@@ -19,7 +19,7 @@
     <packaging>jar</packaging>
 
     <name>Wicket Forms</name>
-    <description>DGToolkit Forms</description>
+    <description>Makueni Forms</description>
 
     <parent>
         <groupId>org.devgateway.toolkit</groupId>

@@ -12,8 +12,8 @@
     <artifactId>persistence</artifactId>
     <packaging>jar</packaging>
 
-    <name>JPA Persistence</name>
-    <description>DGToolkit Persistence</description>
+    <name>Persistence</name>
+    <description>Makueni Persistence</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -143,15 +143,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derbyclient</artifactId>
-            <version>${derby.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derbynet</artifactId>
-            <version>${derby.version}</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${pg.version}</version>
         </dependency>
 
         <!-- This is used just in case we need bean validation -->
