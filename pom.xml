@@ -52,15 +52,15 @@
     </issueManagement>
     <ciManagement>
         <system>Jenkins</system>
-        <url>http://toolkit.dgstg.org/ci/</url>
+        <url>https://ocmakueni.dgstg.org/ci</url>
     </ciManagement>
 
     <scm>
-        <url>git@github.com:devgateway/dg-toolkit.git</url>
+        <url>git@github.com:devgateway/oc-makueni.git</url>
         <developerConnection>
-            scm:git:git@github.com:devgateway/dg-toolkit.git
+            scm:git:git@github.com:devgateway/oc-makueni.git
         </developerConnection>
-        <connection>git@github.com:devgateway/dg-toolkit.git
+        <connection>git@github.com:devgateway/oc-makueni.git
         </connection>
         <tag>HEAD</tag>
     </scm>
