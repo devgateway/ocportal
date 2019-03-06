@@ -49,34 +49,6 @@
 
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
-            <artifactId>persistence-mongodb</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
-            <artifactId>ui</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
-            <artifactId>reporting</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>bcprov-jdk14</artifactId>
-                    <groupId>bouncycastle</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>bcprov-jdk14</artifactId>
-                    <groupId>org.bouncycastle</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
             <artifactId>web</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
