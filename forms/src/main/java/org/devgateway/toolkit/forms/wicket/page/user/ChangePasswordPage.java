@@ -23,7 +23,7 @@ public class ChangePasswordPage extends EditUserPage {
         lastName.setVisibilityAllowed(false);
         email.setVisibilityAllowed(false);
         title.setVisibilityAllowed(false);
-        group.setVisibilityAllowed(false);
+        department.setVisibilityAllowed(false);
         roles.setVisibilityAllowed(false);
         enabled.setVisibilityAllowed(false);
         changePasswordNextSignIn.setVisibilityAllowed(false);

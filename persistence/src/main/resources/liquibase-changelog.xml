@@ -39,10 +39,6 @@
         </insert>
         <insert tableName="ROLE">
             <column name="ID" value="3"/>
-            <column name="AUTHORITY" value="ROLE_EDITOR"/>
-        </insert>
-        <insert tableName="ROLE">
-            <column name="ID" value="4"/>
             <column name="AUTHORITY" value="ROLE_VALIDATOR"/>
         </insert>
     </changeSet>

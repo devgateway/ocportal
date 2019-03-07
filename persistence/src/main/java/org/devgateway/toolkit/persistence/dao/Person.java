@@ -12,7 +12,7 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.toolkit.persistence.dao.categories.Group;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -67,7 +67,7 @@ public class Person extends AbstractAuditableEntity implements Serializable, Use
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(fetch = FetchType.EAGER)
-    private Group group;
+    private Department department;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -183,14 +183,6 @@ public class Person extends AbstractAuditableEntity implements Serializable, Use
         this.changePasswordNextSignIn = changePasswordNextSignIn;
     }
 
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(final Group group) {
-        this.group = group;
-    }
-
     public List<Role> getRoles() {
         return roles;
     }
@@ -227,5 +219,13 @@ public class Person extends AbstractAuditableEntity implements Serializable, Use
     @Override
     public AbstractAuditableEntity getParent() {
         return null;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(final Department department) {
+        this.department = department;
     }
 }
