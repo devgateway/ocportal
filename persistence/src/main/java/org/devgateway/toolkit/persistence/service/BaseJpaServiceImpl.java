@@ -46,6 +46,7 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     }
 
     @Override
+    @Cacheable
     public Optional<T> findOne(final Specification<T> spec) {
         return repository().findOne(spec);
     }
