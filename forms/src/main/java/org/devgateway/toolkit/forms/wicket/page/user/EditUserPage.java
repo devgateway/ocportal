@@ -40,10 +40,10 @@ import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.Role;
-import org.devgateway.toolkit.persistence.dao.categories.Group;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.RoleService;
-import org.devgateway.toolkit.persistence.service.category.GroupService;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -56,7 +56,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
     private PersonService personService;
 
     @SpringBean
-    private GroupService groupService;
+    private DepartmentService departmentService;
 
     @SpringBean
     private RoleService roleService;
@@ -77,7 +77,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     protected TextFieldBootstrapFormComponent<String> title;
 
-    protected Select2ChoiceBootstrapFormComponent<Group> group;
+    protected Select2ChoiceBootstrapFormComponent<Department> department;
 
     protected Select2MultiChoiceBootstrapFormComponent<Role> roles;
 
@@ -140,9 +140,9 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         title = ComponentUtil.addTextField(editForm, "title", false);
 
-        group = ComponentUtil.addSelect2ChoiceField(editForm, "group", groupService, false);
-        group.required();
-        MetaDataRoleAuthorizationStrategy.authorize(group, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        department = ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService, false);
+        department.required();
+        MetaDataRoleAuthorizationStrategy.authorize(department, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
         roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService, false);
         roles.required();

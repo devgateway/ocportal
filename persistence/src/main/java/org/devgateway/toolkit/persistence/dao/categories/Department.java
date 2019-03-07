@@ -9,20 +9,31 @@
  * Contributors:
  * Development Gateway - initial API and implementation
  *******************************************************************************/
-/**
- * 
- */
-package org.devgateway.toolkit.forms.security;
+package org.devgateway.toolkit.persistence.dao.categories;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.Entity;
 
 /**
+ * 
  * @author mpostelnicu
  *
  */
-public final class SecurityConstants {
+@Entity
+@Audited
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Department extends Category {
 
-    public static final class Roles {
-        public static final String ROLE_ADMIN = "ROLE_ADMIN";
-        public static final String ROLE_USER = "ROLE_USER";
-        public static final String ROLE_VALIDATOR = "ROLE_VALIDATOR";
+    private Integer code;
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(final Integer code) {
+        this.code = code;
     }
 }

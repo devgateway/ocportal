@@ -9,20 +9,15 @@
  * Contributors:
  * Development Gateway - initial API and implementation
  *******************************************************************************/
-/**
- * 
- */
-package org.devgateway.toolkit.forms.security;
+package org.devgateway.toolkit.persistence.repository.category;
+
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author mpostelnicu
- *
  */
-public final class SecurityConstants {
+@Transactional
+public interface DepartmentRepository extends CategoryRepository<Department> {
 
-    public static final class Roles {
-        public static final String ROLE_ADMIN = "ROLE_ADMIN";
-        public static final String ROLE_USER = "ROLE_USER";
-        public static final String ROLE_VALIDATOR = "ROLE_VALIDATOR";
-    }
 }
