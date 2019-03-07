@@ -148,6 +148,13 @@
             <version>${pg.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>ru.yandex.qatools.embed</groupId>
+            <artifactId>postgresql-embedded</artifactId>
+            <version>${embedded.postgres.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- This is used just in case we need bean validation -->
         <!--<dependency>-->
         <!--<groupId>javax.validation</groupId>-->
