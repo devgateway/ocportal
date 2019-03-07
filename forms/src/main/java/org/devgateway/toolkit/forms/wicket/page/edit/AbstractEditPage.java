@@ -41,7 +41,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.SummernoteBootstrapFo
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
-import org.devgateway.toolkit.reporting.spring.util.ReportsCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -110,9 +109,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     private EntityManager entityManager;
 
     @SpringBean(required = false)
-    private ReportsCacheService reportsCacheService;
-
-    @SpringBean(required = false)
     private MarkupCacheService markupCacheService;
 
     public EditForm getEditForm() {
@@ -124,10 +120,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
     public void flushReportingCaches() {
-        if (reportsCacheService != null) {
-            reportsCacheService.flushCache();
-        }
-
         if (markupCacheService != null) {
             markupCacheService.flushMarkupCache();
             markupCacheService.clearPentahoReportsCache();

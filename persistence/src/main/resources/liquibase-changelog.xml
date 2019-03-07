@@ -9,63 +9,59 @@
     Contributors:
     Development Gateway - initial API and implementation
 -->
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="add-default-group" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="CATEGORY" />
+            <tableExists tableName="CATEGORY"/>
         </preConditions>
         <insert tableName="CATEGORY">
-            <column name="LABEL" value="group1" />
-            <column name="DTYPE" value="Group" />
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="group1"/>
+            <column name="DTYPE" value="Group"/>
         </insert>
     </changeSet>
 
     <changeSet id="add-default-roles" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="ROLE" />
+            <tableExists tableName="ROLE"/>
         </preConditions>
         <insert tableName="ROLE">
-            <column name="AUTHORITY" value="ROLE_USER" />
+            <column name="ID" value="1"/>
+            <column name="AUTHORITY" value="ROLE_USER"/>
         </insert>
         <insert tableName="ROLE">
-            <column name="AUTHORITY" value="ROLE_ADMIN" />
+            <column name="ID" value="2"/>
+            <column name="AUTHORITY" value="ROLE_ADMIN"/>
         </insert>
         <insert tableName="ROLE">
-            <column name="AUTHORITY" value="ROLE_EDITOR" />
+            <column name="ID" value="3"/>
+            <column name="AUTHORITY" value="ROLE_EDITOR"/>
         </insert>
         <insert tableName="ROLE">
-            <column name="AUTHORITY" value="ROLE_VALIDATOR" />
+            <column name="ID" value="4"/>
+            <column name="AUTHORITY" value="ROLE_VALIDATOR"/>
         </insert>
     </changeSet>
 
     <changeSet id="7" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="PERSON_ROLES" />
-            <tableExists tableName="ROLE" />
-            <tableExists tableName="PERSON" />
+            <tableExists tableName="PERSON_ROLES"/>
+            <tableExists tableName="ROLE"/>
+            <tableExists tableName="PERSON"/>
         </preConditions>
-        <sqlFile path="Person.sql" />
+        <sqlFile path="Person.sql"/>
     </changeSet>
 
     <changeSet id="8" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="PERSON_ROLES" />
-            <tableExists tableName="ROLE" />
-            <tableExists tableName="PERSON" />
+            <tableExists tableName="PERSON_ROLES"/>
+            <tableExists tableName="ROLE"/>
+            <tableExists tableName="PERSON"/>
         </preConditions>
-        <sqlFile path="Person_roles.sql" />
+        <sqlFile path="Person_roles.sql"/>
     </changeSet>
-
-    <changeSet id="9" author="Octavian Ciubotaru">
-        <preConditions onFail="CONTINUE">
-            <tableExists tableName="PERSON_ROLES" />
-            <tableExists tableName="ROLE" />
-            <tableExists tableName="PERSON" />
-        </preConditions>
-        <sqlFile path="Renamed_roles.sql" />
-    </changeSet>
-
 </databaseChangeLog>

@@ -44,8 +44,7 @@ public class Footer extends Panel {
             e.printStackTrace();
         }
 
-        add(new Label("toolkit-version", Model.of(prop.getProperty("toolkit.version"))));
-        add(new Label("toolkit-branch", Model.of(prop.getProperty("toolkit.branch"))));
-        add(new Label("toolkit-year", Calendar.getInstance().get(Calendar.YEAR)));
+        add(new Label("makueni-version", Model.of(prop.getProperty("makueni.version"))));
+        add(new Label("makueni-year", Calendar.getInstance().get(Calendar.YEAR)));
     }
 }

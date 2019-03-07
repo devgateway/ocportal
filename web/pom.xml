@@ -79,20 +79,15 @@
         </dependency>
 
         <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <groupId>ru.yandex.qatools.embed</groupId>
+            <artifactId>postgresql-embedded</artifactId>
+            <version>${embedded.postgres.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>persistence</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
-            <artifactId>persistence-mongodb</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
