@@ -118,7 +118,7 @@ public class PostgresqlDatabaseBackupService {
 
         final ProcessBuilder processBuilder =
                 new ProcessBuilder("/usr/bin/pg_dump",
-                        "-U", "makueni",
+                        "-U", "postgres",
                         "-Fd",
                         "makueni",
                         "-f", lastBackupURL);
