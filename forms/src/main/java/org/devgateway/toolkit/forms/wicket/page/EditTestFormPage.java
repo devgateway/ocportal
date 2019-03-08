@@ -36,10 +36,10 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.Role;
 import org.devgateway.toolkit.persistence.dao.TestForm;
-import org.devgateway.toolkit.persistence.dao.categories.Group;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.RoleService;
 import org.devgateway.toolkit.persistence.service.TestFormService;
-import org.devgateway.toolkit.persistence.service.category.GroupService;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
@@ -59,7 +59,7 @@ public class EditTestFormPage extends AbstractEditPage<TestForm> {
     private RoleService roleService;
 
     @SpringBean
-    private GroupService groupService;
+    private DepartmentService departmentService;
 
     /**
      * @param parameters
@@ -88,8 +88,8 @@ public class EditTestFormPage extends AbstractEditPage<TestForm> {
         SummernoteBootstrapFormComponent summernote = new SummernoteBootstrapFormComponent("summernote");
         editForm.add(summernote);
         summernote.required().enableRevisionsView();
-        Select2ChoiceBootstrapFormComponent<Group> entitySelect = new Select2ChoiceBootstrapFormComponent<Group>(
-                "entitySelect", new GenericPersistableJpaTextChoiceProvider<>(groupService));
+        Select2ChoiceBootstrapFormComponent<Department> entitySelect = new Select2ChoiceBootstrapFormComponent<>(
+                "entitySelect", new GenericPersistableJpaTextChoiceProvider<>(departmentService));
         entitySelect.required();
         editForm.add(entitySelect);
 
@@ -128,8 +128,9 @@ public class EditTestFormPage extends AbstractEditPage<TestForm> {
         fileInput.required();
         editForm.add(fileInput);
 
-        Select2ChoiceBootstrapFormComponent<Group> preloadedEntitySelect = new Select2ChoiceBootstrapFormComponent<>(
-                "preloadedEntitySelect", new GenericChoiceProvider<>(groupService.findAll()));
+        Select2ChoiceBootstrapFormComponent<Department> preloadedEntitySelect =
+                new Select2ChoiceBootstrapFormComponent<>("preloadedEntitySelect",
+                        new GenericChoiceProvider<>(departmentService.findAll()));
         preloadedEntitySelect.required();
         editForm.add(preloadedEntitySelect);
 

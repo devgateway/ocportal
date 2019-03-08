@@ -52,7 +52,6 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.security.SecurityConstants;
 import org.devgateway.toolkit.forms.security.SecurityUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListDepartmentPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.ListGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
@@ -262,8 +261,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 final List<AbstractLink> list = new ArrayList<>();
 
                 list.add(new MenuBookmarkablePageLink<ListDepartmentPage>(ListDepartmentPage.class, null,
-                        new StringResourceModel("navbar.departments", this, null)
-                )
+                        new StringResourceModel("navbar.departments", this, null))
                         .setIconType(FontAwesomeIconType.bank));
                 return list;
             }
@@ -285,44 +283,34 @@ public abstract class BasePage extends GenericWebPage<Void> {
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
                 list.add(new MenuBookmarkablePageLink<ListTestFormPage>(ListUserPage.class, null,
-                        new StringResourceModel("navbar.users", this, null)
-                )
+                        new StringResourceModel("navbar.users", this, null))
                         .setIconType(FontAwesomeIconType.users));
 
-                list.add(new MenuBookmarkablePageLink<ListGroupPage>(ListGroupPage.class, null,
-                        new StringResourceModel("navbar.groups", this, null)
-                ).setIconType(FontAwesomeIconType.tags));
-
                 list.add(new MenuBookmarkablePageLink<ListTestFormPage>(ListTestFormPage.class, null,
-                        new StringResourceModel("navbar.testcomponents", this, null)
-                )
+                        new StringResourceModel("navbar.testcomponents", this, null))
                         .setIconType(FontAwesomeIconType.android));
 
                 list.add(new MenuDivider());
 
                 final BootstrapBookmarkablePageLink swagger = new MenuBookmarkablePageLink<Void>(
                         SwaggerPage.class,
-                        new StringResourceModel("navbar.swagger", BasePage.this, null)
-                )
+                        new StringResourceModel("navbar.swagger", BasePage.this, null))
                         .setIconType(FontAwesomeIconType.code);
                 MetaDataRoleAuthorizationStrategy.authorize(swagger, Component.RENDER,
-                        SecurityConstants.Roles.ROLE_ADMIN
-                );
+                        SecurityConstants.Roles.ROLE_ADMIN);
                 list.add(swagger);
 
                 list.add(new MenuBookmarkablePageLink<SpringEndpointsPage>(SpringEndpointsPage.class, null,
-                        new StringResourceModel("navbar.springendpoints", this, null)
-                )
+                        new StringResourceModel("navbar.springendpoints", this, null))
                         .setIconType(FontAwesomeIconType.anchor));
 
                 list.add(new MenuBookmarkablePageLink<JminixRedirectPage>(JminixRedirectPage.class, null,
-                        new StringResourceModel("navbar.jminix", this, null)
-                ).setIconType(FontAwesomeIconType.bug));
+                        new StringResourceModel("navbar.jminix", this, null))
+                        .setIconType(FontAwesomeIconType.bug));
 
                 final MenuBookmarkablePageLink<HALRedirectPage> halBrowserLink =
                         new MenuBookmarkablePageLink<HALRedirectPage>(HALRedirectPage.class, null,
-                                new StringResourceModel("navbar.halbrowser", this, null)
-                        ) {
+                                new StringResourceModel("navbar.halbrowser", this, null)) {
                             private static final long serialVersionUID = 1L;
 
                             @Override
@@ -353,8 +341,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
                 list.add(new MenuBookmarkablePageLink<Void>(
                         EditAdminSettingsPage.class,
-                        new StringResourceModel("navbar.adminSettings", BasePage.this, null)
-                )
+                        new StringResourceModel("navbar.adminSettings", BasePage.this, null))
                         .setIconType(FontAwesomeIconType.briefcase));
 
                 return list;
