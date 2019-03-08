@@ -14,7 +14,7 @@
  */
 package org.devgateway.toolkit.persistence.dao;
 
-import org.devgateway.toolkit.persistence.dao.categories.Group;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -64,7 +64,7 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private Group entitySelect;
+    private Department entitySelect;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
@@ -76,7 +76,7 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private Group preloadedEntitySelect;
+    private Department preloadedEntitySelect;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -114,11 +114,11 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
         this.checkbox = checkbox;
     }
 
-    public Group getEntitySelect() {
+    public Department getEntitySelect() {
         return entitySelect;
     }
 
-    public void setEntitySelect(final Group entitySelect) {
+    public void setEntitySelect(final Department entitySelect) {
         this.entitySelect = entitySelect;
     }
 
@@ -178,11 +178,11 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
         this.checkboxToggle = checkboxToggle;
     }
 
-    public Group getPreloadedEntitySelect() {
+    public Department getPreloadedEntitySelect() {
         return preloadedEntitySelect;
     }
 
-    public void setPreloadedEntitySelect(final Group preloadedEntitySelect) {
+    public void setPreloadedEntitySelect(final Department preloadedEntitySelect) {
         this.preloadedEntitySelect = preloadedEntitySelect;
     }
 
