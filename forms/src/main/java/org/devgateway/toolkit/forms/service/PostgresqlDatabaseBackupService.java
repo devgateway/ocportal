@@ -54,7 +54,8 @@ public class PostgresqlDatabaseBackupService {
      * use a cron format and invoke it every day at 21:00 server time. That
      * should be a good time for backup for both EST and CET
      */
-    @Scheduled(cron = "0 0 21 * * ?")
+    // @Scheduled(cron = "0 0 21 * * ?")
+    @Scheduled(cron = "0 */1 * * * *")
     public void backupDatabase() {
         final String databaseProductName;
 
