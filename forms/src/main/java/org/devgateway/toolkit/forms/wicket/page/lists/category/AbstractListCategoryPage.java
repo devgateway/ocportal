@@ -1,11 +1,11 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.category;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
 
@@ -28,9 +28,10 @@ public class AbstractListCategoryPage<T extends Category> extends AbstractListPa
                         this.getClass().getSimpleName().replaceAll("List", "").replaceAll("Page", "")), ' ')
                         + " Metadata List"));
 
-        columns.add(new PropertyColumn<>(
-                new Model<>((new StringResourceModel("label", AbstractListCategoryPage.this)).getString()), "label",
-                "label"));
+
+        columns.add(new TextFilteredBootstrapPropertyColumn<>(
+                new Model<>((new StringResourceModel("label", AbstractListCategoryPage.this)).getString()),
+                "label", "label"));
 
         super.onInitialize();
     }
