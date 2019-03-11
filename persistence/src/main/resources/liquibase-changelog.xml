@@ -156,4 +156,57 @@
             <column name="DTYPE" value="Department"/>
         </insert>
     </changeSet>
+
+    <changeSet id="OCMAKU-13" author="idobre">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Direct"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Open tender national"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="RF proposal"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="RFQ"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Restricted tender"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Special permitted"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Low value procurement"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Open tender International"/>
+            <column name="DTYPE" value="ProcurementMethod"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
