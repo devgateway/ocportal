@@ -18,7 +18,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.security.SecurityConstants;
-import org.devgateway.toolkit.forms.wicket.page.edit.category.EditFiscalYearPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.EditFiscalYearPage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -32,21 +32,25 @@ public class ListFiscalYearPage extends AbstractListPage<FiscalYear> {
 
     public ListFiscalYearPage(final PageParameters pageParameters) {
         super(pageParameters);
+
         this.jpaService = service;
         this.editPageClass = EditFiscalYearPage.class;
+    }
+
+    @Override
+    protected void onInitialize() {
         columns.add(new PropertyColumn<>(
-                new Model<>((new StringResourceModel("name", ListFiscalYearPage.this)).getString()), "name",
-                "name"
-        ));
+                new Model<>((new StringResourceModel("name", ListFiscalYearPage.this)).getString()), "name", "name"));
+
         columns.add(new PropertyColumn<>(
                 new Model<>((new StringResourceModel("startDate", ListFiscalYearPage.this)).getString()), "startDate",
-                "startDate"
-        ));
+                "startDate"));
 
         columns.add(new PropertyColumn<>(
                 new Model<>((new StringResourceModel("endDate", ListFiscalYearPage.this)).getString()), "endDate",
-                "endDate"
-        ));
+                "endDate"));
 
+        super.onInitialize();
     }
+
 }

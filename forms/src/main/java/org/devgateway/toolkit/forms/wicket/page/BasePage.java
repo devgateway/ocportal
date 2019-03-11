@@ -55,6 +55,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -265,10 +266,16 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         new StringResourceModel("navbar.departments", this, null))
                         .setIconType(FontAwesomeIconType.bank));
 
-                list.add(new MenuBookmarkablePageLink<ListDepartmentPage>(
+                list.add(new MenuBookmarkablePageLink<ListFiscalYearPage>(
                         ListFiscalYearPage.class, null,
                         new StringResourceModel("navbar.fiscalyear", this, null))
                         .setIconType(FontAwesomeIconType.calendar_times_o));
+
+                list.add(new MenuBookmarkablePageLink<ListTargetGroupPage>(
+                        ListTargetGroupPage.class, null,
+                        new StringResourceModel("navbar.targetgroup", this, null))
+                        .setIconType(FontAwesomeIconType.object_group));
+
                 return list;
             }
         };
