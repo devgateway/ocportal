@@ -13,7 +13,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department_;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.wicketstuff.annotation.mount.MountPath;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/department")
 public class EditDepartmentPage extends AbstractCategoryEditPage<Department> {
 
