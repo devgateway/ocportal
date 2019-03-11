@@ -21,7 +21,6 @@ import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterStat
 import org.devgateway.toolkit.forms.wicket.components.table.filter.TestFormFilterState;
 import org.devgateway.toolkit.forms.wicket.page.EditTestFormPage;
 import org.devgateway.toolkit.persistence.dao.TestForm;
-import org.devgateway.toolkit.persistence.service.RoleService;
 import org.devgateway.toolkit.persistence.service.TestFormService;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -33,21 +32,17 @@ public class ListTestFormPage extends AbstractListPage<TestForm> {
     @SpringBean
     private TestFormService testFormService;
 
-    @SpringBean
-    private RoleService roleService;
-
     public ListTestFormPage(final PageParameters pageParameters) {
         super(pageParameters);
         this.jpaService = testFormService;
         this.editPageClass = EditTestFormPage.class;
-
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(new Model<>("Text Field"), "textField", "textField"));
     }
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
+        columns.add(new TextFilteredBootstrapPropertyColumn<>(new Model<>("Text Field"), "textField", "textField"));
 
+        super.onInitialize();
         // enable excel download
         excelForm.setVisibilityAllowed(true);
     }

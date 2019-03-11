@@ -9,7 +9,7 @@
  * Contributors:
  * Development Gateway - initial API and implementation
  *******************************************************************************/
-package org.devgateway.toolkit.forms.wicket.page.lists;
+package org.devgateway.toolkit.forms.wicket.page.lists.category;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -25,20 +25,24 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath(value = "/departments")
-public class ListDepartmentPage extends AbstractListPage<Department> {
+public class ListDepartmentPage extends AbstractListCategoryPage<Department> {
 
     @SpringBean
     protected DepartmentService service;
 
     public ListDepartmentPage(final PageParameters pageParameters) {
         super(pageParameters);
+
         this.jpaService = service;
         this.editPageClass = EditDepartmentPage.class;
-        columns.add(new PropertyColumn<>(
-                new Model<>((new StringResourceModel("name", ListDepartmentPage.this)).getString()), "label",
-                "label"));
+    }
+
+    @Override
+    protected void onInitialize() {
         columns.add(new PropertyColumn<>(
                 new Model<>((new StringResourceModel("code", ListDepartmentPage.this)).getString()), "code",
                 "code"));
+
+        super.onInitialize();
     }
 }
