@@ -21,13 +21,14 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
@@ -73,7 +74,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     protected Class<? extends AbstractEditPage<T>> editPageClass;
 
-    private AjaxFallbackBootstrapDataTable<T, String> dataTable;
+    protected AjaxFallbackBootstrapDataTable<T, String> dataTable;
 
     protected List<IColumn<T, String>> columns;
 
@@ -92,7 +93,17 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         super(parameters);
 
         columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(new Model<>("ID"), "id", "id"));
+
+        columns.add(new AbstractColumn<T, String>(new Model<>("#")) {
+            @Override
+            public void populateItem(final Item<ICellPopulator<T>> cellItem,
+                                     final String componentId,
+                                     final IModel<T> model) {
+                final OddEvenItem oddEvenItem = (OddEvenItem) cellItem.getParent().getParent();
+                final long index = WebConstants.PAGE_SIZE * dataTable.getCurrentPage() + oddEvenItem.getIndex() + 1;
+                cellItem.add(new Label(componentId, index));
+            }
+        });
     }
 
     public ActionPanel getActionPanel(final String id, final IModel<T> model) {
@@ -131,16 +142,33 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         });
         dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
-        ResettingFilterForm<JpaFilterState<T>> filterForm =
+        final ResettingFilterForm<JpaFilterState<T>> filterForm =
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
         filterForm.add(dataTable);
+
+        // create custom submit button in order to prevent form submission
+        final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
+                new Model<>("Submit"), Buttons.Type.Default) {
+
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                super.onSubmit(target);
+
+                // don't do anything on submit, just refresh the table
+                target.add(dataTable);
+            }
+        };
+        filterForm.add(dataTable);
+        filterForm.add(submit);
+        filterForm.setDefaultButton(submit);
+
         add(filterForm);
 
         if (hasFilteredColumns()) {
             dataTable.addTopToolbar(new FilterToolbar(dataTable, filterForm));
         }
 
-        PageParameters pageParameters = new PageParameters();
+        final PageParameters pageParameters = new PageParameters();
         pageParameters.set(WebConstants.PARAM_ID, null);
 
         editPageLink = new BootstrapBookmarkablePageLink<T>("new", editPageClass, pageParameters, Buttons.Type.Success);
@@ -168,7 +196,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 pageParameters.set(WebConstants.PARAM_ID, entity.getId());
             }
 
-            BootstrapBookmarkablePageLink<T> editPageLink =
+            final BootstrapBookmarkablePageLink<T> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", editPageClass, pageParameters, Buttons.Type.Info);
             editPageLink.setIconType(FontAwesomeIconType.edit).setSize(Size.Small)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
@@ -176,12 +204,12 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
             add(getPrintButton(pageParameters));
 
-            PageParameters revisionsPageParameters = new PageParameters();
+            final PageParameters revisionsPageParameters = new PageParameters();
             revisionsPageParameters.set(WebConstants.PARAM_ID, entity.getId());
             revisionsPageParameters.set(WebConstants.PARAM_ENTITY_CLASS, entity.getClass().getName());
 
-            BootstrapBookmarkablePageLink<Void> revisionsPageLink = new BootstrapBookmarkablePageLink<>("revisions",
-                    RevisionsPage.class, revisionsPageParameters, Buttons.Type.Info);
+            final BootstrapBookmarkablePageLink<Void> revisionsPageLink = new BootstrapBookmarkablePageLink<>(
+                    "revisions", RevisionsPage.class, revisionsPageParameters, Buttons.Type.Info);
             revisionsPageLink.setIconType(FontAwesomeIconType.clock_o).setSize(Size.Small)
                     .setLabel(new StringResourceModel("revisions", AbstractListPage.this, null));
             add(revisionsPageLink);
@@ -200,7 +228,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
     }
 
     private boolean hasFilteredColumns() {
-        for (IColumn<?, ?> column : columns) {
+        for (final IColumn<?, ?> column : columns) {
             if (column instanceof IFilteredColumn) {
                 return true;
             }

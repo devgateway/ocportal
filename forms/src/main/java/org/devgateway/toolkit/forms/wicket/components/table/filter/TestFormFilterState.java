@@ -13,14 +13,14 @@ import java.util.List;
  * Created by Octavian on 03.07.2016.
  */
 public class TestFormFilterState extends JpaFilterState<TestForm> {
-
     private static final long serialVersionUID = 8005371716983257722L;
+
     private String textField;
 
     @Override
     public Specification<TestForm> getSpecification() {
         return (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
+            final List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.isNotBlank(textField)) {
                 predicates.add(cb.like(root.get(TestForm_.textField), "%" + textField + "%"));
             }

@@ -6,13 +6,14 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.security.SecurityConstants;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.page.lists.ListDepartmentPage;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Department_;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.wicketstuff.annotation.mount.MountPath;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/department")
 public class EditDepartmentPage extends AbstractCategoryEditPage<Department> {
 
@@ -26,10 +27,10 @@ public class EditDepartmentPage extends AbstractCategoryEditPage<Department> {
     }
 
 
-    public void addCode() {
-        TextFieldBootstrapFormComponent<Integer> code = new TextFieldBootstrapFormComponent<>("code");
+    private void addCode() {
+        final TextFieldBootstrapFormComponent<Integer> code =
+                ComponentUtil.addIntegerTextField(editForm, "code", false);
         code.integer().required();
-        editForm.add(code);
 
         code.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueDepartmentCode"),
@@ -38,7 +39,7 @@ public class EditDepartmentPage extends AbstractCategoryEditPage<Department> {
         ));
     }
 
-    public void addUniqueNameValidator() {
+    private void addUniqueNameValidator() {
         label.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueName"),
                 service::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
@@ -49,6 +50,7 @@ public class EditDepartmentPage extends AbstractCategoryEditPage<Department> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         addCode();
         addUniqueNameValidator();
     }
