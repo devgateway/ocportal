@@ -51,6 +51,7 @@ import org.apache.wicket.util.string.StringValue;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.security.SecurityConstants;
 import org.devgateway.toolkit.forms.security.SecurityUtil;
+import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
@@ -263,6 +264,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListDepartmentPage>(ListDepartmentPage.class, null,
                         new StringResourceModel("navbar.departments", this, null))
                         .setIconType(FontAwesomeIconType.bank));
+
+                list.add(new MenuBookmarkablePageLink<ListDepartmentPage>(
+                        ListFiscalYearPage.class, null,
+                        new StringResourceModel("navbar.fiscalyear", this, null))
+                        .setIconType(FontAwesomeIconType.calendar_times_o));
                 return list;
             }
         };
