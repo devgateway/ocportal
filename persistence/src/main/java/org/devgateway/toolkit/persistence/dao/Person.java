@@ -34,7 +34,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "username")})
+@Table(indexes = {@Index(columnList = "username"), @Index(columnList = "department_id")})
 public class Person extends AbstractAuditableEntity implements Serializable, UserDetails {
     private static final long serialVersionUID = 109780377848343674L;
 

@@ -74,7 +74,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     protected Class<? extends AbstractEditPage<T>> editPageClass;
 
-    private AjaxFallbackBootstrapDataTable<T, String> dataTable;
+    protected AjaxFallbackBootstrapDataTable<T, String> dataTable;
 
     protected List<IColumn<T, String>> columns;
 
@@ -145,6 +145,23 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         final ResettingFilterForm<JpaFilterState<T>> filterForm =
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
         filterForm.add(dataTable);
+
+        // create custom submit button in order to prevent form submission
+        final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
+                new Model<>("Submit"), Buttons.Type.Default) {
+
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                super.onSubmit(target);
+
+                // don't do anything on submit, just refresh the table
+                target.add(dataTable);
+            }
+        };
+        filterForm.add(dataTable);
+        filterForm.add(submit);
+        filterForm.setDefaultButton(submit);
+
         add(filterForm);
 
         if (hasFilteredColumns()) {
