@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+
+    <wicket:child/>
+
+    <div class="status-section">
+        <span wicket:id="statusLabel" class="label">Status Label</span>
+    </div>
+    <p/>
+
+    <div class="col-md-12" wicket:id="visibleStatusComments"/>
+
+
+    <div class="col-md-12" wicket:id="comments">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Status change</th>
+                <th>Comment</th>
+                <th>User</th>
+                <th>Date & Time</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr wicket:id="statusComments">
+                <td>
+                    <span wicket:id="commentIdx"></span>
+                </td>
+
+                <td>
+                    <span wicket:id="status"></span>
+                </td>
+                <td>
+                    <span wicket:id="comment"></span>
+                </td>
+                <td>
+                    <span wicket:id="createdBy"></span>
+                </td>
+                <td>
+                    <span wicket:id="created"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div wicket:id="newStatusComment"/>
+
+    </div>
+
+    <input type="hidden" wicket:id="verticalPosition"/>
+    <input type="hidden" wicket:id="maxHeight"/>
+
+    <div class="col-md-12">
+        <span class="autosave" wicket:id="autoSaveLabel">AutoSaveLabel</span>
+    </div>
+
+    <wicket:fragment wicket:id="entityButtons">
+        <button wicket:id="saveSubmit" type="button" class="btn btn-info btn-form-action">Save</button>
+        <button wicket:id="saveContinue" type="button" class="btn btn-info btn-form-action">Save & Continue</button>
+        <button wicket:id="validate" type="button" class="btn btn-success btn-form-action">Save & Validate</button>
+        <button wicket:id="revertToDraft" type="button" class="btn btn-warning btn-form-action">Save & Validate</button>
+    </wicket:fragment>
+</wicket:extend>
+
+
+
+</body>
+</html>

@@ -19,6 +19,10 @@ public class AdminSettings extends AbstractAuditableEntity implements Serializab
     private static final long serialVersionUID = -1051140524022133178L;
     private Boolean rebootServer = false;
 
+    private Integer autosaveTime;
+
+    private Boolean emailNotification = false;
+
     @Override
     public AbstractAuditableEntity getParent() {
         return null;
@@ -30,5 +34,21 @@ public class AdminSettings extends AbstractAuditableEntity implements Serializab
 
     public void setRebootServer(final Boolean rebootServer) {
         this.rebootServer = rebootServer;
+    }
+
+    public Integer getAutosaveTime() {
+        return autosaveTime;
+    }
+
+    public void setAutosaveTime(final Integer autosaveTime) {
+        this.autosaveTime = autosaveTime;
+    }
+
+    public Boolean getEmailNotification() {
+        return emailNotification;
+    }
+
+    public void setEmailNotification(final Boolean emailNotification) {
+        this.emailNotification = emailNotification;
     }
 }

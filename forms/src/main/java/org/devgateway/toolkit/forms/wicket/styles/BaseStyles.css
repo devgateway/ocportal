@@ -73,3 +73,8 @@ body {
     overflow-x: auto;
     white-space: nowrap;
 }
+
+.autosave{
+    display: block;
+    margin-bottom: 12px;
+}

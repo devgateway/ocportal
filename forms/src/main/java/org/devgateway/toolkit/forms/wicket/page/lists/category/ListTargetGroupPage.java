@@ -3,7 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.lists.category;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.security.SecurityConstants;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
 import org.devgateway.toolkit.forms.wicket.components.table.filter.TargetGroupFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditTargetGroupPage;

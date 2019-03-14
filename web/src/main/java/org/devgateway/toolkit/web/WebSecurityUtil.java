@@ -9,7 +9,7 @@
  * Contributors:
  * Development Gateway - initial API and implementation
  *******************************************************************************/
-package org.devgateway.toolkit.forms.security;
+package org.devgateway.toolkit.web;
 
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.Role;
@@ -18,12 +18,40 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public final class SecurityUtil {
+public class WebSecurityUtil {
 
-    private SecurityUtil() {
+    protected WebSecurityUtil() {
 
     }
+
+    public static boolean rolesContainsAny(final Collection<String> roleSet, final String... roles) {
+        for (String role : roles) {
+            if (roleSet.contains(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean rolesContainsAny(final String... roles) {
+        return rolesContainsAny(Objects.requireNonNull(WebSecurityUtil.getStringRolesForCurrentPerson()), roles);
+    }
+
+
+    public static boolean rolesContainsAll(final Collection<String> roleSet, final String... roles) {
+        return roleSet.containsAll(Arrays.asList(roles));
+    }
+
+    public static boolean rolesContainsAll(final String... roles) {
+        return rolesContainsAll(Objects.requireNonNull(WebSecurityUtil.getStringRolesForCurrentPerson()), roles);
+    }
+
 
     /**
      * returns the principal object. In our case the principal should be
@@ -36,7 +64,7 @@ public final class SecurityUtil {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             return null;
         }
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return null;
         }
@@ -45,6 +73,14 @@ public final class SecurityUtil {
             return (Person) principal;
         }
         return null;
+    }
+
+    public static Set<String> getStringRolesForCurrentPerson() {
+        Person person = getCurrentAuthenticatedPerson();
+        if (person == null) {
+            return null;
+        }
+        return person.getRoles().stream().map(Role::getAuthority).collect(Collectors.toSet());
     }
 
     /**
@@ -57,7 +93,7 @@ public final class SecurityUtil {
         if (p == null || p.getRoles() == null) {
             return false;
         }
-        for (final Role r : p.getRoles()) {
+        for (Role r : p.getRoles()) {
             if (r.getAuthority().equalsIgnoreCase(SecurityConstants.Roles.ROLE_ADMIN)) {
                 return true;
             }
@@ -66,8 +102,9 @@ public final class SecurityUtil {
     }
 
     public static boolean isCurrentUserAdmin() {
-        final Person p = getCurrentAuthenticatedPerson();
+        Person p = getCurrentAuthenticatedPerson();
         return isUserAdmin(p);
     }
+
 
 }
