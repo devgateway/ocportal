@@ -5,11 +5,13 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.security.SecurityConstants;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.persistence.dao.AdminSettings;
 import org.devgateway.toolkit.persistence.service.AdminSettingsService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
     @SpringBean
     private AdminSettingsService adminSettingsService;
+    private TextFieldBootstrapFormComponent<Object> autosaveTime;
 
     public EditAdminSettingsPage(final PageParameters parameters) {
         super(parameters);
@@ -52,5 +55,10 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
         rebootServer = new CheckBoxToggleBootstrapFormComponent("rebootServer");
         editForm.add(rebootServer);
+
+        autosaveTime = new TextFieldBootstrapFormComponent<>("autosaveTime");
+        autosaveTime.integer().required();
+        autosaveTime.getField().add(RangeValidator.range(1, 60));
+        editForm.add(autosaveTime);
     }
 }

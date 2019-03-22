@@ -25,6 +25,10 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormC
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.events.EditingEnabledEvent;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 /**
  * @author mpostelnicu
  *
@@ -33,6 +37,10 @@ public final class ComponentUtil {
 
     private ComponentUtil() {
 
+    }
+
+    public static Date getDateFromLocalDate(final LocalDate localDate) {
+        return  Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     /**

@@ -32,6 +32,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.exceptions.NullListPageClassException;
 import org.devgateway.toolkit.forms.util.MarkupCacheService;
+import org.devgateway.toolkit.forms.util.SettingsUtils;
 import org.devgateway.toolkit.forms.wicket.components.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -84,6 +85,17 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      */
     protected EditForm editForm;
 
+    protected void afterSaveEntity(final T saveable) {
+    }
+
+    /**
+     * Invoked immediately after entity is loaded
+     * @param entityModel
+     */
+    protected void afterLoad(final IModel<T> entityModel) {
+    }
+
+
     /**
      * the entity id, or null if a new entity is requested
      */
@@ -110,6 +122,10 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     @SpringBean(required = false)
     private MarkupCacheService markupCacheService;
+
+    @SpringBean
+    protected SettingsUtils settingsUtils;
+
 
     public EditForm getEditForm() {
         return editForm;
@@ -254,6 +270,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
             // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
             flushReportingCaches();
+
+            afterSaveEntity(saveable);
 
             // only redirect if redirect is true
             if (redirectToSelf) {
@@ -420,6 +438,15 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     }
 
+    /**
+     * use this function to get the block UI message while the form is saved
+     */
+    protected String getShowBlockUICode() {
+        return "blockUI('"
+                + new StringResourceModel("autosave_message", AbstractEditPage.this, null).getString() + "')";
+    }
+
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -448,5 +475,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         if (model != null) {
             editForm.setCompoundPropertyModel(model);
         }
+
+        afterLoad(model);
     }
 }
