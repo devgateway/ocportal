@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.toolkit.persistence.spring.PersistenceConstants;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -18,10 +17,15 @@ import java.util.List;
 
 @MappedSuperclass
 public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEntity {
-
     @NotNull
     @Audited
-    private String status = PersistenceConstants.Status.DRAFT;
+    private String status = DBConstants.Status.DRAFT;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OrderColumn(name = "index")
+    @JsonIgnore
+    private List<StatusChangedComment> statusComments = new ArrayList<>();
 
     @Transient
     private String newStatusComment;
@@ -39,12 +43,6 @@ public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEnt
     public void setStatus(final String status) {
         this.status = status;
     }
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OrderColumn(name = "index")
-    @JsonIgnore
-    private List<StatusChangedComment> statusComments = new ArrayList<>();
 
     public List<StatusChangedComment> getStatusComments() {
         return statusComments;

@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.forms.util;
 
 import org.devgateway.toolkit.persistence.dao.AdminSettings;
-import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
+import org.devgateway.toolkit.persistence.service.AdminSettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class SettingsUtils {
     public static final int AUTOSAVE_TIME_DEFAULT = 10;
 
     @Autowired
-    private AdminSettingsRepository adminSettingsRepository;
+    private AdminSettingsService adminSettingsService;
 
     private AdminSettings setting;
 
@@ -50,17 +50,8 @@ public class SettingsUtils {
         return setting;
     }
 
-    public boolean getEmailNotification() {
-        init();
-
-        if (setting.getEmailNotification() == null) {
-            return false;
-        }
-        return setting.getEmailNotification();
-    }
-
     private void init() {
-        List<AdminSettings> list = adminSettingsRepository.findAll();
+        final List<AdminSettings> list = adminSettingsService.findAll();
         if (list.size() == 0) {
             setting = new AdminSettings();
         } else {

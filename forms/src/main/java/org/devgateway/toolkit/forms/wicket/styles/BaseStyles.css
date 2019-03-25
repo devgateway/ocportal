@@ -68,6 +68,9 @@ body {
     background: transparent url('./assets/img/ajax-loader.gif') no-repeat scroll center center content-box !important;
 }
 
+
+/* Edit Entity Styles
+-------------------------------------------------- */
 .revision-data-div {
     width: 50em;
     overflow-x: auto;
@@ -78,3 +81,19 @@ body {
     display: block;
     margin-bottom: 12px;
 }
+
+hr.edit-separator {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(220, 220, 220, 0), rgba(220, 220, 220, 0.75), rgba(220, 220, 220, 0));
+}
+
+.checkbox {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+/*
+-------------------------------------------------- */

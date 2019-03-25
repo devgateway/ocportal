@@ -17,7 +17,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -28,7 +27,7 @@ import java.util.Date;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class FiscalYear extends AbstractAuditableEntity implements Serializable {
+public class FiscalYear extends AbstractAuditableEntity {
 
     @Override
     public AbstractAuditableEntity getParent() {

@@ -29,6 +29,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBoo
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.TestFormChildPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
@@ -74,66 +75,70 @@ public class EditTestFormPage extends AbstractEditStatusEntityPage<TestForm> {
     protected void onInitialize() {
         super.onInitialize();
 
-        TextFieldBootstrapFormComponent<String> textField = new TextFieldBootstrapFormComponent<>("textField");
+        final TextFieldBootstrapFormComponent<String> textField = new TextFieldBootstrapFormComponent<>("textField");
         editForm.add(textField);
         textField.required();
         textField.enableRevisionsView();
 
 
-        TextAreaFieldBootstrapFormComponent<String> textArea = new TextAreaFieldBootstrapFormComponent<>("textArea");
+        final TextAreaFieldBootstrapFormComponent<String> textArea =
+                new TextAreaFieldBootstrapFormComponent<>("textArea");
         editForm.add(textArea);
         textArea.required();
 
-        SummernoteBootstrapFormComponent summernote = new SummernoteBootstrapFormComponent("summernote");
+        final SummernoteBootstrapFormComponent summernote = new SummernoteBootstrapFormComponent("summernote");
         editForm.add(summernote);
         summernote.required().enableRevisionsView();
-        Select2ChoiceBootstrapFormComponent<Department> entitySelect = new Select2ChoiceBootstrapFormComponent<>(
+
+        editForm.add(new TestFormChildPanel("testFormChildren"));
+
+        final Select2ChoiceBootstrapFormComponent<Department> entitySelect = new Select2ChoiceBootstrapFormComponent<>(
                 "entitySelect", new GenericPersistableJpaTextChoiceProvider<>(departmentService));
         entitySelect.required();
         editForm.add(entitySelect);
 
-        Select2MultiChoiceBootstrapFormComponent<Role> entityMultiSelect =
+        final Select2MultiChoiceBootstrapFormComponent<Role> entityMultiSelect =
                 new Select2MultiChoiceBootstrapFormComponent<Role>(
                         "entityMultiSelect",
                         new GenericPersistableJpaTextChoiceProvider<Role>(roleService)
                 );
         editForm.add(entityMultiSelect);
 
-        CheckBoxBootstrapFormComponent checkbox = new CheckBoxBootstrapFormComponent("checkbox");
+        final CheckBoxBootstrapFormComponent checkbox = new CheckBoxBootstrapFormComponent("checkbox");
         checkbox.required();
         editForm.add(checkbox);
         //checkbox.enableRevisionsView();
 
-        CheckBoxPickerBootstrapFormComponent checkboxPicker =
+        final CheckBoxPickerBootstrapFormComponent checkboxPicker =
                 new CheckBoxPickerBootstrapFormComponent("checkboxPicker");
         checkboxPicker.required();
         editForm.add(checkboxPicker);
         //checkboxPicker.enableRevisionsView();
 
-        CheckBoxToggleBootstrapFormComponent checkboxToggle =
+        final CheckBoxToggleBootstrapFormComponent checkboxToggle =
                 new CheckBoxToggleBootstrapFormComponent("checkboxToggle");
         checkboxToggle.required();
         editForm.add(checkboxToggle);
 
-        DateFieldBootstrapFormComponent date = new DateFieldBootstrapFormComponent("date");
+        final DateFieldBootstrapFormComponent date = new DateFieldBootstrapFormComponent("date");
         date.required();
         editForm.add(date);
 
-        DateTimeFieldBootstrapFormComponent dateTime = new DateTimeFieldBootstrapFormComponent("dateTime");
+        final DateTimeFieldBootstrapFormComponent dateTime = new DateTimeFieldBootstrapFormComponent("dateTime");
         dateTime.required();
         editForm.add(dateTime);
 
-        FileInputBootstrapFormComponent fileInput = new FileInputBootstrapFormComponent("fileInput");
+        final FileInputBootstrapFormComponent fileInput = new FileInputBootstrapFormComponent("fileInput");
         fileInput.required();
         editForm.add(fileInput);
 
-        Select2ChoiceBootstrapFormComponent<Department> preloadedEntitySelect =
+        final Select2ChoiceBootstrapFormComponent<Department> preloadedEntitySelect =
                 new Select2ChoiceBootstrapFormComponent<>("preloadedEntitySelect",
                         new GenericChoiceProvider<>(departmentService.findAll()));
         preloadedEntitySelect.required();
         editForm.add(preloadedEntitySelect);
 
-        ColorPickerBootstrapFormComponent colorPicker = new ColorPickerBootstrapFormComponent("colorPicker");
+        final ColorPickerBootstrapFormComponent colorPicker = new ColorPickerBootstrapFormComponent("colorPicker");
         colorPicker.required();
         editForm.add(colorPicker);
 

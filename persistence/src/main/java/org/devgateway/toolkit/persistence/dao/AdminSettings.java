@@ -5,7 +5,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * @author idobre
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class AdminSettings extends AbstractAuditableEntity implements Serializable {
+public class AdminSettings extends AbstractAuditableEntity {
 
     private static final long serialVersionUID = -1051140524022133178L;
     private Boolean rebootServer = false;

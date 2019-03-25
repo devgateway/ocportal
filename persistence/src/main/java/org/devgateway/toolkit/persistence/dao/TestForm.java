@@ -28,10 +28,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +41,6 @@ import java.util.Set;
 @Entity
 @Audited
 public class TestForm extends AbstractStatusAuditableEntity {
-
     private static final long serialVersionUID = 1L;
 
     @ExcelExport
@@ -88,7 +85,7 @@ public class TestForm extends AbstractStatusAuditableEntity {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "testForm", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderColumn(name = "index")
-    private Set<TestFormChild> testFormChildren = new HashSet<>();
+    private List<TestFormChild> testFormChildren = new ArrayList<>();
 
     public TestForm() {
     }
