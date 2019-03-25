@@ -34,52 +34,6 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         super(id);
     }
 
-    /**
-     * Removes a child based on its index
-     *
-     * @param index
-     * @return
-     */
-    private BootstrapDeleteButton getRemoveChildButton(final int index) {
-        BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove") {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                ListViewSectionPanel.this.getModelObject().remove(index);
-                listView.removeAll();
-                target.add(listWrapper);
-            }
-        };
-
-        removeButton.setOutputMarkupPlaceholderTag(true);
-        return removeButton;
-    }
-
-    /**
-     * Returns the new child button
-     *
-     * @return
-     */
-    protected BootstrapAddButton getAddNewChildButton() {
-        BootstrapAddButton newButton = new BootstrapAddButton("newButton", new ResourceModel("newButton")) {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                T newChild = createNewChild((IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel());
-                ListViewSectionPanel.this.getModel().getObject().add(newChild);
-
-                listView.removeAll();
-                target.add(listWrapper);
-            }
-
-        };
-
-        newButton.setOutputMarkupPlaceholderTag(true);
-        return newButton;
-    }
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -94,8 +48,6 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         listWrapper.add(new Label("panelTitle", title));
 
         listView = new ListView<T>("list", getModel()) {
-            private static final long serialVersionUID = 1L;
-
             @Override
             protected void populateItem(final ListItem<T> item) {
                 // we wrap the item model on a compound model so we can use the field ids as property models
@@ -122,16 +74,55 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
     }
 
     /**
-     * Use the constructor for new children and return the entity after setting
-     * its parent
+     * Removes a child based on its index
+     *
+     * @param index
+     * @return
+     */
+    private BootstrapDeleteButton getRemoveChildButton(final int index) {
+        final BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove") {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                ListViewSectionPanel.this.getModelObject().remove(index);
+                listView.removeAll();
+                target.add(listWrapper);
+            }
+        };
+
+        removeButton.setOutputMarkupPlaceholderTag(true);
+        return removeButton;
+    }
+
+    /**
+     * Returns the new child button.
+     */
+    final BootstrapAddButton getAddNewChildButton() {
+        final BootstrapAddButton newButton = new BootstrapAddButton("newButton", new ResourceModel("newButton")) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                final T newChild = createNewChild(
+                        (IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel());
+                ListViewSectionPanel.this.getModel().getObject().add(newChild);
+
+                listView.removeAll();
+                target.add(listWrapper);
+            }
+
+        };
+
+        newButton.setOutputMarkupPlaceholderTag(true);
+        return newButton;
+    }
+
+    /**
+     * Use the constructor for new children and return the entity after setting its parent.
      *
      * @param parentModel the model of the parent
-     * @return
      */
     public abstract T createNewChild(IModel<PARENT> parentModel);
 
     /**
-     * Populates the list item elements
+     * Populates the list item elements.
      *
      * @param item
      */

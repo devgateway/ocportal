@@ -49,8 +49,8 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.security.SecurityUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
@@ -60,6 +60,7 @@ import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -352,8 +353,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
                 list.add(new MenuDivider());
 
-                list.add(new MenuBookmarkablePageLink<Void>(
-                        EditAdminSettingsPage.class,
+                list.add(new MenuBookmarkablePageLink<Void>(EditAdminSettingsPage.class,
                         new StringResourceModel("navbar.adminSettings", BasePage.this, null))
                         .setIconType(FontAwesomeIconType.briefcase));
 
@@ -409,8 +409,6 @@ public abstract class BasePage extends GenericWebPage<Void> {
         response.render(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV2()));
 
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
-                BaseStyles.class,
-                "assets/js/fileupload.js"
-        )));
+                BaseStyles.class, "assets/js/fileupload.js")));
     }
 }
