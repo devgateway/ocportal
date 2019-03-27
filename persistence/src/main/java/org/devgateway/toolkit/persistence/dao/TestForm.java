@@ -75,10 +75,6 @@ public class TestForm extends AbstractStatusAuditableEntity {
     private Date dateTime;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Department preloadedEntitySelect;
-
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FileMetadata> fileInput;
 
@@ -181,14 +177,6 @@ public class TestForm extends AbstractStatusAuditableEntity {
 
     public void setCheckboxToggle(final Boolean checkboxToggle) {
         this.checkboxToggle = checkboxToggle;
-    }
-
-    public Department getPreloadedEntitySelect() {
-        return preloadedEntitySelect;
-    }
-
-    public void setPreloadedEntitySelect(final Department preloadedEntitySelect) {
-        this.preloadedEntitySelect = preloadedEntitySelect;
     }
 
     public String getColorPicker() {

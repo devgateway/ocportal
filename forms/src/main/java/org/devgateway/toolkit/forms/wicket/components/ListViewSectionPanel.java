@@ -47,7 +47,14 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
         listWrapper.add(new Label("panelTitle", title));
 
-        listView = new ListView<T>("list", getModel()) {
+        final IModel listModel = new FilteredListModel<T>(getModel()) {
+            @Override
+            protected boolean accept(T t) {
+                return filterListItem(t);
+            }
+        };
+
+        listView = new ListView<T>("list", listModel) {
             @Override
             protected void populateItem(final ListItem<T> item) {
                 // we wrap the item model on a compound model so we can use the field ids as property models
@@ -60,7 +67,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
                 populateCompoundListItem(item);
 
                 // we add the remove button
-                final BootstrapDeleteButton removeButton = getRemoveChildButton(item.getIndex());
+                final BootstrapDeleteButton removeButton = getRemoveChildButton(item.getModelObject());
                 item.add(removeButton);
             }
         };
@@ -76,14 +83,14 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
     /**
      * Removes a child based on its index
      *
-     * @param index
+     * @param item
      * @return
      */
-    private BootstrapDeleteButton getRemoveChildButton(final int index) {
+    private BootstrapDeleteButton getRemoveChildButton(final T item) {
         final BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove") {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
-                ListViewSectionPanel.this.getModelObject().remove(index);
+                ListViewSectionPanel.this.getModelObject().remove(item);
                 listView.removeAll();
                 target.add(listWrapper);
             }
@@ -127,4 +134,6 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
      * @param item
      */
     public abstract void populateCompoundListItem(ListItem<T> item);
+
+    protected abstract boolean filterListItem(T t);
 }

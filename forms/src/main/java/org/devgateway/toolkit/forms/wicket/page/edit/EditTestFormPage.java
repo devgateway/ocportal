@@ -132,12 +132,6 @@ public class EditTestFormPage extends AbstractEditStatusEntityPage<TestForm> {
         fileInput.required();
         editForm.add(fileInput);
 
-        final Select2ChoiceBootstrapFormComponent<Department> preloadedEntitySelect =
-                new Select2ChoiceBootstrapFormComponent<>("preloadedEntitySelect",
-                        new GenericChoiceProvider<>(departmentService.findAll()));
-        preloadedEntitySelect.required();
-        editForm.add(preloadedEntitySelect);
-
         final ColorPickerBootstrapFormComponent colorPicker = new ColorPickerBootstrapFormComponent("colorPicker");
         colorPicker.required();
         editForm.add(colorPicker);
