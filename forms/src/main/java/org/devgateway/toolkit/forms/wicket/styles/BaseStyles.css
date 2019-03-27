@@ -77,7 +77,7 @@ body {
     white-space: nowrap;
 }
 
-.autosave{
+.autosave {
     display: block;
     margin-bottom: 12px;
 }
@@ -95,5 +95,63 @@ hr.edit-separator {
     margin-bottom: 0px;
 }
 
-/*
+/* List View Styles
+-------------------------------------------------- */
+.section-bordered {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #00589e;
+}
+
+.pane {
+    padding: 20px 0;
+    margin-bottom: 0;
+}
+
+.pane.title {
+    overflow: hidden;
+}
+
+.pane.title h4 {
+    font-weight: bold;
+    color: #00589e;
+    float: left;
+}
+
+.pane .count {
+    font-weight: bold;
+    color: #858585;
+    float: left;
+    padding-left: 10px;
+    line-height: 40px;
+}
+
+.pane .show-all {
+    float: right;
+    font-size: 12px;
+    line-height: 40px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.accordion-toggle .show-all {
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+/* TODO - do we need this? */
+.accordion-toggle .header-field label.control-label {
+    margin-right: 10px;
+    float: left;
+}
+
+/* TODO - do we need this? */
+.accordion-toggle .header-field .form-group b span {
+    margin-top: 10px;
+    display: block;
+    float: left;
+}
+
+/* List View Styles
 -------------------------------------------------- */
