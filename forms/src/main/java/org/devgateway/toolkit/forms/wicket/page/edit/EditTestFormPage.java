@@ -31,7 +31,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstra
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TestFormChildPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
-import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.Role;
 import org.devgateway.toolkit.persistence.dao.TestForm;

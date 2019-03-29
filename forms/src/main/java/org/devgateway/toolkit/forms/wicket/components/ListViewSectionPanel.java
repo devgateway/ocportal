@@ -39,9 +39,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         extends CompoundSectionPanel<List<T>> {
     private static final Logger logger = LoggerFactory.getLogger(ListViewSectionPanel.class);
 
-    private WebMarkupContainer listWrapper;
+    protected WebMarkupContainer listWrapper;
 
-    private ListView<T> listView;
+    protected ListView<T> listView;
 
     private static final String ID_ACCORDION = "accordion";
 
@@ -62,6 +62,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         setOutputMarkupId(true);
         setOutputMarkupPlaceholderTag(true);
 
+        addFilterForm();
+
         listWrapper = new TransparentWebMarkupContainer("listWrapper");
         listWrapper.setOutputMarkupId(true);
         add(listWrapper);
@@ -79,6 +81,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
                 if (list != null) {
                     // determine if we need to show or hide all the elements
+
+                    // TODO - update this (or expandedContainerIds logic)
+                    // since "hideableContainer.getMarkupId()" change on refresh
                     final Boolean show = list.size() != expandedContainerIds.size();
 
                     for (int i = 0; i < list.size(); i++) {
@@ -253,6 +258,15 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
     private static void goToComponent(final AjaxRequestTarget target, final String markupId) {
         target.appendJavaScript(JQueryUtil.animateScrollTop("#" + markupId, 500));
+    }
+
+    /**
+     * Override this function if you need to add a filter form for the list view component.
+     */
+    protected void addFilterForm() {
+        final TransparentWebMarkupContainer hiddenForm = new TransparentWebMarkupContainer("listFilterForm");
+        hiddenForm.setVisibilityAllowed(false);
+        add(hiddenForm);
     }
 
 
