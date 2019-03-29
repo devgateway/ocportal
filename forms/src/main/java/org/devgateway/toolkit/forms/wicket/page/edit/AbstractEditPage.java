@@ -17,6 +17,8 @@ import de.agilecoders.wicket.core.util.Attributes;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -40,6 +42,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
+import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.slf4j.Logger;
@@ -95,7 +98,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected void afterLoad(final IModel<T> entityModel) {
     }
 
-
     /**
      * the entity id, or null if a new entity is requested
      */
@@ -126,7 +128,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     @SpringBean
     protected SettingsUtils settingsUtils;
 
-
     public EditForm getEditForm() {
         return editForm;
     }
@@ -135,7 +136,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         return entityManager;
     }
 
-    public void flushReportingCaches() {
+    private void flushReportingCaches() {
         if (markupCacheService != null) {
             markupCacheService.flushMarkupCache();
             markupCacheService.clearPentahoReportsCache();
@@ -223,6 +224,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
             deleteButton = getDeleteEditPageButton();
             add(deleteButton);
+
             // don't display the delete button if we just create a new entity
             if (entityId == null) {
                 deleteButton.setVisibilityAllowed(false);
@@ -240,8 +242,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
     /**
-     * Generic funcionality for the save page button, this can be extended
-     * further by subclasses
+     * Generic functionality for the save page button, this can be extended further by subclasses.
      *
      * @author mpostelnicu
      */
@@ -275,8 +276,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
             // only redirect if redirect is true
             if (redirectToSelf) {
-                // we need to close the blockUI if it's opened and enable all
-                // the buttons
+                // we need to close the blockUI if it's opened and enable all the buttons
                 target.appendJavaScript("$.unblockUI();");
                 target.appendJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', false);");
             } else if (redirect) {
@@ -360,7 +360,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
-            T deleteable = editForm.getModelObject();
+            final T deleteable = editForm.getModelObject();
             try {
                 jpaService.delete(deleteable);
 
@@ -389,7 +389,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      *
      * @return
      */
-    public SaveEditPageButton getSaveEditPageButton() {
+    protected SaveEditPageButton getSaveEditPageButton() {
         return new SaveEditPageButton("save", new StringResourceModel("saveButton", this, null));
     }
 
@@ -399,7 +399,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      *
      * @return
      */
-    public DeleteEditPageButton getDeleteEditPageButton() {
+    protected DeleteEditPageButton getDeleteEditPageButton() {
         return new DeleteEditPageButton("delete", new StringResourceModel("deleteButton", this, null));
     }
 
@@ -423,29 +423,17 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             }
         };
 
-        // use this in order to avoid "ServletRequest does not contain multipart
-        // content" error
+        // use this in order to avoid "ServletRequest does not contain multipart content" error
         // this error appears when we have a file upload component that is
         // hidden or not present in the page when the form is created
         editForm.setMultiPart(true);
 
         add(editForm);
 
-        // this fragment ensures extra buttons are added below the wicket:child
-        // section in child
-        Fragment fragment = new Fragment("extraButtons", "noButtons", this);
+        // this fragment ensures extra buttons are added below the wicket:child section in child
+        final Fragment fragment = new Fragment("extraButtons", "noButtons", this);
         editForm.add(fragment);
-
     }
-
-    /**
-     * use this function to get the block UI message while the form is saved
-     */
-    protected String getShowBlockUICode() {
-        return "blockUI('"
-                + new StringResourceModel("autosave_message", AbstractEditPage.this, null).getString() + "')";
-    }
-
 
     @Override
     protected void onInitialize() {
@@ -466,7 +454,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         if (entityId != null) {
             model = new DozerModel<>(jpaService.findById(entityId).orElse(null));
         } else {
-            T instance = newInstance();
+            final T instance = newInstance();
             if (instance != null) {
                 model = new Model(instance);
             }
@@ -477,5 +465,13 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         }
 
         afterLoad(model);
+    }
+
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+
+        // block UI
+        response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
     }
 }

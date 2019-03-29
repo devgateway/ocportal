@@ -27,7 +27,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.io.Serializable;
+import javax.persistence.OrderColumn;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -39,8 +40,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-public class TestForm extends AbstractStatusAuditableEntity implements Serializable {
-
+public class TestForm extends AbstractStatusAuditableEntity {
     private static final long serialVersionUID = 1L;
 
     @ExcelExport
@@ -75,12 +75,13 @@ public class TestForm extends AbstractStatusAuditableEntity implements Serializa
     private Date dateTime;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Department preloadedEntitySelect;
-
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FileMetadata> fileInput;
+
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "testForm", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderColumn(name = "index")
+    private List<TestFormChild> testFormChildren = new ArrayList<>();
 
     public TestForm() {
     }
@@ -176,14 +177,6 @@ public class TestForm extends AbstractStatusAuditableEntity implements Serializa
 
     public void setCheckboxToggle(final Boolean checkboxToggle) {
         this.checkboxToggle = checkboxToggle;
-    }
-
-    public Department getPreloadedEntitySelect() {
-        return preloadedEntitySelect;
-    }
-
-    public void setPreloadedEntitySelect(final Department preloadedEntitySelect) {
-        this.preloadedEntitySelect = preloadedEntitySelect;
     }
 
     public String getColorPicker() {

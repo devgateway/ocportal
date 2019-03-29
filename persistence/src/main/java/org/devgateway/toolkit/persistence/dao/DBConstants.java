@@ -11,10 +11,23 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public final class DBConstants {
 
     private DBConstants() {
 
+    }
+
+    public static final class Status {
+        public static final String DRAFT = "DRAFT";
+        public static final String SUBMITTED = "SUBMITTED";
+        public static final String VALIDATED = "VALIDATED";
+
+        public static final String[] ALL = {DRAFT, SUBMITTED, VALIDATED};
+        public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
     }
 
     public static final int MAX_DEFAULT_TEXT_LENGTH = 32000;

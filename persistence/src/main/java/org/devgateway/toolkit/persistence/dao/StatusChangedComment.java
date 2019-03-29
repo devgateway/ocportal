@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 @Entity
 @Audited
 public class StatusChangedComment extends AbstractAuditableEntity {
-
     private String status;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)

@@ -27,7 +27,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,7 +34,7 @@ import java.util.List;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "username"), @Index(columnList = "department_id")})
-public class Person extends AbstractAuditableEntity implements Serializable, UserDetails {
+public class Person extends AbstractAuditableEntity implements UserDetails {
     private static final long serialVersionUID = 109780377848343674L;
 
     @ExcelExport

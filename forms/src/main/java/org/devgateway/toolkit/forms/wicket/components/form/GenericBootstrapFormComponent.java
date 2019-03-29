@@ -158,8 +158,8 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
             if (revisionOwningEntityModel.getObject().isNew()) {
                 return new ArrayList<>();
             }
-            AuditReader reader = AuditReaderFactory.get(entityManagerModel.getObject());
-            AuditQuery query = reader.createQuery().forRevisionsOfEntity(auditorClass, false, false);
+            final AuditReader reader = AuditReaderFactory.get(entityManagerModel.getObject());
+            final AuditQuery query = reader.createQuery().forRevisionsOfEntity(auditorClass, false, false);
             query.add(AuditEntity.property("id").eq(revisionOwningEntityModel.getObject().getId()));
             query.add(AuditEntity.property(auditProperty).hasChanged());
             return query.getResultList();
