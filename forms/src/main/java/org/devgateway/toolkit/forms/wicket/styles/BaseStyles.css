@@ -140,6 +140,10 @@ hr.edit-separator {
     font-weight: bold;
 }
 
+.show-all:hover {
+    color: #66b558;
+}
+
 /* TODO - do we need this? */
 .accordion-toggle .header-field label.control-label {
     margin-right: 10px;

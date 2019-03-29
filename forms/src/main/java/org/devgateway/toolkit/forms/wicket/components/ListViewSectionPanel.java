@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.components;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -9,12 +11,20 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @param <T>      The current list data type
@@ -27,6 +37,8 @@ import java.util.List;
 
 public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PARENT extends AbstractAuditableEntity>
         extends CompoundSectionPanel<List<T>> {
+    private static final Logger logger = LoggerFactory.getLogger(ListViewSectionPanel.class);
+
     private WebMarkupContainer listWrapper;
 
     private ListView<T> listView;
@@ -36,6 +48,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
     private static final String ID_HIDEABLE_CONTAINER = "hideableContainer";
 
     private static final String ID_ACCORDION_TOGGLE = "accordionToggle";
+
+    private final Set<String> expandedContainerIds = new HashSet<>();
 
     public ListViewSectionPanel(final String id) {
         super(id);
@@ -59,15 +73,37 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
         final AjaxLink<Void> showHideAllEntries = new AjaxLink<Void>("showHideAllEntries") {
             @Override
-            public void onClick(AjaxRequestTarget target) {
+            public void onClick(final AjaxRequestTarget target) {
+                // take the list of elements from the path: listWrapper/list
+                final ListView<T> list = (ListView<T>) ListViewSectionPanel.this.get("listWrapper").get("list");
 
+                if (list != null) {
+                    // determine if we need to show or hide all the elements
+                    final Boolean show = list.size() != expandedContainerIds.size();
+
+                    for (int i = 0; i < list.size(); i++) {
+                        final TransparentWebMarkupContainer accordion =
+                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
+
+                        if (accordion != null) {
+                            final Label showDetailsLink =
+                                    (Label) accordion.get(ID_ACCORDION_TOGGLE).get("showDetailsLink");
+
+                            if (show) {
+                                showSection(target, accordion.get(ID_HIDEABLE_CONTAINER), showDetailsLink);
+                            } else {
+                                hideSection(target, accordion.get(ID_HIDEABLE_CONTAINER), showDetailsLink);
+                            }
+                        }
+                    }
+                }
             }
         };
         listWrapper.add(showHideAllEntries);
 
         final IModel listModel = new FilteredListModel<T>(getModel()) {
             @Override
-            protected boolean accept(T t) {
+            protected boolean accept(final T t) {
                 return filterListItem(t);
             }
         };
@@ -84,36 +120,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
                 // we add the rest of the items in the listItem
                 populateCompoundListItem(item);
 
-
-                final TransparentWebMarkupContainer accordion = new TransparentWebMarkupContainer(ID_ACCORDION);
-                accordion.setOutputMarkupId(true);
-                item.add(accordion);
-
-                final AjaxLink<Void> accordionToggle = new AjaxLink<Void>(ID_ACCORDION_TOGGLE) {
-                    @Override
-                    public void onClick(final AjaxRequestTarget target) {
-
-                    }
-                };
-                accordionToggle.setOutputMarkupId(true);
-                accordion.add(accordionToggle);
-
-                // we add the special header field
-                // accordionToggle.add(getHeaderField("headerField", new CompoundPropertyModel<>(item.getModel())));
-                accordionToggle.add(new Label("headerField", "Header Field"));
-
-                final Label showDetailsLink = new Label("showDetailsLink", new ResourceModel("showDetailsLink"));
-                accordionToggle.add(showDetailsLink);
-
-                // the section that will collapse
-                final TransparentWebMarkupContainer hideableContainer = new TransparentWebMarkupContainer(ID_HIDEABLE_CONTAINER);
-                hideableContainer.setOutputMarkupId(true);
-                hideableContainer.setOutputMarkupPlaceholderTag(true);
-                accordion.add(hideableContainer);
-
-                // we add the remove button
-                final BootstrapDeleteButton removeButton = getRemoveChildButton(item.getModelObject());
-                hideableContainer.add(removeButton);
+                addAcordion(item);
             }
         };
 
@@ -123,6 +130,83 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
         final BootstrapAddButton addButton = getAddNewChildButton();
         add(addButton);
+    }
+
+    private void addAcordion(final ListItem<T> item) {
+        final Label showDetailsLink = new Label("showDetailsLink", new ResourceModel("showDetailsLink"));
+        showDetailsLink.setOutputMarkupId(true);
+
+        // the section that will collapse
+        final TransparentWebMarkupContainer hideableContainer =
+                new TransparentWebMarkupContainer(ID_HIDEABLE_CONTAINER);
+        hideableContainer.setOutputMarkupId(true);
+        hideableContainer.setOutputMarkupPlaceholderTag(true);
+
+        final TransparentWebMarkupContainer accordion = new TransparentWebMarkupContainer(ID_ACCORDION);
+        accordion.setOutputMarkupId(true);
+        item.add(accordion);
+
+        final AjaxLink<Void> accordionToggle = new AjaxLink<Void>(ID_ACCORDION_TOGGLE) {
+            @Override
+            public void onClick(final AjaxRequestTarget target) {
+                if (expandedContainerIds.contains(hideableContainer.getMarkupId())) {
+                    hideSection(target, hideableContainer, showDetailsLink);
+                } else {
+                    showSection(target, hideableContainer, showDetailsLink);
+                }
+            }
+        };
+        accordionToggle.setOutputMarkupId(true);
+        accordion.add(accordionToggle);
+
+        // we add the special header field
+        // accordionToggle.add(getHeaderField("headerField", new CompoundPropertyModel<>(item.getModel())));
+        accordionToggle.add(new Label("headerField", "Header Field"));
+
+        accordionToggle.add(showDetailsLink);
+        accordion.add(hideableContainer);
+
+        // we add the remove button
+        final BootstrapDeleteButton removeButton = getRemoveChildButton(item.getModelObject());
+        hideableContainer.add(removeButton);
+
+        // if we display a new element that was just added then we make the accordion enabled
+        if (item.getModelObject().isNew()
+                && item.getIndex() == getModel().getObject().size() - 1) {
+            hideableContainer.add(new AttributeModifier("class", new Model<>("panel-body panel-collapse collapse in")));
+            showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLink"));
+            expandedContainerIds.add(hideableContainer.getMarkupId());
+
+            // jump to top of the new item
+            final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
+            if (target.isPresent()) {
+                goToComponent(target.get(), accordion.getMarkupId());
+            }
+        }
+    }
+
+    /**
+     * Open the accordion.
+     */
+    public void showSection(final AjaxRequestTarget target,
+                            final Component hideableContainer, final Label showDetailsLink) {
+        target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('show')");
+        expandedContainerIds.add(hideableContainer.getMarkupId());
+
+        showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLink"));
+        target.add(showDetailsLink);
+    }
+
+    /**
+     * Close the accordion.
+     */
+    public void hideSection(final AjaxRequestTarget target, final Component hideableContainer,
+                            final Label showDetailsLink) {
+        target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('hide')");
+        expandedContainerIds.remove(hideableContainer.getMarkupId());
+
+        showDetailsLink.setDefaultModel(new ResourceModel("showDetailsLink"));
+        target.add(showDetailsLink);
     }
 
     /**
@@ -166,6 +250,11 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         newButton.setOutputMarkupPlaceholderTag(true);
         return newButton;
     }
+
+    private static void goToComponent(final AjaxRequestTarget target, final String markupId) {
+        target.appendJavaScript(JQueryUtil.animateScrollTop("#" + markupId, 500));
+    }
+
 
     /**
      * Use the constructor for new children and return the entity after setting its parent.
