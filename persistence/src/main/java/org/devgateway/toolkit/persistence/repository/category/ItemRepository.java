@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package org.devgateway.toolkit.persistence.repository.category;
 
 import org.devgateway.toolkit.persistence.dao.categories.Item;

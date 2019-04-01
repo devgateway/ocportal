@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package org.devgateway.toolkit.forms.wicket.page.edit.category;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
