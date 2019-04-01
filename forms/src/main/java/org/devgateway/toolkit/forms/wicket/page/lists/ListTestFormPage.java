@@ -26,7 +26,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath(value = "/listTestForm")
-public class ListTestFormPage extends AbstractListPage<TestForm> {
+public class ListTestFormPage extends AbstractListStatusEntityPage<TestForm> {
     private static final long serialVersionUID = -324298525712620234L;
 
     @SpringBean

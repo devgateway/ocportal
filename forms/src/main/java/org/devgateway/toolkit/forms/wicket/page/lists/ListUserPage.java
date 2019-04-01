@@ -16,7 +16,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectMultiFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
@@ -29,6 +28,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.RoleService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
@@ -58,8 +58,6 @@ public class ListUserPage extends AbstractListPage<Person> {
     @Override
     protected void onInitialize() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(new Model<>("Name"), "username", "username"));
-
-        // columns.add(new PropertyColumn<>(new Model<>("Roles"), "roles", "roles"));
 
         super.onInitialize();
         // enable excel download

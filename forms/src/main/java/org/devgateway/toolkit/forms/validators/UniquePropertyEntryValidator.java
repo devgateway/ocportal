@@ -18,12 +18,13 @@ import java.util.Optional;
  * @param <P> the property type
  */
 public class UniquePropertyEntryValidator<T extends AbstractAuditableEntity, P> implements IValidator<P>, Serializable {
+    private final String message;
 
-    private String message;
-    private SerializableFunction<Specification<T>, Optional<T>> repositorySearcher;
-    private IModel<T> formModel;
-    private SpecificationConversion<T, P> specificationConversion;
+    private final SerializableFunction<Specification<T>, Optional<T>> repositorySearcher;
 
+    private final IModel<T> formModel;
+
+    private final SpecificationConversion<T, P> specificationConversion;
 
     public UniquePropertyEntryValidator(final String message,
                                         final SerializableFunction<Specification<T>, Optional<T>> repositorySearcher,
@@ -37,15 +38,14 @@ public class UniquePropertyEntryValidator<T extends AbstractAuditableEntity, P> 
 
     @Override
     public void validate(final IValidatable<P> validatable) {
-        Optional<T> other = repositorySearcher.apply(specificationConversion.toSpecification(
+        final Optional<T> other = repositorySearcher.apply(specificationConversion.toSpecification(
                 formModel.getObject(),
-                validatable.getValue()
-        ));
+                validatable.getValue()));
+
         if (other.isPresent() && !other.get().getId().equals(formModel.getObject().getId())) {
             final ValidationError error = new ValidationError(message);
             validatable.error(error);
         }
-
     }
 
     @FunctionalInterface

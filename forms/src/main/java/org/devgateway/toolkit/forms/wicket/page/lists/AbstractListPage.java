@@ -67,10 +67,8 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author mpostelnicu This class can be use to display a list of Categories
  * <p>
- * T - entity type
  */
 public abstract class AbstractListPage<T extends GenericPersistable & Serializable> extends BasePage {
-    private static final long serialVersionUID = 1958350868666244087L;
 
     protected Class<? extends AbstractEditPage<T>> editPageClass;
 
