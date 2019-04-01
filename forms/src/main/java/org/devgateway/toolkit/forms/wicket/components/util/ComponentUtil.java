@@ -42,7 +42,7 @@ public final class ComponentUtil {
     }
 
     public static Date getDateFromLocalDate(final LocalDate localDate) {
-        return  Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     /**

@@ -300,6 +300,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             @Override
             protected void populateItem(final ListItem<StatusChangedComment> item) {
                 item.setModel(new CompoundPropertyModel<>(item.getModel()));
+                item.add(new Label("commentIdx", item.getIndex()));
                 item.add(new Label("status"));
                 item.add(new Label("comment"));
                 item.add(new Label("createdBy", item.getModelObject().getCreatedBy().get()));
@@ -307,7 +308,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                         Model.of(ComponentUtil.getDateFromLocalDate(
                                 item.getModelObject().getCreatedDate().get().toLocalDate())), "SS"
                 ));
-                item.add(new Label("commentIdx", item.getIndex()));
             }
         };
         statusComments.setReuseItems(true);

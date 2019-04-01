@@ -43,11 +43,11 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
     protected ListView<T> listView;
 
-    private static final String ID_ACCORDION = "accordion";
+    public static final String ID_ACCORDION = "accordion";
 
-    private static final String ID_HIDEABLE_CONTAINER = "hideableContainer";
+    public static final String ID_HIDEABLE_CONTAINER = "hideableContainer";
 
-    private static final String ID_ACCORDION_TOGGLE = "accordionToggle";
+    public static final String ID_ACCORDION_TOGGLE = "accordionToggle";
 
     private Set<String> expandedContainerIds = new HashSet<>();
 

@@ -15,10 +15,15 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationMessa
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.util.Attributes;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -35,6 +40,7 @@ import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.exceptions.NullListPageClassException;
 import org.devgateway.toolkit.forms.util.MarkupCacheService;
 import org.devgateway.toolkit.forms.util.SettingsUtils;
+import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
@@ -93,6 +99,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     /**
      * Invoked immediately after entity is loaded
+     *
      * @param entityModel
      */
     protected void afterLoad(final IModel<T> entityModel) {
@@ -309,10 +316,14 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         @Override
         protected void onError(final AjaxRequestTarget target) {
             // make all errors visible
-            GenericBootstrapValidationVisitor genericBootstrapValidationVisitor = getBootstrapValidationVisitor(target);
+            final GenericBootstrapValidationVisitor genericBootstrapValidationVisitor =
+                    getBootstrapValidationVisitor(target);
             editForm.visitChildren(GenericBootstrapFormComponent.class, genericBootstrapValidationVisitor);
 
-            ValidationError error = new ValidationError();
+            // only trigger the parent section of the last invalid visited object
+            triggerShowParentSections(genericBootstrapValidationVisitor.getLastInvalidVisitedObject(), target);
+
+            final ValidationError error = new ValidationError();
             error.addKey("formHasErrors");
             error(error);
 
@@ -349,6 +360,37 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         public boolean isRedirectToSelf() {
             return redirectToSelf;
         }
+    }
+
+    /**
+     * Trigger all parents of type {@link ListViewSectionPanel} to become visible
+     * by invoking {@link ListViewSectionPanel#showSection}
+     *
+     * @param component
+     * @param target
+     */
+    public void triggerShowParentSections(final Component component, final AjaxRequestTarget target) {
+        //we exit if the component is null
+        if (component == null || component instanceof Form) {
+            return;
+        }
+
+        if (component instanceof ListItem
+                && component.getParent().getParent().getParent() instanceof ListViewSectionPanel) {
+            final ListViewSectionPanel<?, ?> sectionPanel = (ListViewSectionPanel<?, ?>)
+                    component.getParent().getParent().getParent();
+
+            final TransparentWebMarkupContainer accordion =
+                    (TransparentWebMarkupContainer) component.get(ListViewSectionPanel.ID_ACCORDION);
+            final Label showDetailsLink =
+                    (Label) accordion.get(ListViewSectionPanel.ID_ACCORDION_TOGGLE).get("showDetailsLink");
+
+            sectionPanel.showSection(target,
+                    accordion.get(ListViewSectionPanel.ID_HIDEABLE_CONTAINER), showDetailsLink);
+        }
+
+        // recursive call
+        triggerShowParentSections(component.getParent(), target);
     }
 
     public class DeleteEditPageButton extends BootstrapDeleteButton {
