@@ -25,8 +25,9 @@ public final class DBConstants {
         public static final String DRAFT = "DRAFT";
         public static final String SUBMITTED = "SUBMITTED";
         public static final String VALIDATED = "VALIDATED";
+        public static final String TERMINATED = "TERMINATED";
 
-        public static final String[] ALL = {DRAFT, SUBMITTED, VALIDATED};
+        public static final String[] ALL = {DRAFT, SUBMITTED, VALIDATED, TERMINATED};
         public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
     }
 

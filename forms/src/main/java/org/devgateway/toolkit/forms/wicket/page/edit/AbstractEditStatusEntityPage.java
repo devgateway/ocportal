@@ -40,11 +40,11 @@ import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.components.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
@@ -302,7 +302,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 item.setModel(new CompoundPropertyModel<>(item.getModel()));
                 item.add(new Label("status"));
                 item.add(new Label("comment"));
-                item.add(new Label("createdBy"));
+                item.add(new Label("createdBy", item.getModelObject().getCreatedBy().get()));
                 item.add(DateLabel.forDateStyle("created",
                         Model.of(ComponentUtil.getDateFromLocalDate(
                                 item.getModelObject().getCreatedDate().get().toLocalDate())), "SS"
@@ -319,7 +319,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     private void setStatusAppendComment(final String status) {
         final T saveable = editForm.getModelObject();
 
-        //do not save an empty comment if previous status is same as current status and comment box is empty
+        // do not save an empty comment if previous status is same as current status and comment box is empty
         if (status.equals(saveable.getStatus()) && ObjectUtils.isEmpty(saveable.getNewStatusComment())) {
             saveable.setStatus(status);
             return;

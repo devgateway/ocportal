@@ -28,6 +28,9 @@ import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 /**
  * @author idobre
@@ -36,6 +39,10 @@ import java.io.Serializable;
 public final class ComponentUtil {
     private ComponentUtil() {
 
+    }
+
+    public static Date getDateFromLocalDate(final LocalDate localDate) {
+        return  Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     /**

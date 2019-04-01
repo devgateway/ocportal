@@ -49,7 +49,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
     private static final String ID_ACCORDION_TOGGLE = "accordionToggle";
 
-    private final Set<String> expandedContainerIds = new HashSet<>();
+    private Set<String> expandedContainerIds = new HashSet<>();
 
     public ListViewSectionPanel(final String id) {
         super(id);
@@ -64,7 +64,15 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
         addFilterForm();
 
-        listWrapper = new TransparentWebMarkupContainer("listWrapper");
+        listWrapper = new TransparentWebMarkupContainer("listWrapper") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                // reset this field on re-paint
+                expandedContainerIds = new HashSet<>();
+            }
+        };
         listWrapper.setOutputMarkupId(true);
         add(listWrapper);
 
@@ -81,9 +89,6 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
 
                 if (list != null) {
                     // determine if we need to show or hide all the elements
-
-                    // TODO - update this (or expandedContainerIds logic)
-                    // since "hideableContainer.getMarkupId()" change on refresh
                     final Boolean show = list.size() != expandedContainerIds.size();
 
                     for (int i = 0; i < list.size(); i++) {
