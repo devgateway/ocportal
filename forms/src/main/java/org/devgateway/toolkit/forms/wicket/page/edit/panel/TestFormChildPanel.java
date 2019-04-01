@@ -52,11 +52,11 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
 
     @Override
     public void populateCompoundListItem(final ListItem<TestFormChild> item) {
-        item.setOutputMarkupId(true);
-        item.setOutputMarkupPlaceholderTag(true);
+        final TextFieldBootstrapFormComponent<String> header = ComponentUtil.addTextField(item, "header", false);
+        header.required();
 
-        ComponentUtil.addTextField(item, "header", false).required();
-        ComponentUtil.addIntegerTextField(item, "value", false).required();
+        final TextFieldBootstrapFormComponent<Integer> value = ComponentUtil.addIntegerTextField(item, "value", false);
+        value.required();
     }
 
     @Override

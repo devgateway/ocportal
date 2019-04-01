@@ -121,6 +121,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         listView = new ListView<T>("list", listModel) {
             @Override
             protected void populateItem(final ListItem<T> item) {
+                item.setOutputMarkupId(true);
+                item.setOutputMarkupPlaceholderTag(true);
+
                 // we wrap the item model on a compound model so we can use the field ids as property models
                 final CompoundPropertyModel<T> compoundPropertyModel = new CompoundPropertyModel<>(item.getModel());
 
