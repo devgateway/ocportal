@@ -66,6 +66,10 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
             return true;
         } else {
             if (listFilterBean.getHeader() != null) {
+                // it was saved as null when it was saved as draft
+                if (testFormChild.getHeader() == null) {
+                    return false;
+                }
                 return testFormChild.getHeader().toLowerCase()
                         .matches(".*" + listFilterBean.getHeader().toLowerCase() + ".*");
             }

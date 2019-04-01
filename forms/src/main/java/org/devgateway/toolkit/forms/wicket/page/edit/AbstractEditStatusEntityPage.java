@@ -21,6 +21,7 @@ import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -35,6 +36,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
@@ -47,6 +49,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
+import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
@@ -519,6 +522,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         super.renderHead(response);
 
         scrollToPreviousPosition(response);
+
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
+                BaseStyles.class, "assets/js/formLeavingHelper.js")));
     }
 
     /**
