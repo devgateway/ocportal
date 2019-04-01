@@ -19,7 +19,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
-import org.devgateway.toolkit.forms.wicket.components.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 
 /**
  * @author mpostelnicu

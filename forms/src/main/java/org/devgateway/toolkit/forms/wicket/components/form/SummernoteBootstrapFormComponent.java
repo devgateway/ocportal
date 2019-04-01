@@ -31,7 +31,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.components.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 
 /**
  * @author mpostelnicu

@@ -21,7 +21,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxBut
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.devgateway.toolkit.forms.wicket.components.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 
 /**
  * @author mpostelnicu

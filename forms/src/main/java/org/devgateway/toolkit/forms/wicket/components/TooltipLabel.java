@@ -20,6 +20,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 
 /**
  * @author mpostelnicu
