@@ -59,18 +59,17 @@ public class ListUserPage extends AbstractListPage<Person> {
     protected void onInitialize() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(new Model<>("Name"), "username", "username"));
 
-        super.onInitialize();
-        // enable excel download
-        excelForm.setVisibilityAllowed(true);
-
-        // we add this columns after "super.onInitialize();" was called because we need dataTable to be initialized.
         final List<Department> departments = departmentService.findAll();
-        columns.add(2, new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
                 "department", "department", new ListModel(departments), dataTable));
 
         final List<Role> roles = roleService.findAll();
-        columns.add(3, new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),
+        columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),
                 "roles", "roles", new ListModel(roles), dataTable));
+
+        super.onInitialize();
+        // enable excel download
+        excelForm.setVisibilityAllowed(true);
     }
 
     @Override

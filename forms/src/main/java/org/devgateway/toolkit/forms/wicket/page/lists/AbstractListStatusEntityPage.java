@@ -36,9 +36,9 @@ public abstract class AbstractListStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
-
         addStatusColumn();
+
+        super.onInitialize();
     }
 
     private List<String> getStatusDropdownValues() {

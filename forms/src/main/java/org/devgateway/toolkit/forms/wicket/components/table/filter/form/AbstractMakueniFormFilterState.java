@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
 
 import org.devgateway.toolkit.forms.wicket.components.table.filter.StatusAuditableEntityFilterState;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -18,6 +19,8 @@ import java.util.List;
 public abstract class AbstractMakueniFormFilterState<T extends AbstractMakueniForm>
         extends StatusAuditableEntityFilterState<T> {
     private ProcurementPlan procurementPlan;
+
+    private Department department;
 
     @Override
     public Specification<T> getSpecification() {

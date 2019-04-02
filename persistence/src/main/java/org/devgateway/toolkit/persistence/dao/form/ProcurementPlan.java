@@ -32,7 +32,12 @@ public class ProcurementPlan extends AbstractMakueniForm {
     private FiscalYear fiscalYear;
 
     public ProcurementPlan() {
-        this.setProcurementPlan(this);
+
+    }
+
+    @Override
+    public ProcurementPlan getProcurementPlan() {
+        return this;
     }
 
     public Department getDepartment() {

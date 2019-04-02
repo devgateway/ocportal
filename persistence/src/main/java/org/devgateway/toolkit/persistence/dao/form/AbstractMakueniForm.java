@@ -22,7 +22,7 @@ public abstract class AbstractMakueniForm extends AbstractStatusAuditableEntity 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OrderColumn(name = "index")
-    @JoinColumn(name = "procurement_plan_id", insertable = false, updatable = false)
+    @JoinColumn(name = "procurement_plan_id", nullable = true, insertable = false, updatable = false)
     @JsonIgnore
     private ProcurementPlan procurementPlan;
 
