@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.hibernate.annotations.Cache;
@@ -22,6 +23,7 @@ public abstract class AbstractMakueniForm extends AbstractStatusAuditableEntity 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OrderColumn(name = "index")
     @JoinColumn(name = "procurement_plan_id", insertable = false, updatable = false)
+    @JsonIgnore
     private ProcurementPlan procurementPlan;
 
     public ProcurementPlan getProcurementPlan() {

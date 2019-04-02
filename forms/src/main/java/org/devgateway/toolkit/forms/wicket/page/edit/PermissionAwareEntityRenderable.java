@@ -16,7 +16,7 @@ public interface PermissionAwareEntityRenderable<T extends AbstractStatusAuditab
             return Constants.Action.EDIT;
         }
 
-        // new activities can be added by editors in addition to admin types
+        // new forms can be added by editors in addition to admin types
         if ((roles.contains(SecurityConstants.Roles.ROLE_ADMIN)
                 || roles.contains(SecurityConstants.Roles.ROLE_USER))
                 && e.isNew()) {

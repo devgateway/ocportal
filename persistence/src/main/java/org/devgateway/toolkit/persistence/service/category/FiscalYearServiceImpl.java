@@ -17,18 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 @CacheConfig(cacheNames = "servicesCache")
 @Transactional(readOnly = true)
 public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implements FiscalYearService {
-
     @Autowired
-    private FiscalYearRepository repository;
+    private FiscalYearRepository fiscalYearRepository;
 
     @Override
     protected BaseJpaRepository<FiscalYear, Long> repository() {
-        return repository;
+        return fiscalYearRepository;
     }
 
     @Override
     public TextSearchableRepository<FiscalYear, Long> textRepository() {
-        return repository;
+        return fiscalYearRepository;
     }
 
     @Override

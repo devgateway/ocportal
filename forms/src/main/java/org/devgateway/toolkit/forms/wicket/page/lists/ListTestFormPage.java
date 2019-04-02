@@ -34,6 +34,7 @@ public class ListTestFormPage extends AbstractListStatusEntityPage<TestForm> {
 
     public ListTestFormPage(final PageParameters pageParameters) {
         super(pageParameters);
+
         this.jpaService = testFormService;
         this.editPageClass = EditTestFormPage.class;
     }

@@ -57,6 +57,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -187,13 +188,13 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     }
 
-    protected NotificationPanel createFeedbackPanel() {
+    private NotificationPanel createFeedbackPanel() {
         final NotificationPanel notificationPanel = new NotificationPanel("feedback");
         notificationPanel.setOutputMarkupId(true);
         return notificationPanel;
     }
 
-    public NavbarDropDownButton newLanguageMenu() {
+    private NavbarDropDownButton newLanguageMenu() {
         final NavbarDropDownButton languageDropDown =
                 new NavbarDropDownButton(new StringResourceModel("navbar.lang", this, null)) {
 
@@ -218,7 +219,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         return languageDropDown;
     }
 
-    protected NavbarButton<LogoutPage> newLogoutMenu() {
+    private NavbarButton<LogoutPage> newLogoutMenu() {
         // logout menu
         final NavbarButton<LogoutPage> logoutMenu =
                 new NavbarButton<LogoutPage>(LogoutPage.class, new StringResourceModel("navbar.logout", this, null));
@@ -228,9 +229,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
         return logoutMenu;
     }
 
-    protected NavbarButton<EditUserPage> newAccountMenu() {
+    private NavbarButton<EditUserPage> newAccountMenu() {
         final PageParameters pageParametersForAccountPage = new PageParameters();
         final Person person = SecurityUtil.getCurrentAuthenticatedPerson();
+
         // account menu
         Model<String> account = null;
         if (person != null) {
@@ -242,23 +244,23 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 new NavbarButton<>(EditUserPage.class, pageParametersForAccountPage, account);
         accountMenu.setIconType(FontAwesomeIconType.user);
         MetaDataRoleAuthorizationStrategy.authorize(accountMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+
         return accountMenu;
     }
 
-    protected NavbarButton<Homepage> newHomeMenu() {
+    private NavbarButton<Homepage> newHomeMenu() {
         // home
-        NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class, Model.of("Home"));
+        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class, Model.of("Home"));
         homeMenu.setIconType(FontAwesomeIconType.home);
         MetaDataRoleAuthorizationStrategy.authorize(homeMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
         return homeMenu;
     }
 
 
-    protected NavbarDropDownButton newMetadataMenu() {
-        // admin menu
-        NavbarDropDownButton adminMenu = new NavbarDropDownButton(new StringResourceModel("navbar.metadata",
-                this, null
-        )) {
+    private NavbarDropDownButton newMetadataMenu() {
+        // metadata menu
+        final NavbarDropDownButton metadataMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.metadata", this, null)) {
 
             @Override
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
@@ -277,8 +279,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         ListTargetGroupPage.class, null,
                         new StringResourceModel("navbar.targetgroup", this, null))
                         .setIconType(FontAwesomeIconType.object_group));
-                
-                list.add(new MenuBookmarkablePageLink<ListTargetGroupPage>(
+
+                list.add(new MenuBookmarkablePageLink<ListItemPage>(
                         ListItemPage.class, null,
                         new StringResourceModel("navbar.items", this, null))
                         .setIconType(FontAwesomeIconType.list));
@@ -287,18 +289,39 @@ public abstract class BasePage extends GenericWebPage<Void> {
             }
         };
 
-        adminMenu.setIconType(FontAwesomeIconType.code);
-        MetaDataRoleAuthorizationStrategy.authorize(adminMenu, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        metadataMenu.setIconType(FontAwesomeIconType.code);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
-        return adminMenu;
+        return metadataMenu;
     }
 
-    protected NavbarDropDownButton newAdminMenu() {
+    private NavbarDropDownButton newFormMenu() {
+        // form menu
+        final NavbarDropDownButton formMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.forms", this, null)) {
 
+            @Override
+            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
+                final List<AbstractLink> list = new ArrayList<>();
+
+                list.add(new MenuBookmarkablePageLink<ListProcurementPlanPage>(ListProcurementPlanPage.class, null,
+                        new StringResourceModel("navbar.procurementPlan", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+
+                return list;
+            }
+        };
+
+        formMenu.setIconType(FontAwesomeIconType.wpforms);
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+
+        return formMenu;
+    }
+
+    private NavbarDropDownButton newAdminMenu() {
         // admin menu
-        NavbarDropDownButton adminMenu = new NavbarDropDownButton(new StringResourceModel("navbar.admin", this, null)) {
-            private static final long serialVersionUID = 1L;
-
+        final NavbarDropDownButton adminMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.admin", this, null)) {
             @Override
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
@@ -392,8 +415,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
         navbar.setInverted(true);
 
         navbar.addComponents(
-                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, newHomeMenu(), newMetadataMenu(),
-                        newAdminMenu(), newAccountMenu(), newLogoutMenu()
+                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, newHomeMenu(), newFormMenu(),
+                        newMetadataMenu(), newAdminMenu(), newAccountMenu(), newLogoutMenu()
                 ));
 
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));
