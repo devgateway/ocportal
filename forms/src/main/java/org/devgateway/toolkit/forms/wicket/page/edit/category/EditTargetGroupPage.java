@@ -17,11 +17,11 @@ import org.wicketstuff.annotation.mount.MountPath;
 @MountPath("/targetgroup")
 public class EditTargetGroupPage extends AbstractCategoryEditPage<TargetGroup> {
     @SpringBean
-    private TargetGroupService service;
+    private TargetGroupService targetGroupService;
 
     public EditTargetGroupPage(final PageParameters parameters) {
         super(parameters);
-        jpaService = service;
+        jpaService = targetGroupService;
         listPageClass = ListTargetGroupPage.class;
     }
 

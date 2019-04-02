@@ -19,12 +19,12 @@ import org.wicketstuff.annotation.mount.MountPath;
 @MountPath("/procurementPlans")
 public class ListProcurementPlanPage extends ListAbstractMakueniFormPage<ProcurementPlan> {
     @SpringBean
-    protected ProcurementPlanService service;
+    protected ProcurementPlanService procurementPlanService;
 
     public ListProcurementPlanPage(final PageParameters parameters) {
         super(parameters);
 
-        this.jpaService = service;
+        this.jpaService = procurementPlanService;
         this.editPageClass = EditProcurementPlanPage.class;
     }
 

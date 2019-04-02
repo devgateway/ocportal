@@ -30,12 +30,12 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class ListDepartmentPage extends AbstractListCategoryPage<Department> {
 
     @SpringBean
-    protected DepartmentService service;
+    protected DepartmentService departmentService;
 
     public ListDepartmentPage(final PageParameters pageParameters) {
         super(pageParameters);
 
-        this.jpaService = service;
+        this.jpaService = departmentService;
         this.editPageClass = EditDepartmentPage.class;
     }
 

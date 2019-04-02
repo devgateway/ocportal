@@ -73,7 +73,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      *
      * @return
      */
-    private T newInstance() {
+    protected T newInstance() {
         return jpaService.newInstance();
     }
 

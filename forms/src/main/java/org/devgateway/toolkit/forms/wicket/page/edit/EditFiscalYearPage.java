@@ -19,7 +19,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditFiscalYearPage extends AbstractEditPage<FiscalYear> {
 
     @SpringBean
-    private FiscalYearService service;
+    private FiscalYearService fiscalYearService;
 
     private DateFieldBootstrapFormComponent endDate;
 
@@ -27,7 +27,7 @@ public class EditFiscalYearPage extends AbstractEditPage<FiscalYear> {
 
     public EditFiscalYearPage(final PageParameters parameters) {
         super(parameters);
-        jpaService = service;
+        jpaService = fiscalYearService;
         listPageClass = ListFiscalYearPage.class;
     }
 

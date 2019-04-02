@@ -20,8 +20,6 @@ public abstract class AbstractMakueniFormFilterState<T extends AbstractMakueniFo
         extends StatusAuditableEntityFilterState<T> {
     private ProcurementPlan procurementPlan;
 
-    private Department department;
-
     @Override
     public Specification<T> getSpecification() {
         return (root, query, cb) -> {

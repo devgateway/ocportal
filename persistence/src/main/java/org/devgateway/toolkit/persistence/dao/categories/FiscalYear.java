@@ -29,12 +29,6 @@ import java.util.Date;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FiscalYear extends AbstractAuditableEntity implements Labelable {
-
-    @Override
-    public AbstractAuditableEntity getParent() {
-        return null;
-    }
-
     private String name;
 
     private Date startDate;
@@ -65,9 +59,13 @@ public class FiscalYear extends AbstractAuditableEntity implements Labelable {
         this.endDate = endDate;
     }
 
+    @Override
+    public AbstractAuditableEntity getParent() {
+        return null;
+    }
 
     @Override
-    public void setLabel(String label) {
+    public void setLabel(final String label) {
         setName(label);
     }
 

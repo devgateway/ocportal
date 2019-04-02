@@ -19,9 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"),
-        @Index(columnList = "department_id"),
-        @Index(columnList = "fiscal_year_id")})
+@Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
 public class ProcurementPlan extends AbstractMakueniForm {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(fetch = FetchType.EAGER)
