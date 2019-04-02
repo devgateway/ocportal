@@ -6,7 +6,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.service.RoleService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
@@ -29,9 +28,6 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
     @SpringBean
     private FiscalYearService fiscalYearService;
 
-    @SpringBean
-    private RoleService roleService;
-
     public EditProcurementPlanPage(final PageParameters parameters) {
         super(parameters);
 
@@ -46,7 +42,7 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
         ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService, false)
                 .required();
 
-        // ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", roleService, false)
-        //         .required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService, false)
+                .required();
     }
 }

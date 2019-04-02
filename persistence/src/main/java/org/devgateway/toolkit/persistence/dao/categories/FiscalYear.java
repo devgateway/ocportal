@@ -12,6 +12,7 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -27,7 +28,7 @@ import java.util.Date;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class FiscalYear extends AbstractAuditableEntity {
+public class FiscalYear extends AbstractAuditableEntity implements Labelable {
 
     @Override
     public AbstractAuditableEntity getParent() {
@@ -62,5 +63,21 @@ public class FiscalYear extends AbstractAuditableEntity {
 
     public void setEndDate(final Date endDate) {
         this.endDate = endDate;
+    }
+
+
+    @Override
+    public void setLabel(String label) {
+        setName(label);
+    }
+
+    @Override
+    public String getLabel() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return getLabel();
     }
 }

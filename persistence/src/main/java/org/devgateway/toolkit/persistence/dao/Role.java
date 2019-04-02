@@ -65,12 +65,10 @@ public class Role extends GenericPersistable implements Serializable, Comparable
     @Override
     public void setLabel(final String label) {
         setAuthority(label);
-
     }
 
     @Override
     public String getLabel() {
         return getAuthority();
     }
-
 }
