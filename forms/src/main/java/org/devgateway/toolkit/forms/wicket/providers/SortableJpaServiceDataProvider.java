@@ -90,7 +90,7 @@ public class SortableJpaServiceDataProvider<T extends GenericPersistable & Seria
      */
     @Override
     public IModel<T> model(final T object) {
-        return new PersistableJpaRepositoryModel<T>(object, jpaService);
+        return new PersistableJpaRepositoryModel<>(object, jpaService);
     }
 
     @Override

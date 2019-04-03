@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -32,6 +34,13 @@ public abstract class ListAbstractMakueniFormPage<T extends AbstractMakueniForm>
 
     @Override
     protected void onInitialize() {
+        // just replace the page title with the name of the class
+        // instead of having .properties files only for the page title
+        addOrReplace(new Label("pageTitle",
+                StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
+                        this.getClass().getSimpleName().replaceAll("List", "").replaceAll("Page", "")), ' ')
+                        + " List"));
+
         final Boolean isProcurementPlan = this instanceof ListProcurementPlanPage;
         final List<Department> departments = departmentService.findAll();
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
