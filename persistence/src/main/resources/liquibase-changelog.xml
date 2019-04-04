@@ -244,4 +244,21 @@
             <column name="DTYPE" value="TargetGroup"/>
         </insert>
     </changeSet>
+    
+       <changeSet id="OCMAKU-35" author="gmutuhu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Development"/>
+            <column name="DTYPE" value="ChargeAccount"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Recurrent"/>
+            <column name="DTYPE" value="ChargeAccount"/>
+        </insert>       
+    </changeSet>
 </databaseChangeLog>
