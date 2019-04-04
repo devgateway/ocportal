@@ -244,4 +244,39 @@
             <column name="DTYPE" value="TargetGroup"/>
         </insert>
     </changeSet>
+    <changeSet id="OCMAKU-34" author="gmutuhu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Tender Form and Price schedule"/>
+            <column name="DTYPE" value="ContractDocument"/>
+        </insert>
+		<insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Schedule of Requirements"/>
+            <column name="DTYPE" value="ContractDocument"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Details of Cover"/>
+            <column name="DTYPE" value="ContractDocument"/>
+        </insert>
+		<insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Conditions of the Contract"/>
+            <column name="DTYPE" value="ContractDocument"/>
+        </insert>
+		<insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Special Conditions of Contract"/>
+            <column name="DTYPE" value="ContractDocument"/>
+        </insert>
+		<insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Procuring Entity Notification of Award"/>
+            <column name="DTYPE" value="ContractDocument"/>
+        </insert>
+       </changeSet>
 </databaseChangeLog>
