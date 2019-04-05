@@ -161,5 +161,11 @@ hr.edit-separator {
     width: 100% !important;
 }
 
+.section-title {
+    color: #2e6da4;
+    font-size: 12pt;
+    font-weight: bold !important;
+}
+
 /*
 -------------------------------------------------- */

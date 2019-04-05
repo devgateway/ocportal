@@ -8,6 +8,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
+import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 
 /**
  * @author idobre
@@ -16,6 +17,9 @@ import org.devgateway.toolkit.persistence.service.category.ItemService;
 public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPlan> {
     @SpringBean
     private ItemService itemService;
+
+    @SpringBean
+    private ProcurementMethodService procurementMethodService;
 
     public PlanItemPanel(final String id) {
         super(id);
@@ -34,11 +38,22 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         ComponentUtil.addSelect2ChoiceField(item, "item", itemService, false);
         ComponentUtil.addTextField(item, "description", false);
 
-        ComponentUtil.addLongTextField(item, "estimatedCost", false);
+        ComponentUtil.addDoubleField(item, "estimatedCost", false);
         ComponentUtil.addTextField(item, "unitOfIssue", false);
         ComponentUtil.addIntegerTextField(item, "quantity", false);
-        ComponentUtil.addIntegerTextField(item, "unitPrice", false);
-        ComponentUtil.addLongTextField(item, "totalCost", false);
+        ComponentUtil.addDoubleField(item, "unitPrice", false);
+        ComponentUtil.addDoubleField(item, "totalCost", false);
+
+        ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService, false);
+        ComponentUtil.addTextField(item, "sourceOfFunds", false);
+
+
+
+
+        ComponentUtil.addDoubleField(item, "quarter1st", false);
+        ComponentUtil.addDoubleField(item, "quarter2nd", false);
+        ComponentUtil.addDoubleField(item, "quarter3rd", false);
+        ComponentUtil.addDoubleField(item, "quarter4th", false);
     }
 
     @Override
