@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -48,6 +49,11 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> {
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private TargetGroup targetGroup;
+
+    private Double targetGroupValue;
 
     private Double quarter1st;
 
@@ -127,6 +133,22 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> {
 
     public void setSourceOfFunds(final String sourceOfFunds) {
         this.sourceOfFunds = sourceOfFunds;
+    }
+
+    public TargetGroup getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(final TargetGroup targetGroup) {
+        this.targetGroup = targetGroup;
+    }
+
+    public Double getTargetGroupValue() {
+        return targetGroupValue;
+    }
+
+    public void setTargetGroupValue(final Double targetGroupValue) {
+        this.targetGroupValue = targetGroupValue;
     }
 
     public Double getQuarter1st() {

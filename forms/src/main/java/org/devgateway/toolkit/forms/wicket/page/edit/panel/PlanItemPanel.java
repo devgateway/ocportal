@@ -9,6 +9,7 @@ import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
+import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 
 /**
  * @author idobre
@@ -21,12 +22,15 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     @SpringBean
     private ProcurementMethodService procurementMethodService;
 
+    @SpringBean
+    private TargetGroupService targetGroupService;
+
     public PlanItemPanel(final String id) {
         super(id);
     }
 
     @Override
-    public PlanItem createNewChild(IModel<ProcurementPlan> parentModel) {
+    public PlanItem createNewChild(final IModel<ProcurementPlan> parentModel) {
         final PlanItem child = new PlanItem();
         child.setParent(parentModel.getObject());
 
@@ -34,7 +38,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     }
 
     @Override
-    public void populateCompoundListItem(ListItem<PlanItem> item) {
+    public void populateCompoundListItem(final ListItem<PlanItem> item) {
         ComponentUtil.addSelect2ChoiceField(item, "item", itemService, false);
         ComponentUtil.addTextField(item, "description", false);
 
@@ -46,9 +50,8 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
         ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService, false);
         ComponentUtil.addTextField(item, "sourceOfFunds", false);
-
-
-
+        ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService, false);
+        ComponentUtil.addDoubleField(item, "targetGroupValue", false);
 
         ComponentUtil.addDoubleField(item, "quarter1st", false);
         ComponentUtil.addDoubleField(item, "quarter2nd", false);
@@ -57,7 +60,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     }
 
     @Override
-    protected boolean filterListItem(PlanItem planItem) {
+    protected boolean filterListItem(final PlanItem planItem) {
         return true;
     }
 

@@ -25,7 +25,7 @@ public abstract class AbstractChildAuditableEntity<P extends AbstractAuditableEn
         return parent;
     }
 
-    public void setParent(P parent) {
+    public void setParent(final P parent) {
         this.parent = parent;
     }
 
