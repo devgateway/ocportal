@@ -66,6 +66,11 @@ public class TextFieldBootstrapFormComponent<TYPE> extends GenericBootstrapFormC
         return this;
     }
 
+    public TextFieldBootstrapFormComponent<TYPE> longValue() {
+        field.setType(Long.class);
+        return this;
+    }
+
     public TextFieldBootstrapFormComponent<TYPE> decimal() {
         field.setType(BigDecimal.class);
         return this;

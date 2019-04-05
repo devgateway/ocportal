@@ -157,5 +157,9 @@ hr.edit-separator {
     float: left;
 }
 
-/* List View Styles
+.select2.select2-container {
+    width: 100% !important;
+}
+
+/*
 -------------------------------------------------- */

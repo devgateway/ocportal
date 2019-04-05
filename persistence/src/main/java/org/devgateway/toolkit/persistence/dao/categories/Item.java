@@ -1,10 +1,10 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
-import javax.persistence.Entity;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+
+import javax.persistence.Entity;
 
 /**
  * 
@@ -23,5 +23,10 @@ public class Item extends Category {
 
     public void setItemCode(final String itemCode) {
         this.itemCode = itemCode;
+    }
+
+    @Override
+    public String toString() {
+        return getItemCode() + " - " + getLabel();
     }
 }
