@@ -4,6 +4,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
@@ -44,5 +45,7 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
 
         ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService, false)
                 .required();
+
+        editForm.add(new PlanItemPanel("planItems"));
     }
 }
