@@ -23,6 +23,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteC
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteStoredImageResourceReference;
 import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.webjars.WicketWebjars;
+import nl.dries.wicket.hibernate.dozer.DozerRequestCycleListener;
 import nl.dries.wicket.hibernate.dozer.SessionFinderHolder;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
@@ -157,25 +158,31 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         // -Dwicket.configuration=deployment
         // The default is Development, so this code is not used
         if (usesDeploymentConfig()) {
-            getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy(
-                    "-v-",
+            getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy("-v-",
                     new CachingResourceVersion(new Adler32ResourceVersion())
             ));
-
             getResourceSettings().setJavaScriptCompressor(
                     new GoogleClosureJavaScriptCompressor(CompilationLevel.SIMPLE_OPTIMIZATIONS));
             getResourceSettings().setCssCompressor(new YuiCssCompressor());
+            getResourceSettings().setUseMinifiedResources(true);
 
             // getFrameworkSettings().setSerializer(new DeflatedJavaSerializer(getApplicationKey()));
-            FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
+            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
             getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
 
             getMarkupSettings().setStripComments(true);
+            getMarkupSettings().setCompressWhitespace(true);
+            getMarkupSettings().setStripWicketTags(true);
         } else {
             getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
+
+            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
+            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
         }
 
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
+        // be sure that we have added Dozer Listener
+        getRequestCycleListeners().add(new DozerRequestCycleListener());
     }
 
     @Override
