@@ -244,4 +244,10 @@
             <column name="DTYPE" value="TargetGroup"/>
         </insert>
     </changeSet>
+    <changeSet id="OCMAKU-37" author="gmutuhu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>            
+        </preConditions>
+        <sqlFile path="Items.sql"/>
+    </changeSet>
 </databaseChangeLog>
