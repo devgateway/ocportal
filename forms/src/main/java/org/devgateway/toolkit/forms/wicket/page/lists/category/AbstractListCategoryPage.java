@@ -13,7 +13,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Category;
  * @author idobre
  * @since 2019-03-11
  */
-public class AbstractListCategoryPage<T extends Category> extends AbstractListPage<T> {
+public abstract class AbstractListCategoryPage<T extends Category> extends AbstractListPage<T> {
 
     public AbstractListCategoryPage(final PageParameters parameters) {
         super(parameters);

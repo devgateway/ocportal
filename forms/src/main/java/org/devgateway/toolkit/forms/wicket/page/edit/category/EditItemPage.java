@@ -24,11 +24,11 @@ import org.wicketstuff.annotation.mount.MountPath;
 @MountPath("/item")
 public class EditItemPage extends AbstractCategoryEditPage<Item> {
     @SpringBean
-    private ItemService service;
+    private ItemService itemService;
 
     public EditItemPage(final PageParameters parameters) {
         super(parameters);
-        jpaService = service;
+        jpaService = itemService;
         listPageClass = ListItemPage.class;
     }
 
@@ -39,7 +39,7 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
         
         code.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueItemCode"),
-                service::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
+                itemService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
                 Item_.itemCode), v), editForm.getModel()
         ));
 
@@ -48,7 +48,7 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
     private void addUniqueNameValidator() {
         label.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueName"),
-                service::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
+                itemService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
                 Item_.label), v), editForm.getModel()
         ));
     }

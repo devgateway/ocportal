@@ -157,5 +157,15 @@ hr.edit-separator {
     float: left;
 }
 
-/* List View Styles
+.select2.select2-container {
+    width: 100% !important;
+}
+
+.section-title {
+    color: #2e6da4;
+    font-size: 12pt;
+    font-weight: bold !important;
+}
+
+/*
 -------------------------------------------------- */

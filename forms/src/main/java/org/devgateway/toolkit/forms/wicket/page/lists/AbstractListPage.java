@@ -72,13 +72,13 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     protected Class<? extends AbstractEditPage<T>> editPageClass;
 
-    protected AjaxFallbackBootstrapDataTable<T, String> dataTable;
+    protected final AjaxFallbackBootstrapDataTable<T, String> dataTable;
 
-    protected List<IColumn<T, String>> columns;
+    protected final List<IColumn<T, String>> columns;
 
     protected BaseJpaService<T> jpaService;
 
-    private SortableJpaServiceDataProvider<T> dataProvider;
+    private final SortableJpaServiceDataProvider<T> dataProvider;
 
     private BootstrapBookmarkablePageLink<T> editPageLink;
 
@@ -91,6 +91,8 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         super(parameters);
 
         columns = new ArrayList<>();
+        dataProvider = new SortableJpaServiceDataProvider<>();
+        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
         columns.add(new AbstractColumn<T, String>(new Model<>("#")) {
             @Override
@@ -119,7 +121,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             throw new NullEditPageClassException();
         }
 
-        dataProvider = new SortableJpaServiceDataProvider<>(jpaService);
+        dataProvider.setJpaService(jpaService);
         dataProvider.setFilterState(newFilterState());
 
         // create the excel download form; by default this form is hidden and we should make it visible only to pages
@@ -138,7 +140,6 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 cellItem.add(getActionPanel(componentId, model));
             }
         });
-        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
         final ResettingFilterForm<JpaFilterState<T>> filterForm =
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);

@@ -6,11 +6,17 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author idobre
@@ -19,9 +25,7 @@ import javax.persistence.Table;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"),
-        @Index(columnList = "department_id"),
-        @Index(columnList = "fiscal_year_id")})
+@Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
 public class ProcurementPlan extends AbstractMakueniForm {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(fetch = FetchType.EAGER)
@@ -31,8 +35,19 @@ public class ProcurementPlan extends AbstractMakueniForm {
     @ManyToOne(fetch = FetchType.EAGER)
     private FiscalYear fiscalYear;
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @OrderColumn(name = "index")
+    private List<PlanItem> planItems = new ArrayList<>();
+
     public ProcurementPlan() {
-        this.setProcurementPlan(this);
+
+    }
+
+    @Override
+    public ProcurementPlan getProcurementPlan() {
+        return this;
     }
 
     public Department getDepartment() {

@@ -19,12 +19,12 @@ import org.wicketstuff.annotation.mount.MountPath;
 @MountPath(value = "/targetgroups")
 public class ListTargetGroupPage extends AbstractListCategoryPage<TargetGroup> {
     @SpringBean
-    private TargetGroupService service;
+    private TargetGroupService targetGroupService;
 
     public ListTargetGroupPage(final PageParameters pageParameters) {
         super(pageParameters);
 
-        this.jpaService = service;
+        this.jpaService = targetGroupService;
         this.editPageClass = EditTargetGroupPage.class;
     }
 

@@ -6,27 +6,28 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/fiscalYear")
 public class EditFiscalYearPage extends AbstractEditPage<FiscalYear> {
 
     @SpringBean
-    private FiscalYearService service;
+    private FiscalYearService fiscalYearService;
 
     private DateFieldBootstrapFormComponent endDate;
+
     private DateFieldBootstrapFormComponent startDate;
 
     public EditFiscalYearPage(final PageParameters parameters) {
         super(parameters);
-        jpaService = service;
+        jpaService = fiscalYearService;
         listPageClass = ListFiscalYearPage.class;
     }
 

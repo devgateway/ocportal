@@ -73,7 +73,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      *
      * @return
      */
-    private T newInstance() {
+    protected T newInstance() {
         return jpaService.newInstance();
     }
 
@@ -267,7 +267,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
             // save the object and go back to the list page
-            T saveable = editForm.getModelObject();
+            final T saveable = editForm.getModelObject();
 
             // saves the entity and flushes the changes
             jpaService.saveAndFlush(saveable);

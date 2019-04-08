@@ -168,6 +168,18 @@ public final class ComponentUtil {
         return textField;
     }
 
+    public static TextFieldBootstrapFormComponent<Long> addLongTextField(
+            final WebMarkupContainer parent,
+            final String id,
+            final boolean isFloatedInput) {
+        final TextFieldBootstrapFormComponent<Long> textField = new TextFieldBootstrapFormComponent<>(id);
+        textField.setIsFloatedInput(isFloatedInput);
+        textField.longValue();
+        parent.add(textField);
+
+        return textField;
+    }
+
     public static TextFieldBootstrapFormComponent<String> addDoubleField(
             final WebMarkupContainer parent,
             final String id,

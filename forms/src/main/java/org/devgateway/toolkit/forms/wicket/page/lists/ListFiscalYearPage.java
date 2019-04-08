@@ -28,12 +28,12 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class ListFiscalYearPage extends AbstractListPage<FiscalYear> {
 
     @SpringBean
-    protected FiscalYearService service;
+    protected FiscalYearService fiscalYearService;
 
     public ListFiscalYearPage(final PageParameters pageParameters) {
         super(pageParameters);
 
-        this.jpaService = service;
+        this.jpaService = fiscalYearService;
         this.editPageClass = EditFiscalYearPage.class;
     }
 
