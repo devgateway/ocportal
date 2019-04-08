@@ -28,7 +28,7 @@ import java.util.Date;
 public class ViewModeConverterModel<T> implements IModel<String> {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-    private IModel<T> originalModel;
+    private final IModel<T> originalModel;
 
     public ViewModeConverterModel(final IModel<T> originalModel) {
         this.originalModel = originalModel;

@@ -22,6 +22,7 @@ public abstract class EditAbstractMakueniFormPage<T extends AbstractMakueniForm>
     protected void onInitialize() {
         super.onInitialize();
 
+        enableDisableAutosaveFields(null);
     }
 
     @Override

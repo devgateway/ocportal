@@ -41,20 +41,16 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService, false)
-                .required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService, false).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService, false).required();
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService, false)
-                .required();
+        editForm.add(new PlanItemPanel("planItems"));
 
         final FileInputBootstrapFormComponent procurementPlanDocs =
                 new FileInputBootstrapFormComponent("procurementPlanDocs");
         procurementPlanDocs.required();
         editForm.add(procurementPlanDocs);
 
-        ComponentUtil.addDateField(editForm, "approvedDate", false)
-                .required();
-
-        editForm.add(new PlanItemPanel("planItems"));
+        ComponentUtil.addDateField(editForm, "approvedDate", false).required();
     }
 }

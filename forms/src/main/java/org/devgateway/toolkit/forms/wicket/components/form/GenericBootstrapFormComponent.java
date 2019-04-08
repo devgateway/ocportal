@@ -337,7 +337,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
             getAjaxFormComponentUpdatingBehavior();
         }
 
-        viewModeField = new Label("viewModeField", new ViewModeConverterModel<TYPE>(getModel()));
+        viewModeField = new Label("viewModeField", new ViewModeConverterModel<>(getModel()));
         viewModeField.setEscapeModelStrings(false);
         viewModeField.setVisibilityAllowed(isViewMode());
         border.add(viewModeField);
