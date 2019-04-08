@@ -10,7 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OrderColumn;
+import java.util.Date;
 
 /**
  * @author idobre
@@ -21,10 +21,11 @@ public abstract class AbstractMakueniForm extends AbstractStatusAuditableEntity 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OrderColumn(name = "index")
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
     private ProcurementPlan procurementPlan;
+
+    private Date approvedDate;
 
     public ProcurementPlan getProcurementPlan() {
         return procurementPlan;
@@ -37,5 +38,13 @@ public abstract class AbstractMakueniForm extends AbstractStatusAuditableEntity 
     @Override
     public AbstractAuditableEntity getParent() {
         return null;
+    }
+
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(final Date approvedDate) {
+        this.approvedDate = approvedDate;
     }
 }
