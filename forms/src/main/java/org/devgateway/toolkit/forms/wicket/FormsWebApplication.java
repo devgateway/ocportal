@@ -29,6 +29,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
@@ -183,6 +184,13 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
         // be sure that we have added Dozer Listener
         getRequestCycleListeners().add(new DozerRequestCycleListener());
+
+        // additional safety guard for opening in the session the same pages
+        Application.get().getComponentInitializationListeners().add(component -> {
+            if (component instanceof WebPage) {
+                component.add(new AjaxNewWindowNotifyingBehavior());
+            }
+        });
     }
 
     @Override
