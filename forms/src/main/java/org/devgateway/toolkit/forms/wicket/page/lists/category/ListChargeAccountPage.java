@@ -3,7 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.lists.category;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.table.filter.ChargeAccountFilterState;
+import org.devgateway.toolkit.forms.wicket.components.table.filter.category.ChargeAccountFilterState;
 import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditChargeAccountPage;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
