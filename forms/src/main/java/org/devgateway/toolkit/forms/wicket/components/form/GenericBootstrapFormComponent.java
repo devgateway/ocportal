@@ -24,7 +24,6 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -321,7 +320,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
             border.add(new TransparentWebMarkupContainer("tooltipLabel").setVisibilityAllowed(false));
         }
 
-        add(new WebMarkupContainer("revisions")); // this is just a placeholder
+        add(new TransparentWebMarkupContainer("revisions")); // this is just a placeholder
     }
 
     /**

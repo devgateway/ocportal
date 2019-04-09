@@ -52,10 +52,10 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
 
     @Override
     public void populateCompoundListItem(final ListItem<TestFormChild> item) {
-        final TextFieldBootstrapFormComponent<String> header = ComponentUtil.addTextField(item, "header", false);
+        final TextFieldBootstrapFormComponent<String> header = ComponentUtil.addTextField(item, "header");
         header.required();
 
-        final TextFieldBootstrapFormComponent<Integer> value = ComponentUtil.addIntegerTextField(item, "value", false);
+        final TextFieldBootstrapFormComponent<Integer> value = ComponentUtil.addIntegerTextField(item, "value");
         value.required();
     }
 
@@ -89,7 +89,7 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
         protected void onInitialize() {
             super.onInitialize();
 
-            header = ComponentUtil.addTextLoginField(this, "header", false);
+            header = ComponentUtil.addTextLoginField(this, "header");
 
             final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
                     new Model<>("Filter"),

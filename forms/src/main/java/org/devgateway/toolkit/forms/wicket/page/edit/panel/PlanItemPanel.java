@@ -39,24 +39,24 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
-        ComponentUtil.addSelect2ChoiceField(item, "item", itemService, false).required();
-        ComponentUtil.addTextField(item, "description", false).required();
+        ComponentUtil.addSelect2ChoiceField(item, "item", itemService).required();
+        ComponentUtil.addTextField(item, "description").required();
 
-        ComponentUtil.addDoubleField(item, "estimatedCost", false).required();
-        ComponentUtil.addTextField(item, "unitOfIssue", false).required();
-        ComponentUtil.addIntegerTextField(item, "quantity", false).required();
-        ComponentUtil.addDoubleField(item, "unitPrice", false).required();
-        ComponentUtil.addDoubleField(item, "totalCost", false).required();
+        ComponentUtil.addDoubleField(item, "estimatedCost").required();
+        ComponentUtil.addTextField(item, "unitOfIssue").required();
+        ComponentUtil.addIntegerTextField(item, "quantity").required();
+        ComponentUtil.addDoubleField(item, "unitPrice").required();
+        ComponentUtil.addDoubleField(item, "totalCost").required();
 
-        ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService, false).required();
-        ComponentUtil.addTextField(item, "sourceOfFunds", false);
-        ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService, false);
-        ComponentUtil.addDoubleField(item, "targetGroupValue", false);
+        ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
+        ComponentUtil.addTextField(item, "sourceOfFunds");
+        ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
+        ComponentUtil.addDoubleField(item, "targetGroupValue");
 
-        ComponentUtil.addDoubleField(item, "quarter1st", false);
-        ComponentUtil.addDoubleField(item, "quarter2nd", false);
-        ComponentUtil.addDoubleField(item, "quarter3rd", false);
-        ComponentUtil.addDoubleField(item, "quarter4th", false);
+        ComponentUtil.addDoubleField(item, "quarter1st");
+        ComponentUtil.addDoubleField(item, "quarter2nd");
+        ComponentUtil.addDoubleField(item, "quarter3rd");
+        ComponentUtil.addDoubleField(item, "quarter4th");
     }
 
     @Override

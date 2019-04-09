@@ -33,8 +33,7 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
     }
 
     private void addCode() {
-        final TextFieldBootstrapFormComponent<String> code = ComponentUtil.addTextField(editForm, "itemCode",
-                false);
+        final TextFieldBootstrapFormComponent<String> code = ComponentUtil.addTextField(editForm, "itemCode");
         code.required();
         
         code.getField().add(new UniquePropertyEntryValidator<>(

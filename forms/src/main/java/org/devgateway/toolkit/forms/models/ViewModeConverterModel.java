@@ -26,7 +26,7 @@ import java.util.Date;
  *         convert the model object to something printable (string-like)
  */
 public class ViewModeConverterModel<T> implements IModel<String> {
-    final private static SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd-MM-yyyy");
 
     private final IModel<T> originalModel;
 
@@ -55,7 +55,7 @@ public class ViewModeConverterModel<T> implements IModel<String> {
 
         // convert date to a nicer format
         if (object instanceof Date) {
-            return sdf.format((Date) object);
+            return SDF.format((Date) object);
         }
 
         // alas just return the string value of the object
