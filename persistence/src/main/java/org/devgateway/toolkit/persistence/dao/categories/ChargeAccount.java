@@ -1,10 +1,8 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
-import javax.persistence.Entity;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+
+import javax.persistence.Entity;
 
 /**
  * @author gmutuhu
@@ -12,7 +10,6 @@ import org.hibernate.envers.Audited;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class ChargeAccount extends Category {    
+public class ChargeAccount extends Category {
 
 }
