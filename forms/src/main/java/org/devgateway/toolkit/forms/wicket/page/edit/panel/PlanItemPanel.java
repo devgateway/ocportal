@@ -137,7 +137,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             return item;
         }
 
-        public void setItem(Item item) {
+        public void setItem(final Item item) {
             this.item = item;
         }
     }
