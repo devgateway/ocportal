@@ -65,7 +65,7 @@ public class Person extends AbstractAuditableEntity implements UserDetails {
     private Boolean changePasswordNextSignIn;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Department department;
 
     @ManyToMany(fetch = FetchType.EAGER)

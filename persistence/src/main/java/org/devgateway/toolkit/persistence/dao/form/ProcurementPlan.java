@@ -30,11 +30,11 @@ import java.util.Set;
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
 public class ProcurementPlan extends AbstractMakueniForm {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Department department;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private FiscalYear fiscalYear;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

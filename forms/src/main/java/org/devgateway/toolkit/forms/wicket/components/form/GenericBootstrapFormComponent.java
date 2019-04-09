@@ -318,7 +318,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
             tooltipLabel.setConfigWithTrigger(configWithTrigger);
             border.add(tooltipLabel);
         } else {
-            border.add(new TransparentWebMarkupContainer("tooltipLabel"));
+            border.add(new TransparentWebMarkupContainer("tooltipLabel").setVisibilityAllowed(false));
         }
 
         add(new WebMarkupContainer("revisions")); // this is just a placeholder
