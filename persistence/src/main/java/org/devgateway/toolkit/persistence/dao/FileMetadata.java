@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -32,6 +34,7 @@ import java.io.Serializable;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "name")})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileMetadata extends AbstractAuditableEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

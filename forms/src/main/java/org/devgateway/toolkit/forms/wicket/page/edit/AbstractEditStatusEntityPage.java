@@ -50,7 +50,6 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
-import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.select2.Select2Choice;
@@ -169,7 +168,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private void checkAndSendEventForDisableEditing() {
         if (!Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT)
-                || Constants.Action.VIEW.equals(getAllowedAccess(editForm.getModelObject()))) {
+                || SecurityConstants.Action.VIEW.equals(getAllowedAccess(editForm.getModelObject()))) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
     }
@@ -292,6 +291,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                         // do nothing - keep this field enabled
                     }
                 };
+        comment.setShowTooltip(true);
         return comment;
     }
 

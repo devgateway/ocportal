@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
@@ -40,12 +41,16 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService, false)
-                .required();
-
-        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService, false)
-                .required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService, false).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService, false).required();
 
         editForm.add(new PlanItemPanel("planItems"));
+
+        final FileInputBootstrapFormComponent procurementPlanDocs =
+                new FileInputBootstrapFormComponent("procurementPlanDocs");
+        procurementPlanDocs.required();
+        editForm.add(procurementPlanDocs);
+
+        ComponentUtil.addDateField(editForm, "approvedDate", false).required();
     }
 }

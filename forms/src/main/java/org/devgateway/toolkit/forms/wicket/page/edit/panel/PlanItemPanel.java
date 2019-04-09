@@ -39,16 +39,16 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
-        ComponentUtil.addSelect2ChoiceField(item, "item", itemService, false);
-        ComponentUtil.addTextField(item, "description", false);
+        ComponentUtil.addSelect2ChoiceField(item, "item", itemService, false).required();
+        ComponentUtil.addTextField(item, "description", false).required();
 
-        ComponentUtil.addDoubleField(item, "estimatedCost", false);
-        ComponentUtil.addTextField(item, "unitOfIssue", false);
-        ComponentUtil.addIntegerTextField(item, "quantity", false);
-        ComponentUtil.addDoubleField(item, "unitPrice", false);
-        ComponentUtil.addDoubleField(item, "totalCost", false);
+        ComponentUtil.addDoubleField(item, "estimatedCost", false).required();
+        ComponentUtil.addTextField(item, "unitOfIssue", false).required();
+        ComponentUtil.addIntegerTextField(item, "quantity", false).required();
+        ComponentUtil.addDoubleField(item, "unitPrice", false).required();
+        ComponentUtil.addDoubleField(item, "totalCost", false).required();
 
-        ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService, false);
+        ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService, false).required();
         ComponentUtil.addTextField(item, "sourceOfFunds", false);
         ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService, false);
         ComponentUtil.addDoubleField(item, "targetGroupValue", false);

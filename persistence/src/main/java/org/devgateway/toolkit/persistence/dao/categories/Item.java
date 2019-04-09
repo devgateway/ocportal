@@ -13,8 +13,7 @@ import javax.persistence.Entity;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Item extends Category {    
+public class Item extends Category {
     private String itemCode;
     
     public String getItemCode() {

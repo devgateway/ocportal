@@ -227,11 +227,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         new AnnotatedMountScanner().scanPackage(BASE_PACKAGE_FOR_PAGES).mount(this);
 
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
-
         getApplicationSettings().setAccessDeniedPage(Homepage.class);
-
-        // deactivate ajax debug mode
-        // getDebugSettings().setAjaxDebugModeEnabled(false);
 
         configureBootstrap();
         configureSummernote();

@@ -59,14 +59,10 @@ public class TooltipLabel extends Label {
         add(AttributeModifier.append("class", "fa fa-question-circle"));
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.wicket.Component#onConfigure()
-     */
     @Override
     protected void onConfigure() {
         super.onConfigure();
+
         helpModelText = new StringResourceModel(fieldId + ".help", this);
         helpModelText.setDefaultValue("");
 

@@ -9,7 +9,6 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Service
-@CacheConfig(cacheNames = "servicesCache")
 @Transactional(readOnly = true)
 public class ItemServiceImpl  extends BaseJpaServiceImpl<Item> implements ItemService {
 

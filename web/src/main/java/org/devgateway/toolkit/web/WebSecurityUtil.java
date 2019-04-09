@@ -31,7 +31,7 @@ public class WebSecurityUtil {
     }
 
     public static boolean rolesContainsAny(final Collection<String> roleSet, final String... roles) {
-        for (String role : roles) {
+        for (final String role : roles) {
             if (roleSet.contains(role)) {
                 return true;
             }
@@ -64,7 +64,7 @@ public class WebSecurityUtil {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             return null;
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return null;
         }
@@ -76,7 +76,7 @@ public class WebSecurityUtil {
     }
 
     public static Set<String> getStringRolesForCurrentPerson() {
-        Person person = getCurrentAuthenticatedPerson();
+        final Person person = getCurrentAuthenticatedPerson();
         if (person == null) {
             return null;
         }
@@ -93,7 +93,7 @@ public class WebSecurityUtil {
         if (p == null || p.getRoles() == null) {
             return false;
         }
-        for (Role r : p.getRoles()) {
+        for (final Role r : p.getRoles()) {
             if (r.getAuthority().equalsIgnoreCase(SecurityConstants.Roles.ROLE_ADMIN)) {
                 return true;
             }
@@ -102,9 +102,7 @@ public class WebSecurityUtil {
     }
 
     public static boolean isCurrentUserAdmin() {
-        Person p = getCurrentAuthenticatedPerson();
+        final Person p = getCurrentAuthenticatedPerson();
         return isUserAdmin(p);
     }
-
-
 }

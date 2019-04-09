@@ -29,7 +29,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.time.Duration;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.security.SecurityUtil;
 import org.devgateway.toolkit.forms.wicket.SSAuthenticatedWebSession;
 import org.devgateway.toolkit.forms.wicket.components.form.PasswordFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
@@ -38,6 +37,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.service.PersonService;
+import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -147,7 +147,7 @@ public class LoginPage extends BasePage {
                     final String pass = LoginForm.this.getModelObject().getPassword();
 
                     if (session.signIn(name, pass)) {
-                        Person user = SecurityUtil.getCurrentAuthenticatedPerson();
+                        final Person user = WebSecurityUtil.getCurrentAuthenticatedPerson();
                         if (user.getChangePasswordNextSignIn()) {
                             final PageParameters pageParam = new PageParameters();
                             pageParam.add(WebConstants.PARAM_ID, user.getId());
