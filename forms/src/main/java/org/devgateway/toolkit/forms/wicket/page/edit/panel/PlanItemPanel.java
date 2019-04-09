@@ -1,15 +1,23 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
+
+import java.io.Serializable;
 
 /**
  * @author idobre
@@ -25,8 +33,24 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     @SpringBean
     private TargetGroupService targetGroupService;
 
+    private final PlanItemFilterBean listFilterBean;
+
     public PlanItemPanel(final String id) {
         super(id);
+
+        listFilterBean = new PlanItemFilterBean();
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addFilterPanel() {
+        final PlanItemFilterPanel listFilterPanel = new PlanItemFilterPanel(
+                "listFilterPanel", new CompoundPropertyModel<>(listFilterBean));
+        add(listFilterPanel);
     }
 
     @Override
@@ -61,11 +85,60 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     protected boolean filterListItem(final PlanItem planItem) {
-        return true;
+        // don't filter unsaved entities
+        if (planItem.getId() == null) {
+            return true;
+        } else {
+            if (listFilterBean.getItem() != null) {
+                // it was saved as null when it was saved as draft
+                if (planItem.getItem() == null) {
+                    return false;
+                }
+                return planItem.getItem().equals(listFilterBean.getItem());
+            }
+
+            return true;
+        }
     }
 
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
+    private class PlanItemFilterPanel extends GenericPanel<PlanItemFilterBean> {
+        PlanItemFilterPanel(final String componentId, final IModel<PlanItemFilterBean> model) {
+            super(componentId, model);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            final Select2ChoiceBootstrapFormComponent<Item> item =
+                    ComponentUtil.addSelect2ChoiceField(this, "item", itemService);
+
+            item.getField().add(new AjaxComponentUpdatingBehavior("change"));
+        }
+
+        private class AjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
+            AjaxComponentUpdatingBehavior(final String event) {
+                super(event);
+            }
+
+            @Override
+            protected void onUpdate(final AjaxRequestTarget target) {
+                // automatically rebuild all ListItems before rendering the list view
+                listView.removeAll();
+                target.add(listWrapper);
+            }
+        }
+    }
+
+    private class PlanItemFilterBean implements Serializable {
+        private Item item;
+
+        public Item getItem() {
+            return item;
+        }
+
+        public void setItem(Item item) {
+            this.item = item;
+        }
     }
 }
