@@ -6,6 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -36,10 +37,10 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
     }
 
     @Override
-    protected void addFilterForm() {
-        final ListFilterForm listFilterForm = new ListFilterForm(
-                "listFilterForm", new CompoundPropertyModel<>(listFilterBean));
-        add(listFilterForm);
+    protected void addFilterPanel() {
+        final ListFilterPanel listFilterPanel = new ListFilterPanel(
+                "listFilterPanel", new CompoundPropertyModel<>(listFilterBean));
+        add(listFilterPanel);
     }
 
     @Override
@@ -52,10 +53,10 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
 
     @Override
     public void populateCompoundListItem(final ListItem<TestFormChild> item) {
-        final TextFieldBootstrapFormComponent<String> header = ComponentUtil.addTextField(item, "header", false);
+        final TextFieldBootstrapFormComponent<String> header = ComponentUtil.addTextField(item, "header");
         header.required();
 
-        final TextFieldBootstrapFormComponent<Integer> value = ComponentUtil.addIntegerTextField(item, "value", false);
+        final TextFieldBootstrapFormComponent<Integer> value = ComponentUtil.addIntegerTextField(item, "value");
         value.required();
     }
 
@@ -78,6 +79,21 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
         }
     }
 
+    public class ListFilterPanel extends GenericPanel<ListFilterBean> {
+        ListFilterPanel(final String componentId, final IModel<ListFilterBean> model) {
+            super(componentId, model);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            final ListFilterForm listFilterForm = new ListFilterForm(
+                    "listFilterForm", new CompoundPropertyModel<>(getModel()));
+            add(listFilterForm);
+        }
+    }
+
     class ListFilterForm extends BootstrapForm<ListFilterBean> {
         private TextFieldBootstrapFormComponent<String> header;
 
@@ -89,7 +105,7 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
         protected void onInitialize() {
             super.onInitialize();
 
-            header = ComponentUtil.addTextLoginField(this, "header", false);
+            header = ComponentUtil.addTextLoginField(this, "header");
 
             final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
                     new Model<>("Filter"),

@@ -28,9 +28,8 @@ import java.util.Set;
  */
 public abstract class GenericEnablingBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>>
         extends GenericBootstrapFormComponent<TYPE, FIELD> {
-
-    private static final long serialVersionUID = 1L;
     private Set<Component> visibilityBoundComponents = new HashSet<Component>();
+
     private Set<Component> visibilityReverseBoundComponents = new HashSet<Component>();
 
     /**

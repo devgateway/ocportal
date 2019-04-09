@@ -279,7 +279,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                         // do nothing - keep this field enabled
                     }
                 };
-        checkBoxBootstrapFormComponent.setIsFloatedInput(true);
         return checkBoxBootstrapFormComponent;
     }
 

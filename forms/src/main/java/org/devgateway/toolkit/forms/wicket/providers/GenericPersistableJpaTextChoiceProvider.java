@@ -14,10 +14,8 @@
  */
 package org.devgateway.toolkit.forms.wicket.providers;
 
-import org.apache.wicket.model.IModel;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
-import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,55 +28,27 @@ import org.wicketstuff.select2.Response;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
  * @author mpostelnicu
  */
-public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistable & Labelable & Serializable>
+public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistable & Serializable>
         extends ChoiceProvider<T> {
     private static final long serialVersionUID = -643286578944834690L;
 
     private static final Logger logger = LoggerFactory.getLogger(GenericPersistableJpaTextChoiceProvider.class);
 
-    private T newObject;
+    private final TextSearchableService<T> textSearchableService;
 
     private Sort sort;
-
-    private Boolean addNewElements = false;
-
-    private Class<T> clazz;
-
-    private IModel<Collection<T>> restrictedToItemsModel;
-
-    private final TextSearchableService<T> textSearchableService;
 
     public GenericPersistableJpaTextChoiceProvider(final TextSearchableService<T> textSearchableService) {
         this.textSearchableService = textSearchableService;
     }
 
-    public GenericPersistableJpaTextChoiceProvider(final TextSearchableService<T> textSearchableService,
-                                                   final Class<T> clazz,
-                                                   final Boolean addNewElements) {
-        this.textSearchableService = textSearchableService;
-        this.clazz = clazz;
-        this.addNewElements = addNewElements;
-    }
-
-    public GenericPersistableJpaTextChoiceProvider(final TextSearchableService<T> textSearchableService,
-                                                   final IModel<Collection<T>> restrictedToItemsModel) {
-        this(textSearchableService);
-        this.restrictedToItemsModel = restrictedToItemsModel;
-    }
-
     @Override
     public String getIdValue(final T choice) {
-        // if the object is not null but it hasn't an ID return 0
-        if (choice != null && choice.getId() == null && addNewElements) {
-            return "0";
-        }
-
         return choice.getId().toString();
     }
 
@@ -93,27 +63,8 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
         }
 
         if (itemsByTerm != null) {
-            if (itemsByTerm.getContent().size() == 0 && addNewElements) {
-                // add new element dynamically
-                // the new element should extend Category so that we can attache
-                // a 'label' to it
-                try {
-                    newObject = clazz.newInstance();
-                    newObject.setLabel(term);
-                } catch (InstantiationException e) {
-                    logger.error("Error creating a new Item", e);
-                } catch (IllegalAccessException e) {
-                    logger.error("Error creating a new Item", e);
-                }
-
-                List<T> newElementsList = new ArrayList<>();
-                newElementsList.add(newObject);
-
-                response.addAll(newElementsList);
-            } else {
-                response.setHasMore(itemsByTerm.hasNext());
-                response.addAll(itemsByTerm.getContent());
-            }
+            response.setHasMore(itemsByTerm.hasNext());
+            response.addAll(itemsByTerm.getContent());
         }
     }
 
@@ -135,26 +86,16 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
     public Collection<T> toChoices(final Collection<String> ids) {
         final ArrayList<String> idsList = new ArrayList<>();
 
-        for (String id : ids) {
-            // create new element
-            if (Long.parseLong(id) == 0 && addNewElements) {
-                if (newObject != null && newObject.getId() == null) {
-                    textSearchableService.save(newObject);
-                }
-
-                id = newObject.getId().toString();
-            }
-
+        for (final String id : ids) {
             idsList.add(id);
         }
 
         final ArrayList<T> response = new ArrayList<>();
         for (final String s : idsList) {
-            Long id = Long.parseLong(s);
+            final Long id = Long.parseLong(s);
             final Optional<T> findOne = textSearchableService.findByIdCached(id);
             if (!findOne.isPresent()) {
-                logger.error("Cannot find entity with id=" + id + " in service "
-                        + textSearchableService.getClass());
+                logger.error("Cannot find entity with id=" + id + " in service " + textSearchableService.getClass());
             } else {
                 response.add(findOne.get());
             }
@@ -164,10 +105,10 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
 
     @Override
     public String getDisplayValue(final T choice) {
-        if (addNewElements && choice.getId() == null) {
-            return choice.toString() + " ---> (press enter to create new element)";
-        }
-
         return choice.toString();
+    }
+
+    public void setSort(final Sort sort) {
+        this.sort = sort;
     }
 }

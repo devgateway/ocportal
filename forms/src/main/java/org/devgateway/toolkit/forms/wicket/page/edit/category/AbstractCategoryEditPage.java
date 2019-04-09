@@ -42,7 +42,7 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
                 StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
                         this.getClass().getSimpleName().replaceAll("Page", "")), ' ')));
 
-        label = ComponentUtil.addTextField(editForm, "label", false);
+        label = ComponentUtil.addTextField(editForm, "label");
         label.required();
     }
 }

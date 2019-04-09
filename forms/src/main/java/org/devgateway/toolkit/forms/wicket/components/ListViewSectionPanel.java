@@ -62,7 +62,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         setOutputMarkupId(true);
         setOutputMarkupPlaceholderTag(true);
 
-        addFilterForm();
+        addFilterPanel();
 
         listWrapper = new TransparentWebMarkupContainer("listWrapper") {
             @Override
@@ -271,8 +271,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
     /**
      * Override this function if you need to add a filter form for the list view component.
      */
-    protected void addFilterForm() {
-        final TransparentWebMarkupContainer hiddenForm = new TransparentWebMarkupContainer("listFilterForm");
+    protected void addFilterPanel() {
+        final TransparentWebMarkupContainer hiddenForm = new TransparentWebMarkupContainer("listFilterPanel");
         hiddenForm.setVisibilityAllowed(false);
         add(hiddenForm);
     }

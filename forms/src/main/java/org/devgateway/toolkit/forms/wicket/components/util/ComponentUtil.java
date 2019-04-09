@@ -73,10 +73,8 @@ public final class ComponentUtil {
 
     public static CheckBoxBootstrapFormComponent addCheckBox(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final CheckBoxBootstrapFormComponent checkBox = new CheckBoxBootstrapFormComponent(id);
-        checkBox.setIsFloatedInput(isFloatedInput);
         parent.add(checkBox);
 
         return checkBox;
@@ -84,10 +82,8 @@ public final class ComponentUtil {
 
     public static CheckBoxToggleBootstrapFormComponent addCheckToggle(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final CheckBoxToggleBootstrapFormComponent checkToggle = new CheckBoxToggleBootstrapFormComponent(id);
-        checkToggle.setIsFloatedInput(isFloatedInput);
         parent.add(checkToggle);
 
         return checkToggle;
@@ -95,10 +91,8 @@ public final class ComponentUtil {
 
     public static CheckBoxYesNoToggleBootstrapFormComponent addYesNoToggle(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final CheckBoxYesNoToggleBootstrapFormComponent checkToggle = new CheckBoxYesNoToggleBootstrapFormComponent(id);
-        checkToggle.setIsFloatedInput(isFloatedInput);
         parent.add(checkToggle);
 
         return checkToggle;
@@ -115,10 +109,8 @@ public final class ComponentUtil {
 
     public static TextFieldBootstrapFormComponent<String> addTextField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final TextFieldBootstrapFormComponent<String> textField = new TextFieldBootstrapFormComponent<>(id);
-        textField.setIsFloatedInput(isFloatedInput);
         parent.add(textField);
 
         return textField;
@@ -126,15 +118,13 @@ public final class ComponentUtil {
 
     public static TextFieldBootstrapFormComponent<String> addTextLoginField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final TextFieldBootstrapFormComponent<String> textField = new TextFieldBootstrapFormComponent<String>(id) {
             @Override
             public String getUpdateEvent() {
                 return null;
             }
         };
-        textField.setIsFloatedInput(isFloatedInput);
         parent.add(textField);
 
         return textField;
@@ -142,15 +132,13 @@ public final class ComponentUtil {
 
     public static PasswordFieldBootstrapFormComponent addTextPasswordField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final PasswordFieldBootstrapFormComponent textField = new PasswordFieldBootstrapFormComponent(id) {
             @Override
             public String getUpdateEvent() {
                 return null;
             }
         };
-        textField.setIsFloatedInput(isFloatedInput);
         parent.add(textField);
 
         return textField;
@@ -158,10 +146,8 @@ public final class ComponentUtil {
 
     public static TextFieldBootstrapFormComponent<Integer> addIntegerTextField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final TextFieldBootstrapFormComponent<Integer> textField = new TextFieldBootstrapFormComponent<>(id);
-        textField.setIsFloatedInput(isFloatedInput);
         textField.integer();
         parent.add(textField);
 
@@ -170,10 +156,8 @@ public final class ComponentUtil {
 
     public static TextFieldBootstrapFormComponent<Long> addLongTextField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final TextFieldBootstrapFormComponent<Long> textField = new TextFieldBootstrapFormComponent<>(id);
-        textField.setIsFloatedInput(isFloatedInput);
         textField.longValue();
         parent.add(textField);
 
@@ -182,10 +166,8 @@ public final class ComponentUtil {
 
     public static TextFieldBootstrapFormComponent<String> addDoubleField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final TextFieldBootstrapFormComponent<String> textField = new TextFieldBootstrapFormComponent<>(id);
-        textField.setIsFloatedInput(isFloatedInput);
         textField.asDouble();
         parent.add(textField);
 
@@ -194,10 +176,8 @@ public final class ComponentUtil {
 
     public static DateTimeFieldBootstrapFormComponent addDateTimeField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final DateTimeFieldBootstrapFormComponent field = new DateTimeFieldBootstrapFormComponent(id);
-        field.setIsFloatedInput(isFloatedInput);
         parent.add(field);
 
         return field;
@@ -205,10 +185,8 @@ public final class ComponentUtil {
 
     public static DateFieldBootstrapFormComponent addDateField(
             final WebMarkupContainer parent,
-            final String id,
-            final boolean isFloatedInput) {
+            final String id) {
         final DateFieldBootstrapFormComponent field = new DateFieldBootstrapFormComponent(id);
-        field.setIsFloatedInput(isFloatedInput);
         parent.add(field);
 
         return field;
@@ -218,13 +196,11 @@ public final class ComponentUtil {
     addSelect2ChoiceField(
             final WebMarkupContainer parent,
             final String id,
-            final TextSearchableService<E> searchService,
-            final boolean isFloatedInput) {
+            final TextSearchableService<E> searchService) {
         final GenericPersistableJpaTextChoiceProvider<E> choiceProvider
                 = new GenericPersistableJpaTextChoiceProvider<>(searchService);
         final Select2ChoiceBootstrapFormComponent<E> component = new Select2ChoiceBootstrapFormComponent<>(id,
                 choiceProvider);
-        component.setIsFloatedInput(isFloatedInput);
         parent.add(component);
 
         return component;
@@ -234,13 +210,11 @@ public final class ComponentUtil {
     addSelect2MultiChoiceField(
             final WebMarkupContainer parent,
             final String id,
-            final TextSearchableService<E> searchService,
-            final boolean isFloatedInput) {
+            final TextSearchableService<E> searchService) {
         final GenericPersistableJpaTextChoiceProvider<E> choiceProvider =
                 new GenericPersistableJpaTextChoiceProvider<>(searchService);
         final Select2MultiChoiceBootstrapFormComponent<E> component =
                 new Select2MultiChoiceBootstrapFormComponent<>(id, choiceProvider);
-        component.setIsFloatedInput(isFloatedInput);
         parent.add(component);
 
         return component;

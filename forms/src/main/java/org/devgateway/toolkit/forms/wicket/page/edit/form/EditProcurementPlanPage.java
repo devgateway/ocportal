@@ -41,8 +41,8 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService, false).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService, false).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService).required();
 
         editForm.add(new PlanItemPanel("planItems"));
 
@@ -51,6 +51,6 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
         procurementPlanDocs.required();
         editForm.add(procurementPlanDocs);
 
-        ComponentUtil.addDateField(editForm, "approvedDate", false).required();
+        ComponentUtil.addDateField(editForm, "approvedDate").required();
     }
 }
