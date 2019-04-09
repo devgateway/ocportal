@@ -29,7 +29,9 @@ import java.math.BigDecimal;
  */
 public class TextFieldBootstrapFormComponent<TYPE> extends GenericBootstrapFormComponent<TYPE, TextField<TYPE>> {
     private static final long serialVersionUID = 8062663141536130313L;
-    private StringValidator validator = WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT;
+
+    private final StringValidator validator = WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT;
+
     private Boolean isFloatedInput = false;
 
     public TextFieldBootstrapFormComponent(final String id, final IModel<String> labelModel, final IModel<TYPE> model) {

@@ -16,7 +16,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.form.FormGroup;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.InputBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.InputBehavior.Size;
 import de.agilecoders.wicket.core.util.Attributes;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
@@ -45,8 +44,6 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -58,29 +55,20 @@ import java.util.List;
 public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>> extends FieldPanel<TYPE> {
     private static final long serialVersionUID = -7051128382707812456L;
 
-    private static final Logger logger = LoggerFactory.getLogger(GenericBootstrapFormComponent.class);
-
     protected FormGroup border;
 
     protected FIELD field;
-
-    private Label viewModeField;
 
     private InputBehavior sizeBehavior;
 
     private TooltipConfig.OpenTrigger configWithTrigger = TooltipConfig.OpenTrigger.hover;
 
-    private TooltipLabel tooltipLabel;
+    // use a flag if we need to display a Tooltip since StringResourceModel it's expensive
+    private Boolean showTooltip = false;
 
     private IModel<String> labelModel;
 
     private Class<?> auditorClass;
-
-    private WebMarkupContainer revisions;
-
-    private TransparentWebMarkupContainer masterGroup;
-
-    private TransparentWebMarkupContainer childGroup;
 
     private IModel<EntityManager> entityManagerModel;
 
@@ -110,7 +98,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
     }
 
     public void enableRevisionsView() {
-        AbstractEditPage<?> parentPage = (AbstractEditPage<?>) getPage();
+        final AbstractEditPage<?> parentPage = (AbstractEditPage<?>) getPage();
         enableRevisionsView(
                 parentPage.getNewInstanceClass(), parentPage.getEntityManager(), parentPage.getEditForm().getModel());
     }
@@ -140,17 +128,6 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
 
     protected RevisionsPanel<TYPE> getRevisionsPanel() {
         return new RevisionsPanel<>("revisions", getRevisionsModel(), auditProperty);
-    }
-
-    /**
-     * Encloses the component and revisions section with a boostrap panel
-     *
-     * @return
-     */
-    public GenericBootstrapFormComponent<TYPE, FIELD> encloseWithBorder() {
-        masterGroup.add(AttributeModifier.append("class", "panel panel-default"));
-        childGroup.add(AttributeModifier.append("class", "panel-body"));
-        return this;
     }
 
     protected IModel<List<TYPE>> getRevisionsModel() {
@@ -267,8 +244,6 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
 
         initializeField();
 
-        tooltipLabel = new TooltipLabel("tooltipLabel", id);
-        border.add(tooltipLabel);
         auditProperty = this.getId();
     }
 
@@ -322,11 +297,6 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
         return ComponentUtil.isViewMode();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.wicket.Component#onConfigure()
-     */
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -337,21 +307,21 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
             getAjaxFormComponentUpdatingBehavior();
         }
 
-        viewModeField = new Label("viewModeField", new ViewModeConverterModel<>(getModel()));
+        final Label viewModeField = new Label("viewModeField", new ViewModeConverterModel<>(getModel()));
         viewModeField.setEscapeModelStrings(false);
         viewModeField.setVisibilityAllowed(isViewMode());
         border.add(viewModeField);
 
-        tooltipLabel.setConfigWithTrigger(configWithTrigger);
+        if (showTooltip) {
+            final TooltipLabel tooltipLabel = new TooltipLabel("tooltipLabel", getId());
+            tooltipLabel.setVisibilityAllowed(showTooltip);
+            tooltipLabel.setConfigWithTrigger(configWithTrigger);
+            border.add(tooltipLabel);
+        } else {
+            border.add(new TransparentWebMarkupContainer("tooltipLabel"));
+        }
 
-        masterGroup = new TransparentWebMarkupContainer("masterGroup");
-        add(masterGroup);
-        childGroup = new TransparentWebMarkupContainer("childGroup");
-        add(childGroup);
-
-        revisions = new WebMarkupContainer("revisions"); // this is just a placeholder
-        add(revisions);
-
+        add(new WebMarkupContainer("revisions")); // this is just a placeholder
     }
 
     /**
@@ -375,5 +345,9 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
 
     public void setAuditProperty(final String auditProperty) {
         this.auditProperty = auditProperty;
+    }
+
+    public void setShowTooltip(final Boolean showTooltip) {
+        this.showTooltip = showTooltip;
     }
 }

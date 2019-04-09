@@ -291,6 +291,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                         // do nothing - keep this field enabled
                     }
                 };
+        comment.setShowTooltip(true);
         return comment;
     }
 

@@ -75,6 +75,11 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
         return repository().findById(id);
     }
 
+    @Cacheable
+    public Optional<T> findByIdCached(final Long id) {
+        return repository().findById(id);
+    }
+
     @Override
     @Cacheable
     public long count() {

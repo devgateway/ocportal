@@ -84,7 +84,7 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
 
     @Override
     public void query(final String term, final int page, final Response<T> response) {
-        Page<T> itemsByTerm;
+        final Page<T> itemsByTerm;
         if (term == null || term.isEmpty()) {
             itemsByTerm = findAll(page);
             response.setHasMore(itemsByTerm.hasNext());
@@ -133,7 +133,7 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
 
     @Override
     public Collection<T> toChoices(final Collection<String> ids) {
-        ArrayList<String> idsList = new ArrayList<>();
+        final ArrayList<String> idsList = new ArrayList<>();
 
         for (String id : ids) {
             // create new element
@@ -148,10 +148,10 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
             idsList.add(id);
         }
 
-        ArrayList<T> response = new ArrayList<>();
-        for (String s : idsList) {
+        final ArrayList<T> response = new ArrayList<>();
+        for (final String s : idsList) {
             Long id = Long.parseLong(s);
-            Optional<T> findOne = textSearchableService.findById(id);
+            final Optional<T> findOne = textSearchableService.findByIdCached(id);
             if (!findOne.isPresent()) {
                 logger.error("Cannot find entity with id=" + id + " in service "
                         + textSearchableService.getClass());

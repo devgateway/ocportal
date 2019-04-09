@@ -24,7 +24,7 @@ public interface TextSearchableService<T extends GenericPersistable & Serializab
 
     <S extends T> S save(S entity);
 
-    Optional<T> findById(Long id);
+    Optional<T> findByIdCached(Long id);
 
     /**
      * Default implementation of {@link TextSearchableRepository#searchText}.

@@ -21,8 +21,7 @@ public class ChargeAccountServiceImpl extends BaseJpaServiceImpl<ChargeAccount> 
 
     @Autowired
     private ChargeAccountRepository repository;
-    
-    
+
     @Override
     public ChargeAccount newInstance() {
         return new ChargeAccount();
