@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -8,6 +9,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
+import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
@@ -63,9 +65,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
-        ComponentUtil.addSelect2ChoiceField(item, "item", itemService).required();
-        ComponentUtil.addTextField(item, "description").required();
-
         ComponentUtil.addDoubleField(item, "estimatedCost").required();
         ComponentUtil.addTextField(item, "unitOfIssue").required();
         ComponentUtil.addIntegerTextField(item, "quantity").required();
@@ -84,6 +83,11 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     }
 
     @Override
+    protected Component getHeaderField(final String id, final CompoundPropertyModel<PlanItem> compoundModel) {
+        return new PlanItemHeaderPanel(id, compoundModel);
+    }
+
+    @Override
     protected boolean filterListItem(final PlanItem planItem) {
         // don't filter unsaved entities
         if (planItem.getId() == null) {
@@ -98,6 +102,23 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             }
 
             return true;
+        }
+    }
+
+    private class PlanItemHeaderPanel extends GenericPanel<PlanItem> {
+        PlanItemHeaderPanel(final String componentId, final IModel<PlanItem> model) {
+            super(componentId, model);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            final Component item = ComponentUtil.addSelect2ChoiceField(this, "item", itemService).required();
+            item.add(new StopEventPropagationBehavior());
+
+            final Component description = ComponentUtil.addTextField(this, "description").required();
+            description.add(new StopEventPropagationBehavior());
         }
     }
 

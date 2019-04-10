@@ -130,6 +130,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
                 // we set back the model as the compound model, thus ensures the rest of the items added will benefit
                 item.setModel(compoundPropertyModel);
 
+                // we add the header #
+                item.add(new Label("headerNo", 1 + item.getIndex()));
+
                 // we add the rest of the items in the listItem
                 populateCompoundListItem(item);
 
@@ -173,8 +176,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         accordion.add(accordionToggle);
 
         // we add the special header field
-        // accordionToggle.add(getHeaderField("headerField", new CompoundPropertyModel<>(item.getModel())));
-        accordionToggle.add(new Label("headerField", "Header Field"));
+        accordionToggle.add(getHeaderField("headerField", new CompoundPropertyModel<>(item.getModel())));
 
         accordionToggle.add(showDetailsLink);
         accordion.add(hideableContainer);
@@ -275,6 +277,10 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity, PA
         final TransparentWebMarkupContainer hiddenForm = new TransparentWebMarkupContainer("listFilterPanel");
         hiddenForm.setVisibilityAllowed(false);
         add(hiddenForm);
+    }
+
+    protected Component getHeaderField(final String id, final CompoundPropertyModel<T> compoundModel) {
+        return new TransparentWebMarkupContainer(id);
     }
 
 
