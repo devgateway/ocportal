@@ -10,6 +10,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
@@ -65,7 +66,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
-        ComponentUtil.addDoubleField(item, "estimatedCost").required();
+        /*ComponentUtil.addDoubleField(item, "estimatedCost").required();
         ComponentUtil.addTextField(item, "unitOfIssue").required();
         ComponentUtil.addIntegerTextField(item, "quantity").required();
         ComponentUtil.addDoubleField(item, "unitPrice").required();
@@ -79,7 +80,25 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         ComponentUtil.addDoubleField(item, "quarter1st");
         ComponentUtil.addDoubleField(item, "quarter2nd");
         ComponentUtil.addDoubleField(item, "quarter3rd");
-        ComponentUtil.addDoubleField(item, "quarter4th");
+        ComponentUtil.addDoubleField(item, "quarter4th");*/
+
+
+
+        item.add(new GenericSleepFormComponent<>("estimatedCost"));
+        item.add(new GenericSleepFormComponent<>("unitOfIssue"));
+        item.add(new GenericSleepFormComponent<>("quantity"));
+        item.add(new GenericSleepFormComponent<>("unitPrice"));
+        item.add(new GenericSleepFormComponent<>("totalCost"));
+
+        item.add(new GenericSleepFormComponent<>("procurementMethod"));
+        item.add(new GenericSleepFormComponent<>("sourceOfFunds"));
+        item.add(new GenericSleepFormComponent<>("targetGroup"));
+        item.add(new GenericSleepFormComponent<>("targetGroupValue"));
+
+        item.add(new GenericSleepFormComponent<>("quarter1st"));
+        item.add(new GenericSleepFormComponent<>("quarter2nd"));
+        item.add(new GenericSleepFormComponent<>("quarter3rd"));
+        item.add(new GenericSleepFormComponent<>("quarter4th"));
     }
 
     @Override
@@ -114,11 +133,15 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         protected void onInitialize() {
             super.onInitialize();
 
+            /*
             final Component item = ComponentUtil.addSelect2ChoiceField(this, "item", itemService).required();
             item.add(new StopEventPropagationBehavior());
 
             final Component description = ComponentUtil.addTextField(this, "description").required();
-            description.add(new StopEventPropagationBehavior());
+            description.add(new StopEventPropagationBehavior());*/
+
+            add(new GenericSleepFormComponent<>("item"));
+            add(new GenericSleepFormComponent<>("description"));
         }
     }
 

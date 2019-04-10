@@ -186,5 +186,10 @@ hr.edit-separator {
     font-weight: bold !important;
 }
 
+.sleep-mode {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 /*
 -------------------------------------------------- */
