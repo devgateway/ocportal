@@ -271,6 +271,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
             // saves the entity and flushes the changes
             jpaService.saveAndFlush(saveable);
+            getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
 
             // clears session and detaches all entities that are currently
             // attached
