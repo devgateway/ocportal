@@ -53,7 +53,7 @@ public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        add(new AttributeAppender("onclick", new Model<String>("window.onbeforeunload = null;"), " "));
+        add(new AttributeAppender("onclick", new Model<>("window.onbeforeunload = null;"), " "));
         setDefaultFormProcessing(false);
         setIconType(FontAwesomeIconType.trash_o);
 

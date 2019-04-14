@@ -1,7 +1,9 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
@@ -14,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author idobre
@@ -23,7 +26,7 @@ import javax.persistence.Table;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
-public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> {
+public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
@@ -62,6 +65,14 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> {
     private Double quarter3rd;
 
     private Double quarter4th;
+
+    @Transient
+    @JsonIgnore
+    private Boolean editable = false;
+
+    @Transient
+    @JsonIgnore
+    private Boolean expanded = false;
 
     public Item getItem() {
         return item;
@@ -181,5 +192,25 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> {
 
     public void setQuarter4th(final Double quarter4th) {
         this.quarter4th = quarter4th;
+    }
+
+    @Override
+    public Boolean getEditable() {
+        return editable;
+    }
+
+    @Override
+    public void setEditable(final Boolean editable) {
+        this.editable = editable;
+    }
+
+    @Override
+    public Boolean getExpanded() {
+        return expanded;
+    }
+
+    @Override
+    public void setExpanded(final Boolean expanded) {
+        this.expanded = expanded;
     }
 }
