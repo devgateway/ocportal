@@ -22,10 +22,6 @@ public class RevisionsPanel<TYPE> extends GenericPanel<List<TYPE>> {
 
     private TransparentWebMarkupContainer revisionsCollapse;
 
-    private TransparentWebMarkupContainer revisionsMasterGroup;
-
-    private TransparentWebMarkupContainer revisionsChildGroup;
-
     private WebMarkupContainer revisionsPanelLink;
 
     private Label revisionsPanelLabel;
@@ -55,6 +51,7 @@ public class RevisionsPanel<TYPE> extends GenericPanel<List<TYPE>> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         revisionsCollapse = new TransparentWebMarkupContainer("revisionsCollapse");
         revisionsCollapse.setOutputMarkupId(true);
         add(revisionsCollapse);

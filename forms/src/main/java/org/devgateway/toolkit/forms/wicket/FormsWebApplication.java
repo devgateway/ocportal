@@ -14,6 +14,8 @@ package org.devgateway.toolkit.forms.wicket;
 import com.google.javascript.jscomp.CompilationLevel;
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.FormGroup;
+import de.agilecoders.wicket.core.markup.html.bootstrap.form.InputBehavior;
 import de.agilecoders.wicket.core.request.resource.caching.version.Adler32ResourceVersion;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
@@ -21,6 +23,7 @@ import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompre
 import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteStoredImageResourceReference;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import nl.dries.wicket.hibernate.dozer.DozerRequestCycleListener;
@@ -36,6 +39,7 @@ import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
@@ -45,12 +49,36 @@ import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.Folder;
 import org.devgateway.toolkit.forms.service.SessionFinderService;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
+import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteJpaStorageService;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.converters.NonNumericFilteredBigDecimalConverter;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.user.LoginPage;
+import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.categories.Category;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.categories.Item;
+import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -64,6 +92,7 @@ import org.wicketstuff.pageserializer.fast2.Fast2WicketSerializer;
 import org.wicketstuff.select2.ApplicationSettings;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 /**
  * The web application class also serves as spring boot starting point by using
@@ -168,18 +197,36 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getResourceSettings().setUseMinifiedResources(true);
 
             // getFrameworkSettings().setSerializer(new DeflatedJavaSerializer(getApplicationKey()));
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
+            // final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
+            // getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
 
             getMarkupSettings().setStripComments(true);
             getMarkupSettings().setCompressWhitespace(true);
             getMarkupSettings().setStripWicketTags(true);
         } else {
             getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
-
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
         }
+
+        final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
+        fstConfiguration.registerClass(
+                // POJO
+                ProcurementPlan.class, PlanItem.class, Category.class, Department.class,
+                FiscalYear.class, Item.class, ProcurementMethod.class, TargetGroup.class, ZonedDateTime.class,
+                // file
+                FileMetadata.class, FileInputBootstrapFormComponent.class,
+                // components
+                GenericPersistableJpaTextChoiceProvider.class, GenericBootstrapFormComponent.class, FormGroup.class,
+                Select2ChoiceBootstrapFormComponent.class, Select2MultiChoiceBootstrapFormComponent.class,
+                TextFieldBootstrapFormComponent.class, CheckBoxToggleBootstrapFormComponent.class,
+                DateFieldBootstrapFormComponent.class,
+                // sleep component
+                GenericSleepFormComponent.class, Label.class,
+                // buttons
+                BootstrapSubmitButton.class, BootstrapDeleteButton.class, BootstrapCancelButton.class,
+                BootstrapAddButton.class, LaddaAjaxButton.class,
+                // pages
+                EditProcurementPlanPage.class, PlanItemPanel.class);
+        getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
 
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
         // be sure that we have added Dozer Listener
