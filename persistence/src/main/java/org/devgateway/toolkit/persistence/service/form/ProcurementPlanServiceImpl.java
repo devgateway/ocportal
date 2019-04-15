@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.repository.form.ProcurementPlanRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,6 +31,11 @@ public class ProcurementPlanServiceImpl extends BaseJpaServiceImpl<ProcurementPl
 
     @Override
     protected BaseJpaRepository<ProcurementPlan, Long> repository() {
+        return procurementPlanRepository;
+    }
+    
+    @Override
+    public TextSearchableRepository<ProcurementPlan, Long> textRepository() {
         return procurementPlanRepository;
     }
 
