@@ -166,7 +166,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      *
      * @author mpostelnicu
      */
-    public class GenericBootstrapValidationVisitor implements IVisitor<GenericBootstrapFormComponent<?, ?>, Void> {
+    public static class GenericBootstrapValidationVisitor
+            implements IVisitor<GenericBootstrapFormComponent<?, ?>, Void> {
 
         private AjaxRequestTarget target;
 

@@ -43,12 +43,12 @@ import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.CustomDownloadLink;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.events.EditingEnabledEvent;
 import org.devgateway.toolkit.persistence.dao.FileContent;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
@@ -103,7 +103,6 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -147,7 +146,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
         alreadyUploadedFiles
                 .add(new Label("uploadedFilesTitle", new StringResourceModel("uploadedFilesTitle", this, null)));
 
-        IModel<List<FileMetadata>> alreadyUploadedFilesModel =
+        final IModel<List<FileMetadata>> alreadyUploadedFilesModel =
                 new IModel<List<FileMetadata>>() {
                     private static final long serialVersionUID = 1L;
 
@@ -156,7 +155,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                         List<FileMetadata> fileObject = new ArrayList<>();
 
                         // get only the already uploaded files
-                        for (FileMetadata file : filesModel) {
+                        for (final FileMetadata file : filesModel) {
                             if (!file.isNew()) {
                                 fileObject.add(file);
                             }
@@ -166,7 +165,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                     }
                 };
 
-        ListView<FileMetadata> list = new ListView<FileMetadata>("list", alreadyUploadedFilesModel) {
+        final ListView<FileMetadata> list = new ListView<FileMetadata>("list", alreadyUploadedFilesModel) {
             private static final long serialVersionUID = 1L;
 
             private List<IndicatingAjaxLink<Void>> deleteButtons = new ArrayList<>();
@@ -174,16 +173,12 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
             @Override
             protected void populateItem(final ListItem<FileMetadata> item) {
                 // make file name clickable
-                Link<FileMetadata> downloadLink = new Link<FileMetadata>("downloadLink", item.getModel()) {
-                    private static final long serialVersionUID = 1L;
-
+                final Link<FileMetadata> downloadLink = new Link<FileMetadata>("downloadLink", item.getModel()) {
                     @Override
                     public void onClick() {
                         final FileMetadata modelObject = getModelObject();
 
-                        AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
-                            private static final long serialVersionUID = 1L;
-
+                        final AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
                             @Override
                             public void write(final OutputStream output) throws IOException {
                                 output.write(modelObject.getContent().getBytes());
@@ -195,7 +190,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                             }
                         };
 
-                        ResourceStreamRequestHandler handler =
+                        final ResourceStreamRequestHandler handler =
                                 new ResourceStreamRequestHandler(rstream, modelObject.getName());
                         handler.setContentDisposition(ContentDisposition.ATTACHMENT);
                         getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
@@ -206,10 +201,10 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                         FileInputBootstrapFormComponentWrapper.this, null), TOOLTIP_CONFIG));
                 item.add(downloadLink);
 
-                Link<FileMetadata> download = new CustomDownloadLink("download", item.getModel());
+                final Link<FileMetadata> download = new CustomDownloadLink("download", item.getModel());
                 item.add(download);
 
-                IndicatingAjaxLink<Void> delete = new IndicatingAjaxLink<Void>("delete") {
+                final IndicatingAjaxLink<Void> delete = new IndicatingAjaxLink<Void>("delete") {
                     private static final long serialVersionUID = 1L;
 
                     @SuppressWarnings("unchecked")
@@ -292,7 +287,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
         pendingFiles.add(new Label("pendingFilesTitle", new StringResourceModel("pendingFilesTitle", this, null)));
 
-        IModel<List<FileMetadata>> pendingFilesModel = new IModel<List<FileMetadata>>() {
+        final IModel<List<FileMetadata>> pendingFilesModel = new IModel<List<FileMetadata>>() {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -311,14 +306,14 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
             }
         };
 
-        ListView<FileMetadata> list = new ListView<FileMetadata>("list", pendingFilesModel) {
+        final ListView<FileMetadata> list = new ListView<FileMetadata>("list", pendingFilesModel) {
             private static final long serialVersionUID = 1L;
 
             @Override
             protected void populateItem(final ListItem<FileMetadata> item) {
                 item.add(new Label("fileTitle", item.getModelObject().getName()));
 
-                IndicatingAjaxLink<Void> delete = new IndicatingAjaxLink<Void>("delete") {
+                final IndicatingAjaxLink<Void> delete = new IndicatingAjaxLink<Void>("delete") {
                     private static final long serialVersionUID = 1L;
 
                     @SuppressWarnings("unchecked")
@@ -374,7 +369,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
         /*
          * some customization of the BootstrapFileInput Component
          */
-        FileInputConfig fileInputConfig = new FileInputConfig();
+        final FileInputConfig fileInputConfig = new FileInputConfig();
         fileInputConfig.put(new Key<String>("browseLabel"),
                 new StringResourceModel("browseLabel", FileInputBootstrapFormComponentWrapper.this, null).getString());
         fileInputConfig.put(new Key<String>("uploadClass"), "btn btn-blue");
@@ -388,7 +383,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
             protected void onSubmit(final AjaxRequestTarget target) {
                 super.onSubmit(target);
 
-                List<FileUpload> fileUploads = internalUploadModel.getObject();
+                final List<FileUpload> fileUploads = internalUploadModel.getObject();
 
                 if (fileUploads != null) {
                     // check if we uploaded too many files
@@ -404,8 +399,8 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                     } else {
                         // convert the uploaded files to the internal structure
                         // and update the model
-                        for (FileUpload upload : fileUploads) {
-                            FileMetadata fileMetadata = new FileMetadata();
+                        for (final FileUpload upload : fileUploads) {
+                            final FileMetadata fileMetadata = new FileMetadata();
                             fileMetadata.setName(upload.getClientFileName());
                             fileMetadata.setContentType(upload.getContentType());
                             fileMetadata.setSize(upload.getSize());
@@ -415,13 +410,6 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                             fileMetadata.setContent(fileContent);
 
                             filesModel.add(fileMetadata);
-
-                            // don't display the success notification
-                            // FileInputBootstrapFormComponentWrapper.this.success(new
-                            // StringResourceModel("successUpload",
-                            // FileInputBootstrapFormComponentWrapper.this,
-                            // null, new
-                            // Model(upload.getClientFileName())).getString());
                         }
                     }
                 }
