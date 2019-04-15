@@ -27,6 +27,7 @@ import org.devgateway.toolkit.persistence.service.category.ProcurementMethodServ
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author idobre
@@ -133,7 +134,29 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     error.addKey("planItemHasErrors");
                     error(error);
                 } else {
-                    super.onSubmit(target);
+                    Boolean descriptionError = false;
+                    // check that we have unique descriptions (at least the last element)
+                    final List<PlanItem> planItems = PlanItemPanel.this.getModelObject();
+                    if (planItems.size() > 2) {
+                        final PlanItem lastElement = planItems.get(planItems.size() - 1);
+                        for (int i = 0; i < planItems.size() - 1; i++) {
+                            final PlanItem planItem = planItems.get(i);
+
+                            if (planItem.getDescription() != null && lastElement.getDescription() != null
+                                    && planItem.getDescription().replaceAll("\\s+", "")
+                                    .equals(lastElement.getDescription().replaceAll("\\s+", ""))) {
+                                descriptionError = true;
+                            }
+                        }
+                    }
+
+                    if (descriptionError) {
+                        final ValidationError error = new ValidationError();
+                        error.addKey("descriptionError");
+                        error(error);
+                    } else {
+                        super.onSubmit(target);
+                    }
                 }
 
                 target.add(addButtonNotificationPanel);
