@@ -3,13 +3,19 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.ValidationError;
+import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -21,6 +27,7 @@ import org.devgateway.toolkit.persistence.service.category.ProcurementMethodServ
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author idobre
@@ -60,6 +67,8 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     public PlanItem createNewChild(final IModel<ProcurementPlan> parentModel) {
         final PlanItem child = new PlanItem();
         child.setParent(parentModel.getObject());
+        child.setExpanded(true);
+        child.setEditable(true);
 
         return child;
     }
@@ -105,6 +114,56 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     @Override
     protected Component getHeaderField(final String id, final CompoundPropertyModel<PlanItem> compoundModel) {
         return new PlanItemHeaderPanel(id, compoundModel);
+    }
+
+    @Override
+    protected BootstrapAddButton getAddNewChildButton() {
+        final AddNewChildButton addNewChildButton = new AddNewChildButton("newButton", new ResourceModel("newButton")) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                // make sure that we have cleared the messages.
+                final FeedbackMessages feedback = getFeedbackMessages();
+                feedback.clear();
+
+                // make all errors visible
+                final PanelValidationVisitor panelValidationVisitor = new PanelValidationVisitor(target);
+                PlanItemPanel.this.visitChildren(GenericBootstrapFormComponent.class, panelValidationVisitor);
+
+                if (panelValidationVisitor.getFormErrors()) {
+                    final ValidationError error = new ValidationError();
+                    error.addKey("planItemHasErrors");
+                    error(error);
+                } else {
+                    Boolean descriptionError = false;
+                    // check that we have unique descriptions (at least the last element)
+                    final List<PlanItem> planItems = PlanItemPanel.this.getModelObject();
+                    if (planItems.size() > 2) {
+                        final PlanItem lastElement = planItems.get(planItems.size() - 1);
+                        for (int i = 0; i < planItems.size() - 1; i++) {
+                            final PlanItem planItem = planItems.get(i);
+
+                            if (planItem.getDescription() != null && lastElement.getDescription() != null
+                                    && planItem.getDescription().replaceAll("\\s+", "")
+                                    .equals(lastElement.getDescription().replaceAll("\\s+", ""))) {
+                                descriptionError = true;
+                            }
+                        }
+                    }
+
+                    if (descriptionError) {
+                        final ValidationError error = new ValidationError();
+                        error.addKey("descriptionError");
+                        error(error);
+                    } else {
+                        super.onSubmit(target);
+                    }
+                }
+
+                target.add(addButtonNotificationPanel);
+            }
+        };
+
+        return addNewChildButton;
     }
 
     @Override

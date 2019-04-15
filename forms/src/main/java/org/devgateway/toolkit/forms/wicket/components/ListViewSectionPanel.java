@@ -1,12 +1,15 @@
 package org.devgateway.toolkit.forms.wicket.components;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,6 +23,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.slf4j.Logger;
@@ -41,15 +45,17 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> {
     private static final Logger logger = LoggerFactory.getLogger(ListViewSectionPanel.class);
 
-    protected WebMarkupContainer listWrapper;
-
-    protected ListView<T> listView;
-
     public static final String ID_ACCORDION = "accordion";
 
     public static final String ID_HIDEABLE_CONTAINER = "hideableContainer";
 
     public static final String ID_ACCORDION_TOGGLE = "accordionToggle";
+
+    protected WebMarkupContainer listWrapper;
+
+    protected ListView<T> listView;
+
+    protected NotificationPanel addButtonNotificationPanel;
 
     public ListViewSectionPanel(final String id) {
         super(id);
@@ -129,6 +135,12 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 // we add the header #
                 item.add(new Label("headerNo", 1 + item.getIndex()));
 
+                // just keep the last element editable and expanded
+                if (item.getIndex() == getModel().getObject().size() - 1) {
+                    item.getModelObject().setExpanded(true);
+                    item.getModelObject().setEditable(true);
+                }
+
                 // we add the rest of the items in the listItem
                 populateCompoundListItem(item);
 
@@ -142,6 +154,11 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
         final BootstrapAddButton addButton = getAddNewChildButton();
         add(addButton);
+
+        addButtonNotificationPanel = new NotificationPanel("addButtonNotificationPanel");
+        addButtonNotificationPanel.setOutputMarkupId(true);
+        addButtonNotificationPanel.setFilter(new ComponentFeedbackMessageFilter(addButton));
+        add(addButtonNotificationPanel);
     }
 
     private void addAcordion(final ListItem<T> item) {
@@ -250,6 +267,11 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             }
 
             @Override
+            public void onEvent(final IEvent<?> event) {
+                ComponentUtil.enableDisableEvent(this, event);
+            }
+
+            @Override
             protected void onInitialize() {
                 super.onInitialize();
             }
@@ -284,22 +306,24 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     /**
      * Returns the new child button.
      */
-    final BootstrapAddButton getAddNewChildButton() {
-        final BootstrapAddButton newButton = new BootstrapAddButton("newButton", new ResourceModel("newButton")) {
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                final T newChild = createNewChild(
-                        (IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel());
-                ListViewSectionPanel.this.getModel().getObject().add(newChild);
+    protected BootstrapAddButton getAddNewChildButton() {
+        return new AddNewChildButton("newButton", new ResourceModel("newButton"));
+    }
 
-                listView.removeAll();
-                target.add(listWrapper);
-            }
+    public class AddNewChildButton extends BootstrapAddButton {
+        public AddNewChildButton(final String id, final IModel<String> model) {
+            super(id, model);
+        }
 
-        };
+        @Override
+        protected void onSubmit(final AjaxRequestTarget target) {
+            final T newChild = createNewChild(
+                    (IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel());
+            ListViewSectionPanel.this.getModelObject().add(newChild);
 
-        newButton.setOutputMarkupPlaceholderTag(true);
-        return newButton;
+            listView.removeAll();
+            target.add(listWrapper);
+        }
     }
 
     private static void goToComponent(final AjaxRequestTarget target, final String markupId) {
