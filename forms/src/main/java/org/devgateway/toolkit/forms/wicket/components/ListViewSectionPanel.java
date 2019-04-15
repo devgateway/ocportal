@@ -184,7 +184,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
         // we add the edit button
         final LaddaAjaxButton editButton = getEditChildButton(item);
-        editButton.setVisibilityAllowed(item.getModelObject().getEditable() != null);
+        editButton.setVisibilityAllowed(item.getModelObject().getEditable() != null
+                && !item.getModelObject().getEditable());
         hideableContainer.add(editButton);
 
         // if we display a new element that was just added then we make the accordion enabled
@@ -253,6 +254,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 super.onInitialize();
             }
         };
+        editButton.setDefaultFormProcessing(false);
         editButton.setIconType(FontAwesomeIconType.edit);
         editButton.setOutputMarkupPlaceholderTag(true);
         return editButton;

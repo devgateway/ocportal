@@ -62,8 +62,6 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
 
     protected FIELD field;
 
-    private InputBehavior sizeBehavior;
-
     private TooltipConfig.OpenTrigger configWithTrigger = TooltipConfig.OpenTrigger.hover;
 
     // use a flag if we need to display a Tooltip since StringResourceModel it's expensive
@@ -92,11 +90,6 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
 
     public GenericBootstrapFormComponent<TYPE, FIELD> type(final Class<?> clazz) {
         field.setType(clazz);
-        return this;
-    }
-
-    public GenericBootstrapFormComponent<TYPE, FIELD> size(final Size size) {
-        sizeBehavior.size(size);
         return this;
     }
 
@@ -134,7 +127,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
         field = inputField("field", getModel());
         field.setOutputMarkupId(true);
         field.setVisibilityAllowed(!isViewMode());
-        sizeBehavior = getInputBehavior();
+        final InputBehavior sizeBehavior = getInputBehavior();
         if (sizeBehavior != null) {
             field.add(sizeBehavior);
         }
