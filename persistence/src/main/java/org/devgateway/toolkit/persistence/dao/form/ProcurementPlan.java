@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.hibernate.annotations.Cache;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +31,7 @@ import java.util.Set;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
-public class ProcurementPlan extends AbstractMakueniForm {
+public class ProcurementPlan extends AbstractMakueniForm implements Serializable, Labelable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;
@@ -86,5 +89,30 @@ public class ProcurementPlan extends AbstractMakueniForm {
 
     public void setProcurementPlanDocs(final Set<FileMetadata> procurementPlanDocs) {
         this.procurementPlanDocs = procurementPlanDocs;
+    }
+
+    @Override
+    public void setLabel(final String label) {
+                
+    }
+
+    @Override
+    public String getLabel() {
+        String fullName = "";
+        if (fiscalYear != null) {
+            fullName += fiscalYear.getName(); 
+        }
+        
+        if (department != null) {
+            fullName += " - " + department.getLabel(); 
+        }
+        
+        return fullName;
+        
+    }
+    
+    @Override
+    public String toString() {
+        return getLabel();
     }
 }

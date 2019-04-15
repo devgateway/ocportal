@@ -40,6 +40,8 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @Override
     protected void onInitialize() {
         super.onInitialize();       
+        
+        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();       
         ComponentUtil.addTextField(editForm, "name").required();
         final TextFieldBootstrapFormComponent<String> numberField = ComponentUtil.addTextField(editForm, "number");
         numberField.required();
