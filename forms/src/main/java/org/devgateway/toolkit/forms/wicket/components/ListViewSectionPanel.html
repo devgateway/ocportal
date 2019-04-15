@@ -6,7 +6,7 @@
 <wicket:panel>
     <div wicket:id="listFilterPanel"></div>
 
-    <div class="row" wicket:id="listWrapper">
+    <div class="row list-wrapper" wicket:id="listWrapper">
         <div class="col-md-12">
             <div class="pane title">
                 <h4 wicket:id="panelTitle">[[title]]</h4>
@@ -22,11 +22,18 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
-                            <a class="accordion-toggle col-md-12" wicket:id="accordionToggle">
-                                <div wicket:id="headerField" class="col-md-9 header-field"></div>
+                            <div class="col-md-1">
+                                <span wicket:id="headerNo" class="list-number"></span>
+                            </div>
 
-                                <div class="col-md-3">
-                                    <span class="show-all pull-right" wicket:id="showDetailsLink">show details</span>
+                            <a class="accordion-toggle col-md-11" wicket:id="accordionToggle">
+                                <div class="row">
+                                    <div wicket:id="headerField" class="col-md-11 header-field"></div>
+
+                                    <div class="col-md-1">
+                                        <span class="show-all pull-right"
+                                              wicket:id="showDetailsLink">show details</span>
+                                    </div>
                                 </div>
                             </a>
                         </div>
@@ -36,6 +43,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <button wicket:id="remove" type="button" class="btn btn-red pull-right">Remove</button>
+                                <button wicket:id="edit" type="button" class="btn btn-primary pull-right">Edit</button>
                             </div>
                         </div>
 
@@ -47,6 +55,8 @@
     </div>
 
     <div class="row">
+        <div wicket:id="addButtonNotificationPanel" class="col-md-12"></div>
+
         <div class="col-md-12">
             <button wicket:id="newButton" class="btn btn-blue pull-left" type="button">[[+ ADD another element]]
             </button>

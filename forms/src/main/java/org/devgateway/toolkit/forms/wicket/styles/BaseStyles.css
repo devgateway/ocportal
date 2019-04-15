@@ -144,27 +144,51 @@ hr.edit-separator {
     color: #66b558;
 }
 
-/* TODO - do we need this? */
-.accordion-toggle .header-field label.control-label {
-    margin-right: 10px;
-    float: left;
-}
-
-/* TODO - do we need this? */
-.accordion-toggle .header-field .form-group b span {
-    margin-top: 10px;
-    display: block;
-    float: left;
-}
-
+/*.list-wrapper .select2.select2-container {*/
+/*width: 100% !important;*/
+/*}*/
 .select2.select2-container {
     width: 100% !important;
+}
+
+.list-wrapper .accordion-toggle .form-group {
+    margin-bottom: 0;
+}
+
+.accordion-toggle .header-field label.control-label {
+    /*margin-right: 10px;*/
+    /*float: left;*/
+}
+
+.accordion-toggle .header-field .form-group span {
+    /*margin-top: 10px;*/
+    /*display: block;*/
+    /*float: left;*/
+}
+
+.list-wrapper .list-number {
+    float: left;
+    color: #00589e;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.plan-items .list-wrapper .list-number {
+    padding-top: 22px;
 }
 
 .section-title {
     color: #2e6da4;
     font-size: 12pt;
     font-weight: bold !important;
+}
+
+.sleep-mode {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 /*

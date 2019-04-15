@@ -50,6 +50,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,7 +166,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      *
      * @author mpostelnicu
      */
-    public class GenericBootstrapValidationVisitor implements IVisitor<GenericBootstrapFormComponent<?, ?>, Void> {
+    public static class GenericBootstrapValidationVisitor
+            implements IVisitor<GenericBootstrapFormComponent<?, ?>, Void> {
 
         private AjaxRequestTarget target;
 
@@ -271,6 +273,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
             // saves the entity and flushes the changes
             jpaService.saveAndFlush(saveable);
+            getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
 
             // clears session and detaches all entities that are currently
             // attached
@@ -370,7 +373,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      * @param target
      */
     public void triggerShowParentSections(final Component component, final AjaxRequestTarget target) {
-        //we exit if the component is null
+        // we exit if the component is null
         if (component == null || component instanceof Form) {
             return;
         }
@@ -385,7 +388,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             final Label showDetailsLink =
                     (Label) accordion.get(ListViewSectionPanel.ID_ACCORDION_TOGGLE).get("showDetailsLink");
 
-            sectionPanel.showSection(target,
+            final ListViewItem listViewItem = (ListViewItem) ((ListItem) component).getModelObject();
+            sectionPanel.showSection(listViewItem, target,
                     accordion.get(ListViewSectionPanel.ID_HIDEABLE_CONTAINER), showDetailsLink);
         }
 

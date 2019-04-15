@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
@@ -19,5 +21,6 @@ public interface ProcurementPlanRepository extends TextSearchableRepository<Proc
     @Query("select proc from  #{#entityName} proc where lower(proc.department.label) "
             + " like %:name% or lower(proc.fiscalYear.name) like %:name%")
     Page<ProcurementPlan> searchText(@Param("name") String name, Pageable page);
-
-}
+    
+    Long countByDepartmentAndFiscalYearAndIdNot(Department department, FiscalYear fiscalYear, Long id);
+  }

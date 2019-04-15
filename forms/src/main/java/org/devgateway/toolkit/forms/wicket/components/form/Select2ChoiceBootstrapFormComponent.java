@@ -70,12 +70,13 @@ public class Select2ChoiceBootstrapFormComponent<TYPE>
 
     @Override
     protected void onInitialize() {
+        super.onInitialize();
+
         field.getSettings().setPlaceholder("Click to select");
         field.getSettings().setAllowClear(true);
         field.getSettings().setCloseOnSelect(true);
         field.getSettings().setDropdownAutoWidth(true);
         field.getSettings().setTheme(new Select2BootstrapTheme(false));
-        super.onInitialize();
     }
 
     @Override

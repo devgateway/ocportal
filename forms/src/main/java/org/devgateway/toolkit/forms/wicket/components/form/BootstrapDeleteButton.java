@@ -25,7 +25,6 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 
 /**
  * @author mpostelnicu
@@ -53,7 +52,7 @@ public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        add(new AttributeAppender("onclick", new Model<String>("window.onbeforeunload = null;"), " "));
+        add(new AttributeAppender("onclick", new Model<>("window.onbeforeunload = null;"), " "));
         setDefaultFormProcessing(false);
         setIconType(FontAwesomeIconType.trash_o);
 
@@ -64,9 +63,7 @@ public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
 
     @Override
     public void onEvent(final IEvent<?> event) {
-        if (event.getPayload() instanceof EditingDisabledEvent) {
-            this.setEnabled(false);
-        }
+        ComponentUtil.enableDisableEvent(this, event);
     }
 
     @Override

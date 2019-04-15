@@ -28,9 +28,9 @@ import java.util.Set;
  */
 public abstract class GenericEnablingBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>>
         extends GenericBootstrapFormComponent<TYPE, FIELD> {
-    private Set<Component> visibilityBoundComponents = new HashSet<Component>();
+    private final Set<Component> visibilityBoundComponents = new HashSet<Component>();
 
-    private Set<Component> visibilityReverseBoundComponents = new HashSet<Component>();
+    private final Set<Component> visibilityReverseBoundComponents = new HashSet<Component>();
 
     /**
      * @param id
