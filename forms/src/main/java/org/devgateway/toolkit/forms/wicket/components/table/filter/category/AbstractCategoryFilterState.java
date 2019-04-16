@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class AbstractCategoryFilterState<T extends Category> extends JpaFilterState<T> {
     private String label;
+    private String code;
 
     @Override
     public Specification<T> getSpecification() {
@@ -24,6 +25,10 @@ public class AbstractCategoryFilterState<T extends Category> extends JpaFilterSt
 
             if (StringUtils.isNotBlank(label)) {
                 predicates.add(cb.like(cb.lower(root.get(Category_.label)), "%" + label.toLowerCase() + "%"));
+            }
+            
+            if (StringUtils.isNotBlank(code)) {
+                predicates.add(cb.like(cb.lower(root.get(Category_.code)), "%" + code.toLowerCase() + "%"));
             }
 
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -36,5 +41,13 @@ public class AbstractCategoryFilterState<T extends Category> extends JpaFilterSt
 
     public void setLabel(final String label) {
         this.label = label;
+    }
+    
+    public final String getCode() {
+        return code;
+    }
+
+    public final void setCode(final String code) {
+        this.code = code;
     }
 }

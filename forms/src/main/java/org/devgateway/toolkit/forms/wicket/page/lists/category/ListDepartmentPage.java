@@ -18,6 +18,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.forms.wicket.components.table.filter.category.AbstractCategoryFilterState;
 import org.devgateway.toolkit.forms.wicket.components.table.filter.category.DepartmentFilterState;
 import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditDepartmentPage;
@@ -49,6 +50,6 @@ public class ListDepartmentPage extends AbstractListCategoryPage<Department> {
 
     @Override
     public JpaFilterState<Department> newFilterState() {
-        return new DepartmentFilterState();
+        return new AbstractCategoryFilterState();
     }
 }
