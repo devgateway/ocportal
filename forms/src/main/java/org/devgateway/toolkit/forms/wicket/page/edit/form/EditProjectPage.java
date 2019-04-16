@@ -42,13 +42,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
     @Override
     protected Project newInstance() {
         final Project project = jpaService.newInstance();
-
-        // this is for testing purposes
-        final Optional<ProcurementPlan> procurementPlan = procurementPlanService.findById(Long.valueOf(467));
-        if (procurementPlan.isPresent()) {
-            project.setProcurementPlan(procurementPlan.get());
-        }
-
+        // project.setProcurementPlan(procurementPlan);  // here we need to set the ProcurementPlan
         return project;
     }
 
