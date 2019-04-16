@@ -42,8 +42,8 @@ public class ListItemPage extends AbstractListCategoryPage<Item> {
     @Override
     protected void onInitialize() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
-                new Model<>((new StringResourceModel("itemCode", ListItemPage.this)).getString()), "itemCode",
-                "itemCode"));
+                new Model<>((new StringResourceModel("code", ListItemPage.this)).getString()), "code",
+                "code"));
 
         super.onInitialize();
     }

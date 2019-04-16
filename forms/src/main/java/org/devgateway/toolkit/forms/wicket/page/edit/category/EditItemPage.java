@@ -33,13 +33,13 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
     }
 
     private void addCode() {
-        final TextFieldBootstrapFormComponent<String> code = ComponentUtil.addTextField(editForm, "itemCode");
+        final TextFieldBootstrapFormComponent<String> code = ComponentUtil.addTextField(editForm, "code");
         code.required();
         
         code.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueItemCode"),
                 itemService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
-                Item_.itemCode), v), editForm.getModel()
+                Item_.code), v), editForm.getModel()
         ));
 
     }

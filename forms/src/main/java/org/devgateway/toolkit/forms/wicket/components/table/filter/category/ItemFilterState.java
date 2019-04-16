@@ -11,16 +11,16 @@ import java.util.List;
 
 
 public class ItemFilterState extends AbstractCategoryFilterState<Item> {
-    private String itemCode;
+    private String code;
 
     @Override
     public Specification<Item> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();   
 
-            if (StringUtils.isNotBlank(itemCode)) {
-                predicates.add(cb.like(cb.lower(root.get(Item_.itemCode).as(String.class)),
-                        "%" + itemCode + "%"));
+            if (StringUtils.isNotBlank(code)) {
+                predicates.add(cb.like(cb.lower(root.get(Item_.code).as(String.class)),
+                        "%" + code + "%"));
             }
 
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
@@ -28,11 +28,11 @@ public class ItemFilterState extends AbstractCategoryFilterState<Item> {
         };
     }
 
-    public String getItemCode() {
-        return itemCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setItemCode(final String itemCode) {
-        this.itemCode = itemCode;
+    public void setCode(final String code) {
+        this.code = code;
     }
 }

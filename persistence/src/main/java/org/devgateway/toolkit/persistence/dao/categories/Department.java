@@ -22,15 +22,5 @@ import javax.persistence.Entity;
  */
 @Entity
 @Audited
-public class Department extends Category {
-
-    private Integer code;
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(final Integer code) {
-        this.code = code;
-    }
+public class Department extends Category {    
 }
