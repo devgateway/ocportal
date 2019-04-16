@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -37,6 +38,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
     protected void onInitialize() {
         super.onInitialize();
 
+        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
     }
 
     @Override
