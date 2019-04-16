@@ -11,28 +11,12 @@ import java.util.List;
 
 
 public class ItemFilterState extends AbstractCategoryFilterState<Item> {
-    private String code;
-
     @Override
     public Specification<Item> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();   
-
-            if (StringUtils.isNotBlank(code)) {
-                predicates.add(cb.like(cb.lower(root.get(Item_.code).as(String.class)),
-                        "%" + code + "%"));
-            }
-
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));
         };
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(final String code) {
-        this.code = code;
-    }
+    }  
 }
