@@ -31,7 +31,7 @@ import java.util.Set;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
-public class ProcurementPlan extends AbstractMakueniForm implements Serializable, Labelable {
+public class ProcurementPlan extends AbstractMakueniForm {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;

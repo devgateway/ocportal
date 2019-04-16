@@ -56,4 +56,19 @@ public class CabinetPaper extends AbstractMakueniForm {
     public final void setNumber(final String number) {
         this.number = number;
     }
+
+    @Override
+    public void setLabel(final String label) {
+
+    }
+
+    @Override
+    public String getLabel() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return getLabel();
+    }
 }
