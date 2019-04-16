@@ -57,6 +57,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccount
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
@@ -298,6 +299,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         ListChargeAccountPage.class, null,
                         new StringResourceModel("navbar.chargeaccounts", this, null))
                         .setIconType(FontAwesomeIconType.money));
+                
+                list.add(new MenuBookmarkablePageLink<ListSupplierPage>(
+                        ListSupplierPage.class, null,
+                        new StringResourceModel("navbar.suppliers", this, null))
+                        .setIconType(FontAwesomeIconType.list));
 
                 return list;
             }

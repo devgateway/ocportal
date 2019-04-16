@@ -28,9 +28,9 @@ public class EditDepartmentPage extends AbstractCategoryEditPage<Department> {
 
 
     private void addCode() {
-        final TextFieldBootstrapFormComponent<Integer> code =
-                ComponentUtil.addIntegerTextField(editForm, "code");
-        code.integer().required();
+        final TextFieldBootstrapFormComponent<String> code =
+                ComponentUtil.addTextField(editForm, "code");
+        code.required();
 
         code.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueDepartmentCode"),

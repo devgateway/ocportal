@@ -9,10 +9,10 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
-import org.devgateway.toolkit.persistence.dao.categories.Item;
-import org.devgateway.toolkit.persistence.dao.categories.Item_;
-import org.devgateway.toolkit.persistence.service.category.ItemService;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier_;
+import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -21,15 +21,15 @@ import org.wicketstuff.annotation.mount.MountPath;
  *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
-@MountPath("/item")
-public class EditItemPage extends AbstractCategoryEditPage<Item> {
+@MountPath("/supplier")
+public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
     @SpringBean
-    private ItemService itemService;
+    private SupplierService supplierService;
 
-    public EditItemPage(final PageParameters parameters) {
+    public EditSupplierPage(final PageParameters parameters) {
         super(parameters);
-        jpaService = itemService;
-        listPageClass = ListItemPage.class;
+        jpaService = supplierService;
+        listPageClass = ListSupplierPage.class;
     }
 
     private void addCode() {
@@ -37,9 +37,9 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
         code.required();
         
         code.getField().add(new UniquePropertyEntryValidator<>(
-                getString("uniqueItemCode"),
-                itemService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
-                Item_.code), v), editForm.getModel()
+                getString("uniqueCode"),
+                supplierService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
+                Supplier_.code), v), editForm.getModel()
         ));
 
     }
@@ -47,8 +47,8 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
     private void addUniqueNameValidator() {
         label.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueName"),
-                itemService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
-                Item_.label), v), editForm.getModel()
+                supplierService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
+                Supplier_.label), v), editForm.getModel()
         ));
     }
 
@@ -58,6 +58,7 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
         super.onInitialize();
         addCode();
         addUniqueNameValidator();
+        ComponentUtil.addTextAreaField(editForm, "address");
     }
 
 }
