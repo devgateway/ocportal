@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class CabinetPaperFilterState extends AbstractMakueniFormFilterState<CabinetPaper> {
     private String name;
+
     private String number;
 
     @Override
@@ -30,6 +31,7 @@ public class CabinetPaperFilterState extends AbstractMakueniFormFilterState<Cabi
                 predicates.add(cb.like(cb.lower(root.get(CabinetPaper_.number)), "%" + number.toLowerCase() + "%"));
             }
 
+            predicates.add(super.getSpecification().toPredicate(root, query, cb));
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
