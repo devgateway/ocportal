@@ -14,6 +14,8 @@ package org.devgateway.toolkit.forms.wicket.page.edit.category;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.validation.validator.StringValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
@@ -25,6 +27,9 @@ import org.devgateway.toolkit.persistence.dao.categories.Category;
 
 public abstract class AbstractCategoryEditPage<T extends Category> extends AbstractEditPage<T> {
     private static final long serialVersionUID = 6571076983713857766L;
+
+    private static final StringValidator VALIDATOR =
+            WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT;
 
     protected TextFieldBootstrapFormComponent<String> label;
 
@@ -43,6 +48,7 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
                         this.getClass().getSimpleName().replaceAll("Page", "")), ' ')));
 
         label = ComponentUtil.addTextField(editForm, "label");
+        label.getField().add(VALIDATOR);
         label.required();
     }
 }

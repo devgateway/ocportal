@@ -48,6 +48,8 @@ public final class WebConstants {
     public static final class StringValidators {
         public static final StringValidator MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT =
                 StringValidator.maximumLength(DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE);
+        public static final StringValidator MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT =
+                StringValidator.maximumLength(DBConstants.STD_DEFAULT_TEXT_LENGTH);
         public static final StringValidator MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXTAREA =
                 StringValidator.maximumLength(DBConstants.MAX_DEFAULT_TEXT_AREA);
     }
