@@ -297,7 +297,6 @@
             <column name="DTYPE" value="ContractDocument"/>
         </insert>
     </changeSet>
-
     <changeSet id="OCMAKU-37" author="gmutuhu">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="category"/>

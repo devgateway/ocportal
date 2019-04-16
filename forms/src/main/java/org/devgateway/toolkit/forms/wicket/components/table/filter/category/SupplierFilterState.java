@@ -1,8 +1,8 @@
 package org.devgateway.toolkit.forms.wicket.components.table.filter.category;
 
 import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.persistence.dao.categories.Item;
-import org.devgateway.toolkit.persistence.dao.categories.Item_;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ItemFilterState extends AbstractCategoryFilterState<Item> {
+public class SupplierFilterState extends AbstractCategoryFilterState<Supplier> {
     private String code;
 
     @Override
-    public Specification<Item> getSpecification() {
+    public Specification<Supplier> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();   
 
             if (StringUtils.isNotBlank(code)) {
-                predicates.add(cb.like(cb.lower(root.get(Item_.code).as(String.class)),
+                predicates.add(cb.like(cb.lower(root.get(Supplier_.code).as(String.class)),
                         "%" + code + "%"));
             }
 
@@ -28,11 +28,13 @@ public class ItemFilterState extends AbstractCategoryFilterState<Item> {
         };
     }
 
-    public String getCode() {
+    public final String getCode() {
         return code;
     }
 
-    public void setCode(final String code) {
+    public final void setCode(final String code) {
         this.code = code;
     }
+
+   
 }

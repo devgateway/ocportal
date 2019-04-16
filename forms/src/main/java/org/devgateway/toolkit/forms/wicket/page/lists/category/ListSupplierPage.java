@@ -18,38 +18,38 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
-import org.devgateway.toolkit.forms.wicket.components.table.filter.category.ItemFilterState;
+import org.devgateway.toolkit.forms.wicket.components.table.filter.category.SupplierFilterState;
 import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
-import org.devgateway.toolkit.forms.wicket.page.edit.category.EditItemPage;
-import org.devgateway.toolkit.persistence.dao.categories.Item;
-import org.devgateway.toolkit.persistence.service.category.ItemService;
+import org.devgateway.toolkit.forms.wicket.page.edit.category.EditSupplierPage;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.wicketstuff.annotation.mount.MountPath;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
-@MountPath(value = "/items")
-public class ListItemPage extends AbstractListCategoryPage<Item> {
+@MountPath(value = "/suppliers")
+public class ListSupplierPage extends AbstractListCategoryPage<Supplier> {
 
     @SpringBean
-    protected ItemService itemService;
+    protected SupplierService supplierService;
 
-    public ListItemPage(final PageParameters pageParameters) {
+    public ListSupplierPage(final PageParameters pageParameters) {
         super(pageParameters);
 
-        this.jpaService = itemService;
-        this.editPageClass = EditItemPage.class;
+        this.jpaService = supplierService;
+        this.editPageClass = EditSupplierPage.class;
     }
 
     @Override
     protected void onInitialize() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
-                new Model<>((new StringResourceModel("code", ListItemPage.this)).getString()), "code",
+                new Model<>((new StringResourceModel("code", ListSupplierPage.this)).getString()), "code",
                 "code"));
 
         super.onInitialize();
     }
 
     @Override
-    public JpaFilterState<Item> newFilterState() {
-        return new ItemFilterState();
+    public JpaFilterState<Supplier> newFilterState() {
+        return new SupplierFilterState();
     }
 }

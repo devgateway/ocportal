@@ -12,18 +12,9 @@ import javax.persistence.Entity;
 @Entity
 @Audited
 public class Item extends Category {
-    private String itemCode;
-    
-    public String getItemCode() {
-        return itemCode;
-    }
-
-    public void setItemCode(final String itemCode) {
-        this.itemCode = itemCode;
-    }
-
+   
     @Override
     public String toString() {
-        return getItemCode() + " - " + getLabel();
+        return getCode() + " - " + getLabel();
     }
 }
