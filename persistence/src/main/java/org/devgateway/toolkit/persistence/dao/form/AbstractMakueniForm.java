@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -17,7 +18,7 @@ import java.util.Date;
  * @since 2019-04-01
  */
 @MappedSuperclass
-public abstract class AbstractMakueniForm extends AbstractStatusAuditableEntity {
+public abstract class AbstractMakueniForm extends AbstractStatusAuditableEntity implements Labelable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

@@ -1,11 +1,13 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
@@ -18,19 +20,14 @@ import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstra
 import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
 import org.devgateway.toolkit.forms.wicket.components.table.filter.form.CabinetPaperFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.Item;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * @author gmutuhu
@@ -38,7 +35,7 @@ import org.apache.wicket.markup.repeater.Item;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/cabinetPapers")
-public class ListCabinetPaperPage extends AbstractListPage<CabinetPaper> {
+public class ListCabinetPaperPage extends ListAbstractMakueniFormPage<CabinetPaper> {
 
     @SpringBean
     protected CabinetPaperService cabinetPaperService;
@@ -73,6 +70,8 @@ public class ListCabinetPaperPage extends AbstractListPage<CabinetPaper> {
         });
 
         super.onInitialize();
+
+        columns.remove(1); // remove the status column
     }
 
     @Override
