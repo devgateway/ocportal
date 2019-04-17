@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.devgateway.toolkit.forms.wicket.page.edit.category;
 
@@ -35,7 +35,8 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
     private void addCode() {
         final TextFieldBootstrapFormComponent<String> code = ComponentUtil.addTextField(editForm, "code");
         code.required();
-        
+        code.getField().add(VALIDATOR);
+
         code.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueItemCode"),
                 itemService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
@@ -43,7 +44,7 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
         ));
 
     }
-    
+
     private void addUniqueNameValidator() {
         label.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueName"),
@@ -51,7 +52,6 @@ public class EditItemPage extends AbstractCategoryEditPage<Item> {
                 Item_.label), v), editForm.getModel()
         ));
     }
-
 
     @Override
     protected void onInitialize() {

@@ -28,7 +28,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Category;
 public abstract class AbstractCategoryEditPage<T extends Category> extends AbstractEditPage<T> {
     private static final long serialVersionUID = 6571076983713857766L;
 
-    private static final StringValidator VALIDATOR =
+    protected static final StringValidator VALIDATOR =
             WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT;
 
     protected TextFieldBootstrapFormComponent<String> label;
@@ -48,7 +48,7 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
                         this.getClass().getSimpleName().replaceAll("Page", "")), ' ')));
 
         label = ComponentUtil.addTextField(editForm, "label");
-        label.getField().add(VALIDATOR);
         label.required();
+        label.getField().add(VALIDATOR);
     }
 }
