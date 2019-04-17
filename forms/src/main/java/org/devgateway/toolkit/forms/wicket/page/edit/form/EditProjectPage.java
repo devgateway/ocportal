@@ -3,10 +3,16 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
@@ -45,9 +51,11 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
 
         ComponentUtil.addSelect2ChoiceField(editForm, "cabinetPaper", cabinetPaperService).required();
 
-        // TODO - add validation
-        ComponentUtil.addTextField(editForm, "projectTitle").required()
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        final TextFieldBootstrapFormComponent<String> projectTitle =
+                ComponentUtil.addTextField(editForm, "projectTitle");
+        projectTitle.required();
+        projectTitle.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        projectTitle.getField().add(uniqueTitle());
 
         ComponentUtil.addDoubleField(editForm, "amountBudgeted");
         ComponentUtil.addDoubleField(editForm, "amountRequested");
@@ -68,4 +76,29 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
         return project;
     }
 
+    private IValidator<String> uniqueTitle() {
+        final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
+        return new UniqueTitleValidator(id.toLong(-1));
+    }
+
+    public class UniqueTitleValidator implements IValidator<String> {
+        private final Long id;
+
+        public UniqueTitleValidator(final Long id) {
+            this.id = id;
+        }
+
+        @Override
+        public void validate(final IValidatable<String> validatable) {
+            final String titleValue = validatable.getValue();
+            final ProcurementPlan procurementPlan = editForm.getModelObject().getProcurementPlan();
+
+            if (procurementPlan != null && titleValue != null) {
+                if (projectService.countByProcurementPlanAndProjectTitleAndIdNot(procurementPlan, titleValue, id) > 0) {
+                    final ValidationError error = new ValidationError(getString("uniqueTitle"));
+                    validatable.error(error);
+                }
+            }
+        }
+    }
 }

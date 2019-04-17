@@ -3,12 +3,20 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ItemDetailPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
@@ -48,13 +56,16 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
 
-        // TODO - add validation
-        ComponentUtil.addTextField(editForm, "purchaseRequestNumber").required()
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        final TextFieldBootstrapFormComponent<String> purchaseRequestNumber =
+                ComponentUtil.addTextField(editForm, "purchaseRequestNumber");
+        purchaseRequestNumber.required();
+        purchaseRequestNumber.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        purchaseRequestNumber.getField().add(addUniquePurchaseRequestNumberValidator());
 
-        // TODO - validation (Must be unique)
-        ComponentUtil.addTextField(editForm, "title").required()
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "title");
+        title.required();
+        title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        title.getField().add(uniqueTitle());
 
         ComponentUtil.addSelect2ChoiceField(editForm, "requestedBy", staffService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "chargeAccount", chargeAccountService).required();
@@ -70,10 +81,45 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
         editForm.add(purchaseRequestDocs);
     }
 
+    private IValidator addUniquePurchaseRequestNumberValidator() {
+        return new UniquePropertyEntryValidator<>(
+                getString("uniqueNumber"),
+                purchaseRequisitionService::findOne,
+                (o, v) -> (root, query, cb) -> cb.equal(root.get(PurchaseRequisition_.purchaseRequestNumber), v),
+                editForm.getModel());
+    }
+
     @Override
     protected PurchaseRequisition newInstance() {
         final PurchaseRequisition purchaseRequisition = jpaService.newInstance();
         // purchaseRequisition.setProcurementPlan(procurementPlan);  // here we need to set the ProcurementPlan
         return purchaseRequisition;
+    }
+
+    private IValidator<String> uniqueTitle() {
+        final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
+        return new UniqueTitleValidator(id.toLong(-1));
+    }
+
+    public class UniqueTitleValidator implements IValidator<String> {
+        private final Long id;
+
+        public UniqueTitleValidator(final Long id) {
+            this.id = id;
+        }
+
+        @Override
+        public void validate(final IValidatable<String> validatable) {
+            final String titleValue = validatable.getValue();
+            final ProcurementPlan procurementPlan = editForm.getModelObject().getProcurementPlan();
+
+            if (procurementPlan != null && titleValue != null) {
+                if (purchaseRequisitionService
+                        .countByProcurementPlanAndTitleAndIdNot(procurementPlan, titleValue, id) > 0) {
+                    final ValidationError error = new ValidationError(getString("uniqueTitle"));
+                    validatable.error(error);
+                }
+            }
+        }
     }
 }

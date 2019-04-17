@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,5 +11,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface PurchaseRequisitionRepository extends BaseJpaRepository<PurchaseRequisition, Long> {
-
+    Long countByProcurementPlanAndTitleAndIdNot(ProcurementPlan procurementPlan, String title, Long id);
 }
