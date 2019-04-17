@@ -45,6 +45,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
 
         ComponentUtil.addSelect2ChoiceField(editForm, "cabinetPaper", cabinetPaperService).required();
 
+        // TODO - add validation
         ComponentUtil.addTextField(editForm, "projectTitle").required()
                 .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 

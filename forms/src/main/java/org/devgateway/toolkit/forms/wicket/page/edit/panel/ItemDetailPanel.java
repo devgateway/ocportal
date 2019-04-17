@@ -21,7 +21,7 @@ public class ItemDetailPanel extends ListViewSectionPanel<ItemDetail, PurchaseRe
     }
 
     @Override
-    public ItemDetail createNewChild(IModel<PurchaseRequisition> parentModel) {
+    public ItemDetail createNewChild(final IModel<PurchaseRequisition> parentModel) {
         final ItemDetail child = new ItemDetail();
         child.setParent(parentModel.getObject());
         child.setExpanded(true);
@@ -31,12 +31,12 @@ public class ItemDetailPanel extends ListViewSectionPanel<ItemDetail, PurchaseRe
     }
 
     @Override
-    public void populateCompoundListItem(ListItem<ItemDetail> item) {
+    public void populateCompoundListItem(final ListItem<ItemDetail> item) {
 
     }
 
     @Override
-    protected boolean filterListItem(ItemDetail itemDetail) {
+    protected boolean filterListItem(final ItemDetail itemDetail) {
         return true;
     }
 }

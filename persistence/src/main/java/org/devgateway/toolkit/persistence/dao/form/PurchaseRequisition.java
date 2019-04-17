@@ -30,10 +30,12 @@ import java.util.Set;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id")})
+@Table(indexes = {@Index(columnList = "procurement_plan_id"),
+        @Index(columnList = "purchaseRequestNumber"),
+        @Index(columnList = "title")})
 public class PurchaseRequisition extends AbstractMakueniForm {
-
-    private Integer purchaseRequestNumber;
+    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
+    private String purchaseRequestNumber;
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String title;
@@ -58,11 +60,11 @@ public class PurchaseRequisition extends AbstractMakueniForm {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FileMetadata> purchaseRequestDocs;
 
-    public Integer getPurchaseRequestNumber() {
+    public String getPurchaseRequestNumber() {
         return purchaseRequestNumber;
     }
 
-    public void setPurchaseRequestNumber(final Integer purchaseRequestNumber) {
+    public void setPurchaseRequestNumber(final String purchaseRequestNumber) {
         this.purchaseRequestNumber = purchaseRequestNumber;
     }
 
