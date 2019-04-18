@@ -15,6 +15,10 @@ public class GenericSleepFormComponent<T> extends FieldPanel<T> {
         super(id);
     }
 
+    public GenericSleepFormComponent(final String id, final IModel<T> model) {
+        super(id, model);
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
