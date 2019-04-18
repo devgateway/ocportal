@@ -31,6 +31,15 @@ public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceF
         this.dataTable = dataTable;
     }
 
+    public SelectMultiFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
+                                                      final String propertyExpression,
+                                                      final IModel<? extends List<? extends Y>> filterChoices,
+                                                      final AjaxFallbackBootstrapDataTable dataTable) {
+        super(displayModel, propertyExpression, filterChoices);
+
+        this.dataTable = dataTable;
+    }
+
     @Override
     public Component getFilter(final String componentId, final FilterForm<?> form) {
         final Select2MultiChoiceBootstrapFormComponent<Y> selectorField =
