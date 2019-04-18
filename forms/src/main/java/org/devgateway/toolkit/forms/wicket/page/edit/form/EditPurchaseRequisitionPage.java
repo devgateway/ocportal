@@ -60,7 +60,12 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
                 ComponentUtil.addTextField(editForm, "purchaseRequestNumber");
         purchaseRequestNumber.required();
         purchaseRequestNumber.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        purchaseRequestNumber.getField().add(addUniquePurchaseRequestNumberValidator());
+        purchaseRequestNumber.getField().add(new UniquePropertyEntryValidator<>(
+                getString("uniqueNumber"),
+                purchaseRequisitionService::findOne,
+                (o, v) -> (root, query, cb)
+                        -> cb.equal(cb.lower(root.get(PurchaseRequisition_.purchaseRequestNumber)), v.toLowerCase()),
+                editForm.getModel()));
 
         final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "title");
         title.required();
@@ -79,14 +84,6 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
                 new FileInputBootstrapFormComponent("purchaseRequestDocs");
         purchaseRequestDocs.required();
         editForm.add(purchaseRequestDocs);
-    }
-
-    private IValidator addUniquePurchaseRequestNumberValidator() {
-        return new UniquePropertyEntryValidator<>(
-                getString("uniqueNumber"),
-                purchaseRequisitionService::findOne,
-                (o, v) -> (root, query, cb) -> cb.equal(root.get(PurchaseRequisition_.purchaseRequestNumber), v),
-                editForm.getModel());
     }
 
     @Override
