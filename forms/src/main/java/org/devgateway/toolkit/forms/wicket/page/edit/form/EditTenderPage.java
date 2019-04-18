@@ -5,6 +5,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.ItemDetailPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
@@ -55,7 +57,8 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
        ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
        ComponentUtil.addTextAreaField(editForm, "objective");
        ComponentUtil.addSelect2ChoiceField(editForm, "issuedBy", procuringEntityService);
-       ComponentUtil.addDoubleField(editForm, "tenderValue");
+       ComponentUtil.addDoubleField(editForm, "tenderValue");       
+       editForm.add(new TenderItemPanel("tenderItems"));       
        ComponentUtil.addTextField(editForm, "tenderLink");
        final FileInputBootstrapFormComponent tenderDocs =
                new FileInputBootstrapFormComponent("tenderDocs");       

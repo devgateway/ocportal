@@ -1,14 +1,18 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -48,6 +52,11 @@ public class Tender extends AbstractMakueniForm {
     private Set<FileMetadata> tenderDocs;
     private String tenderLink;
         
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @OrderColumn(name = "index")
+    private List<TenderItem> tenderItems = new ArrayList<>();
     
     @Override
     public void setLabel(final String label) {
@@ -139,6 +148,14 @@ public class Tender extends AbstractMakueniForm {
 
     public final void setTenderLink(final String tenderLink) {
         this.tenderLink = tenderLink;
+    }
+
+    public List<TenderItem> getTenderItems() {
+        return tenderItems;
+    }
+
+    public void setTenderItems(final List<TenderItem> tenderItems) {
+        this.tenderItems = tenderItems;
     }
 
 }
