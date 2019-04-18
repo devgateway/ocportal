@@ -36,8 +36,8 @@ public class EditStaffPage extends AbstractCategoryEditPage<Staff> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         ComponentUtil.addTextField(editForm, "title");
         ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService).required();
     }
-
 }
