@@ -65,7 +65,7 @@ public class ListUserPage extends AbstractListPage<Person> {
 
         final List<Role> roles = roleService.findAll();
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),
-                "roles", "roles", new ListModel(roles), dataTable));
+                "roles", new ListModel(roles), dataTable));
 
         super.onInitialize();
         // enable excel download
