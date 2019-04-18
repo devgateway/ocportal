@@ -1,8 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.components.table.filter.category;
 
-import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.dao.categories.Department_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;

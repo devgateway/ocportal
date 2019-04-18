@@ -11,6 +11,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
@@ -78,13 +79,15 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         final PlanItem planItem = item.getModelObject();
         if (planItem.getEditable()) {
             ComponentUtil.addDoubleField(item, "estimatedCost").required();
-            ComponentUtil.addTextField(item, "unitOfIssue").required();
+            ComponentUtil.addTextField(item, "unitOfIssue").required()
+                    .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             ComponentUtil.addIntegerTextField(item, "quantity").required();
             ComponentUtil.addDoubleField(item, "unitPrice").required();
             ComponentUtil.addDoubleField(item, "totalCost").required();
 
             ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
-            ComponentUtil.addTextField(item, "sourceOfFunds");
+            ComponentUtil.addTextField(item, "sourceOfFunds")
+                    .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
             ComponentUtil.addDoubleField(item, "targetGroupValue");
 

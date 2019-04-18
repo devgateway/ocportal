@@ -1,10 +1,12 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,14 @@ public class PurchaseRequisitionServiceImpl extends BaseJpaServiceImpl<PurchaseR
     @Override
     public PurchaseRequisition newInstance() {
         return new PurchaseRequisition();
+    }
+
+    @Cacheable
+    @Override
+    public Long countByProcurementPlanAndTitleAndIdNot(final ProcurementPlan procurementPlan,
+                                               final String title,
+                                               final Long id) {
+        return purchaseRequisitionRepository.countByProcurementPlanAndTitleAndIdNot(procurementPlan, title, id);
     }
 }
 
