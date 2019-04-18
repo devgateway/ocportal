@@ -6,6 +6,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.StringValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
@@ -17,6 +19,8 @@ import org.wicketstuff.annotation.mount.MountPath;
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/fiscalYear")
 public class EditFiscalYearPage extends AbstractEditPage<FiscalYear> {
+    private static final StringValidator VALIDATOR =
+            WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT;
 
     @SpringBean
     private FiscalYearService fiscalYearService;
@@ -32,8 +36,10 @@ public class EditFiscalYearPage extends AbstractEditPage<FiscalYear> {
     }
 
     public void addName() {
-        TextFieldBootstrapFormComponent<String> name = new TextFieldBootstrapFormComponent<>("name");
+        final TextFieldBootstrapFormComponent<String> name = new TextFieldBootstrapFormComponent<>("name");
         name.required();
+        name.getField().add(VALIDATOR);
+
         editForm.add(name);
     }
 

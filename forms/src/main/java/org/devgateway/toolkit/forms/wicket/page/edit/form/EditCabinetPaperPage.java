@@ -52,8 +52,9 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
         numberField.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueCabinetPaperNumber"),
-                cabinetPaperService::findOne, (o, v) -> (root, query, cb) -> cb.equal(root.get(
-                CabinetPaper_.number), v), editForm.getModel()
+                cabinetPaperService::findOne,
+                (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(CabinetPaper_.number)), v.toLowerCase()),
+                editForm.getModel()
         ));
         
         

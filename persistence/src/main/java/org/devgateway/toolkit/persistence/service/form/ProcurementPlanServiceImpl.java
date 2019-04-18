@@ -23,6 +23,7 @@ public class ProcurementPlanServiceImpl extends BaseJpaServiceImpl<ProcurementPl
     private ProcurementPlanRepository procurementPlanRepository;
 
     @Cacheable
+    @Override
     public Long countByDepartmentAndFiscalYearAndIdNot(final Department department,
                                                        final FiscalYear fiscalYear,
                                                        final Long id) {
