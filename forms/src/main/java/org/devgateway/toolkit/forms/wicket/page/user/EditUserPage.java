@@ -13,6 +13,7 @@ package org.devgateway.toolkit.forms.wicket.page.user;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
@@ -46,6 +47,9 @@ import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath(value = "/account")
@@ -145,7 +149,17 @@ public class EditUserPage extends AbstractEditPage<Person> {
         MetaDataRoleAuthorizationStrategy.authorize(department, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
         roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService);
+        roles.getField().add(new RoleAjaxFormComponentUpdatingBehavior("change"));
         roles.required();
+        if (editForm.getModelObject().getRoles() != null) {
+            final List<String> authority = roles.getModelObject().stream()
+                    .map(Role::getAuthority)
+                    .collect(Collectors.toList());
+
+            if (authority.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
+                department.setVisibilityAllowed(false);
+            }
+        }
         MetaDataRoleAuthorizationStrategy.authorize(roles, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
         enabled = ComponentUtil.addCheckToggle(editForm, "enabled");
@@ -221,6 +235,31 @@ public class EditUserPage extends AbstractEditPage<Person> {
                 }
             }
         };
+    }
+
+    /**
+     * If the user changes the Role we need to update some components.
+     */
+    class RoleAjaxFormComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
+        RoleAjaxFormComponentUpdatingBehavior(final String event) {
+            super(event);
+        }
+
+        @Override
+        protected void onUpdate(final AjaxRequestTarget target) {
+            final List<String> authority = roles.getModelObject().stream()
+                    .map(Role::getAuthority)
+                    .collect(Collectors.toList());
+
+            if (authority.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
+                department.setVisibilityAllowed(false);
+                department.setModelObject(null);
+            } else {
+                department.setVisibilityAllowed(true);
+            }
+
+            target.add(department);
+        }
     }
 
     public static class PasswordPatternValidator extends PatternValidator {
