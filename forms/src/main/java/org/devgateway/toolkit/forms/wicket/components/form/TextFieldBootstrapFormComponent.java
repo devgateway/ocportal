@@ -48,7 +48,7 @@ public class TextFieldBootstrapFormComponent<TYPE> extends GenericBootstrapFormC
 
     @Override
     protected TextField<TYPE> inputField(final String id, final IModel<TYPE> model) {
-        return new TextField<TYPE>(id, initFieldModel());
+        return new TextField<>(id, initFieldModel());
     }
 
     public TextFieldBootstrapFormComponent<TYPE> integer() {
