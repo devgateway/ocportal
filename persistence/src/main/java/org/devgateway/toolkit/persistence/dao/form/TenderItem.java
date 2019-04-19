@@ -22,17 +22,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_detail_id"), @Index(columnList = "description")})
+@Table(indexes = { @Index(columnList = "parent_id"), @Index(columnList = "item_detail_id"),
+        @Index(columnList = "description") })
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private ItemDetail itemDetail; //requisition item
+    private ItemDetail itemDetail; // requisition item
     private String description;
     private String unitOfIssue;
     private Integer quantity;
-    private Double unitPrice;    
+    private Double unitPrice;
     private Double totalCost;
-    
+
     public String getDescription() {
         return description;
     }
@@ -77,7 +78,7 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
         return itemDetail;
     }
 
-    public void setItemDetail(ItemDetail itemDetail) {
+    public void setItemDetail(final ItemDetail itemDetail) {
         this.itemDetail = itemDetail;
     }
 
@@ -96,7 +97,7 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     @Override
     public void setEditable(final Boolean editable) {
-        this.editable = editable;        
+        this.editable = editable;
     }
 
     @Override
@@ -106,7 +107,7 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     @Override
     public void setExpanded(final Boolean expanded) {
-        this.expanded = expanded;        
+        this.expanded = expanded;
     }
 
 }

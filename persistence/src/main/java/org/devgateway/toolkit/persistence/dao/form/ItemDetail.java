@@ -103,7 +103,7 @@ public class ItemDetail extends AbstractChildAuditableEntity<PurchaseRequisition
     }
 
     @Override
-    public void setLabel(String label) {
+    public void setLabel(final String label) {
                
     }
 }

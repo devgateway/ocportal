@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-
 /**
  * @author gmutuhu
  *
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface ItemDetailRepository extends TextSearchableRepository<ItemDetail, Long> {
     @Override
-    @Query("select itemDetail from  #{#entityName} itemDetail where lower(itemDetail.planItem.description) like %:description%")
+    @Query("select itemDetail from  #{#entityName} itemDetail where "
+            + " lower(itemDetail.planItem.description) like %:description%")
     Page<ItemDetail> searchText(@Param("description") String description, Pageable page);
 }
