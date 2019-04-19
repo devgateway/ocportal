@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
@@ -15,8 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
-import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.hibernate.annotations.Cache;
@@ -30,9 +31,13 @@ import org.hibernate.envers.Audited;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tenderTitle")})
+@Table(indexes = {@Index(columnList = "procurement_plan_id"), 
+        @Index(columnList = "tenderTitle"), 
+        @Index(columnList = "tenderNumber")})
 public class Tender extends AbstractMakueniForm {
-    private String tenderNumber;
+    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
+    private String tenderNumber;    
+    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderTitle;
     private Date invitationDate;
     private Date closingDate;
@@ -40,6 +45,8 @@ public class Tender extends AbstractMakueniForm {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
+    
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String objective;
     
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -50,6 +57,8 @@ public class Tender extends AbstractMakueniForm {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FileMetadata> tenderDocs;
+    
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String tenderLink;
         
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -60,8 +69,7 @@ public class Tender extends AbstractMakueniForm {
     
     @Override
     public void setLabel(final String label) {
-        // TODO Auto-generated method stub
-
+        
     }
 
     @Override
@@ -70,83 +78,83 @@ public class Tender extends AbstractMakueniForm {
         return null;
     }
 
-    public final String getTenderNumber() {
+    public String getTenderNumber() {
         return tenderNumber;
     }
 
-    public final void setTenderNumber(final String tenderNumber) {
+    public void setTenderNumber(final String tenderNumber) {
         this.tenderNumber = tenderNumber;
     }
 
-    public final String getTenderTitle() {
+    public String getTenderTitle() {
         return tenderTitle;
     }
 
-    public final void setTenderTitle(final String tenderTitle) {
+    public void setTenderTitle(final String tenderTitle) {
         this.tenderTitle = tenderTitle;
     }
 
-    public final Date getInvitationDate() {
+    public Date getInvitationDate() {
         return invitationDate;
     }
 
-    public final void setInvitationDate(final Date invitationDate) {
+    public void setInvitationDate(final Date invitationDate) {
         this.invitationDate = invitationDate;
     }
 
-    public final Date getClosingDate() {
+    public Date getClosingDate() {
         return closingDate;
     }
 
-    public final void setClosingDate(final Date closingDate) {
+    public void setClosingDate(final Date closingDate) {
         this.closingDate = closingDate;
     }
 
-    public final ProcurementMethod getProcurementMethod() {
+    public ProcurementMethod getProcurementMethod() {
         return procurementMethod;
     }
 
-    public final void setProcurementMethod(final ProcurementMethod procurementMethod) {
+    public void setProcurementMethod(final ProcurementMethod procurementMethod) {
         this.procurementMethod = procurementMethod;
     }
 
-    public final String getObjective() {
+    public String getObjective() {
         return objective;
     }
 
-    public final void setObjective(final String objective) {
+    public void setObjective(final String objective) {
         this.objective = objective;
     }
 
-    public final ProcuringEntity getIssuedBy() {
+    public ProcuringEntity getIssuedBy() {
         return issuedBy;
     }
-
-    public final void setIssuedBy(final ProcuringEntity issuedBy) {
+   
+    public void setIssuedBy(final ProcuringEntity issuedBy) {
         this.issuedBy = issuedBy;
     }
 
-    public final Double getTenderValue() {
+    public Double getTenderValue() {
         return tenderValue;
     }
 
-    public final void setTenderValue(final Double tenderValue) {
+    public void setTenderValue(final Double tenderValue) {
         this.tenderValue = tenderValue;
     }
 
-    public final Set<FileMetadata> getTenderDocs() {
+    public Set<FileMetadata> getTenderDocs() {
         return tenderDocs;
     }
 
-    public final void setTenderDocs(final Set<FileMetadata> tenderDocs) {
+    public void setTenderDocs(final Set<FileMetadata> tenderDocs) {
         this.tenderDocs = tenderDocs;
     }
 
-    public final String getTenderLink() {
+    public String getTenderLink() {
         return tenderLink;
     }
 
-    public final void setTenderLink(final String tenderLink) {
+    public void setTenderLink(final String tenderLink) {
         this.tenderLink = tenderLink;
     }
 

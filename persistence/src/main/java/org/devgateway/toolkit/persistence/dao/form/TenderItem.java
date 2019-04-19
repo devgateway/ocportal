@@ -8,7 +8,6 @@ import javax.persistence.Transient;
 
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
-import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -23,25 +22,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
+@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_detail_id"), @Index(columnList = "description")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private Item item;
+    private ItemDetail itemDetail; //requisition item
     private String description;
     private String unitOfIssue;
     private Integer quantity;
     private Double unitPrice;    
     private Double totalCost;
     
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(final Item item) {
-        this.item = item;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -80,6 +71,14 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     public void setTotalCost(final Double totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public ItemDetail getItemDetail() {
+        return itemDetail;
+    }
+
+    public void setItemDetail(ItemDetail itemDetail) {
+        this.itemDetail = itemDetail;
     }
 
     @Transient
