@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.devgateway.toolkit.forms.wicket.page.edit.category;
 
@@ -36,8 +36,7 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
         super.onInitialize();
 
         addCode();
-        TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");        
-        address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);  
-        
+        TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
+        address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
     }
 }
