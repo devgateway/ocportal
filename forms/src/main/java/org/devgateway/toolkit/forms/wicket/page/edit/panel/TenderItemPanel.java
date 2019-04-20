@@ -13,8 +13,8 @@ import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavi
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.service.form.ItemDetailService;
 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
@@ -66,9 +66,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                         target.add(totalCost);
                     }
                 };
-                price.asDouble();
-                price.required();
-                item.add(price);
+        price.asDouble();
+        price.required();
+        item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
                 (IModel<Double>) () -> {

@@ -1,18 +1,17 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author gmutuhu
@@ -22,25 +21,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = { @Index(columnList = "parent_id"), @Index(columnList = "item_detail_id"),
-        @Index(columnList = "description") })
+@Table(indexes = { @Index(columnList = "parent_id"), @Index(columnList = "item_detail_id")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ItemDetail itemDetail; // requisition item
-    private String description;
     private String unitOfIssue;
     private Integer quantity;
     private Double unitPrice;
     private Double totalCost;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
 
     public String getUnitOfIssue() {
         return unitOfIssue;
