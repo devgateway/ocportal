@@ -73,20 +73,16 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     @Transient
     @JsonIgnore
-    private Boolean editable = false;
-
-    @Transient
-    @JsonIgnore
     private Boolean expanded = false;
 
     @Override
     public Boolean getEditable() {
-        return editable;
+        return null;
     }
 
     @Override
     public void setEditable(final Boolean editable) {
-        this.editable = editable;
+
     }
 
     @Override

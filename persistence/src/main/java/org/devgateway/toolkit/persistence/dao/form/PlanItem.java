@@ -69,6 +69,10 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     @Transient
     @JsonIgnore
+    private Boolean editable = false;
+
+    @Transient
+    @JsonIgnore
     private Boolean expanded = false;
 
     public Item getItem() {
@@ -193,12 +197,12 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     @Override
     public Boolean getEditable() {
-        return null;
+        return editable;
     }
 
     @Override
     public void setEditable(final Boolean editable) {
-
+        this.editable = editable;
     }
 
     @Override
