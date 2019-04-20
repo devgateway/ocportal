@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -23,7 +24,7 @@ import javax.persistence.Transient;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
-public class ItemDetail extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem {
+public class ItemDetail extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PlanItem planItem;
@@ -89,5 +90,20 @@ public class ItemDetail extends AbstractChildAuditableEntity<PurchaseRequisition
     @Override
     public void setExpanded(final Boolean expanded) {
         this.expanded = expanded;
+    }
+    
+    @Override
+    public String getLabel() {
+        return planItem.getDescription();
+    }
+
+    @Override
+    public String toString() {
+        return getLabel();
+    }
+
+    @Override
+    public void setLabel(final String label) {
+               
     }
 }

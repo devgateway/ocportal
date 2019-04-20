@@ -57,12 +57,14 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccount
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
@@ -311,6 +313,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         ListStaffPage.class, null,
                         new StringResourceModel("navbar.stafflist", this, null))
                         .setIconType(FontAwesomeIconType.list));
+                
+                list.add(new MenuBookmarkablePageLink<ListProcuringEntityPage>(
+                        ListProcuringEntityPage.class, null,
+                        new StringResourceModel("navbar.procuringentitylist", this, null))
+                        .setIconType(FontAwesomeIconType.list));
 
                 return list;
             }
@@ -341,6 +348,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
                 list.add(new MenuBookmarkablePageLink<ListProjectPage>(ListProjectPage.class, null,
                         new StringResourceModel("navbar.project", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+                
+                list.add(new MenuBookmarkablePageLink<ListTenderPage>(ListTenderPage.class, null,
+                        new StringResourceModel("navbar.tenderdocument", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
 
                 list.add(new MenuBookmarkablePageLink<ListPurchaseRequisitionPage>(
