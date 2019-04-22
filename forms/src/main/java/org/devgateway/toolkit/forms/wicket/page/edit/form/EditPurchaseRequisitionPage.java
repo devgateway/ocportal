@@ -20,6 +20,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -36,6 +37,9 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
 
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
+
+    @SpringBean
+    protected ProjectService projectService;
 
     @SpringBean
     protected StaffService staffService;
@@ -55,6 +59,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
         super.onInitialize();
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "project", projectService).required();
 
         final TextFieldBootstrapFormComponent<String> purchaseRequestNumber =
                 ComponentUtil.addTextField(editForm, "purchaseRequestNumber");

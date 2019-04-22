@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +23,11 @@ public class ProjectServiceImpl extends BaseJpaServiceImpl<Project> implements P
 
     @Override
     protected BaseJpaRepository<Project, Long> repository() {
+        return projectRepository;
+    }
+
+    @Override
+    public TextSearchableRepository<Project, Long> textRepository() {
         return projectRepository;
     }
 

@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
@@ -10,6 +11,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,9 +30,15 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"),
+        @Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"),
         @Index(columnList = "title")})
 public class PurchaseRequisition extends AbstractMakueniForm {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Project project;
+
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
 
@@ -52,6 +60,14 @@ public class PurchaseRequisition extends AbstractMakueniForm {
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<ItemDetail> itemDetails = new ArrayList<>();
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(final Project project) {
+        this.project = project;
+    }
 
     public String getPurchaseRequestNumber() {
         return purchaseRequestNumber;
@@ -108,6 +124,11 @@ public class PurchaseRequisition extends AbstractMakueniForm {
 
     @Override
     public String getLabel() {
-        return null;
+        return title;
+    }
+
+    @Override
+    public String toString() {
+        return getLabel();
     }
 }
