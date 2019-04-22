@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,6 +24,11 @@ public class PurchaseRequisitionServiceImpl extends BaseJpaServiceImpl<PurchaseR
 
     @Override
     protected BaseJpaRepository<PurchaseRequisition, Long> repository() {
+        return purchaseRequisitionRepository;
+    }
+
+    @Override
+    public TextSearchableRepository<PurchaseRequisition, Long> textRepository() {
         return purchaseRequisitionRepository;
     }
 

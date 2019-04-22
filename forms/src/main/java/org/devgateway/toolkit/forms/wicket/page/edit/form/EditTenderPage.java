@@ -27,6 +27,7 @@ import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
@@ -49,12 +50,16 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
+
+    @SpringBean
     protected ProcurementMethodService procurementMethodService;
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
 
     private GenericSleepFormComponent procuringEntityEmail = null;
+
     private GenericSleepFormComponent procuringEntityAddress = null;
 
     /**
@@ -70,6 +75,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     protected void onInitialize() {
         super.onInitialize();
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "purchaseRequisition", purchaseRequisitionService).required();
 
         final TextFieldBootstrapFormComponent<String> tenderNumber = ComponentUtil.addTextField(editForm,
                 "tenderNumber");
