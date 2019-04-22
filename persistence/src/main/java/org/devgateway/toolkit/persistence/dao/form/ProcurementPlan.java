@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import org.devgateway.toolkit.persistence.dao.FileMetadata;
-import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.hibernate.annotations.Cache;
@@ -10,18 +8,14 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author idobre
@@ -45,10 +39,6 @@ public class ProcurementPlan extends AbstractMakueniForm {
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<PlanItem> planItems = new ArrayList<>();
-
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<FileMetadata> procurementPlanDocs;
 
     public ProcurementPlan() {
 
@@ -81,14 +71,6 @@ public class ProcurementPlan extends AbstractMakueniForm {
 
     public void setPlanItems(final List<PlanItem> planItems) {
         this.planItems = planItems;
-    }
-
-    public Set<FileMetadata> getProcurementPlanDocs() {
-        return procurementPlanDocs;
-    }
-
-    public void setProcurementPlanDocs(final Set<FileMetadata> procurementPlanDocs) {
-        this.procurementPlanDocs = procurementPlanDocs;
     }
 
     @Override

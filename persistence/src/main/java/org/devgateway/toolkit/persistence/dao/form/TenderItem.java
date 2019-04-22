@@ -15,13 +15,12 @@ import javax.persistence.Transient;
 
 /**
  * @author gmutuhu
- *
  */
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = { @Index(columnList = "parent_id"), @Index(columnList = "item_detail_id")})
+@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_detail_id")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne

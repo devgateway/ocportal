@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-import java.util.Set;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -33,6 +31,8 @@ import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.util.Set;
 
 /**
  * @author gmutuhu
@@ -101,8 +101,8 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         tenderLink.getField().add(tenderDocOrTenderLinkRequiredValidator());
            
 
-        final FileInputBootstrapFormComponent tenderDocs = new FileInputBootstrapFormComponent("tenderDocs");
-        editForm.add(tenderDocs);
+        final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
+        editForm.add(formDocs);
 
     }
 
@@ -158,16 +158,13 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         @Override
         public void validate(final IValidatable<String> validatable) {
             final String tenderLinkValue = validatable.getValue();
-            Set<FileMetadata> uploadedFiles = editForm.getModelObject().getTenderDocs();
+            final Set<FileMetadata> uploadedFiles = editForm.getModelObject().getFormDocs();
             
             if (StringUtils.isEmpty(tenderLinkValue) && uploadedFiles.isEmpty()) {
                 final ValidationError error = new ValidationError(getString("tenderDocRequired"));
                 validatable.error(error);
             }
-            
-            
-            
-            
+
         }
     }
 }

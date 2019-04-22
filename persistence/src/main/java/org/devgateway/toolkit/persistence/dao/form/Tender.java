@@ -1,28 +1,24 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
+import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-
-import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.FileMetadata;
-import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
-import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.envers.Audited;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author gmutuhu
@@ -36,10 +32,13 @@ import org.hibernate.envers.Audited;
         @Index(columnList = "tenderNumber")})
 public class Tender extends AbstractMakueniForm {
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
-    private String tenderNumber;    
+    private String tenderNumber;
+
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderTitle;
+
     private Date invitationDate;
+
     private Date closingDate;
     
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -54,10 +53,6 @@ public class Tender extends AbstractMakueniForm {
     private ProcuringEntity issuedBy;
     private Double tenderValue;
     
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<FileMetadata> tenderDocs;
-    
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String tenderLink;
         
@@ -66,7 +61,7 @@ public class Tender extends AbstractMakueniForm {
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<TenderItem> tenderItems = new ArrayList<>();
-    
+
     @Override
     public void setLabel(final String label) {
         
@@ -74,7 +69,6 @@ public class Tender extends AbstractMakueniForm {
 
     @Override
     public String getLabel() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -140,14 +134,6 @@ public class Tender extends AbstractMakueniForm {
 
     public void setTenderValue(final Double tenderValue) {
         this.tenderValue = tenderValue;
-    }
-
-    public Set<FileMetadata> getTenderDocs() {
-        return tenderDocs;
-    }
-
-    public void setTenderDocs(final Set<FileMetadata> tenderDocs) {
-        this.tenderDocs = tenderDocs;
     }
 
     public String getTenderLink() {
