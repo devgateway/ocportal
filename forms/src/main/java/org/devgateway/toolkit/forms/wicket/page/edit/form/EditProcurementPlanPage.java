@@ -58,10 +58,10 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
 
         editForm.add(new PlanItemPanel("planItems"));
 
-        final FileInputBootstrapFormComponent procurementPlanDocs =
-                new FileInputBootstrapFormComponent("procurementPlanDocs");
-        procurementPlanDocs.required();
-        editForm.add(procurementPlanDocs);
+        final FileInputBootstrapFormComponent formDocs =
+                new FileInputBootstrapFormComponent("formDocs");
+        formDocs.required();
+        editForm.add(formDocs);
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
     }

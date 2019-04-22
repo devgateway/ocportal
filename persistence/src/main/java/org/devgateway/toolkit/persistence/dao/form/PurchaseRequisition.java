@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.hibernate.annotations.Cache;
@@ -11,7 +10,6 @@ import org.hibernate.envers.Audited;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,7 +19,6 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author idobre
@@ -55,10 +52,6 @@ public class PurchaseRequisition extends AbstractMakueniForm {
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<ItemDetail> itemDetails = new ArrayList<>();
-
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<FileMetadata> purchaseRequestDocs;
 
     public String getPurchaseRequestNumber() {
         return purchaseRequestNumber;
@@ -106,14 +99,6 @@ public class PurchaseRequisition extends AbstractMakueniForm {
 
     public void setItemDetails(final List<ItemDetail> itemDetails) {
         this.itemDetails = itemDetails;
-    }
-
-    public Set<FileMetadata> getPurchaseRequestDocs() {
-        return purchaseRequestDocs;
-    }
-
-    public void setPurchaseRequestDocs(final Set<FileMetadata> purchaseRequestDocs) {
-        this.purchaseRequestDocs = purchaseRequestDocs;
     }
 
     @Override

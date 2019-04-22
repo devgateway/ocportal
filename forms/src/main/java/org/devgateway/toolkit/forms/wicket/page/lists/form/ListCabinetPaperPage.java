@@ -62,7 +62,7 @@ public class ListCabinetPaperPage extends ListAbstractMakueniFormPage<CabinetPap
             @Override
             public void populateItem(final Item<ICellPopulator<CabinetPaper>> cellItem, final String componentId,
                     final IModel<CabinetPaper> model) {
-                FileMetadata file = model.getObject().getCabinetPaperDocs().stream().findFirst().orElse(null);
+                final FileMetadata file = model.getObject().getFormDocs().stream().findFirst().orElse(null);
                 if (file != null) {
                     cellItem.add(new DownloadPanel(componentId, new Model(file)));
                 }

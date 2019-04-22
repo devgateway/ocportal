@@ -80,10 +80,9 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
-        final FileInputBootstrapFormComponent purchaseRequestDocs =
-                new FileInputBootstrapFormComponent("purchaseRequestDocs");
-        purchaseRequestDocs.required();
-        editForm.add(purchaseRequestDocs);
+        final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
+        formDocs.required();
+        editForm.add(formDocs);
     }
 
     @Override

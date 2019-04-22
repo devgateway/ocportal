@@ -58,7 +58,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         ));
         
         
-        final FileInputBootstrapFormComponent doc = new FileInputBootstrapFormComponent("cabinetPaperDocs");
+        final FileInputBootstrapFormComponent doc = new FileInputBootstrapFormComponent("formDocs");
         doc.maxFiles(1);
         doc.required();
         editForm.add(doc);
