@@ -12,7 +12,7 @@ import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.edit.panel.ItemDetailPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -81,7 +81,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
         ComponentUtil.addSelect2ChoiceField(editForm, "chargeAccount", chargeAccountService).required();
         ComponentUtil.addDateField(editForm, "requestApprovalDate").required();
 
-        editForm.add(new ItemDetailPanel("itemDetails"));
+        editForm.add(new PurchaseItemPanel("purchaseItems"));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 

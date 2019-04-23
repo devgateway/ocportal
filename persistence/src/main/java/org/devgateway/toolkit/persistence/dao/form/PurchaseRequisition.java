@@ -59,7 +59,7 @@ public class PurchaseRequisition extends AbstractMakueniForm {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
-    private List<ItemDetail> itemDetails = new ArrayList<>();
+    private List<PurchaseItem> purchaseItems = new ArrayList<>();
 
     public Project getProject() {
         return project;
@@ -109,12 +109,12 @@ public class PurchaseRequisition extends AbstractMakueniForm {
         this.requestApprovalDate = requestApprovalDate;
     }
 
-    public List<ItemDetail> getItemDetails() {
-        return itemDetails;
+    public List<PurchaseItem> getPurchaseItems() {
+        return purchaseItems;
     }
 
-    public void setItemDetails(final List<ItemDetail> itemDetails) {
-        this.itemDetails = itemDetails;
+    public void setPurchaseItems(final List<PurchaseItem> purchaseItems) {
+        this.purchaseItems = purchaseItems;
     }
 
     @Override

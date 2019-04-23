@@ -49,6 +49,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
 
+        // TODO - this should be filtered based on form Procurement Plan
         ComponentUtil.addSelect2ChoiceField(editForm, "cabinetPaper", cabinetPaperService).required();
 
         final TextFieldBootstrapFormComponent<String> projectTitle =

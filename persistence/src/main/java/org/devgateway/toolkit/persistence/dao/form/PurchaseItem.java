@@ -24,7 +24,7 @@ import javax.persistence.Transient;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
-public class ItemDetail extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
+public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PlanItem planItem;
@@ -94,7 +94,7 @@ public class ItemDetail extends AbstractChildAuditableEntity<PurchaseRequisition
     
     @Override
     public String getLabel() {
-        return planItem.getDescription();
+        return planItem.getLabel();
     }
 
     @Override
