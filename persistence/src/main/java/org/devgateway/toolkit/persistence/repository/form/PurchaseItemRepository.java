@@ -1,6 +1,6 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
-import org.devgateway.toolkit.persistence.dao.form.ItemDetail;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Transactional
-public interface ItemDetailRepository extends TextSearchableRepository<ItemDetail, Long> {
+public interface PurchaseItemRepository extends TextSearchableRepository<PurchaseItem, Long> {
     @Override
-    @Query("select itemDetail from  #{#entityName} itemDetail where "
-            + " lower(itemDetail.planItem.description) like %:description%")
-    Page<ItemDetail> searchText(@Param("description") String description, Pageable page);
+    @Query("select purchaseItem from  #{#entityName} purchaseItem where "
+            + " lower(purchaseItem.planItem.description) like %:description%")
+    Page<PurchaseItem> searchText(@Param("description") String description, Pageable page);
 }

@@ -13,7 +13,7 @@ import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavi
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.persistence.dao.form.ItemDetail;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.PlanItemService;
 
@@ -21,13 +21,13 @@ import org.devgateway.toolkit.persistence.service.form.PlanItemService;
  * @author idobre
  * @since 2019-04-17
  */
-public class ItemDetailPanel extends ListViewSectionPanel<ItemDetail, PurchaseRequisition> {
+public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchaseRequisition> {
     @SpringBean
     private PlanItemService planItemService;
 
     private GenericSleepFormComponent totalCost;
 
-    public ItemDetailPanel(final String id) {
+    public PurchaseItemPanel(final String id) {
         super(id);
     }
 
@@ -37,8 +37,8 @@ public class ItemDetailPanel extends ListViewSectionPanel<ItemDetail, PurchaseRe
     }
 
     @Override
-    public ItemDetail createNewChild(final IModel<PurchaseRequisition> parentModel) {
-        final ItemDetail child = new ItemDetail();
+    public PurchaseItem createNewChild(final IModel<PurchaseRequisition> parentModel) {
+        final PurchaseItem child = new PurchaseItem();
         child.setParent(parentModel.getObject());
         child.setExpanded(true);
         child.setEditable(true);
@@ -47,7 +47,7 @@ public class ItemDetailPanel extends ListViewSectionPanel<ItemDetail, PurchaseRe
     }
 
     @Override
-    public void populateCompoundListItem(final ListItem<ItemDetail> item) {
+    public void populateCompoundListItem(final ListItem<PurchaseItem> item) {
         final TextFieldBootstrapFormComponent<Integer> quantity =
                 new TextFieldBootstrapFormComponent<Integer>("quantity") {
                     @Override
@@ -86,17 +86,17 @@ public class ItemDetailPanel extends ListViewSectionPanel<ItemDetail, PurchaseRe
     }
 
     @Override
-    protected boolean filterListItem(final ItemDetail itemDetail) {
+    protected boolean filterListItem(final PurchaseItem purchaseItem) {
         return true;
     }
 
     @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<ItemDetail> compoundModel) {
-        return new ItemDetailHeaderPanel(id, compoundModel);
+    protected Component getHeaderField(final String id, final CompoundPropertyModel<PurchaseItem> compoundModel) {
+        return new PurchaseItemHeaderPanel(id, compoundModel);
     }
 
-    private class ItemDetailHeaderPanel extends GenericPanel<ItemDetail> {
-        ItemDetailHeaderPanel(final String componentId, final IModel<ItemDetail> model) {
+    private class PurchaseItemHeaderPanel extends GenericPanel<PurchaseItem> {
+        PurchaseItemHeaderPanel(final String componentId, final IModel<PurchaseItem> model) {
             super(componentId, model);
         }
 
@@ -104,6 +104,7 @@ public class ItemDetailPanel extends ListViewSectionPanel<ItemDetail, PurchaseRe
         protected void onInitialize() {
             super.onInitialize();
 
+            // TODO - this should be filtered based on form Procurement Plan
             final Component planItem = ComponentUtil.addSelect2ChoiceField(this, "planItem", planItemService)
                     .required();
             planItem.add(new StopEventPropagationBehavior());

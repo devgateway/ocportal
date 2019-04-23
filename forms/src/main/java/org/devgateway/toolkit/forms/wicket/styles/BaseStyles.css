@@ -34,7 +34,6 @@ body {
      *
      * HACK: The default bootstrap navbar is 50px height and has a bottom margin of 20px for the default font size.
      *
-     * TODO: Convert to LESS and use Bootstrap variables.
      * @see: Navbar.Position.TOP
      * @see: bootstrap::navbar.less
      */

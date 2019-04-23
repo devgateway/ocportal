@@ -20,14 +20,18 @@ import javax.persistence.Transient;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_detail_id")})
+@Table(indexes = {@Index(columnList = "parent_id")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private ItemDetail itemDetail; // requisition item
+    private PurchaseItem purchaseItem; // requisition item
+
     private String unitOfIssue;
+
     private Integer quantity;
+
     private Double unitPrice;
+
     private Double totalCost;
 
     public String getUnitOfIssue() {
@@ -62,12 +66,12 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
         this.totalCost = totalCost;
     }
 
-    public ItemDetail getItemDetail() {
-        return itemDetail;
+    public PurchaseItem getPurchaseItem() {
+        return purchaseItem;
     }
 
-    public void setItemDetail(final ItemDetail itemDetail) {
-        this.itemDetail = itemDetail;
+    public void setPurchaseItem(final PurchaseItem purchaseItem) {
+        this.purchaseItem = purchaseItem;
     }
 
     @Transient

@@ -15,11 +15,11 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
-import org.devgateway.toolkit.persistence.service.form.ItemDetailService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseItemService;
 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     @SpringBean
-    private ItemDetailService itemDetailService;
+    private PurchaseItemService purchaseItemService;
 
     private GenericSleepFormComponent totalCost;
 
@@ -82,7 +82,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     }
 
     @Override
-    protected boolean filterListItem(final TenderItem itemDetail) {
+    protected boolean filterListItem(final TenderItem tenderItem) {
         return true;
     }
 
@@ -100,7 +100,8 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         protected void onInitialize() {
             super.onInitialize();
 
-            final Component planItem = ComponentUtil.addSelect2ChoiceField(this, "itemDetail", itemDetailService)
+            // TODO - this should be filtered based on form Procurement Plan
+            final Component planItem = ComponentUtil.addSelect2ChoiceField(this, "purchaseItem", purchaseItemService)
                     .required();
             planItem.add(new StopEventPropagationBehavior());
         }
