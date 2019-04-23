@@ -42,12 +42,6 @@ public abstract class BootstrapCancelButton extends LaddaAjaxButton {
     @Override
     protected abstract void onSubmit(AjaxRequestTarget target);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.
-     * LaddaAjaxButton#onInitialize()
-     */
     @Override
     protected void onInitialize() {
         super.onInitialize();

@@ -50,6 +50,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
+import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.select2.Select2Choice;
@@ -159,16 +160,16 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         super.onBeforeRender();
 
         checkAndSendEventForDisableEditing();
-        setStatusLabelVisibility();
-    }
 
-    private void setStatusLabelVisibility() {
         this.statusLabel.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusLabel());
     }
 
+    private boolean isViewMode() {
+        return SecurityConstants.Action.VIEW.equals(getAllowedAccess(editForm.getModelObject()));
+    }
+
     private void checkAndSendEventForDisableEditing() {
-        if (!Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT)
-                || SecurityConstants.Action.VIEW.equals(getAllowedAccess(editForm.getModelObject()))) {
+        if (!Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
     }
@@ -315,22 +316,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return statusComments;
     }
 
-    private void setStatusAppendComment(final String status) {
-        final T saveable = editForm.getModelObject();
-
-        // do not save an empty comment if previous status is same as current status and comment box is empty
-        if (status.equals(saveable.getStatus()) && ObjectUtils.isEmpty(saveable.getNewStatusComment())) {
-            saveable.setStatus(status);
-            return;
-        }
-        saveable.setStatus(status);
-
-        final StatusChangedComment comment = new StatusChangedComment();
-        comment.setStatus(status);
-        comment.setComment(editForm.getModelObject().getNewStatusComment());
-        saveable.getStatusComments().add(comment);
-    }
-
     /**
      * Use this function to get the block UI message while the form is saved.
      */
@@ -339,7 +324,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 .getString() + "')";
     }
 
-
+    /*******************************************************************************
+     * Buttons Behavior
+     *******************************************************************************/
     private void applyDraftSaveBehavior(final BootstrapSubmitButton button) {
         // disable form validation
         button.setDefaultFormProcessing(false);
@@ -458,43 +445,73 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return saveEditPageButton;
     }
 
+    private void setStatusAppendComment(final String status) {
+        final T saveable = editForm.getModelObject();
+
+        // do not save an empty comment if previous status is same as current status and comment box is empty
+        if (status.equals(saveable.getStatus()) && ObjectUtils.isEmpty(saveable.getNewStatusComment())) {
+            saveable.setStatus(status);
+            return;
+        }
+        saveable.setStatus(status);
+
+        final StatusChangedComment comment = new StatusChangedComment();
+        comment.setStatus(status);
+        comment.setComment(editForm.getModelObject().getNewStatusComment());
+        saveable.getStatusComments().add(comment);
+    }
+
     private void setButtonsPermissions() {
-        addSaveButtonPermissions(saveButton);
-        addSaveButtonPermissions(saveContinueButton);
+        addSaveButtonsPermissions(saveButton);
+        addSaveButtonsPermissions(saveContinueButton);
+        addSaveButtonsPermissions(saveSubmitButton);
         addValidateButtonPermissions(saveValidateButton);
-        addSaveSubmitButtonPermissions(saveSubmitButton);
         addSaveRevertButtonPermissions(revertToDraftPageButton);
         addDeleteButtonPermissions(deleteButton);
+
+        // no need to display the buttons on print view so we overwrite the above permissions
+        if (ComponentUtil.isViewMode()) {
+            saveContinueButton.setVisibilityAllowed(false);
+            saveSubmitButton.setVisibilityAllowed(false);
+            saveValidateButton.setVisibilityAllowed(false);
+            revertToDraftPageButton.setVisibilityAllowed(false);
+        }
     }
 
     private void addDefaultAllButtonsPermissions(final Component button) {
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        button.setVisibilityAllowed(!isViewMode());
     }
 
-    private void addSaveButtonPermissions(final Component button) {
+    private void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+        button.setVisibilityAllowed(
+                DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus())
+                        && !isViewMode());
     }
 
     private void addValidateButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        button.setVisibilityAllowed(DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
-
-    }
-
-    private void addSaveSubmitButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+        button.setVisibilityAllowed(
+                DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus())
+                        && !isViewMode());
     }
 
     private void addSaveRevertButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(!DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+        button.setVisibilityAllowed(
+                !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus())
+                        && !isViewMode());
+
+        // additionally normal users should not revert anything that was already validated
+        if (WebSecurityUtil.isCurrentRoleUser()
+                && DBConstants.Status.VALIDATED.equals(editForm.getModelObject().getStatus())) {
+            button.setVisibilityAllowed(false);
+        }
     }
 
     private void addDeleteButtonPermissions(final Component button) {

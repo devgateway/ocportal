@@ -105,4 +105,17 @@ public class WebSecurityUtil {
         final Person p = getCurrentAuthenticatedPerson();
         return isUserAdmin(p);
     }
+
+    public static boolean isCurrentRoleUser() {
+        final Person p = getCurrentAuthenticatedPerson();
+
+        // check if we have more than 1 role
+        if (p == null || p.getRoles() == null || p.getRoles().size() != 1) {
+            return false;
+        }
+        if (p.getRoles().get(0).getAuthority().equalsIgnoreCase(SecurityConstants.Roles.ROLE_USER)) {
+            return true;
+        }
+        return false;
+    }
 }
