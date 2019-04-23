@@ -100,7 +100,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         protected void onInitialize() {
             super.onInitialize();
 
-            // TODO - this should be filtered based on form Procurement Plan
+            // TODO - this should be filtered based on form Procurement Plan (and possible filter by Purchase)
             final Component planItem = ComponentUtil.addSelect2ChoiceField(this, "purchaseItem", purchaseItemService)
                     .required();
             planItem.add(new StopEventPropagationBehavior());

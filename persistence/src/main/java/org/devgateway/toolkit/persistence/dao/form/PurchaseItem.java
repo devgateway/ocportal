@@ -94,7 +94,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     
     @Override
     public String getLabel() {
-        return planItem.getDescription();
+        return planItem.getLabel();
     }
 
     @Override
