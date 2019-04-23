@@ -85,7 +85,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         saveButton.setVisibilityAllowed(!isViewMode());
         deleteButton.setVisibilityAllowed(!isViewMode());
         // no need to display the buttons on print view so we overwrite the above permissions
-        if (ComponentUtil.isViewMode()) {
+        if (ComponentUtil.isPrintMode()) {
             saveButton.setVisibilityAllowed(false);
             deleteButton.setVisibilityAllowed(false);
         }

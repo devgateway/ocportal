@@ -45,7 +45,7 @@ public abstract class BootstrapCancelButton extends LaddaAjaxButton {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        if (ComponentUtil.isViewMode()) {
+        if (ComponentUtil.isPrintMode()) {
             setVisibilityAllowed(false);
         }
     }

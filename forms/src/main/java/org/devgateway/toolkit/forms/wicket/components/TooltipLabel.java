@@ -69,7 +69,7 @@ public class TooltipLabel extends Label {
         if (!helpModelText.getString().isEmpty()) {
             tooltipConfig = new CustomTooltipConfig();
             add(new TooltipBehavior(helpModelText, tooltipConfig));
-            setVisibilityAllowed(!ComponentUtil.isViewMode());
+            setVisibilityAllowed(!ComponentUtil.isPrintMode());
         } else {
             setVisibilityAllowed(false);
         }

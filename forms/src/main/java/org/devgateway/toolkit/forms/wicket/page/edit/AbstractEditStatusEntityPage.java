@@ -213,7 +213,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private void addAutosaveBehavior(final AjaxRequestTarget target) {
         // enable autosave
-        if (!ComponentUtil.isViewMode()
+        if (!ComponentUtil.isPrintMode()
                 && Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT)) {
             saveContinueButton.add(getAutosaveBehavior());
             autoSaveLabel.setVisibilityAllowed(true);
@@ -477,7 +477,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         addDeleteButtonPermissions(deleteButton);
 
         // no need to display the buttons on print view so we overwrite the above permissions
-        if (ComponentUtil.isViewMode()) {
+        if (ComponentUtil.isPrintMode()) {
             saveContinueButton.setVisibilityAllowed(false);
             saveSubmitButton.setVisibilityAllowed(false);
             saveValidateButton.setVisibilityAllowed(false);

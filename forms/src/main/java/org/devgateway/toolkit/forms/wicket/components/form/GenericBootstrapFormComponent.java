@@ -107,7 +107,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
 
         final Label viewModeField = new Label("viewModeField", new ViewModeConverterModel<>(getModel()));
         viewModeField.setEscapeModelStrings(false);
-        viewModeField.setVisibilityAllowed(isViewMode());
+        viewModeField.setVisibilityAllowed(isPrintMode());
         border.add(viewModeField);
 
         if (showTooltip) {
@@ -125,7 +125,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
     protected void initializeField() {
         field = inputField("field", getModel());
         field.setOutputMarkupId(true);
-        field.setVisibilityAllowed(!isViewMode());
+        field.setVisibilityAllowed(!isPrintMode());
         final InputBehavior sizeBehavior = getInputBehavior();
         if (sizeBehavior != null) {
             field.add(sizeBehavior);
@@ -273,8 +273,8 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
         return new InputBehavior(InputBehavior.Size.Medium);
     }
 
-    private boolean isViewMode() {
-        return ComponentUtil.isViewMode();
+    private boolean isPrintMode() {
+        return ComponentUtil.isPrintMode();
     }
 
     public GenericBootstrapFormComponent<TYPE, FIELD> hideLabel() {

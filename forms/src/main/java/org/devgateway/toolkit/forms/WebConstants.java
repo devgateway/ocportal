@@ -35,7 +35,7 @@ public final class WebConstants {
     public static final int PAGE_SIZE = 20;
     public static final int SELECT_PAGE_SIZE = 25;
 
-    public static final String PARAM_VIEW_MODE = "viewMode";
+    public static final String PARAM_PRINT = "print";
 
     public static final String PARAM_ID = "id";
     public static final String V_POSITION = "vPosition";

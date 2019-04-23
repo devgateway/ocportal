@@ -463,7 +463,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
 
-                if (ComponentUtil.isViewMode()) {
+                if (ComponentUtil.isPrintMode()) {
                     Attributes.addClass(tag, "print-view");
                 }
             }

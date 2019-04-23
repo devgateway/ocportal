@@ -275,7 +275,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             protected void onInitialize() {
                 super.onInitialize();
 
-                if (ComponentUtil.isViewMode()) {
+                if (ComponentUtil.isPrintMode()) {
                     setVisibilityAllowed(false);
                 }
             }
