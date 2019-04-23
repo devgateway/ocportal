@@ -246,7 +246,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             return filterItem;
         }
 
-        public void setFilterItem(Item filterItem) {
+        public void setFilterItem(final Item filterItem) {
             this.filterItem = filterItem;
         }
     }
