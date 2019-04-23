@@ -68,6 +68,11 @@ body {
     background: transparent url('./assets/img/ajax-loader.gif') no-repeat scroll center center content-box !important;
 }
 
+/* List View Styles
+-------------------------------------------------- */
+.list-edit-button {
+    min-width: 70px;
+}
 
 /* Edit Entity Styles
 -------------------------------------------------- */
@@ -86,7 +91,7 @@ hr.edit-separator {
     margin: 0;
     padding: 0;
     border: 0;
-    height: 1px;
+    height: 3px;
     background-image: linear-gradient(to right, rgba(220, 220, 220, 0), rgba(220, 220, 220, 0.75), rgba(220, 220, 220, 0));
 }
 
@@ -95,8 +100,6 @@ hr.edit-separator {
     margin-bottom: 0px;
 }
 
-/* List View Styles
--------------------------------------------------- */
 .section-bordered {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -144,26 +147,12 @@ hr.edit-separator {
     color: #66b558;
 }
 
-/*.list-wrapper .select2.select2-container {*/
-/*width: 100% !important;*/
-/*}*/
 .select2.select2-container {
     width: 100% !important;
 }
 
 .list-wrapper .accordion-toggle .form-group {
     margin-bottom: 0;
-}
-
-.accordion-toggle .header-field label.control-label {
-    /*margin-right: 10px;*/
-    /*float: left;*/
-}
-
-.accordion-toggle .header-field .form-group span {
-    /*margin-top: 10px;*/
-    /*display: block;*/
-    /*float: left;*/
 }
 
 .list-wrapper .list-number {
@@ -189,6 +178,13 @@ hr.edit-separator {
 .sleep-mode {
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.department .sleep-mode .sleep-value {
+    padding-top: 5px;
+    font-weight: bold;
+    color: #00589e;
+    font-size: 18px;
 }
 
 /*

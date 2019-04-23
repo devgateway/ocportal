@@ -92,7 +92,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
 
     @Override
     protected PurchaseRequisition newInstance() {
-        final PurchaseRequisition purchaseRequisition = jpaService.newInstance();
+        final PurchaseRequisition purchaseRequisition = super.newInstance();
         // purchaseRequisition.setProcurementPlan(procurementPlan);  // here we need to set the ProcurementPlan
         return purchaseRequisition;
     }

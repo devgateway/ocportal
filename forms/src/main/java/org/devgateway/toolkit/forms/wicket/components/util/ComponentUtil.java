@@ -46,13 +46,12 @@ public final class ComponentUtil {
     }
 
     /**
-     * Returns true if the {@link WebConstants#PARAM_VIEW_MODE} is used as a
-     * parameter
+     * Returns true if the {@link WebConstants#PARAM_PRINT} is used as a parameter
      *
      * @return
      */
-    public static boolean isViewMode() {
-        return RequestCycle.get().getRequest().getRequestParameters().getParameterValue(WebConstants.PARAM_VIEW_MODE)
+    public static boolean isPrintMode() {
+        return RequestCycle.get().getRequest().getRequestParameters().getParameterValue(WebConstants.PARAM_PRINT)
                 .toBoolean(false);
     }
 

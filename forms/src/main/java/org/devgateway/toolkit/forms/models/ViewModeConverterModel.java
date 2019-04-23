@@ -22,7 +22,7 @@ import java.util.Date;
 /**
  * @author mpostelnicu Converter for {@link GenericBootstrapFormComponent}
  *         viewModeField This will be used when
- *         {@link WebConstants#PARAM_VIEW_MODE} is true in the browser and will
+ *         {@link WebConstants#PARAM_PRINT} is true in the browser and will
  *         convert the model object to something printable (string-like)
  */
 public class ViewModeConverterModel<T> implements IModel<String> {

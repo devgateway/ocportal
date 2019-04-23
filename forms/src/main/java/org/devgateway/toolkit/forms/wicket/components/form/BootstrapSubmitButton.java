@@ -52,7 +52,7 @@ public abstract class BootstrapSubmitButton extends LaddaAjaxButton {
     protected void onInitialize() {
         super.onInitialize();
 
-        if (ComponentUtil.isViewMode()) {
+        if (ComponentUtil.isPrintMode()) {
             setVisibilityAllowed(false);
         }
     }

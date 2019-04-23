@@ -14,7 +14,6 @@ package org.devgateway.toolkit.forms.wicket.components.form;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
-import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 
@@ -87,7 +86,7 @@ public class FileInputBootstrapFormComponent extends GenericBootstrapFormCompone
 
     @Override
     public void onEvent(final IEvent<?> event) {
-        ComponentUtil.enableDisableEvent(this, event);
+        // do nothing here, let the wrapper control it's visibility
     }
 
     public void setVisibleOnlyToAdmin(final Boolean visibleOnlyToAdmin) {

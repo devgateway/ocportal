@@ -56,7 +56,7 @@ public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
         setDefaultFormProcessing(false);
         setIconType(FontAwesomeIconType.trash_o);
 
-        if (ComponentUtil.isViewMode()) {
+        if (ComponentUtil.isPrintMode()) {
             setVisibilityAllowed(false);
         }
     }

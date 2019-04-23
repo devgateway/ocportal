@@ -71,7 +71,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
 
     @Override
     protected Project newInstance() {
-        final Project project = jpaService.newInstance();
+        final Project project = super.newInstance();
         // project.setProcurementPlan(procurementPlan);  // here we need to set the ProcurementPlan
         return project;
     }
