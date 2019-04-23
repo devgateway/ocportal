@@ -274,6 +274,10 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             @Override
             protected void onInitialize() {
                 super.onInitialize();
+
+                if (ComponentUtil.isViewMode()) {
+                    setVisibilityAllowed(false);
+                }
             }
         };
         editButton.setDefaultFormProcessing(false);
