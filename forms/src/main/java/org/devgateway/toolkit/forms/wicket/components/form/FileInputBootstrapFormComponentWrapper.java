@@ -367,10 +367,15 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
          * some customization of the BootstrapFileInput Component
          */
         final FileInputConfig fileInputConfig = new FileInputConfig();
-        fileInputConfig.put(new Key<String>("browseLabel"),
+        fileInputConfig.put(new Key<>("browseLabel"),
                 new StringResourceModel("browseLabel", FileInputBootstrapFormComponentWrapper.this, null).getString());
-        fileInputConfig.put(new Key<String>("uploadClass"), "btn btn-blue");
-        fileInputConfig.put(new Key<String>("browseClass"), "btn btn-blue");
+        fileInputConfig.put(new Key<>("uploadClass"), "btn btn-blue");
+        fileInputConfig.put(new Key<>("browseClass"), "btn btn-blue");
+
+        // set the max file size to 25 Mb
+        fileInputConfig.put(new Key<>("maxFileSize"), "10240");
+        fileInputConfig.put(new Key<>("msgSizeTooLarge"), "File \"{name}\" exceeds maximum allowed upload size of "
+                + "<b>10 Mb</b>. Please retry your upload!");
 
         bootstrapFileInput = new BootstrapFileInput("bootstrapFileInput", internalUploadModel, fileInputConfig) {
             private static final long serialVersionUID = 1L;
