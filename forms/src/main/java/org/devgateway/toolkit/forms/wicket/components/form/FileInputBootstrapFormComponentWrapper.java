@@ -224,8 +224,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                 item.add(delete);
                 deleteButtons.add(delete);
 
-                // there are situation when we want to display the delete button
-                // only to admins
+                // there are situation when we want to display the delete button only to admins
                 if (visibleOnlyToAdmin) {
                     MetaDataRoleAuthorizationStrategy.authorize(delete, Component.RENDER,
                             SecurityConstants.Roles.ROLE_ADMIN);
@@ -237,9 +236,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
             @Override
             public void onEvent(final IEvent<?> event) {
-                /*
-                 * disable 'delete' buttons based on the form state
-                 */
+                // disable 'delete' buttons based on the form state
                 if (event.getPayload() instanceof EditingDisabledEvent) {
                     for (IndicatingAjaxLink<?> del : deleteButtons) {
                         del.setVisibilityAllowed(false);
@@ -458,7 +455,8 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
     @Override
     public void onEvent(final IEvent<?> event) {
-        ComponentUtil.enableDisableEvent(this, event);
+        // don't disable the entire component, just the file input one.
+        ComponentUtil.enableDisableEvent(bootstrapFileInput, event);
     }
 
     @SuppressWarnings("unchecked")
