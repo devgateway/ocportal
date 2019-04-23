@@ -41,6 +41,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullEditPageClassException;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.table.AjaxFallbackBootstrapDataTable;
 import org.devgateway.toolkit.forms.wicket.components.table.ResettingFilterForm;
@@ -49,7 +50,9 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
+import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -71,7 +74,6 @@ import java.util.zip.ZipOutputStream;
  * <p>
  */
 public abstract class AbstractListPage<T extends GenericPersistable & Serializable> extends BasePage {
-
     protected Class<? extends AbstractEditPage<T>> editPageClass;
 
     protected final AjaxFallbackBootstrapDataTable<T, String> dataTable;
@@ -88,6 +90,9 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     @SpringBean
     private ExcelGeneratorService excelGeneratorService;
+
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
 
     public AbstractListPage(final PageParameters parameters) {
         super(parameters);
@@ -199,8 +204,16 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
             final BootstrapBookmarkablePageLink<T> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", editPageClass, pageParameters, Buttons.Type.Info);
-            editPageLink.setIconType(FontAwesomeIconType.edit).setSize(Size.Small)
+            editPageLink.setIconType(FontAwesomeIconType.edit)
+                    .setSize(Size.Small)
+                    .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
+            if (entity instanceof AbstractMakueniForm && SecurityConstants.Action.VIEW.equals(
+                    permissionEntityRenderableService.getAllowedAccess((AbstractStatusAuditableEntity) entity))) {
+                editPageLink.setIconType(FontAwesomeIconType.eye)
+                        .setType(Buttons.Type.Warning)
+                        .setLabel(new StringResourceModel("view", AbstractListPage.this, null));
+            }
             add(editPageLink);
 
             add(getPrintButton(pageParameters));
