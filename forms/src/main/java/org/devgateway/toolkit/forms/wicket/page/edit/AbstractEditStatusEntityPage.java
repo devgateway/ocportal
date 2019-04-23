@@ -35,11 +35,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
@@ -60,7 +62,10 @@ import org.wicketstuff.select2.Select2Choice;
  * to one entity for editing
  */
 public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAuditableEntity>
-        extends AbstractEditPage<T> implements PermissionAwareEntityRenderable<T> {
+        extends AbstractEditPage<T> {
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
+
     private Fragment entityButtonsFragment;
 
     private SaveEditPageButton saveSubmitButton;
@@ -97,7 +102,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     protected void onInitialize() {
         super.onInitialize();
 
-        if (getAllowedAccess(editForm.getModelObject()) == null) {
+        if (permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()) == null) {
             setResponsePage(listPageClass);
         }
 
@@ -165,7 +170,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     private boolean isViewMode() {
-        return SecurityConstants.Action.VIEW.equals(getAllowedAccess(editForm.getModelObject()));
+        return SecurityConstants.Action.VIEW.equals(
+                permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()));
     }
 
     private void checkAndSendEventForDisableEditing() {
