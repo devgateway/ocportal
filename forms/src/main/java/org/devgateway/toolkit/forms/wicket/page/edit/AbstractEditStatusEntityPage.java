@@ -286,6 +286,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                         // do nothing - keep this field enabled
                     }
                 };
+        checkBoxBootstrapFormComponent.setVisibilityAllowed(!isViewMode());
         return checkBoxBootstrapFormComponent;
     }
 
