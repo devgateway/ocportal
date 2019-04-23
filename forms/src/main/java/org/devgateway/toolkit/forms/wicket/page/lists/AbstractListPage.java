@@ -18,6 +18,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -51,6 +52,7 @@ import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvi
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -212,7 +214,8 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             revisionsPageLink.setIconType(FontAwesomeIconType.clock_o).setSize(Size.Small)
                     .setLabel(new StringResourceModel("revisions", AbstractListPage.this, null));
             add(revisionsPageLink);
-
+            MetaDataRoleAuthorizationStrategy.authorize(
+                    revisionsPageLink, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
         }
     }
 
