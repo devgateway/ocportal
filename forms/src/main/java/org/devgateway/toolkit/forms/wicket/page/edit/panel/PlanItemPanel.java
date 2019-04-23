@@ -175,12 +175,12 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         if (planItem.getId() == null) {
             return true;
         } else {
-            if (listFilterBean.getItem() != null) {
+            if (listFilterBean.getFilterItem() != null) {
                 // it was saved as null when it was saved as draft
                 if (planItem.getItem() == null) {
                     return false;
                 }
-                return planItem.getItem().equals(listFilterBean.getItem());
+                return planItem.getItem().equals(listFilterBean.getFilterItem());
             }
 
             return true;
@@ -219,10 +219,10 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         protected void onInitialize() {
             super.onInitialize();
 
-            final Select2ChoiceBootstrapFormComponent<Item> item =
-                    ComponentUtil.addSelect2ChoiceField(this, "item", itemService);
+            final Select2ChoiceBootstrapFormComponent<Item> filterItem =
+                    ComponentUtil.addSelect2ChoiceField(this, "filterItem", itemService);
 
-            item.getField().add(new AjaxComponentUpdatingBehavior("change"));
+            filterItem.getField().add(new AjaxComponentUpdatingBehavior("change"));
         }
 
         private class AjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
@@ -240,14 +240,14 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     }
 
     private class PlanItemFilterBean implements Serializable {
-        private Item item;
+        private Item filterItem;
 
-        public Item getItem() {
-            return item;
+        public Item getFilterItem() {
+            return filterItem;
         }
 
-        public void setItem(final Item item) {
-            this.item = item;
+        public void setFilterItem(Item filterItem) {
+            this.filterItem = filterItem;
         }
     }
 }
