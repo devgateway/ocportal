@@ -28,8 +28,7 @@ public class RevisionsPanel<TYPE> extends GenericPanel<List<TYPE>> {
 
     /**
      * @param id            the revision panel id
-     * @param model         list of revisions coming from the component, this is usually fed with
-     *                      {@link GenericBootstrapFormComponent#getRevisionsModel()}
+     * @param model         list of revisions coming from the component
      * @param auditProperty the audit property. This is required because sometimes the component is bound with a
      *                      model that has a different source than the component name as property, so we cannot
      *                      assume the id is the property.

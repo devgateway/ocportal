@@ -58,7 +58,6 @@ public class TestEmbeddedPostgres {
      * Graciously starts a Postgres Database Server when the tests start up
      *
      * @return
-     * @throws InterruptedException
      * @throws IOException
      */
     @Bean(destroyMethod = "stop")
