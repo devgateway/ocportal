@@ -77,7 +77,7 @@ public class Tender extends AbstractMakueniForm {
 
     @Override
     public String getLabel() {
-        return null;
+        return tenderNumber + " " + tenderTitle;
     }
 
     public String getTenderNumber() {
@@ -160,4 +160,8 @@ public class Tender extends AbstractMakueniForm {
         this.tenderItems = tenderItems;
     }
 
+    @Override
+    public String toString() {
+        return getLabel();
+    }
 }

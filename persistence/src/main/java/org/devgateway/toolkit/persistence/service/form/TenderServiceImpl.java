@@ -4,6 +4,7 @@ package org.devgateway.toolkit.persistence.service.form;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class TenderServiceImpl extends BaseJpaServiceImpl<Tender> implements Ten
         return tenderRepository;
     }
 
+    @Override
+    public TextSearchableRepository<Tender, Long> textRepository() {
+        return tenderRepository;
+    }
+    
     @Override
     public Tender newInstance() {
         return new Tender();

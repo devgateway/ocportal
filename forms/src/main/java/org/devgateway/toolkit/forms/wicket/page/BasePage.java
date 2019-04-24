@@ -66,6 +66,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPa
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -358,6 +359,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListTenderPage>(ListTenderPage.class, null,
                         new StringResourceModel("navbar.tenderdocument", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
+                
+                list.add(new MenuBookmarkablePageLink<ListTenderQuotationEvaluationPage>(
+                        ListTenderQuotationEvaluationPage.class, null,
+                        new StringResourceModel("navbar.tenderquotationevaluation", this, null))
+                                .setIconType(FontAwesomeIconType.file_text_o));
 
                 return list;
             }
