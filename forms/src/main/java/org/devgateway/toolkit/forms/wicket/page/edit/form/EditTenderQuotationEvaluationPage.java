@@ -52,6 +52,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
         editForm.add(new BidPanel("bids"));
         
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
+        formDocs.required();
         editForm.add(formDocs);
     }  
     
