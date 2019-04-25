@@ -7,6 +7,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
+import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -35,7 +37,8 @@ public class EditProcuringEntityPage extends AbstractCategoryEditPage<ProcuringE
         super.onInitialize();
 
         ComponentUtil.addTextField(editForm, "emailAddress").getField().add(EmailAddressValidator.getInstance());
-        ComponentUtil.addTextAreaField(editForm, "address");
+        TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
+        address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT);
     }
 
 }
