@@ -32,8 +32,8 @@ public final class DBConstants {
     }
     
     public static final class SupplierResponsiveness {
-        public static String FAIL = "Fail";
-        public static String PASS = "Pass";
+        public static final String FAIL = "Fail";
+        public static final String PASS = "Pass";
         public static final String[] ALL = {FAIL, PASS};
         public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
     }

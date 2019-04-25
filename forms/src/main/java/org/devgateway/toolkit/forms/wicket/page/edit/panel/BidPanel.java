@@ -67,18 +67,18 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         ComponentUtil.addIntegerTextField(item, "supplierRanking").required();
         ComponentUtil.addDoubleField(item, "quotedAmount");
 
-        final Select2ChoiceBootstrapFormComponent<String> supplierResponsiveness = new Select2ChoiceBootstrapFormComponent<>(
+        Select2ChoiceBootstrapFormComponent<String> responsiveness = new Select2ChoiceBootstrapFormComponent<>(
                 "supplierResponsiveness",
                 new GenericChoiceProvider<>((List<String>) DBConstants.SupplierResponsiveness.ALL_LIST));
-        supplierResponsiveness.required();
-        item.add(supplierResponsiveness);
+        responsiveness.required();
+        item.add(responsiveness);
     }
 
     @Override
     protected boolean filterListItem(final Bid tenderItem) {
         return true;
     }
-    
+
     private class SupplierUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
         SupplierUpdatingBehavior(final String event) {
             super(event);
@@ -87,7 +87,7 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
             target.add(supplierID);
-            
+
         }
     }
 }
