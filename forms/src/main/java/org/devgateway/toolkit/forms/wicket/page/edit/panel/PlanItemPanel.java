@@ -10,6 +10,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
@@ -19,6 +21,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -86,8 +89,11 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             ComponentUtil.addDoubleField(item, "totalCost").required();
 
             ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
-            ComponentUtil.addTextField(item, "sourceOfFunds")
-                    .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+            final TextFieldBootstrapFormComponent<String> sourceOfFunds = ComponentUtil.addTextField(item,
+                    "sourceOfFunds");
+            sourceOfFunds.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+            sourceOfFunds.getField().add(new SourceOfFundsValidator());
+
             ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
             ComponentUtil.addDoubleField(item, "targetGroupValue");
 
@@ -168,6 +174,8 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
         return addNewChildButton;
     }
+    
+  
 
     @Override
     protected boolean filterListItem(final PlanItem planItem) {
@@ -248,6 +256,23 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
         public void setFilterItem(final Item filterItem) {
             this.filterItem = filterItem;
+        }
+    }
+    
+    public class SourceOfFundsValidator implements IValidator<String> {        
+        private static final String START_CHARACTER = "0";
+        public SourceOfFundsValidator() {            
+        }
+
+        @Override
+        public void validate(final IValidatable<String> validatable) {
+            final String sourceOfFunds = validatable.getValue();
+            if (sourceOfFunds != null) {
+                if (!sourceOfFunds.trim().startsWith(START_CHARACTER)) {
+                    final ValidationError error = new ValidationError(getString("sourceOfFundsStartsWithZero"));
+                    validatable.error(error);
+                }
+            }
         }
     }
 }
