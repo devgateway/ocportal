@@ -84,4 +84,9 @@ public class TenderQuotationEvaluation extends AbstractMakueniForm {
     public String getLabel() {
         return null;
     }
+    
+    @Override
+    public String toString() {
+        return tender.toString();
+    }
 }
