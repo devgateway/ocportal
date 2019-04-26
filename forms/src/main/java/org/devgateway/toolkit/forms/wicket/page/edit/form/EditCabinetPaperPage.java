@@ -4,6 +4,10 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
@@ -15,6 +19,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper_;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -53,8 +58,10 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         }
         
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();       
-        ComponentUtil.addTextField(editForm, "name").required()
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
+        name.required();
+        name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        name.getField().add(uniqueName());
 
         final TextFieldBootstrapFormComponent<String> numberField = ComponentUtil.addTextField(editForm, "number");
         numberField.required()
@@ -74,6 +81,31 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         editForm.add(doc);
     }
 
+    private IValidator<String> uniqueName() {
+        final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
+        return new UniqueNameValidator(id.toLong(-1));
+    }
+
+    public class UniqueNameValidator implements IValidator<String> {
+        private final Long id;
+
+        public UniqueNameValidator(final Long id) {
+            this.id = id;
+        }
+
+        @Override
+        public void validate(final IValidatable<String> validatable) {
+            final String name = validatable.getValue();
+            final ProcurementPlan procurementPlan = editForm.getModelObject().getProcurementPlan();
+
+            if (procurementPlan != null && name != null) {
+                if (cabinetPaperService.countByProcurementPlanAndNameAndIdNot(procurementPlan, name, id) > 0) {
+                    final ValidationError error = new ValidationError(getString("uniqueCabinetPaperName"));
+                    validatable.error(error);
+                }
+            }
+        }
+    }
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();

@@ -30,7 +30,8 @@ public class CabinetPaperFilterState extends AbstractMakueniFormFilterState<Cabi
             if (StringUtils.isNotBlank(number)) {
                 predicates.add(cb.like(cb.lower(root.get(CabinetPaper_.number)), "%" + number.toLowerCase() + "%"));
             }
-
+            
+            query.orderBy(cb.asc(root.get(CabinetPaper_.createdDate)));
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));
         };

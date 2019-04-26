@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.repository.form.CabinetPaperRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gmutuhu
  *
  */
-
 @Service
 @Transactional(readOnly = true)
 public class CabinetPaperServiceImpl extends BaseJpaServiceImpl<CabinetPaper> implements CabinetPaperService {
@@ -34,6 +34,12 @@ public class CabinetPaperServiceImpl extends BaseJpaServiceImpl<CabinetPaper> im
     @Override
     public CabinetPaper newInstance() {
         return new CabinetPaper();
+    }
+
+    @Override
+    public Long countByProcurementPlanAndNameAndIdNot(final ProcurementPlan procurementPlan, final String name,
+            final Long id) {
+        return cabinetPaperRepository.countByProcurementPlanAndNameAndIdNot(procurementPlan, name, id);
     }
 
 }
