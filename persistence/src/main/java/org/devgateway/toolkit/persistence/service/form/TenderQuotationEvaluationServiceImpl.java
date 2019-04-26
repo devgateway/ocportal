@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.service.form;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluationRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,11 @@ public class TenderQuotationEvaluationServiceImpl extends BaseJpaServiceImpl<Ten
     @Override
     public TenderQuotationEvaluation newInstance() {
         return new TenderQuotationEvaluation();
+    }
+
+    @Override
+    public TextSearchableRepository<TenderQuotationEvaluation, Long> textRepository() {
+        return repository;
     }
 
 }

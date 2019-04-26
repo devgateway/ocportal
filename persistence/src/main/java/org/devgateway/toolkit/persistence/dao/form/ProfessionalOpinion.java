@@ -5,9 +5,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -20,11 +24,10 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id")})
 public class ProfessionalOpinion extends AbstractMakueniForm {
-    // @OneToOne(fetch = FetchType.LAZY)
-    // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    // @JsonIgnore
-    // TODO add this link once Tender Quotation & Evaluation is implemented
-    // private TenderEvaluation tenderEvaluation;
+    @OneToOne(fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore    
+    private TenderQuotationEvaluation tenderQuotationEvaluation;
 
     private Date professionalOpinionDate;
 
@@ -56,6 +59,14 @@ public class ProfessionalOpinion extends AbstractMakueniForm {
 
     public void setRecommendedAwardAmount(final Double recommendedAwardAmount) {
         this.recommendedAwardAmount = recommendedAwardAmount;
+    }
+
+    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
+        return tenderQuotationEvaluation;
+    }
+
+    public void setTenderQuotationEvaluation(final TenderQuotationEvaluation tenderQuotationEvaluation) {
+        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
     }
 
     @Override
