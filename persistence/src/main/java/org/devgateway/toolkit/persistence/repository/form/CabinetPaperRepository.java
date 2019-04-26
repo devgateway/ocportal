@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface CabinetPaperRepository extends TextSearchableRepository<Cabinet
     @Override
     @Query("select cabinet from  #{#entityName} cabinet where lower(cabinet.name) like %:name%")
     Page<CabinetPaper> searchText(@Param("name") String name, Pageable page);
+    
+    Long countByProcurementPlanAndNameAndIdNot(ProcurementPlan procurementPlan, String name, Long id);
 }
