@@ -18,12 +18,12 @@ import org.wicketstuff.annotation.mount.MountPath;
 @MountPath("/awardNotifications")
 public class ListAwardNotificationPage extends ListAbstractMakueniFormPage<AwardNotification> {
     @SpringBean
-    protected AwardNotificationService professionalOpinionService;
+    protected AwardNotificationService awardNotificationService;
 
     public ListAwardNotificationPage(final PageParameters parameters) {
         super(parameters);
 
-        this.jpaService = professionalOpinionService;
+        this.jpaService = awardNotificationService;
         this.editPageClass = EditAwardNotificationPage.class;
     }
 
