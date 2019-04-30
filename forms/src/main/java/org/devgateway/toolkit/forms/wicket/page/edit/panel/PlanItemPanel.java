@@ -260,7 +260,8 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     }
     
     public class SourceOfFundsValidator implements IValidator<String> {        
-        private static final String START_CHARACTER = "0";
+        private static final String ALLOWED_START_CHARACTERS_ZERO = "0";
+        private static final String ALLOWED_START_CHARACTERS_ONE = "1";
         public SourceOfFundsValidator() {            
         }
 
@@ -268,7 +269,9 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         public void validate(final IValidatable<String> validatable) {
             final String sourceOfFunds = validatable.getValue();
             if (sourceOfFunds != null) {
-                if (!sourceOfFunds.trim().startsWith(START_CHARACTER)) {
+                                
+                if (!(sourceOfFunds.trim().startsWith(ALLOWED_START_CHARACTERS_ZERO) 
+                        || sourceOfFunds.trim().startsWith(ALLOWED_START_CHARACTERS_ONE))) {
                     final ValidationError error = new ValidationError(getString("sourceOfFundsStartsWithZero"));
                     validatable.error(error);
                 }
