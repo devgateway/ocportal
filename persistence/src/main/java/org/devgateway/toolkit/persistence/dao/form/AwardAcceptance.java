@@ -28,6 +28,7 @@ public class AwardAcceptance extends AbstractMakueniForm {
     private TenderQuotationEvaluation tenderQuotationEvaluation; 
     private Date acceptanceDate;
     private Supplier awardee;
+    private Double tenderValue;
     
 
     public TenderQuotationEvaluation getTenderQuotationEvaluation() {
@@ -52,6 +53,14 @@ public class AwardAcceptance extends AbstractMakueniForm {
 
     public void setAwardee(final Supplier awardee) {
         this.awardee = awardee;
+    }
+
+    public Double getTenderValue() {
+        return tenderValue;
+    }
+
+    public void setTenderValue(final Double tenderValue) {
+        this.tenderValue = tenderValue;
     }
 
     @Override
