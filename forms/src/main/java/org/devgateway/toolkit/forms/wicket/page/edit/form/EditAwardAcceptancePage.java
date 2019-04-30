@@ -58,7 +58,7 @@ public class EditAwardAcceptancePage extends EditAbstractMakueniFormPage<AwardAc
     protected void onInitialize() {
         super.onInitialize();
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
-        ComponentUtil.addDoubleField(editForm, "tenderValue").required();
+        ComponentUtil.addDoubleField(editForm, "tenderValue");
         ComponentUtil.addDateField(editForm, "acceptanceDate").required();
         addTenderInfo();
         addSupplierInfo();
