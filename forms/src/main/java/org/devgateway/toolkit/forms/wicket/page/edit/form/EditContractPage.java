@@ -9,10 +9,10 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -62,17 +62,15 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
     protected void onInitialize() {
         super.onInitialize();
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
-        ComponentUtil.addTextField(editForm, "referenceNumber");
-        ComponentUtil.addDoubleField(editForm, "tenderValue");
+        ComponentUtil.addTextField(editForm, "referenceNumber").required();
+        ComponentUtil.addDoubleField(editForm, "tenderValue").required();
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "contractDate").required();
-        ComponentUtil.addDateField(editForm, "expiryDate").required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService);
+        ComponentUtil.addDateField(editForm, "expiryDate");
+        ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
         addTenderInfo();
-        addSupplierInfo();
-        final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
-        editForm.add(formDocs);
+        addSupplierInfo();            
+        editForm.add(new ContractDocumentPanel("contractDocs"));
     }
 
     @Override

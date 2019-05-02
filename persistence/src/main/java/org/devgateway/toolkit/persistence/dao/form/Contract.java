@@ -1,13 +1,19 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -49,6 +55,13 @@ public class Contract extends AbstractMakueniForm {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity procuringEntity;   
+    
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @OrderColumn(name = "index")
+    private List<ContractDocument> contractDocs = new ArrayList<ContractDocument>();
+    
     
     public TenderQuotationEvaluation getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
@@ -112,6 +125,14 @@ public class Contract extends AbstractMakueniForm {
 
     public void setProcuringEntity(final ProcuringEntity procuringEntity) {
         this.procuringEntity = procuringEntity;
+    }
+
+    public List<ContractDocument> getContractDocs() {
+        return contractDocs;
+    }
+
+    public void setContractDocs(final List<ContractDocument> contractDocs) {
+        this.contractDocs = contractDocs;
     }
 
     @Override
