@@ -3,7 +3,7 @@
  */
 package org.devgateway.toolkit.forms.wicket.components.table.filter.category;
 
-import org.devgateway.toolkit.persistence.dao.categories.ContractDocument;
+import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -14,9 +14,9 @@ import java.util.List;
  * @author gmutuhu
  *
  */
-public class ContractDocumentFilterState extends AbstractCategoryFilterState<ContractDocument> {
+public class ContractDocumentTypeFilterState extends AbstractCategoryFilterState<ContractDocumentType> {
     @Override
-    public Specification<ContractDocument> getSpecification() {
+    public Specification<ContractDocumentType> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 

@@ -3,9 +3,9 @@ package org.devgateway.toolkit.forms.wicket.page.edit.category;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentPage;
-import org.devgateway.toolkit.persistence.dao.categories.ContractDocument;
-import org.devgateway.toolkit.persistence.service.category.ContractDocumentService;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentTypePage;
+import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
+import org.devgateway.toolkit.persistence.service.category.ContractDocumentTypeService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -15,16 +15,16 @@ import org.wicketstuff.annotation.mount.MountPath;
  *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
-@MountPath("/contractdocument")
-public class EditContractDocumentPage extends AbstractCategoryEditPage<ContractDocument> {
+@MountPath("/ContractDocumentType")
+public class EditContractDocumentTypePage extends AbstractCategoryEditPage<ContractDocumentType> {
 
     @SpringBean
-    private ContractDocumentService service;
+    private ContractDocumentTypeService service;
 
-    public EditContractDocumentPage(final PageParameters parameters) {
+    public EditContractDocumentTypePage(final PageParameters parameters) {
         super(parameters);
         jpaService = service;
-        listPageClass = ListContractDocumentPage.class;
+        listPageClass = ListContractDocumentTypePage.class;
     }
 
     @Override

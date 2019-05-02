@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.service.category;
 
-import org.devgateway.toolkit.persistence.dao.categories.ContractDocument;
-import org.devgateway.toolkit.persistence.repository.category.ContractDocumentRepository;
+import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
+import org.devgateway.toolkit.persistence.repository.category.ContractDocumentTypeRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
@@ -15,24 +15,24 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class ContractDocumentServiceImpl extends BaseJpaServiceImpl<ContractDocument>
-        implements ContractDocumentService {
+public class ContractDocumentTypeServiceImpl extends BaseJpaServiceImpl<ContractDocumentType>
+        implements ContractDocumentTypeService {
 
     @Autowired
-    private ContractDocumentRepository repository;
+    private ContractDocumentTypeRepository repository;
 
     @Override
-    public ContractDocument newInstance() {
-        return new ContractDocument();
+    public ContractDocumentType newInstance() {
+        return new ContractDocumentType();
     }
 
     @Override
-    public TextSearchableRepository<ContractDocument, Long> textRepository() {
+    public TextSearchableRepository<ContractDocumentType, Long> textRepository() {
         return repository;
     }
 
     @Override
-    protected BaseJpaRepository<ContractDocument, Long> repository() {
+    protected BaseJpaRepository<ContractDocumentType, Long> repository() {
         return repository;
     }
 }
