@@ -16,7 +16,6 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
 
     <script type="text/javascript" src="https://ocmakueni.dgstg.org/wicket/resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-2.2.4-v-3238353935313838.js"></script>
-
     <script type="text/javascript" src="https://ocmakueni.dgstg.org/wicket/resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-v-3332313239353161.js"></script>
 
   </head>
@@ -110,6 +109,19 @@
           </div>
           <div class="col-md-3 no-padding">
 
+            <!-- start: year button -->
+            <select id="year" class="btn btn-default project-year">
+              <option value="2018">2018</option>
+              <option value="2017">2017</option>
+            </select>
+            <!-- end: year button -->
+
+            <!-- start: downlaod button -->
+            <button type="button" class="btn btn-default download" >
+            </button>
+            <!-- end: download button  -->
+
+          </div>
           </div>
         </div>
         <!-- end: search form -->
@@ -138,8 +150,9 @@
 
 
         <!-- start: results panels -->
+        <div class="project-panels-wrapper">
 
-        <!-- start: terminated panel -->
+        <!-- start:  panels -->
 
         <button class="status-panel terminated" type="button" data-toggle="collapse" data-target="#collapsegovernor" aria-expanded="false" aria-controls="collapsegovernor">
           <span class="status-panel-heading">
@@ -205,7 +218,7 @@
 
         </div>
 
-        <!-- end: terminated panel -->
+        <!-- end:  panel -->
 
         <button class="status-panel draft" type="button" data-toggle="collapse" data-target="#collapsepsb" aria-expanded="false" aria-controls="collapseid">
           <span class="status-panel-heading">
@@ -240,6 +253,9 @@
 
       </div>
       <!-- end: search panel -->
+
+    </div>
+    <!-- end:project panels wrapper  -->
 
     </div>
     <!-- end: main content  -->
