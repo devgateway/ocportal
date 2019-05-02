@@ -54,7 +54,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccountPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentTypePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
@@ -64,6 +64,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPa
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
@@ -293,9 +294,9 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         new StringResourceModel("navbar.targetgroup", this, null))
                         .setIconType(FontAwesomeIconType.object_group));
 
-                list.add(new MenuBookmarkablePageLink<ListContractDocumentPage>(
-                        ListContractDocumentPage.class, null,
-                        new StringResourceModel("navbar.contractdocument", this, null))
+                list.add(new MenuBookmarkablePageLink<ListContractDocumentTypePage>(
+                        ListContractDocumentTypePage.class, null,
+                        new StringResourceModel("navbar.ContractDocumentType", this, null))
                         .setIconType(FontAwesomeIconType.file));
 
                 list.add(new MenuBookmarkablePageLink<ListItemPage>(
@@ -377,6 +378,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         .setIconType(FontAwesomeIconType.file_text_o));
                 list.add(new MenuBookmarkablePageLink<ListAwardAcceptancePage>(ListAwardAcceptancePage.class,
                         null, new StringResourceModel("navbar.awardacceptance", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+                
+                list.add(new MenuBookmarkablePageLink<ListContractPage>(ListContractPage.class,
+                        null, new StringResourceModel("navbar.contract", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
 
                 return list;

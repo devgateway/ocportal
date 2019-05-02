@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -27,6 +28,9 @@ public class AwardAcceptance extends AbstractMakueniForm {
     @JsonIgnore    
     private TenderQuotationEvaluation tenderQuotationEvaluation; 
     private Date acceptanceDate;
+    
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
     private Supplier awardee;
     private Double tenderValue;
     

@@ -13,6 +13,6 @@ import javax.persistence.Entity;
  */
 @Entity
 @Audited
-public class ContractDocument extends Category {
+public class ContractDocumentType extends Category {
 
 }
