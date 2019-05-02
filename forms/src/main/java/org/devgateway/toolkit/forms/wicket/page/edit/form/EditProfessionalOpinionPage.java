@@ -10,6 +10,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
@@ -23,6 +24,7 @@ import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionS
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
  * @author idobre
@@ -69,7 +71,11 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
         editForm.add(awardeeSelector);
 
         ComponentUtil.addDateField(editForm, "professionalOpinionDate").required();
-        ComponentUtil.addDoubleField(editForm, "recommendedAwardAmount").required();
+        
+        final TextFieldBootstrapFormComponent<Double> recommendedAwardAmount = ComponentUtil.addDoubleField(editForm, "recommendedAwardAmount");
+        recommendedAwardAmount.required();
+        recommendedAwardAmount.getField().add(new RangeValidator(0.0, null));
+   
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
