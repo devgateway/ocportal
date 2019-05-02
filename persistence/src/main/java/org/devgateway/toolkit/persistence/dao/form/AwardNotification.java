@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -31,6 +32,9 @@ public class AwardNotification extends AbstractMakueniForm {
     private TenderQuotationEvaluation tenderQuotationEvaluation;    
     private Date awardDate;
     private Double tenderValue;
+    
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
     private Supplier awardee;
     private Integer acknowledgementDays;
     
