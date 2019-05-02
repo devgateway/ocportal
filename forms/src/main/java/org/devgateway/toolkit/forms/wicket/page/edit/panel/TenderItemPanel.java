@@ -16,7 +16,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.service.form.PurchaseItemService;
-
+import org.apache.wicket.validation.validator.RangeValidator; 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     @SpringBean
     private PurchaseItemService purchaseItemService;
@@ -52,6 +52,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                 };
         quantity.integer();
+        quantity.getField().add(new RangeValidator(1, null));
         quantity.required();
         item.add(quantity);
 
@@ -68,6 +69,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 };
         price.asDouble();
         price.required();
+        price.getField().add(new RangeValidator(0.0, null));
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
