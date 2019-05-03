@@ -1,13 +1,11 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
@@ -15,16 +13,18 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionService;
-import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
-import org.apache.wicket.validation.validator.RangeValidator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author idobre
@@ -72,7 +72,8 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
 
         ComponentUtil.addDateField(editForm, "professionalOpinionDate").required();
         
-        final TextFieldBootstrapFormComponent<Double> recommendedAwardAmount = ComponentUtil.addDoubleField(editForm, "recommendedAwardAmount");
+        final TextFieldBootstrapFormComponent<Double> recommendedAwardAmount =
+                ComponentUtil.addDoubleField(editForm, "recommendedAwardAmount");
         recommendedAwardAmount.required();
         recommendedAwardAmount.getField().add(new RangeValidator(0.0, null));
    
