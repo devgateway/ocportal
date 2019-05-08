@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.repository.category;
 
+import java.util.List;
+
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
@@ -28,4 +30,6 @@ public interface FiscalYearRepository extends TextSearchableRepository<FiscalYea
     @Override
     @Query("select cat from  #{#entityName} cat where lower(cat.name) like %:name%")
     Page<FiscalYear> searchText(@Param("name") String name, Pageable page);
+    
+    List<FiscalYear> findAllByOrderByStartDateDesc();
 }

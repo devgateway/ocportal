@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import java.util.List;
+
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
@@ -20,4 +22,7 @@ public interface ProjectRepository extends TextSearchableRepository<Project, Lon
     Page<Project> searchText(@Param("name") String name, Pageable page);
 
     Long countByProcurementPlanAndProjectTitleAndIdNot(ProcurementPlan procurementPlan, String projectTitle, Long id);
+    
+    @Query("select project from  #{#entityName} project where project.procurementPlan.fiscalYear.id = :fiscalYearId")
+    List<Project> findProjectsForYear(@Param("fiscalYearId")Long fiscalYearId);
 }
