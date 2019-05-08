@@ -1,14 +1,10 @@
 package org.devgateway.toolkit.forms.wicket.page.overview;
 
-import java.util.List;
-
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -16,13 +12,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
-import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
-
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 
 public class DepartmentGroupItem extends Panel {
     private static final long serialVersionUID = 1L;
@@ -45,10 +37,7 @@ public class DepartmentGroupItem extends Panel {
 
             @Override
             protected void populateItem(final ListItem<ProjectStatus> item) {
-                // item.add(new Label("title", new PropertyModel<String>(item.getModelObject(),
-                // "projectTitle")));
-
-                Link<Object> link = new Link<Object>("title") {
+                 Link<Object> link = new Link<Object>("title") {
                     private static final long serialVersionUID = 1L;
 
                     @Override
@@ -124,6 +113,5 @@ public class DepartmentGroupItem extends Panel {
         header.add(new Label("year",
                 new PropertyModel<String>(departmentOverviewData.getProcurementPlan().getFiscalYear(), "label")));
         header.add(new Label("projectCount", new PropertyModel<String>(departmentOverviewData.getProjects(), "size")));
-
     }
 }
