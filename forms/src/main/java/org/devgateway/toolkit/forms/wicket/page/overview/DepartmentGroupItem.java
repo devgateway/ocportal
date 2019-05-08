@@ -1,5 +1,8 @@
 package org.devgateway.toolkit.forms.wicket.page.overview;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -21,23 +24,38 @@ public class DepartmentGroupItem extends Panel {
 
     private DepartmentOverviewData departmentOverviewData;
     private Boolean expanded = false;
+    private String searchTerm;
+    private List<ProjectStatus> filteredProjects;
 
-    public DepartmentGroupItem(final String id, final DepartmentOverviewData departmentOverviewData) {
+    public DepartmentGroupItem(final String id, final DepartmentOverviewData departmentOverviewData,
+            final String searchTerm) {
         super(id);
         this.departmentOverviewData = departmentOverviewData;
+        this.searchTerm = searchTerm;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        filteredProjects = this.departmentOverviewData.getProjects();
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            filteredProjects = this.departmentOverviewData.getProjects().stream().filter(p -> {
+                if (p.getProjectTitle() != null) {
+                    return p.getProjectTitle().toLowerCase().contains(searchTerm.toLowerCase());
+                }
+
+                return false;
+            }).collect(Collectors.toList());
+        }
+
         addGroupHeader();
 
-        add(new ListView<ProjectStatus>("projectList", this.departmentOverviewData.getProjects()) {
+        add(new ListView<ProjectStatus>("projectList", filteredProjects) {
             private static final long serialVersionUID = 1L;
 
             @Override
             protected void populateItem(final ListItem<ProjectStatus> item) {
-                 Link<Object> link = new Link<Object>("title") {
+                Link<Object> link = new Link<Object>("title") {
                     private static final long serialVersionUID = 1L;
 
                     @Override
@@ -112,6 +130,6 @@ public class DepartmentGroupItem extends Panel {
                 new PropertyModel<String>(departmentOverviewData.getProcurementPlan().getDepartment(), "label")));
         header.add(new Label("year",
                 new PropertyModel<String>(departmentOverviewData.getProcurementPlan().getFiscalYear(), "label")));
-        header.add(new Label("projectCount", new PropertyModel<String>(departmentOverviewData.getProjects(), "size")));
+        header.add(new Label("projectCount", new PropertyModel<String>(filteredProjects, "size")));
     }
 }
