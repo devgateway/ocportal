@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+ 
+      <div class="row header">
+          <div class="col-md-4">
+            <h2>Department Ministries</h2>
+          </div>
+          <div class="col-md-8">
+           <p>
+              <strong>Lorem ipsum dolor sit amet</strong>, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
+      </div>
+ 
+      <div class="search-panel">
+        <div class="row search-panel-header">
+          <div class="col-md-8">
+            <h3>Department / Ministries Procurement Plans</h3>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-add" wicket:id="newProcurementPlan"></button>
+          </div>
+        </div>
+       
+       <div class="search-form">
+          <div class="col-md-9 no-padding">
+              <input tabindex="1" class="form-control project-search" wicket:id="searchBox"></input>
+          </div>
+          <div class="col-md-3 no-padding">
+            <select wicket:id="years" class="btn btn-default project-year">
+            </select>
+           <button type="button" class="btn btn-default download" >
+            </button>
+            </div>
+          </div>
+        </div>
+        <div class="status-bar">
+          <span class="status approved">
+            Approved
+          </span>
+          <span class="status terminated">
+            Terminated
+          </span>
+          <span class="status submitted">
+            Submitted
+          </span>
+          <span class="status draft">
+            Draft
+          </span>
+        </div>
+       <div class="project-panels-wrapper">
+            <div wicket:id=group>
+             <div wicket:id="groupItem">
+            </div>
+           </div>
+       </div>     
+</wicket:panel>
+</body>
+</html>

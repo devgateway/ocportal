@@ -148,6 +148,14 @@ public class Tender extends AbstractMakueniForm {
         return tenderLink;
     }
 
+    public PurchaseRequisition getPurchaseRequisition() {
+        return purchaseRequisition;
+    }
+
+    public void setPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
+        this.purchaseRequisition = purchaseRequisition;
+    }
+
     public void setTenderLink(final String tenderLink) {
         this.tenderLink = tenderLink;
     }

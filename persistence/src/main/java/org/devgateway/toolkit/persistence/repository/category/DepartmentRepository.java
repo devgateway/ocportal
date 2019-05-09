@@ -11,7 +11,12 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.repository.category;
 
+import java.util.List;
+
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -19,5 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface DepartmentRepository extends CategoryRepository<Department> {
+    
+    @Query("select dept from  #{#entityName} dept inner join ProcurementPlan p on p.department.id = dept.id "
+            + "where p.fiscalYear=:fiscalYear")
+    List<Department> findDeptsInCurrentProcurementPlan(@Param("fiscalYear")FiscalYear fiscalYear);
 
 }
