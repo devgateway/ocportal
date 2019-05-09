@@ -32,4 +32,6 @@ public interface FiscalYearRepository extends TextSearchableRepository<FiscalYea
     Page<FiscalYear> searchText(@Param("name") String name, Pageable page);
     
     List<FiscalYear> findAllByOrderByStartDateDesc();
+    
+    FiscalYear findTopByOrderByStartDateDesc();
 }

@@ -10,21 +10,22 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 
 public class SideBar extends Panel {
     private static final long serialVersionUID = 1L;
+     
     @SpringBean
-    private DepartmentService departmentService;
+    private StatusOverviewService statusOverviewService;
 
     public SideBar(final String id) {
         super(id);
     }
     @Override
     protected void onInitialize() {
-        super.onInitialize();
-        
-        List<Department> departments = departmentService.findAll();
+        super.onInitialize();        
+        List<Department> departments = statusOverviewService.findDeptsInCurrentProcurementPlan();
         add(new PropertyListView<Department>("departmentOverviewLink", departments) {
             @Override
             protected void populateItem(final ListItem<Department> item) {                              

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
@@ -19,6 +20,7 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
+import org.devgateway.toolkit.persistence.repository.category.DepartmentRepository;
 import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
@@ -54,21 +56,25 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Autowired
     private ProfessionalOpinionRepository professionalOpinionRepository;
-    
+
     @Autowired
     private AwardNotificationRepository awardNotificationRepository;
-    
+
     @Autowired
     private AwardAcceptanceRepository awardAcceptanceRepository;
-    
+
     @Autowired
     private ContractRepository contractRepository;
 
-    //TODO: apply filters, investigate if the tender status and award status can be optimized by using sql queries    
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    // TODO: apply filters, investigate if the tender status and award status can be
+    // optimized by using sql queries
     @Override
     public List<DepartmentOverviewData> getProjectsByDepartment(final Long fiscaYearId) {
         List<DepartmentOverviewData> departmentsData = new ArrayList<>();
-        List<Project> projects = projectRepository.findProjectsForYear(fiscaYearId);       
+        List<Project> projects = projectRepository.findProjectsForYear(fiscaYearId);
         final Map<Long, Set<String>> tenderStatusMap = getTenderStatusMap(null);
         final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(null);
 
@@ -90,7 +96,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
             projectStatus.setTenderStatus(getProcessStatus(tenderStatusMap, p.getId()));
             projectStatus.setAwardStatus(getProcessStatus(awardStatusMap, p.getId()));
             departmentOverview.getProjects().add(projectStatus);
-            
 
         }
 
@@ -119,8 +124,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
         return DBConstants.Status.NOT_STARTED;
     }
-    
-    
 
     private Map<Long, Set<String>> getTenderStatusMap(final Long fiscalYearId) {
         final Map<Long, Set<String>> statusMap = new HashMap<>();
@@ -130,18 +133,17 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         addProfessionalOpinionStatus(statusMap, fiscalYearId);
         return statusMap;
     }
-    
+
     private Map<Long, Set<String>> getAwardStatusMap(final Long fiscalYearId) {
         final Map<Long, Set<String>> statusMap = new HashMap<>();
         addAwardNotificationStatus(statusMap, fiscalYearId);
-        addAwardAcceptanceStatus(statusMap, fiscalYearId);        
+        addAwardAcceptanceStatus(statusMap, fiscalYearId);
         addContractStatus(statusMap, fiscalYearId);
         return statusMap;
     }
-    
 
     private void addRequisitionStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        //TODO: filter for current years requisitions
+        // TODO: filter for current years requisitions
         final List<PurchaseRequisition> purchaseRequisitionList = purchaseRequisitionRepository.findAll();
         for (PurchaseRequisition pr : purchaseRequisitionList) {
             if (pr.getProject() != null) {
@@ -203,15 +205,15 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                     && awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
                     && awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                             .getProject() != null) {
-                
+
                 Long projectId = awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                         .getProject().getId();
-                addStatus(statusMap, projectId, awardNotification.getStatus());                
+                addStatus(statusMap, projectId, awardNotification.getStatus());
             }
         }
-        
+
     }
-    
+
     private void addAwardAcceptanceStatus(final Map<Long, Set<String>> statusMap, final Long fiscaYearId) {
         List<AwardAcceptance> awardAcceptanceList = awardAcceptanceRepository.findAll();
         for (AwardAcceptance awardAcceptance : awardAcceptanceList) {
@@ -220,33 +222,32 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                     && awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
                     && awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                             .getProject() != null) {
-                
+
                 Long projectId = awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                         .getProject().getId();
-                addStatus(statusMap, projectId, awardAcceptance.getStatus());                
+                addStatus(statusMap, projectId, awardAcceptance.getStatus());
             }
         }
-        
+
     }
-    
+
     private void addContractStatus(final Map<Long, Set<String>> statusMap, final Long fiscaYearId) {
         List<Contract> contractList = contractRepository.findAll();
         for (Contract contract : contractList) {
             if (contract.getTenderQuotationEvaluation() != null
                     && contract.getTenderQuotationEvaluation().getTender() != null
-                    && contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
-                    && contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                            .getProject() != null) {
-                
+                    && contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null && contract
+                            .getTenderQuotationEvaluation().getTender().getPurchaseRequisition().getProject() != null) {
+
                 Long projectId = contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                         .getProject().getId();
-                addStatus(statusMap, projectId, contract.getStatus());                
+                addStatus(statusMap, projectId, contract.getStatus());
             }
         }
-        
+
     }
-    
-    //TODO: limit to only years with data
+
+    // TODO: limit to only years with data
     @Override
     public List<FiscalYear> getYearsWithData() {
         return fiscalYearRepository.findAllByOrderByStartDateDesc();
@@ -261,6 +262,15 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         }
 
         statuses.add(status);
+    }
+
+    public FiscalYear getLastFiscalYear() {
+        return fiscalYearRepository.findTopByOrderByStartDateDesc();
+    }
+
+    public List<Department> findDeptsInCurrentProcurementPlan() {
+        return departmentRepository
+                .findDeptsInCurrentProcurementPlan(fiscalYearRepository.findTopByOrderByStartDateDesc());
     }
 
 }
