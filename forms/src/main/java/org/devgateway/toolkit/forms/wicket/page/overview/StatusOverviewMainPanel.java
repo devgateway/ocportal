@@ -23,7 +23,7 @@ import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 
-public class DepartmentOverviewPanel extends Panel {
+public class StatusOverviewMainPanel extends Panel {
     private static final long serialVersionUID = 1L;
 
     @SpringBean
@@ -34,7 +34,7 @@ public class DepartmentOverviewPanel extends Panel {
     private List<DepartmentOverviewData> departmentOverviewData;
     private TextField<String> searchBox;
     
-    public DepartmentOverviewPanel(final String id) {
+    public StatusOverviewMainPanel(final String id) {
         super(id);
     }
 
@@ -55,7 +55,7 @@ public class DepartmentOverviewPanel extends Panel {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<Void>(
                 "newProcurementPlan", EditProcurementPlanPage.class, pageParameters, Buttons.Type.Success);
         newProcurementPlanButton
-                .setLabel(new StringResourceModel("newProcurementPlan", DepartmentOverviewPanel.this, null));
+                .setLabel(new StringResourceModel("newProcurementPlan", StatusOverviewMainPanel.this, null));
         add(newProcurementPlanButton);
     }
 
@@ -67,7 +67,7 @@ public class DepartmentOverviewPanel extends Panel {
 
             @Override
             protected void populateItem(final ListItem<DepartmentOverviewData> item) {
-                item.add(new DepartmentGroupItem("groupItem", item.getModelObject(), searchBox.getModelObject()));
+                item.add(new StatusOverviewItem("groupItem", item.getModelObject(), searchBox.getModelObject()));
 
             }
         };

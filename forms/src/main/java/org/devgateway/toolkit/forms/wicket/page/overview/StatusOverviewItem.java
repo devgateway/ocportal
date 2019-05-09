@@ -19,7 +19,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
 
-public class DepartmentGroupItem extends Panel {
+public class StatusOverviewItem extends Panel {
     private static final long serialVersionUID = 1L;
 
     private DepartmentOverviewData departmentOverviewData;
@@ -27,7 +27,7 @@ public class DepartmentGroupItem extends Panel {
     private String searchTerm;
     private List<ProjectStatus> filteredProjects;
 
-    public DepartmentGroupItem(final String id, final DepartmentOverviewData departmentOverviewData,
+    public StatusOverviewItem(final String id, final DepartmentOverviewData departmentOverviewData,
             final String searchTerm) {
         super(id);
         this.departmentOverviewData = departmentOverviewData;

@@ -42,7 +42,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
         super.onInitialize();
         final SideBar sideBar = new SideBar("sideBar");         
         add(sideBar);        
-        final DepartmentOverviewPanel departmentOverview = new DepartmentOverviewPanel("departmentOverview");        
+        final StatusOverviewMainPanel departmentOverview = new StatusOverviewMainPanel("departmentOverview");        
         add(departmentOverview);
         
         final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,

@@ -35,7 +35,7 @@ public class SideBar extends Panel {
                     @Override
                     public void onClick() {
                         PageParameters parameters = new PageParameters();                        
-                        setResponsePage(ProjectOverviewPage.class, parameters);
+                        setResponsePage(DepartmentOverviewPage.class, parameters);
                     }
                 };
                 link.add(new Label("label", item.getModelObject().getLabel())
