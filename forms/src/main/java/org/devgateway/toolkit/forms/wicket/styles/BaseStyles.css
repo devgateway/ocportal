@@ -102,7 +102,7 @@ hr.edit-separator {
 .section-bordered {
     margin-top: 20px;
     margin-bottom: 20px;
-    border-bottom: 1px dashed #00589e;
+    border-bottom: 1px solid #eeeeee;
 }
 
 .pane {
@@ -188,3 +188,52 @@ hr.edit-separator {
 
 /*
 -------------------------------------------------- */
+
+h1.pageTitle{
+  border-bottom: 1px solid #eeeeee;
+  font-size: 27px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+.form-wrapper label{
+  color: #1e6491;
+  font-size: 13px;
+  font-weight: 700;
+}
+@media (min-width: 768px){
+.plan-items .form-inline .control-label{
+  margin-bottom: 5px;
+}
+}
+.form-wrapper .select2-container--bootstrap.select2-container--focus .select2-selection,
+.form-wrapper .select2-container--bootstrap.select2-container--open .select2-selection{
+  border-color: #eeeeee;
+  box-shadow: inset 0 1px 1px rgba(59, 123, 177, 0.2), 0 0 8px rgba(59, 123, 177, 0.2);
+}
+.select2-container--open .select2-dropdown--below{
+  box-shadow: 0 6px 12px rgba(59, 123, 177, 0.2);
+  border-color: #eeeeee;
+}
+.select2-container--bootstrap .select2-search--dropdown .select2-search__field{
+  border: 1px solid #eeeeee;
+  -webkit-box-shadow: none;
+   box-shadow: none;
+}
+.select2-container--bootstrap .select2-selection{
+  border: 1px solid #eeeeee;
+  box-shadow: none;
+}
+.select2-dropdown{
+  border-radius: 0;
+}
+.form-wrapper [type=text].form-control,
+.form-wrapper input.form-control,
+.form-wrapper input[type=text]{
+  border: 1px solid #eeeeee;
+  box-shadow: none;
+  padding-left: 10px;
+}
+.form-wrapper .section-title{
+  margin: 25px 0 15px 0;
+}
