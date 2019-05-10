@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 body {
+  background: #eff3f6;
   font-family: 'Open Sans', sans-serif;
+  min-height:100%;
   overflow: hidden;
 }
 a:hover{
@@ -61,7 +63,7 @@ a:hover{
   color: #ffffff;
   margin-bottom: 20px;
   overflow: hidden;
-  padding: 10px 0;
+  padding: 10px 0 5px 0;
 }
 .overview .data-summary-label{
   float: left;
@@ -76,6 +78,14 @@ a:hover{
   -webkit-border-radius: 30px 30px 30px 30px;
   float: right;
   padding: 5px 10px;
+}
+.overview label{
+  display: block;
+  float: right;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 250%;
+  padding-right: 10px;
 }
 .sidebar-list .title{
   color: #1d7abf;
@@ -236,7 +246,7 @@ a:hover{
   color: #354052;
   font-weight: bold;
 }
-.status-panel-heading .projects-number label{
+.status-panel-heading label{
   color: #7c8ca5;
   font-size: 13px;
   font-weight: normal;
