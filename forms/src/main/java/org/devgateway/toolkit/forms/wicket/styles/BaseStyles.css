@@ -191,8 +191,8 @@ hr.edit-separator {
 
 h1.pageTitle{
   border-bottom: 1px solid #eeeeee;
-  font-size: 27px;
-  font-weight: 500;
+  font-size: 23px;
+  font-weight: 400;
   margin-bottom: 20px;
   padding-bottom: 20px;
 }
@@ -236,4 +236,135 @@ h1.pageTitle{
 }
 .form-wrapper .section-title{
   margin: 25px 0 15px 0;
+}
+.form-wrapper .input-group .form-control,
+.form-wrapper .input-group .form-control:first-child{
+  border: 1px solid #eeeeee;
+  box-shadow: none;
+  border-radius: 0;
+}
+.autosave{
+  color: #2097f0;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: bold;
+}
+.btn.btn-delete{
+  background-color: #d02929;
+  border: 1px solid #d02929;
+  border-radius: 3px;
+  text-transform: capitalize;
+}
+.btn.btn-info{
+  background-color: #3b7bb1;
+  border: 1px solid #3b7bb1;
+  border-radius: 3px;
+  text-transform: capitalize;
+}
+.btn .btn-default{
+  background-color: #8d8d8d;
+  border-radius: 3px;
+  color: #ffffff;
+  text-transform: capitalize;
+}
+.toggle-handle.btn.btn-default{
+  background-color: #ffffff;
+  border-radius: 3px;
+  box-shadow: none;
+  text-transform: capitalize;
+}
+.btn.btn-cancel.btn-default{
+  background: #8d8d8d;
+  border:1px solid #8d8d8d;
+  border-radius: 3px;
+  color: #ffffff;
+  text-transform: capitalize;
+}
+.btn.btn-green.btn-primary{
+  background-color: #38b349;
+  border:1px solid #38b349;
+  border-radius: 3px;
+  text-transform: capitalize;
+}
+.btn.btn-green.btn-primary:hover,
+.btn.btn-cancel.btn-default:hover,
+.btn .btn-default:hover,
+.btn.btn-info:hover,
+.btn.btn-info:hover,
+.btn.btn-delete:hover{
+  background-color: #333333;
+  border: 1px solid #333333;
+}
+.label.label-danger{
+  font-size: 10px;
+  padding: 5px 20px;
+}
+hr.edit-separator{
+  background-image: none;
+  background-color: #eeeeee;
+  height: 2px;
+}
+.btn-file{
+  background-color: #36af47;
+  border: 1px solid #36af47;
+  color: #ffffff;
+}
+.btn-file:hover{
+  background-color: #333333;
+  border: 1px solid #333333;
+  color: #ffffff;
+}
+.btn:active, .btn.active,
+.btn-danger.active{
+  box-shadow: none;
+}
+.form-wrapper .panel-default > .panel-heading{
+  background-color: #f6f6f6;
+  border-radius: 0;
+  padding:0;
+}
+.form-wrapper .panel-group .panel{
+  border-radius: 0;
+}
+.form-wrapper .plan-items .list-wrapper .list-number {
+  background-color: #e4e4e4;
+  padding: 30px;
+}
+.form-wrapper .header-field{
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.form-wrapper .accordion-toggle .show-all{
+  line-height: 120%;
+  margin-top: 10px;
+}
+.main-footer{
+  background-color: #095a14;
+}
+.form-wrapper .panel-info > .panel-heading{
+  background-color: transparent;
+  color: #38b349;
+  border: none;
+  font-style: italic;
+  font-weight: bold;
+}
+.form-wrapper .panel-info{
+  border-color: #eeeeee;
+  border-radius: 0;
+}
+.form-wrapper .panel{
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td{
+  border-top: 1px solid #eeeeee;
+}
+.btn{
+  box-shadow: none;
 }
