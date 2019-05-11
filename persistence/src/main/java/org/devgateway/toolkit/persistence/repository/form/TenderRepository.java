@@ -1,5 +1,8 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import java.util.List;
+
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
@@ -17,5 +20,7 @@ public interface TenderRepository extends TextSearchableRepository<Tender, Long>
     @Override
     @Query("select tender from  #{#entityName} tender where lower(tender.tenderTitle) like %:name%")
     Page<Tender> searchText(@Param("name") String name, Pageable page);
+    
+    List<Tender> findByPurchaseRequisition(PurchaseRequisition purchaseRequisition);
    
 }

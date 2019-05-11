@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.page.overview;
+package org.devgateway.toolkit.forms.wicket.page.overview.status;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.devgateway.toolkit.forms.wicket.page.overview.ProjectOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;

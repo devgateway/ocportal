@@ -16,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface ProcurementPlanRepository extends TextSearchableRepository<ProcurementPlan, Long> {
-    
+
     @Override
     @Query("select proc from  #{#entityName} proc where lower(proc.department.label) "
             + " like %:name% or lower(proc.fiscalYear.name) like %:name%")
     Page<ProcurementPlan> searchText(@Param("name") String name, Pageable page);
-    
+
     Long countByDepartmentAndFiscalYearAndIdNot(Department department, FiscalYear fiscalYear, Long id);
-  }
+
+    ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
+}

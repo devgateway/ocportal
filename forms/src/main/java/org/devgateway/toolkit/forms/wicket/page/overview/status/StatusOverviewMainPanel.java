@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.page.overview;
+package org.devgateway.toolkit.forms.wicket.page.overview.status;
 
 import java.util.List;
 

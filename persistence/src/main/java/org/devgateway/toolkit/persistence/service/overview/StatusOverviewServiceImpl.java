@@ -13,6 +13,7 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -25,6 +26,7 @@ import org.devgateway.toolkit.persistence.repository.category.FiscalYearReposito
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
+import org.devgateway.toolkit.persistence.repository.form.ProcurementPlanRepository;
 import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
 import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
@@ -68,6 +70,9 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+    
+    @Autowired
+    private ProcurementPlanRepository procurementPlanRepository;
 
     // TODO: apply filters, investigate if the tender status and award status can be
     // optimized by using sql queries
@@ -264,13 +269,20 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         statuses.add(status);
     }
 
+    //TODO: move to FiscalYear service
     public FiscalYear getLastFiscalYear() {
         return fiscalYearRepository.findTopByOrderByStartDateDesc();
     }
 
+  //TODO: move to department service
     public List<Department> findDeptsInCurrentProcurementPlan() {
         return departmentRepository
                 .findDeptsInCurrentProcurementPlan(fiscalYearRepository.findTopByOrderByStartDateDesc());
+    }
+
+    //TODO: move to ProcurementPlan Service
+    public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
+        return procurementPlanRepository.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
 }

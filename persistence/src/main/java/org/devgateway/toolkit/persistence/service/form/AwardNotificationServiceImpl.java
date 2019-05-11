@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
@@ -27,6 +28,12 @@ public class AwardNotificationServiceImpl extends BaseJpaServiceImpl<AwardNotifi
     @Override
     public AwardNotification newInstance() {
         return new AwardNotification();
+    }
+
+    @Override
+    public AwardNotification findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
+        return awardNotificationRepository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst()
+                .orElse(null);
     }
 
 }

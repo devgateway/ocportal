@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -36,4 +37,8 @@ public class TenderServiceImpl extends BaseJpaServiceImpl<Tender> implements Ten
         return new Tender();
     }
 
+    public Tender findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
+        //TODO: use findOne - once we add validation to prevent saving multiple tenders per requistion
+        return tenderRepository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst().orElse(null);
+    }
 }

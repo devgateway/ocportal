@@ -8,8 +8,8 @@ import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 
@@ -34,7 +34,8 @@ public class SideBar extends Panel {
 
                     @Override
                     public void onClick() {
-                        PageParameters parameters = new PageParameters();                        
+                        PageParameters parameters = new PageParameters();  
+                        parameters.add("departmentId", item.getModelObject().getId());
                         setResponsePage(DepartmentOverviewPage.class, parameters);
                     }
                 };

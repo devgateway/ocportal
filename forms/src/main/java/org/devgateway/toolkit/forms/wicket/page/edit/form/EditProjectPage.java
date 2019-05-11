@@ -35,17 +35,27 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
 
     @SpringBean
     private CabinetPaperService cabinetPaperService;
+    
+    private ProcurementPlan procurementPlan;
 
     public EditProjectPage(final PageParameters parameters) {
         super(parameters);
-
         this.jpaService = projectService;
         this.listPageClass = ListProjectPage.class;
+        StringValue procurementId = parameters.get(WebConstants.PARAM_PROCUREMENT_PLAN_ID);
+        if (!procurementId.isNull()) {
+           procurementPlan = procurementPlanService.findById(procurementId.toLong()).get(); 
+        }
+        
     }
+    
+    
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        
+        editForm.getModelObject().setProcurementPlan(procurementPlan);
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
 

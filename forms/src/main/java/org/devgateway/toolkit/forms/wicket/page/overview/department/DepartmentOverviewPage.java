@@ -12,41 +12,57 @@
 /**
  *
  */
-package org.devgateway.toolkit.forms.wicket.page.overview;
+package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.devgateway.toolkit.forms.wicket.page.DataEntryBasePage;
+import org.devgateway.toolkit.forms.wicket.page.overview.SideBar;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
+import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+
+
 
 /**
  * @author gmutuhu
  *
  */
-@MountPath("/statusOverview")
+@MountPath("/departmentOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-public class StatusOverviewPage extends DataEntryBasePage {
+public class DepartmentOverviewPage extends DataEntryBasePage {
     /**
      * @param parameters
      */
-    public StatusOverviewPage(final PageParameters parameters) {
-        super(parameters);       
+    private Long departmentId;
+    public DepartmentOverviewPage(final PageParameters parameters) {
+        super(parameters);  
+        this.departmentId = parameters.get("departmentId").toLong();
     }
     
     @Override
     protected void onInitialize() {
         super.onInitialize();
         final SideBar sideBar = new SideBar("sideBar");         
-        add(sideBar);        
-        final StatusOverviewMainPanel departmentOverview = new StatusOverviewMainPanel("departmentOverview");        
-        add(departmentOverview);
-        
+        add(sideBar);   
+        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId);
+        add(mainPanel);
         final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,
                 "assets/img/logo.png"));        
         add(logo);        
-    }  
+    }
+    
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+
+        // Load Styles.
+        response.render(CssHeaderItem.forReference(OverviewStyles.INSTANCE));
+      
+    }
 }

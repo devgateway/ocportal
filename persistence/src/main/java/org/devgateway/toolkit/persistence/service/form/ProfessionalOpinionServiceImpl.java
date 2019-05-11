@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
@@ -28,6 +29,12 @@ public class ProfessionalOpinionServiceImpl extends BaseJpaServiceImpl<Professio
     @Override
     public ProfessionalOpinion newInstance() {
         return new ProfessionalOpinion();
+    }
+
+    public ProfessionalOpinion findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
+        // replace with findOne
+        return professionalOpinionRepository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst()
+                .orElse(null);
     }
 
 }

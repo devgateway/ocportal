@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
@@ -13,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class AwardAcceptanceServiceImpl extends BaseJpaServiceImpl<AwardAcceptance>
-        implements AwardAcceptanceService {
+public class AwardAcceptanceServiceImpl extends BaseJpaServiceImpl<AwardAcceptance> implements AwardAcceptanceService {
 
     @Autowired
     private AwardAcceptanceRepository awardAcceptanceRepository;
@@ -27,6 +27,12 @@ public class AwardAcceptanceServiceImpl extends BaseJpaServiceImpl<AwardAcceptan
     @Override
     public AwardAcceptance newInstance() {
         return new AwardAcceptance();
+    }
+
+    @Override
+    public AwardAcceptance findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
+        return awardAcceptanceRepository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst()
+                .orElse(null);
     }
 
 }

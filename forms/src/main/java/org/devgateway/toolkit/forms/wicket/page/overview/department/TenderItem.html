@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+       <button wicket:id="header" class="status-panel tender" type="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapsegovernor">
+                <div class="status-panel-heading">
+                    <div class="tender-status-wrapper">
+                      <h5>Tender &amp; Award</h5>
+                      <div class="project-status">
+                        <span class="status approved"></span>
+                      </div>
+                    </div>
+                </div>
+              </button>
+           
+           <div wicket:id="projectsWrapper" class="collapse-content tender collapse" aria-expanded="true" style="">
+
+                <div class="row">
+                  <div class="col-md-12 tender-detail">
+                    <div class="tender-header">
+                      <div class="tender-label">Purchase Requisition Tender 1</div>
+                      <div class="tender-status">
+                          <span class="status" wicket:id="requisitionStatus"></span>
+                          <button type="button" class="btn btn-edit" wicket:id="requisitionEdit"></button>
+                      </div>
+                    </div>
+                    <div class="tender-info">
+                        <ul>
+                          <li wicket:id="requisitionTitle">                            
+                          </li>
+                          <li wicket:id="requisitionDate">
+                           
+                          </li>
+                          <li wicket:id="requisitionAmount">                            
+                          </li>
+                        </ul>
+                    </div>
+                </div>
+
+                </div>
+                <!-- end: purchase requisition tender 1 -->
+
+                <div class="row">
+
+                  <!-- start: tender document -->
+                  <div class="col-md-4 tender-detail">
+                    <div class="tender-header">
+                      <div class="tender-label">Tender Document</div>
+                      <div class="tender-status">
+                          <span class="status" wicket:id="tenderStatus"></span>
+                          <button type="button" class="btn" wicket:id="editTender"></button>
+                      </div>
+                    </div>
+                    <div class="tender-info">
+                        <ul>
+                          <li wicket:id="tenderTitle">                           
+                          </li>
+                          <li wicket:id="tenderId">                            
+                          </li >
+                          <li wicket:id="amount">                            
+                          </li>
+                        </ul>
+                  </div>
+                </div>
+                  <!-- end: tender document -->
+
+                  <!-- start: opening -->
+                  <div class="col-md-4 tender-detail">
+                    <div class="tender-header">
+                      <div class="tender-label">Opening</div>
+                      <div class="tender-status">
+                          <span class="status approved"></span>
+                          <button type="button" class="btn btn-edit"></button>
+                      </div>
+                    </div>
+                    <div class="tender-info">
+                        <ul>
+                          <li>
+                            Tender Title
+                          </li>
+                          <li>
+                            Tender ID
+                          </li>
+                          <li>
+                            $ Amount
+                          </li>
+                        </ul>
+                  </div>
+                  </div>
+                  <!-- end: opening -->
+
+                  <!-- start: professional opinion -->
+                  <div class="col-md-4 tender-detail">
+                    <div class="tender-header">
+                      <div class="tender-label">Professional Opinion</div>
+                      <div class="tender-status">
+                          <span class="status approved"></span>
+                          <button type="button" class="btn btn-edit"></button>
+                      </div>
+                    </div>
+                    <div class="tender-info">
+                        <ul>
+                          <li>
+                            Supplier ID
+                          </li>
+                          <li>
+                            $ Amount
+                          </li>
+                        </ul>
+                  </div>
+                  </div>
+                  <!-- end: professional opinion -->
+
+                  <div class="divider"></div>
+
+                  <!-- start: notification -->
+                  <div class="col-md-4 tender-detail">
+                    <div class="tender-header">
+                      <div class="tender-label">Notification</div>
+                      <div class="tender-status">
+                          <span class="status approved"></span>
+                          <button type="button" class="btn btn-edit"></button>
+                      </div>
+                    </div>
+                    <div class="tender-info">
+                        <ul>
+                          <li>
+                            Document 1
+                          </li>
+                          <li>
+                            Supplier
+                          </li>
+                          <li>
+                            Tender ID
+                          </li>
+                        </ul>
+                  </div>
+                  </div>
+                  <!-- end: notification -->
+
+                  <!-- start: acceptance -->
+                  <div class="col-md-4 tender-detail">
+                    <div class="tender-header">
+                      <div class="tender-label">Acceptance</div>
+                      <div class="tender-status">
+                          <span class="status approved"></span>
+                          <button type="button" class="btn btn-edit"></button>
+                      </div>
+                    </div>
+                    <div class="tender-info">
+                        <ul>
+                          <li>
+                            Acceptance Document
+                          </li>
+                          <li>
+                            Tender ID
+                          </li>
+                        </ul>
+                  </div>
+                  </div>
+                  <!-- end: acceptance -->
+
+                  <!-- start: contracts -->
+                  <div class="col-md-4 tender-detail">
+                    <div class="tender-header">
+                      <div class="tender-label">Contracts</div>
+                      <div class="tender-status">
+                          <span class="status approved"></span>
+                          <button type="button" class="btn btn-edit"></button>
+                      </div>
+                    </div>
+                    <div class="tender-info">
+                        <ul>
+                          <li>
+                            Contract Document
+                          </li>
+                          <li>
+                            Tender ID
+                          </li>
+                        </ul>
+                  </div>
+                  </div>
+                  <!-- end: contracts -->
+
+
+                </div>
+                <!-- end: row for tender sections -->
+
+
+
+
+              </div>
+        
+
+
+   
+      
+</wicket:panel>
+</body>
+</html>

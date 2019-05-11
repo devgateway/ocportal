@@ -22,6 +22,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
@@ -61,6 +62,8 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     private GenericSleepFormComponent procuringEntityEmail = null;
 
     private GenericSleepFormComponent procuringEntityAddress = null;
+    
+    private PurchaseRequisition purchaseRequisition;
 
     /**
      * @param parameters
@@ -69,11 +72,21 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         super(parameters);
         this.jpaService = tenderService;
         this.listPageClass = ListTenderPage.class;
+        StringValue purchaseRequisitionId = parameters.get(WebConstants.PARAM_PURCHASE_REQUISITION_ID);
+        if (!purchaseRequisitionId.isNull()) {
+            purchaseRequisition = purchaseRequisitionService.findById(purchaseRequisitionId.toLong()).orElse(null);
+        }
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        
+        if (purchaseRequisition != null) {
+            editForm.getModelObject().setProcurementPlan(purchaseRequisition.getProcurementPlan());
+            editForm.getModelObject().setPurchaseRequisition(purchaseRequisition);            
+        }
+        
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "purchaseRequisition", purchaseRequisitionService).required();
 
