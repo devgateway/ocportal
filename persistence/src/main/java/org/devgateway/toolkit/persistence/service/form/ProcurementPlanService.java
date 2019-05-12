@@ -14,4 +14,6 @@ public interface ProcurementPlanService
         extends BaseJpaService<ProcurementPlan>, TextSearchableService<ProcurementPlan> {
 
     Long countByDepartmentAndFiscalYearAndIdNot(Department department, FiscalYear fiscalYear, Long id);
+
+   ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 }

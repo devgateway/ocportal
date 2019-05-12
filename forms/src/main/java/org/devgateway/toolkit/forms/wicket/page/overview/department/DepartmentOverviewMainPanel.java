@@ -24,6 +24,8 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
+import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
@@ -34,7 +36,7 @@ public class DepartmentOverviewMainPanel extends Panel {
     private static final long serialVersionUID = 1L;
     @SpringBean
     private StatusOverviewService statusOverviewService;
-    private FiscalYear defaultYearfilter;  
+    private FiscalYear selectedFiscalYear;  
     private List<FiscalYear> fiscalYears;
     private TextField<String> searchBox;
     private ProcurementPlan procurementPlan;
@@ -44,14 +46,25 @@ public class DepartmentOverviewMainPanel extends Panel {
     @SpringBean 
     private ProjectService projectService;
     
+    @SpringBean
+    private FiscalYearService fiscalYearService;
+    
+    @SpringBean
+    private ProcurementPlanService procurementPlanService;
+    
     private ListView<Project> projectList;
     
-    public DepartmentOverviewMainPanel(final String id, final Long departmentId) {
+    public DepartmentOverviewMainPanel(final String id, final Long departmentId, final Long fiscalYearId) {
         super(id);
-        defaultYearfilter = statusOverviewService.getLastFiscalYear();
-        fiscalYears = statusOverviewService.getYearsWithData();
+        if (fiscalYearId == null) {
+            selectedFiscalYear = fiscalYearService.getLastFiscalYear();  
+        } else {
+            selectedFiscalYear = fiscalYearService.findById(fiscalYearId).orElse(null);
+        }
+        
+        fiscalYears = fiscalYearService.getYearsWithData();
         Department department = departmentService.findById(departmentId).get();
-        procurementPlan = statusOverviewService.findByDepartmentAndFiscalYear(department, defaultYearfilter);
+        procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, selectedFiscalYear);
         
     }
 
@@ -99,7 +112,7 @@ public class DepartmentOverviewMainPanel extends Panel {
    private void addYearDropdown() {
        final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<FiscalYear>("label", "id");
        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
-               new PropertyModel<FiscalYear>(this, "defaultYearfilter"), fiscalYears, choiceRenderer);
+               new PropertyModel<FiscalYear>(this, "selectedFiscalYear"), fiscalYears, choiceRenderer);
        yearsDropdown.add(new FormComponentUpdatingBehavior() {
            private static final long serialVersionUID = 1L;
 
@@ -138,10 +151,10 @@ public class DepartmentOverviewMainPanel extends Panel {
        add(projectList);
    }
    public FiscalYear getDefaultYearfilter() {
-       return defaultYearfilter;
+       return selectedFiscalYear;
    }
 
-   public void setDefaultYearfilter(final FiscalYear defaultYearfilter) {
-       this.defaultYearfilter = defaultYearfilter;
+   public void setDefaultYearfilter(final FiscalYear selectedFiscalYear) {
+       this.selectedFiscalYear = selectedFiscalYear;
    }
 }

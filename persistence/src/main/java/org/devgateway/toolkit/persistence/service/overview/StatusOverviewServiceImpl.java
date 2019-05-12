@@ -252,11 +252,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     }
 
-    // TODO: limit to only years with data
-    @Override
-    public List<FiscalYear> getYearsWithData() {
-        return fiscalYearRepository.findAllByOrderByStartDateDesc();
-    }
+    
 
     private void addStatus(final Map<Long, Set<String>> statusMap, final Long projectId, final String status) {
         Set<String> statuses = statusMap.get(projectId);
@@ -267,22 +263,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         }
 
         statuses.add(status);
-    }
-
-    //TODO: move to FiscalYear service
-    public FiscalYear getLastFiscalYear() {
-        return fiscalYearRepository.findTopByOrderByStartDateDesc();
-    }
-
-  //TODO: move to department service
-    public List<Department> findDeptsInCurrentProcurementPlan() {
-        return departmentRepository
-                .findDeptsInCurrentProcurementPlan(fiscalYearRepository.findTopByOrderByStartDateDesc());
-    }
-
-    //TODO: move to ProcurementPlan Service
-    public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
-        return procurementPlanRepository.findByDepartmentAndFiscalYear(department, fiscalYear);
-    }
+    } 
 
 }

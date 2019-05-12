@@ -10,10 +10,6 @@ import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 /**
  * @author gmutuhu
  */
-public interface StatusOverviewService {
-    List<FiscalYear> getYearsWithData();
-    List<DepartmentOverviewData> getProjectsByDepartment(Long fiscaYearId);
-    FiscalYear getLastFiscalYear();
-    List<Department> findDeptsInCurrentProcurementPlan();
-    ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
+public interface StatusOverviewService {   
+    List<DepartmentOverviewData> getProjectsByDepartment(Long fiscaYearId);    
 }

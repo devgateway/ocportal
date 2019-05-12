@@ -20,6 +20,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.SideBar;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -39,10 +40,17 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     /**
      * @param parameters
      */
-    private Long departmentId;
+    private Long departmentId = null;
+    private Long fiscalYearId = null;
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);  
-        this.departmentId = parameters.get("departmentId").toLong();
+        if (!parameters.get(WebConstants.PARAM_DEPARTMENT_ID).isNull()) {
+            this.departmentId = parameters.get(WebConstants.PARAM_DEPARTMENT_ID).toLong(); 
+        }
+        
+        if (!parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).isNull()) {
+           this.fiscalYearId = parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).toLong(); 
+        }       
     }
     
     @Override
@@ -50,7 +58,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         super.onInitialize();
         final SideBar sideBar = new SideBar("sideBar");         
         add(sideBar);   
-        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId);
+        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId, fiscalYearId);
         add(mainPanel);
         final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,
                 "assets/img/logo.png"));        

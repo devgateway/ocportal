@@ -64,6 +64,8 @@ public final class WebConstants {
     public static final String PARAM_PURCHASE_REQUISITION_ID = "purchaseRequisitionId"; 
     public static final String PARAM_TENDER_ID = "tenderId";
     public static final String PARAM_TENDER_OPENING_ID = "tenderOpeningId";
+    public static final String PARAM_DEPARTMENT_ID = "departmentId";
+    public static final String PARAM_FISCAL_YEAR_ID = "fiscalYearId";
     
     
 
