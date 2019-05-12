@@ -53,9 +53,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
-        
-        editForm.getModelObject().setProcurementPlan(procurementPlan);
+        super.onInitialize();        
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
 
@@ -83,7 +81,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
     @Override
     protected Project newInstance() {
         final Project project = super.newInstance();
-        // project.setProcurementPlan(procurementPlan);  // here we need to set the ProcurementPlan
+        project.setProcurementPlan(procurementPlan);
         return project;
     }
 

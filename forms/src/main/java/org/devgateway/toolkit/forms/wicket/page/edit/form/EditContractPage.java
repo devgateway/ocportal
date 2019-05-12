@@ -9,6 +9,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -40,8 +42,8 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvalutionService;
-    
+    protected TenderQuotationEvalutionService tenderQuotationEvaluationService;
+
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
 
@@ -49,13 +51,19 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
     private GenericSleepFormComponent tenderTitle = null;
     private GenericSleepFormComponent tenderNumber = null;
     private GenericSleepFormComponent supplierAddress = null;
-    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluation = null;
+    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector = null;
+    private TenderQuotationEvaluation tenderQuotationEvaluation;
 
     public EditContractPage(final PageParameters parameters) {
         super(parameters);
-
         this.jpaService = contractService;
         this.listPageClass = ListContractPage.class;
+
+        StringValue tenderOpeningId = parameters.get(WebConstants.PARAM_TENDER_OPENING_ID);
+        if (!tenderOpeningId.isNull()) {
+            tenderQuotationEvaluation = tenderQuotationEvaluationService.findById(tenderOpeningId.toLong())
+                    .orElse(null);
+        }
     }
 
     @Override
@@ -69,13 +77,17 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
         ComponentUtil.addDateField(editForm, "expiryDate");
         ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
         addTenderInfo();
-        addSupplierInfo();            
+        addSupplierInfo();
         editForm.add(new ContractDocumentPanel("contractDocs"));
     }
 
     @Override
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
+        if (tenderQuotationEvaluation != null) {
+            contract.setProcurementPlan(tenderQuotationEvaluation.getProcurementPlan());
+            contract.setTenderQuotationEvaluation(tenderQuotationEvaluation);
+        }
         return contract;
     }
 
@@ -84,14 +96,15 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
     // Ideally the tender evaluation of an Notification should set only once on
     // creation.s
     private void addTenderInfo() {
-        tenderQuotationEvaluation = ComponentUtil.addSelect2ChoiceField(editForm, "tenderQuotationEvaluation",
-                tenderQuotationEvalutionService);
-        tenderQuotationEvaluation.required();
-        tenderQuotationEvaluation.getField().add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
+        tenderQuotationEvaluationSelector = ComponentUtil.addSelect2ChoiceField(editForm, "tenderQuotationEvaluation",
+                tenderQuotationEvaluationService);
+        tenderQuotationEvaluationSelector.required();
+        tenderQuotationEvaluationSelector.getField()
+                .add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
 
         tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () -> {
-            if (tenderQuotationEvaluation.getModelObject() != null) {
-                return tenderQuotationEvaluation.getModelObject().getTender().getTenderNumber();
+            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
+                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderNumber();
             }
             return null;
         });
@@ -99,8 +112,8 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
         editForm.add(tenderTitle);
 
         tenderNumber = new GenericSleepFormComponent<>("tenderTitle", (IModel<String>) () -> {
-            if (tenderQuotationEvaluation.getModelObject() != null) {
-                return tenderQuotationEvaluation.getModelObject().getTender().getTenderTitle();
+            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
+                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderTitle();
             }
             return null;
         });
@@ -124,7 +137,6 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
         supplierAddress.setOutputMarkupId(true);
         editForm.add(supplierAddress);
 
-        
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
@@ -164,7 +176,7 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
 
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierAddress);            
+            target.add(supplierAddress);
         }
     }
 }

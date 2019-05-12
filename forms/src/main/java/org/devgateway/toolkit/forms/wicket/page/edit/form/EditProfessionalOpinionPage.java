@@ -5,7 +5,9 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
@@ -43,15 +45,23 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
     protected SupplierService supplierService;
 
     @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvalutionService;
+    protected TenderQuotationEvalutionService tenderQuotationEvaluationService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
+
+    private TenderQuotationEvaluation tenderQuotationEvaluation;
 
     public EditProfessionalOpinionPage(final PageParameters parameters) {
         super(parameters);
 
         this.jpaService = professionalOpinionService;
         this.listPageClass = ListProfessionalOpinionPage.class;
+
+        StringValue tenderOpeningId = parameters.get(WebConstants.PARAM_TENDER_OPENING_ID);
+        if (!tenderOpeningId.isNull()) {
+            tenderQuotationEvaluation = tenderQuotationEvaluationService.findById(tenderOpeningId.toLong())
+                    .orElse(null);
+        }
     }
 
     @Override
@@ -61,7 +71,7 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
 
         final Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluation = ComponentUtil
-                .addSelect2ChoiceField(editForm, "tenderQuotationEvaluation", tenderQuotationEvalutionService);
+                .addSelect2ChoiceField(editForm, "tenderQuotationEvaluation", tenderQuotationEvaluationService);
         tenderQuotationEvaluation.required();
         tenderQuotationEvaluation.getField().add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
 
@@ -71,12 +81,12 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
         editForm.add(awardeeSelector);
 
         ComponentUtil.addDateField(editForm, "professionalOpinionDate").required();
-        
-        final TextFieldBootstrapFormComponent<Double> recommendedAwardAmount =
-                ComponentUtil.addDoubleField(editForm, "recommendedAwardAmount");
+
+        final TextFieldBootstrapFormComponent<Double> recommendedAwardAmount = ComponentUtil.addDoubleField(editForm,
+                "recommendedAwardAmount");
         recommendedAwardAmount.required();
         recommendedAwardAmount.getField().add(new RangeValidator(0.0, null));
-   
+
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
@@ -87,8 +97,10 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
     @Override
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
-        // professionalOpinion.setProcurementPlan(procurementPlan); // here we need to
-        // set the ProcurementPlan
+        if (tenderQuotationEvaluation != null) {
+            professionalOpinion.setProcurementPlan(tenderQuotationEvaluation.getProcurementPlan());
+            professionalOpinion.setTenderQuotationEvaluation(tenderQuotationEvaluation);
+        }
         return professionalOpinion;
     }
 

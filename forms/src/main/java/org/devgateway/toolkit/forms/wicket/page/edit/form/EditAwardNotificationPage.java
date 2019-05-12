@@ -9,6 +9,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -39,20 +41,26 @@ public class EditAwardNotificationPage extends EditAbstractMakueniFormPage<Award
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvalutionService;
+    protected TenderQuotationEvalutionService tenderQuotationEvaluationService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
     private GenericSleepFormComponent tenderTitle = null;
     private GenericSleepFormComponent tenderNumber = null;
     private GenericSleepFormComponent supplierID = null;
     private GenericSleepFormComponent supplierAddress = null;
-    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluation = null;
+    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector = null;
+    private TenderQuotationEvaluation tenderQuotationEvaluation;
 
     public EditAwardNotificationPage(final PageParameters parameters) {
         super(parameters);
-
         this.jpaService = awardNotificationService;
         this.listPageClass = ListAwardNotificationPage.class;
+
+        StringValue tenderOpeningId = parameters.get(WebConstants.PARAM_TENDER_OPENING_ID);
+        if (!tenderOpeningId.isNull()) {
+            tenderQuotationEvaluation = tenderQuotationEvaluationService.findById(tenderOpeningId.toLong())
+                    .orElse(null);
+        }
     }
 
     @Override
@@ -72,6 +80,11 @@ public class EditAwardNotificationPage extends EditAbstractMakueniFormPage<Award
     @Override
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
+        if (tenderQuotationEvaluation != null) {
+            awardNotification.setProcurementPlan(tenderQuotationEvaluation.getProcurementPlan());
+            awardNotification.setTenderQuotationEvaluation(tenderQuotationEvaluation);
+        }
+
         return awardNotification;
     }
 
@@ -80,14 +93,15 @@ public class EditAwardNotificationPage extends EditAbstractMakueniFormPage<Award
     // Ideally the tender evaluation of an Notification should set only once on
     // creation.s
     private void addTenderInfo() {
-        tenderQuotationEvaluation = ComponentUtil.addSelect2ChoiceField(editForm, "tenderQuotationEvaluation",
-                tenderQuotationEvalutionService);
-        tenderQuotationEvaluation.required();
-        tenderQuotationEvaluation.getField().add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
+        tenderQuotationEvaluationSelector = ComponentUtil.addSelect2ChoiceField(editForm, "tenderQuotationEvaluation",
+                tenderQuotationEvaluationService);
+        tenderQuotationEvaluationSelector.required();
+        tenderQuotationEvaluationSelector.getField()
+                .add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
 
         tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () -> {
-            if (tenderQuotationEvaluation.getModelObject() != null) {
-                return tenderQuotationEvaluation.getModelObject().getTender().getTenderNumber();
+            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
+                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderNumber();
             }
             return null;
         });
@@ -95,8 +109,8 @@ public class EditAwardNotificationPage extends EditAbstractMakueniFormPage<Award
         editForm.add(tenderTitle);
 
         tenderNumber = new GenericSleepFormComponent<>("tenderTitle", (IModel<String>) () -> {
-            if (tenderQuotationEvaluation.getModelObject() != null) {
-                return tenderQuotationEvaluation.getModelObject().getTender().getTenderTitle();
+            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
+                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderTitle();
             }
             return null;
         });

@@ -62,13 +62,8 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();  
+        super.onInitialize();       
         
-        if (project != null) {
-            editForm.getModelObject().setProcurementPlan(project.getProcurementPlan());
-            editForm.getModelObject().setProject(project);
-        }  
-       
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "project", projectService).required();
 
@@ -104,7 +99,11 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
     @Override
     protected PurchaseRequisition newInstance() {
         final PurchaseRequisition purchaseRequisition = super.newInstance();
-        // purchaseRequisition.setProcurementPlan(procurementPlan);  // here we need to set the ProcurementPlan
+        if (project != null) {
+            purchaseRequisition.setProcurementPlan(project.getProcurementPlan());
+            purchaseRequisition.setProject(project);
+        }  
+       
         return purchaseRequisition;
     }
 

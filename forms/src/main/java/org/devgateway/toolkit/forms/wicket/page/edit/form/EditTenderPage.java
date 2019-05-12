@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import java.util.Set;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -34,8 +36,6 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import java.util.Set;
-
 /**
  * @author gmutuhu
  *
@@ -62,7 +62,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     private GenericSleepFormComponent procuringEntityEmail = null;
 
     private GenericSleepFormComponent procuringEntityAddress = null;
-    
+
     private PurchaseRequisition purchaseRequisition;
 
     /**
@@ -81,12 +81,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        
-        if (purchaseRequisition != null) {
-            editForm.getModelObject().setProcurementPlan(purchaseRequisition.getProcurementPlan());
-            editForm.getModelObject().setPurchaseRequisition(purchaseRequisition);            
-        }
-        
+
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "purchaseRequisition", purchaseRequisitionService).required();
 
@@ -118,7 +113,6 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");
         tenderLink.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXTAREA);
         tenderLink.getField().add(tenderDocOrTenderLinkRequiredValidator());
-           
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
@@ -153,7 +147,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
         return new TenderDocumentValidator(id.toLong(-1));
     }
-    
+
     private class AjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
         AjaxComponentUpdatingBehavior(final String event) {
             super(event);
@@ -165,8 +159,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
             target.add(procuringEntityAddress);
         }
     }
-    
-    
+
     public class TenderDocumentValidator implements IValidator<String>, INullAcceptingValidator<String> {
         private final Long id;
 
@@ -178,12 +171,23 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         public void validate(final IValidatable<String> validatable) {
             final String tenderLinkValue = validatable.getValue();
             final Set<FileMetadata> uploadedFiles = editForm.getModelObject().getFormDocs();
-            
+
             if (StringUtils.isEmpty(tenderLinkValue) && uploadedFiles.isEmpty()) {
                 final ValidationError error = new ValidationError(getString("tenderDocRequired"));
                 validatable.error(error);
             }
 
         }
+    }
+    
+    @Override
+    protected Tender newInstance() {
+        final Tender tender = super.newInstance();
+        if (purchaseRequisition != null) {
+            tender.setProcurementPlan(purchaseRequisition.getProcurementPlan());
+            tender.setPurchaseRequisition(purchaseRequisition);
+        }
+        
+        return tender;
     }
 }

@@ -69,20 +69,17 @@
                     <div class="tender-header">
                       <div class="tender-label">Opening</div>
                       <div class="tender-status">
-                          <span class="status approved"></span>
-                          <button type="button" class="btn btn-edit"></button>
+                          <span class="status" wicket:id="tenderOpeningStatus"></span>
+                          <button type="button" class="btn" wicket:id="editTenderOpening"></button>
                       </div>
                     </div>
                     <div class="tender-info">
                         <ul>
-                          <li>
-                            Tender Title
+                          <li wicket:id="tenderOpeningTitle">                            
                           </li>
-                          <li>
-                            Tender ID
+                          <li wicket:id="tenderOpeningID">                            
                           </li>
-                          <li>
-                            $ Amount
+                          <li wicket:id="tenderOpeningAmount">                            
                           </li>
                         </ul>
                   </div>
@@ -94,17 +91,15 @@
                     <div class="tender-header">
                       <div class="tender-label">Professional Opinion</div>
                       <div class="tender-status">
-                          <span class="status approved"></span>
-                          <button type="button" class="btn btn-edit"></button>
+                          <span class="status" wicket:id="professionalOpinionStatus"></span>
+                          <button type="button" class="btn" wicket:id="editProfessionalOpinion"></button>
                       </div>
                     </div>
                     <div class="tender-info">
                         <ul>
-                          <li>
-                            Supplier ID
+                          <li wicket:id="professionalOpinionSupplier">
                           </li>
-                          <li>
-                            $ Amount
+                          <li wicket:id="professionalOpinionAmount">
                           </li>
                         </ul>
                   </div>
@@ -118,19 +113,18 @@
                     <div class="tender-header">
                       <div class="tender-label">Notification</div>
                       <div class="tender-status">
-                          <span class="status approved"></span>
-                          <button type="button" class="btn btn-edit"></button>
+                          <span class="status" wicket:id="awardNotificationStatus"></span>
+                          <button type="button" class="btn" wicket:id="editAwardNotification"></button>
                       </div>
                     </div>
                     <div class="tender-info">
                         <ul>
-                          <li>
-                            Document 1
+                          <li>                            
                           </li>
-                          <li>
+                          <li wicket:id="awardNotificationSupplier">
                             Supplier
                           </li>
-                          <li>
+                          <li wicket:id="awardNotificationTenderId">
                             Tender ID
                           </li>
                         </ul>
@@ -143,17 +137,17 @@
                     <div class="tender-header">
                       <div class="tender-label">Acceptance</div>
                       <div class="tender-status">
-                          <span class="status approved"></span>
-                          <button type="button" class="btn btn-edit"></button>
+                          <span class="status" wicket:id="awardAcceptanceStatus"></span>
+                          <button type="button" class="btn" wicket:id="editAwardAcceptance"></button>
                       </div>
                     </div>
                     <div class="tender-info">
                         <ul>
-                          <li>
-                            Acceptance Document
+                          <li>                            
                           </li>
-                          <li>
-                            Tender ID
+                          <li wicket:id="awardAcceptanceSupplier">                            
+                          </li>
+                          <li wicket:id="awardAcceptanceTenderId">                            
                           </li>
                         </ul>
                   </div>
@@ -165,8 +159,8 @@
                     <div class="tender-header">
                       <div class="tender-label">Contracts</div>
                       <div class="tender-status">
-                          <span class="status approved"></span>
-                          <button type="button" class="btn btn-edit"></button>
+                          <span class="status" wicket:id="contractStatus"></span>
+                          <button type="button" class="btn" wicket:id="editContract"></button>
                       </div>
                     </div>
                     <div class="tender-info">
@@ -174,26 +168,17 @@
                           <li>
                             Contract Document
                           </li>
-                          <li>
-                            Tender ID
+                           <li wicket:id="contractSupplier">                            
+                          </li>
+                          <li wicket:id="contractTenderId">                            
                           </li>
                         </ul>
                   </div>
                   </div>
                   <!-- end: contracts -->
-
-
                 </div>
                 <!-- end: row for tender sections -->
-
-
-
-
-              </div>
-        
-
-
-   
+                </div>  
       
 </wicket:panel>
 </body>
