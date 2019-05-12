@@ -9,4 +9,5 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
 public interface FiscalYearService extends BaseJpaService<FiscalYear>, TextSearchableService<FiscalYear> {
     FiscalYear getLastFiscalYear();
     List<FiscalYear> getYearsWithData();
+    List<FiscalYear> getYearsWithData(Long departmentId);
 }

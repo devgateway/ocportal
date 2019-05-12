@@ -28,8 +28,6 @@ import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-
-
 /**
  * @author gmutuhu
  *
@@ -42,35 +40,36 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
      */
     private Long departmentId = null;
     private Long fiscalYearId = null;
+
     public DepartmentOverviewPage(final PageParameters parameters) {
-        super(parameters);  
+        super(parameters);
         if (!parameters.get(WebConstants.PARAM_DEPARTMENT_ID).isNull()) {
-            this.departmentId = parameters.get(WebConstants.PARAM_DEPARTMENT_ID).toLong(); 
+            this.departmentId = parameters.get(WebConstants.PARAM_DEPARTMENT_ID).toLong();
         }
-        
+
         if (!parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).isNull()) {
-           this.fiscalYearId = parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).toLong(); 
-        }       
+            this.fiscalYearId = parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).toLong();
+        }
     }
-    
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        final SideBar sideBar = new SideBar("sideBar");         
-        add(sideBar);   
-        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId, fiscalYearId);
+        final SideBar sideBar = new SideBar("sideBar");
+        add(sideBar);
+        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId,
+                fiscalYearId);
         add(mainPanel);
-        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,
-                "assets/img/logo.png"));        
-        add(logo);        
+        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"));
+        add(logo);
     }
-    
+
     @Override
     public void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
 
         // Load Styles.
         response.render(CssHeaderItem.forReference(OverviewStyles.INSTANCE));
-      
+
     }
 }

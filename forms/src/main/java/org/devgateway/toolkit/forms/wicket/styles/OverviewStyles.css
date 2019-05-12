@@ -639,3 +639,12 @@ a:hover{
 .tender-info ul li:last-child:after{
   content: none;
 }
+
+.btn-small {   
+    height: 16px !important;   
+    width: 16px !important;
+}
+
+.btn-container {
+	height:45px;
+}

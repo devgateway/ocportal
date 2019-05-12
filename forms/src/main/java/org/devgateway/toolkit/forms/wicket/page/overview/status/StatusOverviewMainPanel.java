@@ -18,6 +18,8 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
@@ -33,6 +35,8 @@ public class StatusOverviewMainPanel extends Panel {
     private FiscalYear defaultYearfilter;    
     private List<DepartmentOverviewData> departmentOverviewData;
     private TextField<String> searchBox;
+    @SpringBean
+    private FiscalYearService fiscalYearService;
     
     public StatusOverviewMainPanel(final String id) {
         super(id);
@@ -41,8 +45,8 @@ public class StatusOverviewMainPanel extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        final List<FiscalYear> fiscalYears = statusOverviewService.getYearsWithData();
-        defaultYearfilter = fiscalYears.stream().findFirst().orElse(null);
+        final List<FiscalYear> fiscalYears = fiscalYearService.getYearsWithData();
+        defaultYearfilter = fiscalYearService.getLastFiscalYear();
         addSearchBox();
         addProcurementPlanButton();
         addDepartmentList();

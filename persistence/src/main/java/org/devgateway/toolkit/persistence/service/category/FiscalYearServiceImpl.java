@@ -42,6 +42,11 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
     }
     
     @Override
+    public List<FiscalYear> getYearsWithData(final Long departmentId) {
+        return fiscalYearRepository.getYearsWithData(departmentId);
+    }
+    
+    @Override
    public FiscalYear getLastFiscalYear() {
         return fiscalYearRepository.findTopByOrderByStartDateDesc();
     }

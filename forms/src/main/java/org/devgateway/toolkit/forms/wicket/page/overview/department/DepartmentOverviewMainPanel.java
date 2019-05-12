@@ -53,6 +53,7 @@ public class DepartmentOverviewMainPanel extends Panel {
     private ProcurementPlanService procurementPlanService;
     
     private ListView<Project> projectList;
+    private Department department;
     
     public DepartmentOverviewMainPanel(final String id, final Long departmentId, final Long fiscalYearId) {
         super(id);
@@ -62,8 +63,9 @@ public class DepartmentOverviewMainPanel extends Panel {
             selectedFiscalYear = fiscalYearService.findById(fiscalYearId).orElse(null);
         }
         
-        fiscalYears = fiscalYearService.getYearsWithData();
-        Department department = departmentService.findById(departmentId).get();
+        department = departmentService.findById(departmentId).get();
+        //years with data for department
+        fiscalYears = fiscalYearService.getYearsWithData(departmentId);
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, selectedFiscalYear);
         
     }
@@ -118,9 +120,11 @@ public class DepartmentOverviewMainPanel extends Panel {
 
            @Override
            protected void onUpdate() {
-               /*departmentOverviewData = statusOverviewService
-                       .getProjectsByDepartment(yearsDropdown.getModelObject().getId());
-               departmentsList.setModelObject(departmentOverviewData);*/
+               selectedFiscalYear = yearsDropdown.getModelObject();                   
+               PageParameters pageParameters = this.getFormComponent().getPage().getPageParameters();
+               pageParameters.set(WebConstants.PARAM_FISCAL_YEAR_ID, selectedFiscalYear.getId());
+               setResponsePage(DepartmentOverviewPage.class, pageParameters);
+               
            }
        });
        add(yearsDropdown);

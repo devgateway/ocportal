@@ -16,6 +16,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.page.overview.ProjectOverviewPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
@@ -62,8 +63,9 @@ public class StatusOverviewItem extends Panel {
                     @Override
                     public void onClick() {
                         PageParameters parameters = new PageParameters();
-                        parameters.add("id", item.getModelObject().getId());
-                        setResponsePage(ProjectOverviewPage.class, parameters);
+                       // parameters.add("id", item.getModelObject().getId());
+                        
+                       // setResponsePage(DepartmentOverviewPage.class, parameters);
                     }
                 };
                 link.add(new Label("label", new PropertyModel<String>(item.getModelObject(), "projectTitle")));

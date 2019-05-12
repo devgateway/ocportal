@@ -11,6 +11,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 
@@ -19,6 +20,9 @@ public class SideBar extends Panel {
      
     @SpringBean
     private StatusOverviewService statusOverviewService;
+    
+    @SpringBean
+    private DepartmentService departmentService;
 
     public SideBar(final String id) {
         super(id);
@@ -26,7 +30,7 @@ public class SideBar extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();        
-        List<Department> departments = statusOverviewService.findDeptsInCurrentProcurementPlan();
+        List<Department> departments = departmentService.findDeptsInCurrentProcurementPlan();
         add(new PropertyListView<Department>("departmentOverviewLink", departments) {
             @Override
             protected void populateItem(final ListItem<Department> item) {                              
