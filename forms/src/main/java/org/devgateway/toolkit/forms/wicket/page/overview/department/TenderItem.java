@@ -110,7 +110,8 @@ public class TenderItem extends Panel {
 
             }
         };
-
+                     
+        header.add(new Label("headerTitle", Model.of(purchaseRequisition.getTitle())));                
         add(header);
     }
 
