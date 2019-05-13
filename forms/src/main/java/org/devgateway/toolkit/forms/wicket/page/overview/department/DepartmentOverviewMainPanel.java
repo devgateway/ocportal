@@ -65,7 +65,7 @@ public class DepartmentOverviewMainPanel extends Panel {
         }
 
         department = departmentService.findById(departmentId).get();
-        //years with data for department
+        // years with data for department
         fiscalYears = fiscalYearService.getYearsWithData(departmentId);
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, selectedFiscalYear);
 
@@ -138,17 +138,17 @@ public class DepartmentOverviewMainPanel extends Panel {
 
             @Override
             protected void onUpdate() {
-                if (projects != null) {                           
+                if (projects != null) {
                     List<Project> filteredProjects = projects.stream().filter(p -> {
                         if (p.getProjectTitle() != null && searchBox.getModelObject() != null) {
-                           return p.getProjectTitle().toLowerCase().contains(searchBox.getModelObject().toLowerCase());
+                            return p.getProjectTitle().toLowerCase().contains(searchBox.getModelObject().toLowerCase());
                         }
-                        
-                        return true;                                         
+
+                        return true;
                     }).collect(Collectors.toList());
-                    
-                    projectList.setModelObject(filteredProjects);                      
-                  }
+
+                    projectList.setModelObject(filteredProjects);
+                }
             }
         });
         add(searchBox);
