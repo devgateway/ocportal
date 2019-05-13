@@ -30,12 +30,6 @@ a:hover {
     padding-right: 0 !important;
 }
 
-.wrapper {
-    min-height: 100vh;
-    overflow: hidden;
-    width: 100%;
-}
-
 .sidebar {
     background: #223a49;
     bottom: 0;
