@@ -29,13 +29,13 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id")})
+@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
 public class Contract extends AbstractMakueniForm {
-
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private TenderQuotationEvaluation tenderQuotationEvaluation;
+
     private Double tenderValue;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

@@ -25,10 +25,12 @@ import java.util.List;
 public class DepartmentOverviewItem extends Panel {
     private static final long serialVersionUID = -2887946738171526100L;
     private Project project;
+
     private Boolean expanded = false;
 
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
+
     private List<PurchaseRequisition> purchaseReqisitions;
 
     public DepartmentOverviewItem(final String id, final Project project) {

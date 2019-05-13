@@ -37,6 +37,7 @@ import org.devgateway.toolkit.persistence.service.form.TenderService;
 public class TenderItem extends Panel {
     private static final long serialVersionUID = -2887946738171526100L;
     private Boolean expanded = false;
+
     private PurchaseRequisition purchaseRequisition;
 
     @SpringBean

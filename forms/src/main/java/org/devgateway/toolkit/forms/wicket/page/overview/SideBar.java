@@ -26,7 +26,9 @@ public class SideBar extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        List<Department> departments = departmentService.findDeptsInCurrentProcurementPlan();
+
+        // TODO - here we should share more info than the departments, like logo, project count...
+        final List<Department> departments = departmentService.findDeptsInCurrentProcurementPlan();
         add(new PropertyListView<Department>("departmentOverviewLink", departments) {
             @Override
             protected void populateItem(final ListItem<Department> item) {
