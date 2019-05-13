@@ -29,8 +29,8 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tenderTitle"),
-        @Index(columnList = "tenderNumber")})
+@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "purchase_requisition_id"),
+        @Index(columnList = "tenderTitle"), @Index(columnList = "tenderNumber")})
 public class Tender extends AbstractMakueniForm {
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

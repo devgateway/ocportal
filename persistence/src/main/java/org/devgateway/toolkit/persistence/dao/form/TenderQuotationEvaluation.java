@@ -25,22 +25,22 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id")})
+@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_id")})
 public class TenderQuotationEvaluation extends AbstractMakueniForm {
-    private Date closingDate;
-
-    private Integer numberOfBids;
-
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Tender tender;
 
+    private Date closingDate;
+
+    private Integer numberOfBids;
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
-    private List<Bid> bids = new ArrayList<Bid>();
+    private List<Bid> bids = new ArrayList<>();
 
     public Date getClosingDate() {
         return closingDate;
