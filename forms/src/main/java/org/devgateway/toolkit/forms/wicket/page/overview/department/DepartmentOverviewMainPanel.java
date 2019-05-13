@@ -30,6 +30,7 @@ import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DepartmentOverviewMainPanel extends Panel {
     private static final long serialVersionUID = 1L;
@@ -53,6 +54,7 @@ public class DepartmentOverviewMainPanel extends Panel {
 
     private ListView<Project> projectList;
     private Department department;
+    private List<Project> projects;
 
     public DepartmentOverviewMainPanel(final String id, final Long departmentId, final Long fiscalYearId) {
         super(id);
@@ -136,14 +138,24 @@ public class DepartmentOverviewMainPanel extends Panel {
 
             @Override
             protected void onUpdate() {
-                // departmentsList.setModelObject(departmentOverviewData);
+                if (projects != null) {                           
+                    List<Project> filteredProjects = projects.stream().filter(p -> {
+                        if (p.getProjectTitle() != null && searchBox.getModelObject() != null) {
+                           return p.getProjectTitle().toLowerCase().contains(searchBox.getModelObject().toLowerCase());
+                        }
+                        
+                        return true;                                         
+                    }).collect(Collectors.toList());
+                    
+                    projectList.setModelObject(filteredProjects);                      
+                  }
             }
         });
         add(searchBox);
     }
 
     private void addProjectList() {
-        List<Project> projects = projectService.findByProcurementPlan(procurementPlan);
+        projects = projectService.findByProcurementPlan(procurementPlan);
         projectList = new ListView<Project>("projectList", projects) {
             private static final long serialVersionUID = 1L;
 
