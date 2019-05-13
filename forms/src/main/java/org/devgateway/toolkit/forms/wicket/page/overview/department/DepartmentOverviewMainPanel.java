@@ -27,18 +27,20 @@ import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 import java.util.List;
 
 public class DepartmentOverviewMainPanel extends Panel {
     private static final long serialVersionUID = 1L;
-    @SpringBean
-    private StatusOverviewService statusOverviewService;
+
     private FiscalYear selectedFiscalYear;
+
     private List<FiscalYear> fiscalYears;
+
     private TextField<String> searchBox;
+
     private ProcurementPlan procurementPlan;
+
     @SpringBean
     private DepartmentService departmentService;
 

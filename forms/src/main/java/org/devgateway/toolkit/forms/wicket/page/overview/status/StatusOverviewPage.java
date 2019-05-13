@@ -31,9 +31,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 @MountPath("/statusOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class StatusOverviewPage extends DataEntryBasePage {
-    /**
-     * @param parameters
-     */
     public StatusOverviewPage(final PageParameters parameters) {
         super(parameters);
     }
@@ -41,8 +38,10 @@ public class StatusOverviewPage extends DataEntryBasePage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         final SideBar sideBar = new SideBar("sideBar");
         add(sideBar);
+
         final StatusOverviewMainPanel departmentOverview = new StatusOverviewMainPanel("departmentOverview");
         add(departmentOverview);
 

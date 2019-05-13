@@ -57,9 +57,11 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         super.onInitialize();
         final SideBar sideBar = new SideBar("sideBar");
         add(sideBar);
+
         final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId,
                 fiscalYearId);
         add(mainPanel);
+
         final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"));
         add(logo);
     }
