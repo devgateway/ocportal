@@ -42,7 +42,7 @@ public class SendEmailService {
     public void sendEmailResetPassword(final Person person, final String newPassword) {
         final SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(person.getEmail());
-        msg.setFrom("support@developmentgateway.org");
+        msg.setFrom("noreply@dgstg.org");
         msg.setSubject("Recover your password");
         msg.setText("Dear " + person.getFirstName() + " " + person.getLastName() + ",\n\n"
                 + "These are your new login credentials for Makueni.\n\n" + "Username: " + person.getUsername() + "\n"
