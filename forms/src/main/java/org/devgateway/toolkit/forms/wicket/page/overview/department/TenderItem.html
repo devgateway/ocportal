@@ -15,11 +15,10 @@
     </button>
 
     <div wicket:id="projectsWrapper" class="collapse-content tender collapse" aria-expanded="true" style="">
-
         <div class="row">
             <div class="col-md-12 tender-detail">
                 <div class="tender-header">
-                    <div class="tender-label">Purchase Requisition Tender 1</div>
+                    <div class="tender-label" wicket:id="requisitionTitle"></div>
                     <div class="tender-status">
                         <span class="status" wicket:id="requisitionStatus"></span>
                         <button type="button" class="btn btn-edit" wicket:id="requisitionEdit"></button>
@@ -27,10 +26,7 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li wicket:id="requisitionTitle">
-                        </li>
-                        <li wicket:id="requisitionDate">
-
+                       <li wicket:id="requisitionDate">
                         </li>
                         <li wicket:id="requisitionAmount">
                         </li>
