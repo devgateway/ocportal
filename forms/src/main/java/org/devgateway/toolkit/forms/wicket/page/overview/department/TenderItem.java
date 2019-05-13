@@ -31,7 +31,7 @@ import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 
 public class TenderItem extends Panel {
@@ -43,7 +43,7 @@ public class TenderItem extends Panel {
     private TenderService tenderService;
 
     @SpringBean
-    private TenderQuotationEvalutionService tenderQuotationEvalutionService;
+    private TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     @SpringBean
     private ProfessionalOpinionService professionalOpinionService;
@@ -73,7 +73,7 @@ public class TenderItem extends Panel {
     protected void onInitialize() {
         super.onInitialize();
         tender = tenderService.findByPurchaseRequisition(purchaseRequisition);
-        tenderQuotationEvaluation = tenderQuotationEvalutionService.findByPurchaseRequisition(purchaseRequisition);
+        tenderQuotationEvaluation = tenderQuotationEvaluationService.findByPurchaseRequisition(purchaseRequisition);
         professionalOpinion = professionalOpinionService.findByPurchaseRequisition(purchaseRequisition);
 
         awardNotification = awardNotificationService.findByPurchaseRequisition(purchaseRequisition);

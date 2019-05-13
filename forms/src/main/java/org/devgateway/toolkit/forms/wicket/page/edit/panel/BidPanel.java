@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
-import java.util.List;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -12,18 +10,15 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionService;
+
+import java.util.List;
 
 public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluation> {
-
-    @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvalutionService;
-
     @SpringBean
     protected SupplierService supplierService;
 
