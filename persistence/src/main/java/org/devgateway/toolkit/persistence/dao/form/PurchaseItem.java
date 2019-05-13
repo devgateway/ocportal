@@ -91,7 +91,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     public void setExpanded(final Boolean expanded) {
         this.expanded = expanded;
     }
-    
+
     @Override
     public String getLabel() {
         return planItem.getLabel();
@@ -104,6 +104,6 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Override
     public void setLabel(final String label) {
-               
+
     }
 }

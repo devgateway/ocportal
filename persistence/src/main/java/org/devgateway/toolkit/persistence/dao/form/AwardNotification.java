@@ -1,6 +1,10 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,36 +12,32 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.envers.Audited;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 
 /**
  * @author gmutuhu
- *
  */
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id")})
 public class AwardNotification extends AbstractMakueniForm {
-    
+
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore    
-    private TenderQuotationEvaluation tenderQuotationEvaluation;    
+    @JsonIgnore
+    private TenderQuotationEvaluation tenderQuotationEvaluation;
+
     private Date awardDate;
+
     private Double tenderValue;
-    
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
+
     private Integer acknowledgementDays;
-    
+
     public TenderQuotationEvaluation getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
     }
@@ -52,7 +52,7 @@ public class AwardNotification extends AbstractMakueniForm {
 
     public void setTenderValue(final Double tenderValue) {
         this.tenderValue = tenderValue;
-    }    
+    }
 
     public Integer getAcknowledgementDays() {
         return acknowledgementDays;
@@ -62,7 +62,6 @@ public class AwardNotification extends AbstractMakueniForm {
         this.acknowledgementDays = acknowledgementDays;
     }
 
-  
 
     public Date getAwardDate() {
         return awardDate;
@@ -81,11 +80,11 @@ public class AwardNotification extends AbstractMakueniForm {
     }
 
     @Override
-    public void setLabel(final String label) {        
+    public void setLabel(final String label) {
     }
 
     @Override
     public String getLabel() {
-      return null;
+        return null;
     }
 }
