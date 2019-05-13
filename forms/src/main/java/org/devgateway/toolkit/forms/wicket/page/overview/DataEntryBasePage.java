@@ -9,7 +9,7 @@
  * Contributors:
  * Development Gateway - initial API and implementation
  *******************************************************************************/
-package org.devgateway.toolkit.forms.wicket.page;
+package org.devgateway.toolkit.forms.wicket.page.overview;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptReference;

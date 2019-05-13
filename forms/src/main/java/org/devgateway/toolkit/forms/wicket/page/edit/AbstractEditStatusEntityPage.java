@@ -372,6 +372,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             @Override
             protected PageParameters getParameterPage() {
                 //TODO: temporary redirect to the department overview
+                // (this is also causing some errors when creating PP)
                 AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
                 final PageParameters pageParameters = new PageParameters();
                 pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
