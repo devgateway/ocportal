@@ -61,8 +61,8 @@ import org.springframework.util.ObjectUtils;
 import org.wicketstuff.select2.Select2Choice;
 
 /**
- * @author mpostelnicu Page used to make editing easy, extend to get easy access
- *         to one entity for editing
+ * @author mpostelnicu
+ * Page used to make editing easy, extend to get easy access to one entity for editing
  */
 public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAuditableEntity>
         extends AbstractEditPage<T> {
@@ -153,8 +153,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void afterSaveEntity(final T saveable) {
-        getPageParameters().set(WebConstants.V_POSITION, verticalPosition.getValue()).set(WebConstants.MAX_HEIGHT,
-                maxHeight.getValue());
+        getPageParameters().set(WebConstants.V_POSITION, verticalPosition.getValue())
+                .set(WebConstants.MAX_HEIGHT, maxHeight.getValue());
     }
 
     @Override
@@ -238,11 +238,10 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 // before components processed)
                 target.prependJavaScript("$(document.activeElement).blur();");
 
-                // invoke autosave from js (execute this javascript code before components
-                // processed)
-                target.prependJavaScript("$('#" + maxHeight.getMarkupId() + "').val($(document).height()); " + "$('#"
-                        + verticalPosition.getMarkupId() + "').val($(window).scrollTop()); " + "$('#"
-                        + saveContinueButton.getMarkupId() + "').click();");
+                // invoke autosave from js (execute this javascript code before components processed)
+                target.prependJavaScript("$('#" + maxHeight.getMarkupId() + "').val($(document).height()); "
+                        + "$('#" + verticalPosition.getMarkupId() + "').val($(window).scrollTop()); "
+                        + "$('#" + saveContinueButton.getMarkupId() + "').click();");
 
                 // disable all buttons from js
                 target.prependJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', true);");
@@ -265,21 +264,20 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
 
         switch (editForm.getModelObject().getStatus()) {
-        case DBConstants.Status.VALIDATED:
-            return "label-success";
-        case DBConstants.Status.DRAFT:
-            return "label-danger";
-        case DBConstants.Status.SUBMITTED:
-            return "label-warning";
-        default:
-            return "";
+            case DBConstants.Status.VALIDATED:
+                return "label-success";
+            case DBConstants.Status.DRAFT:
+                return "label-danger";
+            case DBConstants.Status.SUBMITTED:
+                return "label-warning";
+            default:
+                return "";
         }
     }
 
     private CheckBoxYesNoToggleBootstrapFormComponent getVisibleStatusComments() {
-        final CheckBoxYesNoToggleBootstrapFormComponent checkBoxBootstrapFormComponent 
-        = new CheckBoxYesNoToggleBootstrapFormComponent(
-                "visibleStatusComments") {
+        final CheckBoxYesNoToggleBootstrapFormComponent checkBoxBootstrapFormComponent
+                = new CheckBoxYesNoToggleBootstrapFormComponent("visibleStatusComments") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
                 comments.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusComments());
@@ -345,6 +343,19 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         button.setDefaultFormProcessing(false);
     }
 
+    // TODO: temporary redirect to the department overview
+    // (this is also causing some errors when creating PP)
+    private PageParameters getParams() {
+        final AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
+        final PageParameters pageParameters = new PageParameters();
+        pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
+                object.getProcurementPlan().getDepartment().getId());
+        pageParameters.set(WebConstants.PARAM_FISCAL_YEAR_ID,
+                object.getProcurementPlan().getFiscalYear().getId());
+
+        return pageParameters;
+    }
+
     @Override
     protected SaveEditPageButton getSaveEditPageButton() {
         final SaveEditPageButton button = new SaveEditPageButton("save",
@@ -366,20 +377,13 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             @Override
             protected Class<? extends GenericWebPage<Void>> getResponsePage() {
                 //TODO: temporary redirect to the department overview
-                return (Class<? extends GenericWebPage<Void>>) DepartmentOverviewPage.class;
+                return DepartmentOverviewPage.class;
             }
 
             @Override
             protected PageParameters getParameterPage() {
-                //TODO: temporary redirect to the department overview
-                AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
-                final PageParameters pageParameters = new PageParameters();
-                pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
-                        object.getProcurementPlan().getDepartment().getId());
-                pageParameters.set(WebConstants.PARAM_FISCAL_YEAR_ID,
-                        object.getProcurementPlan().getFiscalYear().getId());
-
-                return pageParameters;
+                // TODO - change this
+                return getParams();
             }
         };
 
@@ -403,20 +407,13 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             @Override
             protected Class<? extends GenericWebPage<Void>> getResponsePage() {
                 //TODO: temporary redirect to the department overview
-                return (Class<? extends GenericWebPage<Void>>) DepartmentOverviewPage.class;
+                return DepartmentOverviewPage.class;
             }
 
             @Override
             protected PageParameters getParameterPage() {
-                //TODO: temporary redirect to the department overview
-                AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
-                final PageParameters pageParameters = new PageParameters();
-                pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
-                        object.getProcurementPlan().getDepartment().getId());
-                pageParameters.set(WebConstants.PARAM_FISCAL_YEAR_ID,
-                        object.getProcurementPlan().getFiscalYear().getId());
-
-                return pageParameters;
+                // TODO - change this
+                return getParams();
             }
         };
 
@@ -474,20 +471,13 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             @Override
             protected Class<? extends GenericWebPage<Void>> getResponsePage() {
                 //TODO: temporary redirect to the department overview
-                return (Class<? extends GenericWebPage<Void>>) DepartmentOverviewPage.class;
+                return DepartmentOverviewPage.class;
             }
 
             @Override
             protected PageParameters getParameterPage() {
-                //TODO: temporary redirect to the department overview
-                AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
-                final PageParameters pageParameters = new PageParameters();
-                pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
-                        object.getProcurementPlan().getDepartment().getId());
-                pageParameters.set(WebConstants.PARAM_FISCAL_YEAR_ID,
-                        object.getProcurementPlan().getFiscalYear().getId());
-
-                return pageParameters;
+                // TODO - change this
+                return getParams();
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
@@ -513,20 +503,13 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             @Override
             protected Class<? extends GenericWebPage<Void>> getResponsePage() {
                 //TODO: temporary redirect to the department overview
-                return (Class<? extends GenericWebPage<Void>>) DepartmentOverviewPage.class;
+                return DepartmentOverviewPage.class;
             }
 
             @Override
             protected PageParameters getParameterPage() {
-                //TODO: temporary redirect to the department overview
-                AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
-                final PageParameters pageParameters = new PageParameters();
-                pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
-                        object.getProcurementPlan().getDepartment().getId());
-                pageParameters.set(WebConstants.PARAM_FISCAL_YEAR_ID,
-                        object.getProcurementPlan().getFiscalYear().getId());
-
-                return pageParameters;
+                // TODO - change this
+                return getParams();
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
@@ -536,8 +519,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     private void setStatusAppendComment(final String status) {
         final T saveable = editForm.getModelObject();
 
-        // do not save an empty comment if previous status is same as current status and
-        // comment box is empty
+        // do not save an empty comment if previous status is same as current status and comment box is empty
         if (status.equals(saveable.getStatus()) && ObjectUtils.isEmpty(saveable.getNewStatusComment())) {
             saveable.setStatus(status);
             return;
@@ -558,8 +540,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         addSaveRevertButtonPermissions(revertToDraftPageButton);
         addDeleteButtonPermissions(deleteButton);
 
-        // no need to display the buttons on print view so we overwrite the above
-        // permissions
+        // no need to display the buttons on print view so we overwrite the above permissions
         if (ComponentUtil.isPrintMode()) {
             saveContinueButton.setVisibilityAllowed(false);
             saveSubmitButton.setVisibilityAllowed(false);
@@ -594,8 +575,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         button.setVisibilityAllowed(
                 !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
 
-        // additionally normal users should not revert anything that was already
-        // validated
+        // additionally normal users should not revert anything that was already validated
         if (WebSecurityUtil.isCurrentRoleUser()
                 && DBConstants.Status.VALIDATED.equals(editForm.getModelObject().getStatus())) {
             button.setVisibilityAllowed(false);
@@ -613,7 +593,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                         + "if(mHeight!=0) $(window).scrollTop(vPosition*cmHeight/mHeight)",
                 getPageParameters().get(WebConstants.V_POSITION).toDouble(0),
                 getPageParameters().get(WebConstants.MAX_HEIGHT).toDouble(0)
-
         )));
     }
 
@@ -625,8 +604,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     /**
-     * Allow null saving for draft entities even if the field is required. Bypass
-     * validation for this purpose.
+     * Allow null saving for draft entities even if the field is required.
+     * Bypass validation for this purpose.
      *
      * @author mpostelnicu
      */

@@ -1,19 +1,9 @@
 package org.devgateway.toolkit.persistence.service.overview;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -21,12 +11,9 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
-import org.devgateway.toolkit.persistence.repository.category.DepartmentRepository;
-import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
-import org.devgateway.toolkit.persistence.repository.form.ProcurementPlanRepository;
 import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
 import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
@@ -35,15 +22,18 @@ import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author gmutuhu
  */
 @Service
 public class StatusOverviewServiceImpl implements StatusOverviewService {
-
-    @Autowired
-    private FiscalYearRepository fiscalYearRepository;
-
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -67,12 +57,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Autowired
     private ContractRepository contractRepository;
-
-    @Autowired
-    private DepartmentRepository departmentRepository;
-    
-    @Autowired
-    private ProcurementPlanRepository procurementPlanRepository;
 
     // TODO: apply filters, investigate if the tender status and award status can be
     // optimized by using sql queries
@@ -192,7 +176,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                     && professionalOpinion.getTenderQuotationEvaluation().getTender() != null
                     && professionalOpinion.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
                     && professionalOpinion.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                            .getProject() != null) {
+                    .getProject() != null) {
 
                 Long projectId = professionalOpinion.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                         .getProject().getId();
@@ -209,7 +193,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                     && awardNotification.getTenderQuotationEvaluation().getTender() != null
                     && awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
                     && awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                            .getProject() != null) {
+                    .getProject() != null) {
 
                 Long projectId = awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                         .getProject().getId();
@@ -226,7 +210,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                     && awardAcceptance.getTenderQuotationEvaluation().getTender() != null
                     && awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
                     && awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                            .getProject() != null) {
+                    .getProject() != null) {
 
                 Long projectId = awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                         .getProject().getId();
@@ -242,7 +226,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
             if (contract.getTenderQuotationEvaluation() != null
                     && contract.getTenderQuotationEvaluation().getTender() != null
                     && contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null && contract
-                            .getTenderQuotationEvaluation().getTender().getPurchaseRequisition().getProject() != null) {
+                    .getTenderQuotationEvaluation().getTender().getPurchaseRequisition().getProject() != null) {
 
                 Long projectId = contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
                         .getProject().getId();
@@ -252,7 +236,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     }
 
-    
 
     private void addStatus(final Map<Long, Set<String>> statusMap, final Long projectId, final String status) {
         Set<String> statuses = statusMap.get(projectId);
@@ -263,6 +246,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         }
 
         statuses.add(status);
-    } 
+    }
 
 }

@@ -11,17 +11,11 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
-import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 import java.util.List;
 
 
 public class SideBar extends Panel {
-    private static final long serialVersionUID = 1L;
-
-    @SpringBean
-    private StatusOverviewService statusOverviewService;
-
     @SpringBean
     private DepartmentService departmentService;
 

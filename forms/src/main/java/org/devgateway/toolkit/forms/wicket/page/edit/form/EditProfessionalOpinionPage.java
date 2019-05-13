@@ -21,7 +21,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -45,7 +45,7 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
     protected SupplierService supplierService;
 
     @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvaluationService;
+    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
