@@ -24,7 +24,7 @@ import javax.persistence.Transient;
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private PurchaseItem purchaseItem; // requisition item
+    private PurchaseItem purchaseItem;
 
     private String unitOfIssue;
 

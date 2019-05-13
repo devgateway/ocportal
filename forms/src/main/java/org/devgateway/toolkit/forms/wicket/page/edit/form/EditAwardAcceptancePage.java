@@ -1,8 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -20,13 +17,16 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionService;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
+import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gmutuhu
@@ -41,7 +41,7 @@ public class EditAwardAcceptancePage extends EditAbstractMakueniFormPage<AwardAc
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvaluationService;
+    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
     private GenericSleepFormComponent tenderTitle = null;

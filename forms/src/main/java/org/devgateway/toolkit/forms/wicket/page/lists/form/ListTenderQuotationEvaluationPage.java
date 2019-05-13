@@ -7,7 +7,7 @@ import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterStat
 import org.devgateway.toolkit.forms.wicket.components.table.filter.form.TenderQuotationEvaluationFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -20,11 +20,11 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class ListTenderQuotationEvaluationPage extends ListAbstractMakueniFormPage<TenderQuotationEvaluation> {
     
     @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvalutionService;
+    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     public ListTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
-        this.jpaService = tenderQuotationEvalutionService;
+        this.jpaService = tenderQuotationEvaluationService;
         this.editPageClass = EditTenderQuotationEvaluationPage.class;
     }
 

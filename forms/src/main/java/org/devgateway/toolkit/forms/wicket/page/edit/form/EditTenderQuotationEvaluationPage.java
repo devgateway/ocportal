@@ -13,7 +13,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEv
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvalutionService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -27,7 +27,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPage<TenderQuotationEvaluation> {
 
     @SpringBean
-    protected TenderQuotationEvalutionService tenderQuotationEvalutionService; 
+    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
     
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
@@ -42,7 +42,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
      */
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
-        this.jpaService = tenderQuotationEvalutionService;
+        this.jpaService = tenderQuotationEvaluationService;
         this.listPageClass = ListTenderQuotationEvaluationPage.class;
         
         StringValue tenderId = parameters.get(WebConstants.PARAM_TENDER_ID);

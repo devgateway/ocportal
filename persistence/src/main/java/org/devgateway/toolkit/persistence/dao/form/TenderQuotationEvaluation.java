@@ -1,8 +1,9 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,16 +14,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.envers.Audited;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author gmutuhu
- *
  */
 
 @Entity
@@ -31,19 +28,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(indexes = {@Index(columnList = "procurement_plan_id")})
 public class TenderQuotationEvaluation extends AbstractMakueniForm {
     private Date closingDate;
+
     private Integer numberOfBids;
-    
+
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Tender tender;
-    
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<Bid> bids = new ArrayList<Bid>();
-    
+
     public Date getClosingDate() {
         return closingDate;
     }
@@ -84,7 +82,7 @@ public class TenderQuotationEvaluation extends AbstractMakueniForm {
     public String getLabel() {
         return null;
     }
-    
+
     @Override
     public String toString() {
         return tender.toString();

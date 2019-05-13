@@ -1,11 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -13,25 +8,32 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author gmutuhu
- *
  */
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
-public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>  implements ListViewItem {
+public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier supplier;
+
     private String supplierResponsiveness;
+
     private Integer supplierScore;
+
     private Integer supplierRanking;
-    private Double quotedAmount;    
+
+    private Double quotedAmount;
 
     public Supplier getSupplier() {
         return supplier;

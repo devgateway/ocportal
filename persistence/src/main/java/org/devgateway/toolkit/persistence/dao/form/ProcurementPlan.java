@@ -75,24 +75,24 @@ public class ProcurementPlan extends AbstractMakueniForm {
 
     @Override
     public void setLabel(final String label) {
-                
+
     }
 
     @Override
     public String getLabel() {
         String fullName = "";
         if (fiscalYear != null) {
-            fullName += fiscalYear.getName(); 
+            fullName += fiscalYear.getName();
         }
-        
+
         if (department != null) {
-            fullName += " - " + department.getLabel(); 
+            fullName += " - " + department.getLabel();
         }
-        
+
         return fullName;
-        
+
     }
-    
+
     @Override
     public String toString() {
         return getLabel();

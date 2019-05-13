@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.page.DataEntryBasePage;
+import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.SideBar;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
