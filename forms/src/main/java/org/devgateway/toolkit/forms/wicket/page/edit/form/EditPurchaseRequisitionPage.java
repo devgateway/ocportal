@@ -15,6 +15,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
@@ -46,18 +47,23 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
 
     @SpringBean
     protected ChargeAccountService chargeAccountService;
+    
+    private Project project = null;
 
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
-
         this.jpaService = purchaseRequisitionService;
         this.listPageClass = ListPurchaseRequisitionPage.class;
+        StringValue projectId = parameters.get(WebConstants.PARAM_PROJECT_ID);
+        if (!projectId.isNull()) {
+            project = projectService.findById(projectId.toLong()).get();
+        }
     }
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
-
+        super.onInitialize();       
+        
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "project", projectService).required();
 
@@ -93,7 +99,11 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
     @Override
     protected PurchaseRequisition newInstance() {
         final PurchaseRequisition purchaseRequisition = super.newInstance();
-        // purchaseRequisition.setProcurementPlan(procurementPlan);  // here we need to set the ProcurementPlan
+        if (project != null) {
+            purchaseRequisition.setProcurementPlan(project.getProcurementPlan());
+            purchaseRequisition.setProject(project);
+        }  
+       
         return purchaseRequisition;
     }
 

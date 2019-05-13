@@ -12,13 +12,14 @@
 /**
  *
  */
-package org.devgateway.toolkit.forms.wicket.page.overview;
+package org.devgateway.toolkit.forms.wicket.page.overview.status;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.devgateway.toolkit.forms.wicket.page.DataEntryBasePage;
+import org.devgateway.toolkit.forms.wicket.page.overview.SideBar;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -34,19 +35,19 @@ public class StatusOverviewPage extends DataEntryBasePage {
      * @param parameters
      */
     public StatusOverviewPage(final PageParameters parameters) {
-        super(parameters);       
+        super(parameters);
     }
-    
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        final SideBar sideBar = new SideBar("sideBar");         
-        add(sideBar);        
-        final DepartmentOverviewPanel departmentOverview = new DepartmentOverviewPanel("departmentOverview");        
+        final SideBar sideBar = new SideBar("sideBar");
+        add(sideBar);
+        final StatusOverviewMainPanel departmentOverview = new StatusOverviewMainPanel("departmentOverview");
         add(departmentOverview);
-        
+
         final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,
-                "assets/img/logo.png"));        
-        add(logo);        
-    }  
+                "assets/img/logo.png"));
+        add(logo);
+    }
 }

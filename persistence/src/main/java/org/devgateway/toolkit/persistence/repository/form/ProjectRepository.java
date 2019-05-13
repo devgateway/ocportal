@@ -25,4 +25,7 @@ public interface ProjectRepository extends TextSearchableRepository<Project, Lon
     
     @Query("select project from  #{#entityName} project where project.procurementPlan.fiscalYear.id = :fiscalYearId")
     List<Project> findProjectsForYear(@Param("fiscalYearId")Long fiscalYearId);
+    
+    List<Project> findByProcurementPlan(ProcurementPlan procurementPlan);
+    
 }

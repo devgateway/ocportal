@@ -1,6 +1,9 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import java.util.List;
+
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
@@ -20,4 +23,6 @@ public interface PurchaseRequisitionRepository extends TextSearchableRepository<
     Page<PurchaseRequisition> searchText(@Param("name") String name, Pageable page);
 
     Long countByProcurementPlanAndTitleAndIdNot(ProcurementPlan procurementPlan, String title, Long id);
+    
+    List<PurchaseRequisition> findByProject(Project project);
 }

@@ -1,5 +1,9 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import java.util.List;
+
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
@@ -18,4 +22,8 @@ public interface TenderQuotationEvaluationRepository extends TextSearchableRepos
             + " where lower(tenderEvaluation.tender.tenderTitle) like %:name%")
     Page<TenderQuotationEvaluation> searchText(@Param("name") String name, Pageable page);
 
+    @Query("select tenderEvaluation from  #{#entityName} tenderEvaluation "
+            + " where tenderEvaluation.tender.purchaseRequisition = :purchaseRequisition")
+    List<TenderQuotationEvaluation> findByPurchaseRequisition(
+            @Param("purchaseRequisition") PurchaseRequisition purchaseRequisition);
 }

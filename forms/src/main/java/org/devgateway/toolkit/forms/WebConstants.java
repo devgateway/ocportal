@@ -58,5 +58,15 @@ public final class WebConstants {
     // wicket i18n is in .properties files so we need
     // to change the src code anyway.
     public static final List<Locale> AVAILABLE_LOCALES = Collections.unmodifiableList(Arrays.asList(new Locale("en")));
+    
+    public static final String PARAM_PROCUREMENT_PLAN_ID = "procurementPlanId";
+    public static final String PARAM_PROJECT_ID = "projectId";
+    public static final String PARAM_PURCHASE_REQUISITION_ID = "purchaseRequisitionId"; 
+    public static final String PARAM_TENDER_ID = "tenderId";
+    public static final String PARAM_TENDER_OPENING_ID = "tenderOpeningId";
+    public static final String PARAM_DEPARTMENT_ID = "departmentId";
+    public static final String PARAM_FISCAL_YEAR_ID = "fiscalYearId";
+    
+    
 
 }

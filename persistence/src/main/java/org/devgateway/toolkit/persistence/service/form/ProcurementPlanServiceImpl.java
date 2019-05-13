@@ -44,4 +44,9 @@ public class ProcurementPlanServiceImpl extends BaseJpaServiceImpl<ProcurementPl
     public ProcurementPlan newInstance() {
         return new ProcurementPlan();
     }
+    
+    @Override
+    public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
+        return procurementPlanRepository.findByDepartmentAndFiscalYear(department, fiscalYear);
+    }
 }

@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluationRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -36,5 +37,8 @@ public class TenderQuotationEvaluationServiceImpl extends BaseJpaServiceImpl<Ten
     public TextSearchableRepository<TenderQuotationEvaluation, Long> textRepository() {
         return repository;
     }
-
+    
+    public TenderQuotationEvaluation findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
+       return repository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst().orElse(null);
+    }
 }

@@ -1,7 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.page.overview;
-
-import java.util.List;
-import java.util.stream.Collectors;
+package org.devgateway.toolkit.forms.wicket.page.overview.status;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -19,7 +16,10 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
 
-public class DepartmentGroupItem extends Panel {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class StatusOverviewItem extends Panel {
     private static final long serialVersionUID = 1L;
 
     private DepartmentOverviewData departmentOverviewData;
@@ -27,8 +27,8 @@ public class DepartmentGroupItem extends Panel {
     private String searchTerm;
     private List<ProjectStatus> filteredProjects;
 
-    public DepartmentGroupItem(final String id, final DepartmentOverviewData departmentOverviewData,
-            final String searchTerm) {
+    public StatusOverviewItem(final String id, final DepartmentOverviewData departmentOverviewData,
+                              final String searchTerm) {
         super(id);
         this.departmentOverviewData = departmentOverviewData;
         this.searchTerm = searchTerm;
@@ -61,8 +61,9 @@ public class DepartmentGroupItem extends Panel {
                     @Override
                     public void onClick() {
                         PageParameters parameters = new PageParameters();
-                        parameters.add("id", item.getModelObject().getId());
-                        setResponsePage(ProjectOverviewPage.class, parameters);
+                        // parameters.add("id", item.getModelObject().getId());
+
+                        // setResponsePage(DepartmentOverviewPage.class, parameters);
                     }
                 };
                 link.add(new Label("label", new PropertyModel<String>(item.getModelObject(), "projectTitle")));
@@ -92,7 +93,7 @@ public class DepartmentGroupItem extends Panel {
     }
 
     private void addStatusLabel(final ListItem<ProjectStatus> item, final String id, final String cssClass,
-            final String message) {
+                                final String message) {
         Label label;
         if (message != null) {
             label = new Label(id, Model.of(message));

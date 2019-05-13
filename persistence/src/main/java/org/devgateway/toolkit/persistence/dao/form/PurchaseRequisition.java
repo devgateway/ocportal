@@ -29,10 +29,8 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"),
-        @Index(columnList = "project_id"),
-        @Index(columnList = "purchaseRequestNumber"),
-        @Index(columnList = "title")})
+@Table(indexes = { @Index(columnList = "procurement_plan_id"), @Index(columnList = "project_id"),
+        @Index(columnList = "purchaseRequestNumber"), @Index(columnList = "title") })
 public class PurchaseRequisition extends AbstractMakueniForm {
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -130,5 +128,16 @@ public class PurchaseRequisition extends AbstractMakueniForm {
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    public Double getAmount() {
+        Double amount = 0d;
+        for (PurchaseItem item : purchaseItems) {
+            if (item.getAmount() != null && item.getQuantity() != null) {
+                amount += (item.getAmount() * item.getQuantity());
+            }
+        }
+
+        return amount;
     }
 }

@@ -12,7 +12,7 @@
 /**
  *
  */
-package org.devgateway.toolkit.forms.wicket.page.overview;
+package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -20,25 +20,36 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.DataEntryBasePage;
+import org.devgateway.toolkit.forms.wicket.page.overview.SideBar;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-
 /**
  * @author gmutuhu
  *
  */
-@MountPath("/projectOverview")
+@MountPath("/departmentOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-public class ProjectOverviewPage extends DataEntryBasePage {
+public class DepartmentOverviewPage extends DataEntryBasePage {
     /**
      * @param parameters
      */
-    public ProjectOverviewPage(final PageParameters parameters) {
+    private Long departmentId = null;
+    private Long fiscalYearId = null;
+
+    public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
+        if (!parameters.get(WebConstants.PARAM_DEPARTMENT_ID).isNull()) {
+            this.departmentId = parameters.get(WebConstants.PARAM_DEPARTMENT_ID).toLong();
+        }
+
+        if (!parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).isNull()) {
+            this.fiscalYearId = parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).toLong();
+        }
     }
 
     @Override
@@ -46,8 +57,10 @@ public class ProjectOverviewPage extends DataEntryBasePage {
         super.onInitialize();
         final SideBar sideBar = new SideBar("sideBar");
         add(sideBar);
-        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,
-                "assets/img/logo.png"));
+        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId,
+                fiscalYearId);
+        add(mainPanel);
+        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"));
         add(logo);
     }
 

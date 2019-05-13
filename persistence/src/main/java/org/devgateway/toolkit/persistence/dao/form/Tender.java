@@ -30,9 +30,8 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), 
-        @Index(columnList = "tenderTitle"), 
-        @Index(columnList = "tenderNumber")})
+@Table(indexes = { @Index(columnList = "procurement_plan_id"), @Index(columnList = "tenderTitle"),
+        @Index(columnList = "tenderNumber") })
 public class Tender extends AbstractMakueniForm {
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -48,22 +47,22 @@ public class Tender extends AbstractMakueniForm {
     private Date invitationDate;
 
     private Date closingDate;
-    
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
-    
+
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String objective;
-    
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity issuedBy;
     private Double tenderValue;
-    
+
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String tenderLink;
-        
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
@@ -72,7 +71,7 @@ public class Tender extends AbstractMakueniForm {
 
     @Override
     public void setLabel(final String label) {
-        
+
     }
 
     @Override
@@ -131,7 +130,7 @@ public class Tender extends AbstractMakueniForm {
     public ProcuringEntity getIssuedBy() {
         return issuedBy;
     }
-   
+
     public void setIssuedBy(final ProcuringEntity issuedBy) {
         this.issuedBy = issuedBy;
     }
@@ -171,5 +170,15 @@ public class Tender extends AbstractMakueniForm {
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    public Double getTotalAmount() {
+        Double total = 0d;
+        for (TenderItem item : tenderItems) {
+            if (item.getUnitPrice() != null && item.getQuantity() != null) {
+                total += item.getUnitPrice() * item.getQuantity();
+            }
+        }
+        return total;
     }
 }

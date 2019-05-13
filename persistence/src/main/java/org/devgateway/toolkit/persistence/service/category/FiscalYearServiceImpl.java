@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service.category;
 
+import java.util.List;
+
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -31,5 +33,21 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
     @Override
     public FiscalYear newInstance() {
         return new FiscalYear();
+    }
+    
+ // TODO: limit to only years with data
+    @Override
+    public List<FiscalYear> getYearsWithData() {
+        return fiscalYearRepository.findAllByOrderByStartDateDesc();
+    }
+    
+    @Override
+    public List<FiscalYear> getYearsWithData(final Long departmentId) {
+        return fiscalYearRepository.getYearsWithData(departmentId);
+    }
+    
+    @Override
+   public FiscalYear getLastFiscalYear() {
+        return fiscalYearRepository.findTopByOrderByStartDateDesc();
     }
 }

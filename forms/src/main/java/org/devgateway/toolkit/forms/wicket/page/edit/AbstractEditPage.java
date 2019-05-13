@@ -20,6 +20,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -303,7 +304,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
          *
          * @return
          */
-        protected Class<? extends BasePage> getResponsePage() {
+        protected Class<? extends GenericWebPage<Void>> getResponsePage() {
             return listPageClass;
         }
 

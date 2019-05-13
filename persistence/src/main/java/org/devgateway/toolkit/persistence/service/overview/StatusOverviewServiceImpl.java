@@ -13,6 +13,7 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -25,6 +26,7 @@ import org.devgateway.toolkit.persistence.repository.category.FiscalYearReposito
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
+import org.devgateway.toolkit.persistence.repository.form.ProcurementPlanRepository;
 import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
 import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
@@ -68,6 +70,9 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+    
+    @Autowired
+    private ProcurementPlanRepository procurementPlanRepository;
 
     // TODO: apply filters, investigate if the tender status and award status can be
     // optimized by using sql queries
@@ -247,11 +252,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     }
 
-    // TODO: limit to only years with data
-    @Override
-    public List<FiscalYear> getYearsWithData() {
-        return fiscalYearRepository.findAllByOrderByStartDateDesc();
-    }
+    
 
     private void addStatus(final Map<Long, Set<String>> statusMap, final Long projectId, final String status) {
         Set<String> statuses = statusMap.get(projectId);
@@ -262,15 +263,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         }
 
         statuses.add(status);
-    }
-
-    public FiscalYear getLastFiscalYear() {
-        return fiscalYearRepository.findTopByOrderByStartDateDesc();
-    }
-
-    public List<Department> findDeptsInCurrentProcurementPlan() {
-        return departmentRepository
-                .findDeptsInCurrentProcurementPlan(fiscalYearRepository.findTopByOrderByStartDateDesc());
-    }
+    } 
 
 }
