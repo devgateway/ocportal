@@ -46,6 +46,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -479,8 +480,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
      * @return a new {@link Navbar} instance
      */
     protected Navbar newNavbar(final String markupId) {
-
-        Navbar navbar = new Navbar(markupId);
+        final Navbar navbar = new Navbar(markupId);
 
         /**
          * Make sure to update the BaseStyles when the navbar position changes.
@@ -489,6 +489,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
          */
         navbar.setPosition(Navbar.Position.TOP);
         navbar.setInverted(true);
+
+        // add brand image
+        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
+                new StringResourceModel("brandImageAltText", this, null));
 
         navbar.addComponents(
                 NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, newHomeMenu(), newFormMenu(),

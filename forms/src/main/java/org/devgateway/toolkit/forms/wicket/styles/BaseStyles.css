@@ -61,6 +61,16 @@ body {
     background-color: #095a14;
 }
 
+.mainFooter .text-muted {
+    padding-top: 16px;
+    color: #eeeeee;
+}
+
+.navbar-brand img {
+    width: 200px;
+    margin-top: -20px;
+}
+
 h1.pageTitle {
     border-bottom: 1px solid #eeeeee;
     font-size: 23px;
