@@ -31,8 +31,6 @@ public class SendEmailService {
     @Autowired
     private JavaMailSenderImpl javaMailSenderImpl;
 
-    private SimpleMailMessage templateMessage;
-
     /**
      * Send a reset password email. This is UNSAFE because passwords are sent in
      * clear text. Nevertheless some customers will ask for these emails to be

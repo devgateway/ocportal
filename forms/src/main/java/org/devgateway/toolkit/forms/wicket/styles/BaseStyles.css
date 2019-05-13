@@ -58,7 +58,15 @@ body {
     width: 100%;
     /* Set the fixed height of the footer here */
     height: 50px;
-    background-color: #222;
+    background-color: #095a14;
+}
+
+h1.pageTitle {
+    border-bottom: 1px solid #eeeeee;
+    font-size: 23px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 /* file upload
@@ -90,7 +98,7 @@ hr.edit-separator {
     margin: 0;
     padding: 0;
     border: 0;
-    height: 3px;
+    height: 2px;
     background-image: linear-gradient(to right, rgba(220, 220, 220, 0), rgba(220, 220, 220, 0.75), rgba(220, 220, 220, 0));
 }
 
@@ -140,14 +148,12 @@ hr.edit-separator {
     font-size: 12px;
     font-style: italic;
     font-weight: bold;
+    line-height: 120%;
+    margin-top: 10px;
 }
 
 .show-all:hover {
     color: #66b558;
-}
-
-.select2.select2-container {
-    width: 100% !important;
 }
 
 .list-wrapper .accordion-toggle .form-group {
@@ -165,13 +171,15 @@ hr.edit-separator {
 }
 
 .plan-items .list-wrapper .list-number {
-    padding-top: 22px;   
+    padding: 30px;
+    background-color: #e4e4e4;
 }
 
 .section-title {
     color: #2e6da4;
     font-size: 12pt;
     font-weight: bold !important;
+    margin: 25px 0 15px 0;
 }
 
 .sleep-mode {
@@ -186,185 +194,184 @@ hr.edit-separator {
     font-size: 18px;
 }
 
-/*
--------------------------------------------------- */
+@media (min-width: 768px) {
+    .plan-items .form-inline .control-label {
+        margin-bottom: 5px;
+    }
+}
 
-h1.pageTitle{
-  border-bottom: 1px solid #eeeeee;
-  font-size: 23px;
-  font-weight: 400;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
+.form-wrapper label {
+    color: #1e6491;
+    font-size: 13px;
+    font-weight: 700;
 }
-.form-wrapper label{
-  color: #1e6491;
-  font-size: 13px;
-  font-weight: 700;
-}
-@media (min-width: 768px){
-.plan-items .form-inline .control-label{
-  margin-bottom: 5px;
-}
-}
-.form-wrapper .select2-container--bootstrap.select2-container--focus .select2-selection,
-.form-wrapper .select2-container--bootstrap.select2-container--open .select2-selection{
-  border-color: #eeeeee;
-  box-shadow: inset 0 1px 1px rgba(59, 123, 177, 0.2), 0 0 8px rgba(59, 123, 177, 0.2);
-}
-.select2-container--open .select2-dropdown--below{
-  box-shadow: 0 6px 12px rgba(59, 123, 177, 0.2);
-  border-color: #eeeeee;
-}
-.select2-container--bootstrap .select2-search--dropdown .select2-search__field{
-  border: 1px solid #eeeeee;
-  -webkit-box-shadow: none;
-   box-shadow: none;
-}
-.select2-container--bootstrap .select2-selection{
-  border: 1px solid #eeeeee;
-  box-shadow: none;
-}
-.select2-dropdown{
-  border-radius: 0;
-}
+
 .form-wrapper [type=text].form-control,
 .form-wrapper input.form-control,
-.form-wrapper input[type=text]{
-  border: 1px solid #eeeeee;
-  box-shadow: none;
-  padding-left: 10px;
+.form-wrapper input[type=text] {
+    border: 1px solid #eeeeee;
+    box-shadow: none;
+    padding-left: 10px;
 }
-.form-wrapper .section-title{
-  margin: 25px 0 15px 0;
-}
+
 .form-wrapper .input-group .form-control,
-.form-wrapper .input-group .form-control:first-child{
-  border: 1px solid #eeeeee;
-  box-shadow: none;
-  border-radius: 0;
+.form-wrapper .input-group .form-control:first-child {
+    border: 1px solid #eeeeee;
+    box-shadow: none;
+    border-radius: 0;
 }
-.autosave{
-  color: #2097f0;
-  font-size: 12px;
-  font-style: italic;
-  font-weight: bold;
+
+.form-wrapper .panel {
+    border-radius: 0;
+    box-shadow: none;
 }
-.btn.btn-delete{
-  background-color: #d02929;
-  border: 1px solid #d02929;
-  border-radius: 3px;
-  text-transform: capitalize;
+
+.form-wrapper .panel-info {
+    border-color: #eeeeee;
+    border-radius: 0;
 }
-.btn.btn-info{
-  background-color: #3b7bb1;
-  border: 1px solid #3b7bb1;
-  border-radius: 3px;
-  text-transform: capitalize;
+
+.form-wrapper .panel-default > .panel-heading {
+    background-color: #f6f6f6;
+    border-radius: 0;
+    padding: 0;
 }
-.btn .btn-default{
-  background-color: #8d8d8d;
-  border-radius: 3px;
-  color: #ffffff;
-  text-transform: capitalize;
+
+.form-wrapper .panel-info > .panel-heading {
+    background-color: transparent;
+    color: #38b349;
+    border: none;
+    font-style: italic;
+    font-weight: bold;
 }
-.toggle-handle.btn.btn-default{
-  background-color: #ffffff;
-  border-radius: 3px;
-  box-shadow: none;
-  text-transform: capitalize;
+
+.form-wrapper .panel-group .panel {
+    border-radius: 0;
 }
-.btn.btn-cancel.btn-default{
-  background: #8d8d8d;
-  border:1px solid #8d8d8d;
-  border-radius: 3px;
-  color: #ffffff;
-  text-transform: capitalize;
+
+.form-wrapper .header-field {
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
-.btn.btn-green.btn-primary{
-  background-color: #38b349;
-  border:1px solid #38b349;
-  border-radius: 3px;
-  text-transform: capitalize;
+
+.autosave {
+    color: #2097f0;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
 }
+
+.label.label-success,
+.label.label-danger,
+.label.label-warning {
+    font-size: 10px;
+    padding: 5px 20px;
+}
+
+/* Selector Styles (Select 2)
+-------------------------------------------------- */
+.select2.select2-container {
+    width: 100% !important;
+}
+
+.form-wrapper .select2-container--bootstrap.select2-container--focus .select2-selection,
+.form-wrapper .select2-container--bootstrap.select2-container--open .select2-selection {
+    border-color: #eeeeee;
+    box-shadow: inset 0 1px 1px rgba(59, 123, 177, 0.2), 0 0 8px rgba(59, 123, 177, 0.2);
+}
+
+.select2-container--open .select2-dropdown--below {
+    box-shadow: 0 6px 12px rgba(59, 123, 177, 0.2);
+    border-color: #eeeeee;
+}
+
+.select2-container--bootstrap .select2-search--dropdown .select2-search__field {
+    border: 1px solid #eeeeee;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.select2-container--bootstrap .select2-selection {
+    border: 1px solid #eeeeee;
+    box-shadow: none;
+}
+
+.select2-dropdown {
+    border-radius: 0;
+}
+
+/* Buttons
+-------------------------------------------------- */
+.btn.btn-delete {
+    background-color: #d02929;
+    border: 1px solid #d02929;
+    border-radius: 3px;
+    text-transform: capitalize;
+}
+
+.btn.btn-info {
+    background-color: #3b7bb1;
+    border: 1px solid #3b7bb1;
+    border-radius: 3px;
+    text-transform: capitalize;
+}
+
+.btn .btn-default {
+    background-color: #8d8d8d;
+    border-radius: 3px;
+    color: #ffffff;
+    text-transform: capitalize;
+}
+
+.toggle-handle.btn.btn-default {
+    background-color: #ffffff;
+    border-radius: 3px;
+    box-shadow: none;
+    text-transform: capitalize;
+}
+
+.btn.btn-cancel.btn-default {
+    background: #8d8d8d;
+    border: 1px solid #8d8d8d;
+    border-radius: 3px;
+    color: #ffffff;
+    text-transform: capitalize;
+}
+
+.btn.btn-green.btn-primary {
+    background-color: #38b349;
+    border: 1px solid #38b349;
+    border-radius: 3px;
+    text-transform: capitalize;
+}
+
 .btn.btn-green.btn-primary:hover,
 .btn.btn-cancel.btn-default:hover,
 .btn .btn-default:hover,
 .btn.btn-info:hover,
 .btn.btn-info:hover,
-.btn.btn-delete:hover{
-  background-color: #333333;
-  border: 1px solid #333333;
-}
-.label.label-danger{
-  font-size: 10px;
-  padding: 5px 20px;
-}
-hr.edit-separator{
-  background-image: none;
-  background-color: #eeeeee;
-  height: 2px;
-}
-.btn-file{
-  background-color: #36af47;
-  border: 1px solid #36af47;
-  color: #ffffff;
-}
-.btn-file:hover{
-  background-color: #333333;
-  border: 1px solid #333333;
-  color: #ffffff;
-}
-.btn:active, .btn.active,
-.btn-danger.active{
-  box-shadow: none;
-}
-.form-wrapper .panel-default > .panel-heading{
-  background-color: #f6f6f6;
-  border-radius: 0;
-  padding:0;
-}
-.form-wrapper .panel-group .panel{
-  border-radius: 0;
-}
-.form-wrapper .plan-items .list-wrapper .list-number {
-  background-color: #e4e4e4;
-  padding: 30px;
-}
-.form-wrapper .header-field{
-  padding-bottom: 10px;
-  padding-top: 10px;
-}
-.form-wrapper .accordion-toggle .show-all{
-  line-height: 120%;
-  margin-top: 10px;
-}
-.main-footer{
-  background-color: #095a14;
-}
-.form-wrapper .panel-info > .panel-heading{
-  background-color: transparent;
-  color: #38b349;
-  border: none;
-  font-style: italic;
-  font-weight: bold;
-}
-.form-wrapper .panel-info{
-  border-color: #eeeeee;
-  border-radius: 0;
-}
-.form-wrapper .panel{
-  border-radius: 0;
-  box-shadow: none;
+.btn.btn-delete:hover {
+    background-color: #333333;
+    border: 1px solid #333333;
 }
 
-.table > thead > tr > th,
-.table > tbody > tr > th,
-.table > tfoot > tr > th,
-.table > thead > tr > td,
-.table > tbody > tr > td,
-.table > tfoot > tr > td{
-  border-top: 1px solid #eeeeee;
+.btn {
+    box-shadow: none;
 }
-.btn{
-  box-shadow: none;
+
+.btn:active, .btn.active,
+.btn-danger.active {
+    box-shadow: none;
+}
+
+.btn-file {
+    background-color: #36af47;
+    border: 1px solid #36af47;
+    color: #ffffff;
+}
+
+.btn-file:hover {
+    background-color: #333333;
+    border: 1px solid #333333;
+    color: #ffffff;
 }
