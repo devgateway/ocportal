@@ -52,7 +52,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                 };
         quantity.integer();
-        quantity.getField().add(new RangeValidator(1, null));
+        quantity.getField().add(new RangeValidator<Integer>(1, null));
         quantity.required();
         item.add(quantity);
 
@@ -69,7 +69,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 };
         price.asDouble();
         price.required();
-        price.getField().add(new RangeValidator(0.0, null));
+        price.getField().add(new RangeValidator<Double>(0.0, null));
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",

@@ -13,6 +13,7 @@ import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
@@ -107,7 +108,10 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
 
         addProcuringEntitySection();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue");
+        final TextFieldBootstrapFormComponent<Double> tenderValue = ComponentUtil.addDoubleField(editForm,
+                "tenderValue");
+        tenderValue.getField().add(new RangeValidator<Double>(0.0, null));
+        
         editForm.add(new TenderItemPanel("tenderItems"));
 
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");
