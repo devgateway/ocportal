@@ -1,30 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 
-body, html {
-    font-family: 'Open Sans', sans-serif;
-    background: #eff3f6;
-    height: 100%;
-    overflow-y: auto;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
+/* general styles for dashboards
+-------------------------------------------------- */
 .main-content a {
     color: #1d7abf;
 }
 
 .main-content a:hover {
     color: #223a49;
-}
-
-.left {
-    float: left;
-}
-
-.right {
-    float: right;
+    text-decoration: none;
 }
 
 [class*="col-"].no-padding {
@@ -32,10 +16,8 @@ a:hover {
     padding-right: 0 !important;
 }
 
-.data-entry-wrapper {
-    min-height: 100vh;
-    overflow: hidden;
-    width: 100%;
+.sidebar a:hover {
+    text-decoration: none;
 }
 
 .sidebar {
@@ -47,7 +29,7 @@ a:hover {
     overflow-y: auto;
     padding: 5px 30px 30px 30px;
     position: fixed;
-    top: 0;
+    top: 50px;
 }
 
 /* Scrollbar styling  (in Chrome) */

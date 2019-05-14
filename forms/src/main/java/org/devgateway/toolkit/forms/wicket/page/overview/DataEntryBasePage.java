@@ -19,9 +19,6 @@ import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * TODO - check if this can be merged with BasePage.
- */
 public abstract class DataEntryBasePage extends BasePage {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
 
@@ -32,6 +29,8 @@ public abstract class DataEntryBasePage extends BasePage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        pageTitle.setVisibilityAllowed(false);
     }
 
     @Override
