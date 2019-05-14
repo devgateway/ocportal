@@ -9,7 +9,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
-
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
 import org.devgateway.toolkit.persistence.service.category.ContractDocumentTypeService;
 
@@ -54,6 +53,4 @@ public class ContractDocumentPanel extends ListViewSectionPanel<ContractDocument
     protected boolean filterListItem(final ContractDocument contractDocuments) {
         return true;
     }
-    
-   
 }

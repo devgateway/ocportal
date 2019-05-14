@@ -66,9 +66,8 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
         projectTitle.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         projectTitle.getField().add(uniqueTitle());
 
-        ComponentUtil.addDoubleField(editForm, "amountBudgeted");
-        ComponentUtil.addDoubleField(editForm, "amountRequested");
-
+        ComponentUtil.addDoubleField(editForm, "amountBudgeted").getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addDoubleField(editForm, "amountRequested").getField().add(RangeValidator.minimum(0.0));
 
         ComponentUtil.addIntegerTextField(editForm, "numberSubCounties")
                 .getField().add(RangeValidator.range(1, 6));

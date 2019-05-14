@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-import java.util.Set;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -13,6 +11,7 @@ import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
@@ -35,6 +34,8 @@ import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.util.Set;
 
 /**
  * @author gmutuhu
@@ -107,7 +108,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
 
         addProcuringEntitySection();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue");
+        ComponentUtil.addDoubleField(editForm, "tenderValue").getField().add(RangeValidator.minimum(0.0));
         editForm.add(new TenderItemPanel("tenderItems"));
 
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");

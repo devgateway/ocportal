@@ -85,7 +85,7 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
         final TextFieldBootstrapFormComponent<Double> recommendedAwardAmount = ComponentUtil.addDoubleField(editForm,
                 "recommendedAwardAmount");
         recommendedAwardAmount.required();
-        recommendedAwardAmount.getField().add(new RangeValidator(0.0, null));
+        recommendedAwardAmount.getField().add(RangeValidator.minimum(0.0));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 

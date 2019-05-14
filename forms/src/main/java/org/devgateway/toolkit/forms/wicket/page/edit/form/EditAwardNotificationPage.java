@@ -7,6 +7,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
@@ -67,11 +68,16 @@ public class EditAwardNotificationPage extends EditAbstractMakueniFormPage<Award
     protected void onInitialize() {
         super.onInitialize();
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
-        ComponentUtil.addDoubleField(editForm, "tenderValue").required();
+        ComponentUtil.addDoubleField(editForm, "tenderValue").required()
+                .getField().add(RangeValidator.minimum(0.0));
+
         ComponentUtil.addDateField(editForm, "awardDate").required();
-        ComponentUtil.addIntegerTextField(editForm, "acknowledgementDays");
+        ComponentUtil.addIntegerTextField(editForm, "acknowledgementDays")
+                .getField().add(RangeValidator.minimum(0));
+
         addTenderInfo();
         addSupplierInfo();
+
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
         editForm.add(formDocs);
