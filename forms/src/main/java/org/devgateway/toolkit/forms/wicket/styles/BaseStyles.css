@@ -41,6 +41,10 @@ body {
     margin-bottom: 20px;
 }
 
+.mainHeader .navbar {
+    background: #223a49;
+}
+
 .mainContainer {
     /*
      * The main page content should have some height.
