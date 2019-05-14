@@ -5,6 +5,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -15,8 +16,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
-
-import java.util.List;
 
 public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluation> {
     @SpringBean
@@ -58,13 +57,16 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         supplierID.setOutputMarkupId(true);
         item.add(supplierID);
 
-        ComponentUtil.addIntegerTextField(item, "supplierScore").required();
-        ComponentUtil.addIntegerTextField(item, "supplierRanking").required();
-        ComponentUtil.addDoubleField(item, "quotedAmount");
+        ComponentUtil.addIntegerTextField(item, "supplierScore").required()
+                .getField().add(RangeValidator.minimum(0));
+        ComponentUtil.addIntegerTextField(item, "supplierRanking").required()
+                .getField().add(RangeValidator.minimum(0));
+        ComponentUtil.addDoubleField(item, "quotedAmount")
+                .getField().add(RangeValidator.minimum(0.0));
 
         Select2ChoiceBootstrapFormComponent<String> responsiveness = new Select2ChoiceBootstrapFormComponent<>(
                 "supplierResponsiveness",
-                new GenericChoiceProvider<>((List<String>) DBConstants.SupplierResponsiveness.ALL_LIST));
+                new GenericChoiceProvider<>(DBConstants.SupplierResponsiveness.ALL_LIST));
         responsiveness.required();
         item.add(responsiveness);
     }

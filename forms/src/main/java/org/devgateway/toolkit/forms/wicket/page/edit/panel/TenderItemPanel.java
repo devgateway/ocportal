@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
@@ -16,7 +17,6 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.service.form.PurchaseItemService;
-import org.apache.wicket.validation.validator.RangeValidator; 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     @SpringBean
     private PurchaseItemService purchaseItemService;
@@ -52,7 +52,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                 };
         quantity.integer();
-        quantity.getField().add(new RangeValidator(1, null));
+        quantity.getField().add(RangeValidator.minimum(1));
         quantity.required();
         item.add(quantity);
 
@@ -69,7 +69,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 };
         price.asDouble();
         price.required();
-        price.getField().add(new RangeValidator(0.0, null));
+        price.getField().add(RangeValidator.minimum(0.0));
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",

@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
@@ -56,6 +57,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     }
                 };
         quantity.integer();
+        quantity.getField().add(RangeValidator.minimum(0));
         quantity.required();
         item.add(quantity);
 
@@ -71,6 +73,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     }
                 };
         amount.asDouble();
+        amount.getField().add(RangeValidator.minimum(0.0));
         amount.required();
         item.add(amount);
 
