@@ -54,7 +54,7 @@ import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOv
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -346,7 +346,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     // TODO: temporary redirect to the department overview
     // (this is also causing some errors when creating PP)
     private PageParameters getParams() {
-        final AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
+        final AbstractMakueniEntity object = (AbstractMakueniEntity) editForm.getModelObject();
         final PageParameters pageParameters = new PageParameters();
         pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
                 object.getProcurementPlan().getDepartment().getId());

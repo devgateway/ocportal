@@ -22,7 +22,7 @@ import java.util.Date;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
-public class ProfessionalOpinion extends AbstractMakueniForm {
+public class ProfessionalOpinion extends AbstractMakueniEntity implements ProjectAttachable {
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -81,5 +81,10 @@ public class ProfessionalOpinion extends AbstractMakueniForm {
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    @Override
+    public ProjectAttachable getProjectAttachable() {
+        return tenderQuotationEvaluation;
     }
 }

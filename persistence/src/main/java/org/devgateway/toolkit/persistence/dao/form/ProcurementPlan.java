@@ -25,7 +25,7 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
-public class ProcurementPlan extends AbstractMakueniForm {
+public class ProcurementPlan extends AbstractMakueniEntity {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;

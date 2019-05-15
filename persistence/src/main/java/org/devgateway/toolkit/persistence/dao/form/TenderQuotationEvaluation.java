@@ -26,7 +26,7 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_id")})
-public class TenderQuotationEvaluation extends AbstractMakueniForm {
+public class TenderQuotationEvaluation extends AbstractMakueniEntity implements ProjectAttachable {
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -86,5 +86,10 @@ public class TenderQuotationEvaluation extends AbstractMakueniForm {
     @Override
     public String toString() {
         return tender.toString();
+    }
+
+    @Override
+    public ProjectAttachable getProjectAttachable() {
+        return tender;
     }
 }

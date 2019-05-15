@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @MappedSuperclass
-public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEntity {
+public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEntity implements Statusable {
     @NotNull
     @Audited
     private String status = DBConstants.Status.DRAFT;
@@ -36,6 +37,7 @@ public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEnt
     @Transient
     private Boolean visibleStatusLabel = true;
 
+    @Override
     public String getStatus() {
         return status;
     }
