@@ -68,12 +68,25 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
     
     @Override
     protected TenderQuotationEvaluation newInstance() {
-        final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
+        final TenderQuotationEvaluation tenderQuotationEvaluation = getOrCreateNew();
         if (tender != null) {
             tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());   
-            tenderQuotationEvaluation.setTender(tender);
-        }
+            tenderQuotationEvaluation.setTender(tender);          
+        }        
         
         return tenderQuotationEvaluation;
+    }
+    
+    private TenderQuotationEvaluation getOrCreateNew() {
+        TenderQuotationEvaluation tenderQuotationEvaluation = null;
+        if (tender != null && tender.getPurchaseRequisition() != null) {
+            tenderQuotationEvaluation = tenderQuotationEvaluationService.findByPurchaseRequisition(tender.getPurchaseRequisition()); 
+        }
+        
+        if (tenderQuotationEvaluation == null) {
+            tenderQuotationEvaluation = super.newInstance();
+        }
+        
+        return tenderQuotationEvaluation;        
     }
 }
