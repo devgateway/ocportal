@@ -22,7 +22,7 @@ import java.util.Set;
  * @since 2019-04-01
  */
 @MappedSuperclass
-public abstract class AbstractMakueniForm extends AbstractStatusAuditableEntity implements Labelable {
+public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity implements Labelable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

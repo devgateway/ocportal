@@ -52,7 +52,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -208,7 +208,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                     .setSize(Size.Small)
                     .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
-            if (entity instanceof AbstractMakueniForm && SecurityConstants.Action.VIEW.equals(
+            if (entity instanceof AbstractMakueniEntity && SecurityConstants.Action.VIEW.equals(
                     permissionEntityRenderableService.getAllowedAccess((AbstractStatusAuditableEntity) entity))) {
                 editPageLink.setIconType(FontAwesomeIconType.eye)
                         .setType(Buttons.Type.Warning)

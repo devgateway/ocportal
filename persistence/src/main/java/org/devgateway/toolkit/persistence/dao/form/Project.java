@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
-public class Project extends AbstractMakueniForm {
+public class Project extends AbstractMakueniEntity {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private CabinetPaper cabinetPaper;

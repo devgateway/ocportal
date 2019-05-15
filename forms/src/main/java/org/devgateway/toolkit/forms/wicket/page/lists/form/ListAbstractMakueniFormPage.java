@@ -10,7 +10,7 @@ import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootst
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListStatusEntityPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 
@@ -20,7 +20,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public abstract class ListAbstractMakueniFormPage<T extends AbstractMakueniForm>
+public abstract class ListAbstractMakueniFormPage<T extends AbstractMakueniEntity>
         extends AbstractListStatusEntityPage<T> {
     @SpringBean
     private DepartmentService departmentService;

@@ -30,7 +30,7 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
-public class Contract extends AbstractMakueniForm {
+public class Contract extends AbstractMakueniEntity implements ProjectAttachable {
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -140,5 +140,10 @@ public class Contract extends AbstractMakueniForm {
     @Override
     public String getLabel() {
         return null;
+    }
+
+    @Override
+    public ProjectAttachable getProjectAttachable() {
+        return tenderQuotationEvaluation;
     }
 }

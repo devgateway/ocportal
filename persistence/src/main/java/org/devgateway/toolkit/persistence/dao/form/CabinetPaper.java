@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Table(indexes = {@Index(columnList = "procurement_plan_id"),
         @Index(columnList = "number"),
         @Index(columnList = "name")})
-public class CabinetPaper extends AbstractMakueniForm {
+public class CabinetPaper extends AbstractMakueniEntity {
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String number;
 

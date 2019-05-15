@@ -31,7 +31,8 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"), @Index(columnList = "title")})
-public class PurchaseRequisition extends AbstractMakueniForm {
+public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable {
+
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -59,8 +60,14 @@ public class PurchaseRequisition extends AbstractMakueniForm {
     @OrderColumn(name = "index")
     private List<PurchaseItem> purchaseItems = new ArrayList<>();
 
+    @Override
     public Project getProject() {
         return project;
+    }
+
+    @Override
+    public ProjectAttachable getProjectAttachable() {
+        return null;
     }
 
     public void setProject(final Project project) {

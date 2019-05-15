@@ -6,13 +6,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 
 /**
  * @author idobre
  * @since 2019-04-02
  */
-public abstract class EditAbstractMakueniFormPage<T extends AbstractMakueniForm>
+public abstract class EditAbstractMakueniFormPage<T extends AbstractMakueniEntity>
         extends AbstractEditStatusEntityPage<T> {
     public EditAbstractMakueniFormPage(final PageParameters parameters) {
         super(parameters);

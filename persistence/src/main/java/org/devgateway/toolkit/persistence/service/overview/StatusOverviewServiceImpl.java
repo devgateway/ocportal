@@ -6,7 +6,9 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
@@ -23,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -134,117 +137,49 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private void addRequisitionStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
         // TODO: filter for current years requisitions
         final List<PurchaseRequisition> purchaseRequisitionList = purchaseRequisitionRepository.findAll();
-        for (PurchaseRequisition pr : purchaseRequisitionList) {
-            if (pr.getProject() != null) {
-                Long projectId = pr.getProject() != null ? pr.getProject().getId() : null;
-                addStatus(statusMap, projectId, pr.getStatus());
-            }
+        addStatus(statusMap, fiscalYearId, purchaseRequisitionList);
+    }
 
-        }
+    private <S extends ProjectAttachable & Statusable>
+            void addStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId,
+                           final Collection<S> collection) {
+            collection.stream().filter(ProjectAttachable::hasProjectId)
+                    .forEach(e -> addStatus(statusMap, e.getProjectId(), e.getStatus()));
     }
 
     private void addTenderStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
         // TODO: replace with filtered Tender List
         final List<Tender> tenderList = tenderRepository.findAll();
-        for (Tender tender : tenderList) {
-
-            if ((tender.getPurchaseRequisition() != null && tender.getPurchaseRequisition().getProject() != null)) {
-                Long projectId = tender.getPurchaseRequisition().getProject().getId();
-                addStatus(statusMap, projectId, tender.getStatus());
-            }
-        }
+        addStatus(statusMap, fiscalYearId, tenderList);
     }
 
     private void addTenderQuotationStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
         final List<TenderQuotationEvaluation> tenderEvaluationsList = tenderQuotationEvaluationRepository.findAll();
-        for (TenderQuotationEvaluation evaluation : tenderEvaluationsList) {
-
-            if (evaluation.getTender() != null && evaluation.getTender().getPurchaseRequisition() != null
-                    && evaluation.getTender().getPurchaseRequisition().getProject() != null) {
-                Long projectId = evaluation.getTender().getPurchaseRequisition().getProject().getId();
-                addStatus(statusMap, projectId, evaluation.getStatus());
-            }
-
-        }
+        addStatus(statusMap, fiscalYearId, tenderEvaluationsList);
     }
 
     private void addProfessionalOpinionStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
         final List<ProfessionalOpinion> professionalOpinionList = professionalOpinionRepository.findAll();
-        for (ProfessionalOpinion professionalOpinion : professionalOpinionList) {
-
-            if (professionalOpinion.getTenderQuotationEvaluation() != null
-                    && professionalOpinion.getTenderQuotationEvaluation().getTender() != null
-                    && professionalOpinion.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
-                    && professionalOpinion.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                    .getProject() != null) {
-
-                Long projectId = professionalOpinion.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                        .getProject().getId();
-                addStatus(statusMap, projectId, professionalOpinion.getStatus());
-            }
-
-        }
+        addStatus(statusMap, fiscalYearId, professionalOpinionList);
     }
 
-    private void addAwardNotificationStatus(final Map<Long, Set<String>> statusMap, final Long fiscaYearId) {
+    private void addAwardNotificationStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
         List<AwardNotification> awardNotificationList = awardNotificationRepository.findAll();
-        for (AwardNotification awardNotification : awardNotificationList) {
-            if (awardNotification.getTenderQuotationEvaluation() != null
-                    && awardNotification.getTenderQuotationEvaluation().getTender() != null
-                    && awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
-                    && awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                    .getProject() != null) {
-
-                Long projectId = awardNotification.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                        .getProject().getId();
-                addStatus(statusMap, projectId, awardNotification.getStatus());
-            }
-        }
-
+        addStatus(statusMap, fiscalYearId, awardNotificationList);
     }
 
-    private void addAwardAcceptanceStatus(final Map<Long, Set<String>> statusMap, final Long fiscaYearId) {
+    private void addAwardAcceptanceStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
         List<AwardAcceptance> awardAcceptanceList = awardAcceptanceRepository.findAll();
-        for (AwardAcceptance awardAcceptance : awardAcceptanceList) {
-            if (awardAcceptance.getTenderQuotationEvaluation() != null
-                    && awardAcceptance.getTenderQuotationEvaluation().getTender() != null
-                    && awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null
-                    && awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                    .getProject() != null) {
-
-                Long projectId = awardAcceptance.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                        .getProject().getId();
-                addStatus(statusMap, projectId, awardAcceptance.getStatus());
-            }
-        }
-
+        addStatus(statusMap, fiscalYearId, awardAcceptanceList);
     }
 
-    private void addContractStatus(final Map<Long, Set<String>> statusMap, final Long fiscaYearId) {
+    private void addContractStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
         List<Contract> contractList = contractRepository.findAll();
-        for (Contract contract : contractList) {
-            if (contract.getTenderQuotationEvaluation() != null
-                    && contract.getTenderQuotationEvaluation().getTender() != null
-                    && contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition() != null && contract
-                    .getTenderQuotationEvaluation().getTender().getPurchaseRequisition().getProject() != null) {
-
-                Long projectId = contract.getTenderQuotationEvaluation().getTender().getPurchaseRequisition()
-                        .getProject().getId();
-                addStatus(statusMap, projectId, contract.getStatus());
-            }
-        }
-
+        addStatus(statusMap, fiscalYearId, contractList);
     }
-
 
     private void addStatus(final Map<Long, Set<String>> statusMap, final Long projectId, final String status) {
-        Set<String> statuses = statusMap.get(projectId);
-
-        if (statuses == null) {
-            statuses = new HashSet<>();
-            statusMap.put(projectId, statuses);
-        }
-
+        Set<String> statuses = statusMap.computeIfAbsent(projectId, k -> new HashSet<>());
         statuses.add(status);
     }
 

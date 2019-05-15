@@ -21,7 +21,7 @@ import java.util.Date;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
-public class AwardNotification extends AbstractMakueniForm {
+public class AwardNotification extends AbstractMakueniEntity implements ProjectAttachable {
 
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -86,5 +86,10 @@ public class AwardNotification extends AbstractMakueniForm {
     @Override
     public String getLabel() {
         return null;
+    }
+
+    @Override
+    public ProjectAttachable getProjectAttachable() {
+        return tenderQuotationEvaluation;
     }
 }
