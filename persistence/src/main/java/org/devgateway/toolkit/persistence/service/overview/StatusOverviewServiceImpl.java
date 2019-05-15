@@ -59,11 +59,11 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     // TODO: apply filters, investigate if the tender status and award status can be
     // optimized by using sql queries
     @Override
-    public List<DepartmentOverviewData> getProjectsByDepartment(final Long fiscaYearId) {
+    public List<DepartmentOverviewData> getProjectsByDepartment(final Long fiscalYearId) {
         List<DepartmentOverviewData> departmentsData = new ArrayList<>();
-        List<Project> projects = projectRepository.findProjectsForYear(fiscaYearId);
-        final Map<Long, Set<String>> tenderStatusMap = getTenderStatusMap(null);
-        final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(null);
+        List<Project> projects = projectRepository.findProjectsForYear(fiscalYearId);
+        final Map<Long, Set<String>> tenderStatusMap = getTenderStatusMap(fiscalYearId);
+        final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(fiscalYearId);
 
         for (Project p : projects) {
             DepartmentOverviewData departmentOverview = departmentsData.stream().filter(
