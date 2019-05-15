@@ -66,10 +66,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(null);
 
         for (Project p : projects) {
-            DepartmentOverviewData departmentOverview = departmentsData.stream().filter(d -> {
-                return p.getProcurementPlan().equals(d.getProcurementPlan());
-            }).findFirst().orElse(null);
-
+            DepartmentOverviewData departmentOverview = departmentsData.stream().filter(
+                    d -> p.getProcurementPlan().equals(d.getProcurementPlan())).findFirst().orElse(null);
             if (departmentOverview == null) {
                 departmentOverview = new DepartmentOverviewData();
                 departmentOverview.setProcurementPlan(p.getProcurementPlan());
@@ -83,14 +81,13 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
             projectStatus.setTenderStatus(getProcessStatus(tenderStatusMap, p.getId()));
             projectStatus.setAwardStatus(getProcessStatus(awardStatusMap, p.getId()));
             departmentOverview.getProjects().add(projectStatus);
-
         }
-
         return departmentsData;
     }
 
     private String getProcessStatus(final Map<Long, Set<String>> tenderStatusMap, final Long projectId) {
         final Set<String> status = tenderStatusMap.get(projectId);
+
         if (status != null) {
             if (status.contains(DBConstants.Status.TERMINATED)) {
                 return DBConstants.Status.TERMINATED;
@@ -135,7 +132,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 .forEach(e -> addStatus(statusMap, e.getProjectId(), e.getStatus()));
     }
 
-    private <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
+    @SafeVarargs
+    private final <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
     void addStatus(final Map<Long, Set<String>> statusMap,
                    final Long fiscalYearId,
                    final AbstractMakueniEntityRepository<? extends S>... repository) {
