@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -28,15 +27,15 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
 
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
-    
+
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
     protected TenderService tenderService;
-    
+
     private Tender tender = null;
-    
+
     /**
      * @param parameters
      */
@@ -44,7 +43,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
         super(parameters);
         this.jpaService = tenderQuotationEvaluationService;
         this.listPageClass = ListTenderQuotationEvaluationPage.class;
-        
+
         StringValue tenderId = parameters.get(WebConstants.PARAM_TENDER_ID);
         if (!tenderId.isNull()) {
             tender = tenderService.findById(tenderId.toLong()).orElse(null);
@@ -53,40 +52,41 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();        
+        super.onInitialize();
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "tender", tenderService).required();
-        
+
         ComponentUtil.addDateField(editForm, "closingDate").required();
         ComponentUtil.addIntegerTextField(editForm, "numberOfBids").required();
         editForm.add(new BidPanel("bids"));
-        
+
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
         editForm.add(formDocs);
-    }  
-    
+    }
+
     @Override
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = getOrCreateNew();
         if (tender != null) {
-            tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());   
-            tenderQuotationEvaluation.setTender(tender);          
-        }        
-        
+            tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());
+            tenderQuotationEvaluation.setTender(tender);
+        }
+
         return tenderQuotationEvaluation;
     }
-    
+
     private TenderQuotationEvaluation getOrCreateNew() {
         TenderQuotationEvaluation tenderQuotationEvaluation = null;
         if (tender != null && tender.getPurchaseRequisition() != null) {
-            tenderQuotationEvaluation = tenderQuotationEvaluationService.findByPurchaseRequisition(tender.getPurchaseRequisition()); 
+            tenderQuotationEvaluation = tenderQuotationEvaluationService
+                    .findByPurchaseRequisition(tender.getPurchaseRequisition());
         }
-        
+
         if (tenderQuotationEvaluation == null) {
             tenderQuotationEvaluation = super.newInstance();
         }
-        
-        return tenderQuotationEvaluation;        
+
+        return tenderQuotationEvaluation;
     }
 }
