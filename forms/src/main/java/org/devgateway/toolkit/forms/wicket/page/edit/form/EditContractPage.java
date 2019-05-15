@@ -7,6 +7,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -71,13 +72,16 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
         super.onInitialize();
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
-        ComponentUtil.addDoubleField(editForm, "tenderValue").required();
+        ComponentUtil.addDoubleField(editForm, "tenderValue").required()
+                .getField().add(RangeValidator.minimum(0.0));
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "contractDate").required();
         ComponentUtil.addDateField(editForm, "expiryDate");
         ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
+
         addTenderInfo();
         addSupplierInfo();
+
         editForm.add(new ContractDocumentPanel("contractDocs"));
     }
 

@@ -4,6 +4,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -57,7 +58,8 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
         ComponentUtil.addSelect2ChoiceField(editForm, "tender", tenderService).required();
 
         ComponentUtil.addDateField(editForm, "closingDate").required();
-        ComponentUtil.addIntegerTextField(editForm, "numberOfBids").required();
+        ComponentUtil.addIntegerTextField(editForm, "numberOfBids").required()
+                .getField().add(RangeValidator.minimum(0));
         editForm.add(new BidPanel("bids"));
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");

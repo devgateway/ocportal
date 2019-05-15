@@ -13,6 +13,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
@@ -81,12 +82,16 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
         final PlanItem planItem = item.getModelObject();
         if (planItem.getEditable()) {
-            ComponentUtil.addDoubleField(item, "estimatedCost").required();
+            ComponentUtil.addDoubleField(item, "estimatedCost").required()
+                    .getField().add(RangeValidator.minimum(0.0));
             ComponentUtil.addTextField(item, "unitOfIssue").required()
                     .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-            ComponentUtil.addIntegerTextField(item, "quantity").required();
-            ComponentUtil.addDoubleField(item, "unitPrice").required();
-            ComponentUtil.addDoubleField(item, "totalCost").required();
+            ComponentUtil.addIntegerTextField(item, "quantity").required()
+                    .getField().add(RangeValidator.minimum(0));
+            ComponentUtil.addDoubleField(item, "unitPrice").required()
+                    .getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addDoubleField(item, "totalCost").required()
+                    .getField().add(RangeValidator.minimum(0.0));
 
             ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
             final TextFieldBootstrapFormComponent<String> sourceOfFunds = ComponentUtil.addTextField(item,
@@ -95,12 +100,12 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             sourceOfFunds.getField().add(new SourceOfFundsValidator());
 
             ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
-            ComponentUtil.addDoubleField(item, "targetGroupValue");
+            ComponentUtil.addDoubleField(item, "targetGroupValue").getField().add(RangeValidator.minimum(0.0));
 
-            ComponentUtil.addDoubleField(item, "quarter1st");
-            ComponentUtil.addDoubleField(item, "quarter2nd");
-            ComponentUtil.addDoubleField(item, "quarter3rd");
-            ComponentUtil.addDoubleField(item, "quarter4th");
+            ComponentUtil.addDoubleField(item, "quarter1st").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addDoubleField(item, "quarter2nd").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addDoubleField(item, "quarter3rd").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addDoubleField(item, "quarter4th").getField().add(RangeValidator.minimum(0.0));
         } else {
             item.add(new GenericSleepFormComponent<>("estimatedCost"));
             item.add(new GenericSleepFormComponent<>("unitOfIssue"));
@@ -174,8 +179,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
         return addNewChildButton;
     }
-    
-  
+
 
     @Override
     protected boolean filterListItem(final PlanItem planItem) {
@@ -258,19 +262,20 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             this.filterItem = filterItem;
         }
     }
-    
-    public class SourceOfFundsValidator implements IValidator<String> {        
+
+    public class SourceOfFundsValidator implements IValidator<String> {
         private static final String ALLOWED_START_CHARACTERS_ZERO = "0";
         private static final String ALLOWED_START_CHARACTERS_ONE = "1";
-        public SourceOfFundsValidator() {            
+
+        public SourceOfFundsValidator() {
         }
 
         @Override
         public void validate(final IValidatable<String> validatable) {
             final String sourceOfFunds = validatable.getValue();
             if (sourceOfFunds != null) {
-                                
-                if (!(sourceOfFunds.trim().startsWith(ALLOWED_START_CHARACTERS_ZERO) 
+
+                if (!(sourceOfFunds.trim().startsWith(ALLOWED_START_CHARACTERS_ZERO)
                         || sourceOfFunds.trim().startsWith(ALLOWED_START_CHARACTERS_ONE))) {
                     final ValidationError error = new ValidationError(getString("sourceOfFundsStartsWithZero"));
                     validatable.error(error);
