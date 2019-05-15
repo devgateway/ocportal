@@ -421,7 +421,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return button;
     }
 
-    private SaveEditPageButton getSaveDraftAndContinueButton() {
+    protected SaveEditPageButton getSaveDraftAndContinueButton() {
         final SaveEditPageButton button = new SaveEditPageButton("saveContinue",
                 new StringResourceModel("saveContinue", this, null)) {
 
@@ -516,7 +516,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return saveEditPageButton;
     }
 
-    private void setStatusAppendComment(final String status) {
+    protected void setStatusAppendComment(final String status) {
         final T saveable = editForm.getModelObject();
 
         // do not save an empty comment if previous status is same as current status and comment box is empty
