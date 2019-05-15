@@ -129,6 +129,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     private void addProcuringEntitySection() {
         Select2ChoiceBootstrapFormComponent<ProcuringEntity> issuedBy = ComponentUtil.addSelect2ChoiceField(editForm,
                 "issuedBy", procuringEntityService);
+        issuedBy.required();
         issuedBy.getField().add(new AjaxComponentUpdatingBehavior("change"));
 
         procuringEntityEmail = new GenericSleepFormComponent<>("emailAddress", (IModel<String>) () -> {
