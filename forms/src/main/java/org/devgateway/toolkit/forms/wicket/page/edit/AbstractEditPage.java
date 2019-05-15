@@ -45,6 +45,7 @@ import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -183,6 +184,10 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             visit.dontGoDeeper();
             if (object instanceof SummernoteBootstrapFormComponent) {
                 object.getField().processInput();
+            }
+            // refresh file component
+            if (object instanceof FileInputBootstrapFormComponent && object.getField().isValid()) {
+                target.add(object);
             }
             if (!(object instanceof SummernoteBootstrapFormComponent) && object.getField().isValid()) {
                 return;
