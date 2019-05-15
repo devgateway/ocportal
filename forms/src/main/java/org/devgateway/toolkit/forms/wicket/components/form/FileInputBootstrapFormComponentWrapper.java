@@ -502,6 +502,10 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
     @Override
     public boolean checkRequired() {
-        return !requireAtLeastOneItem || !ObjectUtils.isEmpty(getModelObject());
+        if (requireAtLeastOneItem) {
+            return !ObjectUtils.isEmpty(getModelObject());
+        }
+
+        return true;
     }
 }
