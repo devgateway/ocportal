@@ -1,10 +1,11 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import java.util.Set;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
@@ -18,15 +19,12 @@ import org.devgateway.toolkit.forms.validators.EarlierThanDateFieldValidator;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -40,8 +38,6 @@ import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import java.util.Set;
 
 /**
  * @author gmutuhu
@@ -200,42 +196,6 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         }
         
         return tender;
-    }
+    } 
     
-    @Override
-    protected SaveEditPageButton getSaveDraftAndContinueButton() {
-        final SaveEditPageButton button = new SaveEditPageButton("saveContinue",
-                new StringResourceModel("saveContinue", this, null)) {
-
-            @Override
-            protected String getOnClickScript() {
-                return WebConstants.DISABLE_FORM_LEAVING_JS;
-            }
-
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                editForm.visitChildren(GenericBootstrapFormComponent.class,
-                        new AllowNullForCertainInvalidFieldsVisitor());
-                setStatusAppendComment(DBConstants.Status.DRAFT);
-                super.onSubmit(target);
-            }
-
-            @Override
-            protected Class<? extends BasePage> getResponsePage() {
-                return EditTenderQuotationEvaluationPage.class;
-                
-            }
-
-            @Override
-            protected PageParameters getParameterPage() {
-                final Tender tender =  editForm.getModelObject();
-                final PageParameters pageParameters = new PageParameters();
-                pageParameters.set(WebConstants.PARAM_TENDER_ID, tender.getId());
-                return pageParameters;
-            }
-        };
-
-        button.setIconType(FontAwesomeIconType.tasks);
-        return button;
-    }
 }
