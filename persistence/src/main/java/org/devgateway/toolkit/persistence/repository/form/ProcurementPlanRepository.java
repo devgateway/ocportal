@@ -3,7 +3,6 @@ package org.devgateway.toolkit.persistence.repository.form;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-04-02
  */
 @Transactional
-public interface ProcurementPlanRepository extends TextSearchableRepository<ProcurementPlan, Long> {
+public interface ProcurementPlanRepository extends AbstractMakueniEntityRepository<ProcurementPlan> {
 
     @Override
     @Query("select proc from  #{#entityName} proc where lower(proc.department.label) "

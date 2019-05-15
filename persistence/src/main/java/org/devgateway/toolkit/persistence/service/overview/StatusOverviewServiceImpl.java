@@ -1,18 +1,13 @@
 package org.devgateway.toolkit.persistence.service.overview;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
-import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.Contract;
-import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
-import org.devgateway.toolkit.persistence.dao.form.Tender;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
+import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
@@ -119,68 +114,38 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     private Map<Long, Set<String>> getTenderStatusMap(final Long fiscalYearId) {
         final Map<Long, Set<String>> statusMap = new HashMap<>();
-        addRequisitionStatus(statusMap, fiscalYearId);
-        addTenderStatus(statusMap, fiscalYearId);
-        addTenderQuotationStatus(statusMap, fiscalYearId);
-        addProfessionalOpinionStatus(statusMap, fiscalYearId);
+        addStatus(
+                statusMap, fiscalYearId, purchaseRequisitionRepository, tenderRepository,
+                tenderQuotationEvaluationRepository, professionalOpinionRepository
+        );
         return statusMap;
     }
 
     private Map<Long, Set<String>> getAwardStatusMap(final Long fiscalYearId) {
         final Map<Long, Set<String>> statusMap = new HashMap<>();
-        addAwardNotificationStatus(statusMap, fiscalYearId);
-        addAwardAcceptanceStatus(statusMap, fiscalYearId);
-        addContractStatus(statusMap, fiscalYearId);
+        addStatus(
+                statusMap, fiscalYearId, awardNotificationRepository, awardAcceptanceRepository, contractRepository);
         return statusMap;
     }
 
-    private void addRequisitionStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        // TODO: filter for current years requisitions
-        final List<PurchaseRequisition> purchaseRequisitionList = purchaseRequisitionRepository.findAll();
-        addStatus(statusMap, fiscalYearId, purchaseRequisitionList);
-    }
-
     private <S extends ProjectAttachable & Statusable>
-            void addStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId,
-                           final Collection<S> collection) {
-            collection.stream().filter(ProjectAttachable::hasProjectId)
-                    .forEach(e -> addStatus(statusMap, e.getProjectId(), e.getStatus()));
+    void addStatus(final Map<Long, Set<String>> statusMap,
+                   final Collection<S> collection) {
+        collection.stream().filter(ProjectAttachable::hasProjectId)
+                .forEach(e -> addStatus(statusMap, e.getProjectId(), e.getStatus()));
     }
 
-    private void addTenderStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        // TODO: replace with filtered Tender List
-        final List<Tender> tenderList = tenderRepository.findAll();
-        addStatus(statusMap, fiscalYearId, tenderList);
-    }
-
-    private void addTenderQuotationStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        final List<TenderQuotationEvaluation> tenderEvaluationsList = tenderQuotationEvaluationRepository.findAll();
-        addStatus(statusMap, fiscalYearId, tenderEvaluationsList);
-    }
-
-    private void addProfessionalOpinionStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        final List<ProfessionalOpinion> professionalOpinionList = professionalOpinionRepository.findAll();
-        addStatus(statusMap, fiscalYearId, professionalOpinionList);
-    }
-
-    private void addAwardNotificationStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        List<AwardNotification> awardNotificationList = awardNotificationRepository.findAll();
-        addStatus(statusMap, fiscalYearId, awardNotificationList);
-    }
-
-    private void addAwardAcceptanceStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        List<AwardAcceptance> awardAcceptanceList = awardAcceptanceRepository.findAll();
-        addStatus(statusMap, fiscalYearId, awardAcceptanceList);
-    }
-
-    private void addContractStatus(final Map<Long, Set<String>> statusMap, final Long fiscalYearId) {
-        List<Contract> contractList = contractRepository.findAll();
-        addStatus(statusMap, fiscalYearId, contractList);
+    private <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
+    void addStatus(final Map<Long, Set<String>> statusMap,
+                   final Long fiscalYearId,
+                   final AbstractMakueniEntityRepository<? extends S>... repository) {
+        for (AbstractMakueniEntityRepository<? extends S> r : repository) {
+            addStatus(statusMap, r.findByProcurementPlanFiscalYearId(fiscalYearId));
+        }
     }
 
     private void addStatus(final Map<Long, Set<String>> statusMap, final Long projectId, final String status) {
         Set<String> statuses = statusMap.computeIfAbsent(projectId, k -> new HashSet<>());
         statuses.add(status);
     }
-
 }
