@@ -11,7 +11,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-24
  */
-public class ProfessionalOpinionFilterState extends AbstractMakueniFormFilterState<ProfessionalOpinion> {
+public class ProfessionalOpinionFilterState extends AbstractMakueniEntityFilterState<ProfessionalOpinion> {
     @Override
     public Specification<ProfessionalOpinion> getSpecification() {
         return (root, query, cb) -> {

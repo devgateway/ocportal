@@ -35,7 +35,7 @@ import java.io.OutputStream;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/cabinetPapers")
-public class ListCabinetPaperPage extends ListAbstractMakueniFormPage<CabinetPaper> {
+public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetPaper> {
 
     @SpringBean
     protected CabinetPaperService cabinetPaperService;

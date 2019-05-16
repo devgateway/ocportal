@@ -13,7 +13,7 @@ import java.util.List;
  * @author gmutuhu
  *
  */
-public class CabinetPaperFilterState extends AbstractMakueniFormFilterState<CabinetPaper> {
+public class CabinetPaperFilterState extends AbstractMakueniEntityFilterState<CabinetPaper> {
     private String name;
 
     private String number;

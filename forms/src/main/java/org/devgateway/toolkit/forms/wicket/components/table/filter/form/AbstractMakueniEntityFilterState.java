@@ -15,7 +15,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public abstract class AbstractMakueniFormFilterState<T extends AbstractMakueniEntity>
+public abstract class AbstractMakueniEntityFilterState<T extends AbstractMakueniEntity>
         extends StatusAuditableEntityFilterState<T> {
     private ProcurementPlan procurementPlan;
 

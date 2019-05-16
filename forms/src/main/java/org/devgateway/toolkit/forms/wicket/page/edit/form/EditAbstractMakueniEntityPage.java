@@ -15,12 +15,12 @@ import org.slf4j.LoggerFactory;
  * @author idobre
  * @since 2019-04-02
  */
-public abstract class EditAbstractMakueniFormPage<T extends AbstractMakueniEntity>
+public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
         extends AbstractEditStatusEntityPage<T> {
 
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniFormPage.class);
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniEntityPage.class);
 
-    public EditAbstractMakueniFormPage(final PageParameters parameters) {
+    public EditAbstractMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
 
         this.listPageClass = DepartmentOverviewPage.class;

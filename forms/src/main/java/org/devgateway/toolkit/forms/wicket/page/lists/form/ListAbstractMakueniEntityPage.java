@@ -20,7 +20,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public abstract class ListAbstractMakueniFormPage<T extends AbstractMakueniEntity>
+public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
         extends AbstractListStatusEntityPage<T> {
     @SpringBean
     private DepartmentService departmentService;
@@ -28,7 +28,7 @@ public abstract class ListAbstractMakueniFormPage<T extends AbstractMakueniEntit
     @SpringBean
     private FiscalYearService fiscalYearService;
 
-    public ListAbstractMakueniFormPage(final PageParameters parameters) {
+    public ListAbstractMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
     }
 

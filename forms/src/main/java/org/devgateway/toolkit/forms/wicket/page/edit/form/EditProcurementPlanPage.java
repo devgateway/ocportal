@@ -29,7 +29,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/procurementPlan")
-public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<ProcurementPlan> {
+public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<ProcurementPlan> {
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
 
