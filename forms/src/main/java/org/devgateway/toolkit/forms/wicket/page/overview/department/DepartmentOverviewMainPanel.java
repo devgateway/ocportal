@@ -16,6 +16,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
@@ -23,7 +24,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -32,8 +32,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DepartmentOverviewMainPanel extends Panel {
-    private static final long serialVersionUID = 1L;
-
     private FiscalYear fiscalYear;
 
     private Department department;
@@ -49,9 +47,6 @@ public class DepartmentOverviewMainPanel extends Panel {
     private ListView<Project> projectList;
 
     @SpringBean
-    private DepartmentService departmentService;
-
-    @SpringBean
     private ProjectService projectService;
 
     @SpringBean
@@ -65,12 +60,12 @@ public class DepartmentOverviewMainPanel extends Panel {
 
         // TODO (params) - extract fiscalYear and department from Session - if not present redirect the user to
         // another page like StatusOverview.
-        // ex: SessionUtil.getSessionDepartment()
+        this.department = SessionUtil.getSessionDepartment();
+        this.fiscalYear = SessionUtil.getSessionFiscalYear();
 
         // years with data for department
         fiscalYears = fiscalYearService.getYearsWithData(department.getId());
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
-
     }
 
     @Override
@@ -83,8 +78,8 @@ public class DepartmentOverviewMainPanel extends Panel {
         addProjectButton();
         addYearDropdown();
         addSearchBox();
-        add(new Label("departmentLabel", Model.of(procurementPlan.getDepartment().getLabel())));
-        add(new Label("procurementPlanLabel", Model.of(procurementPlan.toString())));
+        add(new Label("departmentLabel", procurementPlan.getDepartment().getLabel()));
+        add(new Label("procurementPlanLabel", procurementPlan.toString()));
         addProjectList();
     }
 
@@ -118,7 +113,7 @@ public class DepartmentOverviewMainPanel extends Panel {
         yearsDropdown.add(new FormComponentUpdatingBehavior() {
             @Override
             protected void onUpdate() {
-                // TODO (params) - save the yearsDropdown.getModelObject(); to Session: SessionUtil.setSessionFiscalYear
+                SessionUtil.setSessionFiscalYear(yearsDropdown.getModelObject());
                 setResponsePage(DepartmentOverviewPage.class);
 
             }

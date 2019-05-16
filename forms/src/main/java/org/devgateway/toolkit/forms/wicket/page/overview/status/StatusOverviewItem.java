@@ -9,9 +9,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
 import org.devgateway.toolkit.persistence.dto.ProjectStatus;
@@ -60,9 +58,9 @@ public class StatusOverviewItem extends Panel {
 
                     @Override
                     public void onClick() {
-                        PageParameters parameters = new PageParameters();
+                        // TODO
+                        // PageParameters parameters = new PageParameters();
                         // parameters.add("id", item.getModelObject().getId());
-
                         // setResponsePage(DepartmentOverviewPage.class, parameters);
                     }
                 };
@@ -96,7 +94,7 @@ public class StatusOverviewItem extends Panel {
                                 final String message) {
         Label label;
         if (message != null) {
-            label = new Label(id, Model.of(message));
+            label = new Label(id, message);
         } else {
             label = new Label(id);
         }
