@@ -20,7 +20,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 /**
  * @author gmutuhu
- *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenderQuotationEvaluation")
@@ -71,10 +70,10 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
         if (tender != null) {
-            tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());   
+            tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());
             tenderQuotationEvaluation.setTender(tender);
         }
-        
+
         return tenderQuotationEvaluation;
-    }   
+    }
 }

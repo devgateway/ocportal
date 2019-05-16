@@ -41,7 +41,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 /**
  * @author gmutuhu
- *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tender")
@@ -103,10 +102,10 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
 
         DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
         closingDate.required();
-        
-        DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");       
-        invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));        
-       
+
+        DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
+        invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));
+
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
 
         ComponentUtil.addTextAreaField(editForm, "objective").getField()
@@ -187,7 +186,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
 
         }
     }
-    
+
     @Override
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
@@ -195,8 +194,8 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
             tender.setProcurementPlan(purchaseRequisition.getProcurementPlan());
             tender.setPurchaseRequisition(purchaseRequisition);
         }
-        
+
         return tender;
-    } 
-    
+    }
+
 }
