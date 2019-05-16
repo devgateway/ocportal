@@ -46,6 +46,8 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
         this.procurementPlan = SessionUtil.getSessionPP();
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && this.procurementPlan == null) {
+            logger.warn("Something wrong happened since we are trying to add a new Project Entity "
+                    + "without having a ProcurementPlan!");
             setResponsePage(StatusOverviewPage.class);
         }
     }

@@ -8,6 +8,8 @@ import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPag
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author idobre
@@ -15,6 +17,9 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
  */
 public abstract class EditAbstractMakueniFormPage<T extends AbstractMakueniEntity>
         extends AbstractEditStatusEntityPage<T> {
+
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniFormPage.class);
+
     public EditAbstractMakueniFormPage(final PageParameters parameters) {
         super(parameters);
 

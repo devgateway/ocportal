@@ -57,8 +57,6 @@ public class ListCabinetPaperPage extends ListAbstractMakueniFormPage<CabinetPap
 
         columns.add(new AbstractColumn<CabinetPaper, String>(
                 new StringResourceModel("downloadFile", ListCabinetPaperPage.this)) {
-            private static final long serialVersionUID = -7447601118569862123L;
-
             @Override
             public void populateItem(final Item<ICellPopulator<CabinetPaper>> cellItem, final String componentId,
                     final IModel<CabinetPaper> model) {
@@ -80,16 +78,12 @@ public class ListCabinetPaperPage extends ListAbstractMakueniFormPage<CabinetPap
     }
 
     public class DownloadPanel extends Panel {
-        private static final long serialVersionUID = 5821419128121941939L;
-
         /**
          * @param id
          * @param model
          */
         public DownloadPanel(final String id, final IModel<FileMetadata> model) {
             super(id, model);
-
-            final PageParameters pageParameters = new PageParameters();
 
             Link<FileMetadata> downloadLink = new Link<FileMetadata>("downloadLink", model) {
                 @Override

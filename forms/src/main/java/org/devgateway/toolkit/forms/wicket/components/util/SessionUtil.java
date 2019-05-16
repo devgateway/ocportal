@@ -9,6 +9,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 
+import static org.devgateway.toolkit.forms.WebConstants.ALL_SESSION_KEYS;
 import static org.devgateway.toolkit.forms.WebConstants.DEPARTMENT;
 import static org.devgateway.toolkit.forms.WebConstants.FISCALYEAR;
 import static org.devgateway.toolkit.forms.WebConstants.PROCUREMENTPLAN;
@@ -143,5 +144,12 @@ public final class SessionUtil {
         }
 
         return null;
+    }
+
+    public static void clearSessionData() {
+        final Session session = Session.get();
+        if (session != null) {
+            ALL_SESSION_KEYS.forEach(key -> session.setMetaData(key, null));
+        }
     }
 }
