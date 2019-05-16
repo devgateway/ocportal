@@ -16,7 +16,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -46,7 +45,9 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         super(parameters);
 
         this.jpaService = cabinetPaperService;
-        this.listPageClass = ListCabinetPaperPage.class;
+
+        // TODO (params) - check that the Cabinet Paper page has access to Procurement Plan and link it to the
+        // CabinetPaper object
     }
 
     @Override

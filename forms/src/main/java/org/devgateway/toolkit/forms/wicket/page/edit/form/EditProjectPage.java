@@ -11,7 +11,7 @@ import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
@@ -36,21 +36,16 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
     @SpringBean
     private CabinetPaperService cabinetPaperService;
     
-    private ProcurementPlan procurementPlan;
+    private final ProcurementPlan procurementPlan;
 
     public EditProjectPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = projectService;
-        this.listPageClass = ListProjectPage.class;
-        StringValue procurementId = parameters.get(WebConstants.PARAM_PROCUREMENT_PLAN_ID);
-        if (!procurementId.isNull()) {
-           procurementPlan = procurementPlanService.findById(procurementId.toLong()).get(); 
-        }
-        
+
+        this.procurementPlan = SessionUtil.getSessionPP();
+        // TODO - check if this is a new object and without a PP, then redirect to some page like StatusOverview
     }
     
-    
-
     @Override
     protected void onInitialize() {
         super.onInitialize();        

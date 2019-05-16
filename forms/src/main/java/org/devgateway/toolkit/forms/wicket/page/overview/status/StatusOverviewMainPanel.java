@@ -30,9 +30,13 @@ public class StatusOverviewMainPanel extends Panel {
     private StatusOverviewService statusOverviewService;
 
     private ListView<DepartmentOverviewData> departmentsList;
+
     private FiscalYear defaultYearfilter;
+
     private List<DepartmentOverviewData> departmentOverviewData;
+
     private TextField<String> searchBox;
+
     @SpringBean
     private FiscalYearService fiscalYearService;
 
@@ -96,7 +100,7 @@ public class StatusOverviewMainPanel extends Panel {
     }
 
     private void addSearchBox() {
-        searchBox = new TextField<String>("searchBox", Model.of(""));
+        searchBox = new TextField<>("searchBox", Model.of(""));
         searchBox.add(new FormComponentUpdatingBehavior() {
             private static final long serialVersionUID = 1L;
 

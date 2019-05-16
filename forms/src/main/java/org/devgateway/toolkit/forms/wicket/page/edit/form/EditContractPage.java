@@ -6,14 +6,12 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -49,22 +47,24 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
     protected ProcuringEntityService procuringEntityService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
-    private GenericSleepFormComponent tenderTitle = null;
-    private GenericSleepFormComponent tenderNumber = null;
-    private GenericSleepFormComponent supplierAddress = null;
-    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector = null;
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
+
+    private GenericSleepFormComponent tenderTitle;
+
+    private GenericSleepFormComponent tenderNumber;
+
+    private GenericSleepFormComponent supplierAddress;
+
+    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector;
+
+    private final TenderQuotationEvaluation tenderQuotationEvaluation;
 
     public EditContractPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = contractService;
-        this.listPageClass = ListContractPage.class;
 
-        StringValue tenderOpeningId = parameters.get(WebConstants.PARAM_TENDER_OPENING_ID);
-        if (!tenderOpeningId.isNull()) {
-            tenderQuotationEvaluation = tenderQuotationEvaluationService.findById(tenderOpeningId.toLong())
-                    .orElse(null);
-        }
+        this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
+        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
+        //  then redirect to some page like StatusOverview
     }
 
     @Override

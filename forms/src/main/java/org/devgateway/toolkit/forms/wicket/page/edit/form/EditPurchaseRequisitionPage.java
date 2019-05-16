@@ -12,8 +12,8 @@ import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -48,16 +48,14 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
     @SpringBean
     protected ChargeAccountService chargeAccountService;
     
-    private Project project = null;
+    private final Project project;
 
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = purchaseRequisitionService;
-        this.listPageClass = ListPurchaseRequisitionPage.class;
-        StringValue projectId = parameters.get(WebConstants.PARAM_PROJECT_ID);
-        if (!projectId.isNull()) {
-            project = projectService.findById(projectId.toLong()).get();
-        }
+
+        this.project = SessionUtil.getSessionProject();
+        // TODO - check if this is a new object and without a project, then redirect to some page like StatusOverview
     }
 
     @Override

@@ -174,10 +174,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             dataTable.addTopToolbar(new FilterToolbar(dataTable, filterForm));
         }
 
-        final PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_ID, null);
-
-        editPageLink = new BootstrapBookmarkablePageLink<T>("new", editPageClass, pageParameters, Buttons.Type.Success);
+        editPageLink = new BootstrapBookmarkablePageLink<>("new", editPageClass, Buttons.Type.Success);
         editPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
                 .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
 

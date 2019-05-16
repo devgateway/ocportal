@@ -12,7 +12,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
@@ -44,7 +43,6 @@ public class EditProcurementPlanPage extends EditAbstractMakueniFormPage<Procure
         super(parameters);
 
         this.jpaService = procurementPlanService;
-        this.listPageClass = ListProcurementPlanPage.class;
     }
 
     @Override

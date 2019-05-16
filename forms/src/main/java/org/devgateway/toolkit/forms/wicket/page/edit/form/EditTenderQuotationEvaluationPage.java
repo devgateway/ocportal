@@ -4,13 +4,11 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
@@ -36,7 +34,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
     @SpringBean
     protected TenderService tenderService;
     
-    private Tender tender = null;
+    private final Tender tender;
     
     /**
      * @param parameters
@@ -44,12 +42,9 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderQuotationEvaluationService;
-        this.listPageClass = ListTenderQuotationEvaluationPage.class;
-        
-        StringValue tenderId = parameters.get(WebConstants.PARAM_TENDER_ID);
-        if (!tenderId.isNull()) {
-            tender = tenderService.findById(tenderId.toLong()).orElse(null);
-        }
+
+        this.tender = SessionUtil.getSessionTender();
+        // TODO - check if this is a new object and without a tender,then redirect to some page like StatusOverview
     }
 
     @Override

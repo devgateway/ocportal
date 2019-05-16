@@ -5,20 +5,17 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
@@ -42,26 +39,19 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
-    protected SupplierService supplierService;
-
-    @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
+    private final TenderQuotationEvaluation tenderQuotationEvaluation;
 
     public EditProfessionalOpinionPage(final PageParameters parameters) {
         super(parameters);
-
         this.jpaService = professionalOpinionService;
-        this.listPageClass = ListProfessionalOpinionPage.class;
 
-        StringValue tenderOpeningId = parameters.get(WebConstants.PARAM_TENDER_OPENING_ID);
-        if (!tenderOpeningId.isNull()) {
-            tenderQuotationEvaluation = tenderQuotationEvaluationService.findById(tenderOpeningId.toLong())
-                    .orElse(null);
-        }
+        this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
+        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
+        //  then redirect to some page like StatusOverview
     }
 
     @Override

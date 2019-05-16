@@ -5,6 +5,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 
@@ -16,6 +17,8 @@ public abstract class EditAbstractMakueniFormPage<T extends AbstractMakueniEntit
         extends AbstractEditStatusEntityPage<T> {
     public EditAbstractMakueniFormPage(final PageParameters parameters) {
         super(parameters);
+
+        this.listPageClass = DepartmentOverviewPage.class;
     }
 
     @Override

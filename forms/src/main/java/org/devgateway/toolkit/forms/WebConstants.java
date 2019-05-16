@@ -11,8 +11,16 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms;
 
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,12 +67,24 @@ public final class WebConstants {
     // to change the src code anyway.
     public static final List<Locale> AVAILABLE_LOCALES = Collections.unmodifiableList(Arrays.asList(new Locale("en")));
 
-    // TODO - check if we need to pass objects as IDs in URL
-    public static final String PARAM_PROCUREMENT_PLAN_ID = "procurementPlanId";
-    public static final String PARAM_PROJECT_ID = "projectId";
-    public static final String PARAM_PURCHASE_REQUISITION_ID = "purchaseRequisitionId";
-    public static final String PARAM_TENDER_ID = "tenderId";
-    public static final String PARAM_TENDER_OPENING_ID = "tenderOpeningId";
-    public static final String PARAM_DEPARTMENT_ID = "departmentId";
-    public static final String PARAM_FISCAL_YEAR_ID = "fiscalYearId";
+    public static final MetaDataKey<Department> DEPARTMENT = new MetaDataKey<Department>() {
+    };
+    public static final MetaDataKey<FiscalYear> FISCALYEAR = new MetaDataKey<FiscalYear>() {
+    };
+    public static final MetaDataKey<ProcurementPlan> PROCUREMENTPLAN = new MetaDataKey<ProcurementPlan>() {
+    };
+    public static final MetaDataKey<Project> PROJECT = new MetaDataKey<Project>() {
+    };
+    public static final MetaDataKey<PurchaseRequisition> PURCHASE_REQUISITION
+            = new MetaDataKey<PurchaseRequisition>() {
+    };
+    public static final MetaDataKey<Tender> TENDER = new MetaDataKey<Tender>() {
+    };
+    public static final MetaDataKey<TenderQuotationEvaluation> TENDER_EVALUATION
+= new MetaDataKey<TenderQuotationEvaluation>() {
+    };
+
+    public static final List<MetaDataKey> ALL_SESSION_KEYS = Collections.unmodifiableList(
+            Arrays.asList(DEPARTMENT, FISCALYEAR, PROCUREMENTPLAN,
+                    PROJECT, PURCHASE_REQUISITION, TENDER, TENDER_EVALUATION));
 }

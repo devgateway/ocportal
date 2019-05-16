@@ -6,14 +6,12 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -45,23 +43,26 @@ public class EditAwardNotificationPage extends EditAbstractMakueniFormPage<Award
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
-    private GenericSleepFormComponent tenderTitle = null;
-    private GenericSleepFormComponent tenderNumber = null;
-    private GenericSleepFormComponent supplierID = null;
-    private GenericSleepFormComponent supplierAddress = null;
-    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector = null;
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
+
+    private GenericSleepFormComponent tenderTitle;
+
+    private GenericSleepFormComponent tenderNumber;
+
+    private GenericSleepFormComponent supplierID;
+
+    private GenericSleepFormComponent supplierAddress;
+
+    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector;
+
+    private final TenderQuotationEvaluation tenderQuotationEvaluation;
 
     public EditAwardNotificationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = awardNotificationService;
-        this.listPageClass = ListAwardNotificationPage.class;
 
-        StringValue tenderOpeningId = parameters.get(WebConstants.PARAM_TENDER_OPENING_ID);
-        if (!tenderOpeningId.isNull()) {
-            tenderQuotationEvaluation = tenderQuotationEvaluationService.findById(tenderOpeningId.toLong())
-                    .orElse(null);
-        }
+        this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
+        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
+        //  then redirect to some page like StatusOverview
     }
 
     @Override
