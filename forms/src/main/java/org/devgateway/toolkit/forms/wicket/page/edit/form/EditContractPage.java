@@ -69,7 +69,7 @@ public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
+        super.onInitialize();             
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addDoubleField(editForm, "tenderValue").required()
@@ -134,7 +134,7 @@ public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
 
         supplierAddress = new GenericSleepFormComponent<>("supplierAddress", (IModel<String>) () -> {
             if (awardeeSelector.getModelObject() != null) {
-                return awardeeSelector.getModelObject().getCode();
+                return awardeeSelector.getModelObject().getAddress();
             }
             return null;
         });
