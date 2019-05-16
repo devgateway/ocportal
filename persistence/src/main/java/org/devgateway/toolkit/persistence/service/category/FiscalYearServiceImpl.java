@@ -1,15 +1,17 @@
 package org.devgateway.toolkit.persistence.service.category;
 
-import java.util.List;
-
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author mpostelnicu
@@ -34,20 +36,22 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
     public FiscalYear newInstance() {
         return new FiscalYear();
     }
-    
- // TODO: limit to only years with data
+
     @Override
+    @Cacheable
+    public FiscalYear getLastFiscalYear() {
+        return this.getYearsWithData().get(0);
+    }
+
+    @Override
+    @Cacheable
     public List<FiscalYear> getYearsWithData() {
-        return fiscalYearRepository.findAllByOrderByStartDateDesc();
+        return fiscalYearRepository.getYearsWithData();
     }
-    
+
     @Override
-    public List<FiscalYear> getYearsWithData(final Long departmentId) {
-        return fiscalYearRepository.getYearsWithData(departmentId);
-    }
-    
-    @Override
-   public FiscalYear getLastFiscalYear() {
-        return fiscalYearRepository.findTopByOrderByStartDateDesc();
+    @Cacheable
+    public List<FiscalYear> getYearsWithData(final Department department) {
+        return fiscalYearRepository.getYearsWithData(department);
     }
 }

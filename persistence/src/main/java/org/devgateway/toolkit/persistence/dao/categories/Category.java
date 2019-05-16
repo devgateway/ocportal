@@ -38,10 +38,10 @@ public class Category extends AbstractAuditableEntity implements Serializable, L
     protected String label;
 
     private String description;
-    
+
     private String code;
 
-   
+
     public Category() {
 
     }
@@ -72,7 +72,7 @@ public class Category extends AbstractAuditableEntity implements Serializable, L
         this.code = code;
     }
 
-    
+
     @Override
     public String toString() {
         return getLabel();

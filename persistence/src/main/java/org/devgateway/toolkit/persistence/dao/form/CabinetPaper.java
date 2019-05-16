@@ -35,11 +35,11 @@ public class CabinetPaper extends AbstractMakueniEntity {
         this.name = name;
     }
 
-    public final String getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public final void setNumber(final String number) {
+    public void setNumber(final String number) {
         this.number = number;
     }
 

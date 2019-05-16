@@ -26,5 +26,4 @@ public interface ProjectRepository extends AbstractMakueniEntityRepository<Proje
     List<Project> findProjectsForYear(@Param("fiscalYearId")Long fiscalYearId);
     
     List<Project> findByProcurementPlan(ProcurementPlan procurementPlan);
-    
 }

@@ -1,10 +1,7 @@
 package org.devgateway.toolkit.persistence.service.category;
 
-import java.util.List;
-
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.repository.category.DepartmentRepository;
-import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
@@ -21,9 +18,6 @@ public class DepartmentServiceImpl extends BaseJpaServiceImpl<Department> implem
     @Autowired
     private DepartmentRepository repository;
     
-    @Autowired
-    private FiscalYearRepository fiscalYearRepository;
-
     @Override
     protected BaseJpaRepository<Department, Long> repository() {
         return repository;
@@ -37,11 +31,5 @@ public class DepartmentServiceImpl extends BaseJpaServiceImpl<Department> implem
     @Override
     public Department newInstance() {
         return new Department();
-    }
-    
-    @Override
-    public List<Department> findDeptsInCurrentProcurementPlan() {
-        return repository
-                .findDeptsInCurrentProcurementPlan(fiscalYearRepository.findTopByOrderByStartDateDesc());
     }
 }

@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class CabinetPaperServiceImpl extends BaseJpaServiceImpl<CabinetPaper> im
     }
 
     @Override
+    @Cacheable
     public Long countByProcurementPlanAndNameAndIdNot(final ProcurementPlan procurementPlan, final String name,
             final Long id) {
         return cabinetPaperRepository.countByProcurementPlanAndNameAndIdNot(procurementPlan, name, id);

@@ -46,6 +46,7 @@ public class ProcurementPlanServiceImpl extends BaseJpaServiceImpl<ProcurementPl
     }
     
     @Override
+    @Cacheable
     public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.findByDepartmentAndFiscalYear(department, fiscalYear);
     }

@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.persistence.service.form;
 
-import java.util.List;
-
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
@@ -12,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author idobre
@@ -45,7 +45,8 @@ public class ProjectServiceImpl extends BaseJpaServiceImpl<Project> implements P
                                                       final Long id) {
         return projectRepository.countByProcurementPlanAndProjectTitleAndIdNot(procurementPlan, projectTitle, id);
     }
-    
+
+    @Cacheable
     public List<Project> findByProcurementPlan(final ProcurementPlan procurementPlan) {
         return projectRepository.findByProcurementPlan(procurementPlan);
     }

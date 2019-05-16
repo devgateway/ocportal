@@ -2,41 +2,63 @@
 <html wicket:id="html" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:extend>
-    <div class="sidebar">
-        <div class="logo">
-            <a href="/"><img src="images/logo.png" wicket:id="logo"/></a>
-        </div>
-        <div class="overview">
-            <span class="data-summary-label">Overview</span>
-            <!-- TODO - implement this-->
-            <span class="data-summary">25</span>
-            <label>Projects</label>
+    <div class="main-content">
+        <div class="row header">
+            <div class="col-md-3">
+                <h2>Status Overview</h2>
+            </div>
+            <div class="col-md-8">
+                <p>Observe the status for each Department’s projects, including which are pending approval. Navigate to
+                    each
+                    department’s workspace to add and edit projects and update the associated procurement stages by
+                    clicking
+                    on the project name or clicking on a department on the left menu.
+                </p>
+            </div>
         </div>
 
-        <div class="sidebar-list" wicket:id="sideBar">
-        </div>
+        <div class="search-panel">
+            <div class="row search-panel-header">
+                <div class="col-md-8">
+                    <h3>Department / Ministries Procurement Plans</h3>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-add" wicket:id="newProcurementPlan"></button>
+                </div>
+            </div>
 
-        <div class="sidebar-helptext">
-            Help Text - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut libero eget ipsum aliquam
-            mattis ut condimentum quam. Sed vel finibus erat. Praesent molestie aliquet vestibulum. Sed sed efficitur
-            diam, vitae mollis lectus. Vivamus sodales orci ut ultrices bibendum. Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Donec finibus faucibus viverra. Suspendisse et erat velit. Proin quis tempor
-            tellus. Vivamus ornare augue sit amet dictum porta. Mauris dapibus est lacinia, bibendum sem in, viverra
-            dolor. Nulla placerat massa aliquam risus vulputate, sed egestas tellus rhoncus. Donec vitae nisi ac sem
-            posuere imperdiet. Pellentesque pulvinar, augue quis commodo varius, eros risus luctus odio, eu placerat
-            orci metus eu enim.
-            <br/><br/>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut libero eget ipsum aliquam
-            mattis ut condimentum quam. Sed vel finibus erat. Praesent molestie aliquet vestibulum. Sed sed efficitur
-            diam, vitae mollis lectus. Vivamus sodales orci ut ultrices bibendum. Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Donec finibus faucibus viverra. Suspendisse et erat velit. Proin quis tempor
-            tellus. Vivamus ornare augue sit amet dictum porta. Mauris dapibus est lacinia, bibendum sem in, viverra
-            dolor. Nulla placerat massa aliquam risus vulputate, sed egestas tellus rhoncus. Donec vitae nisi ac sem
-            posuere imperdiet. Pellentesque pulvinar, augue quis commodo varius, eros risus luctus odio, eu placerat
-            orci metus eu enim.
+            <div class="search-form">
+                <div class="col-md-9 no-padding">
+                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"></input>
+                </div>
+                <div class="col-md-3 no-padding">
+                    <select wicket:id="years" class="btn btn-default project-year">
+                    </select>
+                    <button type="button" class="btn btn-default download">
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="main-content" wicket:id="departmentOverview">
+        <div class="status-bar">
+          <span class="status approved">
+            Approved
+          </span>
+            <span class="status terminated">
+            Cancelled
+          </span>
+            <span class="status submitted">
+            Submitted
+          </span>
+            <span class="status draft">
+            Draft
+          </span>
+        </div>
+        <div class="project-panels-wrapper">
+            <div wicket:id=group>
+                <div wicket:id="groupItem">
+                </div>
+            </div>
+        </div>
     </div>
 </wicket:extend>
 </body>
