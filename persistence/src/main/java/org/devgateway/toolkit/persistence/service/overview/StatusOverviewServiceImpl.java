@@ -58,6 +58,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     // TODO: apply filters, investigate if the tender status and award status can be
     // optimized by using sql queries
+    // TODO change the name of the function or update it's parameters
+    //  since we don't actually fetch the projects 'byDepartment'
     @Override
     public List<DepartmentOverviewData> getProjectsByDepartment(final Long fiscalYearId) {
         List<DepartmentOverviewData> departmentsData = new ArrayList<>();

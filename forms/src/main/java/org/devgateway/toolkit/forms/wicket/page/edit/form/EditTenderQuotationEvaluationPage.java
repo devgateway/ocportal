@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenderQuotationEvaluation")
-public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPage<TenderQuotationEvaluation> {
+public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniEntityPage<TenderQuotationEvaluation> {
 
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;

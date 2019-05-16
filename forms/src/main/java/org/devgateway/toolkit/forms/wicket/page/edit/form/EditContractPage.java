@@ -33,7 +33,7 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/contract")
-public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
+public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
     @SpringBean
     protected ContractService contractService;
 

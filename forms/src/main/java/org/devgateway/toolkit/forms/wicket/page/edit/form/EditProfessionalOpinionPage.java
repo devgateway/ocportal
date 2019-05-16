@@ -31,7 +31,7 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/professionalOpinion")
-public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<ProfessionalOpinion> {
+public class EditProfessionalOpinionPage extends EditAbstractMakueniEntityPage<ProfessionalOpinion> {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
 

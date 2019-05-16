@@ -12,7 +12,7 @@ import java.util.List;
  * @author gmutuhu
  * @since 2019-04-02
  */
-public class TenderQuotationEvaluationFilterState extends AbstractMakueniFormFilterState<TenderQuotationEvaluation> {
+public class TenderQuotationEvaluationFilterState extends AbstractMakueniEntityFilterState<TenderQuotationEvaluation> {
     @Override
     public Specification<TenderQuotationEvaluation> getSpecification() {
         return (root, query, cb) -> {

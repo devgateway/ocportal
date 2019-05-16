@@ -11,7 +11,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-17
  */
-public class PurchaseRequisitionFilterState extends AbstractMakueniFormFilterState<PurchaseRequisition> {
+public class PurchaseRequisitionFilterState extends AbstractMakueniEntityFilterState<PurchaseRequisition> {
     @Override
     public Specification<PurchaseRequisition> getSpecification() {
         return (root, query, cb) -> {

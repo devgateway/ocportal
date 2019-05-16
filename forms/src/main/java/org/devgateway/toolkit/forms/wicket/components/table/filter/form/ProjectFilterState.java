@@ -11,7 +11,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class ProjectFilterState extends AbstractMakueniFormFilterState<Project> {
+public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project> {
     @Override
     public Specification<Project> getSpecification() {
         return (root, query, cb) -> {

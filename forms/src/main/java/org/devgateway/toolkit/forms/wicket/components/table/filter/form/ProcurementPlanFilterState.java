@@ -14,7 +14,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class ProcurementPlanFilterState extends AbstractMakueniFormFilterState<ProcurementPlan> {
+public class ProcurementPlanFilterState extends AbstractMakueniEntityFilterState<ProcurementPlan> {
     private Department department;
 
     private FiscalYear fiscalYear;

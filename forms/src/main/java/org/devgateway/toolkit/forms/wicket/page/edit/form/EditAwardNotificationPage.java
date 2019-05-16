@@ -32,7 +32,7 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/awardNotification")
-public class EditAwardNotificationPage extends EditAbstractMakueniFormPage<AwardNotification> {
+public class EditAwardNotificationPage extends EditAbstractMakueniEntityPage<AwardNotification> {
     @SpringBean
     protected AwardNotificationService awardNotificationService;
 

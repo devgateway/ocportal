@@ -12,6 +12,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
@@ -26,7 +27,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/project")
-public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
+public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     @SpringBean
     protected ProjectService projectService;
 
@@ -43,14 +44,17 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
         this.jpaService = projectService;
 
         this.procurementPlan = SessionUtil.getSessionPP();
-        // TODO - check if this is a new object and without a PP, then redirect to some page like StatusOverview
+        // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
+        if (entityId == null && this.procurementPlan == null) {
+            logger.warn("Something wrong happened since we are trying to add a new Project Entity "
+                    + "without having a ProcurementPlan!");
+            setResponsePage(StatusOverviewPage.class);
+        }
     }
     
     @Override
     protected void onInitialize() {
-        super.onInitialize();        
-
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
+        super.onInitialize();
 
         // TODO - this should be filtered based on form Procurement Plan
         ComponentUtil.addSelect2ChoiceField(editForm, "cabinetPaper", cabinetPaperService).required();

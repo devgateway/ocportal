@@ -7,11 +7,11 @@
 <body>
 <wicket:extend>
     <div class="row">
-        <div class="col-xs-12 col-md-6 col-md-offset-1">
-            <h2>Welcome to the Makueni OC Portal</h2>                   
-            <button type="button" class="btn btn-add btn  btn-success" onclick="var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; if (win == window) { window.location.href='./statusOverview'; } ;return false">
-              Go to Data Entry Page
-           </button>
+        <div class="col-md-12">
+            <button wicket:id="dataEntryLink" type="button" class="btn btn-lg btn-success">
+                <i class="fa fa-th-list"></i>
+                Data Entry Page
+            </button>
         </div>
     </div>
 </wicket:extend>

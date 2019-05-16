@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author gmutuhu
  */
-public class AwardNotificationFilterState extends AbstractMakueniFormFilterState<AwardNotification> {
+public class AwardNotificationFilterState extends AbstractMakueniEntityFilterState<AwardNotification> {
     @Override
     public Specification<AwardNotification> getSpecification() {
         return (root, query, cb) -> {

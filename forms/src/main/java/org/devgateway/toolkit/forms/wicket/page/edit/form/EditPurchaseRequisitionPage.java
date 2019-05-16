@@ -32,7 +32,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/purchaseRequisition")
-public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<PurchaseRequisition> {
+public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<PurchaseRequisition> {
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
 
