@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 public abstract class DataEntryBasePage extends BasePage {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
 
+    protected SideBar sideBar;
+
     public DataEntryBasePage(final PageParameters parameters) {
         super(parameters);
     }
@@ -31,6 +33,9 @@ public abstract class DataEntryBasePage extends BasePage {
         super.onInitialize();
 
         pageTitle.setVisibilityAllowed(false);
+
+        sideBar = new SideBar("sideBar");
+        add(sideBar);
     }
 
     @Override

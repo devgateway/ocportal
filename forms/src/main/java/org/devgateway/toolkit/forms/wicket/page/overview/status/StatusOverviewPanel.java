@@ -24,7 +24,7 @@ import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService
 
 import java.util.List;
 
-public class StatusOverviewMainPanel extends Panel {
+public class StatusOverviewPanel extends Panel {
     private ListView<DepartmentOverviewData> departmentsList;
 
     private final List<FiscalYear> fiscalYears;
@@ -41,7 +41,7 @@ public class StatusOverviewMainPanel extends Panel {
     @SpringBean
     private StatusOverviewService statusOverviewService;
 
-    public StatusOverviewMainPanel(final String id) {
+    public StatusOverviewPanel(final String id) {
         super(id);
 
         this.fiscalYears = fiscalYearService.getYearsWithData();
@@ -72,7 +72,7 @@ public class StatusOverviewMainPanel extends Panel {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<Void>(
                 "newProcurementPlan", EditProcurementPlanPage.class, pageParameters, Buttons.Type.Success);
         newProcurementPlanButton
-                .setLabel(new StringResourceModel("newProcurementPlan", StatusOverviewMainPanel.this, null));
+                .setLabel(new StringResourceModel("newProcurementPlan", StatusOverviewPanel.this, null));
         add(newProcurementPlanButton);
     }
 

@@ -21,8 +21,11 @@ public class StatusOverviewItem extends Panel {
     private static final long serialVersionUID = 1L;
 
     private DepartmentOverviewData departmentOverviewData;
+
     private Boolean expanded = false;
+
     private String searchTerm;
+
     private List<ProjectStatus> filteredProjects;
 
     public StatusOverviewItem(final String id, final DepartmentOverviewData departmentOverviewData,

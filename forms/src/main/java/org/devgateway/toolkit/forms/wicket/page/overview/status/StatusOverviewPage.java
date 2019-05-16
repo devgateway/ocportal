@@ -15,12 +15,8 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.status;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
-import org.devgateway.toolkit.forms.wicket.page.overview.SideBar;
-import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -39,14 +35,6 @@ public class StatusOverviewPage extends DataEntryBasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        final SideBar sideBar = new SideBar("sideBar");
-        add(sideBar);
-
-        final StatusOverviewMainPanel departmentOverview = new StatusOverviewMainPanel("departmentOverview");
-        add(departmentOverview);
-
-        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,
-                "assets/img/logo.png"));
-        add(logo);
+        add(new StatusOverviewPanel("statusOverviewPanel"));
     }
 }
