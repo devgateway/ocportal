@@ -50,6 +50,8 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniFormPage<Pro
         this.jpaService = professionalOpinionService;
 
         this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
+        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
+        //  then redirect to some page like StatusOverview
     }
 
     @Override

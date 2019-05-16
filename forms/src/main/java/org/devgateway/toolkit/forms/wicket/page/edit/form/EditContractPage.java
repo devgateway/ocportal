@@ -63,6 +63,8 @@ public class EditContractPage extends EditAbstractMakueniFormPage<Contract> {
         this.jpaService = contractService;
 
         this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
+        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
+        //  then redirect to some page like StatusOverview
     }
 
     @Override

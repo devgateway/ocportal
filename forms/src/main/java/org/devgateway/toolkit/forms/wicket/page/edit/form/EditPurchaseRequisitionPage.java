@@ -55,6 +55,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniFormPage<Pur
         this.jpaService = purchaseRequisitionService;
 
         this.project = SessionUtil.getSessionProject();
+        // TODO - check if this is a new object and without a project, then redirect to some page like StatusOverview
     }
 
     @Override

@@ -59,6 +59,8 @@ public class EditAwardAcceptancePage extends EditAbstractMakueniFormPage<AwardAc
         this.jpaService = awardAcceptanceService;
 
         this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
+        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
+        //  then redirect to some page like StatusOverview
     }
 
     @Override

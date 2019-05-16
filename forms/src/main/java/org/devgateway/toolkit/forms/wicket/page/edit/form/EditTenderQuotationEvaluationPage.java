@@ -44,6 +44,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
         this.jpaService = tenderQuotationEvaluationService;
 
         this.tender = SessionUtil.getSessionTender();
+        // TODO - check if this is a new object and without a tender,then redirect to some page like StatusOverview
     }
 
     @Override

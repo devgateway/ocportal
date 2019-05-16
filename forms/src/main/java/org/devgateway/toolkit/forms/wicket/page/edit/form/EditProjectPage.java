@@ -43,7 +43,7 @@ public class EditProjectPage extends EditAbstractMakueniFormPage<Project> {
         this.jpaService = projectService;
 
         this.procurementPlan = SessionUtil.getSessionPP();
-        // TODO - check if it's new and without a PP... redirect to some page
+        // TODO - check if this is a new object and without a PP, then redirect to some page like StatusOverview
     }
     
     @Override

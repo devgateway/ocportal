@@ -74,6 +74,8 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         this.jpaService = tenderService;
 
         this.purchaseRequisition = SessionUtil.getSessionPurchaseRequisition();
+        // TODO - check if this is a new object and without a purchaseRequisition,
+        //  then redirect to some page like StatusOverview
     }
 
     @Override
