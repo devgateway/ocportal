@@ -21,20 +21,21 @@ public class Staff extends Category {
     @ManyToOne
     private Department department;
 
-    public final String getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public final void setTitle(final String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
-    public final Department getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 
-    public final void setDepartment(final Department department) {
+    public void setDepartment(final Department department) {
         this.department = department;
     }
-
 }
+
+// PojoEntityTuplizer

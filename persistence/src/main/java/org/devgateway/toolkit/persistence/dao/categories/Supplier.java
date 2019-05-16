@@ -16,11 +16,11 @@ public class Supplier extends Category {
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String address;
 
-    public final String getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public final void setAddress(final String address) {
+    public void setAddress(final String address) {
         this.address = address;
     }
 }
