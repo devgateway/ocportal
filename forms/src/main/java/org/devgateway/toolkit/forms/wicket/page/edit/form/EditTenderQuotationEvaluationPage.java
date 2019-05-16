@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -19,7 +18,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 /**
  * @author gmutuhu
- *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenderQuotationEvaluation")
@@ -27,13 +25,13 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
 
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
-    
+
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
     protected TenderService tenderService;
-    
+
     private final Tender tender;
     
     /**
@@ -49,28 +47,28 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniFormPa
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();        
+        super.onInitialize();
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "tender", tenderService).required();
-        
+
         ComponentUtil.addDateField(editForm, "closingDate").required();
         ComponentUtil.addIntegerTextField(editForm, "numberOfBids").required()
                 .getField().add(RangeValidator.minimum(0));
         editForm.add(new BidPanel("bids"));
-        
+
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
         editForm.add(formDocs);
-    }  
-    
+    }
+
     @Override
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
         if (tender != null) {
-            tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());   
+            tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());
             tenderQuotationEvaluation.setTender(tender);
         }
-        
+
         return tenderQuotationEvaluation;
     }
 }

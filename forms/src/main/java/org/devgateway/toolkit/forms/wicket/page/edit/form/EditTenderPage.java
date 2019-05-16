@@ -13,7 +13,9 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.validators.EarlierThanDateFieldValidator;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
+import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -39,7 +41,6 @@ import java.util.Set;
 
 /**
  * @author gmutuhu
- *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tender")
@@ -98,8 +99,12 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
         title.required();
         title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
-        ComponentUtil.addDateField(editForm, "invitationDate");
-        ComponentUtil.addDateField(editForm, "closingDate").required();
+        DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
+        closingDate.required();
+
+        DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
+        invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));
+
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
 
         ComponentUtil.addTextAreaField(editForm, "objective").getField()
@@ -122,6 +127,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     private void addProcuringEntitySection() {
         Select2ChoiceBootstrapFormComponent<ProcuringEntity> issuedBy = ComponentUtil.addSelect2ChoiceField(editForm,
                 "issuedBy", procuringEntityService);
+        issuedBy.required();
         issuedBy.getField().add(new AjaxComponentUpdatingBehavior("change"));
 
         procuringEntityEmail = new GenericSleepFormComponent<>("emailAddress", (IModel<String>) () -> {
@@ -179,7 +185,7 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
 
         }
     }
-    
+
     @Override
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
@@ -187,7 +193,8 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
             tender.setProcurementPlan(purchaseRequisition.getProcurementPlan());
             tender.setPurchaseRequisition(purchaseRequisition);
         }
-        
+
         return tender;
     }
+
 }
