@@ -47,7 +47,9 @@ public class PurchaseRequisitionServiceImpl extends BaseJpaServiceImpl<PurchaseR
                                                final Long id) {
         return purchaseRequisitionRepository.countByProcurementPlanAndTitleAndIdNot(procurementPlan, title, id);
     }
-    
+
+    @Cacheable
+    @Override
     public List<PurchaseRequisition> findByProject(final Project project) {
         return purchaseRequisitionRepository.findByProject(project);
     }

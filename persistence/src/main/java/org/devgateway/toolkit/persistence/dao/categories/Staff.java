@@ -37,5 +37,3 @@ public class Staff extends Category {
         this.department = department;
     }
 }
-
-// PojoEntityTuplizer

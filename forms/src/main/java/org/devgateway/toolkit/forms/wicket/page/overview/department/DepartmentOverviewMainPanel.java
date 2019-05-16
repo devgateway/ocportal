@@ -64,7 +64,8 @@ public class DepartmentOverviewMainPanel extends Panel {
         this.fiscalYear = SessionUtil.getSessionFiscalYear();
 
         // years with data for department
-        fiscalYears = fiscalYearService.getYearsWithData(department.getId());
+        fiscalYears = fiscalYearService.getYearsWithData(department);
+        // TODO - add checks when no PP is found for (department, fiscalYear)
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
 

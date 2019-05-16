@@ -17,6 +17,7 @@ import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRep
 import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluationRepository;
 import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ import java.util.Set;
  * @author gmutuhu
  */
 @Service
+@CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
+// TODO - add cache
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     @Autowired
     private ProjectRepository projectRepository;

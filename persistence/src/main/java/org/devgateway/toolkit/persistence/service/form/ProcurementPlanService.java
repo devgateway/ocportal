@@ -15,5 +15,5 @@ public interface ProcurementPlanService
 
     Long countByDepartmentAndFiscalYearAndIdNot(Department department, FiscalYear fiscalYear, Long id);
 
-   ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
+    ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 }

@@ -25,8 +25,4 @@ import java.util.List;
 @Transactional
 public interface DepartmentRepository extends CategoryRepository<Department> {
 
-    @Query("select dept from  #{#entityName} dept inner join ProcurementPlan p on p.department.id = dept.id "
-            + "where p.fiscalYear=:fiscalYear")
-    List<Department> findActiveDepartmentsInFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
-
 }

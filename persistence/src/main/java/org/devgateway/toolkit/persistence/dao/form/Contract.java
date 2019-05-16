@@ -59,7 +59,7 @@ public class Contract extends AbstractMakueniEntity implements ProjectAttachable
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
-    private List<ContractDocument> contractDocs = new ArrayList<ContractDocument>();
+    private List<ContractDocument> contractDocs = new ArrayList<>();
 
     public TenderQuotationEvaluation getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
