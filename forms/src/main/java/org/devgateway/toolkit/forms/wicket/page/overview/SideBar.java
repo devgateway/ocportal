@@ -12,7 +12,9 @@ import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 
 import java.util.List;
 
@@ -20,6 +22,9 @@ import java.util.List;
 public class SideBar extends Panel {
     @SpringBean
     private DepartmentService departmentService;
+
+    @SpringBean
+    private FiscalYearService fiscalYearService;
 
     public SideBar(final String id) {
         super(id);
@@ -29,12 +34,12 @@ public class SideBar extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class,
-                "assets/img/logo.png"));
+        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"));
         add(logo);
 
         // TODO - here we should share more info than the departments, like logo, project count...
-        final List<Department> departments = departmentService.findDeptsInCurrentProcurementPlan();
+        final FiscalYear lastFiscalYear = fiscalYearService.getLastFiscalYear();
+        final List<Department> departments = departmentService.findActiveDepartmentsInFiscalYear(lastFiscalYear);
         add(new PropertyListView<Department>("departmentOverviewLink", departments) {
             @Override
             protected void populateItem(final ListItem<Department> item) {

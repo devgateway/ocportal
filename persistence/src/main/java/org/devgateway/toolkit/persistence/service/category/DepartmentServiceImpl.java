@@ -1,16 +1,17 @@
 package org.devgateway.toolkit.persistence.service.category;
 
-import java.util.List;
-
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.repository.category.DepartmentRepository;
-import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author mpostelnicu
@@ -21,9 +22,6 @@ public class DepartmentServiceImpl extends BaseJpaServiceImpl<Department> implem
     @Autowired
     private DepartmentRepository repository;
     
-    @Autowired
-    private FiscalYearRepository fiscalYearRepository;
-
     @Override
     protected BaseJpaRepository<Department, Long> repository() {
         return repository;
@@ -40,8 +38,8 @@ public class DepartmentServiceImpl extends BaseJpaServiceImpl<Department> implem
     }
     
     @Override
-    public List<Department> findDeptsInCurrentProcurementPlan() {
-        return repository
-                .findDeptsInCurrentProcurementPlan(fiscalYearRepository.findTopByOrderByStartDateDesc());
+    @Cacheable
+    public List<Department> findActiveDepartmentsInFiscalYear(final FiscalYear fiscalYear) {
+        return repository.findActiveDepartmentsInFiscalYear(fiscalYear);
     }
 }
