@@ -15,16 +15,12 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.SideBar;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
-import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -35,21 +31,8 @@ import org.wicketstuff.annotation.mount.MountPath;
 @MountPath("/departmentOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class DepartmentOverviewPage extends DataEntryBasePage {
-    /**
-     * @param parameters
-     */
-    private Long departmentId = null;
-    private Long fiscalYearId = null;
-
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
-        if (!parameters.get(WebConstants.PARAM_DEPARTMENT_ID).isNull()) {
-            this.departmentId = parameters.get(WebConstants.PARAM_DEPARTMENT_ID).toLong();
-        }
-
-        if (!parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).isNull()) {
-            this.fiscalYearId = parameters.get(WebConstants.PARAM_FISCAL_YEAR_ID).toLong();
-        }
     }
 
     @Override
@@ -58,20 +41,10 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         final SideBar sideBar = new SideBar("sideBar");
         add(sideBar);
 
-        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel", this.departmentId,
-                fiscalYearId);
+        final DepartmentOverviewMainPanel mainPanel = new DepartmentOverviewMainPanel("mainPanel");
         add(mainPanel);
 
         final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"));
         add(logo);
-    }
-
-    @Override
-    public void renderHead(final IHeaderResponse response) {
-        super.renderHead(response);
-
-        // Load Styles.
-        response.render(CssHeaderItem.forReference(OverviewStyles.INSTANCE));
-
     }
 }

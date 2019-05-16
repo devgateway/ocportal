@@ -19,8 +19,8 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -60,11 +60,11 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
 
-    private GenericSleepFormComponent procuringEntityEmail = null;
+    private GenericSleepFormComponent procuringEntityEmail;
 
-    private GenericSleepFormComponent procuringEntityAddress = null;
+    private GenericSleepFormComponent procuringEntityAddress;
 
-    private PurchaseRequisition purchaseRequisition;
+    private final PurchaseRequisition purchaseRequisition;
 
     /**
      * @param parameters
@@ -72,11 +72,8 @@ public class EditTenderPage extends EditAbstractMakueniFormPage<Tender> {
     public EditTenderPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderService;
-        this.listPageClass = ListTenderPage.class;
-        StringValue purchaseRequisitionId = parameters.get(WebConstants.PARAM_PURCHASE_REQUISITION_ID);
-        if (!purchaseRequisitionId.isNull()) {
-            purchaseRequisition = purchaseRequisitionService.findById(purchaseRequisitionId.toLong()).orElse(null);
-        }
+
+        this.purchaseRequisition = SessionUtil.getSessionPurchaseRequisition();
     }
 
     @Override

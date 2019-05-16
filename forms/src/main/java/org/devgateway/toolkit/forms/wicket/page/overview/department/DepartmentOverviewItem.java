@@ -12,9 +12,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -67,17 +65,15 @@ public class DepartmentOverviewItem extends Panel {
             }
         };
 
-        header.add(new Label("projectTitle", new Model<String>(this.project.getProjectTitle())));
+        header.add(new Label("projectTitle", new Model<>(this.project.getProjectTitle())));
         header.add(new Label("fiscalYear",
                 new PropertyModel<String>(this.project.getProcurementPlan().getFiscalYear(), "label")));
         add(header);
     }
 
     private void addTenderButton() {
-        final PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_PROJECT_ID, project.getId());
         final BootstrapBookmarkablePageLink<Void> addTenderButton = new BootstrapBookmarkablePageLink<Void>("addTender",
-                EditPurchaseRequisitionPage.class, pageParameters, Buttons.Type.Success);
+                EditPurchaseRequisitionPage.class, Buttons.Type.Success);
         addTenderButton.setLabel(new StringResourceModel("addTender", DepartmentOverviewItem.this, null));
         add(addTenderButton);
 

@@ -22,7 +22,6 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.HiddenField;
@@ -50,11 +49,9 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
-import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniForm;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -234,8 +231,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 // display block UI message until the page is reloaded
                 target.prependJavaScript(getShowBlockUICode());
 
-                // disable all fields from js and lose focus (execute this javascript code
-                // before components processed)
+                // disable all fields from js and lose focus (execute this javascript code before components processed)
                 target.prependJavaScript("$(document.activeElement).blur();");
 
                 // invoke autosave from js (execute this javascript code before components processed)
@@ -276,31 +272,31 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     private CheckBoxYesNoToggleBootstrapFormComponent getVisibleStatusComments() {
-        final CheckBoxYesNoToggleBootstrapFormComponent checkBoxBootstrapFormComponent
-                = new CheckBoxYesNoToggleBootstrapFormComponent("visibleStatusComments") {
-            @Override
-            protected void onUpdate(final AjaxRequestTarget target) {
-                comments.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusComments());
-                target.add(comments);
-            }
+        final CheckBoxYesNoToggleBootstrapFormComponent checkBoxBootstrapFormComponent =
+                new CheckBoxYesNoToggleBootstrapFormComponent("visibleStatusComments") {
+                    @Override
+                    protected void onUpdate(final AjaxRequestTarget target) {
+                        comments.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusComments());
+                        target.add(comments);
+                    }
 
-            @Override
-            public void onEvent(final IEvent<?> event) {
-                // do nothing - keep this field enabled
-            }
-        };
+                    @Override
+                    public void onEvent(final IEvent<?> event) {
+                        // do nothing - keep this field enabled
+                    }
+                };
         checkBoxBootstrapFormComponent.setVisibilityAllowed(!isViewMode());
         return checkBoxBootstrapFormComponent;
     }
 
     private TextAreaFieldBootstrapFormComponent<String> getNewStatusCommentField() {
-        final TextAreaFieldBootstrapFormComponent<String> comment = new TextAreaFieldBootstrapFormComponent<String>(
-                "newStatusComment") {
-            @Override
-            public void onEvent(final IEvent<?> event) {
-                // do nothing - keep this field enabled
-            }
-        };
+        final TextAreaFieldBootstrapFormComponent<String> comment =
+                new TextAreaFieldBootstrapFormComponent<String>("newStatusComment") {
+                    @Override
+                    public void onEvent(final IEvent<?> event) {
+                        // do nothing - keep this field enabled
+                    }
+                };
         comment.setShowTooltip(true);
         return comment;
     }
@@ -343,19 +339,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         button.setDefaultFormProcessing(false);
     }
 
-    // TODO: temporary redirect to the department overview
-    // (this is also causing some errors when creating PP)
-    private PageParameters getParams() {
-        final AbstractMakueniForm object = (AbstractMakueniForm) editForm.getModelObject();
-        final PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_DEPARTMENT_ID,
-                object.getProcurementPlan().getDepartment().getId());
-        pageParameters.set(WebConstants.PARAM_FISCAL_YEAR_ID,
-                object.getProcurementPlan().getFiscalYear().getId());
-
-        return pageParameters;
-    }
-
     @Override
     protected SaveEditPageButton getSaveEditPageButton() {
         final SaveEditPageButton button = new SaveEditPageButton("save",
@@ -372,18 +355,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                         new AllowNullForCertainInvalidFieldsVisitor());
                 setStatusAppendComment(DBConstants.Status.DRAFT);
                 super.onSubmit(target);
-            }
-
-            @Override
-            protected Class<? extends GenericWebPage<Void>> getResponsePage() {
-                //TODO: temporary redirect to the department overview
-                return DepartmentOverviewPage.class;
-            }
-
-            @Override
-            protected PageParameters getParameterPage() {
-                // TODO - change this
-                return getParams();
             }
         };
 
@@ -402,18 +373,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             protected void onSubmit(final AjaxRequestTarget target) {
                 setStatusAppendComment(DBConstants.Status.SUBMITTED);
                 super.onSubmit(target);
-            }
-
-            @Override
-            protected Class<? extends GenericWebPage<Void>> getResponsePage() {
-                //TODO: temporary redirect to the department overview
-                return DepartmentOverviewPage.class;
-            }
-
-            @Override
-            protected PageParameters getParameterPage() {
-                // TODO - change this
-                return getParams();
             }
         };
 
@@ -467,18 +426,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 setStatusAppendComment(DBConstants.Status.VALIDATED);
                 super.onSubmit(target);
             }
-
-            @Override
-            protected Class<? extends GenericWebPage<Void>> getResponsePage() {
-                //TODO: temporary redirect to the department overview
-                return DepartmentOverviewPage.class;
-            }
-
-            @Override
-            protected PageParameters getParameterPage() {
-                // TODO - change this
-                return getParams();
-            }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
         return saveEditPageButton;
@@ -498,18 +445,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 super.onSubmit(target);
                 target.add(editForm);
                 setButtonsPermissions();
-            }
-
-            @Override
-            protected Class<? extends GenericWebPage<Void>> getResponsePage() {
-                //TODO: temporary redirect to the department overview
-                return DepartmentOverviewPage.class;
-            }
-
-            @Override
-            protected PageParameters getParameterPage() {
-                // TODO - change this
-                return getParams();
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
