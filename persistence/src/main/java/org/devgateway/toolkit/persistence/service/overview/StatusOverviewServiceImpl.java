@@ -35,6 +35,7 @@ import java.util.Set;
 @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
 // TODO - add cache
 public class StatusOverviewServiceImpl implements StatusOverviewService {
+    // TODO - replace all repositories with services
     @Autowired
     private ProjectRepository projectRepository;
 
