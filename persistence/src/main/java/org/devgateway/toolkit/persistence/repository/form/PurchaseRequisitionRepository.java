@@ -21,7 +21,11 @@ public interface PurchaseRequisitionRepository extends AbstractMakueniEntityRepo
     @Query("select purchase from #{#entityName} purchase where lower(purchase.title) like %:name%")
     Page<PurchaseRequisition> searchText(@Param("name") String name, Pageable page);
 
-    Long countByProcurementPlanAndTitleAndIdNot(ProcurementPlan procurementPlan, String title, Long id);
+    Long countByProjectProcurementPlanAndTitleAndIdNot(ProcurementPlan procurementPlan, String title, Long id);
     
     List<PurchaseRequisition> findByProject(Project project);
+
+    @Query("select c from  #{#entityName} c "
+            + " where c.project.procurementPlan.fiscalYear.id = :fiscalYearId")
+    List<PurchaseRequisition> findByFiscalYearId(@Param("fiscalYearId") Long  id);
 }

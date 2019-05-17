@@ -21,8 +21,7 @@ import javax.persistence.Table;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"),
-        @Index(columnList = "number"),
+@Table(indexes = {@Index(columnList = "number"),
         @Index(columnList = "name")})
 public class CabinetPaper extends AbstractMakueniEntity {
 

@@ -30,7 +30,7 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "project_id"),
+@Table(indexes = {@Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"), @Index(columnList = "title")})
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable {
 

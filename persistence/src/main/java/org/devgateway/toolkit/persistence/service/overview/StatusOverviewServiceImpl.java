@@ -144,7 +144,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                    final Long fiscalYearId,
                    final AbstractMakueniEntityRepository<? extends S>... repository) {
         for (AbstractMakueniEntityRepository<? extends S> r : repository) {
-            addStatus(statusMap, r.findByProcurementPlanFiscalYearId(fiscalYearId));
+            addStatus(statusMap, r.findByFiscalYearId(fiscalYearId));
         }
     }
 

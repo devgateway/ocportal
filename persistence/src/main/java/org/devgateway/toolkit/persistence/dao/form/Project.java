@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
+@Table(indexes = {@Index(columnList = "projectTitle")})
 public class Project extends AbstractMakueniEntity {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne

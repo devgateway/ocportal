@@ -124,7 +124,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
             if (project != null && titleValue != null) {
                 ProcurementPlan procurementPlan = project.getProcurementPlan();
                 if (purchaseRequisitionService
-                        .countByProcurementPlanAndTitleAndIdNot(procurementPlan, titleValue, id) > 0) {
+                        .countByProjectProcurementPlanAndTitleAndIdNot(procurementPlan, titleValue, id) > 0) {
                     final ValidationError error = new ValidationError(getString("uniqueTitle"));
                     validatable.error(error);
                 }
