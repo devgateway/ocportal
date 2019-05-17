@@ -15,10 +15,13 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
+import org.devgateway.toolkit.forms.wicket.styles.HomeStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 
 /**
@@ -45,5 +48,13 @@ public class Homepage extends BasePage {
         };
 
         add(dataEntryLink);
+    }
+
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+
+        // Load Home Page Styles
+        response.render(CssHeaderItem.forReference(HomeStyles.INSTANCE));
     }
 }
