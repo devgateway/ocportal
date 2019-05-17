@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -7,7 +8,9 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -23,6 +26,13 @@ public class Project extends AbstractMakueniEntity {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private CabinetPaper cabinetPaper;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JoinColumn(name = "procurement_plan_id")
+    @JsonIgnore
+    private ProcurementPlan procurementPlan;
+
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String projectTitle;
@@ -96,5 +106,13 @@ public class Project extends AbstractMakueniEntity {
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    public ProcurementPlan getProcurementPlan() {
+        return procurementPlan;
+    }
+
+    public void setProcurementPlan(ProcurementPlan procurementPlan) {
+        this.procurementPlan = procurementPlan;
     }
 }

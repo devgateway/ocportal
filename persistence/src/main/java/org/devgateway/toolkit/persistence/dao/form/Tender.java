@@ -31,11 +31,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "purchase_requisition_id"),
         @Index(columnList = "tenderTitle"), @Index(columnList = "tenderNumber")})
-public class Tender extends AbstractMakueniEntity  implements ProjectAttachable {
-    @OneToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private PurchaseRequisition purchaseRequisition;
+public class Tender extends AbstractPurchaseReqMakueniEntity {
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
@@ -146,13 +142,6 @@ public class Tender extends AbstractMakueniEntity  implements ProjectAttachable 
         return tenderLink;
     }
 
-    public PurchaseRequisition getPurchaseRequisition() {
-        return purchaseRequisition;
-    }
-
-    public void setPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        this.purchaseRequisition = purchaseRequisition;
-    }
 
     public void setTenderLink(final String tenderLink) {
         this.tenderLink = tenderLink;
@@ -179,10 +168,5 @@ public class Tender extends AbstractMakueniEntity  implements ProjectAttachable 
             }
         }
         return total;
-    }
-
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return purchaseRequisition;
     }
 }

@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenderQuotationEvaluation")
-public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniEntityPage<TenderQuotationEvaluation> {
+public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMakueniEntity<TenderQuotationEvaluation> {
 
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
@@ -32,7 +32,6 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniEntity
     @SpringBean
     protected TenderService tenderService;
 
-    private final Tender tender;
     
     /**
      * @param parameters
@@ -40,9 +39,6 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniEntity
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderQuotationEvaluationService;
-
-        this.tender = SessionUtil.getSessionTender();
-        // TODO - check if this is a new object and without a tender,then redirect to some page like StatusOverview
     }
 
     @Override
@@ -64,11 +60,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractMakueniEntity
     @Override
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
-        if (tender != null) {
-            tenderQuotationEvaluation.setProcurementPlan(tender.getProcurementPlan());
-            tenderQuotationEvaluation.setTender(tender);
-        }
-
+        tenderQuotationEvaluation.setPurchaseRequisition(purchaseRequisition);
         return tenderQuotationEvaluation;
     }
 }

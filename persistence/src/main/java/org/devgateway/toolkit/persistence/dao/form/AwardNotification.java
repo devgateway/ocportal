@@ -21,12 +21,7 @@ import java.util.Date;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
-public class AwardNotification extends AbstractMakueniEntity implements ProjectAttachable {
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
+public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
 
     private Date awardDate;
 
@@ -37,14 +32,6 @@ public class AwardNotification extends AbstractMakueniEntity implements ProjectA
     private Supplier awardee;
 
     private Integer acknowledgementDays;
-
-    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
-        return tenderQuotationEvaluation;
-    }
-
-    public void setTenderQuotationEvaluation(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
-    }
 
     public Double getTenderValue() {
         return tenderValue;
@@ -61,7 +48,6 @@ public class AwardNotification extends AbstractMakueniEntity implements ProjectA
     public void setAcknowledgementDays(final Integer acknowledgementDays) {
         this.acknowledgementDays = acknowledgementDays;
     }
-
 
     public Date getAwardDate() {
         return awardDate;
@@ -88,8 +74,4 @@ public class AwardNotification extends AbstractMakueniEntity implements ProjectA
         return null;
     }
 
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return tenderQuotationEvaluation;
-    }
 }

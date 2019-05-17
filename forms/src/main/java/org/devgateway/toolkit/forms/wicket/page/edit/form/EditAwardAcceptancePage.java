@@ -32,35 +32,22 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/awardAcceptance")
-public class EditAwardAcceptancePage extends EditAbstractMakueniEntityPage<AwardAcceptance> {
+public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<AwardAcceptance> {
     @SpringBean
     protected AwardAcceptanceService awardAcceptanceService;
 
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
 
-    @SpringBean
-    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
-
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
-
-    private GenericSleepFormComponent tenderTitle;
-
-    private GenericSleepFormComponent tenderNumber;
 
     private GenericSleepFormComponent supplierID;
 
     private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector;
 
-    private final TenderQuotationEvaluation tenderQuotationEvaluation;
-
     public EditAwardAcceptancePage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = awardAcceptanceService;
-
-        this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
-        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
-        //  then redirect to some page like StatusOverview
     }
 
     @Override
@@ -71,7 +58,6 @@ public class EditAwardAcceptancePage extends EditAbstractMakueniEntityPage<Award
                 .getField().add(RangeValidator.minimum(0.0));
         ComponentUtil.addDateField(editForm, "acceptanceDate").required();
 
-        addTenderInfo();
         addSupplierInfo();
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
@@ -82,42 +68,10 @@ public class EditAwardAcceptancePage extends EditAbstractMakueniEntityPage<Award
     @Override
     protected AwardAcceptance newInstance() {
         final AwardAcceptance awardAcceptance = super.newInstance();
-        if (tenderQuotationEvaluation != null) {
-            awardAcceptance.setProcurementPlan(tenderQuotationEvaluation.getProcurementPlan());
-            awardAcceptance.setTenderQuotationEvaluation(tenderQuotationEvaluation);
-        }
+        awardAcceptance.setPurchaseRequisition(purchaseRequisition);
         return awardAcceptance;
     }
 
-    // TODO: we wont need the sleep component for tenderNumber and tenderTitle -
-    // this is just temporary since we are selecting the tender evaluation.
-    // Ideally the tender evaluation of an Notification should set only once on
-    // creation.s
-    private void addTenderInfo() {
-        tenderQuotationEvaluationSelector = ComponentUtil.addSelect2ChoiceField(editForm, "tenderQuotationEvaluation",
-                tenderQuotationEvaluationService);
-        tenderQuotationEvaluationSelector.required();
-        tenderQuotationEvaluationSelector.getField()
-                .add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
-
-        tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () -> {
-            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
-                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderNumber();
-            }
-            return null;
-        });
-        tenderTitle.setOutputMarkupId(true);
-        editForm.add(tenderTitle);
-
-        tenderNumber = new GenericSleepFormComponent<>("tenderTitle", (IModel<String>) () -> {
-            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
-                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderTitle();
-            }
-            return null;
-        });
-        tenderNumber.setOutputMarkupId(true);
-        editForm.add(tenderNumber);
-    }
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
@@ -138,7 +92,7 @@ public class EditAwardAcceptancePage extends EditAbstractMakueniEntityPage<Award
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
-        TenderQuotationEvaluation tenderQuotationEvaluation = editForm.getModelObject().getTenderQuotationEvaluation();
+        TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
         List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {
@@ -151,21 +105,6 @@ public class EditAwardAcceptancePage extends EditAbstractMakueniEntityPage<Award
         return suppliers;
     }
 
-    class TenderQuotationEvaluationAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        TenderQuotationEvaluationAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
-        }
-
-        @Override
-        protected void onUpdate(final AjaxRequestTarget target) {
-            final AwardAcceptance awardAcceptance = editForm.getModelObject();
-            awardAcceptance.setAwardee(null);
-            awardeeSelector.provider(new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
-            target.add(awardeeSelector);
-            target.add(tenderNumber);
-            target.add(tenderTitle);
-        }
-    }
 
     class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
         AwardeeAjaxComponentUpdatingBehavior(final String event) {

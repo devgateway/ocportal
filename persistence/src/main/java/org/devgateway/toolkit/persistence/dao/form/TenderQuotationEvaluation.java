@@ -26,11 +26,7 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_id")})
-public class TenderQuotationEvaluation extends AbstractMakueniEntity implements ProjectAttachable {
-    @OneToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Tender tender;
+public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity {
 
     private Date closingDate;
 
@@ -58,16 +54,9 @@ public class TenderQuotationEvaluation extends AbstractMakueniEntity implements 
         this.numberOfBids = numberOfBids;
     }
 
-    public Tender getTender() {
-        return tender;
-    }
 
     public List<Bid> getBids() {
         return bids;
-    }
-
-    public void setTender(final Tender tender) {
-        this.tender = tender;
     }
 
     public void setBids(final List<Bid> bids) {
@@ -83,13 +72,5 @@ public class TenderQuotationEvaluation extends AbstractMakueniEntity implements 
         return null;
     }
 
-    @Override
-    public String toString() {
-        return tender.toString();
-    }
 
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return tender;
-    }
 }

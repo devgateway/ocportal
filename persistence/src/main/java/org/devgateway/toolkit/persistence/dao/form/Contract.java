@@ -30,11 +30,7 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
-public class Contract extends AbstractMakueniEntity implements ProjectAttachable {
-    @OneToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
+public class Contract extends AbstractPurchaseReqMakueniEntity {
 
     private Double tenderValue;
 
@@ -60,14 +56,6 @@ public class Contract extends AbstractMakueniEntity implements ProjectAttachable
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
-
-    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
-        return tenderQuotationEvaluation;
-    }
-
-    public void setTenderQuotationEvaluation(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
-    }
 
     public Double getTenderValue() {
         return tenderValue;
@@ -142,8 +130,4 @@ public class Contract extends AbstractMakueniEntity implements ProjectAttachable
         return null;
     }
 
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return tenderQuotationEvaluation;
-    }
 }

@@ -22,11 +22,7 @@ import java.util.Date;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
-public class ProfessionalOpinion extends AbstractMakueniEntity implements ProjectAttachable {
-    @OneToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
+public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
 
     private Date professionalOpinionDate;
 
@@ -60,14 +56,6 @@ public class ProfessionalOpinion extends AbstractMakueniEntity implements Projec
         this.recommendedAwardAmount = recommendedAwardAmount;
     }
 
-    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
-        return tenderQuotationEvaluation;
-    }
-
-    public void setTenderQuotationEvaluation(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
-    }
-
     @Override
     public void setLabel(final String label) {
 
@@ -83,8 +71,4 @@ public class ProfessionalOpinion extends AbstractMakueniEntity implements Projec
         return getLabel();
     }
 
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return tenderQuotationEvaluation;
-    }
 }
