@@ -26,7 +26,7 @@ import javax.persistence.Transient;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
+@Table(indexes = {@Index(columnList = "description")})
 public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem, Labelable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne

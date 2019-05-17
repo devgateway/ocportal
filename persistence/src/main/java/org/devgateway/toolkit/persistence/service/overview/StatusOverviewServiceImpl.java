@@ -73,10 +73,11 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
         for (Project p : projects) {
             DepartmentOverviewData departmentOverview = departmentsData.stream().filter(
-                    d -> p.getProcurementPlan().equals(d.getProcurementPlan())).findFirst().orElse(null);
+                    d -> p.getCabinetPaper().getProcurementPlan().equals(d.getProcurementPlan()))
+                    .findFirst().orElse(null);
             if (departmentOverview == null) {
                 departmentOverview = new DepartmentOverviewData();
-                departmentOverview.setProcurementPlan(p.getProcurementPlan());
+                departmentOverview.setProcurementPlan(p.getCabinetPaper().getProcurementPlan());
                 departmentsData.add(departmentOverview);
             }
 
@@ -134,8 +135,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private <S extends ProjectAttachable & Statusable>
     void addStatus(final Map<Long, Set<String>> statusMap,
                    final Collection<S> collection) {
-        collection.stream().filter(ProjectAttachable::hasProjectId)
-                .forEach(e -> addStatus(statusMap, e.getProjectId(), e.getStatus()));
+        collection.stream()
+                .forEach(e -> addStatus(statusMap, e.getProject().getId(), e.getStatus()));
     }
 
     @SafeVarargs
@@ -144,7 +145,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                    final Long fiscalYearId,
                    final AbstractMakueniEntityRepository<? extends S>... repository) {
         for (AbstractMakueniEntityRepository<? extends S> r : repository) {
-            addStatus(statusMap, r.findByProcurementPlanFiscalYearId(fiscalYearId));
+            addStatus(statusMap, r.findByFiscalYearId(fiscalYearId));
         }
     }
 

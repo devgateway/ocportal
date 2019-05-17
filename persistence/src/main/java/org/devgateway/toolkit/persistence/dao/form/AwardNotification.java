@@ -1,17 +1,12 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -20,13 +15,7 @@ import java.util.Date;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "tender_quotation_evaluation_id")})
-public class AwardNotification extends AbstractMakueniEntity implements ProjectAttachable {
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
+public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
 
     private Date awardDate;
 
@@ -37,14 +26,6 @@ public class AwardNotification extends AbstractMakueniEntity implements ProjectA
     private Supplier awardee;
 
     private Integer acknowledgementDays;
-
-    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
-        return tenderQuotationEvaluation;
-    }
-
-    public void setTenderQuotationEvaluation(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
-    }
 
     public Double getTenderValue() {
         return tenderValue;
@@ -61,7 +42,6 @@ public class AwardNotification extends AbstractMakueniEntity implements ProjectA
     public void setAcknowledgementDays(final Integer acknowledgementDays) {
         this.acknowledgementDays = acknowledgementDays;
     }
-
 
     public Date getAwardDate() {
         return awardDate;
@@ -88,8 +68,4 @@ public class AwardNotification extends AbstractMakueniEntity implements ProjectA
         return null;
     }
 
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return tenderQuotationEvaluation;
-    }
 }

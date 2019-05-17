@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -11,12 +10,10 @@ import org.hibernate.envers.Audited;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -29,13 +26,8 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "purchase_requisition_id"),
-        @Index(columnList = "tenderTitle"), @Index(columnList = "tenderNumber")})
-public class Tender extends AbstractMakueniEntity  implements ProjectAttachable {
-    @OneToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private PurchaseRequisition purchaseRequisition;
+@Table(indexes = {@Index(columnList = "tenderTitle"), @Index(columnList = "tenderNumber")})
+public class Tender extends AbstractPurchaseReqMakueniEntity {
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
@@ -146,13 +138,6 @@ public class Tender extends AbstractMakueniEntity  implements ProjectAttachable 
         return tenderLink;
     }
 
-    public PurchaseRequisition getPurchaseRequisition() {
-        return purchaseRequisition;
-    }
-
-    public void setPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        this.purchaseRequisition = purchaseRequisition;
-    }
 
     public void setTenderLink(final String tenderLink) {
         this.tenderLink = tenderLink;
@@ -179,10 +164,5 @@ public class Tender extends AbstractMakueniEntity  implements ProjectAttachable 
             }
         }
         return total;
-    }
-
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return purchaseRequisition;
     }
 }

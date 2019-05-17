@@ -33,7 +33,7 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/contract")
-public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
+public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> {
     @SpringBean
     protected ContractService contractService;
 
@@ -54,23 +54,14 @@ public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
 
     private GenericSleepFormComponent supplierAddress;
 
-    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector;
-
-    private final TenderQuotationEvaluation tenderQuotationEvaluation;
-
     public EditContractPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = contractService;
-
-        this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
-        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
-        //  then redirect to some page like StatusOverview
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();             
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addDoubleField(editForm, "tenderValue").required()
                 .getField().add(RangeValidator.minimum(0.0));
@@ -79,7 +70,7 @@ public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
         ComponentUtil.addDateField(editForm, "expiryDate");
         ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
 
-        addTenderInfo();
+       // addTenderInfo();
         addSupplierInfo();
 
         editForm.add(new ContractDocumentPanel("contractDocs"));
@@ -88,42 +79,10 @@ public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
     @Override
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
-        if (tenderQuotationEvaluation != null) {
-            contract.setProcurementPlan(tenderQuotationEvaluation.getProcurementPlan());
-            contract.setTenderQuotationEvaluation(tenderQuotationEvaluation);
-        }
+        contract.setPurchaseRequisition(purchaseRequisition);
         return contract;
     }
 
-    // TODO: we wont need the sleep component for tenderNumber and tenderTitle -
-    // this is just temporary since we are selecting the tender evaluation.
-    // Ideally the tender evaluation of an Notification should set only once on
-    // creation.s
-    private void addTenderInfo() {
-        tenderQuotationEvaluationSelector = ComponentUtil.addSelect2ChoiceField(editForm, "tenderQuotationEvaluation",
-                tenderQuotationEvaluationService);
-        tenderQuotationEvaluationSelector.required();
-        tenderQuotationEvaluationSelector.getField()
-                .add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
-
-        tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () -> {
-            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
-                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderNumber();
-            }
-            return null;
-        });
-        tenderTitle.setOutputMarkupId(true);
-        editForm.add(tenderTitle);
-
-        tenderNumber = new GenericSleepFormComponent<>("tenderTitle", (IModel<String>) () -> {
-            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
-                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderTitle();
-            }
-            return null;
-        });
-        tenderNumber.setOutputMarkupId(true);
-        editForm.add(tenderNumber);
-    }
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
@@ -144,7 +103,7 @@ public class EditContractPage extends EditAbstractMakueniEntityPage<Contract> {
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
-        TenderQuotationEvaluation tenderQuotationEvaluation = editForm.getModelObject().getTenderQuotationEvaluation();
+        TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
         List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

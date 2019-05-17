@@ -8,9 +8,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
-import javax.persistence.Index;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
@@ -20,7 +18,6 @@ import javax.persistence.Transient;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne

@@ -24,25 +24,11 @@ import java.util.Set;
 @MappedSuperclass
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity implements Labelable {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinColumn(name = "procurement_plan_id")
-    @JsonIgnore
-    private ProcurementPlan procurementPlan;
-
     private Date approvedDate;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FileMetadata> formDocs;
-
-    public ProcurementPlan getProcurementPlan() {
-        return procurementPlan;
-    }
-
-    public void setProcurementPlan(final ProcurementPlan procurementPlan) {
-        this.procurementPlan = procurementPlan;
-    }
 
     @Override
     public AbstractAuditableEntity getParent() {

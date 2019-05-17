@@ -98,7 +98,6 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     protected PurchaseRequisition newInstance() {
         final PurchaseRequisition purchaseRequisition = super.newInstance();
         if (project != null) {
-            purchaseRequisition.setProcurementPlan(project.getProcurementPlan());
             purchaseRequisition.setProject(project);
         }  
        
@@ -120,11 +119,12 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         @Override
         public void validate(final IValidatable<String> validatable) {
             final String titleValue = validatable.getValue();
-            final ProcurementPlan procurementPlan = editForm.getModelObject().getProcurementPlan();
+            final Project project = editForm.getModelObject().getProject();
 
-            if (procurementPlan != null && titleValue != null) {
+            if (project != null && titleValue != null) {
+                ProcurementPlan procurementPlan = project.getProcurementPlan();
                 if (purchaseRequisitionService
-                        .countByProcurementPlanAndTitleAndIdNot(procurementPlan, titleValue, id) > 0) {
+                        .countByProjectProcurementPlanAndTitleAndIdNot(procurementPlan, titleValue, id) > 0) {
                     final ValidationError error = new ValidationError(getString("uniqueTitle"));
                     validatable.error(error);
                 }
