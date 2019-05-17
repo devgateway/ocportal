@@ -95,8 +95,8 @@ public class StatusOverviewItem extends Panel {
         return cssClass;
     }
 
-    private void addStatusLabel(final ListItem<StatusOverviewProjectStatus> item, final String id, final String cssClass,
-                                final String message) {
+    private void addStatusLabel(final ListItem<StatusOverviewProjectStatus> item,
+                                final String id, final String cssClass, final String message) {
         Label label;
         if (message != null) {
             label = new Label(id, message);
