@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author gmutuhu
  *
@@ -19,4 +21,8 @@ public interface CabinetPaperRepository extends AbstractMakueniEntityRepository<
     Page<CabinetPaper> searchText(@Param("name") String name, Pageable page);
     
     Long countByProcurementPlanAndNameAndIdNot(ProcurementPlan procurementPlan, String name, Long id);
+
+    @Query("select c from  #{#entityName} c "
+            + " where c.procurementPlan.fiscalYear.id = :fiscalYearId")
+    List<CabinetPaper> findByFiscalYearId(@Param("fiscalYearId") Long  id);
 }

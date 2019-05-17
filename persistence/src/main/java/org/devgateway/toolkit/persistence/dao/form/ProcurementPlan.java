@@ -43,12 +43,7 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     public ProcurementPlan() {
 
     }
-
-    @Override
-    public ProcurementPlan getProcurementPlan() {
-        return this;
-    }
-
+    
     public Department getDepartment() {
         return department;
     }

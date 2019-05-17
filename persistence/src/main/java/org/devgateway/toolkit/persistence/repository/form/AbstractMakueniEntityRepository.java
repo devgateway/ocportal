@@ -15,7 +15,8 @@ import java.util.List;
 public interface AbstractMakueniEntityRepository<T extends AbstractMakueniEntity>
         extends TextSearchableRepository<T, Long> {
 
-    List<T> findByProcurementPlanFiscalYearId(Long id);
+
+    List<T> findByFiscalYearId(Long id);
 
     @Override
     @Query("select c from  #{#entityName} c")

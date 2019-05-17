@@ -44,7 +44,7 @@ import java.util.Set;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tender")
-public class EditTenderPage extends EditAbstractMakueniEntityPage<Tender> {
+public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender> {
 
     @SpringBean
     protected TenderService tenderService;
@@ -65,18 +65,12 @@ public class EditTenderPage extends EditAbstractMakueniEntityPage<Tender> {
 
     private GenericSleepFormComponent procuringEntityAddress;
 
-    private final PurchaseRequisition purchaseRequisition;
-
     /**
      * @param parameters
      */
     public EditTenderPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderService;
-
-        this.purchaseRequisition = SessionUtil.getSessionPurchaseRequisition();
-        // TODO - check if this is a new object and without a purchaseRequisition,
-        //  then redirect to some page like StatusOverview
     }
 
     @Override
@@ -189,11 +183,7 @@ public class EditTenderPage extends EditAbstractMakueniEntityPage<Tender> {
     @Override
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
-        if (purchaseRequisition != null) {
-            tender.setProcurementPlan(purchaseRequisition.getProcurementPlan());
-            tender.setPurchaseRequisition(purchaseRequisition);
-        }
-
+        tender.setPurchaseRequisition(purchaseRequisition);
         return tender;
     }
 

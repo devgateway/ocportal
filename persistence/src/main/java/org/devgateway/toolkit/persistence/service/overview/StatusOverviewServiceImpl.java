@@ -134,8 +134,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private <S extends ProjectAttachable & Statusable>
     void addStatus(final Map<Long, Set<String>> statusMap,
                    final Collection<S> collection) {
-        collection.stream().filter(ProjectAttachable::hasProjectId)
-                .forEach(e -> addStatus(statusMap, e.getProjectId(), e.getStatus()));
+        collection.stream()
+                .forEach(e -> addStatus(statusMap, e.getProject().getId(), e.getStatus()));
     }
 
     @SafeVarargs
@@ -144,7 +144,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                    final Long fiscalYearId,
                    final AbstractMakueniEntityRepository<? extends S>... repository) {
         for (AbstractMakueniEntityRepository<? extends S> r : repository) {
-            addStatus(statusMap, r.findByProcurementPlanFiscalYearId(fiscalYearId));
+            addStatus(statusMap, r.findByFiscalYearId(fiscalYearId));
         }
     }
 

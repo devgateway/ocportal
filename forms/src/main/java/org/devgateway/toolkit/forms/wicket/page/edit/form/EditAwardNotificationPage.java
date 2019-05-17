@@ -32,7 +32,7 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/awardNotification")
-public class EditAwardNotificationPage extends EditAbstractMakueniEntityPage<AwardNotification> {
+public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntity<AwardNotification> {
     @SpringBean
     protected AwardNotificationService awardNotificationService;
 
@@ -54,15 +54,9 @@ public class EditAwardNotificationPage extends EditAbstractMakueniEntityPage<Awa
 
     private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector;
 
-    private final TenderQuotationEvaluation tenderQuotationEvaluation;
-
     public EditAwardNotificationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = awardNotificationService;
-
-        this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
-        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
-        //  then redirect to some page like StatusOverview
     }
 
     @Override
@@ -76,7 +70,6 @@ public class EditAwardNotificationPage extends EditAbstractMakueniEntityPage<Awa
         ComponentUtil.addIntegerTextField(editForm, "acknowledgementDays")
                 .getField().add(RangeValidator.minimum(0));
 
-        addTenderInfo();
         addSupplierInfo();
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
@@ -87,43 +80,10 @@ public class EditAwardNotificationPage extends EditAbstractMakueniEntityPage<Awa
     @Override
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
-        if (tenderQuotationEvaluation != null) {
-            awardNotification.setProcurementPlan(tenderQuotationEvaluation.getProcurementPlan());
-            awardNotification.setTenderQuotationEvaluation(tenderQuotationEvaluation);
-        }
-
+        awardNotification.setPurchaseRequisition(purchaseRequisition);
         return awardNotification;
     }
 
-    // TODO: we wont need the sleep component for tenderNumber and tenderTitle -
-    // this is just temporary since we are selecting the tender evaluation.
-    // Ideally the tender evaluation of an Notification should set only once on
-    // creation.s
-    private void addTenderInfo() {
-        tenderQuotationEvaluationSelector = ComponentUtil.addSelect2ChoiceField(editForm, "tenderQuotationEvaluation",
-                tenderQuotationEvaluationService);
-        tenderQuotationEvaluationSelector.required();
-        tenderQuotationEvaluationSelector.getField()
-                .add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
-
-        tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () -> {
-            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
-                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderNumber();
-            }
-            return null;
-        });
-        tenderTitle.setOutputMarkupId(true);
-        editForm.add(tenderTitle);
-
-        tenderNumber = new GenericSleepFormComponent<>("tenderTitle", (IModel<String>) () -> {
-            if (tenderQuotationEvaluationSelector.getModelObject() != null) {
-                return tenderQuotationEvaluationSelector.getModelObject().getTender().getTenderTitle();
-            }
-            return null;
-        });
-        tenderNumber.setOutputMarkupId(true);
-        editForm.add(tenderNumber);
-    }
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
@@ -152,7 +112,7 @@ public class EditAwardNotificationPage extends EditAbstractMakueniEntityPage<Awa
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
-        TenderQuotationEvaluation tenderQuotationEvaluation = editForm.getModelObject().getTenderQuotationEvaluation();
+        TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
         List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {
@@ -165,21 +125,6 @@ public class EditAwardNotificationPage extends EditAbstractMakueniEntityPage<Awa
         return suppliers;
     }
 
-    class TenderQuotationEvaluationAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        TenderQuotationEvaluationAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
-        }
-
-        @Override
-        protected void onUpdate(final AjaxRequestTarget target) {
-            final AwardNotification awardNotification = editForm.getModelObject();
-            awardNotification.setAwardee(null);
-            awardeeSelector.provider(new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
-            target.add(awardeeSelector);
-            target.add(tenderNumber);
-            target.add(tenderTitle);
-        }
-    }
 
     class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
         AwardeeAjaxComponentUpdatingBehavior(final String event) {

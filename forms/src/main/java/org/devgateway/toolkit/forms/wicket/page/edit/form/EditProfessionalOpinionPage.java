@@ -31,7 +31,7 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/professionalOpinion")
-public class EditProfessionalOpinionPage extends EditAbstractMakueniEntityPage<ProfessionalOpinion> {
+public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniEntity<ProfessionalOpinion> {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
 
@@ -43,27 +43,14 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniEntityPage<P
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
-    private final TenderQuotationEvaluation tenderQuotationEvaluation;
-
     public EditProfessionalOpinionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = professionalOpinionService;
-
-        this.tenderQuotationEvaluation = SessionUtil.getSessionTenderQuotationEvaluation();
-        // TODO - check if this is a new object and without a tenderQuotationEvaluation,
-        //  then redirect to some page like StatusOverview
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
-
-        final Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluation = ComponentUtil
-                .addSelect2ChoiceField(editForm, "tenderQuotationEvaluation", tenderQuotationEvaluationService);
-        tenderQuotationEvaluation.required();
-        tenderQuotationEvaluation.getField().add(new TenderQuotationEvaluationAjaxComponentUpdatingBehavior("change"));
 
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
                 new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
@@ -87,15 +74,12 @@ public class EditProfessionalOpinionPage extends EditAbstractMakueniEntityPage<P
     @Override
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
-        if (tenderQuotationEvaluation != null) {
-            professionalOpinion.setProcurementPlan(tenderQuotationEvaluation.getProcurementPlan());
-            professionalOpinion.setTenderQuotationEvaluation(tenderQuotationEvaluation);
-        }
+        professionalOpinion.setPurchaseRequisition(purchaseRequisition);
         return professionalOpinion;
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
-        TenderQuotationEvaluation tenderQuotationEvaluation = editForm.getModelObject().getTenderQuotationEvaluation();
+        TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
         List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

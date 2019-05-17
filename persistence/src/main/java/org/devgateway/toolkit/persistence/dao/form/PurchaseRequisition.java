@@ -16,6 +16,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "project_id"),
+@Table(indexes = {@Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"), @Index(columnList = "title")})
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable {
 
@@ -37,6 +38,36 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Project project;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private TenderQuotationEvaluation tenderQuotationEvaluation;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Tender tender;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Contract contract;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private AwardNotification awardNotification;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private AwardAcceptance awardAcceptance;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private ProfessionalOpinion professionalOpinion;
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
@@ -63,11 +94,6 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @Override
     public Project getProject() {
         return project;
-    }
-
-    @Override
-    public ProjectAttachable getProjectAttachable() {
-        return null;
     }
 
     public void setProject(final Project project) {
@@ -146,5 +172,53 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         }
 
         return amount;
+    }
+
+    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
+        return tenderQuotationEvaluation;
+    }
+
+    public void setTenderQuotationEvaluation(TenderQuotationEvaluation tenderQuotationEvaluation) {
+        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
+    }
+
+    public Tender getTender() {
+        return tender;
+    }
+
+    public void setTender(Tender tender) {
+        this.tender = tender;
+    }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    public AwardNotification getAwardNotification() {
+        return awardNotification;
+    }
+
+    public void setAwardNotification(AwardNotification awardNotification) {
+        this.awardNotification = awardNotification;
+    }
+
+    public AwardAcceptance getAwardAcceptance() {
+        return awardAcceptance;
+    }
+
+    public void setAwardAcceptance(AwardAcceptance awardAcceptance) {
+        this.awardAcceptance = awardAcceptance;
+    }
+
+    public ProfessionalOpinion getProfessionalOpinion() {
+        return professionalOpinion;
+    }
+
+    public void setProfessionalOpinion(ProfessionalOpinion professionalOpinion) {
+        this.professionalOpinion = professionalOpinion;
     }
 }
