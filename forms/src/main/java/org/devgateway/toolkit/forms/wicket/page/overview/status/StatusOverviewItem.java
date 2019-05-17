@@ -11,8 +11,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
-import org.devgateway.toolkit.persistence.dto.ProjectStatus;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,27 +20,27 @@ import java.util.stream.Collectors;
 public class StatusOverviewItem extends Panel {
     private static final long serialVersionUID = 1L;
 
-    private DepartmentOverviewData departmentOverviewData;
+    private StatusOverviewData statusOverviewData;
 
     private Boolean expanded = false;
 
     private String searchTerm;
 
-    private List<ProjectStatus> filteredProjects;
+    private List<StatusOverviewProjectStatus> filteredProjects;
 
-    public StatusOverviewItem(final String id, final DepartmentOverviewData departmentOverviewData,
+    public StatusOverviewItem(final String id, final StatusOverviewData statusOverviewData,
                               final String searchTerm) {
         super(id);
-        this.departmentOverviewData = departmentOverviewData;
+        this.statusOverviewData = statusOverviewData;
         this.searchTerm = searchTerm;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        filteredProjects = this.departmentOverviewData.getProjects();
+        filteredProjects = this.statusOverviewData.getProjects();
         if (searchTerm != null && !searchTerm.isEmpty()) {
-            filteredProjects = this.departmentOverviewData.getProjects().stream().filter(p -> {
+            filteredProjects = this.statusOverviewData.getProjects().stream().filter(p -> {
                 if (p.getProjectTitle() != null) {
                     return p.getProjectTitle().toLowerCase().contains(searchTerm.toLowerCase());
                 }
@@ -51,11 +51,11 @@ public class StatusOverviewItem extends Panel {
 
         addGroupHeader();
 
-        add(new ListView<ProjectStatus>("projectList", filteredProjects) {
+        add(new ListView<StatusOverviewProjectStatus>("projectList", filteredProjects) {
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected void populateItem(final ListItem<ProjectStatus> item) {
+            protected void populateItem(final ListItem<StatusOverviewProjectStatus> item) {
                 Link<Object> link = new Link<Object>("title") {
                     private static final long serialVersionUID = 1L;
 
@@ -71,11 +71,13 @@ public class StatusOverviewItem extends Panel {
                 item.add(link);
 
                 addStatusLabel(item, "projectStatus", item.getModelObject().getProjectStatus().toLowerCase(), null);
-                addStatusLabel(item, "tenderStatus", item.getModelObject().getTenderStatus().toLowerCase(), null);
-                addStatusLabel(item, "tenderProcess", getCssClass(item.getModelObject().getTenderStatus()),
+                addStatusLabel(item, "tenderProcessStatus",
+                        item.getModelObject().getTenderProcessStatus().toLowerCase(), null);
+                addStatusLabel(item, "tenderProcess", getCssClass(item.getModelObject().getTenderProcessStatus()),
                         getString("tenderProcess"));
-                addStatusLabel(item, "awardStatus", item.getModelObject().getAwardStatus().toLowerCase(), null);
-                addStatusLabel(item, "awardProcess", getCssClass(item.getModelObject().getAwardStatus()),
+                addStatusLabel(item, "awardProcessStatus",
+                        item.getModelObject().getAwardProcessStatus().toLowerCase(), null);
+                addStatusLabel(item, "awardProcess", getCssClass(item.getModelObject().getAwardProcessStatus()),
                         getString("awardProcess"));
             }
         });
@@ -93,7 +95,7 @@ public class StatusOverviewItem extends Panel {
         return cssClass;
     }
 
-    private void addStatusLabel(final ListItem<ProjectStatus> item, final String id, final String cssClass,
+    private void addStatusLabel(final ListItem<StatusOverviewProjectStatus> item, final String id, final String cssClass,
                                 final String message) {
         Label label;
         if (message != null) {
@@ -129,9 +131,9 @@ public class StatusOverviewItem extends Panel {
         add(header);
 
         header.add(new Label("departmentName",
-                new PropertyModel<String>(departmentOverviewData.getProcurementPlan().getDepartment(), "label")));
+                new PropertyModel<String>(statusOverviewData.getProcurementPlan().getDepartment(), "label")));
         header.add(new Label("year",
-                new PropertyModel<String>(departmentOverviewData.getProcurementPlan().getFiscalYear(), "label")));
+                new PropertyModel<String>(statusOverviewData.getProcurementPlan().getFiscalYear(), "label")));
         header.add(new Label("projectCount", new PropertyModel<String>(filteredProjects, "size")));
     }
 }

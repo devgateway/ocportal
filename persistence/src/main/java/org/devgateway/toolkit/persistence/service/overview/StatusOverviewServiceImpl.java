@@ -5,8 +5,8 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
-import org.devgateway.toolkit.persistence.dto.DepartmentOverviewData;
-import org.devgateway.toolkit.persistence.dto.ProjectStatus;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
 import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
@@ -65,28 +65,28 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     // TODO change the name of the function or update it's parameters
     //  since we don't actually fetch the projects 'byDepartment'
     @Override
-    public List<DepartmentOverviewData> getProjectsByDepartment(final Long fiscalYearId) {
-        List<DepartmentOverviewData> departmentsData = new ArrayList<>();
+    public List<StatusOverviewData> getProjectsByDepartment(final Long fiscalYearId) {
+        List<StatusOverviewData> departmentsData = new ArrayList<>();
         List<Project> projects = projectRepository.findProjectsForYear(fiscalYearId);
         final Map<Long, Set<String>> tenderStatusMap = getTenderStatusMap(fiscalYearId);
         final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(fiscalYearId);
 
         for (Project p : projects) {
-            DepartmentOverviewData departmentOverview = departmentsData.stream().filter(
+            StatusOverviewData departmentOverview = departmentsData.stream().filter(
                     d -> p.getProcurementPlan().equals(d.getProcurementPlan())).findFirst().orElse(null);
             if (departmentOverview == null) {
-                departmentOverview = new DepartmentOverviewData();
+                departmentOverview = new StatusOverviewData();
                 departmentOverview.setProcurementPlan(p.getProcurementPlan());
                 departmentsData.add(departmentOverview);
             }
 
-            ProjectStatus projectStatus = new ProjectStatus();
-            projectStatus.setId(p.getId());
-            projectStatus.setProjectTitle(p.getProjectTitle());
-            projectStatus.setProjectStatus(p.getStatus());
-            projectStatus.setTenderStatus(getProcessStatus(tenderStatusMap, p.getId()));
-            projectStatus.setAwardStatus(getProcessStatus(awardStatusMap, p.getId()));
-            departmentOverview.getProjects().add(projectStatus);
+            StatusOverviewProjectStatus statusOverviewProjectStatus = new StatusOverviewProjectStatus();
+            statusOverviewProjectStatus.setId(p.getId());
+            statusOverviewProjectStatus.setProjectTitle(p.getProjectTitle());
+            statusOverviewProjectStatus.setProjectStatus(p.getStatus());
+            statusOverviewProjectStatus.setTenderProcessStatus(getProcessStatus(tenderStatusMap, p.getId()));
+            statusOverviewProjectStatus.setAwardProcessStatus(getProcessStatus(awardStatusMap, p.getId()));
+            departmentOverview.getProjects().add(statusOverviewProjectStatus);
         }
         return departmentsData;
     }

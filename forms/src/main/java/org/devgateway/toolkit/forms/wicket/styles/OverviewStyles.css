@@ -100,9 +100,20 @@
 }
 
 .sidebar-list .title {
-    color: #1d7abf;
     margin-bottom: 15px;
     text-transform: uppercase;
+}
+
+.sidebar-list .title a {
+    color: #d3d5d6;
+}
+
+.sidebar-list .title a.selected {
+    color: #1d7abf;
+}
+
+.sidebar-list .selected {
+    color: #1d7abf;
 }
 
 .sidebar-list ul {

@@ -4,15 +4,13 @@
 <wicket:extend>
     <div class="main-content">
         <div class="row header">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <h2>Status Overview</h2>
             </div>
             <div class="col-md-8">
                 <p>Observe the status for each Department’s projects, including which are pending approval. Navigate to
-                    each
-                    department’s workspace to add and edit projects and update the associated procurement stages by
-                    clicking
-                    on the project name or clicking on a department on the left menu.
+                    each department’s workspace to add and edit projects and update the associated procurement stages by
+                    clicking on the project name or clicking on a department on the left menu.
                 </p>
             </div>
         </div>
@@ -27,18 +25,17 @@
                 </div>
             </div>
 
-            <div class="search-form">
+            <form class="search-form">
                 <div class="col-md-9 no-padding">
                     <input tabindex="1" class="form-control project-search" wicket:id="searchBox"></input>
                 </div>
                 <div class="col-md-3 no-padding">
-                    <select wicket:id="years" class="btn btn-default project-year">
-                    </select>
-                    <button type="button" class="btn btn-default download">
-                    </button>
+                    <select wicket:id="years" class="btn btn-default project-year"></select>
+                    <button type="button" class="btn btn-default download"></button>
                 </div>
-            </div>
+            </form>
         </div>
+
         <div class="status-bar">
           <span class="status approved">
             Approved
@@ -53,6 +50,9 @@
             Draft
           </span>
         </div>
+
+        <!--<div wicket:id="statusPanel"></div>-->
+
         <div class="project-panels-wrapper">
             <div wicket:id=group>
                 <div wicket:id="groupItem">
