@@ -1,8 +1,6 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.category;
+package org.devgateway.toolkit.persistence.service.filterstate.category;
 
-import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
-import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity_;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -10,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProcuringEntityFilterState extends AbstractCategoryFilterState<ProcuringEntity> {
+public class SupplierFilterState extends AbstractCategoryFilterState<Supplier> {
     @Override
-    public Specification<ProcuringEntity> getSpecification() {
+    public Specification<Supplier> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();            
             predicates.add(super.getSpecification().toPredicate(root, query, cb));

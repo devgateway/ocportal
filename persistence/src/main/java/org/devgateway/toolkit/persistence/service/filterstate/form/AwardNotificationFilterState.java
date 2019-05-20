@@ -1,6 +1,6 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.form;
 
-import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * @author gmutuhu
  */
-public class AwardAcceptanceFilterState extends AbstractMakueniEntityFilterState<AwardAcceptance> {
+public class AwardNotificationFilterState extends AbstractMakueniEntityFilterState<AwardNotification> {
     @Override
-    public Specification<AwardAcceptance> getSpecification() {
+    public Specification<AwardNotification> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 

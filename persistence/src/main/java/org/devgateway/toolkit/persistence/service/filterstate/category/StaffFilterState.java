@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.category;
+package org.devgateway.toolkit.persistence.service.filterstate.category;
 
 import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;

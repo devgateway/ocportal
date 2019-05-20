@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter;
+package org.devgateway.toolkit.persistence.service.filterstate;
 
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity_;

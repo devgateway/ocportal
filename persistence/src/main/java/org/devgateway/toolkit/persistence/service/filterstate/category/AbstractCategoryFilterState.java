@@ -1,7 +1,7 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.category;
+package org.devgateway.toolkit.persistence.service.filterstate.category;
 
 import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Category_;
 import org.springframework.data.jpa.domain.Specification;

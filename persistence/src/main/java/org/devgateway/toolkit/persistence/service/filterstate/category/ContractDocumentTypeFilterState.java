@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.devgateway.toolkit.forms.wicket.components.table.filter.category;
+package org.devgateway.toolkit.persistence.service.filterstate.category;
 
 import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
 import org.springframework.data.jpa.domain.Specification;

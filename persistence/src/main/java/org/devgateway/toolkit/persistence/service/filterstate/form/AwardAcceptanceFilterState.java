@@ -1,7 +1,6 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.form;
 
-
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -10,11 +9,10 @@ import java.util.List;
 
 /**
  * @author gmutuhu
- * @since 2019-04-02
  */
-public class TenderQuotationEvaluationFilterState extends AbstractMakueniEntityFilterState<TenderQuotationEvaluation> {
+public class AwardAcceptanceFilterState extends AbstractMakueniEntityFilterState<AwardAcceptance> {
     @Override
-    public Specification<TenderQuotationEvaluation> getSpecification() {
+    public Specification<AwardAcceptance> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
