@@ -110,7 +110,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
     }
 
     private void addSearchBox() {
-        final  TextField<String> searchBox= new TextField<>("searchBox", Model.of(""));
+        final TextField<String> searchBox = new TextField<>("searchBox", Model.of(""));
         searchBox.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
