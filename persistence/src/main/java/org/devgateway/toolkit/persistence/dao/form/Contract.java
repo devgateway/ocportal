@@ -10,10 +10,12 @@ import org.hibernate.envers.Audited;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +26,8 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class Contract extends AbstractPurchaseReqMakueniEntity {
-
     private Double tenderValue;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

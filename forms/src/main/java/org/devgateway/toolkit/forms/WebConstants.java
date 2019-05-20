@@ -19,8 +19,6 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
-import org.devgateway.toolkit.persistence.dao.form.Tender;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,22 +67,16 @@ public final class WebConstants {
 
     public static final MetaDataKey<Department> DEPARTMENT = new MetaDataKey<Department>() {
     };
-    public static final MetaDataKey<FiscalYear> FISCALYEAR = new MetaDataKey<FiscalYear>() {
+    public static final MetaDataKey<FiscalYear> FISCAL_YEAR = new MetaDataKey<FiscalYear>() {
     };
-    public static final MetaDataKey<ProcurementPlan> PROCUREMENTPLAN = new MetaDataKey<ProcurementPlan>() {
+    public static final MetaDataKey<ProcurementPlan> PROCUREMENT_PLAN = new MetaDataKey<ProcurementPlan>() {
     };
     public static final MetaDataKey<Project> PROJECT = new MetaDataKey<Project>() {
     };
     public static final MetaDataKey<PurchaseRequisition> PURCHASE_REQUISITION
             = new MetaDataKey<PurchaseRequisition>() {
     };
-    public static final MetaDataKey<Tender> TENDER = new MetaDataKey<Tender>() {
-    };
-    public static final MetaDataKey<TenderQuotationEvaluation> TENDER_EVALUATION
-= new MetaDataKey<TenderQuotationEvaluation>() {
-    };
 
     public static final List<MetaDataKey> ALL_SESSION_KEYS = Collections.unmodifiableList(
-            Arrays.asList(DEPARTMENT, FISCALYEAR, PROCUREMENTPLAN,
-                    PROJECT, PURCHASE_REQUISITION, TENDER, TENDER_EVALUATION));
+            Arrays.asList(DEPARTMENT, FISCAL_YEAR, PROCUREMENT_PLAN, PROJECT, PURCHASE_REQUISITION));
 }

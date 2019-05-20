@@ -14,8 +14,6 @@ import java.util.List;
 @NoRepositoryBean
 public interface AbstractMakueniEntityRepository<T extends AbstractMakueniEntity>
         extends TextSearchableRepository<T, Long> {
-
-
     List<T> findByFiscalYearId(Long id);
 
     @Override

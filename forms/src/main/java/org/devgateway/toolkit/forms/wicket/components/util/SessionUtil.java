@@ -6,17 +6,13 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
-import org.devgateway.toolkit.persistence.dao.form.Tender;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 
 import static org.devgateway.toolkit.forms.WebConstants.ALL_SESSION_KEYS;
 import static org.devgateway.toolkit.forms.WebConstants.DEPARTMENT;
-import static org.devgateway.toolkit.forms.WebConstants.FISCALYEAR;
-import static org.devgateway.toolkit.forms.WebConstants.PROCUREMENTPLAN;
+import static org.devgateway.toolkit.forms.WebConstants.FISCAL_YEAR;
+import static org.devgateway.toolkit.forms.WebConstants.PROCUREMENT_PLAN;
 import static org.devgateway.toolkit.forms.WebConstants.PROJECT;
 import static org.devgateway.toolkit.forms.WebConstants.PURCHASE_REQUISITION;
-import static org.devgateway.toolkit.forms.WebConstants.TENDER;
-import static org.devgateway.toolkit.forms.WebConstants.TENDER_EVALUATION;
 
 /**
  * @author idobre
@@ -30,14 +26,14 @@ public final class SessionUtil {
     public static void setSessionPP(final ProcurementPlan object) {
         final Session session = Session.get();
         if (session != null) {
-            session.setMetaData(PROCUREMENTPLAN, object);
+            session.setMetaData(PROCUREMENT_PLAN, object);
         }
     }
 
     public static ProcurementPlan getSessionPP() {
         final Session session = Session.get();
         if (session != null) {
-            final ProcurementPlan procurementPlan = session.getMetaData(PROCUREMENTPLAN);
+            final ProcurementPlan procurementPlan = session.getMetaData(PROCUREMENT_PLAN);
             return procurementPlan;
         }
 
@@ -78,40 +74,6 @@ public final class SessionUtil {
         return null;
     }
 
-    public static void setSessionTender(final Tender object) {
-        final Session session = Session.get();
-        if (session != null) {
-            session.setMetaData(TENDER, object);
-        }
-    }
-
-    public static Tender getSessionTender() {
-        final Session session = Session.get();
-        if (session != null) {
-            final Tender tender = session.getMetaData(TENDER);
-            return tender;
-        }
-
-        return null;
-    }
-
-    public static void setSessionTenderQuotationEvaluation(final TenderQuotationEvaluation object) {
-        final Session session = Session.get();
-        if (session != null) {
-            session.setMetaData(TENDER_EVALUATION, object);
-        }
-    }
-
-    public static TenderQuotationEvaluation getSessionTenderQuotationEvaluation() {
-        final Session session = Session.get();
-        if (session != null) {
-            final TenderQuotationEvaluation tenderQuotationEvaluation = session.getMetaData(TENDER_EVALUATION);
-            return tenderQuotationEvaluation;
-        }
-
-        return null;
-    }
-
     public static void setSessionDepartment(final Department object) {
         final Session session = Session.get();
         if (session != null) {
@@ -132,14 +94,14 @@ public final class SessionUtil {
     public static void setSessionFiscalYear(final FiscalYear object) {
         final Session session = Session.get();
         if (session != null) {
-            session.setMetaData(FISCALYEAR, object);
+            session.setMetaData(FISCAL_YEAR, object);
         }
     }
 
     public static FiscalYear getSessionFiscalYear() {
         final Session session = Session.get();
         if (session != null) {
-            final FiscalYear fiscalYear = session.getMetaData(FISCALYEAR);
+            final FiscalYear fiscalYear = session.getMetaData(FISCAL_YEAR);
             return fiscalYear;
         }
 

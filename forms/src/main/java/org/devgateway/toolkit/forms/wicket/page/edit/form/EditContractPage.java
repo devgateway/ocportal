@@ -10,7 +10,6 @@ import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -21,7 +20,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -41,16 +39,9 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
-    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
-
-    @SpringBean
     protected ProcuringEntityService procuringEntityService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
-
-    private GenericSleepFormComponent tenderTitle;
-
-    private GenericSleepFormComponent tenderNumber;
 
     private GenericSleepFormComponent supplierAddress;
 
@@ -70,7 +61,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         ComponentUtil.addDateField(editForm, "expiryDate");
         ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
 
-       // addTenderInfo();
         addSupplierInfo();
 
         editForm.add(new ContractDocumentPanel("contractDocs"));
@@ -114,22 +104,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         }
 
         return suppliers;
-    }
-
-    class TenderQuotationEvaluationAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        TenderQuotationEvaluationAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
-        }
-
-        @Override
-        protected void onUpdate(final AjaxRequestTarget target) {
-            final Contract contract = editForm.getModelObject();
-            contract.setAwardee(null);
-            awardeeSelector.provider(new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
-            target.add(awardeeSelector);
-            target.add(tenderNumber);
-            target.add(tenderTitle);
-        }
     }
 
     class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {

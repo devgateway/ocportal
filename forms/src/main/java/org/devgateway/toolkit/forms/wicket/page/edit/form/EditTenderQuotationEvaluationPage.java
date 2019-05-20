@@ -6,9 +6,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
-import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
@@ -32,10 +30,6 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     @SpringBean
     protected TenderService tenderService;
 
-    
-    /**
-     * @param parameters
-     */
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderQuotationEvaluationService;

@@ -31,7 +31,8 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "project_id"),
-        @Index(columnList = "purchaseRequestNumber"), @Index(columnList = "title")})
+        @Index(columnList = "purchaseRequestNumber"),
+        @Index(columnList = "title")})
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY)

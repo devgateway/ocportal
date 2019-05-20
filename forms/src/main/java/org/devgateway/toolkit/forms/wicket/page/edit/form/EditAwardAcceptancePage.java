@@ -11,7 +11,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -20,7 +19,6 @@ import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -42,8 +40,6 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
     private GenericSleepFormComponent supplierID;
-
-    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector;
 
     public EditAwardAcceptancePage(final PageParameters parameters) {
         super(parameters);

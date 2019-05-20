@@ -21,11 +21,9 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
