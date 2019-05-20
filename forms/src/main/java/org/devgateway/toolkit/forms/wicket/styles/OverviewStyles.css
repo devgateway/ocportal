@@ -305,7 +305,7 @@
     float: right;
     height: 33px;
     text-indent: 33px;
-    width: 100px;
+    width: 130px;
 }
 
 .search-panel-header .btn.btn-add {
@@ -416,8 +416,8 @@
     border-left: 1px solid #dfe3e9;
 }
 
-.award.inactive,
-.tender-inactive {
+.award .inactive,
+.tender .inactive {
     color: #acacac;
 }
 
@@ -426,6 +426,7 @@
     background-repeat: no-repeat;
     background-size: 20px 20px;
     background-position: 99% center;
+    cursor: pointer;
 }
 
 .status-panel.collapsed {
@@ -467,7 +468,7 @@
     display: block;
     font-size: 11px;
     padding-bottom: 3px;
-    padding-top: 3px;
+    padding-top: 6px;
 }
 
 .project-details .status {

@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
 
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,8 @@ public interface AbstractPurchaseReqMakueniEntityRepository<T extends AbstractPu
         extends AbstractMakueniEntityRepository<T> {
     List<T> findByPurchaseRequisition(@Param("purchaseRequisition") PurchaseRequisition purchaseRequisition);
 
+    @Override
     @Query("select c from  #{#entityName} c "
-            + " where c.purchaseRequisition.project.procurementPlan.fiscalYear.id = :fiscalYearId")
-    List<T> findByFiscalYearId(@Param("fiscalYearId") Long id);
+            + " where c.purchaseRequisition.project.procurementPlan.fiscalYear = :fiscalYear")
+    List<T> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
 }

@@ -4,16 +4,35 @@
 <wicket:panel>
     <div wicket:id="listWrapper" class="project-panels-wrapper">
         <div wicket:id="list">
-
-            <div class="status-panel terminated" type="button" data-toggle="collapse" aria-expanded="false">
-                <span class="status-panel-heading">
-                    <span class="division">Office of the Governor</span>
-                    <span class="year">2018</span>
-                    <span class="projects-number">09 <label>Projects</label></span>
-                </span>
+            <div wicket:id="header" class="status-panel" type="button" data-toggle="collapse" aria-expanded="false">
+                <div class="status-panel-heading">
+                    <span wicket:id="procurementPlan.department" class="division">[[department]]</span>
+                    <span wicket:id="procurementPlan.fiscalYear" class="year">[[year]]</span>
+                    <span wicket:id="projectCount" class="projects-number">[[count]]</span><label>Projects</label>
+                </div>
             </div>
 
-            <td wicket:id="test"></td>
+            <div wicket:id="hideableContainer" class="collapse collapse-content">
+                <ul class="project-details">
+                    <li wicket:id="projects">
+                        <div class="col-md-6 project-title">
+                            <a href="#" wicket:id="title"><span wicket:id="projectTitle"></span></a>
+                            <span class="status" wicket:id="projectStatus"></span>
+                        </div>
+
+                        <div class="col-md-3 tender">
+                            <span wicket:id="tenderLabel"></span>
+                            <span class="status" wicket:id="tenderProcessStatus"></span>
+                        </div>
+
+                        <div class="col-md-3 award">
+                            <span wicket:id="awardLabel"></span>
+                            <span class="status" wicket:id="awardProcessStatus"></span>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
         </div>
     </div>
 </wicket:panel>

@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.overview;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
@@ -65,13 +66,13 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     // TODO change the name of the function or update it's parameters
     //  since we don't actually fetch the projects 'byDepartment'
     @Override
-    public List<StatusOverviewData> getProjectsByDepartment(final Long fiscalYearId) {
-        List<StatusOverviewData> departmentsData = new ArrayList<>();
-        List<Project> projects = projectRepository.findProjectsForYear(fiscalYearId);
-        final Map<Long, Set<String>> tenderStatusMap = getTenderStatusMap(fiscalYearId);
-        final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(fiscalYearId);
+    public List<StatusOverviewData> getAllProjectsByFiscalYear(final FiscalYear fiscalYear) {
+        final List<StatusOverviewData> departmentsData = new ArrayList<>();
+        final List<Project> projects = projectRepository.findByFiscalYear(fiscalYear);
+        final Map<Long, Set<String>> tenderStatusMap = getTenderStatusMap(fiscalYear);
+        final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(fiscalYear);
 
-        for (Project p : projects) {
+        for (final Project p : projects) {
             StatusOverviewData departmentOverview = departmentsData.stream().filter(
                     d -> p.getProcurementPlan().equals(d.getProcurementPlan())).findFirst().orElse(null);
             if (departmentOverview == null) {
@@ -80,14 +81,16 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 departmentsData.add(departmentOverview);
             }
 
-            StatusOverviewProjectStatus statusOverviewProjectStatus = new StatusOverviewProjectStatus();
+            final StatusOverviewProjectStatus statusOverviewProjectStatus = new StatusOverviewProjectStatus();
             statusOverviewProjectStatus.setId(p.getId());
             statusOverviewProjectStatus.setProjectTitle(p.getProjectTitle());
             statusOverviewProjectStatus.setProjectStatus(p.getStatus());
             statusOverviewProjectStatus.setTenderProcessStatus(getProcessStatus(tenderStatusMap, p.getId()));
             statusOverviewProjectStatus.setAwardProcessStatus(getProcessStatus(awardStatusMap, p.getId()));
+
             departmentOverview.getProjects().add(statusOverviewProjectStatus);
         }
+
         return departmentsData;
     }
 
@@ -107,27 +110,27 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 return DBConstants.Status.SUBMITTED;
             }
 
-            if (status.contains(DBConstants.Status.VALIDATED)) {
-                return DBConstants.Status.VALIDATED;
+            if (status.contains(DBConstants.Status.APPROVED)) {
+                return DBConstants.Status.APPROVED;
             }
         }
 
         return DBConstants.Status.NOT_STARTED;
     }
 
-    private Map<Long, Set<String>> getTenderStatusMap(final Long fiscalYearId) {
+    private Map<Long, Set<String>> getTenderStatusMap(final FiscalYear fiscalYear) {
         final Map<Long, Set<String>> statusMap = new HashMap<>();
         addStatus(
-                statusMap, fiscalYearId, purchaseRequisitionRepository, tenderRepository,
+                statusMap, fiscalYear, purchaseRequisitionRepository, tenderRepository,
                 tenderQuotationEvaluationRepository, professionalOpinionRepository
         );
         return statusMap;
     }
 
-    private Map<Long, Set<String>> getAwardStatusMap(final Long fiscalYearId) {
+    private Map<Long, Set<String>> getAwardStatusMap(final FiscalYear fiscalYear) {
         final Map<Long, Set<String>> statusMap = new HashMap<>();
         addStatus(
-                statusMap, fiscalYearId, awardNotificationRepository, awardAcceptanceRepository, contractRepository);
+                statusMap, fiscalYear, awardNotificationRepository, awardAcceptanceRepository, contractRepository);
         return statusMap;
     }
 
@@ -141,10 +144,10 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     @SafeVarargs
     private final <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
     void addStatus(final Map<Long, Set<String>> statusMap,
-                   final Long fiscalYearId,
+                   final FiscalYear fiscalYear,
                    final AbstractMakueniEntityRepository<? extends S>... repository) {
         for (AbstractMakueniEntityRepository<? extends S> r : repository) {
-            addStatus(statusMap, r.findByFiscalYearId(fiscalYearId));
+            addStatus(statusMap, r.findByFiscalYear(fiscalYear));
         }
     }
 

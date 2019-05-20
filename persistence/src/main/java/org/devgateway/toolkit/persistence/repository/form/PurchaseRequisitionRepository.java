@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -25,7 +26,7 @@ public interface PurchaseRequisitionRepository extends AbstractMakueniEntityRepo
     
     List<PurchaseRequisition> findByProject(Project project);
 
-    @Query("select c from  #{#entityName} c "
-            + " where c.project.procurementPlan.fiscalYear.id = :fiscalYearId")
-    List<PurchaseRequisition> findByFiscalYearId(@Param("fiscalYearId") Long  id);
+    @Override
+    @Query("select c from  #{#entityName} c where c.project.procurementPlan.fiscalYear = :fiscalYear")
+    List<PurchaseRequisition> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
 }

@@ -70,7 +70,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private SaveEditPageButton saveSubmitButton;
 
-    private SaveEditPageButton saveValidateButton;
+    private SaveEditPageButton saveApproveButton;
 
     private SaveEditPageButton saveContinueButton;
 
@@ -132,8 +132,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         saveSubmitButton = getSaveSubmitPageButton();
         entityButtonsFragment.add(saveSubmitButton);
 
-        saveValidateButton = getSaveValidatePageButton();
-        entityButtonsFragment.add(saveValidateButton);
+        saveApproveButton = getSaveApprovePageButton();
+        entityButtonsFragment.add(saveApproveButton);
 
         saveContinueButton = getSaveDraftAndContinueButton();
         entityButtonsFragment.add(saveContinueButton);
@@ -260,7 +260,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
 
         switch (editForm.getModelObject().getStatus()) {
-            case DBConstants.Status.VALIDATED:
+            case DBConstants.Status.APPROVED:
                 return "label-success";
             case DBConstants.Status.DRAFT:
                 return "label-danger";
@@ -412,9 +412,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return button;
     }
 
-    private SaveEditPageButton getSaveValidatePageButton() {
-        final SaveEditPageButton saveEditPageButton = new SaveEditPageButton("validate",
-                new StringResourceModel("validate", this, null)) {
+    private SaveEditPageButton getSaveApprovePageButton() {
+        final SaveEditPageButton saveEditPageButton = new SaveEditPageButton("approve",
+                new StringResourceModel("approve", this, null)) {
 
             @Override
             protected String getOnClickScript() {
@@ -423,7 +423,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
-                setStatusAppendComment(DBConstants.Status.VALIDATED);
+                setStatusAppendComment(DBConstants.Status.APPROVED);
                 super.onSubmit(target);
             }
         };
@@ -471,7 +471,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         addSaveButtonsPermissions(saveButton);
         addSaveButtonsPermissions(saveContinueButton);
         addSaveButtonsPermissions(saveSubmitButton);
-        addValidateButtonPermissions(saveValidateButton);
+        addApproveButtonPermissions(saveApproveButton);
         addSaveRevertButtonPermissions(revertToDraftPageButton);
         addDeleteButtonPermissions(deleteButton);
 
@@ -479,7 +479,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         if (ComponentUtil.isPrintMode()) {
             saveContinueButton.setVisibilityAllowed(false);
             saveSubmitButton.setVisibilityAllowed(false);
-            saveValidateButton.setVisibilityAllowed(false);
+            saveApproveButton.setVisibilityAllowed(false);
             revertToDraftPageButton.setVisibilityAllowed(false);
         }
     }
@@ -496,7 +496,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
     }
 
-    private void addValidateButtonPermissions(final Component button) {
+    private void addApproveButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
         button.setVisibilityAllowed(
@@ -512,7 +512,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
         // additionally normal users should not revert anything that was already validated
         if (WebSecurityUtil.isCurrentRoleUser()
-                && DBConstants.Status.VALIDATED.equals(editForm.getModelObject().getStatus())) {
+                && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
             button.setVisibilityAllowed(false);
         }
     }
