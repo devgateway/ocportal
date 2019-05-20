@@ -123,8 +123,8 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
     }
 
     boolean canEdit(Statusable previousStep) {
-        return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED) ||
-                previousStep.getStatus().equals(DBConstants.Status.APPROVED));
+        return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED)
+                || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
     private BootstrapBookmarkablePageLink<Void> createLinkNoPrevStep(GenericPersistable persistable, final String id,
@@ -164,7 +164,8 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
         add(new Label("professionalOpinionAmount", professionalOpinion != null
                 ? professionalOpinion.getRecommendedAwardAmount() : ""));
         add(new DeptOverviewStatusLabel("professionalOpinionStatus", professionalOpinion));
-        createLink(professionalOpinion, "editProfessionalOpinion", EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
+        createLink(professionalOpinion, "editProfessionalOpinion",
+                EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
     }
 
     private void addAwardNotificationSection() {
