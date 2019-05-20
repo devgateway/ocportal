@@ -4,8 +4,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
-import org.devgateway.toolkit.forms.wicket.components.table.filter.category.TargetGroupFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.category.TargetGroupFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditTargetGroupPage;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;

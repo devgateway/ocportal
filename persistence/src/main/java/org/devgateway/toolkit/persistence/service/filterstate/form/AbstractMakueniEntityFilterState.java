@@ -1,10 +1,8 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.form;
 
-import org.devgateway.toolkit.forms.wicket.components.table.filter.StatusAuditableEntityFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -28,7 +26,7 @@ public abstract class AbstractMakueniEntityFilterState<T extends AbstractMakueni
             // if (procurementPlan != null) {
             //     if (procurementPlan.getDepartment() != null) {
             //         predicates.add(cb.equal(
-            //                 root.get(AbstractMakueniEntity_.procurementPlan).get(ProcurementPlan_.department),
+
             //                 procurementPlan.getDepartment()));
             //     }
             //

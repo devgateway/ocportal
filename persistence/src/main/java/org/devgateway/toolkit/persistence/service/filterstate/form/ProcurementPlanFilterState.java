@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;

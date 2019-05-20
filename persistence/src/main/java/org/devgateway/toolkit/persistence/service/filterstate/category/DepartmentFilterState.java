@@ -1,6 +1,6 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.category;
 
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -9,14 +9,13 @@ import java.util.List;
 
 /**
  * @author idobre
- * @since 2019-04-17
+ * @since 2019-03-11
  */
-public class PurchaseRequisitionFilterState extends AbstractMakueniEntityFilterState<PurchaseRequisition> {
+public class DepartmentFilterState extends AbstractCategoryFilterState<Department> {
     @Override
-    public Specification<PurchaseRequisition> getSpecification() {
+    public Specification<Department> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
-
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));
         };

@@ -1,6 +1,6 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.category;
 
-import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -9,10 +9,11 @@ import java.util.List;
 
 /**
  * @author gmutuhu
- */
-public class AwardNotificationFilterState extends AbstractMakueniEntityFilterState<AwardNotification> {
+ * 
+ *  */
+public class ChargeAccountFilterState extends AbstractCategoryFilterState<ChargeAccount> {
     @Override
-    public Specification<AwardNotification> getSpecification() {
+    public Specification<ChargeAccount> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 

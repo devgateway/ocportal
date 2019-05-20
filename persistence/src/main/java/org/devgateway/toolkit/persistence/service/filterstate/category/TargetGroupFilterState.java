@@ -1,6 +1,6 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.category;
 
-import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -9,11 +9,11 @@ import java.util.List;
 
 /**
  * @author idobre
- * @since 2019-04-02
+ * @since 2019-03-11
  */
-public class TenderFilterState extends AbstractMakueniEntityFilterState<Tender> {
+public class TargetGroupFilterState extends AbstractCategoryFilterState<TargetGroup> {
     @Override
-    public Specification<Tender> getSpecification() {
+    public Specification<TargetGroup> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 

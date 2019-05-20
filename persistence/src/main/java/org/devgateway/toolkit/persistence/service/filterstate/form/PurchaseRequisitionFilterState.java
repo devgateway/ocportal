@@ -1,6 +1,6 @@
-package org.devgateway.toolkit.forms.wicket.components.table.filter.form;
+package org.devgateway.toolkit.persistence.service.filterstate.form;
 
-import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -9,11 +9,11 @@ import java.util.List;
 
 /**
  * @author idobre
- * @since 2019-04-24
+ * @since 2019-04-17
  */
-public class ProfessionalOpinionFilterState extends AbstractMakueniEntityFilterState<ProfessionalOpinion> {
+public class PurchaseRequisitionFilterState extends AbstractMakueniEntityFilterState<PurchaseRequisition> {
     @Override
-    public Specification<ProfessionalOpinion> getSpecification() {
+    public Specification<PurchaseRequisition> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
