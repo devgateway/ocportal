@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRep
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +32,9 @@ public class ProfessionalOpinionServiceImpl extends BaseJpaServiceImpl<Professio
         return new ProfessionalOpinion();
     }
 
+    @Override
+    @Cacheable
     public ProfessionalOpinion findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        // replace with findOne
-        return professionalOpinionRepository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst()
-                .orElse(null);
+        return professionalOpinionRepository.findByPurchaseRequisition(purchaseRequisition);
     }
-
 }

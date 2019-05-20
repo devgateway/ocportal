@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepos
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +32,9 @@ public class AwardNotificationServiceImpl extends BaseJpaServiceImpl<AwardNotifi
     }
 
     @Override
+    @Cacheable
     public AwardNotification findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        return awardNotificationRepository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst()
-                .orElse(null);
+        return awardNotificationRepository.findByPurchaseRequisition(purchaseRequisition);
     }
 
 }

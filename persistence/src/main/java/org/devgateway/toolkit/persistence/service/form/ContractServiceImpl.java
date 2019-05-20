@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,9 @@ public class ContractServiceImpl extends BaseJpaServiceImpl<Contract>
     }
 
     @Override
+    @Cacheable
     public Contract findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        return contractRepository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst().orElse(null);
+        return contractRepository.findByPurchaseRequisition(purchaseRequisition);
     }
 
 }

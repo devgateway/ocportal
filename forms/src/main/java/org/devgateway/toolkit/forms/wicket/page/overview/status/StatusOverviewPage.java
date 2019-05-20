@@ -16,12 +16,12 @@ package org.devgateway.toolkit.forms.wicket.page.overview.status;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -32,13 +32,13 @@ import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author gmutuhu
@@ -47,15 +47,11 @@ import java.util.List;
 @MountPath("/statusOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class StatusOverviewPage extends DataEntryBasePage {
-    private ListView<StatusOverviewData> departmentsList;
-
     private final List<FiscalYear> fiscalYears;
 
     private FiscalYear fiscalYear;
 
-    private TextField<String> searchBox;
-
-    private List<StatusOverviewData> statusOverviewData;
+    private ListViewStatusOverview listViewStatusOverview;
 
     @SpringBean
     private FiscalYearService fiscalYearService;
@@ -87,50 +83,56 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
 
         addSearchBox();
-        addYearDropdown(fiscalYears);
+        addYearDropdown();
 
-        addDepartmentList();
-
-        add(new ListViewStatusOverview("statusPanel", new ListModel<>(statusOverviewData)));
+        listViewStatusOverview = new ListViewStatusOverview("statusPanel", new ListModel<>(
+                statusOverviewService.getAllProjectsByFiscalYear(fiscalYear)
+        ));
+        add(listViewStatusOverview);
     }
 
-    private void addYearDropdown(final List<FiscalYear> fiscalYears) {
+    private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
-        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
+        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("yearsDropdown",
                 new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer);
-        yearsDropdown.add(new FormComponentUpdatingBehavior() {
+        yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate() {
+            protected void onUpdate(final AjaxRequestTarget target) {
                 SessionUtil.setSessionFiscalYear(yearsDropdown.getModelObject());
 
-                statusOverviewData = statusOverviewService
-                        .getAllProjectsByFiscalYear(yearsDropdown.getModelObject());
-                departmentsList.setModelObject(statusOverviewData);
+                listViewStatusOverview.setModelObject(statusOverviewService
+                        .getAllProjectsByFiscalYear(yearsDropdown.getModelObject()));
+                target.add(listViewStatusOverview);
+                target.add(sideBar.getProjectCount());
             }
         });
         add(yearsDropdown);
     }
 
     private void addSearchBox() {
-        searchBox = new TextField<>("searchBox", Model.of(""));
-        searchBox.add(new FormComponentUpdatingBehavior() {
+        final  TextField<String> searchBox= new TextField<>("searchBox", Model.of(""));
+        searchBox.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate() {
-                departmentsList.setModelObject(statusOverviewData);
+            protected void onUpdate(final AjaxRequestTarget target) {
+                logger.error(">>>>>>> " + searchBox.getModelObject());
+                // departmentsList.setModelObject(statusOverviewData);
+
+                /*
+                filteredProjects = this.statusOverviewData.getProjects();
+                if (searchTerm != null && !searchTerm.isEmpty()) {
+                    filteredProjects = this.statusOverviewData.getProjects().stream().filter(p -> {
+                        if (p.getProjectTitle() != null) {
+                            return p.getProjectTitle().toLowerCase().contains(searchTerm.toLowerCase());
+                        }
+
+                        return false;
+                    }).collect(Collectors.toList());
+                }*/
+
+                target.add(listViewStatusOverview);
+                target.add(sideBar.getProjectCount());
             }
         });
         add(searchBox);
-    }
-
-    private void addDepartmentList() {
-        statusOverviewData = statusOverviewService.getAllProjectsByFiscalYear(fiscalYear);
-    }
-
-    public FiscalYear getFiscalYear() {
-        return fiscalYear;
-    }
-
-    public void setFiscalYear(final FiscalYear fiscalYear) {
-        this.fiscalYear = fiscalYear;
     }
 }

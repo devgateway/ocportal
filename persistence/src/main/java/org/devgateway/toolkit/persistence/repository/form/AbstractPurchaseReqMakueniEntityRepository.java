@@ -13,7 +13,7 @@ import java.util.List;
 @NoRepositoryBean
 public interface AbstractPurchaseReqMakueniEntityRepository<T extends AbstractPurchaseReqMakueniEntity>
         extends AbstractMakueniEntityRepository<T> {
-    List<T> findByPurchaseRequisition(@Param("purchaseRequisition") PurchaseRequisition purchaseRequisition);
+    T findByPurchaseRequisition(@Param("purchaseRequisition") PurchaseRequisition purchaseRequisition);
 
     @Override
     @Query("select c from  #{#entityName} c "
