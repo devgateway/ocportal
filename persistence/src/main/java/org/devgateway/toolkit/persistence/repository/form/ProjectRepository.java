@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -28,4 +29,9 @@ public interface ProjectRepository extends AbstractMakueniEntityRepository<Proje
     List<Project> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
 
     List<Project> findByProcurementPlan(ProcurementPlan procurementPlan);
+
+    Long countByProcurementPlanFiscalYear(FiscalYear fiscalYear);
+
+    Long countByProcurementPlanDepartmentAndProcurementPlanFiscalYear(Department department,
+                                                                      FiscalYear fiscalYear);
 }

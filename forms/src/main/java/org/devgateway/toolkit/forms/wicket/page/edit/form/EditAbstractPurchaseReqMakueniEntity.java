@@ -20,5 +20,7 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
         super(parameters);
 
         this.purchaseRequisition = SessionUtil.getSessionPurchaseRequisition();
+
+        // TODO - if we don't have a purchaseRequisition log and redirect to status page.
     }
 }

@@ -38,6 +38,7 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author gmutuhu
@@ -49,8 +50,6 @@ public class StatusOverviewPage extends DataEntryBasePage {
     private final List<FiscalYear> fiscalYears;
 
     private FiscalYear fiscalYear;
-
-    private TextField<String> searchBox;
 
     private ListViewStatusOverview listViewStatusOverview;
 
@@ -104,28 +103,36 @@ public class StatusOverviewPage extends DataEntryBasePage {
                 listViewStatusOverview.setModelObject(statusOverviewService
                         .getAllProjectsByFiscalYear(yearsDropdown.getModelObject()));
                 target.add(listViewStatusOverview);
+                target.add(sideBar.getProjectCount());
             }
         });
         add(yearsDropdown);
     }
 
     private void addSearchBox() {
-        searchBox = new TextField<>("searchBox", Model.of(""));
+        final  TextField<String> searchBox= new TextField<>("searchBox", Model.of(""));
         searchBox.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
                 logger.error(">>>>>>> " + searchBox.getModelObject());
                 // departmentsList.setModelObject(statusOverviewData);
+
+                /*
+                filteredProjects = this.statusOverviewData.getProjects();
+                if (searchTerm != null && !searchTerm.isEmpty()) {
+                    filteredProjects = this.statusOverviewData.getProjects().stream().filter(p -> {
+                        if (p.getProjectTitle() != null) {
+                            return p.getProjectTitle().toLowerCase().contains(searchTerm.toLowerCase());
+                        }
+
+                        return false;
+                    }).collect(Collectors.toList());
+                }*/
+
+                target.add(listViewStatusOverview);
+                target.add(sideBar.getProjectCount());
             }
         });
         add(searchBox);
-    }
-
-    public FiscalYear getFiscalYear() {
-        return fiscalYear;
-    }
-
-    public void setFiscalYear(final FiscalYear fiscalYear) {
-        this.fiscalYear = fiscalYear;
     }
 }

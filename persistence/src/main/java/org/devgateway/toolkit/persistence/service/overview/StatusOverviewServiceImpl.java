@@ -63,18 +63,23 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Override
     public List<StatusOverviewData> getAllProjectsByFiscalYear(final FiscalYear fiscalYear) {
-        final List<StatusOverviewData> departmentsData = new ArrayList<>();
+        final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
         final List<Project> projects = projectRepository.findByFiscalYear(fiscalYear);
-        final Map<Long, Set<String>> tenderStatusMap = getTenderStatusMap(fiscalYear);
-        final Map<Long, Set<String>> awardStatusMap = getAwardStatusMap(fiscalYear);
+        final Map<Long, Set<String>> tenderStatusMap = addStatus(
+                fiscalYear, purchaseRequisitionRepository, tenderRepository,
+                tenderQuotationEvaluationRepository, professionalOpinionRepository);
+        final Map<Long, Set<String>> awardStatusMap = addStatus(
+                fiscalYear, awardNotificationRepository, awardAcceptanceRepository, contractRepository);
 
         for (final Project p : projects) {
-            StatusOverviewData departmentOverview = departmentsData.stream().filter(
-                    d -> p.getProcurementPlan().equals(d.getProcurementPlan())).findFirst().orElse(null);
-            if (departmentOverview == null) {
-                departmentOverview = new StatusOverviewData();
-                departmentOverview.setProcurementPlan(p.getProcurementPlan());
-                departmentsData.add(departmentOverview);
+            StatusOverviewData sod = statusOverviewData.parallelStream()
+                    .filter(item -> p.getProcurementPlan().equals(item.getProcurementPlan()))
+                    .findFirst()
+                    .orElse(null);
+            if (sod == null) {
+                sod = new StatusOverviewData();
+                sod.setProcurementPlan(p.getProcurementPlan());
+                statusOverviewData.add(sod);
             }
 
             final StatusOverviewProjectStatus statusOverviewProjectStatus = new StatusOverviewProjectStatus();
@@ -84,10 +89,10 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
             statusOverviewProjectStatus.setTenderProcessStatus(getProcessStatus(tenderStatusMap, p.getId()));
             statusOverviewProjectStatus.setAwardProcessStatus(getProcessStatus(awardStatusMap, p.getId()));
 
-            departmentOverview.getProjects().add(statusOverviewProjectStatus);
+            sod.getProjects().add(statusOverviewProjectStatus);
         }
 
-        return departmentsData;
+        return statusOverviewData;
     }
 
     private String getProcessStatus(final Map<Long, Set<String>> tenderStatusMap, final Long projectId) {
@@ -114,19 +119,16 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         return DBConstants.Status.NOT_STARTED;
     }
 
-    private Map<Long, Set<String>> getTenderStatusMap(final FiscalYear fiscalYear) {
+    @SafeVarargs
+    private final <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
+    Map<Long, Set<String>> addStatus(final FiscalYear fiscalYear,
+                                     final AbstractMakueniEntityRepository<? extends S>... repositories) {
         final Map<Long, Set<String>> statusMap = new HashMap<>();
-        addStatus(
-                statusMap, fiscalYear, purchaseRequisitionRepository, tenderRepository,
-                tenderQuotationEvaluationRepository, professionalOpinionRepository
-        );
-        return statusMap;
-    }
 
-    private Map<Long, Set<String>> getAwardStatusMap(final FiscalYear fiscalYear) {
-        final Map<Long, Set<String>> statusMap = new HashMap<>();
-        addStatus(
-                statusMap, fiscalYear, awardNotificationRepository, awardAcceptanceRepository, contractRepository);
+        for (AbstractMakueniEntityRepository<? extends S> repository : repositories) {
+            addStatus(statusMap, repository.findByFiscalYear(fiscalYear));
+        }
+
         return statusMap;
     }
 
@@ -135,16 +137,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                    final Collection<S> collection) {
         collection.stream()
                 .forEach(e -> addStatus(statusMap, e.getProject().getId(), e.getStatus()));
-    }
-
-    @SafeVarargs
-    private final <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
-    void addStatus(final Map<Long, Set<String>> statusMap,
-                   final FiscalYear fiscalYear,
-                   final AbstractMakueniEntityRepository<? extends S>... repository) {
-        for (AbstractMakueniEntityRepository<? extends S> r : repository) {
-            addStatus(statusMap, r.findByFiscalYear(fiscalYear));
-        }
     }
 
     private void addStatus(final Map<Long, Set<String>> statusMap, final Long projectId, final String status) {
