@@ -13,10 +13,11 @@ import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceReposit
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
 import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
-import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
 import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluationRepository;
 import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
+import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ import java.util.Set;
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     // TODO - replace all repositories with services
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectService projectService;
 
     @Autowired
     private PurchaseRequisitionRepository purchaseRequisitionRepository;
@@ -62,9 +63,11 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private ContractRepository contractRepository;
 
     @Override
-    public List<StatusOverviewData> getAllProjectsByFiscalYear(final FiscalYear fiscalYear) {
+    public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
         final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
-        final List<Project> projects = projectRepository.findByFiscalYear(fiscalYear);
+        final List<Project> projects = projectService.findAll(
+                new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
+
         final Map<Long, Set<String>> tenderStatusMap = addStatus(
                 fiscalYear, purchaseRequisitionRepository, tenderRepository,
                 tenderQuotationEvaluationRepository, professionalOpinionRepository);

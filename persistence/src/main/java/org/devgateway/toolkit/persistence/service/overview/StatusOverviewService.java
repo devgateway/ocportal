@@ -9,5 +9,5 @@ import java.util.List;
  * @author gmutuhu
  */
 public interface StatusOverviewService {
-    List<StatusOverviewData> getAllProjectsByFiscalYear(FiscalYear fiscalYear);
+    List<StatusOverviewData> getAllProjects(FiscalYear fiscalYear, String title);
 }
