@@ -2,6 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -72,26 +73,54 @@ public class DepartmentOverviewMainPanel extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        addProcurementPlanButton("newProcurementPlan", null);
-        addProcurementPlanButton("editProcurementPlan", procurementPlan.getId());
-        addProcurementPlanButton("viewProcurementPlan", procurementPlan.getId());
+        addNewProcurementPlanButton();
+        addEditProcurementPlanButton();
+        addViewProcurementPlanButton();
         addCabinetPaperButton();
         addProjectButton();
         addYearDropdown();
         addSearchBox();
-        add(new Label("departmentLabel", procurementPlan.getDepartment().getLabel()));
-        add(new Label("procurementPlanLabel", procurementPlan.toString()));
+        add(new Label("departmentLabel", department.getLabel()));
+        if (procurementPlan != null) {
+            add(new Label("procurementPlanLabel", procurementPlan.toString()));
+        } else {
+            add(new WebMarkupContainer("procurementPlanLabel").setVisibilityAllowed(false));
+        }
         addProjectList();
     }
 
-    private void addProcurementPlanButton(final String buttonId, final Long procurementPlanId) {
-        final PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_ID, procurementPlanId);
-
+    private void addNewProcurementPlanButton() {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
-                buttonId, EditProcurementPlanPage.class, pageParameters, Buttons.Type.Success);
+                "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
     }
+
+    private void addEditProcurementPlanButton() {
+        PageParameters pp = new PageParameters();
+        if (procurementPlan != null) {
+            pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
+        }
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
+                "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Info);
+        if (procurementPlan == null) {
+            button.setEnabled(false);
+        }
+        add(button);
+    }
+
+    private void addViewProcurementPlanButton() {
+        PageParameters pp = new PageParameters();
+        if (procurementPlan != null) {
+            pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
+        }
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
+                "viewProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Success);
+        if (procurementPlan == null) {
+            button.setEnabled(false);
+        }
+        add(button);
+    }
+
 
     private void addCabinetPaperButton() {
         // TODO (params) - check that here the Cabinet Paper page has access to Procurement Plan
@@ -113,7 +142,8 @@ public class DepartmentOverviewMainPanel extends Panel {
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
-                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer);
+                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer
+        );
         yearsDropdown.add(new FormComponentUpdatingBehavior() {
             @Override
             protected void onUpdate() {

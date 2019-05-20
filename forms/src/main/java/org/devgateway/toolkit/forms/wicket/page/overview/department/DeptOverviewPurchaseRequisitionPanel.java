@@ -12,6 +12,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
@@ -20,44 +21,24 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitio
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
-import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
-import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
-import org.devgateway.toolkit.persistence.service.form.ContractService;
-import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
-import org.devgateway.toolkit.persistence.service.form.TenderService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 
 // TODO - this class should be renamed
-public class TenderItem extends Panel {
-    @SpringBean
-    private TenderService tenderService;
+public class DeptOverviewPurchaseRequisitionPanel extends Panel {
 
     @SpringBean
-    private TenderQuotationEvaluationService tenderQuotationEvaluationService;
-
-    @SpringBean
-    private ProfessionalOpinionService professionalOpinionService;
-
-    @SpringBean
-    private AwardNotificationService awardNotificationService;
-
-    @SpringBean
-    private AwardAcceptanceService awardAcceptanceService;
-
-    @SpringBean
-    private ContractService contractService;
+    private PurchaseRequisitionService purchaseRequisitionService;
 
     private final PurchaseRequisition purchaseRequisition;
-
-    private final Project project;
 
     private Tender tender;
 
@@ -73,22 +54,22 @@ public class TenderItem extends Panel {
 
     private Boolean expanded = false;
 
-    public TenderItem(final String id, final Project project, final PurchaseRequisition purchaseRequisition) {
+    public DeptOverviewPurchaseRequisitionPanel(final String id, final PurchaseRequisition purchaseRequisition) {
         super(id);
-        this.project = project;
         this.purchaseRequisition = purchaseRequisition;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        tender = tenderService.findByPurchaseRequisition(purchaseRequisition);
-        tenderQuotationEvaluation = tenderQuotationEvaluationService.findByPurchaseRequisition(purchaseRequisition);
-        professionalOpinion = professionalOpinionService.findByPurchaseRequisition(purchaseRequisition);
 
-        awardNotification = awardNotificationService.findByPurchaseRequisition(purchaseRequisition);
-        awardAcceptance = awardAcceptanceService.findByPurchaseRequisition(purchaseRequisition);
-        contract = contractService.findByPurchaseRequisition(purchaseRequisition);
+        PurchaseRequisition pr = purchaseRequisitionService.findById(purchaseRequisition.getId()).get();
+        tender = pr.getTender();
+        tenderQuotationEvaluation = pr.getTenderQuotationEvaluation();
+        professionalOpinion = pr.getProfessionalOpinion();
+        awardNotification = pr.getAwardNotification();
+        awardAcceptance = pr.getAwardAcceptance();
+        contract = pr.getContract();
 
         addGroupHeader();
         addPurchaseRequisitionSection();
@@ -139,7 +120,6 @@ public class TenderItem extends Panel {
                 "requisitionEdit", EditPurchaseRequisitionPage.class, pageParameters, Buttons.Type.Success);
         add(purchaseRequisitionEdit);
 
-    }
 
     private void addTenderDocumentSection() {
         add(new Label("tenderTitle", tender != null ? tender.getTenderTitle() : ""));
@@ -148,30 +128,32 @@ public class TenderItem extends Panel {
         addStatus("tenderStatus", tender != null
                 ? tender.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase());
 
-        final PageParameters pageParameters = new PageParameters();
-        if (tender != null) {
-            pageParameters.set(WebConstants.PARAM_ID, tender.getId());
-        }
-
-        createLink("editTender", pageParameters, "btn-add no-text", EditTenderPage.class, true);
+    boolean canEdit(Statusable previousStep) {
+        return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED) ||
+                previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
-    private void createLink(final String id, final PageParameters pageParameters, final String cssClasses,
-                            final Class clazz, final boolean enabled) {
+    private BootstrapBookmarkablePageLink<Void> createLinkNoPrevStep(GenericPersistable persistable, final String id,
+                                                                     final Class<? extends AbstractEditPage> clazz) {
+        final PageParameters pageParameters = new PageParameters();
+        if (persistable != null) {
+            pageParameters.set(WebConstants.PARAM_ID, persistable.getId());
+        }
 
         SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
 
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>(id, clazz,
-                pageParameters, Buttons.Type.Success);
-        button.add(AttributeAppender.append("class", cssClasses));
-        button.setEnabled(enabled);
+                pageParameters, Buttons.Type.Success
+        );
+        button.add(AttributeAppender.append("class", "no-text btn-"
+                + (persistable == null ? "add" : "edit")));
         add(button);
+        return button;
     }
 
-    private void addStatus(final String id, final String status) {
-        Label statusLabel = new Label(id);
-        statusLabel.add(AttributeAppender.append("class", status));
-        add(statusLabel);
+    private void createLink(GenericPersistable persistable, final String id,
+                            final Class<? extends AbstractEditPage> clazz, Statusable previousStep) {
+        createLinkNoPrevStep(persistable, id, clazz).setEnabled(canEdit(previousStep));
     }
 
     private void addTenderEvaluationSection() {

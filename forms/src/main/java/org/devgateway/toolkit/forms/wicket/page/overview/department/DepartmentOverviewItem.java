@@ -92,7 +92,7 @@ public class DepartmentOverviewItem extends Panel {
 
             @Override
             protected void populateItem(final ListItem<PurchaseRequisition> item) {
-                item.add(new TenderItem("tender", project, item.getModelObject()));
+                item.add(new DeptOverviewPurchaseRequisitionPanel("tender",  item.getModelObject()));
             }
         };
         purchaseReqisitionList.setOutputMarkupId(true);
