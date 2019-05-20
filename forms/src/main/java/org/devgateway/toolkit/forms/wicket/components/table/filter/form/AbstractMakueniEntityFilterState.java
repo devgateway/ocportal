@@ -24,19 +24,20 @@ public abstract class AbstractMakueniEntityFilterState<T extends AbstractMakueni
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
-            if (procurementPlan != null) {
-                if (procurementPlan.getDepartment() != null) {
-                    predicates.add(cb.equal(
-                            root.get(AbstractMakueniEntity_.procurementPlan).get(ProcurementPlan_.department),
-                            procurementPlan.getDepartment()));
-                }
-
-                if (procurementPlan.getFiscalYear() != null) {
-                    predicates.add(cb.equal(
-                            root.get(AbstractMakueniEntity_.procurementPlan).get(ProcurementPlan_.fiscalYear),
-                            procurementPlan.getFiscalYear()));
-                }
-            }
+            // TODO
+            // if (procurementPlan != null) {
+            //     if (procurementPlan.getDepartment() != null) {
+            //         predicates.add(cb.equal(
+            //                 root.get(AbstractMakueniEntity_.procurementPlan).get(ProcurementPlan_.department),
+            //                 procurementPlan.getDepartment()));
+            //     }
+            //
+            //     if (procurementPlan.getFiscalYear() != null) {
+            //         predicates.add(cb.equal(
+            //                 root.get(AbstractMakueniEntity_.procurementPlan).get(ProcurementPlan_.fiscalYear),
+            //                 procurementPlan.getFiscalYear()));
+            //     }
+            // }
 
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));

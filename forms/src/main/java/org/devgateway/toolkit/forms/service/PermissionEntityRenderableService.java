@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.forms.service;
 
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -37,6 +36,7 @@ public class PermissionEntityRenderableService {
         if (!entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_VALIDATOR)
                 || roles.contains(SecurityConstants.Roles.ROLE_USER))) {
             if (entity instanceof AbstractMakueniEntity) {
+                // TODO check this
                 final ProcurementPlan procurementPlan = ((AbstractPurchaseReqMakueniEntity) entity)
                         .getProject().getProcurementPlan();
 

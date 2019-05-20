@@ -11,7 +11,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -19,8 +18,6 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -36,23 +33,11 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @SpringBean
     protected AwardNotificationService awardNotificationService;
 
-    @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
-    @SpringBean
-    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
-
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
-
-    private GenericSleepFormComponent tenderTitle;
-
-    private GenericSleepFormComponent tenderNumber;
 
     private GenericSleepFormComponent supplierID;
 
     private GenericSleepFormComponent supplierAddress;
-
-    private Select2ChoiceBootstrapFormComponent<TenderQuotationEvaluation> tenderQuotationEvaluationSelector;
 
     public EditAwardNotificationPage(final PageParameters parameters) {
         super(parameters);
@@ -62,7 +47,7 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
+
         ComponentUtil.addDoubleField(editForm, "tenderValue").required()
                 .getField().add(RangeValidator.minimum(0.0));
 
@@ -81,6 +66,8 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
         awardNotification.setPurchaseRequisition(purchaseRequisition);
+        purchaseRequisition.setAwardNotification(awardNotification);
+
         return awardNotification;
     }
 

@@ -95,12 +95,15 @@ public class DepartmentOverviewMainPanel extends Panel {
 
     private void addCabinetPaperButton() {
         // TODO (params) - check that here the Cabinet Paper page has access to Procurement Plan
+        SessionUtil.setSessionPP(procurementPlan);
+
         final BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
                 "editCabinetPaper", EditCabinetPaperPage.class, Buttons.Type.Success);
         add(editCabinetPaper);
     }
 
     private void addProjectButton() {
+        SessionUtil.setSessionPP(procurementPlan);
         final BootstrapBookmarkablePageLink<Void> addNewProject = new BootstrapBookmarkablePageLink<>(
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewMainPanel.this, null));

@@ -16,5 +16,5 @@ public interface AbstractPurchaseReqMakueniEntityRepository<T extends AbstractPu
 
     @Query("select c from  #{#entityName} c "
             + " where c.purchaseRequisition.project.procurementPlan.fiscalYear.id = :fiscalYearId")
-    List<T> findByFiscalYearId(@Param("fiscalYearId") Long  id);
+    List<T> findByFiscalYearId(@Param("fiscalYearId") Long id);
 }

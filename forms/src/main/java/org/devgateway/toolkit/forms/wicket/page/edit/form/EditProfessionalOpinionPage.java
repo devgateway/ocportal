@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -10,15 +8,12 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
-import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -34,12 +29,6 @@ import java.util.List;
 public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniEntity<ProfessionalOpinion> {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
-
-    @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
-    @SpringBean
-    protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -75,32 +64,22 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
         professionalOpinion.setPurchaseRequisition(purchaseRequisition);
+        purchaseRequisition.setProfessionalOpinion(professionalOpinion);
+
         return professionalOpinion;
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
         TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
         List<Supplier> suppliers = new ArrayList<>();
-        if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
+        if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {
-                suppliers.add(bid.getSupplier());
+                if (bid.getSupplier() != null) {
+                    suppliers.add(bid.getSupplier());
+                }
             }
         }
 
         return suppliers;
-    }
-
-    class TenderQuotationEvaluationAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        TenderQuotationEvaluationAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
-        }
-
-        @Override
-        protected void onUpdate(final AjaxRequestTarget target) {
-            final ProfessionalOpinion professionalOpinion = editForm.getModelObject();
-            professionalOpinion.setAwardee(null);
-            awardeeSelector.provider(new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
-            target.add(awardeeSelector);
-        }
     }
 }

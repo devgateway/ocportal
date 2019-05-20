@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable {
-
     @OneToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore

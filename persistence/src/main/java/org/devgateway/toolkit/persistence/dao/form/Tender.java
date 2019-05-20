@@ -26,9 +26,10 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "tenderTitle"), @Index(columnList = "tenderNumber")})
+@Table(indexes = {@Index(columnList = "purchase_requisition_id"),
+        @Index(columnList = "tenderTitle"),
+        @Index(columnList = "tenderNumber")})
 public class Tender extends AbstractPurchaseReqMakueniEntity {
-
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
 

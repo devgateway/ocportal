@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
@@ -23,6 +24,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
@@ -53,7 +55,9 @@ public class TenderItem extends Panel {
     @SpringBean
     private ContractService contractService;
 
-    private PurchaseRequisition purchaseRequisition;
+    private final PurchaseRequisition purchaseRequisition;
+
+    private final Project project;
 
     private Tender tender;
 
@@ -69,8 +73,9 @@ public class TenderItem extends Panel {
 
     private Boolean expanded = false;
 
-    public TenderItem(final String id, final PurchaseRequisition purchaseRequisition) {
+    public TenderItem(final String id, final Project project, final PurchaseRequisition purchaseRequisition) {
         super(id);
+        this.project = project;
         this.purchaseRequisition = purchaseRequisition;
     }
 
@@ -148,12 +153,14 @@ public class TenderItem extends Panel {
             pageParameters.set(WebConstants.PARAM_ID, tender.getId());
         }
 
-        // TODO (params) - set any necessary Session params here.
         createLink("editTender", pageParameters, "btn-add no-text", EditTenderPage.class, true);
     }
 
     private void createLink(final String id, final PageParameters pageParameters, final String cssClasses,
                             final Class clazz, final boolean enabled) {
+
+        SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
+
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>(id, clazz,
                 pageParameters, Buttons.Type.Success);
         button.add(AttributeAppender.append("class", cssClasses));
@@ -179,7 +186,6 @@ public class TenderItem extends Panel {
             pageParameters.set(WebConstants.PARAM_ID, tenderQuotationEvaluation.getId());
         }
 
-        // TODO (params) - set any necessary Session params here.
         createLink("editTenderOpening", pageParameters, "btn-add no-text", EditTenderQuotationEvaluationPage.class,
                 tender != null);
 
@@ -198,7 +204,6 @@ public class TenderItem extends Panel {
             pageParameters.set(WebConstants.PARAM_ID, professionalOpinion.getId());
         }
 
-        // TODO (params) - set any necessary Session params here.
         createLink("editProfessionalOpinion", pageParameters, "btn-add no-text", EditProfessionalOpinionPage.class,
                 tenderQuotationEvaluation != null);
     }
@@ -214,7 +219,6 @@ public class TenderItem extends Panel {
             pageParameters.set(WebConstants.PARAM_ID, awardNotification.getId());
         }
 
-        // TODO (params) - set any necessary Session params here.
         createLink("editAwardNotification", pageParameters, "btn-add no-text", EditAwardNotificationPage.class,
                 professionalOpinion != null);
     }
@@ -230,7 +234,6 @@ public class TenderItem extends Panel {
             pageParameters.set(WebConstants.PARAM_ID, awardAcceptance.getId());
         }
 
-        // TODO (params) - set any necessary Session params here.
         createLink("editAwardAcceptance", pageParameters, "btn-add no-text", EditAwardAcceptancePage.class,
                 awardNotification != null);
     }
@@ -246,7 +249,6 @@ public class TenderItem extends Panel {
             pageParameters.set(WebConstants.PARAM_ID, contract.getId());
         }
 
-        // TODO (params) - set any necessary Session params here.
         createLink("editContract", pageParameters, "btn-add no-text", EditContractPage.class,
                 awardAcceptance != null);
     }

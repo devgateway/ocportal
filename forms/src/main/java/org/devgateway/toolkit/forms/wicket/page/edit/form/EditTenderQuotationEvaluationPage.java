@@ -6,13 +6,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
-import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
-import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -26,16 +22,6 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
-    @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
-    @SpringBean
-    protected TenderService tenderService;
-
-    
-    /**
-     * @param parameters
-     */
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderQuotationEvaluationService;
@@ -44,8 +30,6 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "tender", tenderService).required();
 
         ComponentUtil.addDateField(editForm, "closingDate").required();
         ComponentUtil.addIntegerTextField(editForm, "numberOfBids").required()
@@ -61,6 +45,8 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
         tenderQuotationEvaluation.setPurchaseRequisition(purchaseRequisition);
+        purchaseRequisition.setTenderQuotationEvaluation(tenderQuotationEvaluation);
+
         return tenderQuotationEvaluation;
     }
 }
