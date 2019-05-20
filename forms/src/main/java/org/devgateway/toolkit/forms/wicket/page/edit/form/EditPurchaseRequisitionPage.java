@@ -20,8 +20,6 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -35,12 +33,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<PurchaseRequisition> {
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
-
-    @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
-    @SpringBean
-    protected ProjectService projectService;
 
     @SpringBean
     protected StaffService staffService;
@@ -60,10 +52,12 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();       
-        
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "project", projectService).required();
+        super.onInitialize();
+
+        final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "title");
+        title.required();
+        title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        title.getField().add(uniqueTitle());
 
         final TextFieldBootstrapFormComponent<String> purchaseRequestNumber =
                 ComponentUtil.addTextField(editForm, "purchaseRequestNumber");
@@ -75,11 +69,6 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
                 (o, v) -> (root, query, cb)
                         -> cb.equal(cb.lower(root.get(PurchaseRequisition_.purchaseRequestNumber)), v.toLowerCase()),
                 editForm.getModel()));
-
-        final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "title");
-        title.required();
-        title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        title.getField().add(uniqueTitle());
 
         ComponentUtil.addSelect2ChoiceField(editForm, "requestedBy", staffService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "chargeAccount", chargeAccountService).required();

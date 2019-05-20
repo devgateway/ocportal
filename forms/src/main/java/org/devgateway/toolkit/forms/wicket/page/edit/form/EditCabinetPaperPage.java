@@ -14,6 +14,7 @@ import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
@@ -42,6 +43,8 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
 
+    private final ProcurementPlan procurementPlan;
+
     public EditCabinetPaperPage(final PageParameters parameters) {
         super(parameters);
 
@@ -50,6 +53,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
         // TODO (params) - check that the Cabinet Paper page has access to Procurement Plan and link it to the
         // CabinetPaper object
+        this.procurementPlan = SessionUtil.getSessionPP();
     }
 
     @Override

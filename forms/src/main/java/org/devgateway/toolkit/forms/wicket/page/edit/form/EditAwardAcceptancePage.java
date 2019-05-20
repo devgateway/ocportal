@@ -18,7 +18,6 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -34,9 +33,6 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     @SpringBean
     protected AwardAcceptanceService awardAcceptanceService;
 
-    @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
     private GenericSleepFormComponent supplierID;
@@ -49,7 +45,7 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
+
         ComponentUtil.addDoubleField(editForm, "tenderValue")
                 .getField().add(RangeValidator.minimum(0.0));
         ComponentUtil.addDateField(editForm, "acceptanceDate").required();
@@ -65,6 +61,8 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     protected AwardAcceptance newInstance() {
         final AwardAcceptance awardAcceptance = super.newInstance();
         awardAcceptance.setPurchaseRequisition(purchaseRequisition);
+        purchaseRequisition.setAwardAcceptance(awardAcceptance);
+
         return awardAcceptance;
     }
 

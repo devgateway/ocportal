@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -21,6 +22,9 @@ import java.util.List;
 public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implements FiscalYearService {
     @Autowired
     private FiscalYearRepository fiscalYearRepository;
+
+    @Resource
+    private FiscalYearService self; // Self-autowired reference to proxified bean of this class.
 
     @Override
     protected BaseJpaRepository<FiscalYear, Long> repository() {
@@ -40,7 +44,7 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
     @Override
     @Cacheable
     public FiscalYear getLastFiscalYear() {
-        return this.getYearsWithData().get(0);
+        return self.getYearsWithData().isEmpty() ? null : self.getYearsWithData().get(0);
     }
 
     @Override

@@ -13,7 +13,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -30,9 +29,6 @@ import java.util.List;
 public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniEntity<ProfessionalOpinion> {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
-
-    @SpringBean
-    protected ProcurementPlanService procurementPlanService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -68,15 +64,19 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
         professionalOpinion.setPurchaseRequisition(purchaseRequisition);
+        purchaseRequisition.setProfessionalOpinion(professionalOpinion);
+
         return professionalOpinion;
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
         TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
         List<Supplier> suppliers = new ArrayList<>();
-        if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
+        if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {
-                suppliers.add(bid.getSupplier());
+                if (bid.getSupplier() != null) {
+                    suppliers.add(bid.getSupplier());
+                }
             }
         }
 

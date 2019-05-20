@@ -56,14 +56,14 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     protected void onInitialize() {
         super.onInitialize();
 
-        // TODO - this should be filtered based on form Procurement Plan
-        ComponentUtil.addSelect2ChoiceField(editForm, "cabinetPaper", cabinetPaperService).required();
-
         final TextFieldBootstrapFormComponent<String> projectTitle =
                 ComponentUtil.addTextField(editForm, "projectTitle");
         projectTitle.required();
         projectTitle.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         projectTitle.getField().add(uniqueTitle());
+
+        // TODO - this should be filtered based on form Procurement Plan
+        ComponentUtil.addSelect2ChoiceField(editForm, "cabinetPaper", cabinetPaperService).required();
 
         ComponentUtil.addDoubleField(editForm, "amountBudgeted").getField().add(RangeValidator.minimum(0.0));
         ComponentUtil.addDoubleField(editForm, "amountRequested").getField().add(RangeValidator.minimum(0.0));

@@ -13,6 +13,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -22,19 +23,21 @@ import java.util.List;
 
 public class DepartmentOverviewItem extends Panel {
     private static final long serialVersionUID = -2887946738171526100L;
-    private Project project;
-
-    private Boolean expanded = false;
 
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
 
-    private List<PurchaseRequisition> purchaseReqisitions;
+    private final Project project;
+
+    private final List<PurchaseRequisition> purchaseRequisitions;
+
+    private Boolean expanded = false;
 
     public DepartmentOverviewItem(final String id, final Project project) {
         super(id);
+
         this.project = project;
-        purchaseReqisitions = purchaseRequisitionService.findByProject(project);
+        purchaseRequisitions = purchaseRequisitionService.findByProject(project);
     }
 
     @Override
@@ -71,7 +74,10 @@ public class DepartmentOverviewItem extends Panel {
         add(header);
     }
 
+    // TODO - change the name of the method
     private void addTenderButton() {
+        SessionUtil.setSessionProject(project);
+
         final BootstrapBookmarkablePageLink<Void> addTenderButton = new BootstrapBookmarkablePageLink<Void>("addTender",
                 EditPurchaseRequisitionPage.class, Buttons.Type.Success);
         addTenderButton.setLabel(new StringResourceModel("addTender", DepartmentOverviewItem.this, null));
@@ -81,12 +87,12 @@ public class DepartmentOverviewItem extends Panel {
 
     private void addTenderList() {
         ListView<PurchaseRequisition> purchaseReqisitionList = new ListView<PurchaseRequisition>("tenderList",
-                purchaseReqisitions) {
+                purchaseRequisitions) {
             private static final long serialVersionUID = 1L;
 
             @Override
             protected void populateItem(final ListItem<PurchaseRequisition> item) {
-                item.add(new TenderItem("tender", item.getModelObject()));
+                item.add(new TenderItem("tender", project, item.getModelObject()));
             }
         };
         purchaseReqisitionList.setOutputMarkupId(true);

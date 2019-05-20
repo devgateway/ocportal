@@ -28,8 +28,6 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
@@ -48,12 +46,6 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     protected TenderService tenderService;
 
     @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
-    @SpringBean
-    protected PurchaseRequisitionService purchaseRequisitionService;
-
-    @SpringBean
     protected ProcurementMethodService procurementMethodService;
 
     @SpringBean
@@ -63,9 +55,6 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
 
     private GenericSleepFormComponent procuringEntityAddress;
 
-    /**
-     * @param parameters
-     */
     public EditTenderPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderService;
@@ -75,8 +64,9 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "purchaseRequisition", purchaseRequisitionService).required();
+        final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "tenderTitle");
+        title.required();
+        title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
         final TextFieldBootstrapFormComponent<String> tenderNumber = ComponentUtil.addTextField(editForm,
                 "tenderNumber");
@@ -86,10 +76,6 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
                 tenderService::findOne,
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Tender_.tenderNumber)), v.toLowerCase()),
                 editForm.getModel()));
-
-        final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "tenderTitle");
-        title.required();
-        title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
         DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
         closingDate.required();
@@ -182,6 +168,8 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
         tender.setPurchaseRequisition(purchaseRequisition);
+        purchaseRequisition.setTender(tender);
+
         return tender;
     }
 

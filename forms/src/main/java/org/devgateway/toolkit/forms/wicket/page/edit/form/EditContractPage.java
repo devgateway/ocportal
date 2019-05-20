@@ -36,9 +36,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected ContractService contractService;
 
     @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
-    @SpringBean
     protected ProcuringEntityService procuringEntityService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
@@ -52,7 +49,8 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();             
+        super.onInitialize();
+
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addDoubleField(editForm, "tenderValue").required()
                 .getField().add(RangeValidator.minimum(0.0));
@@ -70,6 +68,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
         contract.setPurchaseRequisition(purchaseRequisition);
+        purchaseRequisition.setContract(contract);
         return contract;
     }
 
