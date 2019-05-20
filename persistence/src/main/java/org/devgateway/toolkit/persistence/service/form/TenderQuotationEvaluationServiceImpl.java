@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +38,10 @@ public class TenderQuotationEvaluationServiceImpl extends BaseJpaServiceImpl<Ten
     public TextSearchableRepository<TenderQuotationEvaluation, Long> textRepository() {
         return repository;
     }
-    
+
+    @Override
+    @Cacheable
     public TenderQuotationEvaluation findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-       return repository.findByPurchaseRequisition(purchaseRequisition).stream().findFirst().orElse(null);
+       return repository.findByPurchaseRequisition(purchaseRequisition);
     }
 }

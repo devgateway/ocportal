@@ -54,9 +54,6 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
                 // we set back the model as the compound model, thus ensures the rest of the items added will benefit
                 item.setModel(compoundPropertyModel);
 
-
-
-
                 // add header
                 final TransparentWebMarkupContainer hideableContainer =
                         new TransparentWebMarkupContainer("hideableContainer");
