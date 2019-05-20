@@ -109,24 +109,18 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
         add(new Label("requisitionTitle", purchaseRequisition.getTitle()));
         add(new Label("requisitionDate", purchaseRequisition.getRequestApprovalDate()));
         add(new Label("requisitionAmount", purchaseRequisition.getAmount()));
-        Label statusLabel = new Label("requisitionStatus");
-        statusLabel.add(AttributeAppender.append("class", purchaseRequisition.getStatus().toLowerCase()));
-        add(statusLabel);
-
-        final PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_ID, purchaseRequisition.getId());
-
-        final BootstrapBookmarkablePageLink<Void> purchaseRequisitionEdit = new BootstrapBookmarkablePageLink<>(
-                "requisitionEdit", EditPurchaseRequisitionPage.class, pageParameters, Buttons.Type.Success);
-        add(purchaseRequisitionEdit);
+        add(new DeptOverviewStatusLabel("requisitionStatus", purchaseRequisition));
+        createLinkNoPrevStep(purchaseRequisition, "requisitionEdit", EditPurchaseRequisitionPage.class);
+    }
 
 
     private void addTenderDocumentSection() {
         add(new Label("tenderTitle", tender != null ? tender.getTenderTitle() : ""));
         add(new Label("tenderId", tender != null ? tender.getTenderNumber() : ""));
         add(new Label("amount", tender != null ? tender.getTotalAmount() : ""));
-        addStatus("tenderStatus", tender != null
-                ? tender.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase());
+        add(new DeptOverviewStatusLabel("tenderStatus", tender));
+        createLinkNoPrevStep(tender, "editTender", EditTenderPage.class);
+    }
 
     boolean canEdit(Statusable previousStep) {
         return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED) ||
@@ -160,17 +154,8 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
         add(new Label("tenderOpeningTitle", tenderQuotationEvaluation != null ? tender.getTenderTitle() : ""));
         add(new Label("tenderOpeningID", tenderQuotationEvaluation != null ? tender.getTenderNumber() : ""));
         add(new Label("tenderOpeningAmount", tenderQuotationEvaluation != null ? 0 : ""));
-        addStatus("tenderOpeningStatus", tenderQuotationEvaluation != null
-                ? tenderQuotationEvaluation.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase());
-
-        final PageParameters pageParameters = new PageParameters();
-        if (tenderQuotationEvaluation != null) {
-            pageParameters.set(WebConstants.PARAM_ID, tenderQuotationEvaluation.getId());
-        }
-
-        createLink("editTenderOpening", pageParameters, "btn-add no-text", EditTenderQuotationEvaluationPage.class,
-                tender != null);
-
+        add(new DeptOverviewStatusLabel("tenderOpeningStatus", tenderQuotationEvaluation));
+        createLink(tenderQuotationEvaluation, "editTenderOpening", EditTenderQuotationEvaluationPage.class, tender);
     }
 
     private void addProfessionalOpinionSection() {
@@ -178,60 +163,28 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
                 ? professionalOpinion.getAwardee() : ""));
         add(new Label("professionalOpinionAmount", professionalOpinion != null
                 ? professionalOpinion.getRecommendedAwardAmount() : ""));
-        addStatus("professionalOpinionStatus", professionalOpinion != null
-                ? professionalOpinion.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase());
-
-        final PageParameters pageParameters = new PageParameters();
-        if (professionalOpinion != null) {
-            pageParameters.set(WebConstants.PARAM_ID, professionalOpinion.getId());
-        }
-
-        createLink("editProfessionalOpinion", pageParameters, "btn-add no-text", EditProfessionalOpinionPage.class,
-                tenderQuotationEvaluation != null);
+        add(new DeptOverviewStatusLabel("professionalOpinionStatus", professionalOpinion));
+        createLink(professionalOpinion, "editProfessionalOpinion", EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
     }
 
     private void addAwardNotificationSection() {
         add(new Label("awardNotificationSupplier", awardNotification != null ? awardNotification.getAwardee() : ""));
         add(new Label("awardNotificationTenderId", awardNotification != null ? tender.getTenderNumber() : ""));
-        addStatus("awardNotificationStatus", awardNotification != null
-                ? awardNotification.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase());
-
-        final PageParameters pageParameters = new PageParameters();
-        if (awardNotification != null) {
-            pageParameters.set(WebConstants.PARAM_ID, awardNotification.getId());
-        }
-
-        createLink("editAwardNotification", pageParameters, "btn-add no-text", EditAwardNotificationPage.class,
-                professionalOpinion != null);
+        add(new DeptOverviewStatusLabel("awardNotificationStatus", awardNotification));
+        createLink(awardNotification, "editAwardNotification", EditAwardNotificationPage.class, professionalOpinion);
     }
 
     private void addAwardAcceptanceSection() {
         add(new Label("awardAcceptanceSupplier", awardAcceptance != null ? awardAcceptance.getAwardee() : ""));
         add(new Label("awardAcceptanceTenderId", awardAcceptance != null ? tender.getTenderNumber() : ""));
-        addStatus("awardAcceptanceStatus", awardAcceptance != null
-                ? awardAcceptance.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase());
-
-        final PageParameters pageParameters = new PageParameters();
-        if (awardAcceptance != null) {
-            pageParameters.set(WebConstants.PARAM_ID, awardAcceptance.getId());
-        }
-
-        createLink("editAwardAcceptance", pageParameters, "btn-add no-text", EditAwardAcceptancePage.class,
-                awardNotification != null);
+        add(new DeptOverviewStatusLabel("awardAcceptanceStatus", awardAcceptance));
+        createLink(awardAcceptance, "editAwardAcceptance", EditAwardAcceptancePage.class, awardNotification);
     }
 
     private void addContractSection() {
         add(new Label("contractSupplier", contract != null ? contract.getAwardee() : ""));
         add(new Label("contractTenderId", contract != null ? tender.getTenderNumber() : ""));
-        addStatus("contractStatus", contract != null
-                ? contract.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase());
-
-        final PageParameters pageParameters = new PageParameters();
-        if (contract != null) {
-            pageParameters.set(WebConstants.PARAM_ID, contract.getId());
-        }
-
-        createLink("editContract", pageParameters, "btn-add no-text", EditContractPage.class,
-                awardAcceptance != null);
+        add(new DeptOverviewStatusLabel("contractStatus", contract));
+        createLink(contract, "editContract", EditContractPage.class, awardAcceptance);
     }
 }
