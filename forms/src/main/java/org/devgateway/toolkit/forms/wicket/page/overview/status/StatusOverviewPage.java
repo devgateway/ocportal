@@ -21,11 +21,11 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
@@ -80,20 +80,18 @@ public class StatusOverviewPage extends DataEntryBasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        addProcurementPlanButton();
+        final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
+                "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
+        newProcurementPlanButton.setLabel(new StringResourceModel("newProcurementPlan", StatusOverviewPage.this, null));
+        add(newProcurementPlanButton);
+
+
         addSearchBox();
         addYearDropdown(fiscalYears);
 
         addDepartmentList();
 
-        // add(new ListViewStatusOverview("statusPanel", new ListModel<>(statusOverviewData)));
-    }
-
-    private void addProcurementPlanButton() {
-        final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
-                "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
-        newProcurementPlanButton.setLabel(new StringResourceModel("newProcurementPlan", StatusOverviewPage.this, null));
-        add(newProcurementPlanButton);
+        add(new ListViewStatusOverview("statusPanel", new ListModel<>(statusOverviewData)));
     }
 
     private void addYearDropdown(final List<FiscalYear> fiscalYears) {
@@ -106,7 +104,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
                 SessionUtil.setSessionFiscalYear(yearsDropdown.getModelObject());
 
                 statusOverviewData = statusOverviewService
-                        .getProjectsByDepartment(yearsDropdown.getModelObject().getId());
+                        .getAllProjectsByFiscalYear(yearsDropdown.getModelObject());
                 departmentsList.setModelObject(statusOverviewData);
             }
         });
@@ -125,17 +123,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
     }
 
     private void addDepartmentList() {
-        final Long defaultFiscalYearId = fiscalYear != null ? fiscalYear.getId() : null;
-        statusOverviewData = statusOverviewService.getProjectsByDepartment(defaultFiscalYearId);
-        departmentsList = new ListView<StatusOverviewData>("group", statusOverviewData) {
-            @Override
-            protected void populateItem(final ListItem<StatusOverviewData> item) {
-                item.add(new StatusOverviewItem("groupItem", item.getModelObject(), searchBox.getModelObject()));
-
-            }
-        };
-        departmentsList.setOutputMarkupId(true);
-        add(departmentsList);
+        statusOverviewData = statusOverviewService.getAllProjectsByFiscalYear(fiscalYear);
     }
 
     public FiscalYear getFiscalYear() {

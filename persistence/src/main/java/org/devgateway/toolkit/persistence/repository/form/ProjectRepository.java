@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.springframework.data.domain.Page;
@@ -21,13 +22,10 @@ public interface ProjectRepository extends AbstractMakueniEntityRepository<Proje
     Page<Project> searchText(@Param("name") String name, Pageable page);
 
     Long countByProcurementPlanAndProjectTitleAndIdNot(ProcurementPlan procurementPlan, String projectTitle, Long id);
-    
-    @Query("select project from  #{#entityName} project where project.procurementPlan.fiscalYear.id = :fiscalYearId")
-    List<Project> findProjectsForYear(@Param("fiscalYearId")Long fiscalYearId);
-    
+
+    @Override
+    @Query("select project from  #{#entityName} project where project.procurementPlan.fiscalYear = :fiscalYear")
+    List<Project> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
+
     List<Project> findByProcurementPlan(ProcurementPlan procurementPlan);
-
-    @Query("select c from  #{#entityName} c where c.procurementPlan.fiscalYear.id = :fiscalYearId")
-    List<Project> findByFiscalYearId(@Param("fiscalYearId") Long  id);
-
 }

@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface TenderQuotationEvaluationRepository
         extends AbstractPurchaseReqMakueniEntityRepository<TenderQuotationEvaluation> {
+
     @Query("select tenderEvaluation from  #{#entityName} tenderEvaluation "
             + " where lower(purchaseRequisition.tender.tenderTitle) like %:name%")
     Page<TenderQuotationEvaluation> searchText(@Param("name") String name, Pageable page);
-
 }

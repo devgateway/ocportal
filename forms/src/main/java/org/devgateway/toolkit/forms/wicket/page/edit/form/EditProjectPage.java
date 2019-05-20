@@ -80,6 +80,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     protected Project newInstance() {
         final Project project = super.newInstance();
         project.setProcurementPlan(procurementPlan);
+
         return project;
     }
 

@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ public interface CabinetPaperRepository extends AbstractMakueniEntityRepository<
     
     Long countByProcurementPlanAndNameAndIdNot(ProcurementPlan procurementPlan, String name, Long id);
 
-    @Query("select c from  #{#entityName} c "
-            + " where c.procurementPlan.fiscalYear.id = :fiscalYearId")
-    List<CabinetPaper> findByFiscalYearId(@Param("fiscalYearId") Long  id);
+    @Override
+    @Query("select c from  #{#entityName} c where c.procurementPlan.fiscalYear = :fiscalYear")
+    List<CabinetPaper> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
 }

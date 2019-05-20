@@ -16,5 +16,4 @@ public interface TenderRepository extends AbstractPurchaseReqMakueniEntityReposi
     @Override
     @Query("select tender from  #{#entityName} tender where lower(tender.tenderTitle) like %:name%")
     Page<Tender> searchText(@Param("name") String name, Pageable page);
-   
 }
