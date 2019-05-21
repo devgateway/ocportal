@@ -8,16 +8,16 @@ import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
-import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityRepository;
-import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
-import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
-import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
-import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
-import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
-import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluationRepository;
-import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
+import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
+import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
+import org.devgateway.toolkit.persistence.service.form.ContractService;
+import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
+import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -37,30 +37,29 @@ import java.util.stream.Stream;
 @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
 // TODO - add cache
 public class StatusOverviewServiceImpl implements StatusOverviewService {
-    // TODO - replace all repositories with services
     @Autowired
     private ProjectService projectService;
 
     @Autowired
-    private PurchaseRequisitionRepository purchaseRequisitionRepository;
+    private PurchaseRequisitionService purchaseRequisitionService;
 
     @Autowired
-    private TenderRepository tenderRepository;
+    private TenderService tenderService;
 
     @Autowired
-    private TenderQuotationEvaluationRepository tenderQuotationEvaluationRepository;
+    private TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     @Autowired
-    private ProfessionalOpinionRepository professionalOpinionRepository;
+    private ProfessionalOpinionService professionalOpinionService;
 
     @Autowired
-    private AwardNotificationRepository awardNotificationRepository;
+    private AwardNotificationService awardNotificationService;
 
     @Autowired
-    private AwardAcceptanceRepository awardAcceptanceRepository;
+    private AwardAcceptanceService awardAcceptanceService;
 
     @Autowired
-    private ContractRepository contractRepository;
+    private ContractService contractService;
 
     @Override
     public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
@@ -68,14 +67,14 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
 
         final Map<Project, List<String>> tenderStatusMap = addStatus(
-                fiscalYear, purchaseRequisitionRepository, tenderRepository,
-                tenderQuotationEvaluationRepository, professionalOpinionRepository);
+                fiscalYear, purchaseRequisitionService, tenderService,
+                tenderQuotationEvaluationService, professionalOpinionService);
         final Map<Project, List<String>> awardStatusMap = addStatus(
-                fiscalYear, awardNotificationRepository, awardAcceptanceRepository, contractRepository);
+                fiscalYear, awardNotificationService, awardAcceptanceService, contractService);
 
         // get list of statuses of PurchaseRequisition forms grouped by Project
         final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
-                purchaseRequisitionRepository.findByFiscalYear(fiscalYear));
+                purchaseRequisitionService.findByFiscalYear(fiscalYear));
 
         final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
         for (final Project project : projects) {
@@ -169,11 +168,11 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     private <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
     Map<Project, List<String>> addStatus(final FiscalYear fiscalYear,
-                                         final AbstractMakueniEntityRepository<? extends S>... repositories) {
+                                         final AbstractMakueniEntityService<? extends S>... services) {
         Map<Project, List<String>> statusMap = new HashMap<>();
 
-        for (AbstractMakueniEntityRepository<? extends S> repository : repositories) {
-            statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(repository.findByFiscalYear(fiscalYear)));
+        for (AbstractMakueniEntityService<? extends S> service : services) {
+            statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(service.findByFiscalYear(fiscalYear)));
         }
 
         return statusMap;
