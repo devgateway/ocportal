@@ -3,8 +3,7 @@
 <body>
 <wicket:panel>
 
-    <button wicket:id="header" class="status-panel project" data-toggle="collapse" data-target="#tenderlist"
-            aria-expanded="false" aria-controls="collapsegovernor">
+    <div wicket:id="header" class="status-panel project" type="button" data-toggle="collapse" aria-expanded="false">
         <div class="status-panel-heading">
             <div class="project-title" wicket:id="projectTitle"></div>
             <span class="year" wicket:id="fiscalYear"></span>
@@ -13,20 +12,18 @@
             </div>
 
         </div>
-    </button>
-    <div wicket:id="projectsWrapper" class="collapse-content tender collapse">
+    </div>
 
+    <div wicket:id="projectsWrapper" class="collapse-content tender collapse">
         <div class="col-md-12 btn-container">
             <button type="button" class="btn btn-add pull-right" wicket:id="addTender">ADD New Tender</button>
         </div>
 
         <div class="tender-list-wrapper">
-           <div>           
-            </div>
-              <ol>
+            <ol>
                 <li wicket:id=tenderList>
-                <div wicket:id="tender">                
-                </div>
+                    <div wicket:id="tender">
+                    </div>
                 </li>
             </ol>
         </div>
