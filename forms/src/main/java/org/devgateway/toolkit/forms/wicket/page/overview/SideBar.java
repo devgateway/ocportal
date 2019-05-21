@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
@@ -47,14 +46,7 @@ public class SideBar extends Panel {
         final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"));
         add(logo);
 
-        projectCount = new Label("projectCount", (IModel<Long>) () -> {
-            final FiscalYear fiscalYear = SessionUtil.getSessionFiscalYear();
-            if (department == null) {
-                return projectService.countByFiscalYear(fiscalYear);
-            }
-
-            return projectService.countByDepartmentAndFiscalYear(department, fiscalYear);
-        });
+        projectCount = new Label("projectCount", calculateProjectCount());
         projectCount.setOutputMarkupId(true);
         add(projectCount);
 
@@ -102,6 +94,15 @@ public class SideBar extends Panel {
                 item.add(link);
             }
         });
+    }
+
+    private Long calculateProjectCount() {
+        final FiscalYear fiscalYear = SessionUtil.getSessionFiscalYear();
+        if (department == null) {
+            return projectService.countByFiscalYear(fiscalYear);
+        }
+
+        return projectService.countByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
     public Label getProjectCount() {
