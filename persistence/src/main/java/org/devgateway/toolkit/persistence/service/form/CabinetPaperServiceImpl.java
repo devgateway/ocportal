@@ -5,7 +5,6 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.repository.form.CabinetPaperRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
-import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class CabinetPaperServiceImpl extends BaseJpaServiceImpl<CabinetPaper> implements CabinetPaperService {
+public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<CabinetPaper>
+        implements CabinetPaperService {
 
     @Autowired
     private CabinetPaperRepository cabinetPaperRepository;

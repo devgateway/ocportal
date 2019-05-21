@@ -8,16 +8,16 @@ import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
-import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityRepository;
-import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
-import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
-import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
-import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
-import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionRepository;
-import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluationRepository;
-import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
+import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
+import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
+import org.devgateway.toolkit.persistence.service.form.ContractService;
+import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
+import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author gmutuhu
@@ -37,60 +37,74 @@ import java.util.Set;
 @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
 // TODO - add cache
 public class StatusOverviewServiceImpl implements StatusOverviewService {
-    // TODO - replace all repositories with services
     @Autowired
     private ProjectService projectService;
 
     @Autowired
-    private PurchaseRequisitionRepository purchaseRequisitionRepository;
+    private PurchaseRequisitionService purchaseRequisitionService;
 
     @Autowired
-    private TenderRepository tenderRepository;
+    private TenderService tenderService;
 
     @Autowired
-    private TenderQuotationEvaluationRepository tenderQuotationEvaluationRepository;
+    private TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     @Autowired
-    private ProfessionalOpinionRepository professionalOpinionRepository;
+    private ProfessionalOpinionService professionalOpinionService;
 
     @Autowired
-    private AwardNotificationRepository awardNotificationRepository;
+    private AwardNotificationService awardNotificationService;
 
     @Autowired
-    private AwardAcceptanceRepository awardAcceptanceRepository;
+    private AwardAcceptanceService awardAcceptanceService;
 
     @Autowired
-    private ContractRepository contractRepository;
+    private ContractService contractService;
 
     @Override
     public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
-        final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
         final List<Project> projects = projectService.findAll(
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
 
-        final Map<Long, Set<String>> tenderStatusMap = addStatus(
-                fiscalYear, purchaseRequisitionRepository, tenderRepository,
-                tenderQuotationEvaluationRepository, professionalOpinionRepository);
-        final Map<Long, Set<String>> awardStatusMap = addStatus(
-                fiscalYear, awardNotificationRepository, awardAcceptanceRepository, contractRepository);
+        final Map<Project, List<String>> tenderStatusMap = addStatus(
+                fiscalYear, purchaseRequisitionService, tenderService,
+                tenderQuotationEvaluationService, professionalOpinionService);
+        final Map<Project, List<String>> awardStatusMap = addStatus(
+                fiscalYear, awardNotificationService, awardAcceptanceService, contractService);
 
-        for (final Project p : projects) {
+        // get list of statuses of PurchaseRequisition forms grouped by Project
+        final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
+                purchaseRequisitionService.findByFiscalYear(fiscalYear));
+
+        final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
+        for (final Project project : projects) {
             StatusOverviewData sod = statusOverviewData.parallelStream()
-                    .filter(item -> p.getProcurementPlan().equals(item.getProcurementPlan()))
+                    .filter(item -> project.getProcurementPlan().equals(item.getProcurementPlan()))
                     .findFirst()
                     .orElse(null);
             if (sod == null) {
                 sod = new StatusOverviewData();
-                sod.setProcurementPlan(p.getProcurementPlan());
+                sod.setProcurementPlan(project.getProcurementPlan());
                 statusOverviewData.add(sod);
             }
 
+            final List<String> purchaseStatuses = purchaseStatusMap.get(project);
+
             final StatusOverviewProjectStatus statusOverviewProjectStatus = new StatusOverviewProjectStatus();
-            statusOverviewProjectStatus.setId(p.getId());
-            statusOverviewProjectStatus.setProjectTitle(p.getProjectTitle());
-            statusOverviewProjectStatus.setProjectStatus(p.getStatus());
-            statusOverviewProjectStatus.setTenderProcessStatus(getProcessStatus(tenderStatusMap, p.getId()));
-            statusOverviewProjectStatus.setAwardProcessStatus(getProcessStatus(awardStatusMap, p.getId()));
+            statusOverviewProjectStatus.setId(project.getId());
+            statusOverviewProjectStatus.setProjectTitle(project.getProjectTitle());
+            statusOverviewProjectStatus.setProjectStatus(project.getStatus());
+
+            // check if we have at least one Purchase Requisition
+            if (purchaseStatuses == null || purchaseStatuses.isEmpty()) {
+                statusOverviewProjectStatus.setTenderProcessStatus(DBConstants.Status.NOT_STARTED);
+                statusOverviewProjectStatus.setAwardProcessStatus(DBConstants.Status.NOT_STARTED);
+            } else {
+                statusOverviewProjectStatus.setTenderProcessStatus(
+                        getProcessStatus(tenderStatusMap.get(project), purchaseStatuses.size() * 4));
+                statusOverviewProjectStatus.setAwardProcessStatus(
+                        getProcessStatus(awardStatusMap.get(project), purchaseStatuses.size() * 3));
+            }
 
             sod.getProjects().add(statusOverviewProjectStatus);
         }
@@ -98,23 +112,30 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         return statusOverviewData;
     }
 
-    private String getProcessStatus(final Map<Long, Set<String>> tenderStatusMap, final Long projectId) {
-        final Set<String> status = tenderStatusMap.get(projectId);
-
-        if (status != null) {
-            if (status.contains(DBConstants.Status.TERMINATED)) {
+    /**
+     * Returns an aggregate status from a list of statuses.
+     *
+     * @param sizeCheck - is used to determine if the list of statuses has the right length
+     */
+    private String getProcessStatus(final List<String> statuses, final int sizeCheck) {
+        if (statuses != null) {
+            if (statuses.contains(DBConstants.Status.TERMINATED)) {
                 return DBConstants.Status.TERMINATED;
             }
 
-            if (status.contains(DBConstants.Status.DRAFT)) {
+            if (statuses.size() != sizeCheck) {
+                return DBConstants.Status.NOT_STARTED;
+            }
+
+            if (statuses.contains(DBConstants.Status.DRAFT)) {
                 return DBConstants.Status.DRAFT;
             }
 
-            if (status.contains(DBConstants.Status.SUBMITTED)) {
+            if (statuses.contains(DBConstants.Status.SUBMITTED)) {
                 return DBConstants.Status.SUBMITTED;
             }
 
-            if (status.contains(DBConstants.Status.APPROVED)) {
+            if (statuses.contains(DBConstants.Status.APPROVED)) {
                 return DBConstants.Status.APPROVED;
             }
         }
@@ -122,28 +143,38 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         return DBConstants.Status.NOT_STARTED;
     }
 
-    @SafeVarargs
-    private final <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
-    Map<Long, Set<String>> addStatus(final FiscalYear fiscalYear,
-                                     final AbstractMakueniEntityRepository<? extends S>... repositories) {
-        final Map<Long, Set<String>> statusMap = new HashMap<>();
+    /**
+     * Group a list of {@link ProjectAttachable} objects by {@link Project} and collect all their status.
+     */
+    private <S extends ProjectAttachable & Statusable>
+    Map<Project, List<String>> groupStatusByProject(final List<S> list) {
+        return list.stream()
+                .collect(Collectors.groupingBy(ProjectAttachable::getProject,
+                        Collectors.mapping(key -> key.getStatus(), Collectors.toList())));
+    }
 
-        for (AbstractMakueniEntityRepository<? extends S> repository : repositories) {
-            addStatus(statusMap, repository.findByFiscalYear(fiscalYear));
+    /**
+     * Merge 2 {@link Map} of statuses grouped by {@link Project}.
+     */
+    private Map<Project, List<String>> mergeMapOfStatuses(final Map<Project, List<String>> map1,
+                                                          final Map<Project, List<String>> map2) {
+        final Map<Project, List<String>> mergedMap = new HashMap<>(map1);
+        map2.forEach(
+                (key, value) -> mergedMap.merge(key, value,
+                        (v1, v2) -> Stream.of(v1, v2).flatMap(Collection::stream).collect(Collectors.toList())));
+
+        return mergedMap;
+    }
+
+    private <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
+    Map<Project, List<String>> addStatus(final FiscalYear fiscalYear,
+                                         final AbstractMakueniEntityService<? extends S>... services) {
+        Map<Project, List<String>> statusMap = new HashMap<>();
+
+        for (AbstractMakueniEntityService<? extends S> service : services) {
+            statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(service.findByFiscalYear(fiscalYear)));
         }
 
         return statusMap;
-    }
-
-    private <S extends ProjectAttachable & Statusable>
-    void addStatus(final Map<Long, Set<String>> statusMap,
-                   final Collection<S> collection) {
-        collection.stream()
-                .forEach(e -> addStatus(statusMap, e.getProject().getId(), e.getStatus()));
-    }
-
-    private void addStatus(final Map<Long, Set<String>> statusMap, final Long projectId, final String status) {
-        Set<String> statuses = statusMap.computeIfAbsent(projectId, k -> new HashSet<>());
-        statuses.add(status);
     }
 }
