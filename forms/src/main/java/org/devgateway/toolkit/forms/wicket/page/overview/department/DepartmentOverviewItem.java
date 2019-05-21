@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -19,7 +19,8 @@ import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 
-import java.util.List;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 
 public class DepartmentOverviewItem extends Panel {
     private static final long serialVersionUID = -2887946738171526100L;
@@ -74,17 +75,21 @@ public class DepartmentOverviewItem extends Panel {
         add(header);
     }
 
-   private void addPurchaseRequisitionButton() {
-        SessionUtil.setSessionProject(project);
-
-        final BootstrapBookmarkablePageLink<Void> addPurchaseRequisition = new BootstrapBookmarkablePageLink<Void>(
-                "addPurchaseRequisition", EditPurchaseRequisitionPage.class, Buttons.Type.Success);
+   private void addPurchaseRequisitionButton() {        
+        final BootstrapAjaxLink<Void> addPurchaseRequisition = new BootstrapAjaxLink<Void>("addPurchaseRequisition",
+                Buttons.Type.Success) {       
+            private static final long serialVersionUID = 1L;
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                SessionUtil.setSessionProject(project);
+                setResponsePage(EditPurchaseRequisitionPage.class);                
+            }            
+        };
         
-        
-        addPurchaseRequisition
-                .setLabel(new StringResourceModel("addPurchaseRequisition", DepartmentOverviewItem.this, null));
+        addPurchaseRequisition.setLabel(new StringResourceModel("addPurchaseRequisition", 
+                DepartmentOverviewItem.this, null));        
         add(addPurchaseRequisition);
-    }
+   }
 
     private void addTenderList() {
         ListView<PurchaseRequisition> purchaseReqisitionList = new ListView<PurchaseRequisition>("tenderList",
