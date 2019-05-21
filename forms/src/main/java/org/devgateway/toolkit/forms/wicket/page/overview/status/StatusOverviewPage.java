@@ -69,6 +69,9 @@ public class StatusOverviewPage extends DataEntryBasePage {
             fiscalYear = fiscalYearService.getLastFiscalYear();
             SessionUtil.setSessionFiscalYear(fiscalYear);
         }
+
+        // clear department from session
+        SessionUtil.setSessionDepartment(null);
     }
 
     @Override
@@ -98,9 +101,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
             protected void onUpdate(final AjaxRequestTarget target) {
                 SessionUtil.setSessionFiscalYear(fiscalYear);
 
-                listViewStatusOverview.setModelObject(statusOverviewService.getAllProjects(fiscalYear, searchBox));
-                target.add(listViewStatusOverview);
-                target.add(sideBar.getProjectCount());
+                updateDashboard(target);
             }
         });
         add(yearsDropdown);
@@ -111,12 +112,20 @@ public class StatusOverviewPage extends DataEntryBasePage {
         searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                listViewStatusOverview.setModelObject(statusOverviewService.getAllProjects(fiscalYear, searchBox));
-
-                target.add(listViewStatusOverview);
-                target.add(sideBar.getProjectCount());
+                updateDashboard(target);
             }
         });
         add(searchBoxField);
+    }
+
+    private void updateDashboard(final AjaxRequestTarget target) {
+        listViewStatusOverview.setModelObject(statusOverviewService.getAllProjects(fiscalYear, searchBox));
+
+        // update the project count from sidebar as well
+        sideBar.getProjectCount()
+                .setDefaultModelObject(statusOverviewService.countProjects(fiscalYear, searchBox));
+
+        target.add(listViewStatusOverview);
+        target.add(sideBar.getProjectCount());
     }
 }
