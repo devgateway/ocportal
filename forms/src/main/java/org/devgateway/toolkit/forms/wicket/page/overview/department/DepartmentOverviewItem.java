@@ -77,11 +77,12 @@ public class DepartmentOverviewItem extends Panel {
    private void addPurchaseRequisitionButton() {
         SessionUtil.setSessionProject(project);
 
-        final BootstrapBookmarkablePageLink<Void> addPurchaseRequisition = new BootstrapBookmarkablePageLink<Void>("addPurchaseRequisition",
-                EditPurchaseRequisitionPage.class, Buttons.Type.Success);
+        final BootstrapBookmarkablePageLink<Void> addPurchaseRequisition = new BootstrapBookmarkablePageLink<Void>(
+                "addPurchaseRequisition", EditPurchaseRequisitionPage.class, Buttons.Type.Success);
         
         
-        addPurchaseRequisition.setLabel(new StringResourceModel("addPurchaseRequisition", DepartmentOverviewItem.this, null));
+        addPurchaseRequisition
+                .setLabel(new StringResourceModel("addPurchaseRequisition", DepartmentOverviewItem.this, null));
         add(addPurchaseRequisition);
     }
 
