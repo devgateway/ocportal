@@ -32,7 +32,6 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 
-// TODO - this class should be renamed
 public class DeptOverviewPurchaseRequisitionPanel extends Panel {
 
     @SpringBean
