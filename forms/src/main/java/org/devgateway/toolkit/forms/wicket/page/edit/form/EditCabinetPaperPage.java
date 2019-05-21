@@ -17,12 +17,11 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -38,9 +37,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     protected CabinetPaperService cabinetPaperService;
 
     @SpringBean
-    protected ProcurementPlanService procurementPlanService;
-
-    @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
 
     private final ProcurementPlan procurementPlan;
@@ -49,7 +45,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         super(parameters);
 
         this.jpaService = cabinetPaperService;
-        this.listPageClass = ListCabinetPaperPage.class;
+        this.listPageClass = DepartmentOverviewPage.class;
 
         // TODO (params) - check that the Cabinet Paper page has access to Procurement Plan and link it to the
         // CabinetPaper object
@@ -64,7 +60,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
             setResponsePage(listPageClass);
         }
         
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementPlan", procurementPlanService).required();       
         final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
         name.required();
         name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
@@ -86,6 +81,14 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         doc.maxFiles(1);
         doc.required();
         editForm.add(doc);
+    }
+
+    @Override
+    protected CabinetPaper newInstance() {
+        final CabinetPaper cabinetPaper = super.newInstance();
+        cabinetPaper.setProcurementPlan(procurementPlan);
+
+        return cabinetPaper;
     }
 
     private IValidator<String> uniqueName() {
