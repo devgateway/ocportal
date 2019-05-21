@@ -16,7 +16,6 @@ import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPa
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -30,9 +29,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     @SpringBean
     protected ProjectService projectService;
-
-    @SpringBean
-    protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
     private CabinetPaperService cabinetPaperService;

@@ -55,5 +55,8 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
                 new ListModel(fiscalYears), dataTable));
 
         super.onInitialize();
+
+        // don't allow users to add new entities from the listing pages for AbstractMakueniEntity.
+        editPageLink.setVisibilityAllowed(false);
     }
 }
