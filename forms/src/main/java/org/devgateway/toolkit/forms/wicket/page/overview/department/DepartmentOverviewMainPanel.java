@@ -136,14 +136,15 @@ public class DepartmentOverviewMainPanel extends Panel {
         final BootstrapBookmarkablePageLink<Void> addNewProject = new BootstrapBookmarkablePageLink<>(
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewMainPanel.this, null));
-        addNewProject.setEnabled(procurementPlan!=null);
+        addNewProject.setEnabled(procurementPlan != null);
         add(addNewProject);
     }
 
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
-                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer);
+                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer
+        );
         yearsDropdown.add(new FormComponentUpdatingBehavior() {
             @Override
             protected void onUpdate() {
