@@ -136,6 +136,7 @@ public class DepartmentOverviewMainPanel extends Panel {
         final BootstrapBookmarkablePageLink<Void> addNewProject = new BootstrapBookmarkablePageLink<>(
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewMainPanel.this, null));
+        addNewProject.setEnabled(procurementPlan != null);
         add(addNewProject);
     }
 
