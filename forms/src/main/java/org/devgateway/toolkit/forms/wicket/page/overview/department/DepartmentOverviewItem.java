@@ -44,7 +44,7 @@ public class DepartmentOverviewItem extends Panel {
     protected void onInitialize() {
         super.onInitialize();
         addGroupHeader();
-        addTenderButton();
+        addPurchaseRequisitionButton();
         addTenderList();
     }
 
@@ -74,15 +74,15 @@ public class DepartmentOverviewItem extends Panel {
         add(header);
     }
 
-    // TODO - change the name of the method
-    private void addTenderButton() {
+   private void addPurchaseRequisitionButton() {
         SessionUtil.setSessionProject(project);
 
-        final BootstrapBookmarkablePageLink<Void> addTenderButton = new BootstrapBookmarkablePageLink<Void>("addTender",
+        final BootstrapBookmarkablePageLink<Void> addPurchaseRequisition = new BootstrapBookmarkablePageLink<Void>("addPurchaseRequisition",
                 EditPurchaseRequisitionPage.class, Buttons.Type.Success);
-        addTenderButton.setLabel(new StringResourceModel("addTender", DepartmentOverviewItem.this, null));
-        add(addTenderButton);
-
+        
+        
+        addPurchaseRequisition.setLabel(new StringResourceModel("addPurchaseRequisition", DepartmentOverviewItem.this, null));
+        add(addPurchaseRequisition);
     }
 
     private void addTenderList() {
