@@ -7,7 +7,6 @@ import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
-import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
-public class ProjectServiceImpl extends BaseJpaServiceImpl<Project> implements ProjectService {
+public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project> implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
