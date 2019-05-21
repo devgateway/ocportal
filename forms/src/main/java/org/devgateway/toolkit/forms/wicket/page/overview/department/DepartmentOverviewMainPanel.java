@@ -113,6 +113,11 @@ public class DepartmentOverviewMainPanel extends Panel {
         if (procurementPlan != null) {
             pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
         }
+
+        DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel("procurementPlanStatus",
+                procurementPlan);
+        add(procurementPlanStatus);
+
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
                 "viewProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Success);
         if (procurementPlan == null) {
