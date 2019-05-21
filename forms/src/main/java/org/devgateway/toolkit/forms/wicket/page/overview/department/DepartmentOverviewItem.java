@@ -68,6 +68,7 @@ public class DepartmentOverviewItem extends Panel {
             }
         };
 
+        header.add(new DeptOverviewStatusLabel("projectStatus", project));
         header.add(new Label("projectTitle", new Model<>(this.project.getProjectTitle())));
         header.add(new Label("fiscalYear",
                 new PropertyModel<String>(this.project.getProcurementPlan().getFiscalYear(), "label")));
