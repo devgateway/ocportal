@@ -10,6 +10,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author gmutuhu
  *
@@ -43,5 +45,12 @@ public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<Ca
             final Long id) {
         return cabinetPaperRepository.countByProcurementPlanAndNameAndIdNot(procurementPlan, name, id);
     }
+
+    @Cacheable
+    @Override
+    public List<CabinetPaper> findByProcurementPlan(final ProcurementPlan procurementPlan) {
+        return cabinetPaperRepository.findByProcurementPlan(procurementPlan);
+    }
+
 
 }
