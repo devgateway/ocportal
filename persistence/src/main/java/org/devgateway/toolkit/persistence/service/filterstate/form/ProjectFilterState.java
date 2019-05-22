@@ -1,7 +1,9 @@
 package org.devgateway.toolkit.persistence.service.filterstate.form;
 
 import org.apache.commons.lang3.StringUtils;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.Project_;
@@ -17,13 +19,19 @@ import java.util.List;
  */
 public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project> {
     private FiscalYear fiscalYear;
-
     private String projectTitle;
-
-    public ProjectFilterState(final FiscalYear fiscalYear, final String projectTitle) {
+    private Long procurementPlanId;
+    
+   public ProjectFilterState(final FiscalYear fiscalYear, final String projectTitle) {
         this.fiscalYear = fiscalYear;
         this.projectTitle = projectTitle;
     }
+    
+    public ProjectFilterState(final Long procurementPlanId, final String projectTitle) {
+        this.procurementPlanId = procurementPlanId;
+        this.projectTitle = projectTitle;
+    }
+    
 
     public ProjectFilterState() {
 
@@ -38,6 +46,11 @@ public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project
                 predicates.add(cb.equal(
                         root.get(Project_.procurementPlan).get(ProcurementPlan_.fiscalYear), fiscalYear));
             }
+            
+            if (fiscalYear == null) {
+                predicates.add(cb.equal(
+                        root.get(Project_.procurementPlan).get(ProcurementPlan_.id), procurementPlanId));
+            }      
 
             if (StringUtils.isNotBlank(projectTitle)) {
                 predicates.add(cb.like(
@@ -64,4 +77,13 @@ public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project
     public void setProjectTitle(final String projectTitle) {
         this.projectTitle = projectTitle;
     }
+    
+    public Long getProcurementPlanId() {
+        return procurementPlanId;
+    }
+
+    public void setProcurementPlanId(final Long procurementPlanId) {
+        this.procurementPlanId = procurementPlanId;
+    }
+   
 }
