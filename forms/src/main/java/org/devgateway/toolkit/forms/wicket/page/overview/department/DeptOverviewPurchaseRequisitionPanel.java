@@ -116,7 +116,7 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
     private void addTenderDocumentSection() {
         add(new Label("tenderTitle", tender != null ? tender.getTenderTitle() : ""));
         add(new Label("tenderId", tender != null ? tender.getTenderNumber() : ""));
-        add(new Label("amount", tender != null ? tender.getTotalAmount() : ""));
+        add(new Label("amount", tender != null ? tender.getTenderValue() : ""));
         add(new DeptOverviewStatusLabel("tenderStatus", tender));
         createLinkNoPrevStep(tender, "editTender", EditTenderPage.class);
     }
