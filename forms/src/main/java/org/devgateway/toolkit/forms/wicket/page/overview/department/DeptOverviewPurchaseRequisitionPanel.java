@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -29,8 +30,10 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.util.Attributes;
 
 public class DeptOverviewPurchaseRequisitionPanel extends Panel {
 
@@ -96,8 +99,19 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
                     expanded = true;
                     target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('show')");
                 }
-
+                
+                target.add(this);
             }
+             
+             @Override
+             protected void onComponentTag(final ComponentTag tag) {
+                 super.onComponentTag(tag);
+                 if (expanded) {
+                     Attributes.removeClass(tag, "collapsed");
+                 } else {
+                     Attributes.addClass(tag, "collapsed");
+                 }
+             }
         };
 
         header.add(new Label("headerTitle", purchaseRequisition.getTitle()));

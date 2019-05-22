@@ -1,9 +1,13 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.util.Attributes;
 import java.util.List;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -12,15 +16,17 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 
 public class DepartmentOverviewItem extends Panel {
     private static final long serialVersionUID = -2887946738171526100L;
@@ -65,7 +71,18 @@ public class DepartmentOverviewItem extends Panel {
                     expanded = true;
                     target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('show')");
                 }
-
+                
+                target.add(this);
+           }
+            
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+                if (expanded) {
+                    Attributes.removeClass(tag, "collapsed");
+                } else {
+                    Attributes.addClass(tag, "collapsed");
+                }
             }
         };
 
@@ -73,6 +90,13 @@ public class DepartmentOverviewItem extends Panel {
         header.add(new Label("projectTitle", new Model<>(this.project.getProjectTitle())));
         header.add(new Label("fiscalYear",
                 new PropertyModel<String>(this.project.getProcurementPlan().getFiscalYear(), "label")));
+
+        final PageParameters pageParameters = new PageParameters();
+        pageParameters.set(WebConstants.PARAM_ID, this.project.getId());
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>("editProject",
+                EditProjectPage.class, pageParameters, Buttons.Type.Success);
+        button.add(AttributeAppender.append("class", "no-text btn-edit btn-small"));
+        header.add(button);
         add(header);
     }
 
