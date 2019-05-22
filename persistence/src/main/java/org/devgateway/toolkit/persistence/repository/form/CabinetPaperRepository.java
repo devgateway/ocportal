@@ -23,6 +23,8 @@ public interface CabinetPaperRepository extends AbstractMakueniEntityRepository<
     
     Long countByProcurementPlanAndNameAndIdNot(ProcurementPlan procurementPlan, String name, Long id);
 
+    List<CabinetPaper> findByProcurementPlan(ProcurementPlan procurementPlan);
+
     @Override
     @Query("select c from  #{#entityName} c where c.procurementPlan.fiscalYear = :fiscalYear")
     List<CabinetPaper> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
