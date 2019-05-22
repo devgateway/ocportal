@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.page.user;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -45,9 +46,12 @@ import org.devgateway.toolkit.persistence.service.RoleService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -227,7 +231,10 @@ public class EditUserPage extends AbstractEditPage<Person> {
                     person.setChangePasswordNextSignIn(false);
                 }
 
-                jpaService.save(person);
+                Person saved = jpaService.save(person);
+                updateCurrentAuthenticatedUserData(saved);
+
+
                 if (!WebSecurityUtil.isCurrentUserAdmin()) {
                     setResponsePage(Homepage.class);
                 } else {
@@ -235,6 +242,32 @@ public class EditUserPage extends AbstractEditPage<Person> {
                 }
             }
         };
+    }
+
+    /**
+     * Updates current principal with user data if the user edits herself. Will not update
+     * roles for security reasons. For that, u must log out/back in.
+     *
+     * @param saved
+     */
+    private void updateCurrentAuthenticatedUserData(Person saved) {
+        Person currentAuthenticatedPerson = WebSecurityUtil.getCurrentAuthenticatedPerson();
+        Collection<? extends GrantedAuthority> oldAuthorities = currentAuthenticatedPerson.getAuthorities();
+        List<Role> oldRoles = currentAuthenticatedPerson.getRoles();
+
+        if (currentAuthenticatedPerson.getId().equals(saved.getId())) {
+            //i edited myself, update the principal
+            try {
+                BeanUtils.copyProperties(currentAuthenticatedPerson, saved);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+
+            //copy back old authorities - we do not allow update of authorities in same session because
+            //u can easily lock yourself out of admin by just saving your admin after removing admin role...
+            currentAuthenticatedPerson.setAuthorities(oldAuthorities);
+            currentAuthenticatedPerson.setRoles(oldRoles);
+        }
     }
 
     /**

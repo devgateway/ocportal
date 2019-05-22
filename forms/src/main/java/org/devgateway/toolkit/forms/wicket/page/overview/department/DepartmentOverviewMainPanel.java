@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -24,15 +25,18 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPag
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
+import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
 
 public class DepartmentOverviewMainPanel extends Panel {
     private FiscalYear fiscalYear;
@@ -42,6 +46,7 @@ public class DepartmentOverviewMainPanel extends Panel {
     private ProcurementPlan procurementPlan;
 
     private List<FiscalYear> fiscalYears;   
+    private ListView<CabinetPaper> cabinetPapers;
 
     private ListView<Project> projectsListView;
 
@@ -57,7 +62,10 @@ public class DepartmentOverviewMainPanel extends Panel {
     private String searchText = "";
     
     private WebMarkupContainer listWrapper;
-    
+
+    @SpringBean
+    private CabinetPaperService cabinetPaperService;
+
     public DepartmentOverviewMainPanel(final String id) {
         super(id);
 
@@ -123,8 +131,10 @@ public class DepartmentOverviewMainPanel extends Panel {
             pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
         }
 
-        DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel("procurementPlanStatus",
-                procurementPlan);
+        DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
+                "procurementPlanStatus",
+                procurementPlan
+        );
         add(procurementPlanStatus);
 
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
@@ -144,6 +154,31 @@ public class DepartmentOverviewMainPanel extends Panel {
                 "editCabinetPaper", EditCabinetPaperPage.class, Buttons.Type.Success);
         editCabinetPaper.setEnabled(procurementPlan != null);
         add(editCabinetPaper);
+
+        LoadableDetachableModel<List<CabinetPaper>> cabinetPapersModel =
+                new LoadableDetachableModel<List<CabinetPaper>>() {
+                    @Override
+                    protected List<CabinetPaper> load() {
+                        return cabinetPaperService.findByProcurementPlan(procurementPlan);
+                    }
+                };
+
+        cabinetPapers = new BootstrapListView<CabinetPaper>("cabinetPapers", cabinetPapersModel) {
+            @Override
+            protected void populateItem(ListItem<CabinetPaper> item) {
+                item.add(new Label("label", item.getModelObject().getLabel()));
+
+                BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
+                        "edit", EditCabinetPaperPage.class,
+                        new PageParameters().set(WebConstants.PARAM_ID, item.getModelObject().getId()),
+                        Buttons.Type.Success
+                );
+                item.add(editCabinetPaper);
+            }
+        };
+
+        add(cabinetPapers);
+
     }
 
     private void addProjectButton() {
@@ -211,10 +246,6 @@ public class DepartmentOverviewMainPanel extends Panel {
         this.fiscalYear = fiscalYear;
     }
 
-
-    /**
-     * @param target
-     */
     private void updateDashboard(final AjaxRequestTarget target) {
         Long procurementPlanId = procurementPlan != null ? procurementPlan.getId() : null;
         projectsListView.setModelObject(projectService.findAll(
