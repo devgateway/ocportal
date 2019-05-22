@@ -1,14 +1,11 @@
 /* file upload
 -------------------------------------------------- */
 h1.pageTitle {
-    border-bottom: 1px solid #42b251;
     font-size: 21px;
     font-weight: 400;
-    margin-bottom: 20px;
     margin-top: 40px;
     padding-bottom: 20px;
 }
-
 .homepage-menu-wrapper {
     clear: both;
     overflow: hidden;
@@ -17,6 +14,9 @@ h1.pageTitle {
 .intro-text {
     font-size: 15px;
     font-weight: bold;
+    border-top: 1px solid #42b251;
+    margin-top: -20px;
+    padding-top: 20px;
 }
 
 ul.homepage-menu {
@@ -89,8 +89,9 @@ ul.homepage-menu li.corruption-dash button:hover {
 }
 
 .btn.btn-text {
+    background-color: #ffffff;
     color: #354051;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     outline: none;
     text-align: center;

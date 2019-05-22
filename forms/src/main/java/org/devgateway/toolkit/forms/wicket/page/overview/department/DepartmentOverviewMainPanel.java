@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -70,6 +71,15 @@ public class DepartmentOverviewMainPanel extends Panel {
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
+
+    public void addLabelOrInvisibleContainer(String id, Object o) {
+        if (o != null) {
+            add(new Label(id, o.toString()));
+        } else {
+            add(new WebMarkupContainer(id).setVisibilityAllowed(false));
+        }
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -81,11 +91,9 @@ public class DepartmentOverviewMainPanel extends Panel {
         addYearDropdown();
         addSearchBox();
         add(new Label("departmentLabel", department.getLabel()));
-        if (procurementPlan != null) {
-            add(new Label("procurementPlanLabel", procurementPlan.toString()));
-        } else {
-            add(new WebMarkupContainer("procurementPlanLabel").setVisibilityAllowed(false));
-        }
+        add(new Label("fiscalYear", fiscalYear.getLabel()));
+
+        addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
         addProjectList();
     }
 
@@ -133,6 +141,7 @@ public class DepartmentOverviewMainPanel extends Panel {
 
         final BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
                 "editCabinetPaper", EditCabinetPaperPage.class, Buttons.Type.Success);
+        editCabinetPaper.setEnabled(procurementPlan != null);
         add(editCabinetPaper);
     }
 
