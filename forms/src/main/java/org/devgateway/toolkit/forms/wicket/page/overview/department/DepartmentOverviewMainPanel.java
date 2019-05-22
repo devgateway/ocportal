@@ -1,19 +1,19 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
+import java.util.List;
+
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -29,12 +29,14 @@ import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
+import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
 
 public class DepartmentOverviewMainPanel extends Panel {
     private FiscalYear fiscalYear;
@@ -43,15 +45,10 @@ public class DepartmentOverviewMainPanel extends Panel {
 
     private ProcurementPlan procurementPlan;
 
+    private List<FiscalYear> fiscalYears;   
     private ListView<CabinetPaper> cabinetPapers;
 
-    private List<FiscalYear> fiscalYears;
-
-    private TextField<String> searchBox;
-
-    private List<Project> projects;
-
-    private ListView<Project> projectList;
+    private ListView<Project> projectsListView;
 
     @SpringBean
     private ProjectService projectService;
@@ -61,6 +58,10 @@ public class DepartmentOverviewMainPanel extends Panel {
 
     @SpringBean
     private ProcurementPlanService procurementPlanService;
+    
+    private String searchText = "";
+    
+    private WebMarkupContainer listWrapper;
 
     @SpringBean
     private CabinetPaperService cabinetPaperService;
@@ -192,45 +193,40 @@ public class DepartmentOverviewMainPanel extends Panel {
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
-                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer
-        );
-        yearsDropdown.add(new FormComponentUpdatingBehavior() {
+                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer);       
+        
+        yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate() {
-                SessionUtil.setSessionFiscalYear(yearsDropdown.getModelObject());
-                setResponsePage(DepartmentOverviewPage.class);
-
+            protected void onUpdate(final AjaxRequestTarget target) {
+                SessionUtil.setSessionFiscalYear(fiscalYear);
+                updateDashboard(target);
             }
         });
         add(yearsDropdown);
     }
 
     private void addSearchBox() {
-        searchBox = new TextField<>("searchBox", Model.of(""));
-        searchBox.add(new FormComponentUpdatingBehavior() {
-            private static final long serialVersionUID = 1L;
-
+        final TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchText"));
+        searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
-            protected void onUpdate() {
-                if (projects != null) {
-                    final List<Project> filteredProjects = projects.stream().filter(p -> {
-                        if (p.getProjectTitle() != null && searchBox.getModelObject() != null) {
-                            return p.getProjectTitle().toLowerCase().contains(searchBox.getModelObject().toLowerCase());
-                        }
-
-                        return true;
-                    }).collect(Collectors.toList());
-
-                    projectList.setModelObject(filteredProjects);
-                }
+            protected void onUpdate(final AjaxRequestTarget target) {
+                updateDashboard(target);
             }
         });
-        add(searchBox);
+        add(searchBoxField);       
     }
 
-    private void addProjectList() {
-        projects = projectService.findByProcurementPlan(procurementPlan);
-        projectList = new ListView<Project>("projectList", projects) {
+    private void addProjectList() {        
+        listWrapper = new TransparentWebMarkupContainer("listWrapper");
+        listWrapper.setOutputMarkupId(true);
+        add(listWrapper);
+        
+        Long procurementPlanId = procurementPlan != null ? procurementPlan.getId() : null;
+        List<Project> projects = projectService.findAll(
+                    new ProjectFilterState(procurementPlanId, searchText)
+                            .getSpecification());       
+        
+        projectsListView = new ListView<Project>("projectList", projects) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -238,8 +234,8 @@ public class DepartmentOverviewMainPanel extends Panel {
                 item.add(new DepartmentOverviewItem("project", item.getModelObject()));
             }
         };
-        projectList.setOutputMarkupId(true);
-        add(projectList);
+        projectsListView.setOutputMarkupId(true);
+        listWrapper.add(projectsListView);
     }
 
     public FiscalYear getFiscalYear() {
@@ -248,5 +244,13 @@ public class DepartmentOverviewMainPanel extends Panel {
 
     public void setFiscalYear(final FiscalYear fiscalYear) {
         this.fiscalYear = fiscalYear;
+    }
+
+    private void updateDashboard(final AjaxRequestTarget target) {
+        Long procurementPlanId = procurementPlan != null ? procurementPlan.getId() : null;
+        projectsListView.setModelObject(projectService.findAll(
+                new ProjectFilterState(procurementPlanId, searchText)
+                        .getSpecification()));
+        target.add(listWrapper);
     }
 }
