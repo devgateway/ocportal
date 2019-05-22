@@ -2,9 +2,12 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.util.Attributes;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -68,7 +71,18 @@ public class DepartmentOverviewItem extends Panel {
                     expanded = true;
                     target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('show')");
                 }
-
+                
+                target.add(this);
+           }
+            
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+                if (expanded) {
+                    Attributes.removeClass(tag, "collapsed");
+                } else {
+                    Attributes.addClass(tag, "collapsed");
+                }
             }
         };
 
