@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -31,6 +29,8 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 
 public class DeptOverviewPurchaseRequisitionPanel extends Panel {
 
@@ -126,18 +126,23 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
                 || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
-    private BootstrapBookmarkablePageLink<Void> createLinkNoPrevStep(GenericPersistable persistable, final String id,
+    private BootstrapAjaxLink<Void> createLinkNoPrevStep(GenericPersistable persistable, final String id,
                                                                      final Class<? extends AbstractEditPage> clazz) {
         final PageParameters pageParameters = new PageParameters();
         if (persistable != null) {
             pageParameters.set(WebConstants.PARAM_ID, persistable.getId());
-        }
+        }      
 
-        SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
-
-        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>(id, clazz,
-                pageParameters, Buttons.Type.Success
-        );
+        final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id,
+                Buttons.Type.Success) {       
+            private static final long serialVersionUID = 1L;
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
+                setResponsePage(clazz, pageParameters);                
+            }            
+        };
+        
         button.add(AttributeAppender.append("class", "no-text btn-"
                 + (persistable == null ? "add" : "edit")));
         add(button);
