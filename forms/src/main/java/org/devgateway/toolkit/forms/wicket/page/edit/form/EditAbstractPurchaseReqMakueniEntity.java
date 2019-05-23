@@ -2,6 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.slf4j.Logger;
@@ -21,6 +22,11 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
 
         this.purchaseRequisition = SessionUtil.getSessionPurchaseRequisition();
 
-        // TODO - if we don't have a purchaseRequisition log and redirect to status page.
+        // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
+        if (entityId == null && this.purchaseRequisition == null) {
+            logger.warn("Something wrong happened since we are trying to add a new AbstractPurchaseReqMakueni Entity "
+                    + "without having a PurchaseRequisition!");
+            setResponsePage(StatusOverviewPage.class);
+        }
     }
 }
