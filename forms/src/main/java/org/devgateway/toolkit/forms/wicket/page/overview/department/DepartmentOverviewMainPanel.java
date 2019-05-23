@@ -1,8 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -37,12 +36,11 @@ import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
-
-import java.util.List;
 
 public class DepartmentOverviewMainPanel extends Panel {
     private static final Logger logger = LoggerFactory.getLogger(DepartmentOverviewMainPanel.class);
@@ -79,11 +77,7 @@ public class DepartmentOverviewMainPanel extends Panel {
 
         this.department = SessionUtil.getSessionDepartment();
         this.fiscalYear = SessionUtil.getSessionFiscalYear();
-        if (this.department == null || this.fiscalYear == null) {
-           logger.warn("Can not open the department overview page because the department or the fiscal year is null.");
-           setResponsePage(StatusOverviewPage.class);
-        }
-
+      
         // redirect user to status dashboard page if we don't have all the needed info
         if (this.department == null) {
             logger.warn("User landed on DepartmentOverviewPage page without having any department in Session");
