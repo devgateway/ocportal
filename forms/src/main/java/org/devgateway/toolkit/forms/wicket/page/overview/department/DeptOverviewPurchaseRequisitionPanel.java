@@ -1,5 +1,8 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.util.Attributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -31,12 +34,7 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.util.Attributes;
-
 public class DeptOverviewPurchaseRequisitionPanel extends Panel {
-
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
 
@@ -65,7 +63,7 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        PurchaseRequisition pr = purchaseRequisitionService.findById(purchaseRequisition.getId()).get();
+        final PurchaseRequisition pr = purchaseRequisitionService.findById(purchaseRequisition.getId()).get();
         tender = pr.getTender();
         tenderQuotationEvaluation = pr.getTenderQuotationEvaluation();
         professionalOpinion = pr.getProfessionalOpinion();
