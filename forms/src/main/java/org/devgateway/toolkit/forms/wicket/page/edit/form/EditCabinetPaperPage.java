@@ -28,12 +28,11 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 /**
  * @author gmutuhu
- *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/cabinetPaper")
 public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
-    
+
     @SpringBean
     protected CabinetPaperService cabinetPaperService;
 
@@ -47,7 +46,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
-
         this.procurementPlan = SessionUtil.getSessionPP();
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && this.procurementPlan == null) {
@@ -60,11 +58,10 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
         if (permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()) == null) {
             setResponsePage(listPageClass);
         }
-        
+
         final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
         name.required();
         name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
@@ -80,8 +77,8 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(CabinetPaper_.number)), v.toLowerCase()),
                 editForm.getModel()
         ));
-        
-        
+
+
         final FileInputBootstrapFormComponent doc = new FileInputBootstrapFormComponent("formDocs");
         doc.maxFiles(1);
         doc.required();
@@ -121,6 +118,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
             }
         }
     }
+
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();

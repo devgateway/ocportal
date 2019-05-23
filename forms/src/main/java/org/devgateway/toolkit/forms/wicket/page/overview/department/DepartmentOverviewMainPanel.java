@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
@@ -75,7 +76,7 @@ public class DepartmentOverviewMainPanel extends Panel {
 
         this.department = SessionUtil.getSessionDepartment();
         this.fiscalYear = SessionUtil.getSessionFiscalYear();
-
+      
         // redirect user to status dashboard page if we don't have all the needed info
         if (this.department == null) {
             logger.warn("User landed on DepartmentOverviewPage page without having any department in Session");
@@ -106,6 +107,7 @@ public class DepartmentOverviewMainPanel extends Panel {
         addProjectButton();
         addYearDropdown();
         addSearchBox();
+
         add(new Label("departmentLabel", department == null ? "" : department.getLabel()));
         add(new Label("fiscalYear", fiscalYear == null ? "" : fiscalYear.getLabel()));
 
@@ -154,11 +156,16 @@ public class DepartmentOverviewMainPanel extends Panel {
 
 
     private void addCabinetPaperButton() {
-        // TODO (params) - check that here the Cabinet Paper page has access to Procurement Plan
-        SessionUtil.setSessionPP(procurementPlan);
+        final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("editCabinetPaper",
+                Buttons.Type.Success) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                SessionUtil.setSessionPP(procurementPlan);
+                setResponsePage(EditCabinetPaperPage.class);
+            }
 
-        final BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
-                "editCabinetPaper", EditCabinetPaperPage.class, Buttons.Type.Success);
+        };
+        
         editCabinetPaper.setEnabled(procurementPlan != null);
         add(editCabinetPaper);
 
