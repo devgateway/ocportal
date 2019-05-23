@@ -43,6 +43,8 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
         super(parameters);
 
         this.jpaService = procurementPlanService;
+
+        // TODO check if department is present in session and set it for admins
     }
 
     @Override

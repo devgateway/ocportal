@@ -106,8 +106,8 @@ public class DepartmentOverviewMainPanel extends Panel {
         addProjectButton();
         addYearDropdown();
         addSearchBox();
-        add(new Label("departmentLabel", department.getLabel()));
-        add(new Label("fiscalYear", fiscalYear.getLabel()));
+        add(new Label("departmentLabel", department == null ? "" : department.getLabel()));
+        add(new Label("fiscalYear", fiscalYear == null ? "" : fiscalYear.getLabel()));
 
         addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
         addProjectList();
