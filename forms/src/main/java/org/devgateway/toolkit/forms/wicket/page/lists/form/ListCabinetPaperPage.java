@@ -24,6 +24,7 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.hibernate.Hibernate;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
                     final IModel<CabinetPaper> model) {
                 final FileMetadata file = model.getObject().getFormDocs().stream().findFirst().orElse(null);
                 if (file != null) {
+                    Hibernate.initialize(file.getContent());
                     cellItem.add(new DownloadPanel(componentId, new Model(file)));
                 }
             }
