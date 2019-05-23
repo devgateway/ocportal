@@ -37,6 +37,7 @@ import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
@@ -153,11 +154,16 @@ public class DepartmentOverviewMainPanel extends Panel {
 
 
     private void addCabinetPaperButton() {
-        // TODO (params) - check that here the Cabinet Paper page has access to Procurement Plan
-        SessionUtil.setSessionPP(procurementPlan);
+        final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("editCabinetPaper",
+                Buttons.Type.Success) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                SessionUtil.setSessionPP(procurementPlan);
+                setResponsePage(EditCabinetPaperPage.class);
+            }
 
-        final BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
-                "editCabinetPaper", EditCabinetPaperPage.class, Buttons.Type.Success);
+        };
+        
         editCabinetPaper.setEnabled(procurementPlan != null);
         add(editCabinetPaper);
 
