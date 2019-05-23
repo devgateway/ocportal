@@ -46,16 +46,15 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
-
-        // TODO (params) - check that the Cabinet Paper page has access to Procurement Plan and link it to the
-        // CabinetPaper object
-        this.procurementPlan = SessionUtil.getSessionPP();
+        this.procurementPlan = SessionUtil.getSessionPP();        
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
+        if (procurementPlan == null && editForm.getModelObject().getProcurementPlan() == null) {
+            setResponsePage(DepartmentOverviewPage.class);
+        }
         if (permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()) == null) {
             setResponsePage(listPageClass);
         }
