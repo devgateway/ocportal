@@ -99,19 +99,19 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
                     expanded = true;
                     target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('show')");
                 }
-                
+
                 target.add(this);
             }
-             
-             @Override
-             protected void onComponentTag(final ComponentTag tag) {
-                 super.onComponentTag(tag);
-                 if (expanded) {
-                     Attributes.removeClass(tag, "collapsed");
-                 } else {
-                     Attributes.addClass(tag, "collapsed");
-                 }
-             }
+
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+                if (expanded) {
+                    Attributes.removeClass(tag, "collapsed");
+                } else {
+                    Attributes.addClass(tag, "collapsed");
+                }
+            }
         };
 
         header.add(new Label("headerTitle", purchaseRequisition.getTitle()));
@@ -141,24 +141,24 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
     }
 
     private BootstrapAjaxLink<Void> createLinkNoPrevStep(GenericPersistable persistable, final String id,
-                                                                     final Class<? extends AbstractEditPage> clazz) {
+                                                         final Class<? extends AbstractEditPage> clazz) {
         final PageParameters pageParameters = new PageParameters();
         if (persistable != null) {
             pageParameters.set(WebConstants.PARAM_ID, persistable.getId());
-        }      
+        }
 
         final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id,
-                Buttons.Type.Success) {       
+                Buttons.Type.Success) {
             private static final long serialVersionUID = 1L;
+
             @Override
             public void onClick(AjaxRequestTarget target) {
                 SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
-                setResponsePage(clazz, pageParameters);                
-            }            
+                setResponsePage(clazz, pageParameters);
+            }
         };
-        
-        button.add(AttributeAppender.append("class", "no-text btn-"
-                + (persistable == null ? "add" : "edit")));
+
+        button.add(AttributeAppender.append("class", "no-text btn-" + (persistable == null ? "add" : "edit")));
         add(button);
         return button;
     }

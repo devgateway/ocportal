@@ -11,17 +11,19 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
+import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.form.CabinetPaperFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.form.CabinetPaperFilterState;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.hibernate.Hibernate;
@@ -50,6 +52,12 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
 
     @Override
     protected void onInitialize() {
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+                "procurementPlan.department", "procurementPlan.department", new ListModel(departments), dataTable));
+
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
+                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear", new ListModel(fiscalYears), dataTable));
+
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("number", ListCabinetPaperPage.this)).getString()), "number",
                 "number"));
@@ -80,10 +88,6 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
     }
 
     public class DownloadPanel extends Panel {
-        /**
-         * @param id
-         * @param model
-         */
         public DownloadPanel(final String id, final IModel<FileMetadata> model) {
             super(id, model);
 

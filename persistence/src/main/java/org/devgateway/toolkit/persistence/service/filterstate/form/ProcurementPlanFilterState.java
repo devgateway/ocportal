@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
+import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class ProcurementPlanFilterState extends AbstractMakueniEntityFilterState<ProcurementPlan> {
+public class ProcurementPlanFilterState extends StatusAuditableEntityFilterState<ProcurementPlan> {
     private Department department;
 
     private FiscalYear fiscalYear;

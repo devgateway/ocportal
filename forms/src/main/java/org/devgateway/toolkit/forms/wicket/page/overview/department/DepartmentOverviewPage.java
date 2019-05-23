@@ -256,7 +256,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         listWrapper.setOutputMarkupId(true);
         add(listWrapper);
 
-        List<Project> projects = projectService.findAll(
+        final List<Project> projects = projectService.findAll(
                 new ProjectFilterState(procurementPlan, searchText).getSpecification());
 
         projectsListView = new ListView<Project>("projectList", projects) {
