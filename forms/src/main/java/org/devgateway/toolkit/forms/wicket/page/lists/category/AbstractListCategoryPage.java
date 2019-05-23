@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.category;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -21,8 +19,6 @@ public abstract class AbstractListCategoryPage<T extends Category> extends Abstr
 
     @Override
     protected void onInitialize() {
-        // just replace the page title with the name of the class
-        // instead of having .properties files only for the page title
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("label", AbstractListCategoryPage.this)).getString()),
                 "label", "label"));
