@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import java.util.List;
+
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -9,10 +11,13 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
+import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
@@ -58,9 +63,12 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         projectTitle.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         projectTitle.getField().add(uniqueTitle());
 
-        // TODO - this should be filtered based on form Procurement Plan
-        ComponentUtil.addSelect2ChoiceField(editForm, "cabinetPaper", cabinetPaperService).required();
-
+        List<CabinetPaper> cabinetPapers = cabinetPaperService.findByProcurementPlan(procurementPlan);        
+        Select2ChoiceBootstrapFormComponent<CabinetPaper> cabinetPaperDropdown = 
+                new Select2ChoiceBootstrapFormComponent<>("cabinetPaper", new GenericChoiceProvider<>(cabinetPapers));
+        cabinetPaperDropdown.required();
+        editForm.add(cabinetPaperDropdown);
+        
         ComponentUtil.addDoubleField(editForm, "amountBudgeted").getField().add(RangeValidator.minimum(0.0));
         ComponentUtil.addDoubleField(editForm, "amountRequested").getField().add(RangeValidator.minimum(0.0));
 
