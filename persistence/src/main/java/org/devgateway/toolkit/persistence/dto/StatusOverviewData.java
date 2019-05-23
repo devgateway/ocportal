@@ -43,7 +43,8 @@ public class StatusOverviewData implements Serializable {
         return expanded;
     }
 
-    public void setExpanded(final Boolean expanded) {
+    public StatusOverviewData setExpanded(final Boolean expanded) {
         this.expanded = expanded;
+        return this;
     }
 }

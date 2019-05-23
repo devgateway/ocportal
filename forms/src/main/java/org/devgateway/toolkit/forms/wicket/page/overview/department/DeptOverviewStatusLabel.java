@@ -7,7 +7,7 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 
 public class DeptOverviewStatusLabel extends Label {
 
-    public DeptOverviewStatusLabel(String id, Statusable statusable) {
+    public DeptOverviewStatusLabel(final String id, final Statusable statusable) {
         super(id);
 
         add(AttributeAppender.append("class", statusable != null

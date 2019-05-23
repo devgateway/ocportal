@@ -98,20 +98,6 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
         editForm.add(supplierAddress);
     }
 
-    private List<Supplier> getSuppliersInTenderQuotation() {
-        TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
-        List<Supplier> suppliers = new ArrayList<>();
-        if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
-            for (Bid bid : tenderQuotationEvaluation.getBids()) {
-                if (DBConstants.SupplierResponsiveness.PASS.equalsIgnoreCase(bid.getSupplierResponsiveness())) {
-                    suppliers.add(bid.getSupplier());
-                }
-            }
-        }
-
-        return suppliers;
-    }
-
 
     class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
         AwardeeAjaxComponentUpdatingBehavior(final String event) {

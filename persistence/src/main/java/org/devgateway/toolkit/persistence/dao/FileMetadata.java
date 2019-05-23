@@ -36,7 +36,7 @@ import java.io.Serializable;
 @Table(indexes = {@Index(columnList = "name")})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileMetadata extends AbstractAuditableEntity implements Serializable {
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private FileContent content;
 
@@ -45,8 +45,6 @@ public class FileMetadata extends AbstractAuditableEntity implements Serializabl
     private String contentType;
 
     private long size;
-
-    private boolean isUserSupportDocument = false;
 
     @Override
     public String toString() {
@@ -83,14 +81,6 @@ public class FileMetadata extends AbstractAuditableEntity implements Serializabl
 
     public void setSize(final long size) {
         this.size = size;
-    }
-
-    public boolean isUserSupportDocument() {
-        return isUserSupportDocument;
-    }
-
-    public void setUserSupportDocument(final boolean isUserSupportDocument) {
-        this.isUserSupportDocument = isUserSupportDocument;
     }
 
     @Override

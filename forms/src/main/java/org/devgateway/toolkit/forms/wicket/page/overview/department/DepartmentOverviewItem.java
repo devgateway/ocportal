@@ -1,9 +1,9 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.util.Attributes;
-import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -26,7 +26,7 @@ import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
+import java.util.List;
 
 public class DepartmentOverviewItem extends Panel {
     private static final long serialVersionUID = -2887946738171526100L;
@@ -119,14 +119,13 @@ public class DepartmentOverviewItem extends Panel {
     private void addTenderList() {
         ListView<PurchaseRequisition> purchaseReqisitionList = new ListView<PurchaseRequisition>("tenderList",
                 purchaseRequisitions) {
-            private static final long serialVersionUID = 1L;
-
             @Override
             protected void populateItem(final ListItem<PurchaseRequisition> item) {
                 item.add(new DeptOverviewPurchaseRequisitionPanel("tender",  item.getModelObject()));
             }
         };
         purchaseReqisitionList.setOutputMarkupId(true);
+        purchaseReqisitionList.setReuseItems(true);
         add(purchaseReqisitionList);
     }
 }

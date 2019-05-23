@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -16,6 +17,7 @@ public abstract class AbstractChildAuditableEntity<P extends AbstractAuditableEn
     @ManyToOne
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "parent_id", insertable = false, updatable = false)
+    @JsonIgnore
     protected P parent;
 
     @Override

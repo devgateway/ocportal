@@ -13,10 +13,15 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.CompoundSectionPanel;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 
 import java.util.List;
 
@@ -28,6 +33,9 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
     private WebMarkupContainer listWrapper;
 
     private ListView<StatusOverviewData> listView;
+
+    @SpringBean
+    private ProjectService projectService;
 
     public ListViewStatusOverview(final String id, final IModel<List<StatusOverviewData>> model) {
         super(id, model);
@@ -92,6 +100,8 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
                 header.add(new Label("procurementPlan.fiscalYear"));
                 header.add(new Label("projectCount", item.getModelObject().getProjects().size()));
 
+                final ProcurementPlan procurementPlan = item.getModelObject().getProcurementPlan();
+
                 // add the items in the listItem
                 item.add(new ListView<StatusOverviewProjectStatus>("projects") {
                     @Override
@@ -104,13 +114,13 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
                         // thus ensures the rest of the items added will benefit
                         item.setModel(compoundPropertyModel);
 
-                        final Link<Object> link = new Link<Object>("title") {
+                        final Link<Void> link = new Link<Void>("title") {
                             @Override
                             public void onClick() {
-                                // TODO
-                                // PageParameters parameters = new PageParameters();
-                                // parameters.add("id", item.getModelObject().getId());
-                                // setResponsePage(DepartmentOverviewPage.class, parameters);
+                                SessionUtil.setSessionDepartment(procurementPlan.getDepartment());
+                                SessionUtil.setSessionProject(
+                                        projectService.findByIdCached(item.getModelObject().getId()).get());
+                                setResponsePage(DepartmentOverviewPage.class);
                             }
                         };
                         link.add(new Label("projectTitle"));

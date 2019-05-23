@@ -11,7 +11,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class TenderFilterState extends AbstractMakueniEntityFilterState<Tender> {
+public class TenderFilterState extends AbstractPurchaseReqMakueniFilterState<Tender> {
     @Override
     public Specification<Tender> getSpecification() {
         return (root, query, cb) -> {

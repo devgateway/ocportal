@@ -85,13 +85,15 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
-    private String searchText = "";
+    private String searchBox = "";
 
     private WebMarkupContainer listWrapper;
 
     @SpringBean
     private CabinetPaperService cabinetPaperService;
 
+
+    // TODO all list view should have LoadableDetachableModel models
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
 
@@ -110,20 +112,13 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
 
-    public void addLabelOrInvisibleContainer(String id, Object o) {
-        if (o != null) {
-            add(new Label(id, o.toString()));
-        } else {
-            add(new WebMarkupContainer(id).setVisibilityAllowed(false));
-        }
-    }
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
         addViewProcurementPlanButton();
+
         addCabinetPaperButton();
         addProjectButton();
         addYearDropdown();
@@ -134,6 +129,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
         addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
         addProjectList();
+    }
+
+    private void addLabelOrInvisibleContainer(String id, Object o) {
+        if (o != null) {
+            add(new Label(id, o.toString()));
+        } else {
+            add(new WebMarkupContainer(id).setVisibilityAllowed(false));
+        }
     }
 
     private void addNewProcurementPlanButton() {
@@ -241,7 +244,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void addSearchBox() {
-        final TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchText"));
+        final TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
         searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
@@ -256,8 +259,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         listWrapper.setOutputMarkupId(true);
         add(listWrapper);
 
-        List<Project> projects = projectService.findAll(
-                new ProjectFilterState(procurementPlan, searchText).getSpecification());
+        final List<Project> projects = projectService.findAll(
+                new ProjectFilterState(procurementPlan, searchBox).getSpecification());
 
         projectsListView = new ListView<Project>("projectList", projects) {
             private static final long serialVersionUID = 1L;
@@ -268,6 +271,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         projectsListView.setOutputMarkupId(true);
+        projectsListView.setReuseItems(true);
         listWrapper.add(projectsListView);
     }
 
@@ -280,7 +284,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void updateDashboard(final AjaxRequestTarget target) {
-        projectsListView.setModelObject(projectService.findAll(new ProjectFilterState(procurementPlan, searchText)
+        projectsListView.setModelObject(projectService.findAll(new ProjectFilterState(procurementPlan, searchBox)
                 .getSpecification()));
         target.add(listWrapper);
     }
