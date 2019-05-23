@@ -121,6 +121,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         username = ComponentUtil.addTextField(editForm, "username");
         username.required();
+        username.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         username.getField().add(new UsernamePatternValidator());
         StringValue idPerson = getPageParameters().get(WebConstants.PARAM_ID);
         if (!idPerson.isNull()) {
@@ -132,9 +133,11 @@ public class EditUserPage extends AbstractEditPage<Person> {
         MetaDataRoleAuthorizationStrategy.authorize(username, Component.ENABLE, SecurityConstants.Roles.ROLE_ADMIN);
 
         firstName = ComponentUtil.addTextField(editForm, "firstName");
+        firstName.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         firstName.required();
 
         lastName = ComponentUtil.addTextField(editForm, "lastName");
+        lastName.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         lastName.required();
 
         email = ComponentUtil.addTextField(editForm, "email");
