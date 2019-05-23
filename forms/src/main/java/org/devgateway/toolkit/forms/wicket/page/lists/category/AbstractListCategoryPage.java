@@ -23,12 +23,6 @@ public abstract class AbstractListCategoryPage<T extends Category> extends Abstr
     protected void onInitialize() {
         // just replace the page title with the name of the class
         // instead of having .properties files only for the page title
-        addOrReplace(new Label("pageTitle",
-                StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
-                        this.getClass().getSimpleName().replaceAll("List", "").replaceAll("Page", "")), ' ')
-                        + " Metadata List"));
-
-
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("label", AbstractListCategoryPage.this)).getString()),
                 "label", "label"));
