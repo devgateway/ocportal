@@ -106,8 +106,8 @@ public class DepartmentOverviewMainPanel extends Panel {
         addProjectButton();
         addYearDropdown();
         addSearchBox();
-        add(new Label("departmentLabel", department.getLabel()));
-        add(new Label("fiscalYear", fiscalYear.getLabel()));
+        add(new Label("departmentLabel", department == null ? "" : department.getLabel()));
+        add(new Label("fiscalYear", fiscalYear == null ? "" : fiscalYear.getLabel()));
 
         addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
         addProjectList();
@@ -228,10 +228,8 @@ public class DepartmentOverviewMainPanel extends Panel {
         listWrapper.setOutputMarkupId(true);
         add(listWrapper);
 
-        Long procurementPlanId = procurementPlan != null ? procurementPlan.getId() : null;
         List<Project> projects = projectService.findAll(
-                new ProjectFilterState(procurementPlanId, searchText)
-                        .getSpecification());
+                new ProjectFilterState(procurementPlan, searchText).getSpecification());
 
         projectsListView = new ListView<Project>("projectList", projects) {
             private static final long serialVersionUID = 1L;
@@ -254,9 +252,7 @@ public class DepartmentOverviewMainPanel extends Panel {
     }
 
     private void updateDashboard(final AjaxRequestTarget target) {
-        Long procurementPlanId = procurementPlan != null ? procurementPlan.getId() : null;
-        projectsListView.setModelObject(projectService.findAll(
-                new ProjectFilterState(procurementPlanId, searchText)
+        projectsListView.setModelObject(projectService.findAll(new ProjectFilterState(procurementPlan, searchText)
                         .getSpecification()));
         target.add(listWrapper);
     }
