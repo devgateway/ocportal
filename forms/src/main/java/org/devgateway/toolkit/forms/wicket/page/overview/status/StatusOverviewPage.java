@@ -31,12 +31,14 @@ import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author gmutuhu
@@ -86,9 +88,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
         addSearchBox();
         addYearDropdown();
 
-        listViewStatusOverview = new ListViewStatusOverview("statusPanel", new ListModel<>(
-                statusOverviewService.getAllProjects(fiscalYear, searchBox)
-        ));
+        listViewStatusOverview = new ListViewStatusOverview("statusPanel", new ListModel<>(fetchData()));
         add(listViewStatusOverview);
     }
 
@@ -119,7 +119,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
     }
 
     private void updateDashboard(final AjaxRequestTarget target) {
-        listViewStatusOverview.setModelObject(statusOverviewService.getAllProjects(fiscalYear, searchBox));
+        listViewStatusOverview.setModelObject(fetchData());
 
         // update the project count from sidebar as well
         sideBar.getProjectCount()
@@ -127,5 +127,12 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
         target.add(listViewStatusOverview);
         target.add(sideBar.getProjectCount());
+    }
+
+    private List<StatusOverviewData> fetchData() {
+        return statusOverviewService.getAllProjects(fiscalYear, searchBox)
+                .parallelStream()
+                .map(item -> item.setExpanded(false))
+                .collect(Collectors.toList());
     }
 }
