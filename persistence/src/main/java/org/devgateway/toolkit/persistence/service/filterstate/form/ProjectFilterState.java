@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.persistence.service.filterstate.form;
 
 import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
@@ -18,20 +17,22 @@ import java.util.List;
  * @since 2019-04-02
  */
 public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project> {
+    private ProcurementPlan procurementPlan;
+
     private FiscalYear fiscalYear;
+
     private String projectTitle;
-    private Long procurementPlanId;
-    
-   public ProjectFilterState(final FiscalYear fiscalYear, final String projectTitle) {
+
+    public ProjectFilterState(final FiscalYear fiscalYear, final String projectTitle) {
         this.fiscalYear = fiscalYear;
         this.projectTitle = projectTitle;
     }
-    
-    public ProjectFilterState(final Long procurementPlanId, final String projectTitle) {
-        this.procurementPlanId = procurementPlanId;
+
+    public ProjectFilterState(final ProcurementPlan procurementPlan, final String projectTitle) {
+        this.procurementPlan = procurementPlan;
         this.projectTitle = projectTitle;
     }
-    
+
 
     public ProjectFilterState() {
 
@@ -42,15 +43,14 @@ public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
+            if (procurementPlan != null) {
+                predicates.add(cb.equal(root.get(Project_.procurementPlan), procurementPlan));
+            }
+
             if (fiscalYear != null) {
                 predicates.add(cb.equal(
                         root.get(Project_.procurementPlan).get(ProcurementPlan_.fiscalYear), fiscalYear));
             }
-            
-            if (fiscalYear == null) {
-                predicates.add(cb.equal(
-                        root.get(Project_.procurementPlan).get(ProcurementPlan_.id), procurementPlanId));
-            }      
 
             if (StringUtils.isNotBlank(projectTitle)) {
                 predicates.add(cb.like(
@@ -77,13 +77,14 @@ public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project
     public void setProjectTitle(final String projectTitle) {
         this.projectTitle = projectTitle;
     }
-    
-    public Long getProcurementPlanId() {
-        return procurementPlanId;
+
+    @Override
+    public ProcurementPlan getProcurementPlan() {
+        return procurementPlan;
     }
 
-    public void setProcurementPlanId(final Long procurementPlanId) {
-        this.procurementPlanId = procurementPlanId;
+    @Override
+    public void setProcurementPlan(final ProcurementPlan procurementPlan) {
+        this.procurementPlan = procurementPlan;
     }
-   
 }
