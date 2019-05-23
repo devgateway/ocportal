@@ -3,17 +3,14 @@ package org.devgateway.toolkit.forms.wicket.page.overview;
 import de.agilecoders.wicket.core.util.Attributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
-import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
@@ -42,9 +39,6 @@ public class SideBar extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Image logo = new Image("logo", new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"));
-        add(logo);
 
         projectCount = new Label("projectCount", calculateProjectCount());
         projectCount.setOutputMarkupId(true);

@@ -14,6 +14,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -47,7 +48,12 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         this.jpaService = purchaseRequisitionService;
 
         this.project = SessionUtil.getSessionProject();
-        // TODO - check if this is a new object and without a project, then redirect to some page like StatusOverview
+        // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
+        if (entityId == null && this.project == null) {
+            logger.warn("Something wrong happened since we are trying to add a new PurchaseRequisition Entity "
+                    + "without having a Project!");
+            setResponsePage(StatusOverviewPage.class);
+        }
     }
 
     @Override

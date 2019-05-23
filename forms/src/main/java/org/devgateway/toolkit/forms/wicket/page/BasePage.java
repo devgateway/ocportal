@@ -495,11 +495,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 new StringResourceModel("brandImageAltText", this, null));
 
         navbar.addComponents(
-                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, newHomeMenu(), newFormMenu(),
+                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newFormMenu(),
                         newMetadataMenu(), newAdminMenu(), newAccountMenu(), newLogoutMenu()
                 ));
 
-        navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));
+        // navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));
 
         return navbar;
     }
