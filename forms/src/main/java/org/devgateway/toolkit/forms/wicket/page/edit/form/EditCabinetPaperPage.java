@@ -18,6 +18,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -47,9 +48,13 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
 
-        // TODO (params) - check that the Cabinet Paper page has access to Procurement Plan and link it to the
-        // CabinetPaper object
         this.procurementPlan = SessionUtil.getSessionPP();
+        // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
+        if (entityId == null && this.procurementPlan == null) {
+            logger.warn("Something wrong happened since we are trying to add a new CabinetPaper Entity "
+                    + "without having a ProcurementPlan!");
+            setResponsePage(StatusOverviewPage.class);
+        }
     }
 
     @Override

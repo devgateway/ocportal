@@ -68,7 +68,7 @@ import java.io.Serializable;
 public abstract class AbstractEditPage<T extends GenericPersistable & Serializable> extends BasePage {
     private static final long serialVersionUID = -5928614890244382103L;
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractEditPage.class);
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractEditPage.class);
 
     /**
      * Factory method for the new instance of the entity being editing. This
