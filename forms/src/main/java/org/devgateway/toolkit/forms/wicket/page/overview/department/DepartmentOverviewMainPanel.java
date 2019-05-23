@@ -23,6 +23,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
@@ -33,12 +34,16 @@ import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilter
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
 
 public class DepartmentOverviewMainPanel extends Panel {
+    
+    protected static final Logger logger = LoggerFactory.getLogger(DepartmentOverviewMainPanel.class);
     private FiscalYear fiscalYear;
 
     private Department department;
@@ -69,14 +74,15 @@ public class DepartmentOverviewMainPanel extends Panel {
     public DepartmentOverviewMainPanel(final String id) {
         super(id);
 
-        // TODO (params) - extract fiscalYear and department from Session - if not present redirect the user to
-        // another page like StatusOverview.
         this.department = SessionUtil.getSessionDepartment();
         this.fiscalYear = SessionUtil.getSessionFiscalYear();
+        if (this.department == null || this.fiscalYear == null) {
+           logger.warn("Can not open the department overview page because the department or the fiscal year is null.");
+           setResponsePage(StatusOverviewPage.class);
+        }
 
         // years with data for department
         fiscalYears = fiscalYearService.getYearsWithData(department);
-        // TODO - add checks when no PP is found for (department, fiscalYear)
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
@@ -99,8 +105,8 @@ public class DepartmentOverviewMainPanel extends Panel {
         addProjectButton();
         addYearDropdown();
         addSearchBox();
-        add(new Label("departmentLabel", department.getLabel()));
-        add(new Label("fiscalYear", fiscalYear.getLabel()));
+        add(new Label("departmentLabel", department != null ? department.getLabel() : ""));
+        add(new Label("fiscalYear", fiscalYear != null ? fiscalYear.getLabel() : ""));
 
         addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
         addProjectList();
