@@ -70,6 +70,7 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
         editForm.add(formDocs);
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
+        saveTerminateButton.setVisibilityAllowed(false);
     }
 
     @Override

@@ -11,12 +11,16 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.page.edit;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationMessage;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.util.Attributes;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -129,6 +133,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      */
     protected BootstrapDeleteButton deleteButton;
 
+    protected TextContentModal deleteModal;
+
     @SpringBean
     private EntityManager entityManager;
 
@@ -161,6 +167,24 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     public GenericBootstrapValidationVisitor getBootstrapValidationVisitor(final AjaxRequestTarget target) {
         return new GenericBootstrapValidationVisitor(target);
     }
+
+    protected TextContentModal createDeleteModal() {
+        TextContentModal modal = new TextContentModal("deleteModal",
+                Model.of("DELETE is an irreversible operation. Are you sure?"));
+        modal.addCloseButton();
+
+        LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                super.onSubmit(target);
+                onDelete(target);
+            }
+        };
+        deleteButton.setLabel(Model.of("DELETE"));
+        modal.addButton(deleteButton);
+        return modal;
+    }
+
 
     /**
      * Traverses all fields and refreshes the ones that are not valid, so that
@@ -240,6 +264,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             deleteButton = getDeleteEditPageButton();
             add(deleteButton);
 
+            deleteModal = createDeleteModal();
+            add(deleteModal);
+
             // don't display the delete button if we just create a new entity
             if (entityId == null) {
                 deleteButton.setVisibilityAllowed(false);
@@ -256,6 +283,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         }
     }
 
+
+
+
     /**
      * Generic functionality for the save page button, this can be extended further by subclasses.
      *
@@ -271,6 +301,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         public SaveEditPageButton(final String id, final IModel<String> model) {
             super(id, model);
         }
+
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
@@ -408,25 +439,13 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
         public DeleteEditPageButton(final String id, final IModel<String> model) {
             super(id, model);
+            setDefaultFormProcessing(false);
         }
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
-            final T deleteable = editForm.getModelObject();
-            try {
-                jpaService.delete(deleteable);
-
-                // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
-                flushReportingCaches();
-            } catch (DataIntegrityViolationException e) {
-                error(new NotificationMessage(
-                        new StringResourceModel("delete_error_message", AbstractEditPage.this, null))
-                        .hideAfter(Duration.NONE));
-                target.add(feedbackPanel);
-
-                return;
-            }
-            setResponsePage(listPageClass);
+            deleteModal.show(true);
+            target.add(deleteModal);
         }
 
         @Override
@@ -434,6 +453,29 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             super.onError(target);
             target.add(feedbackPanel);
         }
+
+        @Override
+        protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+
+        }
+    }
+
+    protected void onDelete(AjaxRequestTarget target) {
+        final T deleteable = editForm.getModelObject();
+        try {
+            jpaService.delete(deleteable);
+
+            // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
+            flushReportingCaches();
+        } catch (DataIntegrityViolationException e) {
+            error(new NotificationMessage(
+                    new StringResourceModel("delete_error_message", AbstractEditPage.this, null))
+                    .hideAfter(Duration.NONE));
+            target.add(feedbackPanel);
+
+            return;
+        }
+        setResponsePage(listPageClass);
     }
 
     /**
