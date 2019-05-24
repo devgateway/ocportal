@@ -79,11 +79,6 @@ public class StatusOverviewPage extends DataEntryBasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
-                "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
-        newProcurementPlanButton.setLabel(new StringResourceModel("newProcurementPlan", StatusOverviewPage.this, null));
-        add(newProcurementPlanButton);
-
         addSearchBox();
         addYearDropdown();
 

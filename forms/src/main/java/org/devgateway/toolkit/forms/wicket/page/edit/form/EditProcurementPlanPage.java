@@ -11,6 +11,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -51,17 +52,6 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
     protected void onInitialize() {
         super.onInitialize();
 
-        // Non-Admins users should have the Department preselected when adding a new Procurement Plan
-        if (WebSecurityUtil.isCurrentUserAdmin()) {
-            ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService).required();
-        } else {
-            editForm.add(new GenericSleepFormComponent<>("department"));
-        }
-
-        ComponentUtil.addSelect2ChoiceField(editForm, "fiscalYear", fiscalYearService)
-                .required()
-                .getField().add(uniqueProcurementPlan());
-
         editForm.add(new PlanItemPanel("planItems"));
 
         final FileInputBootstrapFormComponent formDocs =
@@ -81,7 +71,10 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
         if (!WebSecurityUtil.isCurrentUserAdmin()) {
             final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
             procurementPlan.setDepartment(person.getDepartment());
+        } else {
+            procurementPlan.setDepartment(SessionUtil.getSessionDepartment());
         }
+        procurementPlan.setFiscalYear(SessionUtil.getSessionFiscalYear());
 
         return procurementPlan;
     }
