@@ -23,7 +23,9 @@ import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author idobre
@@ -36,6 +38,8 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
 
     @SpringBean
     private ProjectService projectService;
+
+    private Set<Long> expandedContainerIds = new HashSet<>();
 
     public ListViewStatusOverview(final String id, final IModel<List<StatusOverviewData>> model) {
         super(id, model);
@@ -64,7 +68,18 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
 
                 // add header
                 final TransparentWebMarkupContainer hideableContainer =
-                        new TransparentWebMarkupContainer("hideableContainer");
+                        new TransparentWebMarkupContainer("hideableContainer") {
+                            @Override
+                            protected void onComponentTag(final ComponentTag tag) {
+                                super.onComponentTag(tag);
+
+                                if (isExpanded(item)) {
+                                    Attributes.addClass(tag, "in");
+                                } else {
+                                    Attributes.removeClass(tag, "in");
+                                }
+                            }
+                        };
                 hideableContainer.setOutputMarkupId(true);
                 hideableContainer.setOutputMarkupPlaceholderTag(true);
                 item.add(hideableContainer);
@@ -72,22 +87,21 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
                 final AjaxLink<Void> header = new AjaxLink<Void>("header") {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
-                        final boolean isExpanded = item.getModelObject().getExpanded();
-                        if (isExpanded) {
+                        if (isExpanded(item)) {
                             target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('hide')");
+                            expandedContainerIds.remove(getItemId(item));
                         } else {
                             target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('show')");
+                            expandedContainerIds.add(getItemId(item));
                         }
                         target.add(this);
-
-                        item.getModelObject().setExpanded(!isExpanded);
                     }
 
                     @Override
                     protected void onComponentTag(final ComponentTag tag) {
                         super.onComponentTag(tag);
 
-                        if (item.getModelObject().getExpanded()) {
+                        if (isExpanded(item)) {
                             Attributes.removeClass(tag, "collapsed");
                         } else {
                             Attributes.addClass(tag, "collapsed");
@@ -161,5 +175,13 @@ public class ListViewStatusOverview extends CompoundSectionPanel<List<StatusOver
         listView.setReuseItems(true);
         listView.setOutputMarkupId(true);
         listWrapper.add(listView);
+    }
+
+    protected Long getItemId(final ListItem<StatusOverviewData> item) {
+        return item.getModelObject().getProcurementPlan().getId();
+    }
+
+    private boolean isExpanded(final ListItem<StatusOverviewData> item) {
+        return expandedContainerIds.contains(getItemId(item));
     }
 }
