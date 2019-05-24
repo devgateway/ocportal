@@ -103,7 +103,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         }
 
         // get years with data for current department
-        fiscalYears = fiscalYearService.getYearsWithData(department);
+        fiscalYears = fiscalYearService.getAll();
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
@@ -140,6 +140,10 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
+
+        if (procurementPlan != null) {
+            newProcurementPlanButton.setEnabled(false);
+        }
     }
 
     private void addEditProcurementPlanButton() {
