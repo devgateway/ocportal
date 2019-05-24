@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.Project_;
+import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project> {
+public class ProjectFilterState extends StatusAuditableEntityFilterState<Project> {
     private ProcurementPlan procurementPlan;
 
     private FiscalYear fiscalYear;
@@ -44,7 +45,21 @@ public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project
             final List<Predicate> predicates = new ArrayList<>();
 
             if (procurementPlan != null) {
-                predicates.add(cb.equal(root.get(Project_.procurementPlan), procurementPlan));
+                if (!procurementPlan.isNew()) {
+                    predicates.add(cb.equal(root.get(Project_.procurementPlan), procurementPlan));
+                } else {
+                    if (procurementPlan.getDepartment() != null) {
+                        predicates.add(cb.equal(
+                                root.get(Project_.procurementPlan).get(ProcurementPlan_.department),
+                                procurementPlan.getDepartment()));
+                    }
+
+                    if (procurementPlan.getFiscalYear() != null) {
+                        predicates.add(cb.equal(
+                                root.get(Project_.procurementPlan).get(ProcurementPlan_.fiscalYear),
+                                procurementPlan.getFiscalYear()));
+                    }
+                }
             }
 
             if (fiscalYear != null) {
@@ -78,12 +93,10 @@ public class ProjectFilterState extends AbstractMakueniEntityFilterState<Project
         this.projectTitle = projectTitle;
     }
 
-    @Override
     public ProcurementPlan getProcurementPlan() {
         return procurementPlan;
     }
 
-    @Override
     public void setProcurementPlan(final ProcurementPlan procurementPlan) {
         this.procurementPlan = procurementPlan;
     }

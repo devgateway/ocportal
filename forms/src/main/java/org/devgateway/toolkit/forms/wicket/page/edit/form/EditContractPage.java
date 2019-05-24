@@ -12,18 +12,12 @@ import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author gmutuhu
@@ -88,20 +82,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         supplierAddress.setOutputMarkupId(true);
         editForm.add(supplierAddress);
 
-    }
-
-    private List<Supplier> getSuppliersInTenderQuotation() {
-        TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
-        List<Supplier> suppliers = new ArrayList<>();
-        if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
-            for (Bid bid : tenderQuotationEvaluation.getBids()) {
-                if (DBConstants.SupplierResponsiveness.PASS.equalsIgnoreCase(bid.getSupplierResponsiveness())) {
-                    suppliers.add(bid.getSupplier());
-                }
-            }
-        }
-
-        return suppliers;
     }
 
     class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {

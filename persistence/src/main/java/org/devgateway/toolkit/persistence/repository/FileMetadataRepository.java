@@ -13,10 +13,7 @@ package org.devgateway.toolkit.persistence.repository;
 
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 /**
  * @author idobre
@@ -25,9 +22,5 @@ import java.util.Set;
 
 @Transactional
 public interface FileMetadataRepository extends BaseJpaRepository<FileMetadata, Long> {
-
-    @Query("select file from FileMetadata file where file.isUserSupportDocument = cast('true' as boolean)")
-    Set<FileMetadata> findByIsUserSupportDocumentTrue();
-
     FileMetadata findByName(String name);
 }

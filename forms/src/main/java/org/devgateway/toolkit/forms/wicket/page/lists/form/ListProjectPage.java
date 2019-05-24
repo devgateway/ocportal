@@ -1,8 +1,11 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
@@ -30,6 +33,12 @@ public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
 
     @Override
     protected void onInitialize() {
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+                "procurementPlan.department", "procurementPlan.department", new ListModel(departments), dataTable));
+
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
+                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear", new ListModel(fiscalYears), dataTable));
+
         super.onInitialize();
     }
 
