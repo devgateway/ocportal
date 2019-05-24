@@ -48,7 +48,6 @@ public class ProjectFilterState extends StatusAuditableEntityFilterState<Project
                 if (!procurementPlan.isNew()) {
                     predicates.add(cb.equal(root.get(Project_.procurementPlan), procurementPlan));
                 } else {
-
                     if (procurementPlan.getDepartment() != null) {
                         predicates.add(cb.equal(
                                 root.get(Project_.procurementPlan).get(ProcurementPlan_.department),

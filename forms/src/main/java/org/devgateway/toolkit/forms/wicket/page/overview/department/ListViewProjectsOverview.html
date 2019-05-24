@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <wicket:fragment wicket:id="headerFragment">
+        <div class="project-title" wicket:id="projectTitle"></div>
+        <button type="button" class="btn-edit no-text btn-small" wicket:id="editProject"></button>
+        <span class="year" wicket:id="procurementPlan.fiscalYear"></span>
+        <div class="project-status">
+            <span class="status" wicket:id="projectStatus"></span>
+        </div>
+    </wicket:fragment>
+
+
+    <wicket:fragment wicket:id="containerFragment">
+        <div class="col-md-12 btn-container">
+            <button type="button" class="btn btn-add pull-right" wicket:id="addPurchaseRequisition">ADD New Tender
+            </button>
+        </div>
+
+        <div class="tender-list-wrapper">
+            <ol>
+                <li wicket:id=tenderList>
+                    <div wicket:id="tender">
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

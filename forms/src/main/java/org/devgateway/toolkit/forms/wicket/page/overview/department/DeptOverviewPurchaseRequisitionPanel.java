@@ -145,10 +145,7 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
             pageParameters.set(WebConstants.PARAM_ID, persistable.getId());
         }
 
-        final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id,
-                Buttons.Type.Success) {
-            private static final long serialVersionUID = 1L;
-
+        final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id, Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
