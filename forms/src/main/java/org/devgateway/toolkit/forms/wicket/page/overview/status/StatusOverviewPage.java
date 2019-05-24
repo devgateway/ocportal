@@ -119,6 +119,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
     private void updateDashboard(final AjaxRequestTarget target) {
         listViewStatusOverview.setModelObject(fetchData());
+        listViewStatusOverview.removeListItems();
 
         // update the project count from sidebar as well
         sideBar.getProjectCount()

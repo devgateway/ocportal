@@ -113,6 +113,11 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
         listWrapper.add(listView);
     }
 
+    public void removeListItems() {
+        // remove all items to automatically rebuild all ListItems before rendering the list view
+        listView.removeAll();
+    }
+
     protected abstract void populateCompoundListItem(final ListItem<T> item);
 
     protected abstract void populateHeader(final String headerFragmentId,

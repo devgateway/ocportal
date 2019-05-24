@@ -252,6 +252,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private void updateDashboard(final AjaxRequestTarget target) {
         listViewProjectsOverview.setModelObject(fetchData());
+        listViewProjectsOverview.removeListItems();
 
         target.add(listViewProjectsOverview);
     }
