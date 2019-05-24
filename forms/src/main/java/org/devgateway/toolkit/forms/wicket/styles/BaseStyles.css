@@ -44,11 +44,14 @@ body {
 .mainHeader .navbar {
     background: #223a49;
     box-shadow: none;
-    padding-bottom: 0;
+    padding-bottom: 12px;
     padding-top: 12px;
 }
 .mainHeader .navbar.navbar-inverse{
   border-color: #223a49;
+}
+.mainHeader .navbar.navbar-inverse .navbar-nav > .active > a{
+  background-color: transparent;
 }
 .mainHeader .navbar .container{
   width: 100%;
