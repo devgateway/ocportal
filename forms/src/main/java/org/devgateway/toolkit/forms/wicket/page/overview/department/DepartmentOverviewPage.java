@@ -115,7 +115,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
-        addViewProcurementPlanButton();
 
         addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
 
@@ -151,24 +150,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         if (procurementPlan == null) {
             button.setEnabled(false);
         }
-        add(button);
-    }
 
-    private void addViewProcurementPlanButton() {
-        final PageParameters pp = new PageParameters();
-        if (procurementPlan != null) {
-            pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
-        }
+        add(button);
+
         DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
                 "procurementPlanStatus", procurementPlan);
         add(procurementPlanStatus);
-
-        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
-                "viewProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Success);
-        if (procurementPlan == null) {
-            button.setEnabled(false);
-        }
-        add(button);
     }
 
     private void addCabinetPaperButton() {

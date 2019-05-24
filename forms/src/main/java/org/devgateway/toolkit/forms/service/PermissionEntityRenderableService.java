@@ -36,9 +36,13 @@ public class PermissionEntityRenderableService {
         if (!entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_VALIDATOR)
                 || roles.contains(SecurityConstants.Roles.ROLE_USER))) {
             if (entity instanceof AbstractMakueniEntity) {
-                // TODO check this
-                final ProcurementPlan procurementPlan = ((AbstractPurchaseReqMakueniEntity) entity)
-                        .getProject().getProcurementPlan();
+                final ProcurementPlan procurementPlan;
+                if (entity instanceof ProcurementPlan) {
+                    procurementPlan = (ProcurementPlan) entity;
+                } else {
+                    procurementPlan = ((AbstractPurchaseReqMakueniEntity) entity)
+                            .getProject().getProcurementPlan();
+                }
 
                 if (procurementPlan == null || procurementPlan.getDepartment() == null) {
                     return SecurityConstants.Action.VIEW;
