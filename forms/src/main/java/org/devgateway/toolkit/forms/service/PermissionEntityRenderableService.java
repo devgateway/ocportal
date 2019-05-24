@@ -5,6 +5,8 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.stereotype.Service;
@@ -40,8 +42,16 @@ public class PermissionEntityRenderableService {
                 if (entity instanceof ProcurementPlan) {
                     procurementPlan = (ProcurementPlan) entity;
                 } else {
-                    procurementPlan = ((AbstractPurchaseReqMakueniEntity) entity)
-                            .getProject().getProcurementPlan();
+                    if (entity instanceof Project) {
+                        procurementPlan = ((Project) entity).getProcurementPlan();
+                    } else {
+                        if (entity instanceof PurchaseRequisition) {
+                            procurementPlan = ((PurchaseRequisition) entity).getProject().getProcurementPlan();
+                        } else {
+                            procurementPlan = ((AbstractPurchaseReqMakueniEntity) entity)
+                                    .getProject().getProcurementPlan();
+                        }
+                    }
                 }
 
                 if (procurementPlan == null || procurementPlan.getDepartment() == null) {
