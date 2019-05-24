@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
-public class Project extends AbstractMakueniEntity {
+public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private CabinetPaper cabinetPaper;
@@ -107,6 +107,7 @@ public class Project extends AbstractMakueniEntity {
         return getLabel();
     }
 
+    @Override
     public ProcurementPlan getProcurementPlan() {
         return procurementPlan;
     }
