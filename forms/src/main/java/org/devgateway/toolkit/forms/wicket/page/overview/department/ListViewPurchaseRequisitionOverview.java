@@ -89,56 +89,63 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         final Contract contract = purchaseRequisition.getContract();
 
         // TODO - refactor this section
-        add(new Label("requisitionTitle", purchaseRequisition.getTitle()));
-        add(new Label("requisitionDate", purchaseRequisition.getRequestApprovalDate()));
-        add(new Label("requisitionAmount", purchaseRequisition.getAmount()));
-        add(new DeptOverviewStatusLabel("requisitionStatus", purchaseRequisition));
-        createLinkNoPrevStep(purchaseRequisition, purchaseRequisition, "requisitionEdit",
+        containerFragment.add(new Label("requisitionTitle", purchaseRequisition.getTitle()));
+        containerFragment.add(new Label("requisitionDate", purchaseRequisition.getRequestApprovalDate()));
+        containerFragment.add(new Label("requisitionAmount", purchaseRequisition.getAmount()));
+        containerFragment.add(new DeptOverviewStatusLabel("requisitionStatus", purchaseRequisition));
+        createLinkNoPrevStep(containerFragment, purchaseRequisition, purchaseRequisition, "requisitionEdit",
                 EditPurchaseRequisitionPage.class);
 
 
-        add(new Label("tenderTitle", tender != null ? tender.getTenderTitle() : ""));
-        add(new Label("tenderId", tender != null ? tender.getTenderNumber() : ""));
-        add(new Label("amount", tender != null ? tender.getTenderValue() : ""));
-        add(new DeptOverviewStatusLabel("tenderStatus", tender));
-        createLinkNoPrevStep(purchaseRequisition, tender, "editTender", EditTenderPage.class);
+        containerFragment.add(new Label("tenderTitle", tender != null ? tender.getTenderTitle() : ""));
+        containerFragment.add(new Label("tenderId", tender != null ? tender.getTenderNumber() : ""));
+        containerFragment.add(new Label("amount", tender != null ? tender.getTenderValue() : ""));
+        containerFragment.add(new DeptOverviewStatusLabel("tenderStatus", tender));
+        createLinkNoPrevStep(containerFragment, purchaseRequisition, tender, "editTender", EditTenderPage.class);
 
 
-        add(new Label("tenderOpeningTitle", tenderQuotationEvaluation != null ? tender.getTenderTitle() : ""));
-        add(new Label("tenderOpeningID", tenderQuotationEvaluation != null ? tender.getTenderNumber() : ""));
-        add(new Label("tenderOpeningAmount", tenderQuotationEvaluation != null ? 0 : ""));
-        add(new DeptOverviewStatusLabel("tenderOpeningStatus", tenderQuotationEvaluation));
-        createLink(purchaseRequisition, tenderQuotationEvaluation, "editTenderOpening",
+        containerFragment.add(new Label("tenderOpeningTitle",
+                tenderQuotationEvaluation != null ? tender.getTenderTitle() : ""));
+        containerFragment.add(new Label("tenderOpeningID",
+                tenderQuotationEvaluation != null ? tender.getTenderNumber() : ""));
+        containerFragment.add(new Label("tenderOpeningAmount", tenderQuotationEvaluation != null ? 0 : ""));
+        containerFragment.add(new DeptOverviewStatusLabel("tenderOpeningStatus", tenderQuotationEvaluation));
+        createLink(containerFragment, purchaseRequisition, tenderQuotationEvaluation, "editTenderOpening",
                 EditTenderQuotationEvaluationPage.class, tender);
 
 
-        add(new Label("professionalOpinionSupplier", professionalOpinion != null
+        containerFragment.add(new Label("professionalOpinionSupplier", professionalOpinion != null
                 ? professionalOpinion.getAwardee() : ""));
-        add(new Label("professionalOpinionAmount", professionalOpinion != null
+        containerFragment.add(new Label("professionalOpinionAmount", professionalOpinion != null
                 ? professionalOpinion.getRecommendedAwardAmount() : ""));
-        add(new DeptOverviewStatusLabel("professionalOpinionStatus", professionalOpinion));
-        createLink(purchaseRequisition, professionalOpinion, "editProfessionalOpinion",
+        containerFragment.add(new DeptOverviewStatusLabel("professionalOpinionStatus", professionalOpinion));
+        createLink(containerFragment, purchaseRequisition, professionalOpinion, "editProfessionalOpinion",
                 EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
 
 
-        add(new Label("awardNotificationSupplier", awardNotification != null ? awardNotification.getAwardee() : ""));
-        add(new Label("awardNotificationTenderId", awardNotification != null ? tender.getTenderNumber() : ""));
-        add(new DeptOverviewStatusLabel("awardNotificationStatus", awardNotification));
-        createLink(purchaseRequisition, awardNotification, "editAwardNotification",
+        containerFragment.add(new Label("awardNotificationSupplier",
+                awardNotification != null ? awardNotification.getAwardee() : ""));
+        containerFragment.add(new Label("awardNotificationTenderId",
+                awardNotification != null ? tender.getTenderNumber() : ""));
+        containerFragment.add(new DeptOverviewStatusLabel("awardNotificationStatus", awardNotification));
+        createLink(containerFragment, purchaseRequisition, awardNotification, "editAwardNotification",
                 EditAwardNotificationPage.class, professionalOpinion);
 
 
-        add(new Label("awardAcceptanceSupplier", awardAcceptance != null ? awardAcceptance.getAwardee() : ""));
-        add(new Label("awardAcceptanceTenderId", awardAcceptance != null ? tender.getTenderNumber() : ""));
-        add(new DeptOverviewStatusLabel("awardAcceptanceStatus", awardAcceptance));
-        createLink(purchaseRequisition, awardAcceptance, "editAwardAcceptance",
+        containerFragment.add(new Label("awardAcceptanceSupplier",
+                awardAcceptance != null ? awardAcceptance.getAwardee() : ""));
+        containerFragment.add(new Label("awardAcceptanceTenderId",
+                awardAcceptance != null ? tender.getTenderNumber() : ""));
+        containerFragment.add(new DeptOverviewStatusLabel("awardAcceptanceStatus", awardAcceptance));
+        createLink(containerFragment, purchaseRequisition, awardAcceptance, "editAwardAcceptance",
                 EditAwardAcceptancePage.class, awardNotification);
 
 
-        add(new Label("contractSupplier", contract != null ? contract.getAwardee() : ""));
-        add(new Label("contractTenderId", contract != null ? tender.getTenderNumber() : ""));
-        add(new DeptOverviewStatusLabel("contractStatus", contract));
-        createLink(purchaseRequisition, contract, "editContract", EditContractPage.class, awardAcceptance);
+        containerFragment.add(new Label("contractSupplier", contract != null ? contract.getAwardee() : ""));
+        containerFragment.add(new Label("contractTenderId", contract != null ? tender.getTenderNumber() : ""));
+        containerFragment.add(new DeptOverviewStatusLabel("contractStatus", contract));
+        createLink(containerFragment, purchaseRequisition, contract, "editContract",
+                EditContractPage.class, awardAcceptance);
 
 
         hideableContainer.add(containerFragment);
@@ -155,7 +162,8 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
-    private BootstrapAjaxLink<Void> createLinkNoPrevStep(final PurchaseRequisition purchaseRequisition,
+    private BootstrapAjaxLink<Void> createLinkNoPrevStep(final Fragment containerFragment,
+                                                         final PurchaseRequisition purchaseRequisition,
                                                          final GenericPersistable persistable, final String id,
                                                          final Class<? extends AbstractEditPage> clazz) {
         final PageParameters pageParameters = new PageParameters();
@@ -172,13 +180,15 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         };
 
         button.add(AttributeAppender.append("class", "no-text btn-" + (persistable == null ? "add" : "edit")));
-        add(button);
+        containerFragment.add(button);
         return button;
     }
 
-    private void createLink(final PurchaseRequisition purchaseRequisition,
+    private void createLink(final Fragment containerFragment,
+                            final PurchaseRequisition purchaseRequisition,
                             final GenericPersistable persistable, final String id,
                             final Class<? extends AbstractEditPage> clazz, Statusable previousStep) {
-        createLinkNoPrevStep(purchaseRequisition, persistable, id, clazz).setEnabled(canEdit(previousStep));
+        createLinkNoPrevStep(containerFragment, purchaseRequisition, persistable, id, clazz).
+                setEnabled(canEdit(previousStep));
     }
 }
