@@ -38,7 +38,6 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author gmutuhu
@@ -130,9 +129,6 @@ public class StatusOverviewPage extends DataEntryBasePage {
     }
 
     private List<StatusOverviewData> fetchData() {
-        return statusOverviewService.getAllProjects(fiscalYear, searchBox)
-                .parallelStream()
-                .map(item -> item.setExpanded(false))
-                .collect(Collectors.toList());
+        return statusOverviewService.getAllProjects(fiscalYear, searchBox);
     }
 }
