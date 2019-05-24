@@ -92,6 +92,27 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @OrderColumn(name = "index")
     private List<PurchaseItem> purchaseItems = new ArrayList<>();
 
+    private boolean checkTerminated(Statusable... statusables) {
+        for (Statusable statusable : statusables) {
+            if (statusable != null && statusable.isTerminated()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Calculates if this {@link PurchaseRequisition} is terminated. This involves going through all stages and
+     * checking if any of them is terminated
+     * @return
+     */
+    @Override
+    public boolean isTerminated() {
+        return checkTerminated(tender, tenderQuotationEvaluation, professionalOpinion, awardNotification,
+                awardAcceptance, contract
+        );
+    }
+
     @Override
     public Project getProject() {
         return project;

@@ -1,5 +1,8 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.util.Attributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -30,10 +33,6 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.util.Attributes;
 
 public class DeptOverviewPurchaseRequisitionPanel extends Panel {
 
@@ -135,7 +134,10 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
         createLinkNoPrevStep(tender, "editTender", EditTenderPage.class);
     }
 
-    boolean canEdit(Statusable previousStep) {
+    boolean canEdit(GenericPersistable persistable, Statusable previousStep) {
+        if (persistable == null && purchaseRequisition.isTerminated()) {
+            return false;
+        }
         return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED)
                 || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
@@ -156,16 +158,18 @@ public class DeptOverviewPurchaseRequisitionPanel extends Panel {
                 setResponsePage(clazz, pageParameters);                
             }            
         };
-        
+
         button.add(AttributeAppender.append("class", "no-text btn-"
                 + (persistable == null ? "add" : "edit")));
         add(button);
+
+
         return button;
     }
 
     private void createLink(GenericPersistable persistable, final String id,
                             final Class<? extends AbstractEditPage> clazz, Statusable previousStep) {
-        createLinkNoPrevStep(persistable, id, clazz).setEnabled(canEdit(previousStep));
+        createLinkNoPrevStep(persistable, id, clazz).setEnabled(canEdit(persistable, previousStep));
     }
 
     private void addTenderEvaluationSection() {

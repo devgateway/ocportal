@@ -55,6 +55,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -220,8 +221,18 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 .equals(permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()));
     }
 
-    private void checkAndSendEventForDisableEditing() {
+    protected void checkAndSendEventForDisableEditing() {
         if (!Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode()) {
+            send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
+        }
+    }
+
+    /**
+     * Forms with a terminated {@link PurchaseRequisition} shall not be editable
+     * @param pr
+     */
+    protected void disableFormInTerminatedHierarchy(PurchaseRequisition pr) {
+        if (pr.isTerminated()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
     }
@@ -326,7 +337,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             case DBConstants.Status.SUBMITTED:
                 return "label-warning";
             case DBConstants.Status.TERMINATED:
-                return "label-danger";
+                return "label-term";
             default:
                 return "";
         }
@@ -549,13 +560,19 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private void addDefaultAllButtonsPermissions(final Component button) {
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
-        button.setVisibilityAllowed(!isViewMode());
+        button.setVisibilityAllowed(!isTerminated() && !isViewMode());
     }
 
     private void addTerminateButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        button.setVisibilityAllowed(!isViewMode());
+        if (editForm.getModelObject().isNew()) {
+            button.setVisibilityAllowed(false);
+        }
+    }
+
+    private boolean isTerminated() {
+        return DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus());
     }
 
     private void addSaveButtonsPermissions(final Component button) {
@@ -576,13 +593,19 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(
-                !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
+        button.setVisibilityAllowed(!isTerminated()
+                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
 
         // additionally normal users should not revert anything that was already validated
         if (WebSecurityUtil.isCurrentRoleUser()
                 && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
             button.setVisibilityAllowed(false);
+        } else
+
+        //admins can revert anything, including terminated!
+        if (WebSecurityUtil.isCurrentUserAdmin()
+                && (DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()) || isTerminated())) {
+            button.setVisibilityAllowed(true);
         }
     }
 

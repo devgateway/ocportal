@@ -275,9 +275,20 @@ hr.edit-separator {
     font-weight: bold;
 }
 
+
+
+.label-term {
+  background-color: #8a0f13;
+}
+.label-term[href]:hover,
+.label-term[href]:focus {
+  background-color: #730d10;
+}
+
 .label.label-success,
 .label.label-danger,
-.label.label-warning {
+.label.label-warning,
+.label.label-term {
     font-size: 10px;
     padding: 5px 20px;
 }
