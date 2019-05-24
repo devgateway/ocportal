@@ -602,10 +602,11 @@
 
 .ministry .header-section h5 {
     font-size: 15px;
-    float:left;
+    float: left;
 }
-.ministry .header-section .status{
-  float: left;
+
+.ministry .header-section .status {
+    float: left;
 }
 
 .ministry .header-buttons {
