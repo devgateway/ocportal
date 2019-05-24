@@ -40,11 +40,7 @@ public class SideBar extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
-        projectCount = new Label("projectCount", calculateProjectCount());
-        projectCount.setOutputMarkupId(true);
-        add(projectCount);
-
-        final Link<Void> title = new Link<Void>("title") {
+        final Link<Void> statusLink = new Link<Void>("statusLink") {
             @Override
             public void onClick() {
                 // clear all session data before going to the dashboard
@@ -61,7 +57,11 @@ public class SideBar extends Panel {
                 }
             }
         };
-        add(title);
+        add(statusLink);
+
+        projectCount = new Label("projectCount", calculateProjectCount());
+        projectCount.setOutputMarkupId(true);
+        add(projectCount);
 
         final List<Department> departments = departmentService.findAll();
         add(new PropertyListView<Department>("departmentOverviewLink", departments) {

@@ -65,7 +65,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
     protected void populateHeader(final String headerFragmentId,
                                   final AjaxLink<Void> header,
                                   final ListItem<PurchaseRequisition> item) {
-        header.add(AttributeAppender.append("class", "tender"));   // add specific class to project overview header
+        header.add(AttributeAppender.append("class", "tender"));   // add specific class to tender overview header
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
 
         headerFragment.add(new Label("title"));
@@ -77,7 +77,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
                                              final ListItem<PurchaseRequisition> item) {
-        hideableContainer.add(AttributeAppender.append("class", "tender")); // add specific class to project list
+        hideableContainer.add(AttributeAppender.append("class", "purchase-req")); // add specific class to pr list
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
         final PurchaseRequisition purchaseRequisition = item.getModelObject();

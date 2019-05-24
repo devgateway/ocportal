@@ -102,13 +102,20 @@
 .sidebar-list .title {
     margin-bottom: 15px;
     text-transform: uppercase;
+    color: #d3d5d6;
+    font-weight: bold;
 }
 
-.sidebar-list .title a {
+.data-summary-label a {
     color: #d3d5d6;
 }
 
-.sidebar-list .title a.selected {
+.data-summary-label a:hover,
+.data-summary-label a.selected {
+    color: #269bf4;
+}
+
+.data-summary-label a.selected {
     color: #1d7abf;
 }
 
@@ -176,7 +183,7 @@
 
 .search-panel {
     overflow: hidden;
-    padding: 30px;
+    padding: 30px 30px 10px 30px;
 }
 
 .search-panel h3 {
@@ -325,10 +332,11 @@
 }
 
 .status-bar {
-    margin-bottom: -30px;
-    margin-top: -20px;
     padding: 0 30px;
-    overflow: hidden;
+}
+
+.status-bar.department {
+    padding-bottom: 20px;
 }
 
 .status {
@@ -493,7 +501,7 @@
 }
 
 .project-panels-wrapper {
-    padding: 30px;
+    padding: 0px 30px 30px 30px;
 }
 
 .sidebar-title h2 {
@@ -618,10 +626,6 @@
     line-height: 165%;
     margin-right: 5px;
     text-transform: uppercase;
-}
-
-.ministry .project-panels-wrapper {
-    padding-top: 0;
 }
 
 .project-status {

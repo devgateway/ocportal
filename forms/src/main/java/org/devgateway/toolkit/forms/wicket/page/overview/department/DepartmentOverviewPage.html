@@ -73,27 +73,35 @@
             </div>
             <!-- start: search panel title -->
 
-            <!-- start: search form -->
             <div class="search-form">
                 <div class="col-md-9 no-padding">
                     <input tabindex="1" class="form-control project-search" wicket:id="searchBox"></input>
                 </div>
                 <div class="col-md-3 no-padding">
 
-                    <!-- start: year button -->
-                    <select wicket:id="years" class="btn btn-default project-year">
-                    </select>
-                    <!-- end: year button -->
+                    <select wicket:id="years" class="btn btn-default project-year"></select>
 
-                    <!-- start: downlaod button -->
-                    <button type="button" class="btn btn-default download">
-                    </button>
-                    <!-- end: download button  -->
-
+                    <button type="button" class="btn btn-default download"></button>
                 </div>
             </div>
         </div>
-        <!-- end: search form -->
+
+        <div class="status-bar department row">
+            <div class="col-md-12">
+              <span class="status approved">
+              Approved
+              </span>
+                <span class="status terminated">
+              Terminated
+              </span>
+                <span class="status submitted">
+              Submitted
+              </span>
+                <span class="status draft">
+              Draft
+              </span>
+            </div>
+        </div>
 
         <div class="ministry" wicket:id="projectsOverview"></div>
     </div>
