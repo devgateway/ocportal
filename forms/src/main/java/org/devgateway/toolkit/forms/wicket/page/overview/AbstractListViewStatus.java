@@ -118,17 +118,17 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
         listView.removeAll();
     }
 
-    protected abstract void populateCompoundListItem(final ListItem<T> item);
+    protected abstract void populateCompoundListItem(ListItem<T> item);
 
-    protected abstract void populateHeader(final String headerFragmentId,
-                                           final AjaxLink<Void> header,
-                                           final ListItem<T> item);
+    protected abstract void populateHeader(String headerFragmentId,
+                                           AjaxLink<Void> header,
+                                           ListItem<T> item);
 
-    protected abstract void populateHideableContainer(final String containerFragmentId,
-                                                      final TransparentWebMarkupContainer hideableContainer,
-                                                      final ListItem<T> item);
+    protected abstract void populateHideableContainer(String containerFragmentId,
+                                                      TransparentWebMarkupContainer hideableContainer,
+                                                      ListItem<T> item);
 
-    protected abstract Long getItemId(final ListItem<T> item);
+    protected abstract Long getItemId(ListItem<T> item);
 
     private boolean isExpanded(final ListItem<T> item) {
         return expandedContainerIds.contains(getItemId(item));
