@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import org.devgateway.toolkit.persistence.dao.DBConstants;
+
 /**
  * @author mihai
  * <p>
@@ -9,4 +11,12 @@ package org.devgateway.toolkit.persistence.dao.form;
 public interface Statusable {
 
     String getStatus();
+
+    /**
+     * Default terminated scenario means the status was put to TERMINATED
+     * @return
+     */
+    default boolean isTerminated() {
+        return DBConstants.Status.TERMINATED.equals(getStatus());
+    }
 }

@@ -87,6 +87,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
         editForm.add(formDocs);
+        saveTerminateButton.setVisibilityAllowed(false);
     }
 
     @Override

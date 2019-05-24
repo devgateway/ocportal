@@ -156,8 +156,12 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         return item.getModelObject().getId();
     }
 
-
-    boolean canEdit(Statusable previousStep) {
+    boolean canEdit(final PurchaseRequisition purchaseRequisition,
+                    final GenericPersistable persistable,
+                    final Statusable previousStep) {
+        if (persistable == null && purchaseRequisition.isTerminated()) {
+            return false;
+        }
         return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED)
                 || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
@@ -171,7 +175,10 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
             pageParameters.set(WebConstants.PARAM_ID, persistable.getId());
         }
 
-        final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id, Buttons.Type.Success) {
+        final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id,
+                Buttons.Type.Success) {
+            private static final long serialVersionUID = 1L;
+
             @Override
             public void onClick(AjaxRequestTarget target) {
                 SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
@@ -181,6 +188,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
         button.add(AttributeAppender.append("class", "no-text btn-" + (persistable == null ? "add" : "edit")));
         containerFragment.add(button);
+
         return button;
     }
 
@@ -188,7 +196,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                             final PurchaseRequisition purchaseRequisition,
                             final GenericPersistable persistable, final String id,
                             final Class<? extends AbstractEditPage> clazz, Statusable previousStep) {
-        createLinkNoPrevStep(containerFragment, purchaseRequisition, persistable, id, clazz).
-                setEnabled(canEdit(previousStep));
+        createLinkNoPrevStep(containerFragment, purchaseRequisition, persistable, id, clazz)
+                .setEnabled(canEdit(purchaseRequisition, persistable, previousStep));
     }
 }

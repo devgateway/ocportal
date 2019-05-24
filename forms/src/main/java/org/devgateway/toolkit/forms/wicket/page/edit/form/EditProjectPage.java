@@ -79,6 +79,8 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
                 .getField().add(RangeValidator.range(1, 30));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
+
+        saveTerminateButton.setVisibilityAllowed(false);
     }
 
     @Override

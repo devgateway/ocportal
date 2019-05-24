@@ -35,6 +35,12 @@ public abstract class EditAbstractTenderReqMakueniEntity<T extends AbstractPurch
         addTenderInfo();
     }
 
+    @Override
+    protected void checkAndSendEventForDisableEditing() {
+        super.checkAndSendEventForDisableEditing();
+        disableFormInTerminatedHierarchy(purchaseRequisition);
+    }
+
     private void addTenderInfo() {
         tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () ->
                 editForm.getModelObject().getPurchaseRequisition().getTender().getTenderTitle()
