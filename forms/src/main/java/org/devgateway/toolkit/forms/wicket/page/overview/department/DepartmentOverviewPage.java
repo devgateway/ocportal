@@ -228,7 +228,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
                 SessionUtil.setSessionFiscalYear(fiscalYear);
-                updateDashboard(target);
+                setResponsePage(DepartmentOverviewPage.class);
             }
         });
         add(yearsDropdown);
