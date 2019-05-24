@@ -55,7 +55,6 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -223,16 +222,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     protected void checkAndSendEventForDisableEditing() {
         if (!Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode()) {
-            send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
-        }
-    }
-
-    /**
-     * Forms with a terminated {@link PurchaseRequisition} shall not be editable
-     * @param pr
-     */
-    protected void disableFormInTerminatedHierarchy(PurchaseRequisition pr) {
-        if (pr.isTerminated()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
     }
@@ -571,7 +560,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
     }
 
-    private boolean isTerminated() {
+    protected boolean isTerminated() {
         return DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus());
     }
 
