@@ -9,10 +9,10 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -86,19 +86,10 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 new StringResourceModel("addPurchaseRequisition", ListViewProjectsOverview.this, null));
         containerFragment.add(addPurchaseRequisition);
 
-
         final List<PurchaseRequisition> purchaseRequisitions = purchaseRequisitionService.findByProject(project);
-        final ListView<PurchaseRequisition> purchaseReqisitionList = new ListView<PurchaseRequisition>("tenderList",
-                purchaseRequisitions) {
-            @Override
-            protected void populateItem(final ListItem<PurchaseRequisition> item) {
-                item.add(new DeptOverviewPurchaseRequisitionPanel("tender", item.getModelObject()));
-            }
-        };
-        purchaseReqisitionList.setOutputMarkupId(true);
-        purchaseReqisitionList.setReuseItems(true);
-        containerFragment.add(purchaseReqisitionList);
-
+        final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
+                new ListViewPurchaseRequisitionOverview("purchaseReqOverview", new ListModel<>(purchaseRequisitions));
+        containerFragment.add(listViewPurchaseRequisitionOverview);
 
         hideableContainer.add(containerFragment);
     }
