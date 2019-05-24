@@ -38,7 +38,6 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author gmutuhu
