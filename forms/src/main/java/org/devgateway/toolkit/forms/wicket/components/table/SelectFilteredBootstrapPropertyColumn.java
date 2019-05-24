@@ -19,14 +19,25 @@ import java.util.List;
  */
 public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilteredPropertyColumn<T, Y, S> {
     private final AjaxFallbackBootstrapDataTable dataTable;
+    private boolean disableFilter = false;
 
     public SelectFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
                                                  final S sortProperty,
                                                  final String propertyExpression,
                                                  final IModel<? extends List<? extends Y>> filterChoices,
                                                  final AjaxFallbackBootstrapDataTable dataTable) {
-        super(displayModel, sortProperty, propertyExpression, filterChoices);
+        this(displayModel, sortProperty, propertyExpression, filterChoices, dataTable, false);
+    }
 
+
+    public SelectFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
+                                                 final S sortProperty,
+                                                 final String propertyExpression,
+                                                 final IModel<? extends List<? extends Y>> filterChoices,
+                                                 final AjaxFallbackBootstrapDataTable dataTable,
+                                                 boolean disableFilter) {
+        super(displayModel, sortProperty, propertyExpression, filterChoices);
+        this.disableFilter = disableFilter;
         this.dataTable = dataTable;
     }
 
@@ -37,6 +48,9 @@ public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilter
                         new GenericChoiceProvider<>((List<Y>) getFilterChoices().getObject()),
                         getFilterModel(form));
         selectorField.hideLabel();
+        if (disableFilter) {
+            selectorField.setEnabled(false);
+        }
 
         selectorField.getField().add(new AjaxComponentUpdatingBehavior(form, "change"));
 

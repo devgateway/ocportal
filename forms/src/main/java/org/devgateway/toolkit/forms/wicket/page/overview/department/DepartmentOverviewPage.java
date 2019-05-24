@@ -39,6 +39,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -119,6 +120,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
 
         addCabinetPaperButton();
+        listCabinetPaperButton();
         addProjectButton();
         addYearDropdown();
         addSearchBox();
@@ -169,32 +171,19 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         editCabinetPaper.setEnabled(procurementPlan != null);
         add(editCabinetPaper);
+    }
 
-        final LoadableDetachableModel<List<CabinetPaper>> cabinetPapersModel =
-                new LoadableDetachableModel<List<CabinetPaper>>() {
-                    @Override
-                    protected List<CabinetPaper> load() {
-                        return procurementPlan == null
-                                ? new ArrayList<>()
-                                : cabinetPaperService.findByProcurementPlan(procurementPlan);
-                    }
-                };
-
-        final ListView<CabinetPaper> cabinetPapers =
-                new BootstrapListView<CabinetPaper>("cabinetPapers", cabinetPapersModel) {
-                    @Override
-                    protected void populateItem(ListItem<CabinetPaper> item) {
-                        item.add(new Label("label", item.getModelObject().getLabel()));
-
-                        BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
-                                "edit", EditCabinetPaperPage.class,
-                                new PageParameters().set(WebConstants.PARAM_ID, item.getModelObject().getId()),
-                                Buttons.Type.Success);
-                        item.add(editCabinetPaper);
-                    }
-                };
-
-        add(cabinetPapers);
+    private void listCabinetPaperButton() {
+        final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("listCabinetPaper",
+                Buttons.Type.Success) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                SessionUtil.setSessionPP(procurementPlan);
+                setResponsePage(ListCabinetPaperPage.class);
+            }
+        };
+        editCabinetPaper.setEnabled(procurementPlan != null);
+        add(editCabinetPaper);
     }
 
     private void addProjectButton() {
