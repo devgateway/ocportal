@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
-<wicket:panel>
-    <button wicket:id="header" class="status-panel tender" type="button" data-toggle="collapse" aria-expanded="false">
-        <div class="status-panel-heading">
-            <div class="tender-status-wrapper">
-                <h5 wicket:id="headerTitle"></h5>
-                <div class="project-status">
-                    <span class="status"></span>
-                </div>
-            </div>
+<wicket:extend>
+    <wicket:fragment wicket:id="headerFragment">
+        <div class="tender-status-wrapper">
+            <h5 wicket:id="title"></h5>
         </div>
-    </button>
+    </wicket:fragment>
 
-    <div wicket:id="projectsWrapper" class="collapse-content collapse tender">
+
+    <wicket:fragment wicket:id="containerFragment">
         <div class="row">
             <div class="col-md-12 tender-detail">
                 <div class="tender-header">
@@ -25,20 +21,15 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li wicket:id="requisitionDate">
-                        </li>
-                        <li wicket:id="requisitionAmount">
-                        </li>
+                        <li wicket:id="requisitionDate"></li>
+                        <li wicket:id="requisitionAmount"></li>
                     </ul>
                 </div>
             </div>
 
         </div>
-        <!-- end: purchase requisition tender 1 -->
 
         <div class="row">
-
-            <!-- start: tender document -->
             <div class="col-md-4 tender-detail">
                 <div class="tender-header">
                     <div class="tender-label">Tender Document</div>
@@ -49,18 +40,13 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li wicket:id="tenderTitle">
-                        </li>
-                        <li wicket:id="tenderId">
-                        </li>
-                        <li wicket:id="amount">
-                        </li>
+                        <li wicket:id="tenderTitle"></li>
+                        <li wicket:id="tenderId"></li>
+                        <li wicket:id="amount"></li>
                     </ul>
                 </div>
             </div>
-            <!-- end: tender document -->
 
-            <!-- start: opening -->
             <div class="col-md-4 tender-detail">
                 <div class="tender-header">
                     <div class="tender-label">Opening</div>
@@ -71,18 +57,13 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li wicket:id="tenderOpeningTitle">
-                        </li>
-                        <li wicket:id="tenderOpeningID">
-                        </li>
-                        <li wicket:id="tenderOpeningAmount">
-                        </li>
+                        <li wicket:id="tenderOpeningTitle"></li>
+                        <li wicket:id="tenderOpeningID"></li>
+                        <li wicket:id="tenderOpeningAmount"></li>
                     </ul>
                 </div>
             </div>
-            <!-- end: opening -->
 
-            <!-- start: professional opinion -->
             <div class="col-md-4 tender-detail">
                 <div class="tender-header">
                     <div class="tender-label">Professional Opinion</div>
@@ -93,18 +74,15 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li wicket:id="professionalOpinionSupplier">
-                        </li>
-                        <li wicket:id="professionalOpinionAmount">
-                        </li>
+                        <li wicket:id="professionalOpinionSupplier"></li>
+                        <li wicket:id="professionalOpinionAmount"></li>
                     </ul>
                 </div>
             </div>
-            <!-- end: professional opinion -->
+        </div>
 
+        <div class="row">
             <div class="divider"></div>
-
-            <!-- start: notification -->
             <div class="col-md-4 tender-detail">
                 <div class="tender-header">
                     <div class="tender-label">Notification</div>
@@ -115,20 +93,12 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li>
-                        </li>
-                        <li wicket:id="awardNotificationSupplier">
-                            Supplier
-                        </li>
-                        <li wicket:id="awardNotificationTenderId">
-                            Tender ID
-                        </li>
+                        <li wicket:id="awardNotificationSupplier"></li>
+                        <li wicket:id="awardNotificationTenderId"></li>
                     </ul>
                 </div>
             </div>
-            <!-- end: notification -->
 
-            <!-- start: acceptance -->
             <div class="col-md-4 tender-detail">
                 <div class="tender-header">
                     <div class="tender-label">Acceptance</div>
@@ -139,18 +109,12 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li>
-                        </li>
-                        <li wicket:id="awardAcceptanceSupplier">
-                        </li>
-                        <li wicket:id="awardAcceptanceTenderId">
-                        </li>
+                        <li wicket:id="awardAcceptanceSupplier"></li>
+                        <li wicket:id="awardAcceptanceTenderId"></li>
                     </ul>
                 </div>
             </div>
-            <!-- end: acceptance -->
 
-            <!-- start: contracts -->
             <div class="col-md-4 tender-detail">
                 <div class="tender-header">
                     <div class="tender-label">Contracts</div>
@@ -161,21 +125,14 @@
                 </div>
                 <div class="tender-info">
                     <ul>
-                        <li>
-                            Contract Document
-                        </li>
-                        <li wicket:id="contractSupplier">
-                        </li>
-                        <li wicket:id="contractTenderId">
-                        </li>
+                        <li>Contract Document</li>
+                        <li wicket:id="contractSupplier"></li>
+                        <li wicket:id="contractTenderId"></li>
                     </ul>
                 </div>
             </div>
-            <!-- end: contracts -->
         </div>
-        <!-- end: row for tender sections -->
-    </div>
-
-</wicket:panel>
+    </wicket:fragment>
+</wicket:extend>
 </body>
 </html>

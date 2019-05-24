@@ -21,7 +21,7 @@ import java.util.Set;
  * @since 2019-05-24
  */
 public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<List<T>> {
-    private WebMarkupContainer listWrapper;
+    protected WebMarkupContainer listWrapper;
 
     private ListView<T> listView;
 

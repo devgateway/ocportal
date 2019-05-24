@@ -21,7 +21,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -32,6 +31,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -54,6 +54,7 @@ import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,18 +64,17 @@ import java.util.List;
 @MountPath("/departmentOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class DepartmentOverviewPage extends DataEntryBasePage {
-
     private FiscalYear fiscalYear;
 
-    private Department department;
+    private final Department department;
 
-    private ProcurementPlan procurementPlan;
+    private final ProcurementPlan procurementPlan;
 
-    private List<FiscalYear> fiscalYears;
+    private final List<FiscalYear> fiscalYears;
 
-    private ListView<CabinetPaper> cabinetPapers;
+    private String searchBox = "";
 
-    private ListView<Project> projectsListView;
+    private ListViewProjectsOverview listViewProjectsOverview;
 
     @SpringBean
     private ProjectService projectService;
@@ -85,13 +85,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
-    private String searchBox = "";
-
-    private WebMarkupContainer listWrapper;
-
     @SpringBean
     private CabinetPaperService cabinetPaperService;
-
 
     // TODO all list view should have LoadableDetachableModel models
     public DepartmentOverviewPage(final PageParameters parameters) {
@@ -111,27 +106,28 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
-
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        add(new Label("departmentLabel", department == null ? "" : department.getLabel()));
+        add(new Label("fiscalYear", fiscalYear == null ? "" : fiscalYear.getLabel()));
+
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
         addViewProcurementPlanButton();
+
+        addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
 
         addCabinetPaperButton();
         addProjectButton();
         addYearDropdown();
         addSearchBox();
 
-        add(new Label("departmentLabel", department == null ? "" : department.getLabel()));
-        add(new Label("fiscalYear", fiscalYear == null ? "" : fiscalYear.getLabel()));
-
-        addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
         addProjectList();
     }
 
-    private void addLabelOrInvisibleContainer(String id, Object o) {
+    private void addLabelOrInvisibleContainer(final String id, final Object o) {
         if (o != null) {
             add(new Label(id, o.toString()));
         } else {
@@ -146,7 +142,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void addEditProcurementPlanButton() {
-        PageParameters pp = new PageParameters();
+        final PageParameters pp = new PageParameters();
         if (procurementPlan != null) {
             pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
         }
@@ -159,15 +155,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void addViewProcurementPlanButton() {
-        PageParameters pp = new PageParameters();
+        final PageParameters pp = new PageParameters();
         if (procurementPlan != null) {
             pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
         }
-
         DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
-                "procurementPlanStatus",
-                procurementPlan
-        );
+                "procurementPlanStatus", procurementPlan);
         add(procurementPlanStatus);
 
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
@@ -178,7 +171,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         add(button);
     }
 
-
     private void addCabinetPaperButton() {
         final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("editCabinetPaper",
                 Buttons.Type.Success) {
@@ -187,36 +179,35 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 SessionUtil.setSessionPP(procurementPlan);
                 setResponsePage(EditCabinetPaperPage.class);
             }
-
         };
-
         editCabinetPaper.setEnabled(procurementPlan != null);
         add(editCabinetPaper);
 
-        LoadableDetachableModel<List<CabinetPaper>> cabinetPapersModel =
+        final LoadableDetachableModel<List<CabinetPaper>> cabinetPapersModel =
                 new LoadableDetachableModel<List<CabinetPaper>>() {
                     @Override
                     protected List<CabinetPaper> load() {
-                        return cabinetPaperService.findByProcurementPlan(procurementPlan);
+                        return procurementPlan == null
+                                ? new ArrayList<>()
+                                : cabinetPaperService.findByProcurementPlan(procurementPlan);
                     }
                 };
 
-        cabinetPapers = new BootstrapListView<CabinetPaper>("cabinetPapers", cabinetPapersModel) {
-            @Override
-            protected void populateItem(ListItem<CabinetPaper> item) {
-                item.add(new Label("label", item.getModelObject().getLabel()));
+        final ListView<CabinetPaper> cabinetPapers =
+                new BootstrapListView<CabinetPaper>("cabinetPapers", cabinetPapersModel) {
+                    @Override
+                    protected void populateItem(ListItem<CabinetPaper> item) {
+                        item.add(new Label("label", item.getModelObject().getLabel()));
 
-                BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
-                        "edit", EditCabinetPaperPage.class,
-                        new PageParameters().set(WebConstants.PARAM_ID, item.getModelObject().getId()),
-                        Buttons.Type.Success
-                );
-                item.add(editCabinetPaper);
-            }
-        };
+                        BootstrapBookmarkablePageLink<Void> editCabinetPaper = new BootstrapBookmarkablePageLink<>(
+                                "edit", EditCabinetPaperPage.class,
+                                new PageParameters().set(WebConstants.PARAM_ID, item.getModelObject().getId()),
+                                Buttons.Type.Success);
+                        item.add(editCabinetPaper);
+                    }
+                };
 
         add(cabinetPapers);
-
     }
 
     private void addProjectButton() {
@@ -255,37 +246,19 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void addProjectList() {
-        listWrapper = new TransparentWebMarkupContainer("listWrapper");
-        listWrapper.setOutputMarkupId(true);
-        add(listWrapper);
-
-        final List<Project> projects = projectService.findAll(
-                new ProjectFilterState(procurementPlan, searchBox).getSpecification());
-
-        projectsListView = new ListView<Project>("projectList", projects) {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            protected void populateItem(final ListItem<Project> item) {
-                item.add(new DepartmentOverviewItem("project", item.getModelObject()));
-            }
-        };
-        projectsListView.setOutputMarkupId(true);
-        projectsListView.setReuseItems(true);
-        listWrapper.add(projectsListView);
-    }
-
-    public FiscalYear getFiscalYear() {
-        return fiscalYear;
-    }
-
-    public void setFiscalYear(final FiscalYear fiscalYear) {
-        this.fiscalYear = fiscalYear;
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", new ListModel<>(fetchData()));
+        add(listViewProjectsOverview);
     }
 
     private void updateDashboard(final AjaxRequestTarget target) {
-        projectsListView.setModelObject(projectService.findAll(new ProjectFilterState(procurementPlan, searchBox)
-                .getSpecification()));
-        target.add(listWrapper);
+        listViewProjectsOverview.setModelObject(fetchData());
+
+        target.add(listViewProjectsOverview);
+    }
+
+    private List<Project> fetchData() {
+        return procurementPlan == null
+                ? new ArrayList<>()
+                : projectService.findAll(new ProjectFilterState(procurementPlan, searchBox).getSpecification());
     }
 }

@@ -266,6 +266,7 @@
 
 .btn-container {
     height: 45px;
+    padding-right: 15px;
 }
 
 .btn.btn-view {
@@ -671,7 +672,7 @@
     overflow: hidden;
 }
 
-.tender-list-wrapper > ol {
+.tender-list-wrapper {
     clear: both;
     counter-reset: li; /* Initiate a counter */
     display: block;
@@ -680,14 +681,14 @@
     padding-right: 10px;
 }
 
-.tender-list-wrapper ol > li {
+.tender-list-wrapper > div {
     position: relative;
     margin: 0 0 6px 2em;
     padding: 4px 8px;
     list-style: none; /* Disable the normal item numbering */
 }
 
-.tender-list-wrapper ol > li:before {
+.tender-list-wrapper > div:before {
     border-radius: 50%;
     content: counter(li); /* Use the counter as content */
     counter-increment: li; /* Increment the counter by 1 */
@@ -729,17 +730,7 @@
     text-transform: uppercase;
 }
 
-.tender-status-wrapper .tender-status {
-    float: left;
-}
-
-.tender-status-wrapper .project-status {
-    margin-left: 10px;
-    margin-top: -3px;
-}
-
 /* tender detail sections */
-
 .tender-detail {
     border-right: 1px solid #eeeeee;
     margin-bottom: 15px;
