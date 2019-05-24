@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlanAttachable;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.web.WebSecurityUtil;
@@ -39,19 +40,13 @@ public class PermissionEntityRenderableService {
                 || roles.contains(SecurityConstants.Roles.ROLE_USER))) {
             if (entity instanceof AbstractMakueniEntity) {
                 final ProcurementPlan procurementPlan;
-                if (entity instanceof ProcurementPlan) {
+
+                if (entity instanceof ProcurementPlanAttachable) {
+                    procurementPlan = ((ProcurementPlanAttachable) entity).getProcurementPlan();
+                } else if (entity instanceof ProcurementPlan) {
                     procurementPlan = (ProcurementPlan) entity;
                 } else {
-                    if (entity instanceof Project) {
-                        procurementPlan = ((Project) entity).getProcurementPlan();
-                    } else {
-                        if (entity instanceof PurchaseRequisition) {
-                            procurementPlan = ((PurchaseRequisition) entity).getProject().getProcurementPlan();
-                        } else {
-                            procurementPlan = ((AbstractPurchaseReqMakueniEntity) entity)
-                                    .getProject().getProcurementPlan();
-                        }
-                    }
+                    return null;
                 }
 
                 if (procurementPlan == null || procurementPlan.getDepartment() == null) {

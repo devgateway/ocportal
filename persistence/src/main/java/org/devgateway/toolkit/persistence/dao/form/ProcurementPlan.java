@@ -92,4 +92,5 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     public String toString() {
         return getLabel();
     }
+
 }

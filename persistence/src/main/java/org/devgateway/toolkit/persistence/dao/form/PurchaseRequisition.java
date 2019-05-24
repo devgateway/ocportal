@@ -34,7 +34,7 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"),
         @Index(columnList = "title")})
-public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable {
+public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -243,5 +243,13 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
 
     public void setProfessionalOpinion(ProfessionalOpinion professionalOpinion) {
         this.professionalOpinion = professionalOpinion;
+    }
+
+    @Override
+    public ProcurementPlan getProcurementPlan() {
+        if (project != null) {
+            return project.getProcurementPlan();
+        }
+        return null;
     }
 }

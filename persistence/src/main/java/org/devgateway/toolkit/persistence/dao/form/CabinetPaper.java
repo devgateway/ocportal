@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @Table(indexes = {@Index(columnList = "procurement_plan_id"),
         @Index(columnList = "number"),
         @Index(columnList = "name")})
-public class CabinetPaper extends AbstractMakueniEntity {
+public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -59,6 +59,7 @@ public class CabinetPaper extends AbstractMakueniEntity {
 
     }
 
+    @Override
     public ProcurementPlan getProcurementPlan() {
         return procurementPlan;
     }
