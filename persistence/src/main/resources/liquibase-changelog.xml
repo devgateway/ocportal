@@ -297,10 +297,18 @@
             <column name="DTYPE" value="ContractDocumentType"/>
         </insert>
     </changeSet>
+
     <changeSet id="OCMAKU-37" author="gmutuhu">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="category"/>
         </preConditions>
         <sqlFile path="Items.sql"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-117" author="gmutuhu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <sqlFile path="Metadata1.sql"/>
     </changeSet>
 </databaseChangeLog>
