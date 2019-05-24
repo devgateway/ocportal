@@ -102,13 +102,20 @@
 .sidebar-list .title {
     margin-bottom: 15px;
     text-transform: uppercase;
+    color: #d3d5d6;
+    font-weight: bold;
 }
 
-.sidebar-list .title a {
+.data-summary-label a {
     color: #d3d5d6;
 }
 
-.sidebar-list .title a.selected {
+.data-summary-label a:hover,
+.data-summary-label a.selected {
+    color: #269bf4;
+}
+
+.data-summary-label a.selected {
     color: #1d7abf;
 }
 

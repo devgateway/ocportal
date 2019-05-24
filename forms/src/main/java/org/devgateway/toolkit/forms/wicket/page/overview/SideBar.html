@@ -4,7 +4,9 @@
 <wicket:panel>
     <div class="sidebar">
         <div class="overview">
-            <span class="data-summary-label">Overview</span>
+            <div class="data-summary-label">
+                <a wicket:id="statusLink" class="selected">Status Overview</a>
+            </div>
 
             <span class="data-summary" wicket:id="projectCount">[[count]]</span>
             <label>Projects</label>
@@ -12,7 +14,7 @@
 
         <div class="sidebar-list">
             <div class="title">
-                <a wicket:id="title" class="selected">Ministry Plans</a>
+                Ministry Plans
             </div>
 
             <ul>
