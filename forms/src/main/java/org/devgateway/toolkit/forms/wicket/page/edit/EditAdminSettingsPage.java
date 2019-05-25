@@ -1,0 +1,64 @@
+package org.devgateway.toolkit.forms.wicket.page.edit;
+
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.page.Homepage;
+import org.devgateway.toolkit.persistence.dao.AdminSettings;
+import org.devgateway.toolkit.persistence.service.AdminSettingsService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.wicketstuff.annotation.mount.MountPath;
+
+import java.util.List;
+
+/**
+ * @author idobre
+ * @since 6/22/16
+ */
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@MountPath(value = "/adminsettings")
+public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
+
+    private static final long serialVersionUID = 5742724046825803877L;
+
+    private CheckBoxToggleBootstrapFormComponent rebootServer;
+
+    @SpringBean
+    private AdminSettingsService adminSettingsService;
+    private TextFieldBootstrapFormComponent<Object> autosaveTime;
+
+    public EditAdminSettingsPage(final PageParameters parameters) {
+        super(parameters);
+
+        this.jpaService = adminSettingsService;
+        this.listPageClass = Homepage.class;
+
+        if (entityId == null) {
+            final List<AdminSettings> listSettings = adminSettingsService.findAll();
+            // just keep 1 entry for settings
+            if (listSettings.size() == 1) {
+                entityId = listSettings.get(0).getId();
+            }
+        }
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        editForm.add(new Label("systemTitle", new StringResourceModel("systemTitle", this, null)));
+
+        rebootServer = new CheckBoxToggleBootstrapFormComponent("rebootServer");
+        editForm.add(rebootServer);
+
+        autosaveTime = new TextFieldBootstrapFormComponent<>("autosaveTime");
+        autosaveTime.integer().required();
+        autosaveTime.getField().add(RangeValidator.range(1, 60));
+        editForm.add(autosaveTime);
+    }
+}

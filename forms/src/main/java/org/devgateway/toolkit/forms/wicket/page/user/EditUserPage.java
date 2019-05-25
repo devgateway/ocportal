@@ -11,8 +11,10 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.page.user;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
@@ -26,8 +28,6 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.PatternValidator;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.security.SecurityConstants;
-import org.devgateway.toolkit.forms.security.SecurityUtil;
 import org.devgateway.toolkit.forms.service.SendEmailService;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.PasswordFieldBootstrapFormComponent;
@@ -40,12 +40,20 @@ import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.Role;
-import org.devgateway.toolkit.persistence.dao.categories.Group;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.RoleService;
-import org.devgateway.toolkit.persistence.service.category.GroupService;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.web.WebSecurityUtil;
+import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath(value = "/account")
@@ -56,7 +64,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
     private PersonService personService;
 
     @SpringBean
-    private GroupService groupService;
+    private DepartmentService departmentService;
 
     @SpringBean
     private RoleService roleService;
@@ -77,7 +85,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     protected TextFieldBootstrapFormComponent<String> title;
 
-    protected Select2ChoiceBootstrapFormComponent<Group> group;
+    protected Select2ChoiceBootstrapFormComponent<Department> department;
 
     protected Select2MultiChoiceBootstrapFormComponent<Role> roles;
 
@@ -101,9 +109,9 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     @Override
     protected void onInitialize() {
-        Person person = SecurityUtil.getCurrentAuthenticatedPerson();
+        final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
 
-        if (!SecurityUtil.isCurrentUserAdmin()) {
+        if (!WebSecurityUtil.isCurrentUserAdmin()) {
             if (person.getId() != getPageParameters().get(WebConstants.PARAM_ID).toLong()) {
                 setResponsePage(getApplication().getHomePage());
             }
@@ -111,8 +119,9 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         super.onInitialize();
 
-        username = ComponentUtil.addTextField(editForm, "username", false);
+        username = ComponentUtil.addTextField(editForm, "username");
         username.required();
+        username.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         username.getField().add(new UsernamePatternValidator());
         StringValue idPerson = getPageParameters().get(WebConstants.PARAM_ID);
         if (!idPerson.isNull()) {
@@ -123,13 +132,15 @@ public class EditUserPage extends AbstractEditPage<Person> {
         editForm.add(username);
         MetaDataRoleAuthorizationStrategy.authorize(username, Component.ENABLE, SecurityConstants.Roles.ROLE_ADMIN);
 
-        firstName = ComponentUtil.addTextField(editForm, "firstName", false);
+        firstName = ComponentUtil.addTextField(editForm, "firstName");
+        firstName.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         firstName.required();
 
-        lastName = ComponentUtil.addTextField(editForm, "lastName", false);
+        lastName = ComponentUtil.addTextField(editForm, "lastName");
+        lastName.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         lastName.required();
 
-        email = ComponentUtil.addTextField(editForm, "email", false);
+        email = ComponentUtil.addTextField(editForm, "email");
         email.required()
                 .getField().add(RfcCompliantEmailAddressValidator.getInstance());
         if (!idPerson.isNull()) {
@@ -138,20 +149,30 @@ public class EditUserPage extends AbstractEditPage<Person> {
             email.getField().add(new UniqueEmailAddressValidator());
         }
 
-        title = ComponentUtil.addTextField(editForm, "title", false);
+        title = ComponentUtil.addTextField(editForm, "title");
 
-        group = ComponentUtil.addSelect2ChoiceField(editForm, "group", groupService, false);
-        group.required();
-        MetaDataRoleAuthorizationStrategy.authorize(group, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        department = ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService);
+        department.required();
+        MetaDataRoleAuthorizationStrategy.authorize(department, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
-        roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService, false);
+        roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService);
+        roles.getField().add(new RoleAjaxFormComponentUpdatingBehavior("change"));
         roles.required();
+        if (editForm.getModelObject().getRoles() != null) {
+            final List<String> authority = roles.getModelObject().stream()
+                    .map(Role::getAuthority)
+                    .collect(Collectors.toList());
+
+            if (authority.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
+                department.setVisibilityAllowed(false);
+            }
+        }
         MetaDataRoleAuthorizationStrategy.authorize(roles, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
-        enabled = ComponentUtil.addCheckToggle(editForm, "enabled", false);
+        enabled = ComponentUtil.addCheckToggle(editForm, "enabled");
         MetaDataRoleAuthorizationStrategy.authorize(enabled, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
-        changePasswordNextSignIn = ComponentUtil.addCheckToggle(editForm, "changePasswordNextSignIn", false);
+        changePasswordNextSignIn = ComponentUtil.addCheckToggle(editForm, "changePasswordNextSignIn");
         MetaDataRoleAuthorizationStrategy.authorize(changePasswordNextSignIn, Component.RENDER,
                 SecurityConstants.Roles.ROLE_ADMIN);
 
@@ -167,17 +188,17 @@ public class EditUserPage extends AbstractEditPage<Person> {
         };
         editForm.add(changeProfilePassword);
 
-        plainPassword = ComponentUtil.addTextPasswordField(editForm, "plainPassword", false);
+        plainPassword = ComponentUtil.addTextPasswordField(editForm, "plainPassword");
         plainPassword.required();
         // stop resetting the password fields each time they are rendered
         plainPassword.getField().setResetPassword(false);
         plainPassword.getField().add(new PasswordPatternValidator());
 
-        plainPasswordCheck = ComponentUtil.addTextPasswordField(editForm, "plainPasswordCheck", false);
+        plainPasswordCheck = ComponentUtil.addTextPasswordField(editForm, "plainPasswordCheck");
         plainPasswordCheck.required();
         plainPasswordCheck.getField().setResetPassword(false);
 
-        if (SecurityUtil.isCurrentUserAdmin() && idPerson.isNull()) {
+        if (WebSecurityUtil.isCurrentUserAdmin() && idPerson.isNull()) {
             // hide the change password checkbox and set it's model to true
             editForm.getModelObject().setChangeProfilePassword(true);
             changeProfilePassword.setVisibilityAllowed(false);
@@ -213,14 +234,68 @@ public class EditUserPage extends AbstractEditPage<Person> {
                     person.setChangePasswordNextSignIn(false);
                 }
 
-                jpaService.save(person);
-                if (!SecurityUtil.isCurrentUserAdmin()) {
+                Person saved = jpaService.save(person);
+                updateCurrentAuthenticatedUserData(saved);
+
+
+                if (!WebSecurityUtil.isCurrentUserAdmin()) {
                     setResponsePage(Homepage.class);
                 } else {
                     setResponsePage(listPageClass);
                 }
             }
         };
+    }
+
+    /**
+     * Updates current principal with user data if the user edits herself. Will not update
+     * roles for security reasons. For that, u must log out/back in.
+     *
+     * @param saved
+     */
+    private void updateCurrentAuthenticatedUserData(Person saved) {
+        Person currentAuthenticatedPerson = WebSecurityUtil.getCurrentAuthenticatedPerson();
+        Collection<? extends GrantedAuthority> oldAuthorities = currentAuthenticatedPerson.getAuthorities();
+        List<Role> oldRoles = currentAuthenticatedPerson.getRoles();
+
+        if (currentAuthenticatedPerson.getId().equals(saved.getId())) {
+            //i edited myself, update the principal
+            try {
+                BeanUtils.copyProperties(currentAuthenticatedPerson, saved);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+
+            //copy back old authorities - we do not allow update of authorities in same session because
+            //u can easily lock yourself out of admin by just saving your admin after removing admin role...
+            currentAuthenticatedPerson.setAuthorities(oldAuthorities);
+            currentAuthenticatedPerson.setRoles(oldRoles);
+        }
+    }
+
+    /**
+     * If the user changes the Role we need to update some components.
+     */
+    class RoleAjaxFormComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
+        RoleAjaxFormComponentUpdatingBehavior(final String event) {
+            super(event);
+        }
+
+        @Override
+        protected void onUpdate(final AjaxRequestTarget target) {
+            final List<String> authority = roles.getModelObject().stream()
+                    .map(Role::getAuthority)
+                    .collect(Collectors.toList());
+
+            if (authority.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
+                department.setVisibilityAllowed(false);
+                department.setModelObject(null);
+            } else {
+                department.setVisibilityAllowed(true);
+            }
+
+            target.add(department);
+        }
     }
 
     public static class PasswordPatternValidator extends PatternValidator {

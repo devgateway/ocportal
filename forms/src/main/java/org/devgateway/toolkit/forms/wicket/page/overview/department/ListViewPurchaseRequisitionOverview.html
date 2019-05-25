@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <wicket:fragment wicket:id="headerFragment">
+        <div class="tender-status-wrapper">
+            <h5 wicket:id="title"></h5>
+        </div>
+    </wicket:fragment>
+
+
+    <wicket:fragment wicket:id="containerFragment">
+        <div class="row">
+            <div class="col-md-12 tender-detail">
+                <div class="tender-header">
+                    <div class="tender-label" wicket:id="requisitionTitle"></div>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="requisitionStatus"></span>
+                        <button type="button" class="btn btn-edit" wicket:id="requisitionEdit"></button>
+                    </div>
+                </div>
+                <div class="tender-info">
+                    <ul>
+                        <li wicket:id="requisitionDate"></li>
+                        <li wicket:id="requisitionAmount"></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 tender-detail">
+                <div class="tender-header">
+                    <div class="tender-label">Tender Document</div>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="tenderStatus"></span>
+                        <button type="button" class="btn btn-small" wicket:id="editTender"></button>
+                    </div>
+                </div>
+                <div class="tender-info">
+                    <ul>
+                        <li wicket:id="tenderTitle"></li>
+                        <li wicket:id="tenderId"></li>
+                        <li wicket:id="amount"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-4 tender-detail">
+                <div class="tender-header">
+                    <div class="tender-label">Opening</div>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="tenderOpeningStatus"></span>
+                        <button type="button" class="btn btn-small" wicket:id="editTenderOpening"></button>
+                    </div>
+                </div>
+                <div class="tender-info">
+                    <ul>
+                        <li wicket:id="tenderOpeningTitle"></li>
+                        <li wicket:id="tenderOpeningID"></li>
+                        <li wicket:id="tenderOpeningAmount"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-4 tender-detail">
+                <div class="tender-header">
+                    <div class="tender-label">Professional Opinion</div>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="professionalOpinionStatus"></span>
+                        <button type="button" class="btn btn-small" wicket:id="editProfessionalOpinion"></button>
+                    </div>
+                </div>
+                <div class="tender-info">
+                    <ul>
+                        <li wicket:id="professionalOpinionSupplier"></li>
+                        <li wicket:id="professionalOpinionAmount"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="divider"></div>
+            <div class="col-md-4 tender-detail">
+                <div class="tender-header">
+                    <div class="tender-label">Notification</div>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="awardNotificationStatus"></span>
+                        <button type="button" class="btn btn-small" wicket:id="editAwardNotification"></button>
+                    </div>
+                </div>
+                <div class="tender-info">
+                    <ul>
+                        <li wicket:id="awardNotificationSupplier"></li>
+                        <li wicket:id="awardNotificationTenderId"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-4 tender-detail">
+                <div class="tender-header">
+                    <div class="tender-label">Acceptance</div>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="awardAcceptanceStatus"></span>
+                        <button type="button" class="btn btn-small" wicket:id="editAwardAcceptance"></button>
+                    </div>
+                </div>
+                <div class="tender-info">
+                    <ul>
+                        <li wicket:id="awardAcceptanceSupplier"></li>
+                        <li wicket:id="awardAcceptanceTenderId"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-4 tender-detail">
+                <div class="tender-header">
+                    <div class="tender-label">Contracts</div>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="contractStatus"></span>
+                        <button type="button" class="btn btn-small" wicket:id="editContract"></button>
+                    </div>
+                </div>
+                <div class="tender-info">
+                    <ul>
+                        <li>Contract Document</li>
+                        <li wicket:id="contractSupplier"></li>
+                        <li wicket:id="contractTenderId"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

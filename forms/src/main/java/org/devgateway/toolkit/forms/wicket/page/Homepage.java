@@ -15,8 +15,14 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.devgateway.toolkit.forms.security.SecurityConstants;
+import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
+import org.devgateway.toolkit.forms.wicket.styles.HomeStyles;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 
 /**
  * @author mpostelnicu
@@ -24,10 +30,31 @@ import org.devgateway.toolkit.forms.security.SecurityConstants;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class Homepage extends BasePage {
-    /**
-     * @param parameters
-     */
     public Homepage(final PageParameters parameters) {
         super(parameters);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        final Link<Void> dataEntryLink = new Link<Void>("dataEntryLink") {
+            @Override
+            public void onClick() {
+                // clear all session data before going to the dashboard
+                SessionUtil.clearSessionData();
+                setResponsePage(StatusOverviewPage.class);
+            }
+        };
+
+        add(dataEntryLink);
+    }
+
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+
+        // Load Home Page Styles
+        response.render(CssHeaderItem.forReference(HomeStyles.INSTANCE));
     }
 }

@@ -12,3 +12,4 @@ npm-debug.log
 .idea
 rebel.xml
 /logs/
+.DS_Store

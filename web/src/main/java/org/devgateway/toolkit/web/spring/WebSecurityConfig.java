@@ -129,4 +129,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(final AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customJPAUserDetailsService).passwordEncoder(passwordEncoder);
     }
+
 }

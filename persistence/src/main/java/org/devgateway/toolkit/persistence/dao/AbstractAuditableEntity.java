@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PreUpdate;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ import java.util.Optional;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractAuditableEntity extends GenericPersistable
-        implements Auditable<String, Long, ZonedDateTime> {
+        implements Auditable<String, Long, ZonedDateTime>, Serializable {
     private static final long serialVersionUID = 4031407178647451427L;
 
     @Audited
@@ -86,7 +87,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<String> getCreatedBy() {
-        return Optional.of(createdBy);
+        return createdBy != null ? Optional.of(createdBy) : Optional.empty();
     }
 
     /**
@@ -102,7 +103,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<ZonedDateTime> getCreatedDate() {
-        return Optional.of(createdDate);
+        return createdDate != null ? Optional.of(createdDate) : Optional.empty();
     }
 
     /**
@@ -118,7 +119,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<String> getLastModifiedBy() {
-        return Optional.of(lastModifiedBy);
+        return lastModifiedBy != null ? Optional.of(lastModifiedBy) : Optional.empty();
     }
 
     /**
@@ -134,7 +135,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<ZonedDateTime> getLastModifiedDate() {
-        return Optional.of(lastModifiedDate);
+        return lastModifiedDate != null ? Optional.of(lastModifiedDate) : Optional.empty();
     }
 
     /**

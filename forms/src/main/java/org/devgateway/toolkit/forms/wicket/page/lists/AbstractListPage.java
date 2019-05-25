@@ -18,16 +18,18 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
@@ -39,17 +41,21 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullEditPageClassException;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.table.AjaxFallbackBootstrapDataTable;
 import org.devgateway.toolkit.forms.wicket.components.table.ResettingFilterForm;
-import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
+import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -66,33 +72,45 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author mpostelnicu This class can be use to display a list of Categories
  * <p>
- * T - entity type
  */
 public abstract class AbstractListPage<T extends GenericPersistable & Serializable> extends BasePage {
-    private static final long serialVersionUID = 1958350868666244087L;
-
     protected Class<? extends AbstractEditPage<T>> editPageClass;
 
-    private AjaxFallbackBootstrapDataTable<T, String> dataTable;
+    protected final AjaxFallbackBootstrapDataTable<T, String> dataTable;
 
-    protected List<IColumn<T, String>> columns;
+    protected final List<IColumn<T, String>> columns;
 
     protected BaseJpaService<T> jpaService;
 
-    private SortableJpaServiceDataProvider<T> dataProvider;
+    private final SortableJpaServiceDataProvider<T> dataProvider;
 
-    private BootstrapBookmarkablePageLink<T> editPageLink;
+    protected BootstrapBookmarkablePageLink<T> editPageLink;
 
     protected Form excelForm;
 
     @SpringBean
     private ExcelGeneratorService excelGeneratorService;
 
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
+
     public AbstractListPage(final PageParameters parameters) {
         super(parameters);
 
         columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(new Model<>("ID"), "id", "id"));
+        dataProvider = new SortableJpaServiceDataProvider<>();
+        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
+
+        columns.add(new AbstractColumn<T, String>(new Model<>("#")) {
+            @Override
+            public void populateItem(final Item<ICellPopulator<T>> cellItem,
+                                     final String componentId,
+                                     final IModel<T> model) {
+                final OddEvenItem oddEvenItem = (OddEvenItem) cellItem.getParent().getParent();
+                final long index = WebConstants.PAGE_SIZE * dataTable.getCurrentPage() + oddEvenItem.getIndex() + 1;
+                cellItem.add(new Label(componentId, index));
+            }
+        });
     }
 
     public ActionPanel getActionPanel(final String id, final IModel<T> model) {
@@ -110,7 +128,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             throw new NullEditPageClassException();
         }
 
-        dataProvider = new SortableJpaServiceDataProvider<>(jpaService);
+        dataProvider.setJpaService(jpaService);
         dataProvider.setFilterState(newFilterState());
 
         // create the excel download form; by default this form is hidden and we should make it visible only to pages
@@ -129,21 +147,34 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 cellItem.add(getActionPanel(componentId, model));
             }
         });
-        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
-        ResettingFilterForm<JpaFilterState<T>> filterForm =
+        final ResettingFilterForm<JpaFilterState<T>> filterForm =
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
         filterForm.add(dataTable);
+
+        // create custom submit button in order to prevent form submission
+        final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
+                new Model<>("Submit"), Buttons.Type.Default) {
+
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                super.onSubmit(target);
+
+                // don't do anything on submit, just refresh the table
+                target.add(dataTable);
+            }
+        };
+        filterForm.add(dataTable);
+        filterForm.add(submit);
+        filterForm.setDefaultButton(submit);
+
         add(filterForm);
 
         if (hasFilteredColumns()) {
             dataTable.addTopToolbar(new FilterToolbar(dataTable, filterForm));
         }
 
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_ID, null);
-
-        editPageLink = new BootstrapBookmarkablePageLink<T>("new", editPageClass, pageParameters, Buttons.Type.Success);
+        editPageLink = new BootstrapBookmarkablePageLink<>("new", editPageClass, Buttons.Type.Success);
         editPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
                 .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
 
@@ -168,24 +199,33 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 pageParameters.set(WebConstants.PARAM_ID, entity.getId());
             }
 
-            BootstrapBookmarkablePageLink<T> editPageLink =
+            final BootstrapBookmarkablePageLink<T> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", editPageClass, pageParameters, Buttons.Type.Info);
-            editPageLink.setIconType(FontAwesomeIconType.edit).setSize(Size.Small)
+            editPageLink.setIconType(FontAwesomeIconType.edit)
+                    .setSize(Size.Small)
+                    .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
+            if (entity instanceof AbstractMakueniEntity && SecurityConstants.Action.VIEW.equals(
+                    permissionEntityRenderableService.getAllowedAccess((AbstractStatusAuditableEntity) entity))) {
+                editPageLink.setIconType(FontAwesomeIconType.eye)
+                        .setType(Buttons.Type.Warning)
+                        .setLabel(new StringResourceModel("view", AbstractListPage.this, null));
+            }
             add(editPageLink);
 
             add(getPrintButton(pageParameters));
 
-            PageParameters revisionsPageParameters = new PageParameters();
+            final PageParameters revisionsPageParameters = new PageParameters();
             revisionsPageParameters.set(WebConstants.PARAM_ID, entity.getId());
             revisionsPageParameters.set(WebConstants.PARAM_ENTITY_CLASS, entity.getClass().getName());
 
-            BootstrapBookmarkablePageLink<Void> revisionsPageLink = new BootstrapBookmarkablePageLink<>("revisions",
-                    RevisionsPage.class, revisionsPageParameters, Buttons.Type.Info);
+            final BootstrapBookmarkablePageLink<Void> revisionsPageLink = new BootstrapBookmarkablePageLink<>(
+                    "revisions", RevisionsPage.class, revisionsPageParameters, Buttons.Type.Info);
             revisionsPageLink.setIconType(FontAwesomeIconType.clock_o).setSize(Size.Small)
                     .setLabel(new StringResourceModel("revisions", AbstractListPage.this, null));
             add(revisionsPageLink);
-
+            MetaDataRoleAuthorizationStrategy.authorize(
+                    revisionsPageLink, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
         }
     }
 
@@ -200,7 +240,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
     }
 
     private boolean hasFilteredColumns() {
-        for (IColumn<?, ?> column : columns) {
+        for (final IColumn<?, ?> column : columns) {
             if (column instanceof IFilteredColumn) {
                 return true;
             }

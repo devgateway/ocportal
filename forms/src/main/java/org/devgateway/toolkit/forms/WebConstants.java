@@ -11,8 +11,14 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms;
 
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,12 +31,21 @@ public final class WebConstants {
 
     }
 
-    public static final int PAGE_SIZE = 10;
+    public static final String DISABLE_FORM_LEAVING_JS
+            = "if(typeof disableFormLeavingConfirmation === 'function') disableFormLeavingConfirmation();";
+
+    public static final String ENABLE_FORM_LEAVING_JS
+            = "if(typeof enableFormLeavingConfirmation === 'function') enableFormLeavingConfirmation();";
+
+
+    public static final int PAGE_SIZE = 20;
     public static final int SELECT_PAGE_SIZE = 25;
 
-    public static final String PARAM_VIEW_MODE = "viewMode";
+    public static final String PARAM_PRINT = "print";
 
     public static final String PARAM_ID = "id";
+    public static final String V_POSITION = "vPosition";
+    public static final String MAX_HEIGHT = "maxPosition";
     public static final String PARAM_REVISION_ID = "revisionId";
     public static final String PARAM_ENTITY_CLASS = "class";
 
@@ -39,6 +54,8 @@ public final class WebConstants {
     public static final class StringValidators {
         public static final StringValidator MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT =
                 StringValidator.maximumLength(DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE);
+        public static final StringValidator MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT =
+                StringValidator.maximumLength(DBConstants.STD_DEFAULT_TEXT_LENGTH);
         public static final StringValidator MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXTAREA =
                 StringValidator.maximumLength(DBConstants.MAX_DEFAULT_TEXT_AREA);
     }
@@ -48,4 +65,18 @@ public final class WebConstants {
     // to change the src code anyway.
     public static final List<Locale> AVAILABLE_LOCALES = Collections.unmodifiableList(Arrays.asList(new Locale("en")));
 
+    public static final MetaDataKey<Department> DEPARTMENT = new MetaDataKey<Department>() {
+    };
+    public static final MetaDataKey<FiscalYear> FISCAL_YEAR = new MetaDataKey<FiscalYear>() {
+    };
+    public static final MetaDataKey<ProcurementPlan> PROCUREMENT_PLAN = new MetaDataKey<ProcurementPlan>() {
+    };
+    public static final MetaDataKey<Project> PROJECT = new MetaDataKey<Project>() {
+    };
+    public static final MetaDataKey<PurchaseRequisition> PURCHASE_REQUISITION
+            = new MetaDataKey<PurchaseRequisition>() {
+    };
+
+    public static final List<MetaDataKey> ALL_SESSION_KEYS = Collections.unmodifiableList(
+            Arrays.asList(DEPARTMENT, FISCAL_YEAR, PROCUREMENT_PLAN, PROJECT, PURCHASE_REQUISITION));
 }

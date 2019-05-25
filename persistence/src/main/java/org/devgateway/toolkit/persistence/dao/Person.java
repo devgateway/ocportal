@@ -12,7 +12,7 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.toolkit.persistence.dao.categories.Group;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -27,15 +27,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "username")})
-public class Person extends AbstractAuditableEntity implements Serializable, UserDetails {
+@Table(indexes = {@Index(columnList = "username"), @Index(columnList = "department_id")})
+public class Person extends AbstractAuditableEntity implements UserDetails {
     private static final long serialVersionUID = 109780377848343674L;
 
     @ExcelExport
@@ -66,8 +65,8 @@ public class Person extends AbstractAuditableEntity implements Serializable, Use
     private Boolean changePasswordNextSignIn;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Group group;
+    @ManyToOne
+    private Department department;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -183,14 +182,6 @@ public class Person extends AbstractAuditableEntity implements Serializable, Use
         this.changePasswordNextSignIn = changePasswordNextSignIn;
     }
 
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(final Group group) {
-        this.group = group;
-    }
-
     public List<Role> getRoles() {
         return roles;
     }
@@ -227,5 +218,13 @@ public class Person extends AbstractAuditableEntity implements Serializable, Use
     @Override
     public AbstractAuditableEntity getParent() {
         return null;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(final Department department) {
+        this.department = department;
     }
 }

@@ -1,19 +1,20 @@
-/*******************************************************************************
+/**
  * Copyright (c) 2015 Development Gateway, Inc and others.
- *
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the MIT License (MIT)
  * which accompanies this distribution, and is available at
  * https://opensource.org/licenses/MIT
- *
+ * <p>
  * Contributors:
  * Development Gateway - initial API and implementation
- *******************************************************************************/
+ */
 /**
- * 
+ *
  */
 package org.devgateway.toolkit.forms.validators;
 
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
@@ -50,8 +51,9 @@ public class EarlierThanDateFieldValidator implements IValidator<Date> {
         final Date endDate = highDate.getField().getConvertedInput();
 
         if (endDate != null && validatable.getValue() != null && endDate.before(validatable.getValue())) {
-            final ValidationError error = new ValidationError(this);
-            error.setVariable("highDateName", highDate.getLabelModel().getObject());
+            ValidationError error = new ValidationError(this);
+            error.setVariable("highDateName",
+                    new StringResourceModel(highDate.getId() + ".label", highDate.getParent(), null).getString());
             validatable.error(error);
         }
     }

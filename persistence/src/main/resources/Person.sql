@@ -7,8 +7,7 @@ INSERT INTO PERSON
  LAST_NAME,
  PASSWORD,
  TITLE,
- USERNAME,
- GROUP_ID)
+ USERNAME)
 VALUES (1,
         false,
         NULL,
@@ -17,5 +16,4 @@ VALUES (1,
         NULL,
         '$2a$10$wvn/WOzcIGu.GGFGDhEzS.0KVIhHG3ypCNjH4ui1Xa8h3qgt2mdZ6',
         NULL,
-        'admin',
-        NULL);
+        'admin');

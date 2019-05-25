@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Template Makueni</title>
+
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Base styles css  -->
+    <link rel="stylesheet" type="text/css"
+          href="https://ocmakueni.dgstg.org/wicket/resource/org.devgateway.toolkit.forms.wicket.styles.BaseStyles/BaseStyles-v-3735653261613137.css"/>
+    <!-- custom styles -->
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+
+    <script type="text/javascript"
+            src="https://ocmakueni.dgstg.org/wicket/resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-2.2.4-v-3238353935313838.js"></script>
+    <script type="text/javascript"
+            src="https://ocmakueni.dgstg.org/wicket/resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-v-3332313239353161.js"></script>
+
+</head>
+<body>
+
+<!-- start: wrapper -->
+<div class="wrapper">
+
+    <!-- start: Sidebar -->
+    <div class="sidebar">
+        <!-- start: logo  -->
+        <div class="logo">
+            <img src="images/logo.png"/>
+        </div>
+        <!-- end: logo -->
+
+        <!-- start: sidebar title -->
+        <div class="sidebar-title">
+            <h2>Department Ministries</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+            </p>
+        </div>
+        <!-- end: sidebar title -->
+        <!-- start: sidebar overview  -->
+        <div class="overview">
+            <span class="data-summary-label">Overview</span>
+            <span class="data-summary">25</span>
+        </div>
+        <!-- end: sidebar overview -->
+
+        <!-- start: sidebar plan list -->
+        <div class="sidebar-list">
+            <div class="title">Ministry Plans</div>
+
+            <ul class="nav nav-tabs sidebar-tabs-nav">
+                <li>
+                    <a data-toggle="tab" href="#home">Office of the Governor</a>
+                </li>
+                <li><a href="#">Public Service Board</a></li>
+                <li><a href="#">County Service (Country Secretary)</a></li>
+                <li><a href="#">Devolution Public Services</a></li>
+                <li><a href="#">Finance and Social Economic Planning</a></li>
+                <li><a href="#">Agriculture Livestock and Food Security</a></li>
+                <li><a href="#">Water and Irrigation</a></li>
+                <li><a href="#">County Education and Civic Education</a></li>
+                <li><a href="#">Youth Services</a></li>
+                <li><a href="#">Makueni Lands Urban Planning and Environmental Management</a></li>
+                <li><a href="#">Transport and County Infrastructure</a></li>
+                <li><a href="#">Tradem, Industry and Tourism</a></li>
+                <li><a href="#">Gender, Youth and Social Services</a></li>
+            </ul>
+
+        </div>
+
+        <!-- end: sidebar plan list -->
+
+        <div class="sidebar-helptext">
+            Quam curae; imperdiet ornare nullam orci diam, habitant erat. Vehicula inceptos ultricies hac. Tortor congue
+            mollis auctor amet ultricies mi vestibulum purus est pellentesque massa. Quisque ipsum lobortis pulvinar
+            libero himenaeos. Taciti massa volutpat pulvinar nisl sollicitudin.
+        </div>
+
+    </div>
+    <!-- end: sidebar -->
+
+
+    <!-- start: main content -->
+    <div class="main-content tab-content">
+
+
+        <!-- start: second panel content -->
+        <div id="home" class="col-md-2 tab-pane secondary-panel">
+
+            <!-- start: second panel header -->
+            <div class="secondary-panel-header">
+                <h3>Office of the Governor</h3>
+                <p>Navigate below from an overview of the department’s projects and associated procurement stages to a
+                    list view of all forms filled for each procurement stage.
+                </p>
+                <h3>Department Overview</h3>
+                <h4>Form Lists</h4>
+            </div>
+            <!-- end: second panel headers -->
+
+            <ul class="sidebar-form-list">
+                <li>
+                    <a href="">Projects</a>
+                </li>
+                <li>
+                    <a href="">Purchase Requisition</a>
+                </li>
+                <li>
+                    <a href="">Tenders</a>
+                </li>
+                <li>
+                    <a href="">Tender Opening & Evaluation</a>
+                </li>
+                <li>
+                    <a href="">Professional Opinion</a>
+                </li>
+                <li>
+                    <a href="">Award Notification</a>
+                </li>
+                <li>
+                    <a href="">Award Acceptance</a>
+                </li>
+                <li>
+                    <a href="">Contract</a>
+                </li>
+            </ul>
+
+        </div>
+        <!-- end: second panel content -->
+
+
+        <!-- start: main content inner wrapper to separate from second panel -->
+        <div class="main-content-inner ministry">
+
+            <!-- start: main content header -->
+            <div class="row header">
+                <div class="row header-section">
+                    <div class="col-md-6">
+                        <h4>Office of the Governor</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="header-buttons">
+                            <span class="button-label">Create new procurement plan</span>
+                            <button type="button" class="btn btn-add no-text"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row header-section">
+                    <div class="col-md-6">
+                        <h5>2018-Procurement Plan</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="header-buttons">
+                            <span class="button-label">Adjust existing procurement plan</span>
+                            <button type="button" class="btn btn-view"></button>
+                            <button type="button" class="btn btn-edit"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row header-section">
+                    <div class="col-md-6">
+                        <h5>Cabinet / Ministerial Paper</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="header-buttons">
+                            <span class="button-label">Edit / Add</span>
+                            <button type="button" class="btn btn-edit"></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- end: main content header -->
+
+            <!-- start: search panel -->
+            <div class="search-panel">
+
+                <!-- start: search panel title -->
+                <div class="row search-panel-header">
+                    <div class="col-md-8">
+                        <h3>Ministry Projects</h3>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-add">ADD New Project</button>
+                    </div>
+                </div>
+                <!-- start: search panel title -->
+
+
+                <!-- start: search form -->
+                <div class="search-form">
+                    <div class="col-md-9 no-padding">
+                        <div tabindex="1" class="form-control project-search"></div>
+                    </div>
+                    <div class="col-md-3 no-padding">
+
+                        <!-- start: year button -->
+                        <select id="year" class="btn btn-default project-year">
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                        </select>
+                        <!-- end: year button -->
+
+                        <!-- start: downlaod button -->
+                        <button type="button" class="btn btn-default download">
+                        </button>
+                        <!-- end: download button  -->
+
+                    </div>
+                </div>
+            </div>
+            <!-- end: search form -->
+
+
+            <!-- start: results panels -->
+            <div class="project-panels-wrapper">
+
+                <!-- start:  panels -->
+
+                <button class="status-panel project" type="button" data-toggle="collapse" data-target="#tenderlist"
+                        aria-expanded="false" aria-controls="collapsegovernor">
+          <span class="status-panel-heading">
+            <div class="project-title">Construction of Central Mechanical Shop</div>
+            <span class="year">2018</span>
+            <div class="project-status">
+              <span class="status approved"></span>
+            </div>
+          </span>
+                </button>
+
+                <!-- start: collapsible content -->
+                <div class="collapse collapse-content tender" id="tenderlist">
+
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-add right">ADD New Tender</button>
+                    </div>
+
+                    <div class="tender-list-wrapper">
+                        <ol>
+                            <li>
+                                <!-- start: tender collapse panel -->
+                                <button class="status-panel tender" type="button" data-toggle="collapse"
+                                        data-target="#tender" aria-expanded="false" aria-controls="collapsegovernor">
+                                    <div class="status-panel-heading">
+                                        <div class="tender-status-wrapper">
+                                            <h5>Tender & Award</h5>
+                                            <div class="project-status">
+                                                <span class="status approved"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                                <div class="collapse collapse-content tender" id="tender">
+
+                                    <div class="row">
+                                        <div class="col-md-12 tender-detail">
+                                            <div class="tender-header">
+                                                <div class="tender-label">Purchase Requisition Tender 1</div>
+                                                <div class="tender-status">
+                                                    <span class="status approved"></span>
+                                                    <button type="button" class="btn btn-edit"></button>
+                                                </div>
+                                            </div>
+                                            <div class="tender-info">
+                                                <ul>
+                                                    <li>
+                                                        Requisition Title
+                                                    </li>
+                                                    <li>
+                                                        Requisition Date
+                                                    </li>
+                                                    <li>
+                                                        $ Amount
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- end: purchase requisition tender 1 -->
+
+                                    <div class="row">
+
+                                        <!-- start: tender document -->
+                                        <div class="col-md-4 tender-detail">
+                                            <div class="tender-header">
+                                                <div class="tender-label">Tender Document</div>
+                                                <div class="tender-status">
+                                                    <span class="status approved"></span>
+                                                    <button type="button" class="btn btn-edit"></button>
+                                                </div>
+                                            </div>
+                                            <div class="tender-info">
+                                                <ul>
+                                                    <li>
+                                                        Tender Title
+                                                    </li>
+                                                    <li>
+                                                        Tender ID
+                                                    </li>
+                                                    <li>
+                                                        $ Amount
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <!-- end: tender document -->
+
+                                        <!-- start: opening -->
+                                        <div class="col-md-4 tender-detail">
+                                            <div class="tender-header">
+                                                <div class="tender-label">Opening</div>
+                                                <div class="tender-status">
+                                                    <span class="status approved"></span>
+                                                    <button type="button" class="btn btn-edit"></button>
+                                                </div>
+                                            </div>
+                                            <div class="tender-info">
+                                                <ul>
+                                                    <li>
+                                                        Tender Title
+                                                    </li>
+                                                    <li>
+                                                        Tender ID
+                                                    </li>
+                                                    <li>
+                                                        $ Amount
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <!-- end: opening -->
+
+                                        <!-- start: professional opinion -->
+                                        <div class="col-md-4 tender-detail">
+                                            <div class="tender-header">
+                                                <div class="tender-label">Professional Opinion</div>
+                                                <div class="tender-status">
+                                                    <span class="status approved"></span>
+                                                    <button type="button" class="btn btn-edit"></button>
+                                                </div>
+                                            </div>
+                                            <div class="tender-info">
+                                                <ul>
+                                                    <li>
+                                                        Supplier ID
+                                                    </li>
+                                                    <li>
+                                                        $ Amount
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <!-- end: professional opinion -->
+
+                                        <div class="divider"></div>
+
+                                        <!-- start: notification -->
+                                        <div class="col-md-4 tender-detail">
+                                            <div class="tender-header">
+                                                <div class="tender-label">Notification</div>
+                                                <div class="tender-status">
+                                                    <span class="status approved"></span>
+                                                    <button type="button" class="btn btn-edit"></button>
+                                                </div>
+                                            </div>
+                                            <div class="tender-info">
+                                                <ul>
+                                                    <li>
+                                                        Document 1
+                                                    </li>
+                                                    <li>
+                                                        Supplier
+                                                    </li>
+                                                    <li>
+                                                        Tender ID
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <!-- end: notification -->
+
+                                        <!-- start: acceptance -->
+                                        <div class="col-md-4 tender-detail">
+                                            <div class="tender-header">
+                                                <div class="tender-label">Acceptance</div>
+                                                <div class="tender-status">
+                                                    <span class="status approved"></span>
+                                                    <button type="button" class="btn btn-edit"></button>
+                                                </div>
+                                            </div>
+                                            <div class="tender-info">
+                                                <ul>
+                                                    <li>
+                                                        Acceptance Document
+                                                    </li>
+                                                    <li>
+                                                        Tender ID
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <!-- end: acceptance -->
+
+                                        <!-- start: contracts -->
+                                        <div class="col-md-4 tender-detail">
+                                            <div class="tender-header">
+                                                <div class="tender-label">Contracts</div>
+                                                <div class="tender-status">
+                                                    <span class="status approved"></span>
+                                                    <button type="button" class="btn btn-edit"></button>
+                                                </div>
+                                            </div>
+                                            <div class="tender-info">
+                                                <ul>
+                                                    <li>
+                                                        Contract Document
+                                                    </li>
+                                                    <li>
+                                                        Tender ID
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <!-- end: contracts -->
+
+
+                                    </div>
+                                    <!-- end: row for tender sections -->
+
+
+                                </div>
+                                <!-- end: tender collapse panel -->
+                            </li>
+
+                        </ol>
+
+                    </div>
+
+
+                </div>
+
+                <!-- end:  panel -->
+
+
+                <!-- end: results panels -->
+
+
+            </div>
+            <!-- end: search panel -->
+
+        </div>
+        <!-- end:project panels wrapper  -->
+
+        <!-- end: main content inner wrapper -->
+    </div>
+
+</div>
+<!-- end: main content  -->
+
+
+<!-- end: wrapper  -->
+
+<!-- Bootstrap js -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

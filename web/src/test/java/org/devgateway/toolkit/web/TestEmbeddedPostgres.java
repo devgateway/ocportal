@@ -58,14 +58,14 @@ public class TestEmbeddedPostgres {
      * Graciously starts a Postgres Database Server when the tests start up
      *
      * @return
-     * @throws InterruptedException
      * @throws IOException
      */
     @Bean(destroyMethod = "stop")
     public EmbeddedPostgres postgresServer() throws IOException {
         // starting Postgres
         final EmbeddedPostgres postgres = new EmbeddedPostgres(PRODUCTION);
-        final String url = postgres.start(cachedRuntimeConfig(Paths.get("~/.embedpostgresql")), "localhost",
+        final String url = postgres.start(cachedRuntimeConfig(
+                Paths.get(System.getProperty("user.home") + "/.embedpostgresql")), "localhost",
                 DB_PORT, "makueni-test", springDatasourceUsername, springDatasourcePassword, DEFAULT_ADD_PARAMS);
 
         logger.debug("Embedded postgres url: " + url);

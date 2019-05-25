@@ -11,12 +11,9 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import de.agilecoders.wicket.core.util.Attributes;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.devgateway.toolkit.forms.wicket.components.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 
@@ -34,10 +31,6 @@ import java.util.Collection;
  */
 public class FileInputBootstrapFormComponent extends GenericBootstrapFormComponent<Collection<FileMetadata>,
         FileInputBootstrapFormComponentWrapper<Collection<FileMetadata>>> {
-
-    private static final long serialVersionUID = 1L;
-
-    private Boolean isFloatedInput = false;
 
     private FileInputBootstrapFormComponentWrapper<Collection<FileMetadata>> fileInputBootstrapFormComponentWrapper;
 
@@ -92,17 +85,8 @@ public class FileInputBootstrapFormComponent extends GenericBootstrapFormCompone
     }
 
     @Override
-    protected void onComponentTag(final ComponentTag tag) {
-        super.onComponentTag(tag);
-
-        if (getIsFloatedInput()) {
-            Attributes.addClass(tag, "floated-input");
-        }
-    }
-
-    @Override
     public void onEvent(final IEvent<?> event) {
-        ComponentUtil.enableDisableEvent(this, event);
+        // do nothing here, let the wrapper control it's visibility
     }
 
     public void setVisibleOnlyToAdmin(final Boolean visibleOnlyToAdmin) {
@@ -111,14 +95,6 @@ public class FileInputBootstrapFormComponent extends GenericBootstrapFormCompone
 
     public void setDisableDeleteButton(final Boolean disableDeleteButton) {
         fileInputBootstrapFormComponentWrapper.setDisableDeleteButton(disableDeleteButton);
-    }
-
-    public Boolean getIsFloatedInput() {
-        return isFloatedInput;
-    }
-
-    public void setIsFloatedInput(final Boolean isFloatedInput) {
-        this.isFloatedInput = isFloatedInput;
     }
 
     public FileInputBootstrapFormComponentWrapper<Collection<FileMetadata>>

@@ -14,8 +14,6 @@
  */
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import de.agilecoders.wicket.core.util.Attributes;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -29,8 +27,9 @@ import java.math.BigDecimal;
  */
 public class TextFieldBootstrapFormComponent<TYPE> extends GenericBootstrapFormComponent<TYPE, TextField<TYPE>> {
     private static final long serialVersionUID = 8062663141536130313L;
-    private StringValidator validator = WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT;
-    private Boolean isFloatedInput = false;
+
+    private static final StringValidator VALIDATOR =
+            WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT;
 
     public TextFieldBootstrapFormComponent(final String id, final IModel<String> labelModel, final IModel<TYPE> model) {
         super(id, labelModel, model);
@@ -49,20 +48,16 @@ public class TextFieldBootstrapFormComponent<TYPE> extends GenericBootstrapFormC
 
     @Override
     protected TextField<TYPE> inputField(final String id, final IModel<TYPE> model) {
-        return new TextField<TYPE>(id, initFieldModel());
-    }
-
-    @Override
-    protected void onComponentTag(final ComponentTag tag) {
-        super.onComponentTag(tag);
-
-        if (getIsFloatedInput()) {
-            Attributes.addClass(tag, "floated-input");
-        }
+        return new TextField<>(id, initFieldModel());
     }
 
     public TextFieldBootstrapFormComponent<TYPE> integer() {
         field.setType(Integer.class);
+        return this;
+    }
+
+    public TextFieldBootstrapFormComponent<TYPE> longValue() {
+        field.setType(Long.class);
         return this;
     }
 
@@ -80,16 +75,7 @@ public class TextFieldBootstrapFormComponent<TYPE> extends GenericBootstrapFormC
     protected void onInitialize() {
         super.onInitialize();
         if (getField().getType() == null || !Number.class.isAssignableFrom(getField().getType())) {
-            getField().add(validator);
+            getField().add(VALIDATOR);
         }
     }
-
-    public Boolean getIsFloatedInput() {
-        return isFloatedInput;
-    }
-
-    public void setIsFloatedInput(final Boolean isFloatedInput) {
-        this.isFloatedInput = isFloatedInput;
-    }
-
 }

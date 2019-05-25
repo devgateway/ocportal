@@ -14,17 +14,14 @@
  */
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import java.util.Date;
-
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 
-import de.agilecoders.wicket.core.util.Attributes;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePicker;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.DatetimePickerConfig;
+import java.util.Date;
 
 /**
  * @author mpostelnicu
@@ -33,11 +30,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.datetime.Date
 public class DateTimeFieldBootstrapFormComponent extends GenericBootstrapFormComponent<Date, DatetimePicker> {
     private static final long serialVersionUID = 6829640010904041758L;
 
-    public static final String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
-
-    private DatetimePickerConfig config;
-
-    private Boolean isFloatedInput = false;
+    private static final String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
 
     /**
      * @param id
@@ -63,7 +56,7 @@ public class DateTimeFieldBootstrapFormComponent extends GenericBootstrapFormCom
 
     @Override
     protected DatetimePicker inputField(final String id, final IModel<Date> model) {
-        config = new DatetimePickerConfig().withFormat(DEFAULT_FORMAT);
+        final DatetimePickerConfig config = new DatetimePickerConfig().withFormat(DEFAULT_FORMAT);
         return new DatetimePicker("field", initFieldModel(), config);
     }
 
@@ -94,22 +87,5 @@ public class DateTimeFieldBootstrapFormComponent extends GenericBootstrapFormCom
             }
         };
         border.add(clearDateLink);
-    }
-
-    @Override
-    protected void onComponentTag(final ComponentTag tag) {
-        super.onComponentTag(tag);
-
-        if (isFloatedInput) {
-            Attributes.addClass(tag, "floated-input");
-        }
-    }
-
-    public Boolean getIsFloatedInput() {
-        return isFloatedInput;
-    }
-
-    public void setIsFloatedInput(final Boolean isFloatedInput) {
-        this.isFloatedInput = isFloatedInput;
     }
 }

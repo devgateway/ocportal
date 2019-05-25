@@ -12,15 +12,26 @@
 package org.devgateway.toolkit.forms.wicket.page.lists;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.security.SecurityConstants;
+import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.forms.wicket.components.table.SelectMultiFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.PersonFilterState;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPageElevated;
 import org.devgateway.toolkit.persistence.dao.Person;
+import org.devgateway.toolkit.persistence.dao.Role;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.PersonService;
+import org.devgateway.toolkit.persistence.service.RoleService;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.util.List;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath(value = "/listusers")
@@ -31,22 +42,38 @@ public class ListUserPage extends AbstractListPage<Person> {
     @SpringBean
     private PersonService personService;
 
+    @SpringBean
+    private DepartmentService departmentService;
+
+    @SpringBean
+    private RoleService roleService;
+
     public ListUserPage(final PageParameters pageParameters) {
         super(pageParameters);
 
         this.jpaService = personService;
-
         this.editPageClass = EditUserPageElevated.class;
-        columns.add(new PropertyColumn<>(new Model<>("Name"), "username", "username"));
-        columns.add(new PropertyColumn<>(new Model<>("Group"), "group", "group"));
-        columns.add(new PropertyColumn<>(new Model<>("Roles"), "roles", "roles"));
     }
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
+        columns.add(new TextFilteredBootstrapPropertyColumn<>(new Model<>("Name"), "username", "username"));
 
+        final List<Department> departments = departmentService.findAll();
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+                "department", "department", new ListModel(departments), dataTable));
+
+        final List<Role> roles = roleService.findAll();
+        columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),
+                "roles", new ListModel(roles), dataTable));
+
+        super.onInitialize();
         // enable excel download
         excelForm.setVisibilityAllowed(true);
+    }
+
+    @Override
+    public JpaFilterState<Person> newFilterState() {
+        return new PersonFilterState();
     }
 }

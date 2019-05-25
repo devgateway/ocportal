@@ -22,18 +22,13 @@ public class RevisionsPanel<TYPE> extends GenericPanel<List<TYPE>> {
 
     private TransparentWebMarkupContainer revisionsCollapse;
 
-    private TransparentWebMarkupContainer revisionsMasterGroup;
-
-    private TransparentWebMarkupContainer revisionsChildGroup;
-
     private WebMarkupContainer revisionsPanelLink;
 
     private Label revisionsPanelLabel;
 
     /**
      * @param id            the revision panel id
-     * @param model         list of revisions coming from the component, this is usually fed with
-     *                      {@link GenericBootstrapFormComponent#getRevisionsModel()}
+     * @param model         list of revisions coming from the component
      * @param auditProperty the audit property. This is required because sometimes the component is bound with a
      *                      model that has a different source than the component name as property, so we cannot
      *                      assume the id is the property.
@@ -55,6 +50,7 @@ public class RevisionsPanel<TYPE> extends GenericPanel<List<TYPE>> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         revisionsCollapse = new TransparentWebMarkupContainer("revisionsCollapse");
         revisionsCollapse.setOutputMarkupId(true);
         add(revisionsCollapse);

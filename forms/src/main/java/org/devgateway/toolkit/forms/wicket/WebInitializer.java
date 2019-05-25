@@ -26,7 +26,6 @@ import javax.servlet.ServletException;
  * in the spring aware configuration style.
  *
  * @author Stefan Kloe
- *
  */
 @Configuration
 public class WebInitializer implements ServletContextInitializer {
@@ -36,16 +35,11 @@ public class WebInitializer implements ServletContextInitializer {
     @Override
     public void onStartup(final ServletContext sc) throws ServletException {
 
-        // AUTO configured by spring boot 1.2.x and upper
-        // sc.addFilter(AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME,
-        // new DelegatingFilterProxy("springSecurityFilterChain"))
-        // .addMappingForUrlPatterns(null, false, "/*");
-
         sc.addFilter("Spring OpenEntityManagerInViewFilter",
                 org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter.class)
                 .addMappingForUrlPatterns(null, false, "/*");
 
-        FilterRegistration filter = sc.addFilter("wicket-filter", WicketFilter.class);
+        final FilterRegistration filter = sc.addFilter("wicket-filter", WicketFilter.class);
         filter.setInitParameter(WicketFilter.APP_FACT_PARAM, SpringWebApplicationFactory.class.getName());
         filter.setInitParameter(PARAM_APP_BEAN, "formsWebApplication");
         // This line is the only surprise when comparing to the equivalent
@@ -53,22 +47,7 @@ public class WebInitializer implements ServletContextInitializer {
         filter.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
         filter.addMappingForUrlPatterns(null, false, "/*");
 
-        // // Request Listener
-        // sc.addListener(new RequestContextListener());
-        //
-        // sc.addListener(new ContextCleanupListener());
-        //
         sc.addListener(new HttpSessionEventPublisher());
 
     }
-
-    // @Bean
-    // public SessionFactory sessionFactory(EntityManagerFactory factory) {
-    // if (factory.unwrap(SessionFactory.class) == null) {
-    // throw new NullPointerException("factory is not a hibernate factory");
-    // }
-    //
-    // return factory.unwrap(SessionFactory.class);
-    // }
-    //
 }

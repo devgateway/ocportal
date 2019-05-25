@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="sidebar">
+        <div class="overview">
+            <div class="data-summary-label">
+                <a wicket:id="statusLink" class="selected">Status Overview</a>
+            </div>
+
+            <span class="data-summary" wicket:id="projectCount">[[count]]</span>
+            <label>Projects</label>
+        </div>
+
+        <div class="sidebar-list">
+            <div class="title">
+                Ministry Plans
+            </div>
+
+            <ul>
+                <li wicket:id="departmentOverviewLink">
+                    <a wicket:id="link">
+                        <div wicket:id="label"></div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-helptext">
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

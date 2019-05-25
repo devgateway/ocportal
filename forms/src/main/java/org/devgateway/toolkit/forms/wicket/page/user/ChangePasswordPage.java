@@ -2,7 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.user;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.devgateway.toolkit.forms.security.SecurityConstants;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
@@ -18,12 +18,14 @@ public class ChangePasswordPage extends EditUserPage {
     protected void onInitialize() {
         super.onInitialize();
 
+        editForm.getModelObject().setChangeProfilePassword(true);
+
         username.setVisibilityAllowed(false);
         firstName.setVisibilityAllowed(false);
         lastName.setVisibilityAllowed(false);
         email.setVisibilityAllowed(false);
         title.setVisibilityAllowed(false);
-        group.setVisibilityAllowed(false);
+        department.setVisibilityAllowed(false);
         roles.setVisibilityAllowed(false);
         enabled.setVisibilityAllowed(false);
         changePasswordNextSignIn.setVisibilityAllowed(false);

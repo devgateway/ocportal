@@ -11,9 +11,6 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.wicket.Session;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -32,6 +29,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.RememberMeServices;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
 /**
@@ -59,14 +58,6 @@ public class SSAuthenticatedWebSession extends AuthenticatedWebSession {
     @SpringBean
     private RoleHierarchy roleHierarchy;
 
-    // @SpringBean
-    // private SessionRegistry sessionRegistry;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.wicket.Session#replaceSession()
-     */
     @Override
     public void replaceSession() {
         // do nothing here, this breaks spring security in wicket 6.19
@@ -96,7 +87,7 @@ public class SSAuthenticatedWebSession extends AuthenticatedWebSession {
     public boolean authenticate(final String username, final String password) {
         boolean authenticated;
         try {
-            Authentication authentication =
+            final Authentication authentication =
                     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             // httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
@@ -117,11 +108,9 @@ public class SSAuthenticatedWebSession extends AuthenticatedWebSession {
         return authenticated;
     }
 
-    // FIXME: MZA: Modification of returning object - it would be better if
-    // roles were returned
     @Override
     public Roles getRoles() {
-        Roles roles = new Roles();
+        final Roles roles = new Roles();
         getRolesIfSignedIn(roles);
         return roles;
     }
@@ -136,7 +125,7 @@ public class SSAuthenticatedWebSession extends AuthenticatedWebSession {
      */
     private void getRolesIfSignedIn(final Roles roles) {
         if (isSignedIn()) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             addRolesFromAuthentication(roles, authentication);
         }
     }
@@ -150,7 +139,7 @@ public class SSAuthenticatedWebSession extends AuthenticatedWebSession {
      * @param authentication
      */
     private void addRolesFromAuthentication(final Roles roles, final Authentication authentication) {
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : roleHierarchy.getReachableGrantedAuthorities(authorities)) {
             roles.add(authority.getAuthority());
         }

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -32,8 +34,9 @@ import java.io.Serializable;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "name")})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileMetadata extends AbstractAuditableEntity implements Serializable {
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private FileContent content;
 
@@ -42,8 +45,6 @@ public class FileMetadata extends AbstractAuditableEntity implements Serializabl
     private String contentType;
 
     private long size;
-
-    private boolean isUserSupportDocument = false;
 
     @Override
     public String toString() {
@@ -80,14 +81,6 @@ public class FileMetadata extends AbstractAuditableEntity implements Serializabl
 
     public void setSize(final long size) {
         this.size = size;
-    }
-
-    public boolean isUserSupportDocument() {
-        return isUserSupportDocument;
-    }
-
-    public void setUserSupportDocument(final boolean isUserSupportDocument) {
-        this.isUserSupportDocument = isUserSupportDocument;
     }
 
     @Override

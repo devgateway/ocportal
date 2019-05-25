@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstraptoggle.BootstrapToggle;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstraptoggle.BootstrapToggleConfig;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
@@ -29,9 +27,6 @@ public class CheckBoxToggleBootstrapFormComponent
         extends GenericEnablingBootstrapFormComponent<Boolean, BootstrapToggle> {
     private static final long serialVersionUID = -4032850928243673675L;
 
-    private Boolean isFloatedInput = false;
-
-    private BootstrapToggleConfig config;
     private CheckBox wrappedCheckbox;
 
     public CheckBoxToggleBootstrapFormComponent(final String id, final IModel<String> labelModel,
@@ -52,15 +47,6 @@ public class CheckBoxToggleBootstrapFormComponent
     }
 
     @Override
-    protected void onComponentTag(final ComponentTag tag) {
-        super.onComponentTag(tag);
-
-        if (isFloatedInput) {
-            Attributes.addClass(tag, "floated-input");
-        }
-    }
-
-    @Override
     protected FormComponent<Boolean> updatingBehaviorComponent() {
         return wrappedCheckbox;
     }
@@ -68,7 +54,7 @@ public class CheckBoxToggleBootstrapFormComponent
     @Override
     protected BootstrapToggle inputField(final String id, final IModel<Boolean> model) {
 
-        config = new BootstrapToggleConfig();
+        final BootstrapToggleConfig config = new BootstrapToggleConfig();
         config.withOnStyle(BootstrapToggleConfig.Style.info).withOffStyle(BootstrapToggleConfig.Style.warning)
                 .withStyle("customCssClass");
 
@@ -100,20 +86,8 @@ public class CheckBoxToggleBootstrapFormComponent
         return "change";
     }
 
-    public Boolean getIsFloatedInput() {
-        return isFloatedInput;
-    }
-
-    public void setIsFloatedInput(final Boolean isFloatedInput) {
-        this.isFloatedInput = isFloatedInput;
-    }
-
     @Override
     protected boolean boundComponentsVisibilityAllowed(final Boolean selectedValue) {
         return selectedValue;
-    }
-
-    public BootstrapToggleConfig getConfig() {
-        return config;
     }
 }

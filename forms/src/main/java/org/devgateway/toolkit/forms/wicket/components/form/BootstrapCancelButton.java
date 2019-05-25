@@ -19,7 +19,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
-import org.devgateway.toolkit.forms.wicket.components.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 
 /**
  * @author mpostelnicu
@@ -42,16 +42,10 @@ public abstract class BootstrapCancelButton extends LaddaAjaxButton {
     @Override
     protected abstract void onSubmit(AjaxRequestTarget target);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.
-     * LaddaAjaxButton#onInitialize()
-     */
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        if (ComponentUtil.isViewMode()) {
+        if (ComponentUtil.isPrintMode()) {
             setVisibilityAllowed(false);
         }
     }

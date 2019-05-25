@@ -18,7 +18,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.models.PersistableJpaRepositoryModel;
-import org.devgateway.toolkit.forms.wicket.components.table.filter.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.springframework.data.domain.Page;
@@ -38,7 +38,7 @@ public class SortableJpaServiceDataProvider<T extends GenericPersistable & Seria
         extends SortableDataProvider<T, String> implements IFilterStateLocator<JpaFilterState<T>> {
     private static final long serialVersionUID = 6507887810859971417L;
 
-    private final BaseJpaService<T> jpaService;
+    private BaseJpaService<T> jpaService;
 
     private JpaFilterState<T> filterState;
 
@@ -49,6 +49,10 @@ public class SortableJpaServiceDataProvider<T extends GenericPersistable & Seria
      */
     public SortableJpaServiceDataProvider(final BaseJpaService<T> jpaService) {
         this.jpaService = jpaService;
+    }
+
+    public SortableJpaServiceDataProvider() {
+
     }
 
     /**
@@ -86,7 +90,7 @@ public class SortableJpaServiceDataProvider<T extends GenericPersistable & Seria
      */
     @Override
     public IModel<T> model(final T object) {
-        return new PersistableJpaRepositoryModel<T>(object, jpaService);
+        return new PersistableJpaRepositoryModel<>(object, jpaService);
     }
 
     @Override
@@ -97,5 +101,9 @@ public class SortableJpaServiceDataProvider<T extends GenericPersistable & Seria
     @Override
     public void setFilterState(final JpaFilterState<T> filterState) {
         this.filterState = filterState;
+    }
+
+    public void setJpaService(final BaseJpaService<T> jpaService) {
+        this.jpaService = jpaService;
     }
 }

@@ -46,18 +46,38 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.security.SecurityConstants;
-import org.devgateway.toolkit.forms.security.SecurityUtil;
-import org.devgateway.toolkit.forms.wicket.page.lists.ListGroupPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccountPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentTypePage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
+import org.devgateway.toolkit.web.WebSecurityUtil;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,13 +203,13 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     }
 
-    protected NotificationPanel createFeedbackPanel() {
+    private NotificationPanel createFeedbackPanel() {
         final NotificationPanel notificationPanel = new NotificationPanel("feedback");
         notificationPanel.setOutputMarkupId(true);
         return notificationPanel;
     }
 
-    public NavbarDropDownButton newLanguageMenu() {
+    private NavbarDropDownButton newLanguageMenu() {
         final NavbarDropDownButton languageDropDown =
                 new NavbarDropDownButton(new StringResourceModel("navbar.lang", this, null)) {
 
@@ -203,7 +223,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
                             final PageParameters params = new PageParameters(BasePage.this.getPageParameters());
                             params.set(WebConstants.LANGUAGE_PARAM, l.getLanguage());
                             list.add(new MenuBookmarkablePageLink<Page>(BasePage.this.getPageClass(), params,
-                                    Model.of(l.getDisplayName())));
+                                    Model.of(l.getDisplayName())
+                            ));
                         }
 
                         return list;
@@ -213,7 +234,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         return languageDropDown;
     }
 
-    protected NavbarButton<LogoutPage> newLogoutMenu() {
+    private NavbarButton<LogoutPage> newLogoutMenu() {
         // logout menu
         final NavbarButton<LogoutPage> logoutMenu =
                 new NavbarButton<LogoutPage>(LogoutPage.class, new StringResourceModel("navbar.logout", this, null));
@@ -223,9 +244,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
         return logoutMenu;
     }
 
-    protected NavbarButton<EditUserPage> newAccountMenu() {
+    private NavbarButton<EditUserPage> newAccountMenu() {
         final PageParameters pageParametersForAccountPage = new PageParameters();
-        final Person person = SecurityUtil.getCurrentAuthenticatedPerson();
+        final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
+
         // account menu
         Model<String> account = null;
         if (person != null) {
@@ -237,23 +259,146 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 new NavbarButton<>(EditUserPage.class, pageParametersForAccountPage, account);
         accountMenu.setIconType(FontAwesomeIconType.user);
         MetaDataRoleAuthorizationStrategy.authorize(accountMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+
         return accountMenu;
     }
 
-    protected NavbarButton<Homepage> newHomeMenu() {
+    private NavbarButton<Homepage> newHomeMenu() {
         // home
-        NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class, Model.of("Home"));
+        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class, Model.of("Home"));
         homeMenu.setIconType(FontAwesomeIconType.home);
         MetaDataRoleAuthorizationStrategy.authorize(homeMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
         return homeMenu;
     }
 
-    protected NavbarDropDownButton newAdminMenu() {
 
+    private NavbarDropDownButton newMetadataMenu() {
+        // metadata menu
+        final NavbarDropDownButton metadataMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.metadata", this, null)) {
+
+            @Override
+            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
+                final List<AbstractLink> list = new ArrayList<>();
+
+                list.add(new MenuBookmarkablePageLink<ListDepartmentPage>(ListDepartmentPage.class, null,
+                        new StringResourceModel("navbar.departments", this, null))
+                        .setIconType(FontAwesomeIconType.bank));
+
+                list.add(new MenuBookmarkablePageLink<ListFiscalYearPage>(
+                        ListFiscalYearPage.class, null,
+                        new StringResourceModel("navbar.fiscalyear", this, null))
+                        .setIconType(FontAwesomeIconType.calendar_times_o));
+
+                list.add(new MenuBookmarkablePageLink<ListTargetGroupPage>(
+                        ListTargetGroupPage.class, null,
+                        new StringResourceModel("navbar.targetgroup", this, null))
+                        .setIconType(FontAwesomeIconType.object_group));
+
+                list.add(new MenuBookmarkablePageLink<ListContractDocumentTypePage>(
+                        ListContractDocumentTypePage.class, null,
+                        new StringResourceModel("navbar.ContractDocumentType", this, null))
+                        .setIconType(FontAwesomeIconType.file));
+
+                list.add(new MenuBookmarkablePageLink<ListItemPage>(
+                        ListItemPage.class, null,
+                        new StringResourceModel("navbar.items", this, null))
+                        .setIconType(FontAwesomeIconType.list));
+
+                list.add(new MenuBookmarkablePageLink<ListChargeAccountPage>(
+                        ListChargeAccountPage.class, null,
+                        new StringResourceModel("navbar.chargeaccounts", this, null))
+                        .setIconType(FontAwesomeIconType.money));
+                
+                list.add(new MenuBookmarkablePageLink<ListSupplierPage>(
+                        ListSupplierPage.class, null,
+                        new StringResourceModel("navbar.suppliers", this, null))
+                        .setIconType(FontAwesomeIconType.list));
+                
+                list.add(new MenuBookmarkablePageLink<ListStaffPage>(
+                        ListStaffPage.class, null,
+                        new StringResourceModel("navbar.stafflist", this, null))
+                        .setIconType(FontAwesomeIconType.list));
+                
+                list.add(new MenuBookmarkablePageLink<ListProcuringEntityPage>(
+                        ListProcuringEntityPage.class, null,
+                        new StringResourceModel("navbar.procuringentitylist", this, null))
+                        .setIconType(FontAwesomeIconType.list));
+
+                return list;
+            }
+        };
+
+        metadataMenu.setIconType(FontAwesomeIconType.code);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+
+        return metadataMenu;
+    }
+
+    private NavbarDropDownButton newFormMenu() {
+        // form menu
+        final NavbarDropDownButton formMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.forms", this, null)) {
+
+            @Override
+            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
+                final List<AbstractLink> list = new ArrayList<>();
+
+                list.add(new MenuBookmarkablePageLink<ListProcurementPlanPage>(ListProcurementPlanPage.class, null,
+                        new StringResourceModel("navbar.procurementPlan", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+                
+                list.add(new MenuBookmarkablePageLink<ListCabinetPaperPage>(ListCabinetPaperPage.class, null,
+                        new StringResourceModel("navbar.cabinetpapers", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListProjectPage>(ListProjectPage.class, null,
+                        new StringResourceModel("navbar.project", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListPurchaseRequisitionPage>(
+                        ListPurchaseRequisitionPage.class, null,
+                        new StringResourceModel("navbar.purchaseRequisition", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListTenderPage>(ListTenderPage.class, null,
+                        new StringResourceModel("navbar.tenderdocument", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+                
+                list.add(new MenuBookmarkablePageLink<ListTenderQuotationEvaluationPage>(
+                        ListTenderQuotationEvaluationPage.class, null,
+                        new StringResourceModel("navbar.tenderquotationevaluation", this, null))
+                                .setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListProfessionalOpinionPage>(ListProfessionalOpinionPage.class,
+                        null, new StringResourceModel("navbar.professionalopinion", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+                
+                list.add(new MenuBookmarkablePageLink<ListAwardNotificationPage>(ListAwardNotificationPage.class,
+                        null, new StringResourceModel("navbar.awardnotification", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+                list.add(new MenuBookmarkablePageLink<ListAwardAcceptancePage>(ListAwardAcceptancePage.class,
+                        null, new StringResourceModel("navbar.awardacceptance", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+                
+                list.add(new MenuBookmarkablePageLink<ListContractPage>(ListContractPage.class,
+                        null, new StringResourceModel("navbar.contract", this, null))
+                        .setIconType(FontAwesomeIconType.file_text_o));
+
+                return list;
+            }
+        };
+
+        formMenu.setIconType(FontAwesomeIconType.wpforms);
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+
+        return formMenu;
+    }
+
+    private NavbarDropDownButton newAdminMenu() {
         // admin menu
-        NavbarDropDownButton adminMenu = new NavbarDropDownButton(new StringResourceModel("navbar.admin", this, null)) {
-            private static final long serialVersionUID = 1L;
-
+        final NavbarDropDownButton adminMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.admin", this, null)) {
             @Override
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
@@ -261,16 +406,14 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         new StringResourceModel("navbar.users", this, null))
                         .setIconType(FontAwesomeIconType.users));
 
-                list.add(new MenuBookmarkablePageLink<ListGroupPage>(ListGroupPage.class, null,
-                        new StringResourceModel("navbar.groups", this, null)).setIconType(FontAwesomeIconType.tags));
-
                 list.add(new MenuBookmarkablePageLink<ListTestFormPage>(ListTestFormPage.class, null,
                         new StringResourceModel("navbar.testcomponents", this, null))
                         .setIconType(FontAwesomeIconType.android));
 
                 list.add(new MenuDivider());
 
-                final BootstrapBookmarkablePageLink swagger = new MenuBookmarkablePageLink<Void>(SwaggerPage.class,
+                final BootstrapBookmarkablePageLink swagger = new MenuBookmarkablePageLink<Void>(
+                        SwaggerPage.class,
                         new StringResourceModel("navbar.swagger", BasePage.this, null))
                         .setIconType(FontAwesomeIconType.code);
                 MetaDataRoleAuthorizationStrategy.authorize(swagger, Component.RENDER,
@@ -282,7 +425,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         .setIconType(FontAwesomeIconType.anchor));
 
                 list.add(new MenuBookmarkablePageLink<JminixRedirectPage>(JminixRedirectPage.class, null,
-                        new StringResourceModel("navbar.jminix", this, null)).setIconType(FontAwesomeIconType.bug));
+                        new StringResourceModel("navbar.jminix", this, null))
+                        .setIconType(FontAwesomeIconType.bug));
 
                 final MenuBookmarkablePageLink<HALRedirectPage> halBrowserLink =
                         new MenuBookmarkablePageLink<HALRedirectPage>(HALRedirectPage.class, null,
@@ -336,8 +480,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
      * @return a new {@link Navbar} instance
      */
     protected Navbar newNavbar(final String markupId) {
-
-        Navbar navbar = new Navbar(markupId);
+        final Navbar navbar = new Navbar(markupId);
 
         /**
          * Make sure to update the BaseStyles when the navbar position changes.
@@ -347,10 +490,16 @@ public abstract class BasePage extends GenericWebPage<Void> {
         navbar.setPosition(Navbar.Position.TOP);
         navbar.setInverted(true);
 
-        navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, newHomeMenu(), newAdminMenu(),
-                newAccountMenu(), newLogoutMenu()));
+        // add brand image
+        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
+                new StringResourceModel("brandImageAltText", this, null));
 
-        navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));
+        navbar.addComponents(
+                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newFormMenu(),
+                        newMetadataMenu(), newAdminMenu(), newAccountMenu(), newLogoutMenu()
+                ));
+
+        // navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));
 
         return navbar;
     }
@@ -368,7 +517,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
         response.render(RespondJavaScriptReference.headerItem());
         response.render(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV2()));
 
-        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(BaseStyles.class,
-                "assets/js/fileupload.js")));
+        // file upload improvement script
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
+                BaseStyles.class, "assets/js/fileupload.js")));
     }
 }

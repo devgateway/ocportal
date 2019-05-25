@@ -14,7 +14,7 @@
  */
 package org.devgateway.toolkit.persistence.dao;
 
-import org.devgateway.toolkit.persistence.dao.categories.Group;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -27,7 +27,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.io.Serializable;
+import javax.persistence.OrderColumn;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -39,8 +40,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-public class TestForm extends AbstractAuditableEntity implements Serializable {
-
+public class TestForm extends AbstractStatusAuditableEntity {
     private static final long serialVersionUID = 1L;
 
     @ExcelExport
@@ -64,7 +64,7 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private Group entitySelect;
+    private Department entitySelect;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
@@ -75,12 +75,13 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
     private Date dateTime;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Group preloadedEntitySelect;
-
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FileMetadata> fileInput;
+
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "testForm", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderColumn(name = "index")
+    private List<TestFormChild> testFormChildren = new ArrayList<>();
 
     public TestForm() {
     }
@@ -114,11 +115,11 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
         this.checkbox = checkbox;
     }
 
-    public Group getEntitySelect() {
+    public Department getEntitySelect() {
         return entitySelect;
     }
 
-    public void setEntitySelect(final Group entitySelect) {
+    public void setEntitySelect(final Department entitySelect) {
         this.entitySelect = entitySelect;
     }
 
@@ -176,14 +177,6 @@ public class TestForm extends AbstractAuditableEntity implements Serializable {
 
     public void setCheckboxToggle(final Boolean checkboxToggle) {
         this.checkboxToggle = checkboxToggle;
-    }
-
-    public Group getPreloadedEntitySelect() {
-        return preloadedEntitySelect;
-    }
-
-    public void setPreloadedEntitySelect(final Group preloadedEntitySelect) {
-        this.preloadedEntitySelect = preloadedEntitySelect;
     }
 
     public String getColorPicker() {

@@ -27,25 +27,20 @@ import java.io.Serializable;
  * @author idobre
  * @since 11/18/14
  */
-
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @DiscriminatorColumn(length = Category.DTYPE_COLUMN_LENGTH)
 @Table(indexes = {@Index(columnList = "label"), @Index(columnList = "DTYPE")})
 public class Category extends AbstractAuditableEntity implements Serializable, Labelable {
-
     static final int DTYPE_COLUMN_LENGTH = 100;
-
-    private static final long serialVersionUID = 1L;
 
     protected String label;
 
     private String description;
 
-    public Category(final String label) {
-        this.label = label;
-    }
+    private String code;
+
 
     public Category() {
 
@@ -68,6 +63,15 @@ public class Category extends AbstractAuditableEntity implements Serializable, L
     public void setDescription(final String description) {
         this.description = description;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(final String code) {
+        this.code = code;
+    }
+
 
     @Override
     public String toString() {
