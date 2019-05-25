@@ -26,6 +26,8 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextCh
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
+import org.devgateway.toolkit.web.WebSecurityUtil;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -43,6 +45,16 @@ public final class ComponentUtil {
 
     public static Date getDateFromLocalDate(final LocalDate localDate) {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static boolean canAccessAddNewButtonInDeptOverview() {
+        if (WebSecurityUtil.isCurrentUserAdmin()) {
+            return true;
+        } else {
+            return SessionUtil.getSessionDepartment() != null
+                    && SessionUtil.getSessionDepartment().equals(WebSecurityUtil.getCurrentAuthenticatedPerson()
+                    .getDepartment());
+        }
     }
 
     /**

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.devgateway.toolkit.web;
 
+import org.apache.catalina.manager.util.SessionUtils;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.Role;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -38,6 +40,8 @@ public class WebSecurityUtil {
         }
         return false;
     }
+
+
 
     public static boolean rolesContainsAny(final String... roles) {
         return rolesContainsAny(Objects.requireNonNull(WebSecurityUtil.getStringRolesForCurrentPerson()), roles);
