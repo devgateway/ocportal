@@ -70,8 +70,8 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
-        TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
-        List<Supplier> suppliers = new ArrayList<>();
+        final TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
+        final List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {
                 if (bid.getSupplier() != null) {
