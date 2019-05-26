@@ -620,12 +620,19 @@
 
 .ministry .header-buttons {
     float: right;
+    margin: 5px 0;
 }
 
 .ministry .header-buttons .button-label {
     line-height: 165%;
     margin-right: 5px;
     text-transform: uppercase;
+}
+
+.ministry .header-buttons .btn.btn-edit.no-text,
+.ministry .header-buttons .btn.btn-add.no-text,
+.ministry .header-buttons .btn.btn-edit{
+    background-size: 15px 15px;
 }
 
 .project-status {
@@ -661,6 +668,10 @@
 
 .status-panel.project .status-panel-heading {
     padding: 15px 15px 30px 15px;
+}
+
+.status-panel-heading .btn.btn-edit{
+  margin-top: -5px;
 }
 
 .cabinet {
@@ -758,7 +769,7 @@
 .tender-status .btn.btn-edit {
     background-size: 9px 9px;
     height: 16px;
-    margin-top: -3px;
+    margin-top: -4px;
     width: 16px;
 }
 
