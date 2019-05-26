@@ -16,6 +16,7 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
@@ -85,6 +86,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         addPurchaseRequisition.setLabel(
                 new StringResourceModel("addPurchaseRequisition", ListViewProjectsOverview.this, null));
         containerFragment.add(addPurchaseRequisition);
+        addPurchaseRequisition.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
 
         final List<PurchaseRequisition> purchaseRequisitions = purchaseRequisitionService.findByProject(project);
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =

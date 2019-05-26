@@ -13,6 +13,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
@@ -188,6 +189,9 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
         button.add(AttributeAppender.append("class", "no-text btn-" + (persistable == null ? "add" : "edit")));
         containerFragment.add(button);
+        if (persistable == null) {
+            button.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+        }
 
         return button;
     }
