@@ -17,7 +17,7 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.list.BootstrapListView;
+import org.apache.catalina.security.SecurityUtil;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -26,15 +26,14 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
@@ -44,7 +43,6 @@ import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
@@ -52,11 +50,15 @@ import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilter
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.devgateway.toolkit.web.WebSecurityUtil.getCurrentAuthenticatedPerson;
+import static org.devgateway.toolkit.web.WebSecurityUtil.rolesContainsAny;
 
 /**
  * @author gmutuhu
@@ -88,6 +90,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @SpringBean
     private CabinetPaperService cabinetPaperService;
+    private Label newProcurementPlanLabel;
 
     // TODO all list view should have LoadableDetachableModel models
     public DepartmentOverviewPage(final PageParameters parameters) {
@@ -106,6 +109,9 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         fiscalYears = fiscalYearService.getAll();
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
+
+
+
 
     @Override
     protected void onInitialize() {
@@ -140,10 +146,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
+        newProcurementPlanButton.setEnabled(procurementPlan == null);
+        newProcurementPlanButton.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
 
-        if (procurementPlan != null) {
-            newProcurementPlanButton.setEnabled(false);
-        }
+        newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
+        newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
+        add(newProcurementPlanLabel);
     }
 
     private void addEditProcurementPlanButton() {
@@ -153,9 +161,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         }
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
                 "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Info);
-        if (procurementPlan == null) {
-            button.setEnabled(false);
-        }
+
+        button.setEnabled(procurementPlan != null);
 
         add(button);
 
@@ -175,6 +182,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         editCabinetPaper.setEnabled(procurementPlan != null);
         add(editCabinetPaper);
+        editCabinetPaper.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
     }
 
     private void listCabinetPaperButton() {
@@ -196,6 +204,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewPage.this, null));
         addNewProject.setEnabled(procurementPlan != null);
+        addNewProject.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
         add(addNewProject);
     }
 
