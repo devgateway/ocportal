@@ -13,3 +13,4 @@ npm-debug.log
 rebel.xml
 /logs/
 .DS_Store
+/LOG_DIR_IS_UNDEFINED/

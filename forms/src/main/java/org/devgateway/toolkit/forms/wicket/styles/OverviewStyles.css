@@ -727,9 +727,11 @@
     overflow: hidden;
     width: 100%;
 }
-.tender-status-wrapper{
-  overflow: hidden;
+
+.tender-status-wrapper {
+    overflow: hidden;
 }
+
 .tender-status-wrapper h5 {
     float: left;
     line-height: 120%;
