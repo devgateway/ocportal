@@ -17,7 +17,6 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -47,18 +46,13 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
-import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.devgateway.toolkit.web.WebSecurityUtil.getCurrentAuthenticatedPerson;
-import static org.devgateway.toolkit.web.WebSecurityUtil.rolesContainsAny;
 
 /**
  * @author gmutuhu
@@ -88,8 +82,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
-    @SpringBean
-    private CabinetPaperService cabinetPaperService;
     private Label newProcurementPlanLabel;
 
     // TODO all list view should have LoadableDetachableModel models
@@ -106,11 +98,9 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         }
 
         // get years with data for current department
-        fiscalYears = fiscalYearService.getAll();
+        fiscalYears = fiscalYearService.findAll();
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
-
-
 
 
     @Override
