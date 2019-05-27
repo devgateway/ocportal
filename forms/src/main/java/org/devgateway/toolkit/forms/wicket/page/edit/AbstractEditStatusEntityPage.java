@@ -567,23 +567,23 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     private void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(
-                DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
     }
 
     private void addApproveButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        button.setVisibilityAllowed(
-                DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()) && !isViewMode());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
     }
 
     private void addSaveRevertButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(!isTerminated()
-                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
 
         // additionally normal users should not revert anything that was already validated
         if (WebSecurityUtil.isCurrentRoleUser()

@@ -24,7 +24,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitio
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
@@ -160,11 +159,13 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
     boolean canEdit(final PurchaseRequisition purchaseRequisition,
                     final GenericPersistable persistable,
                     final Statusable previousStep) {
-        if (persistable == null && purchaseRequisition.isTerminated()) {
-            return false;
-        }
-        return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED)
-                || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
+        //TODO: this must be refactored
+        return true;
+//        if (persistable == null && purchaseRequisition.isTerminated()) {
+//            return false;
+//        }
+//        return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED)
+//                || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
     private BootstrapAjaxLink<Void> createLinkNoPrevStep(final Fragment containerFragment,
