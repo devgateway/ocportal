@@ -88,8 +88,16 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
 
+        // get years with data for current department
+        fiscalYears = fiscalYearService.findAll();
+
         this.department = SessionUtil.getSessionDepartment();
         this.fiscalYear = SessionUtil.getSessionFiscalYear();
+
+        if (this.fiscalYear == null && !fiscalYears.isEmpty()) {
+            fiscalYear = fiscalYears.get(0);
+            SessionUtil.setSessionFiscalYear(fiscalYear);
+        }
 
         // redirect user to status dashboard page if we don't have all the needed info
         if (this.department == null) {
@@ -97,8 +105,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             setResponsePage(StatusOverviewPage.class);
         }
 
-        // get years with data for current department
-        fiscalYears = fiscalYearService.findAll();
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
@@ -136,7 +142,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
-        newProcurementPlanButton.setEnabled(procurementPlan == null);
+        newProcurementPlanButton.setEnabled(procurementPlan == null && fiscalYear != null);
         newProcurementPlanButton.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
 
         newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
