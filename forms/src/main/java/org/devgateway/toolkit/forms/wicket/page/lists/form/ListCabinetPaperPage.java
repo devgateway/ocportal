@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -37,7 +36,6 @@ import java.io.OutputStream;
 
 /**
  * @author gmutuhu
- *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/cabinetPapers")
@@ -51,10 +49,6 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
 
         this.jpaService = cabinetPaperService;
         this.editPageClass = EditCabinetPaperPage.class;
-    }
-
-    protected boolean isPreselected() {
-        return SessionUtil.getSessionPP() != null;
     }
 
     @Override
@@ -77,7 +71,7 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
                 new StringResourceModel("downloadFile", ListCabinetPaperPage.this)) {
             @Override
             public void populateItem(final Item<ICellPopulator<CabinetPaper>> cellItem, final String componentId,
-                    final IModel<CabinetPaper> model) {
+                                     final IModel<CabinetPaper> model) {
                 final FileMetadata file = model.getObject().getFormDocs().stream().findFirst().orElse(null);
                 if (file != null) {
                     Hibernate.initialize(file.getContent());
@@ -93,12 +87,15 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
 
     @Override
     public JpaFilterState<CabinetPaper> newFilterState() {
-        CabinetPaperFilterState cabinetPaperFilterState = new CabinetPaperFilterState();
+        final CabinetPaperFilterState cabinetPaperFilterState = new CabinetPaperFilterState();
         if (isPreselected()) {
             cabinetPaperFilterState.setProcurementPlan(SessionUtil.getSessionPP());
-
         }
         return cabinetPaperFilterState;
+    }
+
+    private boolean isPreselected() {
+        return SessionUtil.getSessionPP() != null;
     }
 
     public class DownloadPanel extends Panel {
