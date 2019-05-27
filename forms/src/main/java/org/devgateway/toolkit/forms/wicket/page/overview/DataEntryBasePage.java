@@ -14,6 +14,8 @@ package org.devgateway.toolkit.forms.wicket.page.overview;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
 import org.slf4j.Logger;
@@ -23,6 +25,12 @@ public abstract class DataEntryBasePage extends BasePage {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
 
     protected SideBar sideBar;
+
+
+    @SpringBean
+    protected SessionMetadataService sessionMetadataService;
+
+
 
     public DataEntryBasePage(final PageParameters parameters) {
         super(parameters);

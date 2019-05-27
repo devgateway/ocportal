@@ -24,7 +24,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
@@ -61,14 +60,14 @@ public class StatusOverviewPage extends DataEntryBasePage {
         this.fiscalYears = fiscalYearService.getYearsWithData();
 
         // check if we already have a FY in the session and use that one, otherwise get the last one from DB
-        this.fiscalYear = SessionUtil.getSessionFiscalYear();
+        this.fiscalYear = sessionMetadataService.getSessionFiscalYear();
         if (this.fiscalYear == null) {
             fiscalYear = fiscalYearService.getLastFiscalYear();
-            SessionUtil.setSessionFiscalYear(fiscalYear);
+            sessionMetadataService.setSessionFiscalYear(fiscalYear);
         }
 
         // clear department from session
-        SessionUtil.setSessionDepartment(null);
+        sessionMetadataService.setSessionDepartment(null);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
         yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                SessionUtil.setSessionFiscalYear(fiscalYear);
+                sessionMetadataService.setSessionFiscalYear(fiscalYear);
 
                 updateDashboard(target);
             }

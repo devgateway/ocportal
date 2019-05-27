@@ -14,7 +14,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
@@ -183,7 +182,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
             @Override
             public void onClick(AjaxRequestTarget target) {
-                SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
+                sessionMetadataService.setSessionPurchaseRequisition(purchaseRequisition);
                 setResponsePage(clazz, pageParameters);
             }
         };
@@ -191,7 +190,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         button.add(AttributeAppender.append("class", "no-text btn-" + (persistable == null ? "add" : "edit")));
         containerFragment.add(button);
         if (persistable == null) {
-            button.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+            button.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
         }
 
         return button;

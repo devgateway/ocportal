@@ -4,6 +4,8 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -17,6 +19,9 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
         extends AbstractEditStatusEntityPage<T> {
+
+    @SpringBean
+    protected SessionMetadataService sessionMetadataService;
 
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniEntityPage.class);
 

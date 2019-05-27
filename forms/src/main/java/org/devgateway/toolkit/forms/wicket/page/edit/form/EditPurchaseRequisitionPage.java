@@ -12,7 +12,6 @@ import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -47,7 +46,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         super(parameters);
         this.jpaService = purchaseRequisitionService;
 
-        this.project = SessionUtil.getSessionProject();
+        this.project = sessionMetadataService.getSessionProject();
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && this.project == null) {
             logger.warn("Something wrong happened since we are trying to add a new PurchaseRequisition Entity "

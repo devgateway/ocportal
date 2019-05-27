@@ -14,7 +14,7 @@ import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
@@ -36,6 +36,11 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @SpringBean
     protected CabinetPaperService cabinetPaperService;
 
+
+    @SpringBean
+    protected SessionMetadataService sessionMetadataService;
+
+
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
 
@@ -46,7 +51,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
-        this.procurementPlan = SessionUtil.getSessionPP();
+        this.procurementPlan = sessionMetadataService.getSessionPP();
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && this.procurementPlan == null) {
             logger.warn("Something wrong happened since we are trying to add a new CabinetPaper Entity "
