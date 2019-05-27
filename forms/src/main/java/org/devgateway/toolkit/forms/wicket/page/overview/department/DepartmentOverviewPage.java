@@ -17,7 +17,6 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -47,18 +46,13 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
-import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.devgateway.toolkit.web.WebSecurityUtil.getCurrentAuthenticatedPerson;
-import static org.devgateway.toolkit.web.WebSecurityUtil.rolesContainsAny;
 
 /**
  * @author gmutuhu
@@ -88,16 +82,22 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
-    @SpringBean
-    private CabinetPaperService cabinetPaperService;
     private Label newProcurementPlanLabel;
 
     // TODO all list view should have LoadableDetachableModel models
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
 
+        // get years with data for current department
+        fiscalYears = fiscalYearService.findAll();
+
         this.department = SessionUtil.getSessionDepartment();
         this.fiscalYear = SessionUtil.getSessionFiscalYear();
+
+        if (this.fiscalYear == null && !fiscalYears.isEmpty()) {
+            fiscalYear = fiscalYears.get(0);
+            SessionUtil.setSessionFiscalYear(fiscalYear);
+        }
 
         // redirect user to status dashboard page if we don't have all the needed info
         if (this.department == null) {
@@ -105,12 +105,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             setResponsePage(StatusOverviewPage.class);
         }
 
-        // get years with data for current department
-        fiscalYears = fiscalYearService.getAll();
         procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
     }
-
-
 
 
     @Override
@@ -146,7 +142,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
-        newProcurementPlanButton.setEnabled(procurementPlan == null);
+        newProcurementPlanButton.setEnabled(procurementPlan == null && fiscalYear != null);
         newProcurementPlanButton.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
 
         newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
