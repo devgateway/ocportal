@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
@@ -13,5 +14,7 @@ public class DeptOverviewStatusLabel extends Label {
 
         add(AttributeAppender.append("class", statusable != null
                 ? statusable.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase()));
+
+        add(new TooltipBehavior(Model.of(statusable != null ? statusable.getStatus().toLowerCase() : "")));
     }
 }
