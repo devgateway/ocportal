@@ -73,7 +73,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private SaveEditPageButton saveSubmitButton;
 
-    private SaveEditPageButton submitAndNext;
+    protected SaveEditPageButton submitAndNext;
 
     private SaveEditPageButton saveApproveButton;
 

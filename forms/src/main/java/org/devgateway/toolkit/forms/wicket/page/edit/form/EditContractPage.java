@@ -44,6 +44,8 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected void onInitialize() {
         super.onInitialize();
 
+        submitAndNext.setVisibilityAllowed(false);
+
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addDoubleField(editForm, "tenderValue").required()
                 .getField().add(RangeValidator.minimum(0.0));
