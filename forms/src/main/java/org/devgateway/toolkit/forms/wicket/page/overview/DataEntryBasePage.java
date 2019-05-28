@@ -18,6 +18,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.OverviewStyles;
+import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,14 +27,15 @@ public abstract class DataEntryBasePage extends BasePage {
 
     protected SideBar sideBar;
 
-
     @SpringBean
     protected SessionMetadataService sessionMetadataService;
 
-
+    @SpringBean
+    protected FiscalYearService fiscalYearService;
 
     public DataEntryBasePage(final PageParameters parameters) {
         super(parameters);
+
     }
 
     @Override

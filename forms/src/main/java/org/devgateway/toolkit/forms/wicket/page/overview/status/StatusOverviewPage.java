@@ -20,6 +20,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -40,9 +41,9 @@ import java.util.List;
 @MountPath("/statusOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class StatusOverviewPage extends DataEntryBasePage {
-    private final List<FiscalYear> fiscalYears;
 
-    private FiscalYear fiscalYear;
+    private final LoadableDetachableModel<List<FiscalYear>> fiscalYearsModel;
+    private final LoadableDetachableModel<FiscalYear> fiscalYearModel;
 
     private String searchBox = "";
 
@@ -57,17 +58,34 @@ public class StatusOverviewPage extends DataEntryBasePage {
     public StatusOverviewPage(final PageParameters parameters) {
         super(parameters);
 
-        this.fiscalYears = fiscalYearService.getYearsWithData();
+        fiscalYearsModel = new LoadableDetachableModel<List<FiscalYear>>() {
 
-        // check if we already have a FY in the session and use that one, otherwise get the last one from DB
-        this.fiscalYear = sessionMetadataService.getSessionFiscalYear();
-        if (this.fiscalYear == null) {
-            fiscalYear = fiscalYearService.getLastFiscalYear();
-            sessionMetadataService.setSessionFiscalYear(fiscalYear);
-        }
+            @Override
+            protected List<FiscalYear> load() {
+                return fiscalYearService.getYearsWithData();
+            }
+        };
+
+        fiscalYearModel = new LoadableDetachableModel<FiscalYear>() {
+            @Override
+            protected FiscalYear load() {
+                // check if we already have a FY in the session and use that one, otherwise get the last one from DB
+                FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
+                if (fiscalYear == null) {
+                    fiscalYear = fiscalYearService.getLastFiscalYear();
+                    sessionMetadataService.setSessionFiscalYear(fiscalYear);
+                }
+                return fiscalYear;
+
+            }
+        };
 
         // clear department from session
         sessionMetadataService.setSessionDepartment(null);
+    }
+
+    private FiscalYear getFiscalYear() {
+        return fiscalYearModel.getObject();
     }
 
     @Override
@@ -84,12 +102,12 @@ public class StatusOverviewPage extends DataEntryBasePage {
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("yearsDropdown",
-                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer);
+                fiscalYearModel, fiscalYearsModel, choiceRenderer);
         yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                sessionMetadataService.setSessionFiscalYear(fiscalYear);
-
+                sessionMetadataService.setSessionFiscalYear(yearsDropdown.getModelObject());
+                fiscalYearModel.setObject(yearsDropdown.getModelObject());
                 updateDashboard(target);
             }
         });
@@ -113,13 +131,13 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
         // update the project count from sidebar as well
         sideBar.getProjectCount()
-                .setDefaultModelObject(statusOverviewService.countProjects(fiscalYear, searchBox));
+                .setDefaultModelObject(statusOverviewService.countProjects(getFiscalYear(), searchBox));
 
         target.add(listViewStatusOverview);
         target.add(sideBar.getProjectCount());
     }
 
     private List<StatusOverviewData> fetchData() {
-        return statusOverviewService.getAllProjects(fiscalYear, searchBox);
+        return statusOverviewService.getAllProjects(getFiscalYear(), searchBox);
     }
 }

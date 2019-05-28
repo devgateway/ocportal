@@ -44,7 +44,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -76,8 +75,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProjectService projectService;
 
-    @SpringBean
-    private FiscalYearService fiscalYearService;
 
     @SpringBean
     private ProcurementPlanService procurementPlanService;
