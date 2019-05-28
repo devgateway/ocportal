@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +37,7 @@ import java.util.stream.Stream;
  */
 @Service
 @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
+@Transactional(readOnly = true)
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     @Autowired
     private ProjectService projectService;
