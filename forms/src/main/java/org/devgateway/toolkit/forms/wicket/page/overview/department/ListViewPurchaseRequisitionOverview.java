@@ -10,11 +10,14 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
@@ -36,8 +39,9 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,9 +49,6 @@ import java.util.List;
  * @since 2019-05-24
  */
 public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<PurchaseRequisition> {
-    @SpringBean
-    private PurchaseRequisitionService purchaseRequisitionService;
-
     public ListViewPurchaseRequisitionOverview(final String id, final IModel<List<PurchaseRequisition>> model) {
         super(id, model);
     }
@@ -61,7 +62,6 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
     @Override
     protected void populateCompoundListItem(final ListItem<PurchaseRequisition> item) {
-
     }
 
     @Override
@@ -91,65 +91,47 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         final AwardAcceptance awardAcceptance = purchaseRequisition.getAwardAcceptance();
         final Contract contract = purchaseRequisition.getContract();
 
-        // TODO - refactor this section
-        containerFragment.add(new Label("requisitionTitle", purchaseRequisition.getTitle()));
-        containerFragment.add(new Label("requisitionDate", purchaseRequisition.getRequestApprovalDate()));
-        containerFragment.add(new Label("requisitionAmount", purchaseRequisition.getAmount()));
-        containerFragment.add(new DeptOverviewStatusLabel("requisitionStatus", purchaseRequisition));
-        createLinkNoPrevStep(containerFragment, purchaseRequisition, purchaseRequisition, "requisitionEdit",
-                EditPurchaseRequisitionPage.class);
+        final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel", purchaseRequisition,
+                purchaseRequisition.getTitle(), new ArrayList<>(Arrays.asList(
+                purchaseRequisition.getRequestApprovalDate(), purchaseRequisition.getAmount())),
+                purchaseRequisition, EditPurchaseRequisitionPage.class);
+        containerFragment.add(requisitionPanel);
 
+        final Panel tenderPanel = new TenderDetailPanel<>("tenderPanel", tender,
+                "Tender Document", tender != null ? new ArrayList<>(Arrays.asList(
+                tender.getTenderTitle(), tender.getTenderNumber(), tender.getTenderValue())) : null,
+                purchaseRequisition, EditTenderPage.class);
+        containerFragment.add(tenderPanel);
 
-        containerFragment.add(new Label("tenderTitle", tender != null ? tender.getTenderTitle() : ""));
-        containerFragment.add(new Label("tenderId", tender != null ? tender.getTenderNumber() : ""));
-        containerFragment.add(new Label("amount", tender != null ? tender.getTenderValue() : ""));
-        containerFragment.add(new DeptOverviewStatusLabel("tenderStatus", tender));
-        createLinkNoPrevStep(containerFragment, purchaseRequisition, tender, "editTender", EditTenderPage.class);
+        final Panel evaluationPanel = new TenderDetailPanel("evaluationPanel", tenderQuotationEvaluation,
+                "Opening", tenderQuotationEvaluation != null ? new ArrayList<>(Arrays.asList(
+                tender.getTenderTitle(), tender.getTenderNumber())) : null,
+                purchaseRequisition, EditTenderQuotationEvaluationPage.class);
+        containerFragment.add(evaluationPanel);
 
+        final Panel professionalOpinionPanel = new TenderDetailPanel("professionalOpinionPanel", professionalOpinion,
+                "Professional Opinion", professionalOpinion != null ? new ArrayList<>(Arrays.asList(
+                professionalOpinion.getAwardee(), professionalOpinion.getRecommendedAwardAmount())) : null,
+                purchaseRequisition, EditProfessionalOpinionPage.class);
+        containerFragment.add(professionalOpinionPanel);
 
-        containerFragment.add(new Label("tenderOpeningTitle",
-                tenderQuotationEvaluation != null ? tender.getTenderTitle() : ""));
-        containerFragment.add(new Label("tenderOpeningID",
-                tenderQuotationEvaluation != null ? tender.getTenderNumber() : ""));
-        containerFragment.add(new Label("tenderOpeningAmount", tenderQuotationEvaluation != null ? 0 : ""));
-        containerFragment.add(new DeptOverviewStatusLabel("tenderOpeningStatus", tenderQuotationEvaluation));
-        createLink(containerFragment, purchaseRequisition, tenderQuotationEvaluation, "editTenderOpening",
-                EditTenderQuotationEvaluationPage.class, tender);
+        final Panel awardNotificationPanel = new TenderDetailPanel("awardNotificationPanel", awardNotification,
+                "Notification", awardNotification != null ? new ArrayList<>(Arrays.asList(
+                awardNotification.getAwardee(), awardNotification.getTenderValue())) : null,
+                purchaseRequisition, EditAwardNotificationPage.class);
+        containerFragment.add(awardNotificationPanel);
 
+        final Panel awardAcceptancePanel = new TenderDetailPanel("awardAcceptancePanel", awardAcceptance,
+                "Acceptance", awardAcceptance != null ? new ArrayList<>(Arrays.asList(
+                awardAcceptance.getAwardee(), awardAcceptance.getTenderValue())) : null,
+                purchaseRequisition, EditAwardAcceptancePage.class);
+        containerFragment.add(awardAcceptancePanel);
 
-        containerFragment.add(new Label("professionalOpinionSupplier", professionalOpinion != null
-                ? professionalOpinion.getAwardee() : ""));
-        containerFragment.add(new Label("professionalOpinionAmount", professionalOpinion != null
-                ? professionalOpinion.getRecommendedAwardAmount() : ""));
-        containerFragment.add(new DeptOverviewStatusLabel("professionalOpinionStatus", professionalOpinion));
-        createLink(containerFragment, purchaseRequisition, professionalOpinion, "editProfessionalOpinion",
-                EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
-
-
-        containerFragment.add(new Label("awardNotificationSupplier",
-                awardNotification != null ? awardNotification.getAwardee() : ""));
-        containerFragment.add(new Label("awardNotificationTenderId",
-                awardNotification != null ? tender.getTenderNumber() : ""));
-        containerFragment.add(new DeptOverviewStatusLabel("awardNotificationStatus", awardNotification));
-        createLink(containerFragment, purchaseRequisition, awardNotification, "editAwardNotification",
-                EditAwardNotificationPage.class, professionalOpinion);
-
-
-        containerFragment.add(new Label("awardAcceptanceSupplier",
-                awardAcceptance != null ? awardAcceptance.getAwardee() : ""));
-        containerFragment.add(new Label("awardAcceptanceTenderId",
-                awardAcceptance != null ? tender.getTenderNumber() : ""));
-        containerFragment.add(new DeptOverviewStatusLabel("awardAcceptanceStatus", awardAcceptance));
-        createLink(containerFragment, purchaseRequisition, awardAcceptance, "editAwardAcceptance",
-                EditAwardAcceptancePage.class, awardNotification);
-
-
-        containerFragment.add(new Label("contractSupplier", contract != null ? contract.getAwardee() : ""));
-        containerFragment.add(new Label("contractTenderId", contract != null ? tender.getTenderNumber() : ""));
-        containerFragment.add(new DeptOverviewStatusLabel("contractStatus", contract));
-        createLink(containerFragment, purchaseRequisition, contract, "editContract",
-                EditContractPage.class, awardAcceptance);
-
+        final Panel contractPanel = new TenderDetailPanel("contractPanel", contract,
+                "Contracts", contract != null ? new ArrayList<>(Arrays.asList(
+                contract.getAwardee(), contract.getTenderValue())) : null,
+                purchaseRequisition, EditContractPage.class);
+        containerFragment.add(contractPanel);
 
         hideableContainer.add(containerFragment);
     }
@@ -159,10 +141,10 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         return item.getModelObject().getId();
     }
 
-    boolean canEdit(final PurchaseRequisition purchaseRequisition,
-                    final GenericPersistable persistable,
-                    final Statusable previousStep) {
-        //TODO: this must be refactored
+    private boolean canEdit(final PurchaseRequisition purchaseRequisition,
+                            final GenericPersistable persistable,
+                            final Statusable previousStep) {
+        // TODO: this must be refactored
         return true;
 //        if (persistable == null && purchaseRequisition.isTerminated()) {
 //            return false;
@@ -171,44 +153,72 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 //                || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
-    private BootstrapAjaxLink<Void> createLinkNoPrevStep(final Fragment containerFragment,
-                                                         final PurchaseRequisition purchaseRequisition,
-                                                         final GenericPersistable persistable, final String id,
-                                                         final Class<? extends AbstractEditPage> clazz) {
-        final PageParameters pageParameters = new PageParameters();
-        if (persistable != null) {
-            pageParameters.set(WebConstants.PARAM_ID, persistable.getId());
+    private class TenderDetailPanel<T extends GenericPersistable & Statusable> extends GenericPanel<T> {
+        private final T entity;
+
+        private final String tenderLabel;
+
+        private final List<Object> tenderInfo;
+
+        private final PurchaseRequisition purchaseRequisition;
+
+        private final Class<? extends AbstractEditPage> editClazz;
+
+        TenderDetailPanel(final String id, final T entity, final String tenderLabel,
+                          final List<Object> tenderInfo, final PurchaseRequisition purchaseRequisition,
+                          final Class<? extends AbstractEditPage> editClazz) {
+            super(id);
+
+            this.entity = entity;
+            this.tenderLabel = tenderLabel;
+            this.tenderInfo = tenderInfo;
+            this.purchaseRequisition = purchaseRequisition;
+            this.editClazz = editClazz;
         }
 
-        final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id,
-                Buttons.Type.Success) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
-                setResponsePage(clazz, pageParameters);
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            add(new Label("tenderLabel", tenderLabel));
+            add(new DeptOverviewStatusLabel("tenderStatus", entity));
+
+            final BootstrapAjaxLink<Void> editTender = new BootstrapAjaxLink<Void>("editTender",
+                    Buttons.Type.Success) {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    final PageParameters pageParameters = new PageParameters();
+                    if (entity != null) {
+                        pageParameters.set(WebConstants.PARAM_ID, entity.getId());
+                    }
+
+                    SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
+                    setResponsePage(editClazz, pageParameters);
+                }
+            };
+
+            editTender.add(AttributeAppender.append("class", "no-text btn-" + (entity == null ? "add" : "edit")));
+
+            editTender.add(new TooltipBehavior(Model.of((entity == null ? "Add " : "Edit/View ")
+                    + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
+                    editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
+
+            if (entity == null) {
+                editTender.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
             }
-        };
+            if (!(entity instanceof PurchaseRequisition) && !(entity instanceof Tender)) {
+                editTender.setEnabled(canEdit(purchaseRequisition, entity, null));
+            }
+            add(editTender);
 
-        button.add(AttributeAppender.append("class", "no-text btn-" + (persistable == null ? "add" : "edit")));
 
-        button.add(new TooltipBehavior(Model.of((persistable == null ? "Add " : "Edit/View ")
-                + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
-                clazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
-
-        containerFragment.add(button);
-
-        if (persistable == null) {
-            button.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+            add(new ListView<Object>("tenderInfo", new ListModel(tenderInfo)) {
+                @Override
+                protected void populateItem(final ListItem<Object> item) {
+                    final Object object = item.getModelObject();
+                    item.add(new Label("item", object != null ? object.toString() : ""));
+                }
+            });
         }
-
-        return button;
-    }
-
-    private void createLink(final Fragment containerFragment,
-                            final PurchaseRequisition purchaseRequisition,
-                            final GenericPersistable persistable, final String id,
-                            final Class<? extends AbstractEditPage> clazz, Statusable previousStep) {
-        createLinkNoPrevStep(containerFragment, purchaseRequisition, persistable, id, clazz)
-                .setEnabled(canEdit(purchaseRequisition, persistable, previousStep));
     }
 }

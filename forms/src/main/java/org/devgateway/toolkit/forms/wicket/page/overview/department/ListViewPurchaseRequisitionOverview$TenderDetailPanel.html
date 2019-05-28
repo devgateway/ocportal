@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="tender-detail">
+        <div class="tender-header">
+            <div class="tender-label" wicket:id="tenderLabel">[[tender label]]</div>
+            <div class="tender-status">
+                <span class="status" wicket:id="tenderStatus"></span>
+                <button type="button" class="btn btn-small" wicket:id="editTender"></button>
+            </div>
+        </div>
+        <div class="tender-info">
+            <ul>
+                <li wicket:id="tenderInfo">
+                    <span wicket:id="item"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>
