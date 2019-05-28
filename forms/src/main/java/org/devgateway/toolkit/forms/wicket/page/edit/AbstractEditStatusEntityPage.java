@@ -112,14 +112,15 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 Model.of("Are you sure you want to TERMINATE the contracting process?"));
         modal.addCloseButton();
 
-        LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
+        LaddaAjaxButton button = new LaddaAjaxButton("button", Buttons.Type.Danger) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 saveTerminateButton.continueSubmit(target);
             }
         };
-        deleteButton.setLabel(Model.of("TERMINATE"));
-        modal.addButton(deleteButton);
+        button.setDefaultFormProcessing(false);
+        button.setLabel(Model.of("TERMINATE"));
+        modal.addButton(button);
         return modal;
     }
 
@@ -261,6 +262,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.archive);
+        saveEditPageButton.setDefaultFormProcessing(false);
         return saveEditPageButton;
     }
 
