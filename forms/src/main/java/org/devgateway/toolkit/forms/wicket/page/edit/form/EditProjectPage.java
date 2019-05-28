@@ -56,6 +56,8 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     protected void onInitialize() {
         super.onInitialize();
 
+        submitAndNext.setVisibilityAllowed(false);
+
         final TextFieldBootstrapFormComponent<String> projectTitle =
                 ComponentUtil.addTextField(editForm, "projectTitle");
         projectTitle.required();

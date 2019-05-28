@@ -64,6 +64,8 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
     protected void onInitialize() {
         super.onInitialize();
 
+        submitAndNext.setVisibilityAllowed(false);
+
         editForm.add(new GenericSleepFormComponent<>("department"));
         editForm.add(new GenericSleepFormComponent<>("fiscalYear"));
         editForm.add(new PlanItemPanel("planItems"));

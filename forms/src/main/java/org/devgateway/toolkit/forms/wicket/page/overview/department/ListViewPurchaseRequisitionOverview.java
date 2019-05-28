@@ -2,6 +2,8 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -10,6 +12,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -178,8 +181,6 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
         final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id,
                 Buttons.Type.Success) {
-            private static final long serialVersionUID = 1L;
-
             @Override
             public void onClick(AjaxRequestTarget target) {
                 sessionMetadataService.setSessionPurchaseRequisition(purchaseRequisition);
@@ -188,7 +189,13 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         };
 
         button.add(AttributeAppender.append("class", "no-text btn-" + (persistable == null ? "add" : "edit")));
+
+        button.add(new TooltipBehavior(Model.of((persistable == null ? "Add " : "Edit/View ")
+                + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
+                clazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
+
         containerFragment.add(button);
+
         if (persistable == null) {
             button.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
         }

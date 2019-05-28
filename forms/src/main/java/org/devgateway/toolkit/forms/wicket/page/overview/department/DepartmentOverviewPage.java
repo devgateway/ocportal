@@ -17,6 +17,7 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -157,8 +158,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         }
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
                 "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Info);
-
         button.setEnabled(procurementPlan != null);
+        button.add(new TooltipBehavior(Model.of("Edit/View Procurement Plan")));
 
         add(button);
 
@@ -177,6 +178,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         editCabinetPaper.setEnabled(procurementPlan != null);
+        editCabinetPaper.add(new TooltipBehavior(Model.of("Add New Cabinet Paper")));
         add(editCabinetPaper);
         editCabinetPaper.setVisibilityAllowed(
                 ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
@@ -192,6 +194,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         editCabinetPaper.setEnabled(procurementPlan != null);
+        editCabinetPaper.add(new TooltipBehavior(Model.of("List Cabinet Papers")));
         add(editCabinetPaper);
     }
 

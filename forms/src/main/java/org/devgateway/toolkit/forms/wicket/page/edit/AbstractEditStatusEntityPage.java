@@ -73,13 +73,16 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private SaveEditPageButton saveSubmitButton;
 
+    protected SaveEditPageButton submitAndNext;
+
     private SaveEditPageButton saveApproveButton;
 
-    private SaveEditPageButton saveContinueButton;
+    private SaveEditPageButton saveDraftContinueButton;
 
     private SaveEditPageButton revertToDraftPageButton;
 
     protected TerminateEditPageButton saveTerminateButton;
+
     protected TextContentModal terminateModal;
 
     private CheckBoxYesNoToggleBootstrapFormComponent visibleStatusComments;
@@ -125,6 +128,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             super(id, model);
 
         }
+
         @Override
         protected void onSubmit(AjaxRequestTarget target) {
             terminateModal.show(true);
@@ -172,11 +176,14 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         saveSubmitButton = getSaveSubmitPageButton();
         entityButtonsFragment.add(saveSubmitButton);
 
+        submitAndNext = getSubmitAndNextPageButton();
+        entityButtonsFragment.add(submitAndNext);
+
         saveApproveButton = getSaveApprovePageButton();
         entityButtonsFragment.add(saveApproveButton);
 
-        saveContinueButton = getSaveDraftAndContinueButton();
-        entityButtonsFragment.add(saveContinueButton);
+        saveDraftContinueButton = getSaveDraftAndContinueButton();
+        entityButtonsFragment.add(saveDraftContinueButton);
 
         revertToDraftPageButton = getRevertToDraftPageButton();
         entityButtonsFragment.add(revertToDraftPageButton);
@@ -188,7 +195,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         entityButtonsFragment.add(saveTerminateButton);
 
         applyDraftSaveBehavior(saveButton);
-        applyDraftSaveBehavior(saveContinueButton);
+        applyDraftSaveBehavior(saveDraftContinueButton);
         applyDraftSaveBehavior(revertToDraftPageButton);
 
         setButtonsPermissions();
@@ -262,11 +269,12 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         addAutosaveBehavior(target);
 
         saveButton.setEnabled(true);
-        saveContinueButton.setEnabled(true);
+        saveDraftContinueButton.setEnabled(true);
+        submitAndNext.setEnabled(true);
         saveSubmitButton.setEnabled(true);
 
         if (target != null) {
-            target.add(saveButton, saveSubmitButton, saveContinueButton);
+            target.add(saveButton, saveSubmitButton, saveDraftContinueButton, submitAndNext);
         }
     }
 
@@ -274,7 +282,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         // enable autosave
         if (!ComponentUtil.isPrintMode()
                 && Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT)) {
-            saveContinueButton.add(getAutosaveBehavior());
+            saveDraftContinueButton.add(getAutosaveBehavior());
             autoSaveLabel.setVisibilityAllowed(true);
             if (target != null) {
                 target.add(autoSaveLabel);
@@ -296,7 +304,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 // invoke autosave from js (execute this javascript code before components processed)
                 target.prependJavaScript("$('#" + maxHeight.getMarkupId() + "').val($(document).height()); "
                         + "$('#" + verticalPosition.getMarkupId() + "').val($(window).scrollTop()); "
-                        + "$('#" + saveContinueButton.getMarkupId() + "').click();");
+                        + "$('#" + saveDraftContinueButton.getMarkupId() + "').click();");
 
                 // disable all buttons from js
                 target.prependJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', true);");
@@ -441,6 +449,25 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return button;
     }
 
+    private SaveEditPageButton getSubmitAndNextPageButton() {
+        final SaveEditPageButton button = new SaveEditPageButton("submitAndNext",
+                new StringResourceModel("submitAndNext", this, null)) {
+            @Override
+            protected String getOnClickScript() {
+                return WebConstants.DISABLE_FORM_LEAVING_JS;
+            }
+
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                setStatusAppendComment(DBConstants.Status.SUBMITTED);
+                super.onSubmit(target);
+            }
+        };
+
+        button.setIconType(FontAwesomeIconType.tasks);
+        return button;
+    }
+
     private SaveEditPageButton getSaveDraftAndContinueButton() {
         final SaveEditPageButton button = new SaveEditPageButton("saveContinue",
                 new StringResourceModel("saveContinue", this, null)) {
@@ -530,7 +557,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private void setButtonsPermissions() {
         addSaveButtonsPermissions(saveButton);
-        addSaveButtonsPermissions(saveContinueButton);
+        addSaveButtonsPermissions(saveDraftContinueButton);
+        addSaveButtonsPermissions(submitAndNext);
         addSaveButtonsPermissions(saveSubmitButton);
         addApproveButtonPermissions(saveApproveButton);
         addSaveRevertButtonPermissions(revertToDraftPageButton);
@@ -539,7 +567,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
         // no need to display the buttons on print view so we overwrite the above permissions
         if (ComponentUtil.isPrintMode()) {
-            saveContinueButton.setVisibilityAllowed(false);
+            saveDraftContinueButton.setVisibilityAllowed(false);
+            submitAndNext.setVisibilityAllowed(false);
             saveSubmitButton.setVisibilityAllowed(false);
             saveApproveButton.setVisibilityAllowed(false);
             revertToDraftPageButton.setVisibilityAllowed(false);
@@ -591,11 +620,11 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             button.setVisibilityAllowed(false);
         } else
 
-        //admins can revert anything, including terminated!
-        if (WebSecurityUtil.isCurrentUserAdmin()
-                && (DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()) || isTerminated())) {
-            button.setVisibilityAllowed(true);
-        }
+            //admins can revert anything, including terminated!
+            if (WebSecurityUtil.isCurrentUserAdmin()
+                    && (DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()) || isTerminated())) {
+                button.setVisibilityAllowed(true);
+            }
     }
 
     private void addDeleteButtonPermissions(final Component button) {

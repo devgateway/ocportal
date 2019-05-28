@@ -616,6 +616,7 @@
 
 .ministry .header-section .status {
     float: left;
+    margin-top: 5px;
 }
 
 .ministry .header-buttons {
@@ -645,6 +646,7 @@
     height: 20px;
     line-height: 100%;
     margin-right: 3px;
+    margin-top: -1px;
     padding: 15px 5px 0 5px;
     width: 20px;
 }
@@ -667,11 +669,11 @@
 }
 
 .status-panel.project .status-panel-heading {
-    padding: 15px 15px 30px 15px;
+    padding: 15px;
 }
 
 .status-panel-heading .btn.btn-edit{
-  margin-top: -5px;
+  margin-top: -3px;
 }
 
 .cabinet {
@@ -684,7 +686,6 @@
 
 .ministry .collapse-content {
     background: #ffffff;
-    overflow: hidden;
 }
 
 .tender-list-wrapper {
@@ -771,6 +772,11 @@
     margin-right: 20px;
 }
 
+.tender-header.wide .tender-status {
+    float: left;
+    margin-left: 20px;
+}
+
 .tender-status .btn.btn-edit {
     background-size: 9px 9px;
     height: 16px;
@@ -793,7 +799,8 @@
 
 .tender-info ul li:after {
     color: #dfe3e9;
-    content: "|"
+    content: "|";
+    margin-left: 5px;
 }
 
 .tender-info ul li:last-child:after {

@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -11,6 +12,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -62,6 +64,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         pageParameters.set(WebConstants.PARAM_ID, project.getId());
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>("editProject",
                 EditProjectPage.class, pageParameters, Buttons.Type.Success);
+        button.add(new TooltipBehavior(Model.of("Edit/View Project")));
         headerFragment.add(button);
 
         header.add(headerFragment);
