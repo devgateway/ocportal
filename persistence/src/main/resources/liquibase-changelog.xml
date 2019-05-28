@@ -102,7 +102,7 @@
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Agriculture, Irrigation, Livestock And Fisheries Development"/>
+            <column name="LABEL" value="Agriculture, Irrigation, Livestock and Fisheries Development"/>
             <column name="CODE" value="D6"/>
             <column name="DTYPE" value="Department"/>
         </insert>
@@ -144,7 +144,7 @@
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Trade, Industry, Marketing, Tourism And Co-operative Development"/>
+            <column name="LABEL" value="Trade, Industry, Marketing, Tourism and Co-operative Development"/>
             <column name="CODE" value="D12"/>
             <column name="DTYPE" value="Department"/>
         </insert>
