@@ -67,92 +67,92 @@
         </preConditions>
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Office of the Governor"/>
-            <column name="CODE" value="3812"/>
+            <column name="LABEL" value="Office of the Governor"/>
+            <column name="CODE" value="D1"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Public Service Board"/>
-            <column name="CODE" value="3813"/>
+            <column name="LABEL" value="Public Service Board"/>
+            <column name="CODE" value="D2"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
             <column name="LABEL" value="Makueni County Service (County Secretary)"/>
-            <column name="CODE" value="3814"/>
+            <column name="CODE" value="D3"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Devolution Public Service"/>
-            <column name="CODE" value="3815"/>
+            <column name="LABEL" value="Devolution, County Administration, Participatory Development and Public Service"/>
+            <column name="CODE" value="D4"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Finance and Social Economic Planning"/>
-            <column name="CODE" value="3816"/>
+            <column name="LABEL" value="Finance and Social Economic Planning"/>
+            <column name="CODE" value="D5"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Agriculture Livestock and Food Security"/>
-            <column name="CODE" value="3817"/>
+            <column name="LABEL" value="Agriculture, Irrigation, Livestock And Fisheries Development"/>
+            <column name="CODE" value="D6"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Water and Irrigation"/>
-            <column name="CODE" value="3818"/>
+            <column name="LABEL" value="Water, Sanitation, Environment and Climate Change"/>
+            <column name="CODE" value="D7"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni County Education and Civic Education"/>
-            <column name="CODE" value="3819"/>
+            <column name="LABEL" value="Education, Youth, Sports and ICT"/>
+            <column name="CODE" value="D8"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Youth Services"/>
-            <column name="CODE" value="3820"/>
+            <column name="LABEL" value="Health Services"/>
+            <column name="CODE" value="D9"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Lands Urban Planning and Environmental Management"/>
-            <column name="CODE" value="3821"/>
+            <column name="LABEL" value="Lands, Mining, Housing, Physical Planning and Urban Development"/>
+            <column name="CODE" value="D10"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Transport and County Infrastructure"/>
-            <column name="CODE" value="3822"/>
+            <column name="LABEL" value="Roads, Transport, Energy and Public Works"/>
+            <column name="CODE" value="D11"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Trade, Industry, and Tourism"/>
-            <column name="CODE" value="3824"/>
+            <column name="LABEL" value="Trade, Industry, Marketing, Tourism And Co-operative Development"/>
+            <column name="CODE" value="D12"/>
             <column name="DTYPE" value="Department"/>
         </insert>
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Makueni Gender, Youth, and Social Services"/>
-            <column name="CODE" value="3825"/>
+            <column name="LABEL" value="Gender, Children, Culture and Social Services"/>
+            <column name="CODE" value="D13"/>
             <column name="DTYPE" value="Department"/>
         </insert>
     </changeSet>
