@@ -97,9 +97,9 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 purchaseRequisition, EditPurchaseRequisitionPage.class);
         containerFragment.add(requisitionPanel);
 
-        final Panel tenderPanel = new TenderDetailPanel<>("tenderPanel", tender, "Tender Document",
-                tender != null ? new ArrayList<>(Arrays.asList(
-                        tender.getTenderTitle(), tender.getTenderNumber(), tender.getTenderValue())) : null,
+        final Panel tenderPanel = new TenderDetailPanel<>("tenderPanel", tender,
+                "Tender Document", tender != null ? new ArrayList<>(Arrays.asList(
+                tender.getTenderTitle(), tender.getTenderNumber(), tender.getTenderValue())) : null,
                 purchaseRequisition, EditTenderPage.class);
         containerFragment.add(tenderPanel);
 
@@ -117,19 +117,19 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
         final Panel awardNotificationPanel = new TenderDetailPanel("awardNotificationPanel", awardNotification,
                 "Notification", awardNotification != null ? new ArrayList<>(Arrays.asList(
-                awardNotification.getAwardee(), tender.getTenderNumber())) : null,
+                awardNotification.getAwardee(), awardNotification.getTenderValue())) : null,
                 purchaseRequisition, EditAwardNotificationPage.class);
         containerFragment.add(awardNotificationPanel);
 
         final Panel awardAcceptancePanel = new TenderDetailPanel("awardAcceptancePanel", awardAcceptance,
                 "Acceptance", awardAcceptance != null ? new ArrayList<>(Arrays.asList(
-                awardAcceptance.getAwardee(), tender.getTenderNumber())) : null,
+                awardAcceptance.getAwardee(), awardAcceptance.getTenderValue())) : null,
                 purchaseRequisition, EditAwardAcceptancePage.class);
         containerFragment.add(awardAcceptancePanel);
 
         final Panel contractPanel = new TenderDetailPanel("contractPanel", contract,
                 "Contracts", contract != null ? new ArrayList<>(Arrays.asList(
-                contract.getAwardee(), tender.getTenderNumber())) : null,
+                contract.getAwardee(), contract.getTenderValue())) : null,
                 purchaseRequisition, EditContractPage.class);
         containerFragment.add(contractPanel);
 
@@ -165,8 +165,8 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         private final Class<? extends AbstractEditPage> editClazz;
 
         TenderDetailPanel(final String id, final T entity, final String tenderLabel,
-                                 final List<Object> tenderInfo, final PurchaseRequisition purchaseRequisition,
-                                 final Class<? extends AbstractEditPage> editClazz) {
+                          final List<Object> tenderInfo, final PurchaseRequisition purchaseRequisition,
+                          final Class<? extends AbstractEditPage> editClazz) {
             super(id);
 
             this.entity = entity;
