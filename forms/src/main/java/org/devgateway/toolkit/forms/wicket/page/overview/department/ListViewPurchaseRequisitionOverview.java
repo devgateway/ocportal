@@ -20,7 +20,6 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
@@ -192,7 +191,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                         pageParameters.set(WebConstants.PARAM_ID, entity.getId());
                     }
 
-                    SessionUtil.setSessionPurchaseRequisition(purchaseRequisition);
+                    sessionMetadataService.setSessionPurchaseRequisition(purchaseRequisition);
                     setResponsePage(editClazz, pageParameters);
                 }
             };
@@ -204,7 +203,8 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                     editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
 
             if (entity == null) {
-                editTender.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+                editTender.setVisibilityAllowed(
+                        ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
             }
             if (!(entity instanceof PurchaseRequisition) && !(entity instanceof Tender)) {
                 editTender.setEnabled(canEdit(purchaseRequisition, entity, null));

@@ -19,7 +19,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
@@ -36,6 +35,8 @@ import java.util.List;
 public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
+
+
 
     public ListViewProjectsOverview(final String id, final IModel<List<Project>> model) {
         super(id, model);
@@ -82,14 +83,15 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                SessionUtil.setSessionProject(project);
+                sessionMetadataService.setSessionProject(project);
                 setResponsePage(EditPurchaseRequisitionPage.class);
             }
         };
         addPurchaseRequisition.setLabel(
                 new StringResourceModel("addPurchaseRequisition", ListViewProjectsOverview.this, null));
         containerFragment.add(addPurchaseRequisition);
-        addPurchaseRequisition.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+        addPurchaseRequisition.setVisibilityAllowed(
+                ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
 
         final List<PurchaseRequisition> purchaseRequisitions = purchaseRequisitionService.findByProject(project);
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =

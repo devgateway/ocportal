@@ -13,7 +13,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -76,8 +75,8 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                 final Link<Void> link = new Link<Void>("title") {
                     @Override
                     public void onClick() {
-                        SessionUtil.setSessionDepartment(procurementPlan.getDepartment());
-                        SessionUtil.setSessionProject(
+                        sessionMetadataService.setSessionDepartment(procurementPlan.getDepartment());
+                        sessionMetadataService.setSessionProject(
                                 projectService.findByIdCached(item.getModelObject().getId()).get());
                         setResponsePage(DepartmentOverviewPage.class);
                     }

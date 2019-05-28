@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -26,6 +26,9 @@ public class SideBar extends Panel {
     @SpringBean
     private ProjectService projectService;
 
+    @SpringBean
+    private SessionMetadataService sessionMetadataService;
+
     private final Department department;
 
     private Label projectCount;
@@ -33,7 +36,7 @@ public class SideBar extends Panel {
     public SideBar(final String id) {
         super(id);
 
-        this.department = SessionUtil.getSessionDepartment();
+        this.department = sessionMetadataService.getSessionDepartment();
     }
 
     @Override
@@ -44,7 +47,7 @@ public class SideBar extends Panel {
             @Override
             public void onClick() {
                 // clear all session data before going to the dashboard
-                SessionUtil.clearSessionData();
+                SessionMetadataService.clearSessionData();
                 setResponsePage(StatusOverviewPage.class);
             }
 
@@ -70,7 +73,7 @@ public class SideBar extends Panel {
                 final Link<Void> link = new Link<Void>("link") {
                     @Override
                     public void onClick() {
-                        SessionUtil.setSessionDepartment(item.getModelObject());
+                        sessionMetadataService.setSessionDepartment(item.getModelObject());
                         setResponsePage(DepartmentOverviewPage.class);
                     }
 
@@ -91,7 +94,7 @@ public class SideBar extends Panel {
     }
 
     private Long calculateProjectCount() {
-        final FiscalYear fiscalYear = SessionUtil.getSessionFiscalYear();
+        final FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
         if (department == null) {
             return projectService.countByFiscalYear(fiscalYear);
         }

@@ -12,7 +12,6 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
@@ -44,7 +43,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         super(parameters);
         this.jpaService = projectService;
 
-        this.procurementPlan = SessionUtil.getSessionPP();
+        this.procurementPlan = sessionMetadataService.getSessionPP();
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && this.procurementPlan == null) {
             logger.warn("Something wrong happened since we are trying to add a new Project Entity "

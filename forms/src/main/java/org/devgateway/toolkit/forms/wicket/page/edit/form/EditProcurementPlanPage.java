@@ -6,7 +6,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -42,9 +41,9 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
             final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
             this.department = person.getDepartment();
         } else {
-            this.department = SessionUtil.getSessionDepartment();
+            this.department = sessionMetadataService.getSessionDepartment();
         }
-        this.fiscalYear = SessionUtil.getSessionFiscalYear();
+        this.fiscalYear = sessionMetadataService.getSessionFiscalYear();
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && (this.department == null || this.fiscalYear == null)) {

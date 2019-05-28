@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -34,7 +35,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
@@ -45,7 +45,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -62,13 +61,9 @@ import java.util.List;
 @MountPath("/departmentOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class DepartmentOverviewPage extends DataEntryBasePage {
-    private FiscalYear fiscalYear;
 
-    private final Department department;
+    private final LoadableDetachableModel<ProcurementPlan> procurementPlanModel;
 
-    private final ProcurementPlan procurementPlan;
-
-    private final List<FiscalYear> fiscalYears;
 
     private String searchBox = "";
 
@@ -77,36 +72,68 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProjectService projectService;
 
-    @SpringBean
-    private FiscalYearService fiscalYearService;
 
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
     private Label newProcurementPlanLabel;
 
+
+    protected final LoadableDetachableModel<FiscalYear> fiscalYearModel;
+
+    protected LoadableDetachableModel<List<FiscalYear>> fiscalYearsModel;
+
+
+    private Department getDepartment() {
+        return sessionMetadataService.getSessionDepartment();
+    }
+
+    private FiscalYear getFiscalYear() {
+        return sessionMetadataService.getSessionFiscalYear();
+    }
+
+    private ProcurementPlan getProcurementPlan() {
+        return procurementPlanModel.getObject();
+    }
+
+
     // TODO all list view should have LoadableDetachableModel models
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
 
-        // get years with data for current department
-        fiscalYears = fiscalYearService.findAll();
+        fiscalYearsModel = new LoadableDetachableModel<List<FiscalYear>>() {
+            @Override
+            protected List<FiscalYear> load() {
+                return fiscalYearService.findAll();
+            }
+        };
 
-        this.department = SessionUtil.getSessionDepartment();
-        this.fiscalYear = SessionUtil.getSessionFiscalYear();
 
-        if (this.fiscalYear == null && !fiscalYears.isEmpty()) {
-            fiscalYear = fiscalYears.get(0);
-            SessionUtil.setSessionFiscalYear(fiscalYear);
-        }
+        fiscalYearModel = new LoadableDetachableModel<FiscalYear>() {
+            @Override
+            protected FiscalYear load() {
+                FiscalYear fy = sessionMetadataService.getSessionFiscalYear();
+                if (fy != null) {
+                    return fy;
+                }
+                fy = fiscalYearsModel.getObject().isEmpty() ? null : fiscalYearsModel.getObject().get(0);
+                sessionMetadataService.setSessionFiscalYear(fy);
+                return fy;
+            }
+        };
 
         // redirect user to status dashboard page if we don't have all the needed info
-        if (this.department == null) {
+        if (getDepartment() == null) {
             logger.warn("User landed on DepartmentOverviewPage page without having any department in Session");
             setResponsePage(StatusOverviewPage.class);
         }
 
-        procurementPlan = procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
+        procurementPlanModel = new LoadableDetachableModel<ProcurementPlan>() {
+            @Override
+            protected ProcurementPlan load() {
+                return procurementPlanService.findByDepartmentAndFiscalYear(getDepartment(), getFiscalYear());
+            }
+        };
     }
 
 
@@ -114,13 +141,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        add(new Label("departmentLabel", department == null ? "" : department.getLabel()));
-        add(new Label("fiscalYear", fiscalYear == null ? "" : fiscalYear.getLabel()));
+
+        add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
+        add(new Label("fiscalYear", new PropertyModel<>(fiscalYearModel, "label")));
 
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
 
-        addLabelOrInvisibleContainer("procurementPlanLabel", procurementPlan);
+        addLabelOrInvisibleContainer("procurementPlanLabel", getProcurementPlan());
 
         addCabinetPaperButton();
         listCabinetPaperButton();
@@ -143,8 +171,9 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
-        newProcurementPlanButton.setEnabled(procurementPlan == null && fiscalYear != null);
-        newProcurementPlanButton.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+        newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
+        newProcurementPlanButton.setVisibilityAllowed(
+                ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
 
         newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
         newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
@@ -153,18 +182,18 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private void addEditProcurementPlanButton() {
         final PageParameters pp = new PageParameters();
-        if (procurementPlan != null) {
-            pp.set(WebConstants.PARAM_ID, procurementPlan.getId());
+        if (getProcurementPlan() != null) {
+            pp.set(WebConstants.PARAM_ID, getProcurementPlan().getId());
         }
         final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
                 "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Info);
-        button.setEnabled(procurementPlan != null);
+        button.setEnabled(getProcurementPlan() != null);
         button.add(new TooltipBehavior(Model.of("Edit/View Procurement Plan")));
 
         add(button);
 
         DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
-                "procurementPlanStatus", procurementPlan);
+                "procurementPlanStatus", getProcurementPlan());
         add(procurementPlanStatus);
     }
 
@@ -173,14 +202,15 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                SessionUtil.setSessionPP(procurementPlan);
+                sessionMetadataService.setSessionPP(getProcurementPlan());
                 setResponsePage(EditCabinetPaperPage.class);
             }
         };
-        editCabinetPaper.setEnabled(procurementPlan != null);
+        editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(Model.of("Add New Cabinet Paper")));
         add(editCabinetPaper);
-        editCabinetPaper.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+        editCabinetPaper.setVisibilityAllowed(
+                ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
     }
 
     private void listCabinetPaperButton() {
@@ -188,34 +218,34 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                SessionUtil.setSessionPP(procurementPlan);
+                sessionMetadataService.setSessionPP(getProcurementPlan());
                 setResponsePage(ListCabinetPaperPage.class);
             }
         };
-        editCabinetPaper.setEnabled(procurementPlan != null);
+        editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(Model.of("List Cabinet Papers")));
         add(editCabinetPaper);
     }
 
     private void addProjectButton() {
-        SessionUtil.setSessionPP(procurementPlan);
+        sessionMetadataService.setSessionPP(getProcurementPlan());
         final BootstrapBookmarkablePageLink<Void> addNewProject = new BootstrapBookmarkablePageLink<>(
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewPage.this, null));
-        addNewProject.setEnabled(procurementPlan != null);
-        addNewProject.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview());
+        addNewProject.setEnabled(getProcurementPlan() != null);
+        addNewProject.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
         add(addNewProject);
     }
 
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
-                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer);
+                fiscalYearModel, fiscalYearsModel, choiceRenderer);
 
         yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                SessionUtil.setSessionFiscalYear(fiscalYear);
+                sessionMetadataService.setSessionFiscalYear(yearsDropdown.getModelObject());
                 setResponsePage(DepartmentOverviewPage.class);
             }
         });
@@ -246,8 +276,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private List<Project> fetchData() {
-        return procurementPlan == null
+        return getProcurementPlan() == null
                 ? new ArrayList<>()
-                : projectService.findAll(new ProjectFilterState(procurementPlan, searchBox).getSpecification());
+                : projectService.findAll(new ProjectFilterState(getProcurementPlan(), searchBox).getSpecification());
     }
 }

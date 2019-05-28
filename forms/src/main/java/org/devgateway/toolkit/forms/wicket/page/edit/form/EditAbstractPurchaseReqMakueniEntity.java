@@ -2,7 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
@@ -35,7 +35,7 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     public EditAbstractPurchaseReqMakueniEntity(final PageParameters parameters) {
         super(parameters);
 
-        this.purchaseRequisition = SessionUtil.getSessionPurchaseRequisition();
+        this.purchaseRequisition = sessionMetadataService.getSessionPurchaseRequisition();
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && this.purchaseRequisition == null) {
