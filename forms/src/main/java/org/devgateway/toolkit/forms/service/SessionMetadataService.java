@@ -55,7 +55,7 @@ public class SessionMetadataService {
         if (session != null && persistable != null) {
             session.setMetaData(key, persistable.getId());
         } else {
-            if (session != null && persistable == null) {
+            if (session != null) {
                 session.setMetaData(key, null);
             }
         }
@@ -63,7 +63,6 @@ public class SessionMetadataService {
 
     private <S extends GenericPersistable & Serializable> S getSessionPersistable(MetaDataKey<Long> key,
                                                                                   BaseJpaService<S> service) {
-
         final Session session = Session.get();
         if (session != null) {
             final Long objId = session.getMetaData(key);
