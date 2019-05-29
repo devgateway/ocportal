@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -29,6 +30,11 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         super(parameters);
 
         this.listPageClass = DepartmentOverviewPage.class;
+    }
+
+    @Override
+    protected void onAfterRevertToDraft(AjaxRequestTarget target) {
+        editForm.getModelObject().getAllChildrenInHierarchy();
     }
 
     @Override

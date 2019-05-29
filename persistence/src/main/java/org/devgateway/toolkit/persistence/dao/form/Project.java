@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author idobre
@@ -32,6 +37,10 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @JoinColumn(name = "procurement_plan_id")
     @NotNull
     private ProcurementPlan procurementPlan;
+
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "project")
+    private Set<PurchaseRequisition> purchaseRequisitions=new HashSet<>();
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String projectTitle;
@@ -114,5 +123,19 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     public void setProcurementPlan(ProcurementPlan procurementPlan) {
         this.procurementPlan = procurementPlan;
+    }
+
+    public Set<PurchaseRequisition> getPurchaseRequisitions() {
+        return purchaseRequisitions;
+    }
+
+    public void setPurchaseRequisitions(Set<PurchaseRequisition> purchaseRequisitions) {
+        this.purchaseRequisitions = purchaseRequisitions;
+    }
+
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return purchaseRequisitions;
     }
 }

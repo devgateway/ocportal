@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -9,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @MappedSuperclass
 public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable,
@@ -17,7 +17,7 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     @NotNull
-    private PurchaseRequisition purchaseRequisition;
+    protected PurchaseRequisition purchaseRequisition;
 
     public PurchaseRequisition getPurchaseRequisition() {
         return purchaseRequisition;
@@ -30,6 +30,11 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @Override
     public Project getProject() {
         return getPurchaseRequisition().getProject();
+    }
+
+    public PurchaseRequisition getPurchaseRequisitionNotNull() {
+        Objects.requireNonNull(purchaseRequisition, "Purchase requisition must not be null at this stage!");
+        return purchaseRequisition;
     }
 
     @Override

@@ -48,7 +48,7 @@ public abstract class EditAbstractTenderReqMakueniEntity<T extends AbstractPurch
     }
 
     protected List<Supplier> getSuppliersInTenderQuotation() {
-        final TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
+        final TenderQuotationEvaluation tenderQuotationEvaluation = getPurchaseRequisition().getTenderQuotationEvaluation();
         List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

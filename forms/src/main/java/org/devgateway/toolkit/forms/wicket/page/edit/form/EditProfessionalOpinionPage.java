@@ -63,14 +63,14 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     @Override
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
-        professionalOpinion.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setProfessionalOpinion(professionalOpinion);
+        professionalOpinion.setPurchaseRequisition(getPurchaseRequisition());
+        getPurchaseRequisition().setProfessionalOpinion(professionalOpinion);
 
         return professionalOpinion;
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
-        final TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
+        final TenderQuotationEvaluation tenderQuotationEvaluation = getPurchaseRequisition().getTenderQuotationEvaluation();
         final List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

@@ -12,17 +12,11 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.Bid;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author gmutuhu
@@ -65,8 +59,8 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @Override
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
-        awardNotification.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setAwardNotification(awardNotification);
+        awardNotification.setPurchaseRequisition(getPurchaseRequisition());
+        getPurchaseRequisition().setAwardNotification(awardNotification);
 
         return awardNotification;
     }

@@ -42,6 +42,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     
     private final Project project;
 
+
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = purchaseRequisitionService;
