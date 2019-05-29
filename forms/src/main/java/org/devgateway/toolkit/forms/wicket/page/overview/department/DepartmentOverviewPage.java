@@ -64,7 +64,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private final LoadableDetachableModel<ProcurementPlan> procurementPlanModel;
 
-
     private String searchBox = "";
 
     private ListViewProjectsOverview listViewProjectsOverview;
@@ -72,17 +71,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProjectService projectService;
 
-
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
     private Label newProcurementPlanLabel;
 
-
     protected final LoadableDetachableModel<FiscalYear> fiscalYearModel;
 
     protected LoadableDetachableModel<List<FiscalYear>> fiscalYearsModel;
-
 
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
@@ -96,8 +92,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         return procurementPlanModel.getObject();
     }
 
-
-    // TODO all list view should have LoadableDetachableModel models
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
 
