@@ -21,6 +21,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -127,6 +128,22 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         editForm.add(procuringEntityAddress);
     }
 
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditTenderQuotationEvaluationPage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion() != null) {
+            pp.set(WebConstants.PARAM_ID,
+                    editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion().getId());
+        }
+
+        return pp;
+    }
+
     private IValidator<String> tenderDocOrTenderLinkRequiredValidator() {
         final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
         return new TenderDocumentValidator(id.toLong(-1));
@@ -167,8 +184,8 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     @Override
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
-        tender.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setTender(tender);
+        tender.setPurchaseRequisition(this.purchaseRequisition);
+        this.purchaseRequisition.setTender(tender);
 
         return tender;
     }

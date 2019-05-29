@@ -103,7 +103,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         containerFragment.add(tenderPanel);
 
         final Panel evaluationPanel = new TenderDetailPanel("evaluationPanel", tenderQuotationEvaluation,
-                "Opening", tenderQuotationEvaluation != null ? new ArrayList<>(Arrays.asList(
+                "Quotation and Evaluation", tenderQuotationEvaluation != null ? new ArrayList<>(Arrays.asList(
                 tender.getTenderTitle(), tender.getTenderNumber())) : null,
                 purchaseRequisition, EditTenderQuotationEvaluationPage.class);
         containerFragment.add(evaluationPanel);

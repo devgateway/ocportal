@@ -4,8 +4,10 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
@@ -44,9 +46,25 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     @Override
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
-        tenderQuotationEvaluation.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setTenderQuotationEvaluation(tenderQuotationEvaluation);
+        tenderQuotationEvaluation.setPurchaseRequisition(this.purchaseRequisition);
+        this.purchaseRequisition.setTenderQuotationEvaluation(tenderQuotationEvaluation);
 
         return tenderQuotationEvaluation;
+    }
+
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditProfessionalOpinionPage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion() != null) {
+            pp.set(WebConstants.PARAM_ID,
+                    editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion().getId());
+        }
+
+        return pp;
     }
 }

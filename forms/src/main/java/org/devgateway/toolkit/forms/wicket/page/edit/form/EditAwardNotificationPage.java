@@ -7,22 +7,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.Bid;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author gmutuhu
@@ -65,12 +61,27 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @Override
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
-        awardNotification.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setAwardNotification(awardNotification);
+        awardNotification.setPurchaseRequisition(this.purchaseRequisition);
+        this.purchaseRequisition.setAwardNotification(awardNotification);
 
         return awardNotification;
     }
 
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditAwardAcceptancePage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance() != null) {
+            pp.set(WebConstants.PARAM_ID,
+                    editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance().getId());
+        }
+
+        return pp;
+    }
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",

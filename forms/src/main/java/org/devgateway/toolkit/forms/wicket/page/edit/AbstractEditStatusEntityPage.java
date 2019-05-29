@@ -464,10 +464,35 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 setStatusAppendComment(DBConstants.Status.SUBMITTED);
                 super.onSubmit(target);
             }
+
+            @Override
+            protected Class<? extends BasePage> getResponsePage() {
+                return pageAfterSubmitAndNext();
+            }
+
+            @Override
+            protected PageParameters getParameterPage() {
+                return parametersAfterSubmitAndNext();
+            }
         };
 
         button.setIconType(FontAwesomeIconType.tasks);
         return button;
+    }
+
+    /**
+     * Override this function in order to redirect the user to the next page after clicking on submitAndNext button.
+     */
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return (Class<? extends BasePage>) getPage().getClass();
+    }
+
+    /**
+     * Override this function in order to redirect the user to the next page with parameters
+     * after clicking on submitAndNext button.
+     */
+    protected PageParameters parametersAfterSubmitAndNext() {
+        return getPageParameters();
     }
 
     private SaveEditPageButton getSaveDraftAndContinueButton() {

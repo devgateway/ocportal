@@ -2,7 +2,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
