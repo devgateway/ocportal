@@ -136,9 +136,9 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion() != null) {
+        if (editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation() != null) {
             pp.set(WebConstants.PARAM_ID,
-                    editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion().getId());
+                    editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation().getId());
         }
 
         return pp;
