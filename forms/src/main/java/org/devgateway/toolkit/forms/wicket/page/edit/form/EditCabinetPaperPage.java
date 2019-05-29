@@ -10,11 +10,11 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
@@ -35,7 +35,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
     @SpringBean
     protected CabinetPaperService cabinetPaperService;
-
 
     @SpringBean
     protected SessionMetadataService sessionMetadataService;
@@ -93,7 +92,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @Override
     protected CabinetPaper newInstance() {
         final CabinetPaper cabinetPaper = super.newInstance();
-        cabinetPaper.setProcurementPlan(procurementPlan);
+        cabinetPaper.setProcurementPlan(this.procurementPlan);
 
         return cabinetPaper;
     }

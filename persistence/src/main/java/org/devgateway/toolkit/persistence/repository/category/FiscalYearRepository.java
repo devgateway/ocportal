@@ -31,6 +31,6 @@ public interface FiscalYearRepository extends TextSearchableRepository<FiscalYea
     @Query("select cat from  #{#entityName} cat where lower(cat.name) like %:name%")
     Page<FiscalYear> searchText(@Param("name") String name, Pageable page);
 
-    @Query("select distinct p.fiscalYear from ProcurementPlan p")
+    @Query("select distinct p.fiscalYear from ProcurementPlan p order by p.fiscalYear.startDate desc")
     List<FiscalYear> getYearsWithData();
 }

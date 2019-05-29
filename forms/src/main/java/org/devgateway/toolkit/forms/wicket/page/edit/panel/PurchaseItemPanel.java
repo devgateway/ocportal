@@ -6,26 +6,26 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
-import org.devgateway.toolkit.persistence.service.form.PlanItemService;
+
+import java.util.List;
 
 /**
  * @author idobre
  * @since 2019-04-17
  */
 public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchaseRequisition> {
-    @SpringBean
-    private PlanItemService planItemService;
-
     private GenericSleepFormComponent totalCost;
 
     public PurchaseItemPanel(final String id) {
@@ -107,10 +107,17 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         protected void onInitialize() {
             super.onInitialize();
 
-            // TODO - this should be filtered based on form Procurement Plan
-            final Component planItem = ComponentUtil.addSelect2ChoiceField(this, "planItem", planItemService)
-                    .required();
+            // filtered the list based on form Procurement Plan
+            final PurchaseRequisition parentObject =
+                    (PurchaseRequisition) PurchaseItemPanel.this.getParent().getDefaultModelObject();
+            final List<PlanItem> planItems = parentObject.getProject().getProcurementPlan().getPlanItems();
+
+            final Select2ChoiceBootstrapFormComponent<PlanItem> planItem = new Select2ChoiceBootstrapFormComponent<>(
+                    "planItem", new GenericChoiceProvider<>(planItems));
+            planItem.required();
             planItem.add(new StopEventPropagationBehavior());
+
+            add(planItem);
         }
     }
 }
