@@ -95,6 +95,12 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
 
     @Override
     @Transactional(readOnly = false)
+    public <S extends T> List<S> saveAll(final Iterable<S> entities) {
+        return repository().saveAll(entities);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public <S extends T> S saveAndFlush(final S entity) {
         return repository().saveAndFlush(entity);
     }
