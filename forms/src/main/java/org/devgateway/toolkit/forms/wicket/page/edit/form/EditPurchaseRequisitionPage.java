@@ -109,6 +109,10 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         if (editForm.getModelObject().getTender() != null) {
             pp.set(WebConstants.PARAM_ID, editForm.getModelObject().getTender().getId());
         }
+        // check if we have a Purchase Requisition in session and add it
+        if (sessionMetadataService.getSessionPurchaseRequisition() == null) {
+            sessionMetadataService.setSessionPurchaseRequisition(editForm.getModelObject());
+        }
 
         return pp;
     }
