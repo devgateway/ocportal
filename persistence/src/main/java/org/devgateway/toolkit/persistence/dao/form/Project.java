@@ -40,7 +40,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "project")
-    private Set<PurchaseRequisition> purchaseRequisitions=new HashSet<>();
+    private Set<PurchaseRequisition> purchaseRequisitions = new HashSet<>();
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String projectTitle;

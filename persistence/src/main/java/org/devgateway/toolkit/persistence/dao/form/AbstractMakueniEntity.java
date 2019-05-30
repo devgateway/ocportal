@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,17 +33,15 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     private Set<FileMetadata> formDocs;
 
 
+    /**
+     * Gets direct children of current entity, that is the next form(s) that have to be filled in after this one is done
+     * Most of the time this returns just one element, with the exception of {@link Project} where it will return
+     * the {@link Project#getPurchaseRequisitions()}
+     * This is used to revert downstream forms when upstream forms are reverted. So if u do not need this functionality
+     * just return {@link Collections#emptyList()}
+     * @return
+     */
     public abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
-
-    @Transactional
-    @JsonIgnore
-    public Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy() {
-        Set<? extends AbstractMakueniEntity> collect = getDirectChildrenEntities().stream()
-                .flatMap(s -> s.getDirectChildrenEntities().stream())
-                .collect(Collectors.toSet());
-        System.out.println(collect);
-        return collect;
-    }
 
     @Override
     public AbstractAuditableEntity getParent() {
