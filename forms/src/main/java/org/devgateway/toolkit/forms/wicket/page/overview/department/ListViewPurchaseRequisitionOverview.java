@@ -50,6 +50,11 @@ import java.util.List;
 public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<PurchaseRequisition> {
     public ListViewPurchaseRequisitionOverview(final String id, final IModel<List<PurchaseRequisition>> model) {
         super(id, model);
+
+        // check if we need to expand a Project
+        if (sessionMetadataService.getSessionPurchaseRequisition() != null) {
+            expandedContainerIds.add(sessionMetadataService.getSessionPurchaseRequisition().getId());
+        }
     }
 
     @Override
@@ -192,6 +197,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                     }
 
                     sessionMetadataService.setSessionPurchaseRequisition(purchaseRequisition);
+                    sessionMetadataService.setSessionProject(purchaseRequisition.getProject());
                     setResponsePage(editClazz, pageParameters);
                 }
             };

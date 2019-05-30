@@ -36,10 +36,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
 
-
-
     public ListViewProjectsOverview(final String id, final IModel<List<Project>> model) {
         super(id, model);
+
+        // check if we need to expand a Project
+        if (sessionMetadataService.getSessionProject() != null) {
+            expandedContainerIds.add(sessionMetadataService.getSessionProject().getId());
+        }
     }
 
     @Override

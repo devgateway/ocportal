@@ -20,6 +20,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
@@ -42,8 +43,9 @@ import java.util.List;
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class StatusOverviewPage extends DataEntryBasePage {
 
-    private final LoadableDetachableModel<List<FiscalYear>> fiscalYearsModel;
-    private final LoadableDetachableModel<FiscalYear> fiscalYearModel;
+    private final IModel<List<FiscalYear>> fiscalYearsModel;
+
+    private final IModel<FiscalYear> fiscalYearModel;
 
     private String searchBox = "";
 

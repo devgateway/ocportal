@@ -27,7 +27,7 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
 
     private ListView<T> listView;
 
-    private Set<Long> expandedContainerIds = new HashSet<>();
+    protected Set<Long> expandedContainerIds = new HashSet<>();
 
     @SpringBean
     protected SessionMetadataService sessionMetadataService;

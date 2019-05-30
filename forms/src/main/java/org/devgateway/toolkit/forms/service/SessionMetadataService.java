@@ -50,7 +50,7 @@ public class SessionMetadataService {
     private FiscalYearService fiscalYearService;
 
 
-    private void setSessionKey(MetaDataKey<Long> key, GenericPersistable persistable) {
+    private void setSessionKey(final MetaDataKey<Long> key, final GenericPersistable persistable) {
         final Session session = Session.get();
         if (session != null && persistable != null) {
             session.setMetaData(key, persistable.getId());
@@ -61,8 +61,8 @@ public class SessionMetadataService {
         }
     }
 
-    private <S extends GenericPersistable & Serializable> S getSessionPersistable(MetaDataKey<Long> key,
-                                                                                  BaseJpaService<S> service) {
+    private <S extends GenericPersistable & Serializable> S getSessionPersistable(final MetaDataKey<Long> key,
+                                                                                  final BaseJpaService<S> service) {
         final Session session = Session.get();
         if (session != null) {
             final Long objId = session.getMetaData(key);
