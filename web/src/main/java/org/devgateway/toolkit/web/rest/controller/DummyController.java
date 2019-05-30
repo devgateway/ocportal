@@ -11,22 +11,45 @@
  *******************************************************************************/
 package org.devgateway.toolkit.web.rest.controller;
 
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
+import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
+import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
+import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
+import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.PlanItemService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
+import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.rest.entity.Dummy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -39,6 +62,36 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DummyController {
     @Autowired
     private ProcurementPlanService procurementPlanService;
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private PurchaseRequisitionService purchaseRequisitionService;
+
+    @Autowired
+    private TenderService tenderService;
+
+    @Autowired
+    private TenderQuotationEvaluationService tenderQuotationEvaluationService;
+
+    @Autowired
+    private ProfessionalOpinionService professionalOpinionService;
+
+    @Autowired
+    private AwardNotificationService awardNotificationService;
+
+    @Autowired
+    private AwardAcceptanceService awardAcceptanceService;
+
+    @Autowired
+    private ContractService contractService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private FiscalYearService fiscalYearService;
 
     @Autowired
     private PlanItemService planItemService;
@@ -108,5 +161,104 @@ public class DummyController {
         }
 
         return "Success!";
+    }
+
+    @RequestMapping("/generateTest")
+    @Transactional
+    public String generateTestStress(@RequestParam(value = "generate", defaultValue = "no") final String generate) {
+        if (generate.equals("ok")) {
+            final Random random = new Random();
+
+            final FiscalYear fiscalYear = new FiscalYear();
+            final int year = random.nextInt(3000);
+            fiscalYear.setName(year + "/" + (year + 1));
+            fiscalYear.setStartDate(new Date());
+            fiscalYear.setEndDate(new Date());
+
+            fiscalYearService.save(fiscalYear);
+
+            final List<Department> departments = departmentService.findAll();
+
+            final List<ProcurementPlan> procurementPlans = new ArrayList<>();
+            final List<Project> projects = new ArrayList<>();
+            final List<PurchaseRequisition> prs = new ArrayList<>();
+            final List<Tender> tenders = new ArrayList<>();
+            final List<TenderQuotationEvaluation> tenderQuotationEvaluations = new ArrayList<>();
+            final List<ProfessionalOpinion> professionalOpinions = new ArrayList<>();
+            final List<AwardNotification> awardNotifications = new ArrayList<>();
+            final List<AwardAcceptance> awardAcceptances = new ArrayList<>();
+            final List<Contract> contracts = new ArrayList<>();
+
+            for (final Department department : departments) {
+                final ProcurementPlan procurementPlan = new ProcurementPlan();
+                procurementPlan.setDepartment(department);
+                procurementPlan.setFiscalYear(fiscalYear);
+                procurementPlan.setApprovedDate(new Date());
+
+                procurementPlans.add(procurementPlan);
+
+                for (int i = 0; i < 10; i++) {
+                    final Project project = new Project();
+                    project.setProcurementPlan(procurementPlan);
+                    project.setProjectTitle("Project " + i);
+                    project.setAmountBudgeted(100.0);
+                    project.setAmountRequested(200.0);
+
+                    projects.add(project);
+
+                    for (int j = 0; j < 2; j++) {
+                        final PurchaseRequisition purchaseRequisition = new PurchaseRequisition();
+                        purchaseRequisition.setProject(project);
+                        purchaseRequisition.setTitle("Purchase Requisition " + j);
+                        purchaseRequisition.setPurchaseRequestNumber("# " + random.nextInt(5000));
+
+                        prs.add(purchaseRequisition);
+                    }
+
+                    for (final PurchaseRequisition purchaseRequisition : prs) {
+                        final Tender tender = new Tender();
+                        tender.setPurchaseRequisition(purchaseRequisition);
+                        tender.setTenderTitle("Tender " + random.nextInt(5000));
+                        tenders.add(tender);
+
+                        final TenderQuotationEvaluation tenderQuotationEvaluation = new TenderQuotationEvaluation();
+                        tenderQuotationEvaluation.setPurchaseRequisition(purchaseRequisition);
+                        tenderQuotationEvaluations.add(tenderQuotationEvaluation);
+
+                        final ProfessionalOpinion professionalOpinion = new ProfessionalOpinion();
+                        professionalOpinion.setPurchaseRequisition(purchaseRequisition);
+                        professionalOpinions.add(professionalOpinion);
+
+                        final AwardNotification awardNotification = new AwardNotification();
+                        awardNotification.setPurchaseRequisition(purchaseRequisition);
+                        awardNotifications.add(awardNotification);
+
+                        final AwardAcceptance awardAcceptance = new AwardAcceptance();
+                        awardAcceptance.setPurchaseRequisition(purchaseRequisition);
+                        awardAcceptances.add(awardAcceptance);
+
+                        final Contract contract = new Contract();
+                        contract.setPurchaseRequisition(purchaseRequisition);
+                        contracts.add(contract);
+                    }
+                }
+            }
+
+            procurementPlanService.saveAll(procurementPlans);
+            projectService.saveAll(projects);
+            purchaseRequisitionService.saveAll(prs);
+            tenderService.saveAll(tenders);
+            tenderQuotationEvaluationService.saveAll(tenderQuotationEvaluations);
+            professionalOpinionService.saveAll(professionalOpinions);
+            awardNotificationService.saveAll(awardNotifications);
+            awardAcceptanceService.saveAll(awardAcceptances);
+            contractService.saveAll(contracts);
+
+            // clear cache here from browser instead of adding a dependency to form module.
+
+            return "Success!";
+        }
+
+        return "Doing Nothing!";
     }
 }
