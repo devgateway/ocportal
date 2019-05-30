@@ -12,6 +12,7 @@ import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -93,11 +94,24 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @Override
     protected PurchaseRequisition newInstance() {
         final PurchaseRequisition purchaseRequisition = super.newInstance();
-        if (project != null) {
-            purchaseRequisition.setProject(project);
-        }  
-       
+        purchaseRequisition.setProject(this.project);
+
         return purchaseRequisition;
+    }
+
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditTenderPage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (editForm.getModelObject().getTender() != null) {
+            pp.set(WebConstants.PARAM_ID, editForm.getModelObject().getTender().getId());
+        }
+
+        return pp;
     }
 
     private IValidator<String> uniqueTitle() {

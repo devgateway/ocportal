@@ -21,6 +21,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -125,6 +126,22 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         });
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
+    }
+
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditTenderQuotationEvaluationPage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation() != null) {
+            pp.set(WebConstants.PARAM_ID,
+                    editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation().getId());
+        }
+
+        return pp;
     }
 
     private IValidator<String> tenderDocOrTenderLinkRequiredValidator() {

@@ -87,7 +87,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     @Override
     protected Project newInstance() {
         final Project project = super.newInstance();
-        project.setProcurementPlan(procurementPlan);
+        project.setProcurementPlan(this.procurementPlan);
 
         return project;
     }

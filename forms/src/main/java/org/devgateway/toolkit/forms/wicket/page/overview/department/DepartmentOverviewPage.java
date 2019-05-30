@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -62,8 +63,7 @@ import java.util.List;
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class DepartmentOverviewPage extends DataEntryBasePage {
 
-    private final LoadableDetachableModel<ProcurementPlan> procurementPlanModel;
-
+    private final IModel<ProcurementPlan> procurementPlanModel;
 
     private String searchBox = "";
 
@@ -72,17 +72,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProjectService projectService;
 
-
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
     private Label newProcurementPlanLabel;
 
+    protected final IModel<FiscalYear> fiscalYearModel;
 
-    protected final LoadableDetachableModel<FiscalYear> fiscalYearModel;
-
-    protected LoadableDetachableModel<List<FiscalYear>> fiscalYearsModel;
-
+    protected IModel<List<FiscalYear>> fiscalYearsModel;
 
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
@@ -96,8 +93,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         return procurementPlanModel.getObject();
     }
 
-
-    // TODO all list view should have LoadableDetachableModel models
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
 
@@ -107,7 +102,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 return fiscalYearService.findAll();
             }
         };
-
 
         fiscalYearModel = new LoadableDetachableModel<FiscalYear>() {
             @Override
@@ -135,7 +129,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
     }
-
 
     @Override
     protected void onInitialize() {

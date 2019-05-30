@@ -47,17 +47,17 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
     private Tender tender;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private Contract contract;
+    private TenderQuotationEvaluation tenderQuotationEvaluation;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private ProfessionalOpinion professionalOpinion;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -72,7 +72,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private ProfessionalOpinion professionalOpinion;
+    private Contract contract;
 
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
@@ -200,35 +200,35 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         return amount;
     }
 
-    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
-        return tenderQuotationEvaluation;
-    }
-
-    public void setTenderQuotationEvaluation(TenderQuotationEvaluation tenderQuotationEvaluation) {
-        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
-    }
-
     public Tender getTender() {
         return tender;
     }
 
-    public void setTender(Tender tender) {
+    public void setTender(final Tender tender) {
         this.tender = tender;
     }
 
-    public Contract getContract() {
-        return contract;
+    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
+        return tenderQuotationEvaluation;
     }
 
-    public void setContract(Contract contract) {
-        this.contract = contract;
+    public void setTenderQuotationEvaluation(final TenderQuotationEvaluation tenderQuotationEvaluation) {
+        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
+    }
+
+    public ProfessionalOpinion getProfessionalOpinion() {
+        return professionalOpinion;
+    }
+
+    public void setProfessionalOpinion(final ProfessionalOpinion professionalOpinion) {
+        this.professionalOpinion = professionalOpinion;
     }
 
     public AwardNotification getAwardNotification() {
         return awardNotification;
     }
 
-    public void setAwardNotification(AwardNotification awardNotification) {
+    public void setAwardNotification(final AwardNotification awardNotification) {
         this.awardNotification = awardNotification;
     }
 
@@ -236,16 +236,16 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         return awardAcceptance;
     }
 
-    public void setAwardAcceptance(AwardAcceptance awardAcceptance) {
+    public void setAwardAcceptance(final AwardAcceptance awardAcceptance) {
         this.awardAcceptance = awardAcceptance;
     }
 
-    public ProfessionalOpinion getProfessionalOpinion() {
-        return professionalOpinion;
+    public Contract getContract() {
+        return contract;
     }
 
-    public void setProfessionalOpinion(ProfessionalOpinion professionalOpinion) {
-        this.professionalOpinion = professionalOpinion;
+    public void setContract(final Contract contract) {
+        this.contract = contract;
     }
 
     @Override
