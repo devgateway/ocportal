@@ -106,13 +106,13 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         fiscalYearModel = new LoadableDetachableModel<FiscalYear>() {
             @Override
             protected FiscalYear load() {
-                FiscalYear fy = sessionMetadataService.getSessionFiscalYear();
-                if (fy != null) {
-                    return fy;
+                FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
+                if (fiscalYear != null) {
+                    return fiscalYear;
                 }
-                fy = fiscalYearsModel.getObject().isEmpty() ? null : fiscalYearsModel.getObject().get(0);
-                sessionMetadataService.setSessionFiscalYear(fy);
-                return fy;
+                fiscalYear = fiscalYearsModel.getObject().isEmpty() ? null : fiscalYearsModel.getObject().get(0);
+                sessionMetadataService.setSessionFiscalYear(fiscalYear);
+                return fiscalYear;
             }
         };
 

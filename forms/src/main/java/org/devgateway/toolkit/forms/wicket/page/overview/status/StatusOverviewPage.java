@@ -68,17 +68,15 @@ public class StatusOverviewPage extends DataEntryBasePage {
             }
         };
 
+        // we need to se the FY in the session since it's used in other parts like in the SideBar
+        if (sessionMetadataService.getSessionFiscalYear() == null) {
+            // check if we already have a FY in the session and use that one, otherwise get the last one from DB
+            sessionMetadataService.setSessionFiscalYear(fiscalYearService.getLastFiscalYear());
+        }
         fiscalYearModel = new LoadableDetachableModel<FiscalYear>() {
             @Override
             protected FiscalYear load() {
-                // check if we already have a FY in the session and use that one, otherwise get the last one from DB
-                FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
-                if (fiscalYear == null) {
-                    fiscalYear = fiscalYearService.getLastFiscalYear();
-                    sessionMetadataService.setSessionFiscalYear(fiscalYear);
-                }
-                return fiscalYear;
-
+                return sessionMetadataService.getSessionFiscalYear();
             }
         };
 
