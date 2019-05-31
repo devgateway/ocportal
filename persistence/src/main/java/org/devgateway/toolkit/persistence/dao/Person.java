@@ -202,10 +202,6 @@ public class Person extends AbstractAuditableEntity implements UserDetails {
         this.changeProfilePassword = changeProfilePassword;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
     public void setEnabled(final Boolean enabled) {
         this.enabled = enabled;
     }
