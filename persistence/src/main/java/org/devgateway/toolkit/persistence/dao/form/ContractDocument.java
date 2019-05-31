@@ -32,7 +32,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
     private ContractDocumentType contractDocumentType;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
 
     @Transient

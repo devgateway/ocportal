@@ -35,7 +35,6 @@ import java.util.stream.Stream;
  */
 @Service
 // @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
-@Transactional(readOnly = true)
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     @Autowired
     private ProjectService projectService;
@@ -63,6 +62,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Override
     // @Cacheable
+    @Transactional(readOnly = true)
     public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
         final List<Project> projects = projectService.findAll(
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
@@ -79,8 +79,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
         final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
         for (final Project project : projects) {
-            StatusOverviewData sod = statusOverviewData.parallelStream()
-                    .filter(item -> project.getProcurementPlan().equals(item.getProcurementPlan()))
+            StatusOverviewData sod = statusOverviewData.stream()
+                    .filter(item -> project.getProcurementPlan().getId().equals(item.getProcurementPlan().getId()))
                     .findFirst()
                     .orElse(null);
             if (sod == null) {
