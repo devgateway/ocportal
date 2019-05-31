@@ -22,10 +22,15 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
+import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +38,8 @@ import java.util.List;
  * @since 2019-05-24
  */
 public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
+    protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
+
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
 
@@ -96,7 +103,15 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         addPurchaseRequisition.setVisibilityAllowed(
                 ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
 
+        long startTime = System.nanoTime();
+
         final List<PurchaseRequisition> purchaseRequisitions = purchaseRequisitionService.findByProject(project);
+
+        long endTime = System.nanoTime();
+        double duration = (endTime - startTime) / 1000000000.0;
+        // logger.info("------- [DepartmentPage] Fetch " + purchaseRequisitions.size() + " PRs in: " + duration);
+        // logger.info("-------------------------------------------------------------------------------");
+
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
                 new ListViewPurchaseRequisitionOverview("purchaseReqOverview", new ListModel<>(purchaseRequisitions));
         containerFragment.add(listViewPurchaseRequisitionOverview);

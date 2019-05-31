@@ -29,6 +29,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitio
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
+import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
@@ -38,6 +39,8 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +51,8 @@ import java.util.List;
  * @since 2019-05-24
  */
 public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<PurchaseRequisition> {
+    protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
+    
     public ListViewPurchaseRequisitionOverview(final String id, final IModel<List<PurchaseRequisition>> model) {
         super(id, model);
 
@@ -87,6 +92,8 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         hideableContainer.add(AttributeAppender.append("class", "purchase-req")); // add specific class to pr list
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
+        long startTime = System.nanoTime();
+
         final PurchaseRequisition purchaseRequisition = item.getModelObject();
         final Tender tender = purchaseRequisition.getTender();
         final TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
@@ -94,6 +101,11 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         final AwardNotification awardNotification = purchaseRequisition.getAwardNotification();
         final AwardAcceptance awardAcceptance = purchaseRequisition.getAwardAcceptance();
         final Contract contract = purchaseRequisition.getContract();
+
+        long endTime = System.nanoTime();
+        double duration = (endTime - startTime) / 1000000000.0;
+        // logger.info("------- [DepartmentPage] Fetch PR childre in: " + duration);
+        // logger.info("-------------------------------------------------------------------------------");
 
         final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel", purchaseRequisition,
                 purchaseRequisition.getTitle(), new ArrayList<>(Arrays.asList(
