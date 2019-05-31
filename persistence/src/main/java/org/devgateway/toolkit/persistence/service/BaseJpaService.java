@@ -34,6 +34,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
 
     <S extends T> S save(S entity);
 
+    <S extends T> List<S> saveAll(Iterable<S> entities);
+
     <S extends T> S saveAndFlush(S entity);
 
     void delete(T entity);

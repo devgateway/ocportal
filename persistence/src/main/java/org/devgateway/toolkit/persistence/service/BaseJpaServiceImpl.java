@@ -71,7 +71,7 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
 
     @Override
     @Transactional(readOnly = false)
-    // @Cacheable - no need for cache here.
+    // we don't need cache here!
     public Optional<T> findById(final Long id) {
         return repository().findById(id);
     }
@@ -91,6 +91,12 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     @Transactional(readOnly = false)
     public <S extends T> S save(final S entity) {
         return repository().save(entity);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public <S extends T> List<S> saveAll(final Iterable<S> entities) {
+        return repository().saveAll(entities);
     }
 
     @Override
