@@ -24,7 +24,7 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
         extends BaseJpaServiceImpl<T> implements AbstractMakueniEntityService<T> {
 
     @Override
-    @Cacheable
+    // @Cacheable
     public List<T> findByFiscalYear(final FiscalYear fiscalYear) {
         final AbstractMakueniEntityRepository repository = (AbstractMakueniEntityRepository) repository();
         return repository.findByFiscalYear(fiscalYear);

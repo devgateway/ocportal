@@ -6,6 +6,8 @@ import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,31 +47,37 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     private Project project;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Tender tender;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private TenderQuotationEvaluation tenderQuotationEvaluation;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private ProfessionalOpinion professionalOpinion;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private AwardNotification awardNotification;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private AwardAcceptance awardAcceptance;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Contract contract;

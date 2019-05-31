@@ -18,53 +18,53 @@ import java.util.Optional;
  * @author idobre
  * @since 2019-03-04
  */
-@CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
+// @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
 public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializable> implements BaseJpaService<T> {
 
     @Override
-    @Cacheable
+    // @Cacheable
     public List<T> findAll() {
         return repository().findAll();
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public List<T> findAll(final Sort sort) {
         return repository().findAll(sort);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public List<T> findAll(final Specification<T> spec) {
         return repository().findAll(spec);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public Page<T> findAll(final Specification<T> spec, final Pageable pageable) {
         return repository().findAll(spec, pageable);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public Optional<T> findOne(final Specification<T> spec) {
         return repository().findOne(spec);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public Page<T> findAll(final Pageable pageable) {
         return repository().findAll(pageable);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public List<T> findAll(final Specification<T> spec, final Sort sort) {
         return repository().findAll(spec, sort);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public long count(final Specification<T> spec) {
         return repository().count(spec);
     }
@@ -76,13 +76,13 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
         return repository().findById(id);
     }
 
-    @Cacheable
+    // @Cacheable
     public Optional<T> findByIdCached(final Long id) {
         return repository().findById(id);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public long count() {
         return repository().count();
     }

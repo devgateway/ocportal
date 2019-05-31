@@ -144,8 +144,8 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
                         info.put(PARENTID, ExcelFieldService.getObjectID(object));
                         info.put(PARENTROWNUMBER, row.getRowNum() + 1);
 
-                        final ExcelSheet objectSepareteSheet = new ExcelSheetDefault(workbook, this.translateService,
-                                fieldClass.getSimpleName().toLowerCase(), info);
+                        final ExcelSheet objectSepareteSheet = new ExcelSheetDefault(getWorkbook(),
+                                this.translateService, fieldClass.getSimpleName().toLowerCase(), info);
                         final List<Object> newObjects = new ArrayList();
                         final Object value = getFieldValue(field, object);
 

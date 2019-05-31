@@ -10,7 +10,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import java.util.Collection;
@@ -29,7 +28,7 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     private Date approvedDate;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
 
 

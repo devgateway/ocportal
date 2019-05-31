@@ -31,7 +31,7 @@ public class ContractServiceImpl extends AbstractMakueniEntityServiceImpl<Contra
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public Contract findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
         return contractRepository.findByPurchaseRequisition(purchaseRequisition);
     }

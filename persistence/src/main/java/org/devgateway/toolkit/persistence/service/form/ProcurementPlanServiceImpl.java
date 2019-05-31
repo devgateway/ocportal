@@ -22,7 +22,7 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     @Autowired
     private ProcurementPlanRepository procurementPlanRepository;
 
-    @Cacheable
+    // @Cacheable
     @Override
     public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.countByDepartmentAndFiscalYear(department, fiscalYear);
@@ -44,7 +44,7 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.findByDepartmentAndFiscalYear(department, fiscalYear);
     }

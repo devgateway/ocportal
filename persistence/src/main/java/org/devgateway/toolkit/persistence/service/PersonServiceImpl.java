@@ -20,13 +20,13 @@ public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements Per
     private PersonRepository personRepository;
 
     @Override
-    @Cacheable
+    // @Cacheable
     public Person findByUsername(final String username) {
         return personRepository.findByUsername(username);
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public Person findByEmail(final String email) {
         return personRepository.findByEmail(email);
     }

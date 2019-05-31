@@ -138,6 +138,15 @@ public class StatusOverviewPage extends DataEntryBasePage {
     }
 
     private List<StatusOverviewData> fetchData() {
-        return statusOverviewService.getAllProjects(getFiscalYear(), searchBox);
+        long startTime = System.nanoTime();
+
+        final List<StatusOverviewData> list = statusOverviewService.getAllProjects(getFiscalYear(), searchBox);
+
+        long endTime = System.nanoTime();
+        double duration = (endTime - startTime) / 1000000000.0;
+        logger.info("------- [StatusPage] ALL PROCESSING TIME: " + duration);
+        logger.info("-------------------------------------------------------------------------------");
+
+        return list;
     }
 }
