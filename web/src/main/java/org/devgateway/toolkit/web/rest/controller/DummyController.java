@@ -197,7 +197,7 @@ public class DummyController {
 
                 procurementPlans.add(procurementPlan);
 
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 200; i++) {
                     final Project project = new Project();
                     project.setProcurementPlan(procurementPlan);
                     project.setProjectTitle("Project " + i);
@@ -206,16 +206,14 @@ public class DummyController {
 
                     projects.add(project);
 
-                    for (int j = 0; j < 2; j++) {
+                    for (int j = 0; j < 3; j++) {
                         final PurchaseRequisition purchaseRequisition = new PurchaseRequisition();
                         purchaseRequisition.setProject(project);
                         purchaseRequisition.setTitle("Purchase Requisition " + j);
                         purchaseRequisition.setPurchaseRequestNumber("# " + random.nextInt(5000));
 
                         prs.add(purchaseRequisition);
-                    }
 
-                    for (final PurchaseRequisition purchaseRequisition : prs) {
                         final Tender tender = new Tender();
                         tender.setPurchaseRequisition(purchaseRequisition);
                         tender.setTenderTitle("Tender " + random.nextInt(5000));
