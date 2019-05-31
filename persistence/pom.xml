@@ -246,8 +246,8 @@
                             <failOnError>true</failOnError>
                             <enableLazyInitialization>true</enableLazyInitialization>
                             <enableDirtyTracking>true</enableDirtyTracking>
-                            <!--<enableAssociationManagement>true</enableAssociationManagement>-->
-                            <!--<enableExtendedEnhancement>true</enableExtendedEnhancement>-->
+                            <enableAssociationManagement>true</enableAssociationManagement>
+                            <enableExtendedEnhancement>true</enableExtendedEnhancement>
                         </configuration>
                         <goals>
                             <goal>enhance</goal>

@@ -18,7 +18,7 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     @NotNull
-    private PurchaseRequisition purchaseRequisition;
+    protected PurchaseRequisition purchaseRequisition;
 
     public PurchaseRequisition getPurchaseRequisition() {
         return purchaseRequisition;

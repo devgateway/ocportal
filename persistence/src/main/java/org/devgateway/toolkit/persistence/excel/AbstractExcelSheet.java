@@ -28,7 +28,7 @@ import java.util.Set;
  * @since 13/11/2017
  */
 public abstract class AbstractExcelSheet implements ExcelSheet {
-    protected final Workbook workbook;
+    private final Workbook workbook;
 
     private Font dataFont;
 
@@ -208,5 +208,9 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
      */
     protected int getFreeColl(final Row row) {
         return row.getLastCellNum() == -1 ? 0 : row.getLastCellNum();
+    }
+
+    public Workbook getWorkbook() {
+        return workbook;
     }
 }
