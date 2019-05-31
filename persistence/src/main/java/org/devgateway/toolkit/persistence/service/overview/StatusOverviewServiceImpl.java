@@ -155,7 +155,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
      */
     private <S extends ProjectAttachable & Statusable>
     Map<Project, List<String>> groupStatusByProject(final List<S> list) {
-        return list.stream()
+        return list.parallelStream()
                 .collect(Collectors.groupingBy(ProjectAttachable::getProject,
                         Collectors.mapping(key -> key.getStatus(), Collectors.toList())));
     }
