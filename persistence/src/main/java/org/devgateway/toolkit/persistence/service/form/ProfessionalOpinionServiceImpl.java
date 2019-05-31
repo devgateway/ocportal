@@ -32,7 +32,7 @@ public class ProfessionalOpinionServiceImpl extends AbstractMakueniEntityService
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public ProfessionalOpinion findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
         return professionalOpinionRepository.findByPurchaseRequisition(purchaseRequisition);
     }

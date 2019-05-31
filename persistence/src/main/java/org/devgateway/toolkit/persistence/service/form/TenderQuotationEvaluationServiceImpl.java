@@ -39,7 +39,7 @@ public class TenderQuotationEvaluationServiceImpl extends AbstractMakueniEntityS
     }
 
     @Override
-    @Cacheable
+    // @Cacheable
     public TenderQuotationEvaluation findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
        return repository.findByPurchaseRequisition(purchaseRequisition);
     }
