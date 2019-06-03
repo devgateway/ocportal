@@ -39,7 +39,7 @@ public class PurchaseRequisitionServiceImpl extends AbstractMakueniEntityService
         return new PurchaseRequisition();
     }
 
-    // @Cacheable
+    @Cacheable
     @Override
     public Long countByProjectProcurementPlanAndTitleAndIdNot(final ProcurementPlan procurementPlan,
                                                final String title,
@@ -47,10 +47,16 @@ public class PurchaseRequisitionServiceImpl extends AbstractMakueniEntityService
         return purchaseRequisitionRepository.countByProjectProcurementPlanAndTitleAndIdNot(procurementPlan, title, id);
     }
 
-    // @Cacheable
+    @Cacheable
     @Override
     public List<PurchaseRequisition> findByProject(final Project project) {
         return purchaseRequisitionRepository.findByProject(project);
+    }
+
+    @Cacheable
+    @Override
+    public List<PurchaseRequisition> findByProjectProcurementPlan(final ProcurementPlan procurementPlan) {
+        return purchaseRequisitionRepository.findByProjectProcurementPlan(procurementPlan);
     }
 }
 

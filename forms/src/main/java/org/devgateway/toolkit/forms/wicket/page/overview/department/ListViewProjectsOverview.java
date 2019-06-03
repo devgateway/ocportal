@@ -22,27 +22,44 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
+import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author idobre
  * @since 2019-05-24
  */
 public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
+    protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
+
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
 
-    public ListViewProjectsOverview(final String id, final IModel<List<Project>> model) {
+    private final Map<Project, List<PurchaseRequisition>> purchaseRequisitions;
+
+    public ListViewProjectsOverview(final String id, final IModel<List<Project>> model,
+                                    final IModel<ProcurementPlan> procurementPlanModel) {
         super(id, model);
 
         // check if we need to expand a Project
         if (sessionMetadataService.getSessionProject() != null) {
             expandedContainerIds.add(sessionMetadataService.getSessionProject().getId());
         }
+
+        purchaseRequisitions = purchaseRequisitionService.findByProjectProcurementPlan(procurementPlanModel.getObject())
+                .parallelStream()
+                .collect(Collectors.groupingBy(PurchaseRequisition::getProject,
+                        Collectors.mapping(Function.identity(), Collectors.toList())));
     }
 
     @Override
@@ -96,9 +113,9 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         addPurchaseRequisition.setVisibilityAllowed(
                 ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
 
-        final List<PurchaseRequisition> purchaseRequisitions = purchaseRequisitionService.findByProject(project);
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
-                new ListViewPurchaseRequisitionOverview("purchaseReqOverview", new ListModel<>(purchaseRequisitions));
+                new ListViewPurchaseRequisitionOverview("purchaseReqOverview",
+                        new ListModel<>(purchaseRequisitions.get(project)));
         containerFragment.add(listViewPurchaseRequisitionOverview);
 
         hideableContainer.add(containerFragment);

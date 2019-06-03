@@ -39,7 +39,7 @@ public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project
         return new Project();
     }
 
-    // @Cacheable
+    @Cacheable
     @Override
     public Long countByProcurementPlanAndProjectTitleAndIdNot(final ProcurementPlan procurementPlan,
                                                               final String projectTitle,
@@ -47,19 +47,19 @@ public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project
         return projectRepository.countByProcurementPlanAndProjectTitleAndIdNot(procurementPlan, projectTitle, id);
     }
 
-    // @Cacheable
+    @Cacheable
     @Override
     public List<Project> findByProcurementPlan(final ProcurementPlan procurementPlan) {
         return projectRepository.findByProcurementPlan(procurementPlan);
     }
 
-    // @Cacheable
+    @Cacheable
     @Override
     public Long countByFiscalYear(final FiscalYear fiscalYear) {
         return projectRepository.countByProcurementPlanFiscalYear(fiscalYear);
     }
 
-    // @Cacheable
+    @Cacheable
     @Override
     public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return projectRepository.countByProcurementPlanDepartmentAndProcurementPlanFiscalYear(department, fiscalYear);

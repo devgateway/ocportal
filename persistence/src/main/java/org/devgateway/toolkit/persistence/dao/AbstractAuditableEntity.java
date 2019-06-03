@@ -32,16 +32,16 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
     private static final long serialVersionUID = 4031407178647451427L;
 
     @Audited
-    private String createdBy;
+    protected String createdBy;
 
     @Audited
-    private ZonedDateTime createdDate;
+    protected ZonedDateTime createdDate;
 
     @Audited
-    private String lastModifiedBy;
+    protected String lastModifiedBy;
 
     @Audited
-    private ZonedDateTime lastModifiedDate;
+    protected ZonedDateTime lastModifiedDate;
 
     /**
      * Forces the envers to see this object as modified, thus enabling creation
