@@ -31,7 +31,7 @@ public class AwardAcceptanceServiceImpl extends AbstractMakueniEntityServiceImpl
     }
 
     @Override
-    // @Cacheable
+    @Cacheable
     public AwardAcceptance findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
         return awardAcceptanceRepository.findByPurchaseRequisition(purchaseRequisition);
     }

@@ -46,13 +46,13 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
     }
 
     @Override
-    // @Cacheable
+    @Cacheable
     public FiscalYear getLastFiscalYear() {
         return self.getYearsWithData().isEmpty() ? null : self.getYearsWithData().get(0);
     }
 
     @Override
-    // @Cacheable
+    @Cacheable
     public List<FiscalYear> getYearsWithData() {
         return fiscalYearRepository.getYearsWithData();
     }

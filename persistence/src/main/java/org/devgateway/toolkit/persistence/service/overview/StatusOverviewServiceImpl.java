@@ -21,6 +21,8 @@ import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +38,7 @@ import java.util.stream.Stream;
  * @author gmutuhu
  */
 @Service
-// @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
+@CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     protected static final Logger logger = LoggerFactory.getLogger(StatusOverviewService.class);
 
@@ -65,9 +67,10 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private ContractService contractService;
 
     @Override
-    // @Cacheable
+    @Cacheable
     @Transactional(readOnly = true)
     public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
+
         long startTime = System.nanoTime();
 
         final List<Project> projects = projectService.findAll(
@@ -147,7 +150,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     }
 
     @Override
-    // @Cacheable
+    @Cacheable
     public Long countProjects(FiscalYear fiscalYear, String projectTitle) {
         return projectService.count(new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
     }

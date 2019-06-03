@@ -40,13 +40,13 @@ public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<Ca
     }
 
     @Override
-    // @Cacheable
+    @Cacheable
     public Long countByProcurementPlanAndNameAndIdNot(final ProcurementPlan procurementPlan, final String name,
             final Long id) {
         return cabinetPaperRepository.countByProcurementPlanAndNameAndIdNot(procurementPlan, name, id);
     }
 
-    // @Cacheable
+    @Cacheable
     @Override
     public List<CabinetPaper> findByProcurementPlan(final ProcurementPlan procurementPlan) {
         return cabinetPaperRepository.findByProcurementPlan(procurementPlan);
