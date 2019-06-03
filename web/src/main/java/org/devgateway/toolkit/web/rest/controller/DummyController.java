@@ -210,7 +210,7 @@ public class DummyController {
                         final PurchaseRequisition purchaseRequisition = new PurchaseRequisition();
                         purchaseRequisition.setProject(project);
                         purchaseRequisition.setTitle("Purchase Requisition " + i + j);
-                        purchaseRequisition.setPurchaseRequestNumber("# " + random.nextInt(5000));
+                        purchaseRequisition.setPurchaseRequestNumber("# " + i + "-" + random.nextInt(5000));
 
                         prs.add(purchaseRequisition);
 
