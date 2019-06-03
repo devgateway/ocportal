@@ -92,8 +92,6 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         hideableContainer.add(AttributeAppender.append("class", "purchase-req")); // add specific class to pr list
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
-        long startTime = System.nanoTime();
-
         final PurchaseRequisition purchaseRequisition = item.getModelObject();
         final Tender tender = purchaseRequisition.getTender();
         final TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
@@ -101,11 +99,6 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         final AwardNotification awardNotification = purchaseRequisition.getAwardNotification();
         final AwardAcceptance awardAcceptance = purchaseRequisition.getAwardAcceptance();
         final Contract contract = purchaseRequisition.getContract();
-
-        long endTime = System.nanoTime();
-        double duration = (endTime - startTime) / 1000000000.0;
-        // logger.info("------- [DepartmentPage] Fetch PR childre in: " + duration);
-        // logger.info("-------------------------------------------------------------------------------");
 
         final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel", purchaseRequisition,
                 purchaseRequisition.getTitle(), new ArrayList<>(Arrays.asList(

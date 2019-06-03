@@ -46,7 +46,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -134,7 +133,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
 
         add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
         add(new Label("fiscalYear", new PropertyModel<>(fiscalYearModel, "label")));
@@ -258,7 +256,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void addProjectList() {
-        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", new ListModel<>(fetchData()));
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview",
+                new ListModel<>(fetchData()), procurementPlanModel);
         add(listViewProjectsOverview);
     }
 
@@ -270,16 +269,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private List<Project> fetchData() {
-        long startTime = System.nanoTime();
-
-        final List<Project> list = getProcurementPlan() == null
+        return getProcurementPlan() == null
                 ? new ArrayList<>()
                 : projectService.findAll(new ProjectFilterState(getProcurementPlan(), searchBox).getSpecification());
-
-        long endTime = System.nanoTime();
-        double duration = (endTime - startTime) / 1000000000.0;
-        logger.info("------- [DepartmentPage] Fetch " + list.size() + " Projects in: " + duration);
-
-        return list;
     }
 }

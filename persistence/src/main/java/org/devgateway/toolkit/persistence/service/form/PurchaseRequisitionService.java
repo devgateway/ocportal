@@ -16,5 +16,7 @@ public interface PurchaseRequisitionService extends AbstractMakueniEntityService
     Long countByProjectProcurementPlanAndTitleAndIdNot(ProcurementPlan procurementPlan, String title, Long id);
     
     List<PurchaseRequisition> findByProject(Project project);
+
+    List<PurchaseRequisition> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
 }
 
