@@ -7,6 +7,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
@@ -21,11 +22,11 @@ public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEnt
     @Audited
     private String status = DBConstants.Status.DRAFT;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OrderColumn(name = "index")
     @JsonIgnore
-    private List<StatusChangedComment> statusComments = new ArrayList<>();
+    protected List<StatusChangedComment> statusComments = new ArrayList<>();
 
     @Transient
     private String newStatusComment;

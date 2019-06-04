@@ -244,7 +244,7 @@
                     <execution>
                         <configuration>
                             <failOnError>true</failOnError>
-                            <enableLazyInitialization>true</enableLazyInitialization>
+                            <enableLazyInitialization>false</enableLazyInitialization>
                             <enableDirtyTracking>true</enableDirtyTracking>
                             <enableAssociationManagement>true</enableAssociationManagement>
                             <enableExtendedEnhancement>true</enableExtendedEnhancement>
