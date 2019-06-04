@@ -58,6 +58,7 @@ import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilter
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.hibernate.Hibernate;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.http.HttpServletResponse;
@@ -192,6 +193,11 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
                             try {
                                 long startTime = System.nanoTime();
+
+
+                                final ProcurementPlan procurementPlan = getProcurementPlan();
+                                // Hibernate.initialize(procurementPlan.getProjects());
+
                                 final byte[] bytes = excelGeneratorService.getExcelDownload(
                                         new ArrayList<>(Arrays.asList(getProcurementPlan())));
 
