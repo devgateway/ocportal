@@ -67,7 +67,7 @@ public class SessionMetadataService {
         if (session != null) {
             final Long objId = session.getMetaData(key);
             if (objId != null) {
-                return service.findByIdCached(objId).get();
+                return service.findById(objId).get();
             }
         }
         return null;
