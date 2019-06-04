@@ -53,13 +53,15 @@ import java.util.List;
  */
 public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<PurchaseRequisition> {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
-    
-    public ListViewPurchaseRequisitionOverview(final String id, final IModel<List<PurchaseRequisition>> model) {
+
+    public ListViewPurchaseRequisitionOverview(final String id,
+                                               final IModel<List<PurchaseRequisition>> model,
+                                               final PurchaseRequisition sessionPurchaseRequisition) {
         super(id, model);
 
-        // check if we need to expand a Project
-        if (sessionMetadataService.getSessionPurchaseRequisition() != null) {
-            expandedContainerIds.add(sessionMetadataService.getSessionPurchaseRequisition().getId());
+        // check if we need to expand a Purchase Requisition
+        if (sessionPurchaseRequisition != null) {
+            expandedContainerIds.add(sessionPurchaseRequisition.getId());
         }
     }
 

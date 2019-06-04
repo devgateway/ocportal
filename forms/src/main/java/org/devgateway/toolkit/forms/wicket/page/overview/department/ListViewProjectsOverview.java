@@ -47,6 +47,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
     private final Map<Project, List<PurchaseRequisition>> purchaseRequisitions;
 
+    private final PurchaseRequisition sessionPurchaseRequisition;
+
     public ListViewProjectsOverview(final String id, final IModel<List<Project>> model,
                                     final IModel<ProcurementPlan> procurementPlanModel) {
         super(id, model);
@@ -55,6 +57,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         if (sessionMetadataService.getSessionProject() != null) {
             expandedContainerIds.add(sessionMetadataService.getSessionProject().getId());
         }
+
+        sessionPurchaseRequisition = sessionMetadataService.getSessionPurchaseRequisition();
 
         purchaseRequisitions = purchaseRequisitionService.findByProjectProcurementPlan(procurementPlanModel.getObject())
                 .parallelStream()
@@ -98,7 +102,6 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
         final Project project = item.getModelObject();
 
-
         final BootstrapAjaxLink<Void> addPurchaseRequisition = new BootstrapAjaxLink<Void>("addPurchaseRequisition",
                 Buttons.Type.Success) {
             @Override
@@ -115,7 +118,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
                 new ListViewPurchaseRequisitionOverview("purchaseReqOverview",
-                        new ListModel<>(purchaseRequisitions.get(project)));
+                        new ListModel<>(purchaseRequisitions.get(project)), sessionPurchaseRequisition);
         containerFragment.add(listViewPurchaseRequisitionOverview);
 
         hideableContainer.add(containerFragment);
