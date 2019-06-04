@@ -26,6 +26,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
 
     Optional<T> findOne(@Nullable Specification<T> spec);
 
+    Optional<T> findByIdCached(final Long id);
+
     long count(Specification<T> spec);
 
     Optional<T> findById(Long id);

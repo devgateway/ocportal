@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -76,6 +77,6 @@ public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
     @Override
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(getPurchaseRequisitionNotNull().getAwardAcceptance());
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull().getAwardAcceptance()));
     }
 }

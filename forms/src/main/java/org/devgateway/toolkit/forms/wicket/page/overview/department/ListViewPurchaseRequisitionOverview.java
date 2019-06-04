@@ -39,6 +39,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,13 +53,15 @@ import java.util.List;
  */
 public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<PurchaseRequisition> {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
-    
-    public ListViewPurchaseRequisitionOverview(final String id, final IModel<List<PurchaseRequisition>> model) {
+
+    public ListViewPurchaseRequisitionOverview(final String id,
+                                               final IModel<List<PurchaseRequisition>> model,
+                                               final PurchaseRequisition sessionPurchaseRequisition) {
         super(id, model);
 
-        // check if we need to expand a Project
-        if (sessionMetadataService.getSessionPurchaseRequisition() != null) {
-            expandedContainerIds.add(sessionMetadataService.getSessionPurchaseRequisition().getId());
+        // check if we need to expand a Purchase Requisition
+        if (sessionPurchaseRequisition != null) {
+            expandedContainerIds.add(sessionPurchaseRequisition.getId());
         }
     }
 
@@ -93,12 +96,14 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
         final PurchaseRequisition purchaseRequisition = item.getModelObject();
-        final Tender tender = purchaseRequisition.getTender();
-        final TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
-        final ProfessionalOpinion professionalOpinion = purchaseRequisition.getProfessionalOpinion();
-        final AwardNotification awardNotification = purchaseRequisition.getAwardNotification();
-        final AwardAcceptance awardAcceptance = purchaseRequisition.getAwardAcceptance();
-        final Contract contract = purchaseRequisition.getContract();
+        final Tender tender = PersistenceUtil.getNext(purchaseRequisition.getTender());
+        final TenderQuotationEvaluation tenderQuotationEvaluation = PersistenceUtil.getNext(purchaseRequisition
+                .getTenderQuotationEvaluation());
+        final ProfessionalOpinion professionalOpinion = PersistenceUtil.getNext(
+                purchaseRequisition.getProfessionalOpinion());
+        final AwardNotification awardNotification = PersistenceUtil.getNext(purchaseRequisition.getAwardNotification());
+        final AwardAcceptance awardAcceptance = PersistenceUtil.getNext(purchaseRequisition.getAwardAcceptance());
+        final Contract contract = PersistenceUtil.getNext(purchaseRequisition.getContract());
 
         final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel", purchaseRequisition,
                 purchaseRequisition.getTitle(), new ArrayList<>(Arrays.asList(

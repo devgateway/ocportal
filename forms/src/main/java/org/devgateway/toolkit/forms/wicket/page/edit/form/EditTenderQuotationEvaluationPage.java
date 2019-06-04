@@ -11,6 +11,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -47,7 +48,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
         tenderQuotationEvaluation.setPurchaseRequisition(getPurchaseRequisition());
-        getPurchaseRequisition().setTenderQuotationEvaluation(tenderQuotationEvaluation);
+        //getPurchaseRequisition().setTenderQuotationEvaluation(tenderQuotationEvaluation);
 
         return tenderQuotationEvaluation;
     }
@@ -62,7 +63,8 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
         final PageParameters pp = new PageParameters();
         if (editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion() != null) {
             pp.set(WebConstants.PARAM_ID,
-                    editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion().getId());
+                    PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition()
+                            .getProfessionalOpinion()).getId());
         }
 
         return pp;

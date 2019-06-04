@@ -17,6 +17,7 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -62,9 +63,8 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
         awardNotification.setPurchaseRequisition(getPurchaseRequisition());
-        getPurchaseRequisition().setAwardNotification(awardNotification);
+        //getPurchaseRequisition().setAwardNotification(awardNotification);
         awardNotification.setPurchaseRequisition(getPurchaseRequisition());
-        this.getPurchaseRequisition().setAwardNotification(awardNotification);
 
         return awardNotification;
     }
@@ -79,7 +79,8 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
         final PageParameters pp = new PageParameters();
         if (editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance() != null) {
             pp.set(WebConstants.PARAM_ID,
-                    editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance().getId());
+                    PersistenceUtil.getNext(
+                    editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance()).getId());
         }
 
         return pp;

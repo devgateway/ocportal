@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -7,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -75,6 +75,7 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     @Override
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(getPurchaseRequisitionNotNull().getProfessionalOpinion());
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+                .getProfessionalOpinion()));
     }
 }

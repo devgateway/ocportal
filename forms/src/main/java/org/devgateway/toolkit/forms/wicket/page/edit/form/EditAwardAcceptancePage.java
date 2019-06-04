@@ -17,6 +17,7 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -57,7 +58,7 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     protected AwardAcceptance newInstance() {
         final AwardAcceptance awardAcceptance = super.newInstance();
         awardAcceptance.setPurchaseRequisition(getPurchaseRequisition());
-        getPurchaseRequisition().setAwardAcceptance(awardAcceptance);
+        //getPurchaseRequisition().setAwardAcceptance(awardAcceptance);
 
         return awardAcceptance;
     }
@@ -72,7 +73,8 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
         final PageParameters pp = new PageParameters();
         if (editForm.getModelObject().getPurchaseRequisition().getContract() != null) {
             pp.set(WebConstants.PARAM_ID,
-                    editForm.getModelObject().getPurchaseRequisition().getContract().getId());
+                    PersistenceUtil.getNext(
+                    editForm.getModelObject().getPurchaseRequisition().getContract()).getId());
         }
 
         return pp;
