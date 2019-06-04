@@ -77,7 +77,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                     public void onClick() {
                         sessionMetadataService.setSessionDepartment(procurementPlan.getDepartment());
                         sessionMetadataService.setSessionProject(
-                                projectService.findByIdCached(item.getModelObject().getId()).get());
+                                projectService.findById(item.getModelObject().getId()).get());
                         setResponsePage(DepartmentOverviewPage.class);
                     }
                 };
