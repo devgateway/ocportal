@@ -18,6 +18,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -25,6 +26,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -32,9 +34,13 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
@@ -46,13 +52,17 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -80,6 +90,9 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     protected final IModel<FiscalYear> fiscalYearModel;
 
     protected IModel<List<FiscalYear>> fiscalYearsModel;
+
+    @SpringBean
+    private ExcelGeneratorService excelGeneratorService;
 
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
@@ -146,9 +159,72 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         listCabinetPaperButton();
         addProjectButton();
         addYearDropdown();
+
+        final Form excelForm = new ExcelDownloadForm("excelForm");
+        add(excelForm);
+
         addSearchBox();
 
         addProjectList();
+    }
+
+    /**
+     * A wrapper form that is used to fire the excel download action
+     */
+    public class ExcelDownloadForm extends Form<Void> {
+        public ExcelDownloadForm(final String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+
+            final AJAXDownload download = new AJAXDownload() {
+                @Override
+                protected IRequestHandler getHandler() {
+                    return new IRequestHandler() {
+                        @Override
+                        public void respond(final IRequestCycle requestCycle) {
+                            final HttpServletResponse response = (HttpServletResponse) requestCycle
+                                    .getResponse().getContainerResponse();
+
+                            try {
+                                    final byte[] bytes = excelGeneratorService.getExcelDownload(
+                                            new ArrayList<>(Arrays.asList(getProcurementPlan())));
+
+                                    response.setContentType(
+                                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                                    response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
+                                    response.getOutputStream().write(bytes);
+
+                            } catch (IOException e) {
+                                logger.error("Download error", e);
+                            }
+
+                            RequestCycle.get().scheduleRequestHandlerAfterCurrent(null);
+                        }
+
+                        @Override
+                        public void detach(final IRequestCycle requestCycle) {
+                            // do nothing;
+                        }
+                    };
+                }
+            };
+            add(download);
+
+            final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton", Buttons.Type.Warning) {
+                @Override
+                protected void onSubmit(final AjaxRequestTarget target) {
+                    super.onSubmit(target);
+
+                    // initiate the file download
+                    download.initiate(target);
+                }
+            };
+            add(excelButton);
+        }
     }
 
     private void addLabelOrInvisibleContainer(final String id, final Object o) {

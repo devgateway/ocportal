@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.excel;
 import com.google.common.collect.ImmutableSet;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -37,6 +38,7 @@ public enum FieldType {
             .add(String.class)
             .add(BigDecimal.class)
             .add(Date.class)
+            .add(ZonedDateTime.class)
             .add(Integer.class)
             .add(Long.class)
             .add(Double.class)
