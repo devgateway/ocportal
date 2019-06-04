@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -74,6 +75,7 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
     @Override
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(getPurchaseRequisitionNotNull().getAwardNotification());
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+                .getAwardNotification()));
     }
 }

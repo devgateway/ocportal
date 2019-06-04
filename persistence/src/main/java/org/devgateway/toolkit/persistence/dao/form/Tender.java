@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -173,7 +174,8 @@ public class Tender extends AbstractPurchaseReqMakueniEntity {
     @Override
     @Transactional
     public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(getPurchaseRequisitionNotNull().getTenderQuotationEvaluation());
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+                .getTenderQuotationEvaluation()));
     }
 
 }

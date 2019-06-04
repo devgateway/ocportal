@@ -22,6 +22,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -108,7 +109,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
         if (editForm.getModelObject().getTender() != null) {
-            pp.set(WebConstants.PARAM_ID, editForm.getModelObject().getTender().getId());
+            pp.set(WebConstants.PARAM_ID, PersistenceUtil.getNext(editForm.getModelObject().getTender()).getId());
         }
         // check if we have a Purchase Requisition in session and add it
         if (sessionMetadataService.getSessionPurchaseRequisition() == null) {

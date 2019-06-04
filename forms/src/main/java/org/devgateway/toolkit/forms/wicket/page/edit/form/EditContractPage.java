@@ -63,7 +63,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
         contract.setPurchaseRequisition(getPurchaseRequisition());
-        getPurchaseRequisition().setContract(contract);
+        //getPurchaseRequisition().setContract(contract);
         return contract;
     }
 

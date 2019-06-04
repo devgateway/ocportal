@@ -16,6 +16,7 @@ import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -66,7 +67,7 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
         professionalOpinion.setPurchaseRequisition(getPurchaseRequisition());
-        getPurchaseRequisition().setProfessionalOpinion(professionalOpinion);
+        //getPurchaseRequisition().setProfessionalOpinion(professionalOpinion);
 
         return professionalOpinion;
     }
@@ -81,7 +82,8 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
         final PageParameters pp = new PageParameters();
         if (editForm.getModelObject().getPurchaseRequisition().getAwardNotification() != null) {
             pp.set(WebConstants.PARAM_ID,
-                    editForm.getModelObject().getPurchaseRequisition().getAwardNotification().getId());
+                    PersistenceUtil.getNext(
+                    editForm.getModelObject().getPurchaseRequisition().getAwardNotification()).getId());
         }
 
         return pp;
@@ -89,7 +91,7 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
 
     private List<Supplier> getSuppliersInTenderQuotation() {
         final TenderQuotationEvaluation tenderQuotationEvaluation =
-                getPurchaseRequisition().getTenderQuotationEvaluation();
+                PersistenceUtil.getNext(getPurchaseRequisition().getTenderQuotationEvaluation());
         final List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

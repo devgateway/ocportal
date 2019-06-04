@@ -30,6 +30,7 @@ import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -138,7 +139,8 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         final PageParameters pp = new PageParameters();
         if (editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation() != null) {
             pp.set(WebConstants.PARAM_ID,
-                    editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation().getId());
+                    PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition()
+                            .getTenderQuotationEvaluation()).getId());
         }
 
         return pp;
@@ -185,7 +187,7 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
         tender.setPurchaseRequisition(getPurchaseRequisition());
-        getPurchaseRequisition().setTender(tender);
+        //getPurchaseRequisition().setTender(tender);
 
         return tender;
     }
