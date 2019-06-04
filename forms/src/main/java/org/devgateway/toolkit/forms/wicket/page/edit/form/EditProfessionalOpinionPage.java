@@ -67,7 +67,6 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
         professionalOpinion.setPurchaseRequisition(getPurchaseRequisition());
-        //getPurchaseRequisition().setProfessionalOpinion(professionalOpinion);
 
         return professionalOpinion;
     }

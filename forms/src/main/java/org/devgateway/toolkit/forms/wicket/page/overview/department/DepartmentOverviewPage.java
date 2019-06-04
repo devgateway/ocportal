@@ -52,6 +52,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
@@ -190,13 +191,19 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                                     .getResponse().getContainerResponse();
 
                             try {
-                                    final byte[] bytes = excelGeneratorService.getExcelDownload(
-                                            new ArrayList<>(Arrays.asList(getProcurementPlan())));
+                                long startTime = System.nanoTime();
+                                final byte[] bytes = excelGeneratorService.getExcelDownload(
+                                        new ArrayList<>(Arrays.asList(getProcurementPlan())));
 
-                                    response.setContentType(
-                                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                                    response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
-                                    response.getOutputStream().write(bytes);
+
+                                long endTime = System.nanoTime();
+                                double duration = (endTime - startTime) / 1000000000.0;
+                                logger.info("------- [Data Download] excel generation: " + duration);
+
+                                response.setContentType(
+                                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                                response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
+                                response.getOutputStream().write(bytes);
 
                             } catch (IOException e) {
                                 logger.error("Download error", e);

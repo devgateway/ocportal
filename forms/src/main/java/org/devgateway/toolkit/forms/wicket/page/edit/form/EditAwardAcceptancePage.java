@@ -58,7 +58,6 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     protected AwardAcceptance newInstance() {
         final AwardAcceptance awardAcceptance = super.newInstance();
         awardAcceptance.setPurchaseRequisition(getPurchaseRequisition());
-        //getPurchaseRequisition().setAwardAcceptance(awardAcceptance);
 
         return awardAcceptance;
     }

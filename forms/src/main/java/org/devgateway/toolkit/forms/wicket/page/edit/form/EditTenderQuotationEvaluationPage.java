@@ -48,7 +48,6 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
         tenderQuotationEvaluation.setPurchaseRequisition(getPurchaseRequisition());
-        //getPurchaseRequisition().setTenderQuotationEvaluation(tenderQuotationEvaluation);
 
         return tenderQuotationEvaluation;
     }
