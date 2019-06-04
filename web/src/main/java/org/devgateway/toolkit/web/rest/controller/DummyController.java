@@ -209,14 +209,14 @@ public class DummyController {
                     for (int j = 0; j < 3; j++) {
                         final PurchaseRequisition purchaseRequisition = new PurchaseRequisition();
                         purchaseRequisition.setProject(project);
-                        purchaseRequisition.setTitle("Purchase Requisition " + i + j);
-                        purchaseRequisition.setPurchaseRequestNumber("# " + i + "-" + random.nextInt(5000));
+                        purchaseRequisition.setTitle("Purchase Requisition " + i + j + "-" + random.nextInt(50000));
+                        purchaseRequisition.setPurchaseRequestNumber("# " + i + j + "-" + random.nextInt(50000));
 
                         prs.add(purchaseRequisition);
 
                         final Tender tender = new Tender();
                         tender.setPurchaseRequisition(purchaseRequisition);
-                        tender.setTenderTitle("Tender " + random.nextInt(5000));
+                        tender.setTenderTitle("Tender " + i + j + "-" + random.nextInt(50000));
                         tenders.add(tender);
 
                         final TenderQuotationEvaluation tenderQuotationEvaluation = new TenderQuotationEvaluation();
