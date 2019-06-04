@@ -184,8 +184,8 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     @Override
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
-        tender.setPurchaseRequisition(this.purchaseRequisition);
-        this.purchaseRequisition.setTender(tender);
+        tender.setPurchaseRequisition(getPurchaseRequisition());
+        getPurchaseRequisition().setTender(tender);
 
         return tender;
     }

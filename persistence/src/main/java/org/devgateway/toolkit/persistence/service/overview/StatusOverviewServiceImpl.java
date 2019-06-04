@@ -18,6 +18,8 @@ import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,8 +39,9 @@ import java.util.stream.Stream;
  */
 @Service
 @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
-@Transactional(readOnly = true)
 public class StatusOverviewServiceImpl implements StatusOverviewService {
+    protected static final Logger logger = LoggerFactory.getLogger(StatusOverviewService.class);
+
     @Autowired
     private ProjectService projectService;
 
@@ -65,15 +68,41 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Override
     @Cacheable
+    @Transactional(readOnly = true)
     public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
+
+        long startTime = System.nanoTime();
+
         final List<Project> projects = projectService.findAll(
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
+
+        long endTime = System.nanoTime();
+        double duration = (endTime - startTime) / 1000000000.0;
+        logger.info("------- Fetch " + projects.size() + " Projects time: " + duration);
+        logger.info("---------------------");
+
+
+        startTime = System.nanoTime();
 
         final Map<Project, List<String>> tenderStatusMap = addStatus(
                 fiscalYear, purchaseRequisitionService, tenderService,
                 tenderQuotationEvaluationService, professionalOpinionService);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000.0;
+        logger.info("---------- Fetch TOTAL Tenders time: " + duration);
+        logger.info("---------------------");
+
+        startTime = System.nanoTime();
+
         final Map<Project, List<String>> awardStatusMap = addStatus(
                 fiscalYear, awardNotificationService, awardAcceptanceService, contractService);
+
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000.0;
+        logger.info("---------- Fetch TOTAL Awards time: " + duration);
+        logger.info("---------------------");
+
+        startTime = System.nanoTime();
 
         // get list of statuses of PurchaseRequisition forms grouped by Project
         final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
@@ -81,8 +110,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
         final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
         for (final Project project : projects) {
-            StatusOverviewData sod = statusOverviewData.parallelStream()
-                    .filter(item -> project.getProcurementPlan().equals(item.getProcurementPlan()))
+            StatusOverviewData sod = statusOverviewData.stream()
+                    .filter(item -> project.getProcurementPlan().getId().equals(item.getProcurementPlan().getId()))
                     .findFirst()
                     .orElse(null);
             if (sod == null) {
@@ -111,6 +140,11 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
             sod.getProjects().add(statusOverviewProjectStatus);
         }
+
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000.0;
+        logger.info("------- Status calculation time: " + duration);
+        logger.info("---------------------");
 
         return statusOverviewData;
     }
@@ -157,7 +191,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
      */
     private <S extends ProjectAttachable & Statusable>
     Map<Project, List<String>> groupStatusByProject(final List<S> list) {
-        return list.stream()
+        return list.parallelStream()
                 .collect(Collectors.groupingBy(ProjectAttachable::getProject,
                         Collectors.mapping(key -> key.getStatus(), Collectors.toList())));
     }
@@ -181,7 +215,19 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         Map<Project, List<String>> statusMap = new HashMap<>();
 
         for (AbstractMakueniEntityService<? extends S> service : services) {
-            statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(service.findByFiscalYear(fiscalYear)));
+            long startTime = System.nanoTime();
+
+            final List<? extends S> list = service.findByFiscalYear(fiscalYear);
+
+            long endTime = System.nanoTime();
+            double duration = (endTime - startTime) / 1000000000.0;
+            logger.info("------- Fetch " + list.size() + " "
+                    + service.getClass().getSimpleName()
+                    .substring(0, service.getClass().getSimpleName().indexOf("ServiceImpl"))
+                    + " time: " + duration);
+
+
+            statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(list));
         }
 
         return statusMap;

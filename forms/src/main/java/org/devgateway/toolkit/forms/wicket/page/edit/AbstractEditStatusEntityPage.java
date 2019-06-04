@@ -545,7 +545,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
         return saveEditPageButton;
     }
-
+    
     private SaveEditPageButton getRevertToDraftPageButton() {
         final SaveEditPageButton saveEditPageButton = new SaveEditPageButton("revertToDraft",
                 new StringResourceModel("revertToDraft", this, null)) {
@@ -560,10 +560,15 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 super.onSubmit(target);
                 target.add(editForm);
                 setButtonsPermissions();
+                onAfterRevertToDraft(target);
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
         return saveEditPageButton;
+    }
+
+    protected void onAfterRevertToDraft(AjaxRequestTarget target) {
+
     }
 
     private void setStatusAppendComment(final String status) {

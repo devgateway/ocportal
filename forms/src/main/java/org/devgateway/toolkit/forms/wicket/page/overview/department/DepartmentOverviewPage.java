@@ -134,7 +134,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-
         add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
         add(new Label("fiscalYear", new PropertyModel<>(fiscalYearModel, "label")));
 
@@ -257,7 +256,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void addProjectList() {
-        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", new ListModel<>(fetchData()));
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview",
+                new ListModel<>(fetchData()), procurementPlanModel);
         add(listViewProjectsOverview);
     }
 

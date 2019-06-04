@@ -22,11 +22,11 @@ public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEnt
     @Audited
     private String status = DBConstants.Status.DRAFT;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OrderColumn(name = "index")
     @JsonIgnore
-    private List<StatusChangedComment> statusComments = new ArrayList<>();
+    protected List<StatusChangedComment> statusComments = new ArrayList<>();
 
     @Transient
     private String newStatusComment;

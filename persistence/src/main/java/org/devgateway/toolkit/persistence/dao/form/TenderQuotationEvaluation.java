@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -67,5 +70,11 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     @Override
     public String getLabel() {
         return null;
+    }
+
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.singletonList(getPurchaseRequisitionNotNull().getProfessionalOpinion());
     }
 }

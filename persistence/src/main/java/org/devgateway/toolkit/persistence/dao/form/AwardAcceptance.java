@@ -4,11 +4,14 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -61,4 +64,9 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
         return null;
     }
 
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.singletonList(getPurchaseRequisitionNotNull().getContract());
+    }
 }

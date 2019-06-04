@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author gmutuhu
@@ -76,5 +79,11 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.emptyList();
     }
 }
