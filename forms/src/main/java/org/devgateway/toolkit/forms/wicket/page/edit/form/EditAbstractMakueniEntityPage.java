@@ -54,6 +54,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
             comment.setStatus(DRAFT);
             comment.setComment(c.getNewStatusComment());
             c.getStatusComments().add(comment);
+            c.setStatus(DRAFT);
             makeniEntityServiceResolver.saveAndFlushMakueniEntity(c);
         });
     }

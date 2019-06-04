@@ -31,6 +31,7 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
         T loadedEntity = findById(entity.getId()).get();
         return loadedEntity.getDirectChildrenEntities().stream().filter(Objects::nonNull)
                 .flatMap(s -> Stream.concat(Stream.of(s), s.getDirectChildrenEntities().stream()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 }
