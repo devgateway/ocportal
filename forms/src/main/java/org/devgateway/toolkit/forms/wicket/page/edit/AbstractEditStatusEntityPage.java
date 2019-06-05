@@ -103,20 +103,26 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private HiddenField<Double> maxHeight;
 
+    protected Fragment extraStatusEntityButtonsFragment;
+
     public AbstractEditStatusEntityPage(final PageParameters parameters) {
         super(parameters);
+
     }
 
 
     public class ButtonContentModal extends TextContentModal {
+        private final Buttons.Type buttonType;
         private LaddaAjaxButton button;
         private IModel<String> buttonModel;
         private ModalSaveEditPageButton modalSavePageButton;
 
-        public ButtonContentModal(String markupId, IModel<String> model, IModel<String> buttonModel) {
+        public ButtonContentModal(String markupId, IModel<String> model, IModel<String> buttonModel,
+                                  Buttons.Type buttonType) {
             super(markupId, model);
             addCloseButton();
             this.buttonModel = buttonModel;
+            this.buttonType = buttonType;
         }
 
         public ButtonContentModal modalSavePageButton(ModalSaveEditPageButton modalSavePageButton) {
@@ -127,7 +133,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         @Override
         protected void onInitialize() {
             super.onInitialize();
-            button = new LaddaAjaxButton("button", Buttons.Type.Danger) {
+            button = new LaddaAjaxButton("button", buttonType) {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target) {
                     modalSavePageButton.continueSubmit(target);
@@ -143,8 +149,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         ButtonContentModal buttonContentModal = new ButtonContentModal(
                 "terminateModal",
                 Model.of("Are you sure you want to TERMINATE the contracting process?"),
-                Model.of("TERMINATE"));
-        buttonContentModal.modalSavePageButton(saveTerminateButton);
+                Model.of("TERMINATE"), Buttons.Type.Danger);
         return buttonContentModal;
     }
 
@@ -157,13 +162,17 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
 
         @Override
+        protected String getOnClickScript() {
+            return WebConstants.DISABLE_FORM_LEAVING_JS;
+        }
+
+        @Override
         protected void onSubmit(AjaxRequestTarget target) {
             modal.show(true);
             target.add(modal);
         }
 
         public void continueSubmit(AjaxRequestTarget target) {
-            setStatusAppendComment(DBConstants.Status.TERMINATED);
             super.onSubmit(target);
         }
     }
@@ -200,6 +209,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         entityButtonsFragment = new Fragment("extraButtons", "entityButtons", this);
         editForm.replace(entityButtonsFragment);
 
+        Fragment fragment = new Fragment("extraStatusEntityButtons", "noButtons", this);
+        entityButtonsFragment.add(fragment);
+
         saveSubmitButton = getSaveSubmitPageButton();
         entityButtonsFragment.add(saveSubmitButton);
 
@@ -215,11 +227,11 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         revertToDraftPageButton = getRevertToDraftPageButton();
         entityButtonsFragment.add(revertToDraftPageButton);
 
-        terminateModal = createTerminateModal();
-        entityButtonsFragment.add(terminateModal);
 
         saveTerminateButton = getSaveTerminateButton();
         entityButtonsFragment.add(saveTerminateButton);
+        entityButtonsFragment.add(terminateModal);
+
 
         applyDraftSaveBehavior(saveButton);
         applyDraftSaveBehavior(saveDraftContinueButton);
@@ -280,15 +292,19 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     private ModalSaveEditPageButton getSaveTerminateButton() {
+        terminateModal = createTerminateModal();
         final ModalSaveEditPageButton saveEditPageButton = new ModalSaveEditPageButton("terminate",
                 new StringResourceModel("terminate", this, null), terminateModal) {
+
             @Override
-            protected String getOnClickScript() {
-                return WebConstants.DISABLE_FORM_LEAVING_JS;
+            public void continueSubmit(AjaxRequestTarget target) {
+                setStatusAppendComment(DBConstants.Status.TERMINATED);
+                super.continueSubmit(target);
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.archive);
         saveEditPageButton.setDefaultFormProcessing(false);
+        terminateModal.modalSavePageButton(saveEditPageButton);
         return saveEditPageButton;
     }
 
