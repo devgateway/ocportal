@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,31 +35,42 @@ import java.util.List;
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")})
 public class Tender extends AbstractPurchaseReqMakueniEntity {
+    @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
 
+    @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderTitle;
 
+    @ExcelExport
     private Date invitationDate;
 
+    @ExcelExport
     private Date closingDate;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
+    @ExcelExport
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String objective;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity issuedBy;
+
+    @ExcelExport
     private Double tenderValue;
 
+    @ExcelExport
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String tenderLink;
 
+    @ExcelExport(separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")

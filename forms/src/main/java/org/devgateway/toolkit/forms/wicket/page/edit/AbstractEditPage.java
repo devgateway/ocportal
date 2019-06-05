@@ -169,19 +169,24 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
     protected TextContentModal createDeleteModal() {
-        TextContentModal modal = new TextContentModal("deleteModal",
+        final TextContentModal modal = new TextContentModal("deleteModal",
                 Model.of("DELETE is an irreversible operation. Are you sure?"));
         modal.addCloseButton();
 
-        LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
+        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
             @Override
-            protected void onSubmit(AjaxRequestTarget target) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 super.onSubmit(target);
+
+                // close the modal
+                deleteModal.appendCloseDialogJavaScript(target);
                 onDelete(target);
             }
         };
+        deleteButton.setDefaultFormProcessing(false);
         deleteButton.setLabel(Model.of("DELETE"));
         modal.addButton(deleteButton);
+
         return modal;
     }
 
@@ -282,8 +287,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             });
         }
     }
-
-
 
 
     /**
@@ -460,7 +463,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         }
     }
 
-    protected void onDelete(AjaxRequestTarget target) {
+    protected void onDelete(final AjaxRequestTarget target) {
         final T deleteable = editForm.getModelObject();
         try {
             jpaService.delete(deleteable);

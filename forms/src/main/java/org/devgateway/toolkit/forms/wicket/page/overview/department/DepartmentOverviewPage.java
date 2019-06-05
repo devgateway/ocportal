@@ -52,8 +52,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
-import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
+import org.devgateway.toolkit.persistence.service.excel.DataExportService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -63,7 +62,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -93,7 +91,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     protected IModel<List<FiscalYear>> fiscalYearsModel;
 
     @SpringBean
-    private ExcelGeneratorService excelGeneratorService;
+    private DataExportService dataExportService;
 
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
@@ -192,9 +190,9 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
                             try {
                                 long startTime = System.nanoTime();
-                                final byte[] bytes = excelGeneratorService.getExcelDownload(
-                                        new ArrayList<>(Arrays.asList(getProcurementPlan())));
 
+                                final byte[] bytes = dataExportService.generateProcurementPlanExcel(
+                                        getProcurementPlan().getId());
 
                                 long endTime = System.nanoTime();
                                 double duration = (endTime - startTime) / 1000000000.0;
@@ -204,7 +202,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                                 response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
                                 response.getOutputStream().write(bytes);
-
                             } catch (IOException e) {
                                 logger.error("Download error", e);
                             }
