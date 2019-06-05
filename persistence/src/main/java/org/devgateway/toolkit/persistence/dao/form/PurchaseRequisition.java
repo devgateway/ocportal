@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -47,53 +48,65 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @NotNull
     private Project project;
 
+    @ExcelExport(separateSheet = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<Tender> tender;
 
+    @ExcelExport(separateSheet = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<TenderQuotationEvaluation> tenderQuotationEvaluation;
 
+    @ExcelExport(separateSheet = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<ProfessionalOpinion> professionalOpinion;
 
+    @ExcelExport(separateSheet = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<AwardNotification> awardNotification;
 
+    @ExcelExport(separateSheet = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<AwardAcceptance> awardAcceptance;
 
+    @ExcelExport(separateSheet = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<Contract> contract;
 
+    @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
 
+    @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String title;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Staff requestedBy;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ChargeAccount chargeAccount;
 
+    @ExcelExport
     private Date requestApprovalDate;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
