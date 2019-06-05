@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -23,14 +24,18 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
+    @ExcelExport
     private Date awardDate;
 
+    @ExcelExport
     private Double tenderValue;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
+    @ExcelExport
     private Integer acknowledgementDays;
 
     public Double getTenderValue() {

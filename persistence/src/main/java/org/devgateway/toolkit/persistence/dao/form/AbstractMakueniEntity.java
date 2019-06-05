@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Labelable;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -21,13 +22,13 @@ import java.util.Set;
  */
 @MappedSuperclass
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity implements Labelable {
-
+    @ExcelExport
     private Date approvedDate;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
-
 
     /**
      * Gets direct children of current entity, that is the next form(s) that have to be filled in after this one is done

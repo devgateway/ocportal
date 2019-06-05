@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -25,15 +26,19 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PlanItem planItem;
 
+    @ExcelExport
     private Integer quantity;
 
+    @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String unit;
 
+    @ExcelExport
     private Double amount;
 
     @Transient

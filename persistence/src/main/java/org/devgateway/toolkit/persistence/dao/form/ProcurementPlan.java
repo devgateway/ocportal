@@ -1,7 +1,9 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -18,7 +20,9 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author idobre
@@ -29,19 +33,28 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
 public class ProcurementPlan extends AbstractMakueniEntity {
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private FiscalYear fiscalYear;
 
+    @ExcelExport(separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<PlanItem> planItems = new ArrayList<>();
+
+    @ExcelExport(separateSheet = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "procurementPlan")
+    @JsonIgnore
+    private Set<Project> projects = new HashSet<>();
 
     public ProcurementPlan() {
 
@@ -69,6 +82,14 @@ public class ProcurementPlan extends AbstractMakueniEntity {
 
     public void setPlanItems(final List<PlanItem> planItems) {
         this.planItems = planItems;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(final Set<Project> projects) {
+        this.projects = projects;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -28,6 +30,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable {
+    @ExcelExport(separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private CabinetPaper cabinetPaper;
@@ -35,22 +38,30 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
+    @JsonIgnore
     @NotNull
     private ProcurementPlan procurementPlan;
 
+    @ExcelExport(separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "project")
+    @JsonIgnore
     private Set<PurchaseRequisition> purchaseRequisitions = new HashSet<>();
 
+    @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String projectTitle;
 
+    @ExcelExport
     private Double amountBudgeted;
 
+    @ExcelExport
     private Double amountRequested;
 
+    @ExcelExport
     private Integer numberSubCounties;
 
+    @ExcelExport
     private Integer numberSubWards;
 
     public CabinetPaper getCabinetPaper() {

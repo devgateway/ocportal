@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -22,16 +23,21 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PurchaseItem purchaseItem;
 
+    @ExcelExport
     private String unitOfIssue;
 
+    @ExcelExport
     private Integer quantity;
 
+    @ExcelExport
     private Double unitPrice;
 
+    @ExcelExport
     private Double totalCost;
 
     public String getUnitOfIssue() {

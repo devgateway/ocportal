@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -31,25 +32,33 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class Contract extends AbstractPurchaseReqMakueniEntity {
+    @ExcelExport
     private Double tenderValue;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
+    @ExcelExport
     private Date contractDate;
 
+    @ExcelExport
     private Date contractApprovalDate;
 
+    @ExcelExport
     private Date expiryDate;
 
+    @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
 
+    @ExcelExport(justExport = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity procuringEntity;
 
+    @ExcelExport(separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
