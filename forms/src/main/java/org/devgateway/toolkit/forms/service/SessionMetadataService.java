@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import static org.devgateway.toolkit.forms.WebConstants.ALL_SESSION_KEYS;
 import static org.devgateway.toolkit.forms.WebConstants.DEPARTMENT;
@@ -67,7 +68,12 @@ public class SessionMetadataService {
         if (session != null) {
             final Long objId = session.getMetaData(key);
             if (objId != null) {
-                return service.findById(objId).get();
+                Optional<S> object = service.findById(objId);
+                if (object.isPresent()) {
+                    return object.get();
+                }
+
+                return null;
             }
         }
         return null;
