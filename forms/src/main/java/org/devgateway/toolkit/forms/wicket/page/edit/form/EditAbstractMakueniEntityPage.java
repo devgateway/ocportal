@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -27,6 +28,10 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.DRAFT;
  */
 public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
         extends AbstractEditStatusEntityPage<T> {
+
+    protected ButtonContentModal revertToDraftModal;
+
+    protected ModalSaveEditPageButton modalSaveEditPageButton;
 
     @SpringBean
     protected SessionMetadataService sessionMetadataService;
@@ -59,6 +64,39 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         });
     }
 
+    protected ButtonContentModal createRevertToDraftModal() {
+        ButtonContentModal buttonContentModal = new ButtonContentModal(
+                "revertToDraftModal",
+                Model.of("Reverting to draft this entity will result in reverting to draft any other entities downstream. Proceed?"),
+                Model.of("REVERT TO DRAFT"));
+        return buttonContentModal;
+    }
+
+
+//    @Override
+//    protected ModalSaveEditPageButton getRevertToDraftPageButton() {
+//        final ModalSaveEditPageButton saveEditPageButton = new ModalSaveEditPageButton("revertToDraft",
+//                new StringResourceModel("revertToDraft", this, null), revertToDraftModal) {
+//            @Override
+//            protected String getOnClickScript() {
+//                return WebConstants.DISABLE_FORM_LEAVING_JS;
+//            }
+//
+//            @Override
+//            protected void onSubmit(final AjaxRequestTarget target) {
+//                setStatusAppendComment(DBConstants.Status.DRAFT);
+//                super.onSubmit(target);
+//                target.add(editForm);
+//                setButtonsPermissions();
+//                onAfterRevertToDraft(target);
+//            }
+//        };
+//        saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
+//        return saveEditPageButton;
+//    }
+
+
+
     public AbstractMakueniEntityService<T> getJpaService() {
         return (AbstractMakueniEntityService<T>) jpaService;
     }
@@ -68,6 +106,12 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         super.onInitialize();
 
         enableDisableAutosaveFields(null);
+
+//        revertToDraftModal = createRevertToDraftModal();
+//        entityButtonsFragment.add(revertToDraftModal);
+
+      //  revertToDraftModal.modalSavePageButton((ModalSaveEditPageButton) revertToDraftPageButton);
+
     }
 
     @Override
