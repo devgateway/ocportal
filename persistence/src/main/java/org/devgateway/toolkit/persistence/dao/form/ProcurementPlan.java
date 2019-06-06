@@ -33,12 +33,12 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
 public class ProcurementPlan extends AbstractMakueniEntity {
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private FiscalYear fiscalYear;
