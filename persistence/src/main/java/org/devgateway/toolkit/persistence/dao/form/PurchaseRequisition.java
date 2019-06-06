@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author idobre
@@ -41,7 +42,8 @@ import java.util.Set;
 @Table(indexes = {@Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"),
         @Index(columnList = "title")})
-public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
+public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
+        TitleAutogeneratable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -153,8 +155,14 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         this.purchaseRequestNumber = purchaseRequestNumber;
     }
 
+    @Override
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public Consumer<String> titleSetter() {
+        return this::setTitle;
     }
 
     public void setTitle(final String title) {

@@ -310,6 +310,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         protected void onSubmit(final AjaxRequestTarget target) {
             // save the object and go back to the list page
             final T saveable = editForm.getModelObject();
+            
+            beforeSaveEntity(saveable);
 
             // saves the entity and flushes the changes
             jpaService.saveAndFlush(saveable);
@@ -403,6 +405,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         public boolean isRedirectToSelf() {
             return redirectToSelf;
         }
+    }
+
+    protected void beforeSaveEntity(T saveable) {
     }
 
     /**

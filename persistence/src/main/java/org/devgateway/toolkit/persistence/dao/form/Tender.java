@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author gmutuhu
@@ -34,7 +35,7 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id"),
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")})
-public class Tender extends AbstractPurchaseReqMakueniEntity {
+public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAutogeneratable {
     @ExcelExport
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
@@ -190,4 +191,13 @@ public class Tender extends AbstractPurchaseReqMakueniEntity {
                 .getTenderQuotationEvaluation()));
     }
 
+    @Override
+    public String getTitle() {
+        return getTenderTitle();
+    }
+
+    @Override
+    public Consumer<String> titleSetter() {
+        return this::setTenderTitle;
+    }
 }

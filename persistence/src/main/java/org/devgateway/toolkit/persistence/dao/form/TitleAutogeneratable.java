@@ -4,6 +4,10 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.function.Consumer;
 
+/**
+ * @author mihai
+ * Autogenerates title for draft entities when title is missing
+ */
 public interface TitleAutogeneratable {
 
     String getTitle();
