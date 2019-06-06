@@ -29,58 +29,58 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
 public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem, Labelable {
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String description;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double estimatedCost;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String unitOfIssue;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Integer quantity;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double unitPrice;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double totalCost;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double targetGroupValue;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double quarter1st;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double quarter2nd;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double quarter3rd;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double quarter4th;
 
     @Transient

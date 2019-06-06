@@ -25,15 +25,15 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date professionalOpinionDate;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double recommendedAwardAmount;
 
     public Date getProfessionalOpinionDate() {

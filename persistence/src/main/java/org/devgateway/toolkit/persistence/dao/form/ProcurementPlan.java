@@ -43,14 +43,14 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @ManyToOne
     private FiscalYear fiscalYear;
 
-    @ExcelExport(separateSheet = true)
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<PlanItem> planItems = new ArrayList<>();
 
-    @ExcelExport(separateSheet = true)
+    @ExcelExport(separateSheet = true, name = "Projects")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "procurementPlan")
     @JsonIgnore

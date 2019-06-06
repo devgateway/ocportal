@@ -23,21 +23,21 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PurchaseItem purchaseItem;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private String unitOfIssue;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Integer quantity;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double unitPrice;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double totalCost;
 
     public String getUnitOfIssue() {

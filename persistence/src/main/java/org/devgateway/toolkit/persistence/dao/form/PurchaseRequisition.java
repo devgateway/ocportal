@@ -42,76 +42,75 @@ import java.util.Set;
         @Index(columnList = "purchaseRequestNumber"),
         @Index(columnList = "title")})
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
-
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @NotNull
     private Project project;
 
-    @ExcelExport(separateSheet = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<Tender> tender;
-
-    @ExcelExport(separateSheet = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<TenderQuotationEvaluation> tenderQuotationEvaluation;
-
-    @ExcelExport(separateSheet = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<ProfessionalOpinion> professionalOpinion;
-
-    @ExcelExport(separateSheet = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<AwardNotification> awardNotification;
-
-    @ExcelExport(separateSheet = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<AwardAcceptance> awardAcceptance;
-
-    @ExcelExport(separateSheet = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @LazyToOne(value = LazyToOneOption.NO_PROXY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Set<Contract> contract;
-
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String title;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Staff requestedBy;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ChargeAccount chargeAccount;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date requestApprovalDate;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<PurchaseItem> purchaseItems = new ArrayList<>();
+
+    @ExcelExport(separateSheet = true, name = "Tender")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<Tender> tender;
+
+    @ExcelExport(separateSheet = true, name = "Tender Quotation Evaluation")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<TenderQuotationEvaluation> tenderQuotationEvaluation;
+
+    @ExcelExport(separateSheet = true, name = "Professional Opinion")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<ProfessionalOpinion> professionalOpinion;
+
+    @ExcelExport(separateSheet = true, name = "Award Notification")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<AwardNotification> awardNotification;
+
+    @ExcelExport(separateSheet = true, name = "Award Acceptance")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<AwardAcceptance> awardAcceptance;
+
+    @ExcelExport(separateSheet = true, name = "Contract")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<Contract> contract;
 
     private boolean checkTerminated(Statusable... statusables) {
         for (Statusable statusable : statusables) {

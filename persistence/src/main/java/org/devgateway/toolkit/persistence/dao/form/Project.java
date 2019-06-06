@@ -30,7 +30,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable {
-    @ExcelExport(separateSheet = true)
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private CabinetPaper cabinetPaper;
@@ -42,26 +42,26 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @NotNull
     private ProcurementPlan procurementPlan;
 
-    @ExcelExport(separateSheet = true)
+    @ExcelExport(separateSheet = true, name = "Purchase Requisitions")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private Set<PurchaseRequisition> purchaseRequisitions = new HashSet<>();
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String projectTitle;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double amountBudgeted;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double amountRequested;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Integer numberSubCounties;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Integer numberSubWards;
 
     public CabinetPaper getCabinetPaper() {

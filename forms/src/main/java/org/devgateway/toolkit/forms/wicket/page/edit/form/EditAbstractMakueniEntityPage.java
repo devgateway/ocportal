@@ -11,7 +11,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
@@ -36,9 +35,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         extends AbstractEditStatusEntityPage<T> {
 
     protected ButtonContentModal revertToDraftModal;
-
-
-
 
     @SpringBean
     protected SessionMetadataService sessionMetadataService;
