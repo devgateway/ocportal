@@ -39,20 +39,17 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @SpringBean
     protected SessionMetadataService sessionMetadataService;
 
-
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
-
-    private final ProcurementPlan procurementPlan;
 
     public EditCabinetPaperPage(final PageParameters parameters) {
         super(parameters);
 
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
-        this.procurementPlan = sessionMetadataService.getSessionPP();
+
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && this.procurementPlan == null) {
+        if (entityId == null && sessionMetadataService.getSessionPP() == null) {
             logger.warn("Something wrong happened since we are trying to add a new CabinetPaper Entity "
                     + "without having a ProcurementPlan!");
             setResponsePage(StatusOverviewPage.class);
@@ -92,7 +89,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @Override
     protected CabinetPaper newInstance() {
         final CabinetPaper cabinetPaper = super.newInstance();
-        cabinetPaper.setProcurementPlan(this.procurementPlan);
+        cabinetPaper.setProcurementPlan(sessionMetadataService.getSessionPP());
 
         return cabinetPaper;
     }

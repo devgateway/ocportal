@@ -62,7 +62,7 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @Override
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
-        awardNotification.setPurchaseRequisition(getPurchaseRequisition());
+        awardNotification.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
 
         return awardNotification;
     }

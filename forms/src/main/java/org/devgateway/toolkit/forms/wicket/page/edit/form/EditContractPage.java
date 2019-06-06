@@ -62,7 +62,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     @Override
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
-        contract.setPurchaseRequisition(getPurchaseRequisition());
+        contract.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
 
         return contract;
     }

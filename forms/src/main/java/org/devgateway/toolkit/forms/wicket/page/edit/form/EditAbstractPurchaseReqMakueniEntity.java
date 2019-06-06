@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
@@ -17,8 +16,6 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
         extends EditAbstractMakueniEntityPage<T> {
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractPurchaseReqMakueniEntity.class);
 
-    protected final LoadableDetachableModel<PurchaseRequisition> purchaseRequisitionModel;
-
     @Override
     protected void checkAndSendEventForDisableEditing() {
         super.checkAndSendEventForDisableEditing();
@@ -27,29 +24,18 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
         }
     }
 
-
-    protected PurchaseRequisition getPurchaseRequisition() {
-        return purchaseRequisitionModel.getObject();
-    }
-
     @Override
     public boolean isTerminated() {
-        return super.isTerminated() || (getPurchaseRequisition() != null && getPurchaseRequisition().isTerminated());
+        final PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
+        return super.isTerminated() || (purchaseRequisition != null && purchaseRequisition.isTerminated());
     }
 
 
     public EditAbstractPurchaseReqMakueniEntity(final PageParameters parameters) {
         super(parameters);
 
-        purchaseRequisitionModel = new LoadableDetachableModel<PurchaseRequisition>() {
-            @Override
-            protected PurchaseRequisition load() {
-                return sessionMetadataService.getSessionPurchaseRequisition();
-            }
-        };
-
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && getPurchaseRequisition() == null) {
+        if (entityId == null && sessionMetadataService.getSessionPurchaseRequisition() == null) {
             logger.warn("Something wrong happened since we are trying to add a new AbstractPurchaseReqMakueni Entity "
                     + "without having a PurchaseRequisition!");
             setResponsePage(StatusOverviewPage.class);

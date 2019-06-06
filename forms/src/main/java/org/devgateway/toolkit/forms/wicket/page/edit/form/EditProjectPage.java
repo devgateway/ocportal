@@ -37,15 +37,12 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     @SpringBean
     private CabinetPaperService cabinetPaperService;
     
-    private final ProcurementPlan procurementPlan;
-
     public EditProjectPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = projectService;
 
-        this.procurementPlan = sessionMetadataService.getSessionPP();
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && this.procurementPlan == null) {
+        if (entityId == null && sessionMetadataService.getSessionPP() == null) {
             logger.warn("Something wrong happened since we are trying to add a new Project Entity "
                     + "without having a ProcurementPlan!");
             setResponsePage(StatusOverviewPage.class);
@@ -65,7 +62,8 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         projectTitle.getField().add(uniqueTitle());
 
         // filtered CabinetPapers based on form Procurement Plan
-        final List<CabinetPaper> cabinetPapers = cabinetPaperService.findByProcurementPlan(procurementPlan);
+        final List<CabinetPaper> cabinetPapers = cabinetPaperService
+                .findByProcurementPlan(editForm.getModelObject().getProcurementPlan());
         final Select2ChoiceBootstrapFormComponent cabinetPaper = new Select2ChoiceBootstrapFormComponent<>(
                 "cabinetPaper", new GenericChoiceProvider<>(cabinetPapers));
         cabinetPaper.required();
@@ -87,7 +85,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     @Override
     protected Project newInstance() {
         final Project project = super.newInstance();
-        project.setProcurementPlan(this.procurementPlan);
+        project.setProcurementPlan(sessionMetadataService.getSessionPP());
 
         return project;
     }

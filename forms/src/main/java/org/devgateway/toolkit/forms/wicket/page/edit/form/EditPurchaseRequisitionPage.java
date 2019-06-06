@@ -42,17 +42,12 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @SpringBean
     protected ChargeAccountService chargeAccountService;
 
-
-    public Project getProject() {
-        return sessionMetadataService.getSessionProject();
-    }
-
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = purchaseRequisitionService;
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && getProject() == null) {
+        if (entityId == null && sessionMetadataService.getSessionProject() == null) {
             logger.warn("Something wrong happened since we are trying to add a new PurchaseRequisition Entity "
                     + "without having a Project!");
             setResponsePage(StatusOverviewPage.class);
@@ -96,7 +91,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @Override
     protected PurchaseRequisition newInstance() {
         final PurchaseRequisition purchaseRequisition = super.newInstance();
-        purchaseRequisition.setProject(getProject());
+        purchaseRequisition.setProject(sessionMetadataService.getSessionProject());
 
         return purchaseRequisition;
     }

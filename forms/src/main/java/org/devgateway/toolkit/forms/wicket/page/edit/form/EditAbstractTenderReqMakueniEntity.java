@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
@@ -50,8 +51,9 @@ public abstract class EditAbstractTenderReqMakueniEntity<T extends AbstractPurch
     }
 
     protected List<Supplier> getSuppliersInTenderQuotation() {
-        final TenderQuotationEvaluation tenderQuotationEvaluation = PersistenceUtil.getNext(getPurchaseRequisition()
-                .getTenderQuotationEvaluation());
+        final PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
+        final TenderQuotationEvaluation tenderQuotationEvaluation = PersistenceUtil.getNext(
+                purchaseRequisition.getTenderQuotationEvaluation());
         List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {
