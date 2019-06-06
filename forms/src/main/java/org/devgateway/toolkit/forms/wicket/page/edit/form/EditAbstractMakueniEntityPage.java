@@ -1,15 +1,22 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -28,6 +35,11 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.DRAFT;
 public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
         extends AbstractEditStatusEntityPage<T> {
 
+    protected ButtonContentModal revertToDraftModal;
+
+
+
+
     @SpringBean
     protected SessionMetadataService sessionMetadataService;
 
@@ -35,6 +47,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected MakueniEntityServiceResolver makeniEntityServiceResolver;
 
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniEntityPage.class);
+    private Fragment extraStatusEntityButtons;
 
     public EditAbstractMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
@@ -59,6 +72,38 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         });
     }
 
+    protected ButtonContentModal createRevertToDraftModal() {
+        ButtonContentModal buttonContentModal = new ButtonContentModal(
+                "revertToDraftModal",
+                Model.of("Rejecting to draft this entity will result in rejecting to draft"
+                        + " any other entities downstream. Proceed?"),
+                Model.of("REJECT TO DRAFT"), Buttons.Type.Warning);
+        return buttonContentModal;
+    }
+
+
+    @Override
+    protected ModalSaveEditPageButton getRevertToDraftPageButton() {
+        revertToDraftModal = createRevertToDraftModal();
+        final ModalSaveEditPageButton saveEditPageButton = new ModalSaveEditPageButton("revertToDraft",
+                new StringResourceModel("revertToDraft", this, null), revertToDraftModal) {
+
+            @Override
+            public void continueSubmit(AjaxRequestTarget target) {
+                setStatusAppendComment(DBConstants.Status.DRAFT);
+                super.continueSubmit(target);
+                target.add(editForm);
+                setButtonsPermissions();
+                onAfterRevertToDraft(target);
+            }
+        };
+        revertToDraftModal.modalSavePageButton(saveEditPageButton);
+        saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
+        return saveEditPageButton;
+    }
+
+
+
     public AbstractMakueniEntityService<T> getJpaService() {
         return (AbstractMakueniEntityService<T>) jpaService;
     }
@@ -68,6 +113,12 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         super.onInitialize();
 
         enableDisableAutosaveFields(null);
+
+        extraStatusEntityButtons = new Fragment("extraStatusEntityButtons", "extraStatusButtons", this);
+        entityButtonsFragment.replace(extraStatusEntityButtons);
+        extraStatusEntityButtons.add(revertToDraftModal);
+
+
     }
 
     @Override
