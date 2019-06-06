@@ -72,7 +72,8 @@ public class SessionMetadataService {
                 if (object.isPresent()) {
                     return object.get();
                 }
-
+                //remove entry completely
+                session.setMetaData(key, null);
                 return null;
             }
         }
