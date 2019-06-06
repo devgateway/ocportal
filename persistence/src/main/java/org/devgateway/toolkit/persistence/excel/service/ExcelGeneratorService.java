@@ -56,7 +56,6 @@ public class ExcelGeneratorService {
      * @return byte[]
      * @throws IOException
      */
-    @Cacheable
     public byte[] getExcelDownload(final List<Object> objects) throws IOException {
         final ExcelFile excelFile = new ExcelFileDefault(objects, translateService);
         final Workbook workbook = excelFile.createWorkbook();
