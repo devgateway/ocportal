@@ -553,7 +553,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         } else {
             final T instance = newInstance();
             if (instance != null) {
-                model = new Model(instance);
+                model = new DozerModel<>(instance);
             }
         }
 
