@@ -46,8 +46,15 @@ public class Homepage extends BasePage {
                 setResponsePage(StatusOverviewPage.class);
             }
         };
-
         add(dataEntryLink);
+
+        final Link<Void> dataExport = new Link<Void>("dataExport") {
+            @Override
+            public void onClick() {
+                setResponsePage(DataExportPage.class);
+            }
+        };
+        add(dataExport);
     }
 
     @Override

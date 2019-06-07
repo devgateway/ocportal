@@ -20,12 +20,14 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.page.DataExportPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
@@ -94,6 +96,14 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
         addSearchBox();
         addYearDropdown();
+
+        final Link<Void> dataExport = new Link<Void>("dataExport") {
+            @Override
+            public void onClick() {
+                setResponsePage(DataExportPage.class);
+            }
+        };
+        add(dataExport);
 
         listViewStatusOverview = new ListViewStatusOverview("statusPanel", new ListModel<>(fetchData()));
         add(listViewStatusOverview);
