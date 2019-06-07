@@ -14,6 +14,7 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -66,7 +67,7 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     @Override
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
-        professionalOpinion.setPurchaseRequisition(getPurchaseRequisition());
+        professionalOpinion.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
 
         return professionalOpinion;
     }
@@ -89,8 +90,9 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
+        final PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
         final TenderQuotationEvaluation tenderQuotationEvaluation =
-                PersistenceUtil.getNext(getPurchaseRequisition().getTenderQuotationEvaluation());
+                PersistenceUtil.getNext(purchaseRequisition.getTenderQuotationEvaluation());
         final List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

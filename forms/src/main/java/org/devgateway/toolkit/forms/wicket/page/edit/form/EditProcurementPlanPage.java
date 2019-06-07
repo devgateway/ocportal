@@ -27,26 +27,24 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
 
-    private final Department department;
-
-    private final FiscalYear fiscalYear;
-
     public EditProcurementPlanPage(final PageParameters parameters) {
         super(parameters);
 
         this.jpaService = procurementPlanService;
 
+        final Department department;
+        final FiscalYear fiscalYear;
         // non-admin users should create a Procurement Plan only with their department
         if (!WebSecurityUtil.isCurrentUserAdmin()) {
             final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
-            this.department = person.getDepartment();
+            department = person.getDepartment();
         } else {
-            this.department = sessionMetadataService.getSessionDepartment();
+            department = sessionMetadataService.getSessionDepartment();
         }
-        this.fiscalYear = sessionMetadataService.getSessionFiscalYear();
+        fiscalYear = sessionMetadataService.getSessionFiscalYear();
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && (this.department == null || this.fiscalYear == null)) {
+        if (entityId == null && (department == null || fiscalYear == null)) {
             logger.warn("Something wrong happened since we are trying to add a new ProcurementPlan Entity "
                     + "without having a department or a fiscalYear!");
             setResponsePage(StatusOverviewPage.class);
@@ -83,8 +81,8 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
     protected ProcurementPlan newInstance() {
         final ProcurementPlan procurementPlan = super.newInstance();
 
-        procurementPlan.setDepartment(department);
-        procurementPlan.setFiscalYear(fiscalYear);
+        procurementPlan.setDepartment(sessionMetadataService.getSessionDepartment());
+        procurementPlan.setFiscalYear(sessionMetadataService.getSessionFiscalYear());
 
         return procurementPlan;
     }

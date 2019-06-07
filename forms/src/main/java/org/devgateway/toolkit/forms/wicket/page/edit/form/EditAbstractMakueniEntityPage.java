@@ -37,9 +37,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     protected ButtonContentModal revertToDraftModal;
 
-
-
-
     @SpringBean
     protected SessionMetadataService sessionMetadataService;
 
