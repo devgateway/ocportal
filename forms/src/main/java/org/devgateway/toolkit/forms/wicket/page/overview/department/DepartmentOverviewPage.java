@@ -189,14 +189,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                                     .getResponse().getContainerResponse();
 
                             try {
-                                long startTime = System.nanoTime();
-
                                 final byte[] bytes = dataExportService.generateProcurementPlanExcel(
                                         getProcurementPlan().getId());
-
-                                long endTime = System.nanoTime();
-                                double duration = (endTime - startTime) / 1000000000.0;
-                                logger.info("------- [Data Download] excel generation: " + duration);
 
                                 response.setContentType(
                                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Data Export</title>
+</head>
+<body>
+<wicket:extend>
+    <br/><br/>
+    <div class="row">
+        <div class="col-md-10">
+            <form wicket:id="dataExportForm" class="well">
+                <div class="row">
+                    <div class="col-md-6" wicket:id="department"></div>
+                    <div class="col-md-6" wicket:id="fiscalYear"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                    <button wicket:id="excelButton" type="button" id="excelButton" class="pull-right btn">
+                        <i class="fa fa-file-excel-o"></i>
+                        Excel export
+                    </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>
