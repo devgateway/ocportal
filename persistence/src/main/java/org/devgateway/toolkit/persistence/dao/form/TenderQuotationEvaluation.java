@@ -29,13 +29,13 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date closingDate;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Integer numberOfBids;
 
-    @ExcelExport(separateSheet = true)
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
@@ -57,7 +57,6 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     public void setNumberOfBids(final Integer numberOfBids) {
         this.numberOfBids = numberOfBids;
     }
-
 
     public List<Bid> getBids() {
         return bids;

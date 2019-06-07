@@ -27,12 +27,12 @@ import java.util.Set;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem {
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ContractDocumentType contractDocumentType;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;

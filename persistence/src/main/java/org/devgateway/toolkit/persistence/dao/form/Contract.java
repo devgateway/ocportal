@@ -32,33 +32,33 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class Contract extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double tenderValue;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date contractDate;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date contractApprovalDate;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date expiryDate;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity procuringEntity;
 
-    @ExcelExport(separateSheet = true)
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")

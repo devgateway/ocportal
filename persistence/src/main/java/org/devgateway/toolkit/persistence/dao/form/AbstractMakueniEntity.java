@@ -22,10 +22,13 @@ import java.util.Set;
  */
 @MappedSuperclass
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity implements Labelable {
-    @ExcelExport
+    @ExcelExport(useTranslation = true,
+            onlyForClass = {ProcurementPlan.class, Project.class, PurchaseRequisition.class, ProfessionalOpinion.class})
     private Date approvedDate;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true, onlyForClass = {ProcurementPlan.class, CabinetPaper.class,
+            PurchaseRequisition.class, Tender.class, TenderQuotationEvaluation.class, ProfessionalOpinion.class,
+            AwardNotification.class, AwardAcceptance.class})
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
@@ -36,6 +39,7 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
      * the {@link Project#getPurchaseRequisitions()}
      * This is used to revert downstream forms when upstream forms are reverted. So if u do not need this functionality
      * just return {@link Collections#emptyList()}
+     *
      * @return
      */
     public abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.devgateway.toolkit.web.generators.FieldKeyGenerator;
 import org.devgateway.toolkit.web.generators.GenericExcelKeyGenerator;
 import org.devgateway.toolkit.web.generators.GenericKeyGenerator;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -38,6 +39,11 @@ public class MvcConfig implements WebMvcConfigurer {
     public KeyGenerator genericKeyGenerator(final ObjectMapper objectMapper) {
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         return new GenericKeyGenerator(objectMapper);
+    }
+
+    @Bean(name = "fieldKeyGenerator")
+    public KeyGenerator fieldKeyGenerator() {
+        return new FieldKeyGenerator();
     }
 
     @Bean

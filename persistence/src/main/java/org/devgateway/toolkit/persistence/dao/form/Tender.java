@@ -36,42 +36,42 @@ import java.util.function.Consumer;
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")})
 public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAutogeneratable {
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderTitle;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date invitationDate;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Date closingDate;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String objective;
 
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity issuedBy;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double tenderValue;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String tenderLink;
 
-    @ExcelExport(separateSheet = true)
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")

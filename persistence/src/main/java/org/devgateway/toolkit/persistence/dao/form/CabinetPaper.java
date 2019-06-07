@@ -36,11 +36,11 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @JsonIgnore
     private ProcurementPlan procurementPlan;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String name;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String number;
 

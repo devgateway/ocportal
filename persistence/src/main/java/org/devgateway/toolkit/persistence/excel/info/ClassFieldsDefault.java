@@ -61,13 +61,13 @@ public final class ClassFieldsDefault implements ClassFields {
      */
     private List<Field> getAllFields(final Class clazz) {
         final List<Field> fields = new ArrayList<>();
-        final Class superClazz = clazz.getSuperclass();
 
+        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        final Class superClazz = clazz.getSuperclass();
         if (superClazz != null) {
             fields.addAll(getAllFields(superClazz));
         }
-
-        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 
         return fields;
     }

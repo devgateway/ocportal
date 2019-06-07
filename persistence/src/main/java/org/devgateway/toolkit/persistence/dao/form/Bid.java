@@ -24,21 +24,21 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation> implements ListViewItem {
-    @ExcelExport(justExport = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier supplier;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private String supplierResponsiveness;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Integer supplierScore;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Integer supplierRanking;
 
-    @ExcelExport
+    @ExcelExport(useTranslation = true)
     private Double quotedAmount;
 
     public Supplier getSupplier() {
