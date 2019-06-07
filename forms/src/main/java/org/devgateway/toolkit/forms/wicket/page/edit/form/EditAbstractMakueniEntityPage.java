@@ -11,7 +11,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
@@ -19,6 +18,7 @@ import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
 import org.slf4j.Logger;
@@ -81,6 +81,12 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         return buttonContentModal;
     }
 
+    @Override
+    protected void beforeSaveEntity(T saveable) {
+        if (saveable instanceof TitleAutogeneratable) {
+            ((TitleAutogeneratable) saveable).autogenerateTitleWhenEmpty();
+        }
+    }
 
     @Override
     protected ModalSaveEditPageButton getRevertToDraftPageButton() {

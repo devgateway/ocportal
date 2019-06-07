@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author idobre
@@ -29,7 +30,7 @@ import java.util.Set;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
-public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable {
+public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
     @ExcelExport(separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -148,5 +149,15 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return purchaseRequisitions;
+    }
+
+    @Override
+    public String getTitle() {
+        return getProjectTitle();
+    }
+
+    @Override
+    public Consumer<String> titleSetter() {
+        return this::setProjectTitle;
     }
 }
