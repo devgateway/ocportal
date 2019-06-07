@@ -70,39 +70,14 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     @Cacheable
     @Transactional(readOnly = true)
     public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
-
-        long startTime = System.nanoTime();
-
         final List<Project> projects = projectService.findAll(
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
-
-        long endTime = System.nanoTime();
-        double duration = (endTime - startTime) / 1000000000.0;
-        logger.info("------- Fetch " + projects.size() + " Projects time: " + duration);
-        logger.info("---------------------");
-
-
-        startTime = System.nanoTime();
 
         final Map<Project, List<String>> tenderStatusMap = addStatus(
                 fiscalYear, purchaseRequisitionService, tenderService,
                 tenderQuotationEvaluationService, professionalOpinionService);
-        endTime = System.nanoTime();
-        duration = (endTime - startTime) / 1000000000.0;
-        logger.info("---------- Fetch TOTAL Tenders time: " + duration);
-        logger.info("---------------------");
-
-        startTime = System.nanoTime();
-
         final Map<Project, List<String>> awardStatusMap = addStatus(
                 fiscalYear, awardNotificationService, awardAcceptanceService, contractService);
-
-        endTime = System.nanoTime();
-        duration = (endTime - startTime) / 1000000000.0;
-        logger.info("---------- Fetch TOTAL Awards time: " + duration);
-        logger.info("---------------------");
-
-        startTime = System.nanoTime();
 
         // get list of statuses of PurchaseRequisition forms grouped by Project
         final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
@@ -140,11 +115,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
             sod.getProjects().add(statusOverviewProjectStatus);
         }
-
-        endTime = System.nanoTime();
-        duration = (endTime - startTime) / 1000000000.0;
-        logger.info("------- Status calculation time: " + duration);
-        logger.info("---------------------");
 
         return statusOverviewData;
     }
@@ -215,18 +185,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         Map<Project, List<String>> statusMap = new HashMap<>();
 
         for (AbstractMakueniEntityService<? extends S> service : services) {
-            long startTime = System.nanoTime();
-
             final List<? extends S> list = service.findByFiscalYear(fiscalYear);
-
-            long endTime = System.nanoTime();
-            double duration = (endTime - startTime) / 1000000000.0;
-            logger.info("------- Fetch " + list.size() + " "
-                    + service.getClass().getSimpleName()
-                    .substring(0, service.getClass().getSimpleName().indexOf("ServiceImpl"))
-                    + " time: " + duration);
-
-
             statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(list));
         }
 
