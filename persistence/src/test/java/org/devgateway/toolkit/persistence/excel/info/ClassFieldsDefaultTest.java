@@ -45,7 +45,7 @@ public class ClassFieldsDefaultTest {
 
     @Test
     public void getInheritedFields() throws Exception {
-        final String[] expectedFields = {"id", "label", "valid"};
+        final String[] expectedFields = {"valid", "id", "label"};
 
         final ClassFields classFields = new ClassFieldsDefault(TestClassImproved.class, true);
         final Iterator<Field> fields = classFields.getFields();
