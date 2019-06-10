@@ -17,6 +17,8 @@ import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 
+import java.math.BigDecimal;
+
 public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluation> {
     @SpringBean
     protected SupplierService supplierService;
@@ -62,7 +64,7 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         ComponentUtil.addIntegerTextField(item, "supplierRanking").required()
                 .getField().add(RangeValidator.minimum(0));
         ComponentUtil.addBigDecimalField(item, "quotedAmount")
-                .getField().add(RangeValidator.minimum(0.0));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
         Select2ChoiceBootstrapFormComponent<String> responsiveness = new Select2ChoiceBootstrapFormComponent<>(
                 "supplierResponsiveness",

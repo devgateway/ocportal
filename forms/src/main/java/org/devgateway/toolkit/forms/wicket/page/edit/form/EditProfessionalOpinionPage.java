@@ -56,7 +56,7 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
         final TextFieldBootstrapFormComponent<BigDecimal> recommendedAwardAmount =
                 ComponentUtil.addBigDecimalField(editForm, "recommendedAwardAmount");
         recommendedAwardAmount.required();
-        recommendedAwardAmount.getField().add(RangeValidator.minimum(0.0));
+        recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 

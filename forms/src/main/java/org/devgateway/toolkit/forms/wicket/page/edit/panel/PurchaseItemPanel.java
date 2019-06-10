@@ -73,15 +73,15 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                         target.add(totalCost);
                     }
                 };
-        amount.asDouble();
-        amount.getField().add(RangeValidator.minimum(0.0));
+        amount.decimal();
+        amount.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         amount.required();
         item.add(amount);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<BigDecimal>) () -> {
+                (IModel<Double>) () -> {
                     if (quantity.getModelObject() != null && amount.getModelObject() != null) {
-                        return amount.getModelObject().multiply(new BigDecimal(quantity.getModelObject()));
+                        return amount.getModelObject().doubleValue() * quantity.getModelObject();
                     }
                     return null;
                 });

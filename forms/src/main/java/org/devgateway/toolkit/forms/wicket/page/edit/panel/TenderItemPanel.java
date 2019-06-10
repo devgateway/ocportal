@@ -69,15 +69,15 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                         target.add(totalCost);
                     }
                 };
-        price.asDouble();
+        price.decimal();
         price.required();
-        price.getField().add(RangeValidator.minimum(0.0));
+        price.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<BigDecimal>) () -> {
+                (IModel<Double>) () -> {
                     if (quantity.getModelObject() != null && price.getModelObject() != null) {
-                        return price.getModelObject().multiply(new BigDecimal(quantity.getModelObject()));
+                        return price.getModelObject().doubleValue() * quantity.getModelObject();
                     }
                     return null;
                 });

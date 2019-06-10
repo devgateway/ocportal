@@ -19,6 +19,8 @@ import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.math.BigDecimal;
+
 /**
  * @author gmutuhu
  */
@@ -48,7 +50,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
 
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addBigDecimalField(editForm, "tenderValue").required()
-                .getField().add(RangeValidator.minimum(0.0));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "contractDate").required();
         ComponentUtil.addDateField(editForm, "expiryDate");

@@ -32,6 +32,7 @@ import org.devgateway.toolkit.persistence.service.category.ProcurementMethodServ
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -83,15 +84,15 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         final PlanItem planItem = item.getModelObject();
         if (planItem.getEditable()) {
             ComponentUtil.addBigDecimalField(item, "estimatedCost").required()
-                    .getField().add(RangeValidator.minimum(0.0));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
             ComponentUtil.addTextField(item, "unitOfIssue").required()
                     .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             ComponentUtil.addIntegerTextField(item, "quantity").required()
                     .getField().add(RangeValidator.minimum(0));
             ComponentUtil.addBigDecimalField(item, "unitPrice").required()
-                    .getField().add(RangeValidator.minimum(0.0));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
             ComponentUtil.addBigDecimalField(item, "totalCost").required()
-                    .getField().add(RangeValidator.minimum(0.0));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
             ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
             final TextFieldBootstrapFormComponent<String> sourceOfFunds = ComponentUtil.addTextField(item,
@@ -100,12 +101,16 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             sourceOfFunds.getField().add(new SourceOfFundsValidator());
 
             ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
-            ComponentUtil.addBigDecimalField(item, "targetGroupValue").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addBigDecimalField(item, "targetGroupValue").getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
-            ComponentUtil.addBigDecimalField(item, "quarter1st").getField().add(RangeValidator.minimum(0.0));
-            ComponentUtil.addBigDecimalField(item, "quarter2nd").getField().add(RangeValidator.minimum(0.0));
-            ComponentUtil.addBigDecimalField(item, "quarter3rd").getField().add(RangeValidator.minimum(0.0));
-            ComponentUtil.addBigDecimalField(item, "quarter4th").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addBigDecimalField(item, "quarter1st")
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            ComponentUtil.addBigDecimalField(item, "quarter2nd")
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            ComponentUtil.addBigDecimalField(item, "quarter3rd")
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            ComponentUtil.addBigDecimalField(item, "quarter4th")
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         } else {
             item.add(new GenericSleepFormComponent<>("estimatedCost"));
             item.add(new GenericSleepFormComponent<>("unitOfIssue"));
