@@ -61,7 +61,7 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
                 .getField().add(RangeValidator.minimum(0));
         ComponentUtil.addIntegerTextField(item, "supplierRanking").required()
                 .getField().add(RangeValidator.minimum(0));
-        ComponentUtil.addDoubleField(item, "quotedAmount")
+        ComponentUtil.addBigDecimalField(item, "quotedAmount")
                 .getField().add(RangeValidator.minimum(0.0));
 
         Select2ChoiceBootstrapFormComponent<String> responsiveness = new Select2ChoiceBootstrapFormComponent<>(

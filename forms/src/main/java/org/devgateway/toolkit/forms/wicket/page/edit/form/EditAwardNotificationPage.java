@@ -45,7 +45,7 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue").required()
+        ComponentUtil.addBigDecimalField(editForm, "tenderValue").required()
                 .getField().add(RangeValidator.minimum(0.0));
 
         ComponentUtil.addDateField(editForm, "awardDate").required();

@@ -82,15 +82,15 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
         final PlanItem planItem = item.getModelObject();
         if (planItem.getEditable()) {
-            ComponentUtil.addDoubleField(item, "estimatedCost").required()
+            ComponentUtil.addBigDecimalField(item, "estimatedCost").required()
                     .getField().add(RangeValidator.minimum(0.0));
             ComponentUtil.addTextField(item, "unitOfIssue").required()
                     .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             ComponentUtil.addIntegerTextField(item, "quantity").required()
                     .getField().add(RangeValidator.minimum(0));
-            ComponentUtil.addDoubleField(item, "unitPrice").required()
+            ComponentUtil.addBigDecimalField(item, "unitPrice").required()
                     .getField().add(RangeValidator.minimum(0.0));
-            ComponentUtil.addDoubleField(item, "totalCost").required()
+            ComponentUtil.addBigDecimalField(item, "totalCost").required()
                     .getField().add(RangeValidator.minimum(0.0));
 
             ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
@@ -100,12 +100,12 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             sourceOfFunds.getField().add(new SourceOfFundsValidator());
 
             ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
-            ComponentUtil.addDoubleField(item, "targetGroupValue").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addBigDecimalField(item, "targetGroupValue").getField().add(RangeValidator.minimum(0.0));
 
-            ComponentUtil.addDoubleField(item, "quarter1st").getField().add(RangeValidator.minimum(0.0));
-            ComponentUtil.addDoubleField(item, "quarter2nd").getField().add(RangeValidator.minimum(0.0));
-            ComponentUtil.addDoubleField(item, "quarter3rd").getField().add(RangeValidator.minimum(0.0));
-            ComponentUtil.addDoubleField(item, "quarter4th").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addBigDecimalField(item, "quarter1st").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addBigDecimalField(item, "quarter2nd").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addBigDecimalField(item, "quarter3rd").getField().add(RangeValidator.minimum(0.0));
+            ComponentUtil.addBigDecimalField(item, "quarter4th").getField().add(RangeValidator.minimum(0.0));
         } else {
             item.add(new GenericSleepFormComponent<>("estimatedCost"));
             item.add(new GenericSleepFormComponent<>("unitOfIssue"));

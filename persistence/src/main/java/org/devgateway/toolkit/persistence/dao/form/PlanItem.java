@@ -19,6 +19,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author idobre
@@ -39,7 +40,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     private String description;
 
     @ExcelExport(useTranslation = true)
-    private Double estimatedCost;
+    private BigDecimal estimatedCost;
 
     @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
@@ -49,10 +50,10 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     private Integer quantity;
 
     @ExcelExport(useTranslation = true)
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 
     @ExcelExport(useTranslation = true)
-    private Double totalCost;
+    private BigDecimal totalCost;
 
     @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -69,19 +70,19 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     private TargetGroup targetGroup;
 
     @ExcelExport(useTranslation = true)
-    private Double targetGroupValue;
+    private BigDecimal targetGroupValue;
 
     @ExcelExport(useTranslation = true)
-    private Double quarter1st;
+    private BigDecimal quarter1st;
 
     @ExcelExport(useTranslation = true)
-    private Double quarter2nd;
+    private BigDecimal quarter2nd;
 
     @ExcelExport(useTranslation = true)
-    private Double quarter3rd;
+    private BigDecimal quarter3rd;
 
     @ExcelExport(useTranslation = true)
-    private Double quarter4th;
+    private BigDecimal quarter4th;
 
     @Transient
     @JsonIgnore
@@ -107,11 +108,11 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.description = description;
     }
 
-    public Double getEstimatedCost() {
+    public BigDecimal getEstimatedCost() {
         return estimatedCost;
     }
 
-    public void setEstimatedCost(final Double estimatedCost) {
+    public void setEstimatedCost(final BigDecimal estimatedCost) {
         this.estimatedCost = estimatedCost;
     }
 
@@ -131,19 +132,19 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(final Double unitPrice) {
+    public void setUnitPrice(final BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Double getTotalCost() {
+    public BigDecimal getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(final Double totalCost) {
+    public void setTotalCost(final BigDecimal totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -171,43 +172,43 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.targetGroup = targetGroup;
     }
 
-    public Double getTargetGroupValue() {
+    public BigDecimal getTargetGroupValue() {
         return targetGroupValue;
     }
 
-    public void setTargetGroupValue(final Double targetGroupValue) {
+    public void setTargetGroupValue(final BigDecimal targetGroupValue) {
         this.targetGroupValue = targetGroupValue;
     }
 
-    public Double getQuarter1st() {
+    public BigDecimal getQuarter1st() {
         return quarter1st;
     }
 
-    public void setQuarter1st(final Double quarter1st) {
+    public void setQuarter1st(final BigDecimal quarter1st) {
         this.quarter1st = quarter1st;
     }
 
-    public Double getQuarter2nd() {
+    public BigDecimal getQuarter2nd() {
         return quarter2nd;
     }
 
-    public void setQuarter2nd(final Double quarter2nd) {
+    public void setQuarter2nd(final BigDecimal quarter2nd) {
         this.quarter2nd = quarter2nd;
     }
 
-    public Double getQuarter3rd() {
+    public BigDecimal getQuarter3rd() {
         return quarter3rd;
     }
 
-    public void setQuarter3rd(final Double quarter3rd) {
+    public void setQuarter3rd(final BigDecimal quarter3rd) {
         this.quarter3rd = quarter3rd;
     }
 
-    public Double getQuarter4th() {
+    public BigDecimal getQuarter4th() {
         return quarter4th;
     }
 
-    public void setQuarter4th(final Double quarter4th) {
+    public void setQuarter4th(final BigDecimal quarter4th) {
         this.quarter4th = quarter4th;
     }
 

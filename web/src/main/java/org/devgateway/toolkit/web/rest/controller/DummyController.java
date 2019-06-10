@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -136,19 +137,19 @@ public class DummyController {
                 final PlanItem item = new PlanItem();
                 item.setItem(items.get(random.nextInt(items.size())));
                 item.setDescription("Description " + (currentSize + i));
-                item.setEstimatedCost(100.0);
+                item.setEstimatedCost(new BigDecimal(100.0));
                 item.setUnitOfIssue("unit of issue....");
                 item.setQuantity(1001);
-                item.setUnitPrice(200.34);
-                item.setTotalCost(2295000.503);
+                item.setUnitPrice(new BigDecimal(200.34));
+                item.setTotalCost(new BigDecimal(2295000.503));
                 item.setProcurementMethod(procurementMethods.get(random.nextInt(procurementMethods.size())));
                 item.setSourceOfFunds("dk20fk0-2-ck-sk93-0001");
                 item.setTargetGroup(targetGroups.get(random.nextInt(targetGroups.size())));
-                item.setTargetGroupValue(76.12);
-                item.setQuarter1st(12.0);
-                item.setQuarter2nd(34.0);
-                item.setQuarter3rd(56.0);
-                item.setQuarter4th(78.0);
+                item.setTargetGroupValue(new BigDecimal(76.12));
+                item.setQuarter1st(new BigDecimal(12.0));
+                item.setQuarter2nd(new BigDecimal(34.0));
+                item.setQuarter3rd(new BigDecimal(56.0));
+                item.setQuarter4th(new BigDecimal(78.0));
 
                 planItemService.save(item);
                 planItems.add(item);
@@ -197,12 +198,12 @@ public class DummyController {
 
                 procurementPlans.add(procurementPlan);
 
-                for (int i = 0; i < 200; i++) {
+                for (int i = 0; i < 3; i++) {
                     final Project project = new Project();
                     project.setProcurementPlan(procurementPlan);
                     project.setProjectTitle("Project " + i);
-                    project.setAmountBudgeted(100.0);
-                    project.setAmountRequested(200.0);
+                    project.setAmountBudgeted(new BigDecimal(100.0));
+                    project.setAmountRequested(new BigDecimal(200.0));
 
                     projects.add(project);
 

@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,10 +55,10 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     private String projectTitle;
 
     @ExcelExport(useTranslation = true)
-    private Double amountBudgeted;
+    private BigDecimal amountBudgeted;
 
     @ExcelExport(useTranslation = true)
-    private Double amountRequested;
+    private BigDecimal amountRequested;
 
     @ExcelExport(useTranslation = true)
     private Integer numberSubCounties;
@@ -81,19 +82,19 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
         this.projectTitle = projectTitle;
     }
 
-    public Double getAmountBudgeted() {
+    public BigDecimal getAmountBudgeted() {
         return amountBudgeted;
     }
 
-    public void setAmountBudgeted(final Double amountBudgeted) {
+    public void setAmountBudgeted(final BigDecimal amountBudgeted) {
         this.amountBudgeted = amountBudgeted;
     }
 
-    public Double getAmountRequested() {
+    public BigDecimal getAmountRequested() {
         return amountRequested;
     }
 
-    public void setAmountRequested(final Double amountRequested) {
+    public void setAmountRequested(final BigDecimal amountRequested) {
         this.amountRequested = amountRequested;
     }
 

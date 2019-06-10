@@ -30,6 +30,7 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -171,6 +172,16 @@ public final class ComponentUtil {
             final String id) {
         final TextFieldBootstrapFormComponent<Long> textField = new TextFieldBootstrapFormComponent<>(id);
         textField.longValue();
+        parent.add(textField);
+
+        return textField;
+    }
+
+    public static TextFieldBootstrapFormComponent<BigDecimal> addBigDecimalField(
+            final WebMarkupContainer parent,
+            final String id) {
+        final TextFieldBootstrapFormComponent<BigDecimal> textField = new TextFieldBootstrapFormComponent<>(id);
+        textField.decimal();
         parent.add(textField);
 
         return textField;

@@ -92,7 +92,7 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
 
         addProcuringEntitySection();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue").getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addBigDecimalField(editForm, "tenderValue").getField().add(RangeValidator.minimum(0.0));
         editForm.add(new TenderItemPanel("tenderItems"));
 
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");
