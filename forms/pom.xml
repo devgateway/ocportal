@@ -114,6 +114,7 @@
             <version>${closure.compiler.version}</version>
         </dependency>
 
+
         <dependency>
             <groupId>de.agilecoders.wicket.webjars</groupId>
             <artifactId>wicket-webjars</artifactId>

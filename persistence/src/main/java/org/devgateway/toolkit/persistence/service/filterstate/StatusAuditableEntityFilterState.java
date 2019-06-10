@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public abstract class StatusAuditableEntityFilterState<T extends AbstractStatusA
         extends JpaFilterState<T> {
 
     private String status;
+
+    protected LocalDateTime lastModifiedDate;
 
     @Override
     public Specification<T> getSpecification() {
@@ -37,5 +40,13 @@ public abstract class StatusAuditableEntityFilterState<T extends AbstractStatusA
 
     public void setStatus(final String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }
