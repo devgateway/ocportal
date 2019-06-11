@@ -100,7 +100,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Override
     public String getLabel() {
-        return planItem.getLabel();
+        return planItem != null ? planItem.getLabel() : "";
     }
 
     @Override
