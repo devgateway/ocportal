@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +34,7 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class Contract extends AbstractPurchaseReqMakueniEntity {
     @ExcelExport(useTranslation = true)
-    private Double tenderValue;
+    private BigDecimal tenderValue;
 
     @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -65,11 +66,11 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
 
-    public Double getTenderValue() {
+    public BigDecimal getTenderValue() {
         return tenderValue;
     }
 
-    public void setTenderValue(final Double tenderValue) {
+    public void setTenderValue(final BigDecimal tenderValue) {
         this.tenderValue = tenderValue;
     }
 

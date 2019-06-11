@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -33,7 +34,7 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     private Supplier awardee;
 
     @ExcelExport(useTranslation = true)
-    private Double tenderValue;
+    private BigDecimal tenderValue;
 
     public Date getAcceptanceDate() {
         return acceptanceDate;
@@ -51,11 +52,11 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
         this.awardee = awardee;
     }
 
-    public Double getTenderValue() {
+    public BigDecimal getTenderValue() {
         return tenderValue;
     }
 
-    public void setTenderValue(final Double tenderValue) {
+    public void setTenderValue(final BigDecimal tenderValue) {
         this.tenderValue = tenderValue;
     }
 

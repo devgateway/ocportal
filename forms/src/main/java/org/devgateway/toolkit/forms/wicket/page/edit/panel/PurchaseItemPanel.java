@@ -19,6 +19,7 @@ import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -65,22 +66,22 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                 .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
 
-        final TextFieldBootstrapFormComponent<Double> amount =
-                new TextFieldBootstrapFormComponent<Double>("amount") {
+        final TextFieldBootstrapFormComponent<BigDecimal> amount =
+                new TextFieldBootstrapFormComponent<BigDecimal>("amount") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
                         target.add(totalCost);
                     }
                 };
-        amount.asDouble();
-        amount.getField().add(RangeValidator.minimum(0.0));
+        amount.decimal();
+        amount.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         amount.required();
         item.add(amount);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
                 (IModel<Double>) () -> {
                     if (quantity.getModelObject() != null && amount.getModelObject() != null) {
-                        return quantity.getModelObject() * amount.getModelObject();
+                        return amount.getModelObject().doubleValue() * quantity.getModelObject();
                     }
                     return null;
                 });

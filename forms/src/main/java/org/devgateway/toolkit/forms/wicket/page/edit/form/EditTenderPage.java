@@ -35,6 +35,7 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 /**
@@ -92,7 +93,8 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
 
         addProcuringEntitySection();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue").getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addBigDecimalField(editForm, "tenderValue")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         editForm.add(new TenderItemPanel("tenderItems"));
 
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");

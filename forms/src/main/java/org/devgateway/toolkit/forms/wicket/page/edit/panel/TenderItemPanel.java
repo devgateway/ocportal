@@ -19,6 +19,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
@@ -61,22 +62,22 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
 
-        final TextFieldBootstrapFormComponent<Double> price =
-                new TextFieldBootstrapFormComponent<Double>("unitPrice") {
+        final TextFieldBootstrapFormComponent<BigDecimal> price =
+                new TextFieldBootstrapFormComponent<BigDecimal>("unitPrice") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
                         target.add(totalCost);
                     }
                 };
-        price.asDouble();
+        price.decimal();
         price.required();
-        price.getField().add(RangeValidator.minimum(0.0));
+        price.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
                 (IModel<Double>) () -> {
                     if (quantity.getModelObject() != null && price.getModelObject() != null) {
-                        return quantity.getModelObject() * price.getModelObject();
+                        return price.getModelObject().doubleValue() * quantity.getModelObject();
                     }
                     return null;
                 });

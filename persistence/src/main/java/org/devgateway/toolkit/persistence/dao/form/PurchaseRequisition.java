@@ -24,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -215,11 +216,11 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         return getLabel();
     }
 
-    public Double getAmount() {
-        Double amount = 0d;
+    public BigDecimal getAmount() {
+        BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
             if (item.getAmount() != null && item.getQuantity() != null) {
-                amount += (item.getAmount() * item.getQuantity());
+                amount.add(item.getAmount().multiply(new BigDecimal(item.getQuantity())));
             }
         }
 

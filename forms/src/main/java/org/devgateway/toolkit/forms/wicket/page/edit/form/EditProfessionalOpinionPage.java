@@ -21,6 +21,7 @@ import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +53,10 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
 
         ComponentUtil.addDateField(editForm, "professionalOpinionDate").required();
 
-        final TextFieldBootstrapFormComponent<Double> recommendedAwardAmount = ComponentUtil.addDoubleField(editForm,
-                "recommendedAwardAmount");
+        final TextFieldBootstrapFormComponent<BigDecimal> recommendedAwardAmount =
+                ComponentUtil.addBigDecimalField(editForm, "recommendedAwardAmount");
         recommendedAwardAmount.required();
-        recommendedAwardAmount.getField().add(RangeValidator.minimum(0.0));
+        recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 

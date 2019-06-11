@@ -21,6 +21,8 @@ import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.math.BigDecimal;
+
 /**
  * @author gmutuhu
  */
@@ -45,8 +47,8 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue").required()
-                .getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addBigDecimalField(editForm, "tenderValue").required()
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
         ComponentUtil.addDateField(editForm, "awardDate").required();
         ComponentUtil.addIntegerTextField(editForm, "acknowledgementDays")
