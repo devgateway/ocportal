@@ -2,10 +2,15 @@ package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.Component;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -17,8 +22,10 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
+import org.hibernate.Hibernate;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -78,6 +85,26 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
                     new StringResourceModel("downloadUploadedFileTooltip", ListAbstractMakueniEntityPage.this, null)));
             add(downloadLink);
         }
+    }
+
+
+    protected void addFileDownloadColumn() {
+        Component trn = this;
+        columns.add(new AbstractColumn<T, String>(
+                new StringResourceModel("downloadFile", trn)) {
+            @Override
+            public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
+                                     final IModel<T> model) {
+                final FileMetadata file = model.getObject().getFormDocs().stream().findFirst().orElse(null);
+                if (file != null) {
+                    Hibernate.initialize(file.getContent());
+                    cellItem.add(new DownloadPanel(componentId, new Model<>(file)));
+                } else {
+                    cellItem.add(new Label(componentId));
+                }
+            }
+        });
+
     }
 
     @Override
