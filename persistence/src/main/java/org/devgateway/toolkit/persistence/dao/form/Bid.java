@@ -14,6 +14,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author gmutuhu
@@ -39,7 +40,7 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
     private Integer supplierRanking;
 
     @ExcelExport(useTranslation = true)
-    private Double quotedAmount;
+    private BigDecimal quotedAmount;
 
     public Supplier getSupplier() {
         return supplier;
@@ -57,8 +58,12 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
         return supplierRanking;
     }
 
-    public Double getQuotedAmount() {
+    public BigDecimal getQuotedAmount() {
         return quotedAmount;
+    }
+
+    public void setQuotedAmount(final BigDecimal quotedAmount) {
+        this.quotedAmount = quotedAmount;
     }
 
     public void setSupplier(final Supplier supplier) {
@@ -75,10 +80,6 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
 
     public void setSupplierRanking(final Integer supplierRanking) {
         this.supplierRanking = supplierRanking;
-    }
-
-    public void setQuotedAmount(final Double quotedAmount) {
-        this.quotedAmount = quotedAmount;
     }
 
     @Transient

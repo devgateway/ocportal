@@ -13,6 +13,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author gmutuhu
@@ -35,10 +36,10 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
     private Integer quantity;
 
     @ExcelExport(useTranslation = true)
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 
     @ExcelExport(useTranslation = true)
-    private Double totalCost;
+    private BigDecimal totalCost;
 
     public String getUnitOfIssue() {
         return unitOfIssue;
@@ -56,19 +57,19 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(final Double unitPrice) {
+    public void setUnitPrice(final BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Double getTotalCost() {
+    public BigDecimal getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(final Double totalCost) {
+    public void setTotalCost(final BigDecimal totalCost) {
         this.totalCost = totalCost;
     }
 

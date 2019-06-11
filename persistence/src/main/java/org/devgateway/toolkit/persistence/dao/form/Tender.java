@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,7 +66,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     private ProcuringEntity issuedBy;
 
     @ExcelExport(useTranslation = true)
-    private Double tenderValue;
+    private BigDecimal tenderValue;
 
     @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
@@ -144,11 +145,11 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
         this.issuedBy = issuedBy;
     }
 
-    public Double getTenderValue() {
+    public BigDecimal getTenderValue() {
         return tenderValue;
     }
 
-    public void setTenderValue(final Double tenderValue) {
+    public void setTenderValue(final BigDecimal tenderValue) {
         this.tenderValue = tenderValue;
     }
 
@@ -174,11 +175,11 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
         return getLabel();
     }
 
-    public Double getTotalAmount() {
-        Double total = 0d;
+    public BigDecimal getTotalAmount() {
+        BigDecimal total = BigDecimal.ZERO;
         for (TenderItem item : tenderItems) {
             if (item.getUnitPrice() != null && item.getQuantity() != null) {
-                total += item.getUnitPrice() * item.getQuantity();
+                total.add(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
             }
         }
         return total;

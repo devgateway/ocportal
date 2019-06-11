@@ -16,6 +16,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author idobre
@@ -39,7 +40,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     private String unit;
 
     @ExcelExport(useTranslation = true)
-    private Double amount;
+    private BigDecimal amount;
 
     @Transient
     @JsonIgnore
@@ -69,11 +70,11 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
         this.unit = unit;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(final Double amount) {
+    public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -99,7 +100,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Override
     public String getLabel() {
-        return planItem.getLabel();
+        return planItem != null ? planItem.getLabel() : "";
     }
 
     @Override

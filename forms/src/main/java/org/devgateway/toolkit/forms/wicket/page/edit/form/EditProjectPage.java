@@ -22,6 +22,7 @@ import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -69,8 +70,10 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         cabinetPaper.required();
         editForm.add(cabinetPaper);
 
-        ComponentUtil.addDoubleField(editForm, "amountBudgeted").getField().add(RangeValidator.minimum(0.0));
-        ComponentUtil.addDoubleField(editForm, "amountRequested").getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addBigDecimalField(editForm, "amountBudgeted")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+        ComponentUtil.addBigDecimalField(editForm, "amountRequested")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
         ComponentUtil.addIntegerTextField(editForm, "numberSubCounties")
                 .getField().add(RangeValidator.range(1, 6));
