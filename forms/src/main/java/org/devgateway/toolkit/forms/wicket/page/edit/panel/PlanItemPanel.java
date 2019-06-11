@@ -101,7 +101,8 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             sourceOfFunds.getField().add(new SourceOfFundsValidator());
 
             ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
-            ComponentUtil.addBigDecimalField(item, "targetGroupValue").getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            ComponentUtil.addBigDecimalField(item, "targetGroupValue")
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
             ComponentUtil.addBigDecimalField(item, "quarter1st")
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
