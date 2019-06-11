@@ -248,6 +248,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void afterSaveEntity(final T saveable) {
+        super.afterSaveEntity(saveable);
+
         getPageParameters().set(WebConstants.V_POSITION, verticalPosition.getValue())
                 .set(WebConstants.MAX_HEIGHT, maxHeight.getValue());
     }

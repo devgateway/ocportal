@@ -16,9 +16,12 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
@@ -31,6 +34,9 @@ import java.math.BigDecimal;
 public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<AwardAcceptance> {
     @SpringBean
     protected AwardAcceptanceService awardAcceptanceService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -65,6 +71,15 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     }
 
     @Override
+    protected void afterSaveEntity(final AwardAcceptance awardAcceptance) {
+        super.afterSaveEntity(awardAcceptance);
+
+        final PurchaseRequisition purchaseRequisition = awardAcceptance.getPurchaseRequisition();
+        purchaseRequisition.addAwardAcceptance(awardAcceptance);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
     protected Class<? extends BasePage> pageAfterSubmitAndNext() {
         return EditContractPage.class;
     }
@@ -72,10 +87,10 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (editForm.getModelObject().getPurchaseRequisition().getContract() != null) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getContract())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(
-                    editForm.getModelObject().getPurchaseRequisition().getContract()).getId());
+                            editForm.getModelObject().getPurchaseRequisition().getContract()).getId());
         }
 
         return pp;

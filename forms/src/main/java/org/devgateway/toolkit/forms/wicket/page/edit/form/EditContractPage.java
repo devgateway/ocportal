@@ -14,8 +14,10 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -29,6 +31,9 @@ import java.math.BigDecimal;
 public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> {
     @SpringBean
     protected ContractService contractService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
@@ -67,6 +72,15 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         contract.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
 
         return contract;
+    }
+
+    @Override
+    protected void afterSaveEntity(final Contract contract) {
+        super.afterSaveEntity(contract);
+
+        final PurchaseRequisition purchaseRequisition = contract.getPurchaseRequisition();
+        purchaseRequisition.addContract(contract);
+        purchaseRequisitionService.save(purchaseRequisition);
     }
 
 

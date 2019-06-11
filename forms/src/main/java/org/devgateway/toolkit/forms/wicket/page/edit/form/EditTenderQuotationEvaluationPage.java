@@ -9,10 +9,13 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
@@ -24,6 +27,9 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
 
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
@@ -53,6 +59,15 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     }
 
     @Override
+    protected void afterSaveEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
+        super.afterSaveEntity(tenderQuotationEvaluation);
+
+        final PurchaseRequisition purchaseRequisition = tenderQuotationEvaluation.getPurchaseRequisition();
+        purchaseRequisition.addTenderQuotationEvaluation(tenderQuotationEvaluation);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
     protected Class<? extends BasePage> pageAfterSubmitAndNext() {
         return EditProfessionalOpinionPage.class;
     }
@@ -60,7 +75,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion() != null) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition()
                             .getProfessionalOpinion()).getId());

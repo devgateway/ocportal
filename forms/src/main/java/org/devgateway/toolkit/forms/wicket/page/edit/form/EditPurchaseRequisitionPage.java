@@ -21,6 +21,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -36,6 +37,9 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<PurchaseRequisition> {
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
+
+    @SpringBean
+    private ProjectService projectService;
 
     @SpringBean
     protected StaffService staffService;
@@ -95,6 +99,15 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         purchaseRequisition.setProject(sessionMetadataService.getSessionProject());
 
         return purchaseRequisition;
+    }
+
+    @Override
+    protected void afterSaveEntity(final PurchaseRequisition purchaseRequisition) {
+        super.afterSaveEntity(purchaseRequisition);
+
+        final Project project = purchaseRequisition.getProject();
+        project.addPurchaseRequisition(purchaseRequisition);
+        projectService.save(project);
     }
 
     @Override

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -82,38 +83,38 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private Set<Tender> tender;
+    private Set<Tender> tender = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Tender Quotation Evaluation")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private Set<TenderQuotationEvaluation> tenderQuotationEvaluation;
+    private Set<TenderQuotationEvaluation> tenderQuotationEvaluation = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Professional Opinion")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private Set<ProfessionalOpinion> professionalOpinion;
+    private Set<ProfessionalOpinion> professionalOpinion = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Award Notification")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private Set<AwardNotification> awardNotification;
+    private Set<AwardNotification> awardNotification = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Award Acceptance")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private Set<AwardAcceptance> awardAcceptance;
+    private Set<AwardAcceptance> awardAcceptance = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Contract")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    private Set<Contract> contract;
+    private Set<Contract> contract = new HashSet<>();
 
     private boolean checkTerminated(Statusable... statusables) {
         for (Statusable statusable : statusables) {
@@ -236,12 +237,32 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         this.tender = tender;
     }
 
+    public void addTender(final Tender item) {
+        tender.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeTender(final Tender item) {
+        tender.remove(item);
+        item.setPurchaseRequisition(null);
+    }
+
     public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
     }
 
     public void setTenderQuotationEvaluation(Set<TenderQuotationEvaluation> tenderQuotationEvaluation) {
         this.tenderQuotationEvaluation = tenderQuotationEvaluation;
+    }
+
+    public void addTenderQuotationEvaluation(final TenderQuotationEvaluation item) {
+        tenderQuotationEvaluation.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeTenderQuotationEvaluation(final TenderQuotationEvaluation item) {
+        tenderQuotationEvaluation.remove(item);
+        item.setPurchaseRequisition(null);
     }
 
     public Set<ProfessionalOpinion> getProfessionalOpinion() {
@@ -252,12 +273,32 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         this.professionalOpinion = professionalOpinion;
     }
 
+    public void addProfessionalOpinion(final ProfessionalOpinion item) {
+        professionalOpinion.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeProfessionalOpinion(final ProfessionalOpinion item) {
+        professionalOpinion.remove(item);
+        item.setPurchaseRequisition(null);
+    }
+
     public Set<AwardNotification> getAwardNotification() {
         return awardNotification;
     }
 
     public void setAwardNotification(Set<AwardNotification> awardNotification) {
         this.awardNotification = awardNotification;
+    }
+
+    public void addAwardNotification(final AwardNotification item) {
+        awardNotification.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeAwardNotification(final AwardNotification item) {
+        awardNotification.remove(item);
+        item.setPurchaseRequisition(null);
     }
 
     public Set<AwardAcceptance> getAwardAcceptance() {
@@ -268,12 +309,32 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         this.awardAcceptance = awardAcceptance;
     }
 
+    public void addAwardAcceptance(final AwardAcceptance item) {
+        awardAcceptance.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeAwardAcceptance(final AwardAcceptance item) {
+        awardAcceptance.remove(item);
+        item.setPurchaseRequisition(null);
+    }
+
     public Set<Contract> getContract() {
         return contract;
     }
 
     public void setContract(Set<Contract> contract) {
         this.contract = contract;
+    }
+
+    public void addContract(final Contract item) {
+        contract.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeContract(final Contract item) {
+        contract.remove(item);
+        item.setPurchaseRequisition(null);
     }
 
     @Override

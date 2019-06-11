@@ -146,6 +146,16 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
         this.purchaseRequisitions = purchaseRequisitions;
     }
 
+    public void addPurchaseRequisition(final PurchaseRequisition pr) {
+        purchaseRequisitions.add(pr);
+        pr.setProject(this);
+    }
+
+    public void removePurchaseRequisition(final PurchaseRequisition pr) {
+        purchaseRequisitions.remove(pr);
+        pr.setProject(null);
+    }
+
     @Override
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
