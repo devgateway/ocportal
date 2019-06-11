@@ -79,11 +79,20 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     }
 
     @Override
-    protected void afterSaveEntity(final ProfessionalOpinion professionalOpinion) {
-        super.afterSaveEntity(professionalOpinion);
+    protected void beforeSaveEntity(final ProfessionalOpinion professionalOpinion) {
+        super.beforeSaveEntity(professionalOpinion);
 
         final PurchaseRequisition purchaseRequisition = professionalOpinion.getPurchaseRequisition();
         purchaseRequisition.addProfessionalOpinion(professionalOpinion);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final ProfessionalOpinion professionalOpinion) {
+        super.beforeDeleteEntity(professionalOpinion);
+
+        final PurchaseRequisition purchaseRequisition = professionalOpinion.getPurchaseRequisition();
+        purchaseRequisition.removeProfessionalOpinion(professionalOpinion);
         purchaseRequisitionService.save(purchaseRequisition);
     }
 

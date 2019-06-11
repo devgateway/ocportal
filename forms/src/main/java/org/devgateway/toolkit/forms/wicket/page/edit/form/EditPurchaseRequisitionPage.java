@@ -102,11 +102,20 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     }
 
     @Override
-    protected void afterSaveEntity(final PurchaseRequisition purchaseRequisition) {
-        super.afterSaveEntity(purchaseRequisition);
+    protected void beforeSaveEntity(final PurchaseRequisition purchaseRequisition) {
+        super.beforeSaveEntity(purchaseRequisition);
 
         final Project project = purchaseRequisition.getProject();
         project.addPurchaseRequisition(purchaseRequisition);
+        projectService.save(project);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final PurchaseRequisition purchaseRequisition) {
+        super.beforeDeleteEntity(purchaseRequisition);
+
+        final Project project = purchaseRequisition.getProject();
+        project.removePurchaseRequisition(purchaseRequisition);
         projectService.save(project);
     }
 

@@ -201,12 +201,20 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     }
 
     @Override
-    protected void afterSaveEntity(final Tender tender) {
-        super.afterSaveEntity(tender);
+    protected void beforeSaveEntity(final Tender tender) {
+        super.beforeSaveEntity(tender);
 
         final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
         purchaseRequisition.addTender(tender);
         purchaseRequisitionService.save(purchaseRequisition);
     }
 
+    @Override
+    protected void beforeDeleteEntity(final Tender tender) {
+        super.beforeDeleteEntity(tender);
+
+        final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
+        purchaseRequisition.removeTender(tender);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
 }

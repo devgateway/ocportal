@@ -8,7 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @MappedSuperclass
@@ -18,7 +17,6 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @JoinColumn(name = "purchase_requisition_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    @NotNull
     protected PurchaseRequisition purchaseRequisition;
 
     public PurchaseRequisition getPurchaseRequisition() {

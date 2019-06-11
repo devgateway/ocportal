@@ -41,7 +41,6 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
-    @NotNull
     private ProcurementPlan procurementPlan;
 
     @ExcelExport(separateSheet = true, name = "Purchase Requisitions")

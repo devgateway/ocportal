@@ -59,11 +59,20 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     }
 
     @Override
-    protected void afterSaveEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        super.afterSaveEntity(tenderQuotationEvaluation);
+    protected void beforeSaveEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
+        super.beforeSaveEntity(tenderQuotationEvaluation);
 
         final PurchaseRequisition purchaseRequisition = tenderQuotationEvaluation.getPurchaseRequisition();
         purchaseRequisition.addTenderQuotationEvaluation(tenderQuotationEvaluation);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
+        super.beforeDeleteEntity(tenderQuotationEvaluation);
+
+        final PurchaseRequisition purchaseRequisition = tenderQuotationEvaluation.getPurchaseRequisition();
+        purchaseRequisition.removeTenderQuotationEvaluation(tenderQuotationEvaluation);
         purchaseRequisitionService.save(purchaseRequisition);
     }
 

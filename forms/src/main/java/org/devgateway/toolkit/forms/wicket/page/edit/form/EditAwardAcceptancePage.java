@@ -71,11 +71,20 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     }
 
     @Override
-    protected void afterSaveEntity(final AwardAcceptance awardAcceptance) {
-        super.afterSaveEntity(awardAcceptance);
+    protected void beforeSaveEntity(final AwardAcceptance awardAcceptance) {
+        super.beforeSaveEntity(awardAcceptance);
 
         final PurchaseRequisition purchaseRequisition = awardAcceptance.getPurchaseRequisition();
         purchaseRequisition.addAwardAcceptance(awardAcceptance);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final AwardAcceptance awardAcceptance) {
+        super.beforeDeleteEntity(awardAcceptance);
+
+        final PurchaseRequisition purchaseRequisition = awardAcceptance.getPurchaseRequisition();
+        purchaseRequisition.removeAwardAcceptance(awardAcceptance);
         purchaseRequisitionService.save(purchaseRequisition);
     }
 

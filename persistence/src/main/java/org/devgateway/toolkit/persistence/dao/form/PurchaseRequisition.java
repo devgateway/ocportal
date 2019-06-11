@@ -23,7 +23,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +47,6 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         TitleAutogeneratable {
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @NotNull
     private Project project;
 
     @ExcelExport(useTranslation = true)

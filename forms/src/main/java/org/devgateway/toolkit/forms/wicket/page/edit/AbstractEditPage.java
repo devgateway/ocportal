@@ -410,6 +410,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected void beforeSaveEntity(T saveable) {
     }
 
+    protected void beforeDeleteEntity(T deleteable) {
+    }
+
     /**
      * Trigger all parents of type {@link ListViewSectionPanel} to become visible
      * by invoking {@link ListViewSectionPanel#showSection}
@@ -471,6 +474,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected void onDelete(final AjaxRequestTarget target) {
         final T deleteable = editForm.getModelObject();
         try {
+            beforeDeleteEntity(deleteable);
+
             jpaService.delete(deleteable);
 
             // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt

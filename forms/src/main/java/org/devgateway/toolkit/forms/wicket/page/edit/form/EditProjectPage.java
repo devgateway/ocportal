@@ -98,11 +98,20 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     }
 
     @Override
-    protected void afterSaveEntity(final Project project) {
-        super.afterSaveEntity(project);
+    protected void beforeSaveEntity(final Project project) {
+        super.beforeSaveEntity(project);
 
         final ProcurementPlan procurementPlan = project.getProcurementPlan();
         procurementPlan.addProject(project);
+        procurementPlanService.save(procurementPlan);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final Project project) {
+        super.beforeDeleteEntity(project);
+
+        final ProcurementPlan procurementPlan = project.getProcurementPlan();
+        procurementPlan.removeProject(project);
         procurementPlanService.save(procurementPlan);
     }
 

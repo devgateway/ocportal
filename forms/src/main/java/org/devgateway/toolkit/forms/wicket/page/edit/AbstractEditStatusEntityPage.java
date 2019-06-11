@@ -181,6 +181,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void beforeSaveEntity(T saveable) {
+        super.beforeSaveEntity(saveable);
+
         afterSubmitNextParameters = parametersAfterSubmitAndNext();
     }
 

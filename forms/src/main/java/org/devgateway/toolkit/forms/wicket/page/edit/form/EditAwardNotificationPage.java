@@ -16,6 +16,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
@@ -76,11 +77,20 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     }
 
     @Override
-    protected void afterSaveEntity(final AwardNotification awardNotification) {
-        super.afterSaveEntity(awardNotification);
+    protected void beforeSaveEntity(final AwardNotification awardNotification) {
+        super.beforeSaveEntity(awardNotification);
 
         final PurchaseRequisition purchaseRequisition = awardNotification.getPurchaseRequisition();
         purchaseRequisition.addAwardNotification(awardNotification);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final AwardNotification awardNotification) {
+        super.beforeDeleteEntity(awardNotification);
+
+        final PurchaseRequisition purchaseRequisition = awardNotification.getPurchaseRequisition();
+        purchaseRequisition.removeAwardNotification(awardNotification);
         purchaseRequisitionService.save(purchaseRequisition);
     }
 
