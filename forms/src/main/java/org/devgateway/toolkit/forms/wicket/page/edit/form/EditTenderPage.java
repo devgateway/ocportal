@@ -83,7 +83,8 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
         closingDate.required();
 
-        DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
+        final DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
+        invitationDate.required();
         invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
