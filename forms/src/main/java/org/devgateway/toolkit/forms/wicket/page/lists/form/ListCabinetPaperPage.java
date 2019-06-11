@@ -41,18 +41,23 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
     @Override
     protected void onInitialize() {
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "procurementPlan.department", "procurementPlan.department", new ListModel(departments), dataTable,
-                isPreselected() && !WebSecurityUtil.isCurrentUserAdmin()));
+                "procurementPlan.department", "procurementPlan.department",
+                new ListModel(departments), dataTable,
+                isPreselected() && !WebSecurityUtil.isCurrentUserAdmin()
+        ));
 
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
-                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear", new ListModel(fiscalYears), dataTable,
-                isPreselected() && !WebSecurityUtil.isCurrentUserAdmin()));
+                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
+                new ListModel(fiscalYears), dataTable,
+                isPreselected() && !WebSecurityUtil.isCurrentUserAdmin()
+        ));
 
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("number", ListCabinetPaperPage.this)).getString()), "number",
-                "number"));
-//        columns.add(new TextFilteredBootstrapPropertyColumn<>(
-//                new Model<>((new StringResourceModel("name", ListCabinetPaperPage.this)).getString()), "name", "name"));
+                "number"
+        ));
+        //columns.add(new TextFilteredBootstrapPropertyColumn<>(
+        //new Model<>((new StringResourceModel("name", ListCabinetPaperPage.this)).getString()), "name", "name"));
 
 
         addFileDownloadColumn();

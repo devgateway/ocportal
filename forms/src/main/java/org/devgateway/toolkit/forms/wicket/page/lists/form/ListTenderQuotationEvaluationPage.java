@@ -1,12 +1,8 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
@@ -34,17 +30,12 @@ public class ListTenderQuotationEvaluationPage extends ListAbstractPurchaseReqMa
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
 
-
-        columns.add(new PropertyColumn<>(
-                new Model<>((new StringResourceModel("title", ListTenderQuotationEvaluationPage.this)).getString()),
-                "purchaseRequisition.tender.tenderTitle",
-                "purchaseRequisition.tender.tenderTitle"));
-
-
+        addTenderTitleColumn();
 
         addFileDownloadColumn();
+
+        super.onInitialize();
     }
 
     @Override

@@ -52,7 +52,8 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
                 "title", "title"));
 
         columns.add(new PropertyColumn<>(
-                new Model<>((new StringResourceModel("lastModifiedDate", ListPurchaseRequisitionPage.this)).getString()),
+                new Model<>((new StringResourceModel("lastModifiedDate",
+                        ListPurchaseRequisitionPage.this)).getString()),
                 "lastModifiedDate", "lastModifiedDate.get"
         ));
 

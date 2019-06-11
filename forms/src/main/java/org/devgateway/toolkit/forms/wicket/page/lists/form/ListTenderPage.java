@@ -36,7 +36,7 @@ public class ListTenderPage extends ListAbstractPurchaseReqMakueniEntity<Tender>
 
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("title", ListTenderPage.this)).getString()),
-                "title", "title"));
+                "tenderTitle", "tenderTitle"));
 
 
         super.onInitialize();

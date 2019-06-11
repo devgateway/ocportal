@@ -22,7 +22,6 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.hibernate.Hibernate;
@@ -95,7 +94,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
             @Override
             public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
                                      final IModel<T> model) {
-                final FileMetadata file = model.getObject().getFormDocs().stream().findFirst().orElse(null);
+                final FileMetadata file = model.getObject().getFormDoc();
                 if (file != null) {
                     Hibernate.initialize(file.getContent());
                     cellItem.add(new DownloadPanel(componentId, new Model<>(file)));
