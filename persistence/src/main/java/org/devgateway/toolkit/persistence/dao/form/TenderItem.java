@@ -38,9 +38,6 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
     @ExcelExport(useTranslation = true)
     private BigDecimal unitPrice;
 
-    @ExcelExport(useTranslation = true)
-    private BigDecimal totalCost;
-
     public String getUnitOfIssue() {
         return unitOfIssue;
     }
@@ -63,14 +60,6 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     public void setUnitPrice(final BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
-    }
-
-    public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(final BigDecimal totalCost) {
-        this.totalCost = totalCost;
     }
 
     public PurchaseItem getPurchaseItem() {

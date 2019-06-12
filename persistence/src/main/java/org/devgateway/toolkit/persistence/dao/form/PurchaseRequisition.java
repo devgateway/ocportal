@@ -70,7 +70,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @ExcelExport(useTranslation = true)
     private Date requestApprovalDate;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(name = "Purchase Items", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")

@@ -13,6 +13,7 @@ package org.devgateway.toolkit.persistence.dao.categories;
 
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.Labelable;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -35,12 +36,13 @@ import java.io.Serializable;
 public class Category extends AbstractAuditableEntity implements Serializable, Labelable {
     static final int DTYPE_COLUMN_LENGTH = 100;
 
+    @ExcelExport(name = "Name")
     protected String label;
 
     private String description;
 
+    @ExcelExport(name = "Code", onlyForClass = {Supplier.class})
     private String code;
-
 
     public Category() {
 

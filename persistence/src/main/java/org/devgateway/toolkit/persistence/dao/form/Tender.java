@@ -60,7 +60,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String objective;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity issuedBy;

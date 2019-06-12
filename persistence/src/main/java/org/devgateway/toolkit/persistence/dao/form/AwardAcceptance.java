@@ -28,7 +28,7 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     @ExcelExport(useTranslation = true)
     private Date acceptanceDate;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
