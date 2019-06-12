@@ -103,6 +103,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private HiddenField<Double> maxHeight;
 
+    protected PageParameters afterSubmitNextParameters;
+
     protected Fragment extraStatusEntityButtonsFragment;
 
     public AbstractEditStatusEntityPage(final PageParameters parameters) {
@@ -177,6 +179,12 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
     }
 
+    @Override
+    protected void beforeSaveEntity(T saveable) {
+        super.beforeSaveEntity(saveable);
+
+        afterSubmitNextParameters = parametersAfterSubmitAndNext();
+    }
 
     @Override
     protected void onInitialize() {
@@ -242,6 +250,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void afterSaveEntity(final T saveable) {
+        super.afterSaveEntity(saveable);
+
         getPageParameters().set(WebConstants.V_POSITION, verticalPosition.getValue())
                 .set(WebConstants.MAX_HEIGHT, maxHeight.getValue());
     }
@@ -514,7 +524,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
             @Override
             protected PageParameters getParameterPage() {
-                return parametersAfterSubmitAndNext();
+                return afterSubmitNextParameters;
             }
         };
 

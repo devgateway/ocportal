@@ -17,8 +17,10 @@ import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
@@ -34,6 +36,9 @@ import java.util.List;
 public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniEntity<ProfessionalOpinion> {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -74,6 +79,24 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     }
 
     @Override
+    protected void beforeSaveEntity(final ProfessionalOpinion professionalOpinion) {
+        super.beforeSaveEntity(professionalOpinion);
+
+        final PurchaseRequisition purchaseRequisition = professionalOpinion.getPurchaseRequisition();
+        purchaseRequisition.addProfessionalOpinion(professionalOpinion);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final ProfessionalOpinion professionalOpinion) {
+        super.beforeDeleteEntity(professionalOpinion);
+
+        final PurchaseRequisition purchaseRequisition = professionalOpinion.getPurchaseRequisition();
+        purchaseRequisition.removeProfessionalOpinion(professionalOpinion);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
     protected Class<? extends BasePage> pageAfterSubmitAndNext() {
         return EditAwardNotificationPage.class;
     }
@@ -81,10 +104,10 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (editForm.getModelObject().getPurchaseRequisition().getAwardNotification() != null) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getAwardNotification())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(
-                    editForm.getModelObject().getPurchaseRequisition().getAwardNotification()).getId());
+                            editForm.getModelObject().getPurchaseRequisition().getAwardNotification()).getId());
         }
 
         return pp;

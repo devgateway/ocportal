@@ -21,9 +21,11 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
@@ -35,6 +37,9 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<PurchaseRequisition> {
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
+
+    @SpringBean
+    private ProjectService projectService;
 
     @SpringBean
     protected StaffService staffService;
@@ -97,6 +102,24 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     }
 
     @Override
+    protected void beforeSaveEntity(final PurchaseRequisition purchaseRequisition) {
+        super.beforeSaveEntity(purchaseRequisition);
+
+        final Project project = purchaseRequisition.getProject();
+        project.addPurchaseRequisition(purchaseRequisition);
+        projectService.save(project);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final PurchaseRequisition purchaseRequisition) {
+        super.beforeDeleteEntity(purchaseRequisition);
+
+        final Project project = purchaseRequisition.getProject();
+        project.removePurchaseRequisition(purchaseRequisition);
+        projectService.save(project);
+    }
+
+    @Override
     protected Class<? extends BasePage> pageAfterSubmitAndNext() {
         return EditTenderPage.class;
     }
@@ -104,7 +127,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (editForm.getModelObject().getTender() != null) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTender())) {
             pp.set(WebConstants.PARAM_ID, PersistenceUtil.getNext(editForm.getModelObject().getTender()).getId());
         }
         // check if we have a Purchase Requisition in session and add it

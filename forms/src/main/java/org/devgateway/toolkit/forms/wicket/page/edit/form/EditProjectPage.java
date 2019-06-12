@@ -18,6 +18,7 @@ import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
+import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -34,6 +35,9 @@ import java.util.List;
 public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     @SpringBean
     protected ProjectService projectService;
+
+    @SpringBean
+    protected ProcurementPlanService procurementPlanService;
 
     @SpringBean
     private CabinetPaperService cabinetPaperService;
@@ -91,6 +95,24 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         project.setProcurementPlan(sessionMetadataService.getSessionPP());
 
         return project;
+    }
+
+    @Override
+    protected void beforeSaveEntity(final Project project) {
+        super.beforeSaveEntity(project);
+
+        final ProcurementPlan procurementPlan = project.getProcurementPlan();
+        procurementPlan.addProject(project);
+        procurementPlanService.save(procurementPlan);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final Project project) {
+        super.beforeDeleteEntity(project);
+
+        final ProcurementPlan procurementPlan = project.getProcurementPlan();
+        procurementPlan.removeProject(project);
+        procurementPlanService.save(procurementPlan);
     }
 
     private IValidator<String> uniqueTitle() {

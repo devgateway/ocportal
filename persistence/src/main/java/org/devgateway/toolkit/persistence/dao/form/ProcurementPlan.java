@@ -92,6 +92,16 @@ public class ProcurementPlan extends AbstractMakueniEntity {
         this.projects = projects;
     }
 
+    public void addProject(final Project p) {
+        projects.add(p);
+        p.setProcurementPlan(this);
+    }
+
+    public void removeProject(final Project p) {
+        projects.remove(p);
+        p.setProcurementPlan(null);
+    }
+
     @Override
     public void setLabel(final String label) {
 
