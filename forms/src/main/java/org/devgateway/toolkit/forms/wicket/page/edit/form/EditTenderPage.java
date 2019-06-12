@@ -25,13 +25,16 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -47,6 +50,9 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
 
     @SpringBean
     protected TenderService tenderService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     @SpringBean
     protected ProcurementMethodService procurementMethodService;
@@ -140,7 +146,7 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation() != null) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition()
                             .getTenderQuotationEvaluation()).getId());
@@ -194,4 +200,21 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         return tender;
     }
 
+    @Override
+    protected void beforeSaveEntity(final Tender tender) {
+        super.beforeSaveEntity(tender);
+
+        final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
+        purchaseRequisition.addTender(tender);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final Tender tender) {
+        super.beforeDeleteEntity(tender);
+
+        final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
+        purchaseRequisition.removeTender(tender);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
 }

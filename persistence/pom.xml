@@ -236,25 +236,25 @@
         </resources>
 
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.hibernate.orm.tooling</groupId>-->
-                <!--<artifactId>hibernate-enhance-maven-plugin</artifactId>-->
-                <!--<version>5.3.9.Final</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<configuration>-->
-                            <!--<failOnError>true</failOnError>-->
-                            <!--<enableLazyInitialization>false</enableLazyInitialization>-->
-                            <!--<enableDirtyTracking>true</enableDirtyTracking>-->
-                            <!--<enableAssociationManagement>true</enableAssociationManagement>-->
-                            <!--<enableExtendedEnhancement>true</enableExtendedEnhancement>-->
-                        <!--</configuration>-->
-                        <!--<goals>-->
-                            <!--<goal>enhance</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.hibernate.orm.tooling</groupId>
+                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <version>5.3.9.Final</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                            <enableLazyInitialization>false</enableLazyInitialization>
+                            <enableDirtyTracking>true</enableDirtyTracking>
+                            <enableAssociationManagement>true</enableAssociationManagement>
+                            <enableExtendedEnhancement>true</enableExtendedEnhancement>
+                        </configuration>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>

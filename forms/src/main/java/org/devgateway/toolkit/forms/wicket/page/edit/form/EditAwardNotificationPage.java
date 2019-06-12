@@ -16,9 +16,13 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
@@ -31,6 +35,9 @@ import java.math.BigDecimal;
 public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntity<AwardNotification> {
     @SpringBean
     protected AwardNotificationService awardNotificationService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -70,6 +77,24 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     }
 
     @Override
+    protected void beforeSaveEntity(final AwardNotification awardNotification) {
+        super.beforeSaveEntity(awardNotification);
+
+        final PurchaseRequisition purchaseRequisition = awardNotification.getPurchaseRequisition();
+        purchaseRequisition.addAwardNotification(awardNotification);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final AwardNotification awardNotification) {
+        super.beforeDeleteEntity(awardNotification);
+
+        final PurchaseRequisition purchaseRequisition = awardNotification.getPurchaseRequisition();
+        purchaseRequisition.removeAwardNotification(awardNotification);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
     protected Class<? extends BasePage> pageAfterSubmitAndNext() {
         return EditAwardAcceptancePage.class;
     }
@@ -77,10 +102,10 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance() != null) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(
-                    editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance()).getId());
+                            editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance()).getId());
         }
 
         return pp;

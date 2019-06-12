@@ -80,6 +80,8 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @Override
     protected void beforeSaveEntity(T saveable) {
+        super.beforeSaveEntity(saveable);
+
         if (saveable instanceof TitleAutogeneratable) {
             ((TitleAutogeneratable) saveable).autogenerateTitleWhenEmpty();
         }

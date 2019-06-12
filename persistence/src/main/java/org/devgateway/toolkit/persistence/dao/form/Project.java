@@ -41,7 +41,6 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
-    @NotNull
     private ProcurementPlan procurementPlan;
 
     @ExcelExport(separateSheet = true, name = "Purchase Requisitions")
@@ -144,6 +143,16 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     public void setPurchaseRequisitions(Set<PurchaseRequisition> purchaseRequisitions) {
         this.purchaseRequisitions = purchaseRequisitions;
+    }
+
+    public void addPurchaseRequisition(final PurchaseRequisition pr) {
+        purchaseRequisitions.add(pr);
+        pr.setProject(this);
+    }
+
+    public void removePurchaseRequisition(final PurchaseRequisition pr) {
+        purchaseRequisitions.remove(pr);
+        pr.setProject(null);
     }
 
     @Override
