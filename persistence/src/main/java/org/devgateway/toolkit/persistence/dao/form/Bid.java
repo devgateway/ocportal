@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation> implements ListViewItem {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier supplier;

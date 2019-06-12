@@ -29,7 +29,7 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
     @ExcelExport(useTranslation = true)
     private Date professionalOpinionDate;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
