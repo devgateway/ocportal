@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.service;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.repository.PersonRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,10 @@ public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements Per
     @Override
     public Person newInstance() {
         return new Person();
+    }
+
+    @Override
+    public TextSearchableRepository<Person, Long> textRepository() {
+        return personRepository;
     }
 }

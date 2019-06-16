@@ -32,6 +32,8 @@ import java.util.Collection;
 public class FileInputBootstrapFormComponent extends GenericBootstrapFormComponent<Collection<FileMetadata>,
         FileInputBootstrapFormComponentWrapper<Collection<FileMetadata>>> {
 
+    private static final long serialVersionUID = 1L;
+
     private FileInputBootstrapFormComponentWrapper<Collection<FileMetadata>> fileInputBootstrapFormComponentWrapper;
 
     /**

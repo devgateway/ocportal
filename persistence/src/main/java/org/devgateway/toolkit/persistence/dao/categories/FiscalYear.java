@@ -20,6 +20,8 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Entity;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 
  * @author mpostelnicu

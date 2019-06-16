@@ -85,6 +85,7 @@ import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -105,9 +106,13 @@ import java.time.ZonedDateTime;
  */
 @EnableScheduling
 @SpringBootApplication(exclude = {org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration.class})
-@ComponentScan("org.devgateway.toolkit")
+@ComponentScan("org.devgateway")
 @PropertySource("classpath:/org/devgateway/toolkit/forms/application.properties")
+@EnableCaching
 public class FormsWebApplication extends AuthenticatedWebApplication {
+
+
+    public static final String STORAGE_ID = "fileStorage";
 
     private static final String BASE_PACKAGE_FOR_PAGES = BasePage.class.getPackage().getName();
 
@@ -116,6 +121,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
     @Autowired
     private SessionFinderService sessionFinderService;
+
 
     @Autowired
     private SummernoteJpaStorageService summernoteJpaStorageService;
@@ -209,6 +215,9 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getMarkupSettings().setStripWicketTags(true);
         } else {
             getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
+
+            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
+            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
         }
 
         final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
@@ -267,14 +276,14 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         if (packageResourceGuard instanceof SecurePackageResourceGuard) {
             SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
             guard.addPattern("+*.woff2");
+            guard.addPattern("+*.xlsx");
         }
 
-        // this ensures that spring DI works for wicket components and pages
-        // see @SpringBean annotation
+        //this ensures that spring DI works for wicket components and pages
+        //see @SpringBean annotation
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
 
-        // this will scan packages for pages with @MountPath annotations and
-        // automatically create URLs for them
+        //this will scan packages for pages with @MountPath annotations and automatically create URLs for them
         new AnnotatedMountScanner().scanPackage(BASE_PACKAGE_FOR_PAGES).mount(this);
 
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);

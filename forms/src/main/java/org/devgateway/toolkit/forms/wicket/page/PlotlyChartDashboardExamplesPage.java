@@ -2,7 +2,6 @@ package org.devgateway.toolkit.forms.wicket.page;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.forms.wicket.components.charts.Annotation;
 import org.devgateway.toolkit.forms.wicket.components.charts.Data;
 import org.devgateway.toolkit.forms.wicket.components.charts.Font;
@@ -13,6 +12,7 @@ import org.devgateway.toolkit.forms.wicket.components.charts.Marker;
 import org.devgateway.toolkit.forms.wicket.components.charts.PlotlyChart;
 import org.devgateway.toolkit.forms.wicket.components.charts.Xaxis;
 import org.devgateway.toolkit.forms.wicket.components.charts.Yaxis;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.annotation.mount.MountPath;

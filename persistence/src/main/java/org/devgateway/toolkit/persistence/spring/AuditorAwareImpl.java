@@ -22,8 +22,9 @@ import java.util.Optional;
 /**
  * This is a bean that reads the auditor information which is used to audit the
  * JPA entities
+ * 
+ * @author mpostelnicu
  *
- * @author mihai
  */
 @Component
 public class AuditorAwareImpl implements AuditorAware<String> {

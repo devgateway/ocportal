@@ -12,6 +12,7 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.devgateway.ocds.persistence.dao.UserDashboard;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -28,13 +29,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "username"), @Index(columnList = "department_id")})
-public class Person extends AbstractAuditableEntity implements UserDetails {
+public class Person extends AbstractAuditableEntity implements UserDetails, Labelable {
     private static final long serialVersionUID = 109780377848343674L;
 
     @ExcelExport
@@ -72,6 +75,14 @@ public class Person extends AbstractAuditableEntity implements UserDetails {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Role> roles;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private UserDashboard defaultDashboard;
+
+
+    @ManyToMany(fetch = FetchType.EAGER,  mappedBy = "users")
+    private Set<UserDashboard> dashboards = new HashSet<>();
+
+
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -81,6 +92,7 @@ public class Person extends AbstractAuditableEntity implements UserDetails {
     private boolean changeProfilePassword;
 
     private Boolean enabled = true;
+
 
     @Override
     public String getUsername() {
@@ -208,7 +220,7 @@ public class Person extends AbstractAuditableEntity implements UserDetails {
 
     @Override
     public String toString() {
-        return "[" + username + "," + firstName + "," + lastName + "," + email + "]";
+        return username;
     }
 
     @Override
@@ -222,5 +234,37 @@ public class Person extends AbstractAuditableEntity implements UserDetails {
 
     public void setDepartment(final Department department) {
         this.department = department;
+    }
+
+
+    @Override
+    public void setLabel(String label) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String getLabel() {
+      return username;
+    }
+
+    public UserDashboard getDefaultDashboard() {
+        return defaultDashboard;
+    }
+
+    public void setDefaultDashboard(UserDashboard defaultDashboard) {
+        this.defaultDashboard = defaultDashboard;
+    }
+
+    public Set<UserDashboard> getDashboards() {
+        return dashboards;
+    }
+
+    public void setDashboards(Set<UserDashboard> dashboards) {
+        this.dashboards = dashboards;
+    }
+
+    public boolean isChangeProfilePassword() {
+        return changeProfilePassword;
     }
 }
