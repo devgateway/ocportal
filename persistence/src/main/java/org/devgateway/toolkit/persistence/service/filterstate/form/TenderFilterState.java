@@ -12,6 +12,9 @@ import java.util.List;
  * @since 2019-04-02
  */
 public class TenderFilterState extends AbstractPurchaseReqMakueniFilterState<Tender> {
+
+    private String tenderTitle;
+
     @Override
     public Specification<Tender> getSpecification() {
         return (root, query, cb) -> {

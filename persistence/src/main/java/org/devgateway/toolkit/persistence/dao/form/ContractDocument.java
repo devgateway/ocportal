@@ -26,7 +26,8 @@ import java.util.Set;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
-public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem {
+public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem,
+        SingleFileMetadatable {
     @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -49,6 +50,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
         this.contractDocumentType = contractDocumentType;
     }
 
+    @Override
     public Set<FileMetadata> getFormDocs() {
         return formDocs;
     }
