@@ -6,7 +6,51 @@
 
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
 
+    <diskStore path="ehcache-diskstore"/>
+
     <defaultCache eternal="true" overflowToDisk="false" statistics="true" maxEntriesLocalHeap="100000" />
+
+    <cache name="classifications" eternal="true"
+           statistics="true" maxEntriesLocalHeap="1000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120"
+    />
+
+    <cache name="procurementMethodsJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120"
+    />
+
+    <cache name="genericPagingRequestJson" eternal="true" statistics="true" maxEntriesLocalHeap="10000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120"
+    />
+
+    <cache name="bidTypesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120"
+    />
+
+    <cache name="tendersAwardsYears" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120" />
+
+    <cache name="indicatorTypesMappingJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120" />
+
 
     <cache name="reportsCache"
            eternal="true"
@@ -23,6 +67,28 @@
            memoryStoreEvictionPolicy="LRU"
            maxEntriesLocalHeap="100000"
            statistics="true">
+    </cache>
+
+    <cache name="excelChartExport"
+           eternal="true"
+           memoryStoreEvictionPolicy="LRU"
+           maxEntriesLocalHeap="100000"
+           statistics="true"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120" >
+    </cache>
+
+    <cache name="excelChartHelper"
+           eternal="true"
+           memoryStoreEvictionPolicy="LRU"
+           maxEntriesLocalHeap="100000"
+           statistics="true"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120" >
     </cache>
 
     <cache name="excelExportCache"

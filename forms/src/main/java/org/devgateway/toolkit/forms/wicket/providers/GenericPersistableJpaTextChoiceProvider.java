@@ -41,6 +41,7 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
 
     private final TextSearchableService<T> textSearchableService;
 
+
     private Sort sort;
 
     public GenericPersistableJpaTextChoiceProvider(final TextSearchableService<T> textSearchableService) {
@@ -81,6 +82,7 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
                 : PageRequest.of(page, WebConstants.SELECT_PAGE_SIZE, sort);
         return textSearchableService.findAll(pageRequest);
     }
+
 
     @Override
     public Collection<T> toChoices(final Collection<String> ids) {

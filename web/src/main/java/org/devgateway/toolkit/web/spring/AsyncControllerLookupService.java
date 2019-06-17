@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.Future;
 
 /**
- * @author mihai Service designed to run a
+ * @author mpostelnicu Service designed to run a
  *         {@link AsyncBeanParamControllerMethodCallable} using a {@link Object}
  *         as its parameter. and return the results in an {@link Async} way.
  */

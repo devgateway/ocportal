@@ -27,6 +27,10 @@ public class CheckBoxPickerBootstrapFormComponent
         extends GenericEnablingBootstrapFormComponent<Boolean, BootstrapCheckBoxPicker> {
     private static final long serialVersionUID = -4032850928243673675L;
 
+    private Boolean isFloatedInput = false;
+
+    private BootstrapCheckBoxPickerConfig config;
+
     public CheckBoxPickerBootstrapFormComponent(final String id, final IModel<String> labelModel,
             final IModel<Boolean> model) {
         super(id, labelModel, model);

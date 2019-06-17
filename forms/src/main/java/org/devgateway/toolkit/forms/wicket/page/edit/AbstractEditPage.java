@@ -40,11 +40,11 @@ import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.ValidationError;
+import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.exceptions.NullListPageClassException;
 import org.devgateway.toolkit.forms.util.MarkupCacheService;
-import org.devgateway.toolkit.forms.util.SettingsUtils;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -121,7 +121,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      * This is a wrapper model that ensures we can easily edit the properties of
      * the entity
      */
-    private CompoundPropertyModel<T> compoundModel;
+    protected CompoundPropertyModel<T> compoundModel;
 
     /**
      * generic submit button for the form
@@ -310,7 +310,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         protected void onSubmit(final AjaxRequestTarget target) {
             // save the object and go back to the list page
             final T saveable = editForm.getModelObject();
-            
+
             beforeSaveEntity(saveable);
 
             // saves the entity and flushes the changes
@@ -321,7 +321,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             // attached
             entityManager.clear();
 
-            // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
+            // we flush the mondrian/wicket/reports cache to ensure it gets
+            // rebuilt
             flushReportingCaches();
 
             afterSaveEntity(saveable);
@@ -518,8 +519,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         }
 
         editForm = new EditForm("editForm") {
-            private static final long serialVersionUID = 1L;
-
             @Override
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
