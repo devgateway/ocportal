@@ -38,9 +38,9 @@ public class ListTenderPage extends ListAbstractPurchaseReqMakueniEntity<Tender>
                 new Model<>((new StringResourceModel("title", ListTenderPage.this)).getString()),
                 "tenderTitle", "tenderTitle"));
 
+        addFileDownloadColumn();
 
         super.onInitialize();
-
 
     }
 
