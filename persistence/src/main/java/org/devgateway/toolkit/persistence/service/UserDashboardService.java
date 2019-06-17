@@ -16,9 +16,6 @@ public interface UserDashboardService extends BaseJpaService<UserDashboard>, Tex
     UserDashboard getDefaultDashboardForPersonId(long userId);
 
     @Override
-    Page<UserDashboard> searchText(String code, Pageable page);
-
-    @Override
     List<UserDashboard> findAll();
 
     @Override

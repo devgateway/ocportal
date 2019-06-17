@@ -36,11 +36,6 @@ public class UserDashboardServiceImpl extends BaseJpaServiceImpl<UserDashboard> 
     }
 
     @Override
-    public Page<UserDashboard> searchText(String code, Pageable page) {
-        return repository.searchText(code, page);
-    }
-
-    @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

@@ -36,14 +36,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
-import org.apache.wicket.validation.validator.EmailAddressValidator;
-import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
@@ -53,14 +49,9 @@ import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
-import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.DateTimeFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
@@ -589,70 +580,4 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         // block UI
         response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
     }
-
-    protected String getClassName() {
-        return Classes.simpleName(getClass());
-    }
-
-    public IValidator<? super String> isEmail() {
-        return EmailAddressValidator.getInstance();
-    }
-
-    public <P extends Comparable<? super P> & Serializable> RangeValidator<P> inRange(final P min, final P max) {
-        return new RangeValidator<>(min, max);
-    }
-
-    public CheckBoxBootstrapFormComponent addCheckBox(final String name) {
-        CheckBoxBootstrapFormComponent checkBox = new CheckBoxBootstrapFormComponent(name);
-        editForm.add(checkBox);
-        return checkBox;
-    }
-
-    public TextAreaFieldBootstrapFormComponent<String> addTextAreaField(final String name) {
-        TextAreaFieldBootstrapFormComponent<String> textAreaField = new TextAreaFieldBootstrapFormComponent<>(name);
-        editForm.add(textAreaField);
-        return textAreaField;
-    }
-
-    public TextFieldBootstrapFormComponent<String> addTextField(final String name) {
-        TextFieldBootstrapFormComponent<String> textField = new TextFieldBootstrapFormComponent<>(name);
-        editForm.add(textField);
-        return textField;
-    }
-
-    public TextFieldBootstrapFormComponent<Integer> addIntegerTextField(final String name) {
-        TextFieldBootstrapFormComponent<Integer> textField = new TextFieldBootstrapFormComponent<>(name);
-        textField.integer();
-        editForm.add(textField);
-        return textField;
-    }
-
-    public TextFieldBootstrapFormComponent<String> addDoubleField(final String name) {
-        TextFieldBootstrapFormComponent<String> textField = new TextFieldBootstrapFormComponent<>(name);
-        textField.asDouble();
-        editForm.add(textField);
-        return textField;
-    }
-
-    public DateTimeFieldBootstrapFormComponent addDateTimeField(final String name) {
-        DateTimeFieldBootstrapFormComponent field = new DateTimeFieldBootstrapFormComponent(name);
-        editForm.add(field);
-        return field;
-    }
-
-    public DateFieldBootstrapFormComponent addDateField(final String name) {
-        DateFieldBootstrapFormComponent field = new DateFieldBootstrapFormComponent(name);
-        editForm.add(field);
-        return field;
-    }
-
-//    public <E extends GenericPersistable & Labelable & SerializableConsumer> Select2ChoiceBootstrapFormComponent<E>
-//    addSelect2ChoiceField(final String name, final TextSearchableRepository<E, Long> repository) {
-//        GenericPersistableJpaTextChoiceProvider<E> choiceProvider =
-//                new GenericPersistableJpaTextChoiceProvider<E>(repository);
-//        Select2ChoiceBootstrapFormComponent<E> component =
-//                new Select2ChoiceBootstrapFormComponent<>(name, choiceProvider);
-//        editForm.add(component);
-//        return component;
-//    }
 }

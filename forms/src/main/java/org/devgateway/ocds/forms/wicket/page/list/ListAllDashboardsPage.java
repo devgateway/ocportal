@@ -31,7 +31,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath(value = "/listAllDashboards")
 public class ListAllDashboardsPage extends AbstractListPage<UserDashboard> {
-
+    // TODO - pages from this package are not scanned for @MountPath annotation
     /**
      *
      */

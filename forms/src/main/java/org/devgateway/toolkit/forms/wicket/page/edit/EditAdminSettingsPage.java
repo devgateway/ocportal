@@ -96,9 +96,6 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
         addCacheClearLink();
 
-        rebootServer = new CheckBoxToggleBootstrapFormComponent("rebootServer");
-        editForm.add(rebootServer);
-
         autosaveTime = new TextFieldBootstrapFormComponent<>("autosaveTime");
         autosaveTime.integer().required();
         autosaveTime.getField().add(RangeValidator.range(1, 60));
