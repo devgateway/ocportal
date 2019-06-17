@@ -26,7 +26,9 @@
         <liquibase.version>3.6.3</liquibase.version>
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
         <derby.version>10.14.2.0</derby.version>
-        <pentaho.poi.version>3.17</pentaho.poi.version>
+        <pg.version>42.2.5</pg.version>
+        <poi.version>4.0.1</poi.version>
+        <embedded.postgres.version>2.10</embedded.postgres.version>
         <commons.lang3.version>3.5</commons.lang3.version>
         <docker.image.prefix>devgateway/toolkit</docker.image.prefix>
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
