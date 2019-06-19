@@ -162,12 +162,11 @@ class OCApp extends React.Component {
     return (<a
       href="javascript:void(0);"
       key={index}
-      className={cn('col-sm-12', { active: index === this.state.currentTab })}
+      className={cn('', { active: index === this.state.currentTab })}
       onClick={() => this.setState({ currentTab: index })}
     >
       <span className="circle">
         <img className="nav-icon" alt="navigation icon" src={`assets/icons/${icon}.svg`} />
-        <i className={`glyphicon glyphicon-${icon}`} />
       </span>
       &nbsp;
       {getName(this.t.bind(this))}

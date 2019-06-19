@@ -22,7 +22,7 @@ class OCEDemoLocation extends LocationTab {
 }
 OCEDemoLocation.CENTER = [37, -100];
 
-class OCEChild extends OCApp {
+class OCEMakueni extends OCApp {
   constructor(props) {
     super(props);
     this.registerTab(OverviewTab);
@@ -116,6 +116,7 @@ class OCEChild extends OCApp {
     ));
   }
 
+  /*
   navigationLink(Tab, index){
     if (OverviewTab !== Tab) return super.navigationLink(Tab, index);
     const { getName, icon } = Tab;
@@ -141,20 +142,31 @@ class OCEChild extends OCApp {
         </div>
       </div>
     );
-  }
+  }*/
 
   render(){
     return (
       <div className="container-fluid dashboard-default" onClick={() => this.setState({ menuBox: '' })}>
         <header className="branding row">
-          <div className="col-sm-9 logo-wrapper">
+          <div className="col-sm-4 logo-wrapper">
+            {/*<img src="assets/makueni-logo.png" />*/}
             <img src="assets/dg-logo.svg" />
             {this.dashboardSwitcher()}
           </div>
-          <div className="col-sm-1 header-icons language-switcher">
+  
+          <div className="col-sm-6">
+            <div className="row">
+              <div className="navigation">
+                {this.navigation()}
+              </div>
+            </div>
+          </div>
+          
+          
+          <div className="col-sm-2 header-icons language-switcher">
             {this.languageSwitcher()}
           </div>
-          <div className="col-sm-2">
+          <div className="col-sm-1">
             {this.loginBox()}
           </div>
         </header>
@@ -170,13 +182,7 @@ class OCEChild extends OCApp {
             {this.exportBtn()}
           </div>
         </div>
-        <aside className="col-xs-4 col-md-3">
-          <div className="row">
-            <div role="navigation">
-              {this.navigation()}
-            </div>
-          </div>
-        </aside>
+        
         <div className="col-xs-offset-4 col-md-offset-3 col-xs-8 col-md-9">
           <div className="row">
             {this.content()}
@@ -230,8 +236,8 @@ const styling = {
   },
 };
 
-OCEChild.STYLING = styling;
-OCEChild.TRANSLATIONS = translations;
+OCEMakueni.STYLING = styling;
+OCEMakueni.TRANSLATIONS = translations;
 
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
 
@@ -239,7 +245,7 @@ CorruptionRickDashboard.STYLING.charts.traceColors = ['#234e6d', '#3f7499', '#80
 
 class OceSwitcher extends ViewSwitcher {}
 
-OceSwitcher.views['m-and-e'] = OCEChild;
+OceSwitcher.views['m-and-e'] = OCEMakueni;
 OceSwitcher.views.crd = CorruptionRickDashboard;
 
 ReactDOM.render(<OceSwitcher
