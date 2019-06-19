@@ -10,8 +10,9 @@ class Tenders extends Table{
     let bidNo = entry.getIn(['planning', 'bidNo']);
     let tender = entry.get('tender');
     let value = tender.get('value');
-    return (
-      <tr key={bidNo}>
+  
+    // TODO - change the key when we have a bidNo
+    return (<tr key={bidNo + tender}>
         <td>{bidNo}</td>
         <td>{getDate(tender, 'startDate')}</td>
         <td>{getDate(tender, 'endDate')}</td>

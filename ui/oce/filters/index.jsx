@@ -75,30 +75,8 @@ class Filters extends translatable(Component){
     this.props.onUpdate(Map())
   }
 
-  fetchDashboards(){
-    fetchJson('/rest/userDashboards/search/getDashboardsForCurrentUser')
-        .then(data => {
-          const dashboards = data._embedded ? data._embedded.userDashboards : [];
-          this.setState({dashboards});
-          if(dashboardId){
-            for(let counter in dashboards){
-              const dashboard = dashboards[counter];
-              if(dashboard.id == dashboardId){
-                this.updateFilters(fromJSON(dashboard.formUrlEncodedBody));
-                break;
-              }
-            }
-          }
-          return data;
-        })
-        .catch(() => null);
-  }
-
   componentDidMount(){
-    this.fetchDashboards();
-    !dashboardId && fetchJson('/rest/userDashboards/search/getDefaultDashboardForCurrentUser')
-        .then(({formUrlEncodedBody}) => this.updateFilters(fromJSON(formUrlEncodedBody)))
-        .catch(() => null)
+  
   }
 
   updateFilters(newFilters){

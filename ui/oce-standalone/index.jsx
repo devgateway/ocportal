@@ -106,7 +106,7 @@ class OCEChild extends OCApp {
     const { locale: selectedLocale } = this.state;
     if (Object.keys(TRANSLATIONS).length <= 1) return null;
     return Object.keys(TRANSLATIONS).map(locale => (
-      <a
+      <a key={locale}
         href="javascript:void(0);"
         onClick={() => this.setLocale(locale)}
         className={cn({ active: locale === selectedLocale })}
@@ -120,7 +120,7 @@ class OCEChild extends OCApp {
     if (OverviewTab !== Tab) return super.navigationLink(Tab, index);
     const { getName, icon } = Tab;
     return (
-      <div
+      <div key={index}
         className={cn('navigation-item-overview', { active: index === this.state.currentTab })}
         onClick={_ => this.setState({currentTab: index})}
       >
@@ -175,16 +175,6 @@ class OCEChild extends OCApp {
             <div role="navigation">
               {this.navigation()}
             </div>
-            {/*
-                <section className="col-sm-12 description">
-                <h3><strong>{this.t('general:description:title')}</strong></h3>
-                <p>
-                <small>
-                {this.t('general:description:content')}
-                </small>
-                </p>
-                </section>
-              */}
           </div>
         </aside>
         <div className="col-xs-offset-4 col-md-offset-3 col-xs-8 col-md-9">
