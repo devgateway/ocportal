@@ -1,8 +1,6 @@
 import { Map } from 'immutable';
 import cn from 'classnames';
 import ReactDOM from 'react-dom';
-// eslint-disable-next-line no-unused-vars
-import styles from './style.less';
 import OCApp from '../oce';
 import OverviewTab from '../oce/tabs/overview';
 import LocationTab from '../oce/tabs/location';
@@ -12,6 +10,8 @@ import EProcurementTab from '../oce/tabs/e-procurement';
 import { fetchJson } from '../oce/tools';
 import ViewSwitcher from '../oce/switcher.jsx';
 import CorruptionRickDashboard from '../oce/corruption-risk';
+
+import './style.less';
 
 class OCEDemoLocation extends LocationTab {
   getHeight() {
@@ -116,34 +116,6 @@ class OCEMakueni extends OCApp {
     ));
   }
 
-  /*
-  navigationLink(Tab, index){
-    if (OverviewTab !== Tab) return super.navigationLink(Tab, index);
-    const { getName, icon } = Tab;
-    return (
-      <div key={index}
-        className={cn('navigation-item-overview', { active: index === this.state.currentTab })}
-        onClick={_ => this.setState({currentTab: index})}
-      >
-        <a href="javascript:void(0);" key={index} className="col-sm-12">
-          <span className="circle">
-            <img className="nav-icon" src={`assets/icons/${icon}.svg`} />
-            <i className={`glyphicon glyphicon-${icon}`} />
-          </span>
-          &nbsp;
-          {getName(this.t.bind(this))}
-          <i className="glyphicon glyphicon-info-sign" />
-        </a>
-        <div className="description col-sm-12">
-          The Procurement M&E Prototype is an interactive platform for analyzing, monitoring,
-          and evaluating information on public procurement. It is specifically designed to help
-          users understand procurement efficiency, and the competitiveness and cost-effectiveness
-          of public markets.
-        </div>
-      </div>
-    );
-  }*/
-
   render(){
     return (
       <div className="container-fluid dashboard-default" onClick={() => this.setState({ menuBox: '' })}>
@@ -156,9 +128,6 @@ class OCEMakueni extends OCApp {
             <div className="header-icons language-switcher">
               {this.languageSwitcher()}
             </div>
-            
-            {/* TODO - move dashboardSwitcher*/}
-            {/*{this.dashboardSwitcher()}*/}
           </div>
   
           <div className="col-sm-7">
@@ -169,21 +138,30 @@ class OCEMakueni extends OCApp {
             </div>
           </div>
           
-          
           <div className="col-sm-2">
             {this.loginBox()}
           </div>
         </header>
         <div className="header-tools row">
-          <div className="col-xs-offset-4 col-md-offset-3 col-sm-5 menu">
+          <div className="col-md-3">
+            {this.dashboardSwitcher()}
+          </div>
+          
+          <div className="col-md-5 menu">
             <div className="filters-hint">
               {this.t('filters:hint')}
             </div>
             {this.filters()}
             {this.comparison()}
           </div>
-          <div className="col-xs-3 col-md-4">
+          <div className="col-md-4">
             {this.exportBtn()}
+          </div>
+        </div>
+  
+        <div className="col-xs-4 col-md-3">
+          <div className="row">
+            {/* TODO filters*/}
           </div>
         </div>
         
