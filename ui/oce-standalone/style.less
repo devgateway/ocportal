@@ -163,15 +163,18 @@ footer.main-footer {
     @active-text-color: #d1a725;
 
     a {
+        display: table-cell;
+        width: 1%;
         cursor: pointer;
         text-decoration: none;
         text-transform: uppercase;
-        float: left;
+        float: none;
         border: none;
         outline: none;
         padding: 20px 8px;
         transition: 0.3s;
         font-size: 14px;
+        text-align: center;
         font-weight: bold;
 
         &:hover, &.active {
@@ -433,12 +436,15 @@ footer.main-footer {
 
 .logo-wrapper > * {
     float: left;
+    width: 200px;
+    padding-left: 20px;
 }
 
 .language-switcher {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 10px;
 
     img {
         width: 32px;

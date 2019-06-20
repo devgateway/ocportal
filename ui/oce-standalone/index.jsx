@@ -148,13 +148,20 @@ class OCEMakueni extends OCApp {
     return (
       <div className="container-fluid dashboard-default" onClick={() => this.setState({ menuBox: '' })}>
         <header className="branding row">
-          <div className="col-sm-4 logo-wrapper">
-            {/*<img src="assets/makueni-logo.png" />*/}
-            <img src="assets/dg-logo.svg" />
-            {this.dashboardSwitcher()}
+          <div className="col-sm-3">
+            <div className="logo-wrapper">
+              <img src="assets/makueni-logo.png" alt="Makueni"/>
+            </div>
+  
+            <div className="header-icons language-switcher">
+              {this.languageSwitcher()}
+            </div>
+            
+            {/* TODO - move dashboardSwitcher*/}
+            {/*{this.dashboardSwitcher()}*/}
           </div>
   
-          <div className="col-sm-6">
+          <div className="col-sm-7">
             <div className="row">
               <div className="navigation">
                 {this.navigation()}
@@ -163,10 +170,7 @@ class OCEMakueni extends OCApp {
           </div>
           
           
-          <div className="col-sm-2 header-icons language-switcher">
-            {this.languageSwitcher()}
-          </div>
-          <div className="col-sm-1">
+          <div className="col-sm-2">
             {this.loginBox()}
           </div>
         </header>
