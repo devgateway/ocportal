@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.service;
 
+import org.apache.commons.lang3.Validate;
 import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Bids;
@@ -21,7 +22,6 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -175,14 +175,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public String getOcid(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
-        return OCID_PREFIX + tender.getTenderNumber();
+    public String getOcid(PurchaseRequisition purchaseRequisition) {
+        Validate.notNull(purchaseRequisition.getPurchaseRequestNumber(),
+                "purchaseRequestNumber must not be null!");
+        return OCID_PREFIX + purchaseRequisition.getPurchaseRequestNumber();
     }
 
     @Override
     public Release createRelease(PurchaseRequisition purchaseRequisition) {
         Release release = new Release();
-        release.setOcid(getOcid(PersistenceUtil.getNext(purchaseRequisition.getTender())));
+        release.setOcid(getOcid(purchaseRequisition));
         release.setPlanning(createPlanning(
                 purchaseRequisition.getProcurementPlan(),
                 purchaseRequisition.getProject().getCabinetPaper()
