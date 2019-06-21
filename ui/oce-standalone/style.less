@@ -35,23 +35,6 @@ header.branding {
         font-size: @fontSize;
         margin-top: (@headerHeight - @fontSize) / 2.1;
     }
-
-    .menu {
-        color: white;
-        display: inline-block;
-        float: right;
-        padding-left: 15%;
-        text-transform: uppercase;
-        width: 100%;
-        @media only screen and (max-width: 1280px) {
-            margin-left: -140px;
-        }
-
-        & > div {
-            cursor: pointer;
-            padding: 20px;
-        }
-    }
 }
 
 .header-tools {
@@ -62,6 +45,133 @@ header.branding {
     top: @headerHeight;
     height: @headerHeight;
     z-index: 1001;
+}
+
+.menu {
+    margin-top: @headerHeight * 2;
+    background: #F9F9F9;
+    //position: fixed;
+    //z-index: 10;
+
+    .filters-hint {
+        @filtersFontSize: 16px;
+        color: #1088cb;
+        font-size: @filtersFontSize;
+        font-weight: bold;
+    }
+
+    & > div {
+        cursor: pointer;
+        padding: 20px;
+    }
+
+    @gray: #b1b1b1;
+    @active-color: #808080;
+    .filters {
+        background: @headerColor;
+        color: white;
+        cursor: pointer;
+        height: @headerHeight;
+        transition: background-color .4s ease-in-out;
+        text-align: center;
+
+        &:hover {
+            background: @active-color;
+        }
+
+        .glyphicon {
+            &.glyphicon-menu-down {
+                font-size: 10px;
+                margin-left: 5px;
+            }
+        }
+
+        &.comparison .box {
+            padding: 0 20px 20px 20px
+        }
+
+        .box {
+            color: black;
+            min-height: 350px;
+            background: white;
+            border: 1px solid #c5c5c5;
+            border-top-color: white;
+            height: auto;
+            left: -50%;
+            opacity: 0;
+            overflow-y: auto;
+            padding: 20px;
+            position: absolute;
+            text-align: left;
+            top: 100%;
+            transform: scaleY(.00001) scaleX(.5) translateY(-150%);
+            transform-origin: 50% 0;
+            transition: transform .4s ease-in-out, opacity .4s ease-in-out;
+            width: 800px;
+            z-index: 1;
+
+            section {
+                header {
+                    color: white;
+                    background-color: @gray;
+                    font-weight: bold;
+                    margin-left: -15px;
+                    margin-right: -15px;
+                    padding: 15px;
+                    text-transform: uppercase;
+
+                    a {
+                        color: white;
+                        text-transform: none;
+                    }
+                }
+
+                &.buttons {
+                    margin-top: 10px;
+                }
+
+                &.procuring-entities {
+                    header {
+                        margin-right: -35px;
+                    }
+                }
+            }
+
+            ul.nav li a {
+                color: #7c7c7c;
+            }
+
+            ul.nav li.active a {
+                background-color: @active-tab-color;
+                color: white;
+            }
+        }
+
+        &.compare .box {
+            min-height: 50px;
+            padding: 20px;
+            width: 500px;
+        }
+
+        .arrow .glyphicon {
+            transform: rotateZ(0);
+            transition: transform .4s ease-in-out;
+        }
+
+        &.open {
+            background-color: @active-color;
+
+            .box {
+                opacity: 1;
+                transform: scaleY(1) scaleX(1) translateY(0);
+            }
+        }
+
+        .filter-tab-content {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    }
 }
 
 aside {
@@ -220,132 +330,6 @@ footer.main-footer {
 
 .leaflet-control-zoom {
     position: fixed;
-}
-
-@gray: #b1b1b1;
-@active-color: #808080;
-
-.filters {
-    background: @headerColor;
-    color: white;
-    cursor: pointer;
-    display: block;
-    float: left;
-    width: 33%;
-    height: @headerHeight;
-    position: relative;
-    transition: background-color .4s ease-in-out;
-    text-align: center;
-
-    &:hover {
-        background: @active-color;
-    }
-
-    .glyphicon {
-        &.glyphicon-menu-down {
-            font-size: 10px;
-            margin-left: 5px;
-        }
-    }
-
-    &.comparison .box {
-        padding: 0 20px 20px 20px
-    }
-
-    .box {
-        color: black;
-        min-height: 350px;
-        background: white;
-        border: 1px solid #c5c5c5;
-        border-top-color: white;
-        height: auto;
-        left: -50%;
-        opacity: 0;
-        overflow-y: auto;
-        padding: 20px;
-        position: absolute;
-        text-align: left;
-        top: 100%;
-        transform: scaleY(.00001) scaleX(.5) translateY(-150%);
-        transform-origin: 50% 0;
-        transition: transform .4s ease-in-out, opacity .4s ease-in-out;
-        width: 800px;
-        z-index: 1;
-
-        section {
-            header {
-                color: white;
-                background-color: @gray;
-                font-weight: bold;
-                margin-left: -15px;
-                margin-right: -15px;
-                padding: 15px;
-                text-transform: uppercase;
-
-                a {
-                    color: white;
-                    text-transform: none;
-                }
-            }
-
-            &.buttons {
-                margin-top: 10px;
-            }
-
-            &.procuring-entities {
-                header {
-                    margin-right: -35px;
-                }
-            }
-        }
-
-        ul.nav li a {
-            color: #7c7c7c;
-        }
-
-        ul.nav li.active a {
-            background-color: @active-tab-color;
-            color: white;
-        }
-    }
-
-    &.compare .box {
-        min-height: 50px;
-        padding: 20px;
-        width: 500px;
-    }
-
-    .arrow .glyphicon {
-        transform: rotateZ(0);
-        transition: transform .4s ease-in-out;
-    }
-
-    &.open {
-        background-color: @active-color;
-
-        .box {
-            opacity: 1;
-            transform: scaleY(1) scaleX(1) translateY(0);
-        }
-    }
-
-    .filter-tab-content {
-        max-height: 300px;
-        overflow-y: auto;
-    }
-}
-
-.filters-hint {
-    @filtersFontSize: 14px;
-    font-size: @filtersFontSize;
-    line-height: @filtersFontSize;
-    padding-top: (@headerHeight - @filtersFontSize) / 2.1;
-    color: white;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-align: left;
-    width: 33%;
-    float: left;
 }
 
 .btn {
