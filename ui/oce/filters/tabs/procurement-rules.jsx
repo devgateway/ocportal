@@ -1,13 +1,13 @@
-import Tab from "./index";
+import Tab from './index';
 import ProcurementMethod from '../procurement-method';
 
-class TenderRules extends Tab{
-  render(){
+class TenderRules extends Tab {
+  render() {
     return (
       <div>
         {this.renderChild(ProcurementMethod, 'procurementMethod')}
       </div>
-    )
+    );
   }
 }
 
