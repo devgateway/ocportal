@@ -160,7 +160,7 @@ class OCEMakueni extends OCApp {
           </div>
         </div>
         
-        <div className="row">
+        <div className="row content">
           <div className="col-xs-4 col-md-3 menu">
             <div className="row">
               <div className="filters-hint col-md-12">
