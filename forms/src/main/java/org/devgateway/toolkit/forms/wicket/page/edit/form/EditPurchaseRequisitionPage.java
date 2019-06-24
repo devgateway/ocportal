@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -7,7 +9,9 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
+import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.MakueniToOCDSConversionService;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
@@ -46,6 +50,12 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
 
     @SpringBean
     protected ChargeAccountService chargeAccountService;
+
+    @SpringBean
+    private MakueniToOCDSConversionService ocdsConversionService;
+
+    @SpringBean
+    private ObjectMapper mapper;
 
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
@@ -91,6 +101,13 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         formDocs.required();
         editForm.add(formDocs);
         saveTerminateButton.setVisibilityAllowed(false);
+
+        Release release = ocdsConversionService.createRelease(editForm.getModelObject());
+        try {
+            System.out.println(mapper.writeValueAsString(release));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

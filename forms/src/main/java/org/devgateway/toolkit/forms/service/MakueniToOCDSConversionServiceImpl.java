@@ -7,6 +7,7 @@ import org.devgateway.ocds.persistence.mongo.Bids;
 import org.devgateway.ocds.persistence.mongo.Budget;
 import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.Contract;
+import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.Organization;
@@ -22,6 +23,7 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -37,6 +39,9 @@ import java.util.stream.Collectors;
 public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversionService {
 
     private static final String OCID_PREFIX = "ocds-abcd-";
+
+    @Autowired
+    private MongoFileStorageService mongoFileStorageService;
 
     @Override
     public Tender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
@@ -55,6 +60,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                         .map(PlanItem::getSourceOfFunds)
                         .collect(Collectors.joining())
         );
+
         return budget;
     }
 
@@ -68,6 +74,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 .stream()
                 .map(this::createPlanningItem)
                 .collect(Collectors.toCollection(planning::getItems));
+
+        planning.getDocuments().add(mongoFileStorageService.storeFileAndReferenceAsDocument(
+                procurementPlan.getFormDoc(), Document.DocumentType.PROCUREMENT_PLAN));
+
+        //TODO: planning.getDocuments().add()
 
         return planning;
     }
