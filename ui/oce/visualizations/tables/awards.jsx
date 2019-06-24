@@ -6,7 +6,9 @@ class Awards extends Table{
     let bidNo = entry.getIn(['planning', 'bidNo']);
     let awards = entry.get('awards');
     let value = awards.get('value');
-    return <tr key={bidNo}>
+    
+    // TODO - change the key when we have a bidNo
+    return <tr key={bidNo + awards}>
       <td>{bidNo}</td>
       <td>{new Date(awards.get('date')).toLocaleDateString(undefined, Table.DATE_FORMAT)}</td>
       <td className="supplier-name">

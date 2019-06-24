@@ -20,6 +20,7 @@ gulp.task("copy-deps", function(){
 
 gulp.task("copy-html", function(){
   gulp.src("index.html").pipe(gulp.dest('public/ui/'));
+  gulp.src("dev.html").pipe(gulp.dest('public/ui/'));
 });
 
 gulp.task("copy-assets", function(){

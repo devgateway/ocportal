@@ -1,6 +1,4 @@
-import { Map, Set } from 'immutable';
-import URI from 'urijs';
-import { fetchEP } from '../tools';
+import { Map } from 'immutable';
 import State from './index';
 export const API_ROOT = '/api';
 

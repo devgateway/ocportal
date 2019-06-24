@@ -10,40 +10,45 @@ class MultipleSelect extends translatable(Component) {
       options: fromJS([]),
     };
   }
-
+  
   getOptions() {
     return this.state.options;
   }
-
+  
   getSelectedCount() {
-    return this.getOptions().filter(
+    return this.getOptions()
+    .filter(
       (option, key) => this.props.selected.has(this.getId(option, key)),
-    ).count();
+    )
+    .count();
   }
-
+  
   transform(datum) {
     return datum;
   }
-
+  
   componentDidMount() {
     const { ENDPOINT } = this.constructor;
     if (ENDPOINT) {
-      fetchJson(ENDPOINT).then(data => this.setState({options: fromJS(this.transform(data))}));
+      fetchJson(ENDPOINT)
+      .then(data => this.setState({ options: fromJS(this.transform(data)) }));
     }
   }
-
+  
   selectAll() {
     this.props.onUpdateAll(
       Set(
-        this.getOptions().map(this.getId).toArray(),
+        this.getOptions()
+        .map(this.getId)
+        .toArray(),
       ),
     );
   }
-
+  
   selectNone() {
     this.props.onUpdateAll(Set());
   }
-
+  
   render() {
     const options = this.getOptions();
     const { selected, onToggle } = this.props;
@@ -51,12 +56,13 @@ class MultipleSelect extends translatable(Component) {
     return (
       <section className="field">
         <header>
-          {this.getTitle()} <span className="count">({this.getSelectedCount()}/{totalOptions})</span>
-          <div className="pull-right">
+          {this.getTitle()} <span
+          className="count">({this.getSelectedCount()}/{totalOptions})</span>
+          <div className="pull-right select-all-none">
             <a href="javascript:void(0)" onClick={e => this.selectAll()}>
               {this.t('filters:multipleSelect:selectAll')}
             </a>
-              &nbsp;|&nbsp;
+            &nbsp;|&nbsp;
             <a href="javascript:void(0)" onClick={e => this.selectNone()}>
               {this.t('filters:multipleSelect:selectNone')}
             </a>
@@ -73,7 +79,8 @@ class MultipleSelect extends translatable(Component) {
                 /> {this.getLabel(option)}
               </label>
             </div>
-          )).toArray()}
+          ))
+          .toArray()}
         </section>
       </section>
     );
