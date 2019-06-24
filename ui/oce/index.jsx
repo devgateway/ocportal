@@ -24,6 +24,7 @@ class OCApp extends React.Component {
       width: 0,
       currentTab: 0,
       compareBy: '',
+      compareOpen: false,
       comparisonCriteriaValues: [],
       selectedYears: Set(),
       selectedMonths: Set(range(1, 12)),
@@ -171,36 +172,39 @@ class OCApp extends React.Component {
   }
   
   comparison() {
-    const { compareBy } = this.state;
-    return (<div
-      role="button"
-      tabIndex={-1}
-      className={cn('filters compare')}>
-      <img
-        className="top-nav-icon"
-        src="assets/icons/compare.svg"
-        width="100%"
-        height="100%"
-        alt="compare"
-      />
-      {this.t('header:comparison:title')}
-      <i className="glyphicon glyphicon-menu-down"/>
-      <div role="button" className="box" tabIndex={-1} onClick={e => e.stopPropagation()}>
-        <div className="col-sm-6">
-          <label htmlFor="comparison-criteria-select">{this.t('header:comparison:criteria')}</label>
+    const { compareBy, compareOpen } = this.state;
+    
+    return (<div className="filters col-md-12">
+      <div className="row filter compare">
+        <div className={cn('col-md-12 filter-header', { selected: compareOpen })}
+             onClick={_ => this.setState({ compareOpen: !compareOpen })}>
+          <i className="glyphicon glyphicon-tasks pull-left" />
+          <div className="pull-left title">{this.t('header:comparison:title')}</div>
+          <div className={'pull-right toggler ' + (compareOpen ? 'up' : 'down')}></div>
         </div>
-        <div className="col-sm-6">
-          <select
-            id="comparison-criteria-select"
-            className="form-control"
-            value={compareBy}
-            onChange={e => this.updateComparisonCriteria(e.target.value)}
-          >
-            {this.constructor.COMPARISON_TYPES.map(({ value, label }) =>
-              <option key={value} value={value}>{this.t(label)}</option>,
-            )}
-          </select>
-        </div>
+        
+        {compareOpen
+          ? <div className="col-md-12 compare-content">
+            <div className="row">
+              <div className="col-md-6">
+                <label
+                  htmlFor="comparison-criteria-select">{this.t('header:comparison:criteria')}</label>
+              </div>
+              <div className="col-md-6">
+                <select
+                  id="comparison-criteria-select"
+                  className="form-control"
+                  value={compareBy}
+                  onChange={e => this.updateComparisonCriteria(e.target.value)}>
+                  {this.constructor.COMPARISON_TYPES.map(({ value, label }) =>
+                    <option key={value} value={value}>{this.t(label)}</option>,
+                  )}
+                </select>
+              </div>
+            </div>
+          </div>
+          : null
+        }
       </div>
     </div>);
   }

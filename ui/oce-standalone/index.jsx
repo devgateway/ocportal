@@ -95,11 +95,15 @@ class OCEMakueni extends OCApp {
         </div>
       );
     }
-    return (
-      <div className="export-btn">
-        <button className="btn btn-default" disabled>
-          <i className="glyphicon glyphicon-download-alt"/>
-        </button>
+    return (<div>
+        <span className="export-title">
+          Download the Data
+        </span>
+        <div className="export-btn">
+          <button className="btn btn-default" disabled>
+            <i className="glyphicon glyphicon-download-alt"/>
+          </button>
+        </div>
       </div>
     );
   }
@@ -152,10 +156,10 @@ class OCEMakueni extends OCApp {
             {this.dashboardSwitcher()}
           </div>
           
-          <div className="col-md-5">
+          <div className="col-md-6">
           
           </div>
-          <div className="col-md-4">
+          <div className="col-md-3 export">
             {this.exportBtn()}
           </div>
         </div>
