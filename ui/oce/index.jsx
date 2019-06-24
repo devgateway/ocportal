@@ -23,7 +23,6 @@ class OCApp extends React.Component {
       exporting: false,
       width: 0,
       currentTab: 0,
-      menuBox: '',
       compareBy: '',
       comparisonCriteriaValues: [],
       selectedYears: Set(),
@@ -172,7 +171,7 @@ class OCApp extends React.Component {
   }
   
   comparison() {
-    const { menuBox, compareBy } = this.state;
+    const { compareBy } = this.state;
     return (<div
       role="button"
       tabIndex={-1}
@@ -207,9 +206,9 @@ class OCApp extends React.Component {
   }
   
   filters() {
-    const { menuBox, bidTypes, locale, user } = this.state;
+    const { bidTypes, locale } = this.state;
     return (<this.constructor.Filters
-      onUpdate={filters => this.setState({ filters, menuBox: '' })}
+      onUpdate={filters => this.setState({ filters })}
       bidTypes={bidTypes}
       translations={this.constructor.TRANSLATIONS[locale]}
     />);
@@ -258,7 +257,6 @@ class OCApp extends React.Component {
   
   updateComparisonCriteria(criteria) {
     this.setState({
-      menuBox: '',
       compareBy: criteria,
       comparisonCriteriaValues: [],
       comparisonData: fromJS({}),

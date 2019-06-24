@@ -13,21 +13,33 @@ class Filters extends translatable(Component) {
   constructor(props) {
     super(props);
     this.state = {
-      currentTab: 0,
+      expanded: new Set(),
       state: Map(),
     };
   }
   
+  toggleTab(index) {
+    const expanded = new Set(this.state.expanded);
+    if (expanded.has(index)) {
+      expanded.delete(index);
+    } else {
+      expanded.add(index);
+    }
+  
+    this.setState({ expanded: expanded });
+  }
+  
   listTabs() {
-    let { currentTab } = this.state;
+    const { expanded } = this.state;
     return this.constructor.TABS.map((Tab, index) => <div
         key={index}
-        className={cn('col-md-12 box', { active: index === currentTab })}
-        onClick={_ => this.setState({ currentTab: index })}>
+        className={cn('col-md-12 box', { active: expanded.has(index) })}
+        onClick={_ => this.toggleTab(index)}>
         <span className="title">{Tab.getName(this.t.bind(this))}</span>
         
-        {
-          this.content(index)
+        {expanded.has(index)
+          ? this.content(index)
+          : null
         }
       </div>
     );
@@ -52,11 +64,14 @@ class Filters extends translatable(Component) {
           {this.t('filters:reset')}
         </button>
       </section>
-    </div>)
+    </div>);
   }
   
   reset() {
-    this.setState({ state: Map() });
+    this.setState({
+      expanded: new Set(),
+      state: Map()
+    });
     this.props.onUpdate(Map());
   }
   
@@ -66,6 +81,8 @@ class Filters extends translatable(Component) {
   }
   
   render() {
+    console.log(this.state);
+    
     return <div className={cn('filters')}>
       <div className="">
         {this.listTabs()}
