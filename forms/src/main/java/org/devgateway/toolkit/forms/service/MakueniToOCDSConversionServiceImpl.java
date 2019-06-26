@@ -10,6 +10,7 @@ import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
+import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
@@ -17,10 +18,8 @@ import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
-import org.devgateway.toolkit.persistence.dao.form.PlanItem;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -50,39 +51,62 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
     @Override
-    public Budget createPlanningBudget(ProcurementPlan procurementPlan) {
+    public Budget createPlanningBudget(PurchaseRequisition purchaseRequisition) {
         Budget budget = new Budget();
-        //set project id as a comma separated list of sources of funds
-        safeSet(
-                budget::setProjectID,
-                () -> procurementPlan.getPlanItems()
-                        .stream()
-                        .map(PlanItem::getSourceOfFunds)
-                        .collect(Collectors.joining())
-        );
+
+        safeSet(budget::setProjectID, purchaseRequisition.getProject()::getProjectTitle);
+
+//        //set project id as a comma separated list of sources of funds
+//        safeSet(
+//                budget::setProjectID,
+//                () -> procurementPlan.getPlanItems()
+//                        .stream()
+//                        .map(PlanItem::getSourceOfFunds)
+//                        .collect(Collectors.joining())
+//        );
 
         return budget;
     }
 
     @Override
-    public MakueniPlanning createPlanning(ProcurementPlan procurementPlan, CabinetPaper paper) {
+    public MakueniPlanning createPlanning(PurchaseRequisition purchaseRequisition) {
         MakueniPlanning planning = new MakueniPlanning();
 
-        planning.setBudget(createPlanningBudget(procurementPlan));
-        //set planning extension items
-        procurementPlan.getPlanItems()
+
+        safeSet(planning::setBudget, () -> purchaseRequisition, this::createPlanningBudget);
+
+        //TODO: set planning extension items
+        purchaseRequisition.getPurchaseItems()
                 .stream()
                 .map(this::createPlanningItem)
                 .collect(Collectors.toCollection(planning::getItems));
 
         planning.getDocuments().add(mongoFileStorageService.storeFileAndReferenceAsDocument(
-                procurementPlan.getFormDoc(), Document.DocumentType.PROCUREMENT_PLAN));
+                purchaseRequisition.getProcurementPlan().getFormDoc(), Document.DocumentType.PROCUREMENT_PLAN));
 
         //TODO: planning.getDocuments().add()
+
+
+        safeSet(planning.getMilestones()::addAll, () -> purchaseRequisition, this::createPlanningMilestones);
+
+
+        planning.getDocuments().add(mongoFileStorageService.storeFileAndReferenceAsDocument(
+                purchaseRequisition.getProcurementPlan().getFormDoc(), Document.DocumentType.PROCUREMENT_PLAN));
+
 
         return planning;
     }
 
+
+    @Override
+    public List<Milestone> createPlanningMilestones(PurchaseRequisition purchaseRequisition) {
+        ArrayList<Milestone> milestones = new ArrayList<>();
+        Milestone milestone = new Milestone();
+        safeSet(milestone::setType, () -> Milestone.MilestoneType.PRE_PROCUREMENT, Milestone.MilestoneType::toValue);
+        safeSet(milestone::setCode, () -> "approvedDate");
+        safeSet(milestone::setDateMet, purchaseRequisition::getApprovedDate);
+        return milestones;
+    }
 
     /**
      * Will set value only if not empty, but first it converts it using converter
@@ -112,7 +136,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     /**
-     * Convertor for ids into string ids. We do not use Long::toString because method signature is not unique at compile
+     * Converter for ids into string ids. We do not use Long::toString because method signature is not unique at compile
      * time
      *
      * @param id
@@ -123,39 +147,40 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     @Override
-    public Unit createPlanningItemUnit(PlanItem item) {
+    public Unit createPlanningItemUnit(PurchaseItem item) {
         Unit unit = new Unit();
         unit.setScheme("scheme");
-        safeSet(unit::setName, item::getUnitOfIssue);
+        safeSet(unit::setName, item::getUnit);
         safeSet(unit::setId, item::getId, this::idToString);
-        unit.setValue(createPlanningItemUnitAmount(item));
+        safeSet(unit::setValue, () -> item, this::createPlanningItemUnitAmount);
         return unit;
     }
 
     @Override
-    public Amount createPlanningItemUnitAmount(PlanItem item) {
+    public Amount createPlanningItemUnitAmount(PurchaseItem item) {
         Amount amount = new Amount();
-        safeSet(amount::setAmount, item::getUnitPrice);
-        amount.setCurrency(getCurrency());
+        safeSet(amount::setAmount, item::getAmount);
+        safeSet(amount::setCurrency, this::getCurrency);
         return amount;
     }
 
     @Override
-    public Item createPlanningItem(PlanItem item) {
+    public Item createPlanningItem(PurchaseItem item) {
         Item ret = new Item();
         safeSet(ret::setId, item::getId, this::idToString);
-        safeSet(ret::setDescription, item::getDescription);
-        ret.setUnit(createPlanningItemUnit(item));
+        safeSet(ret::setDescription, item::getLabel);
+        safeSet(ret::setUnit, () -> item, this::createPlanningItemUnit);
         safeSet(ret::setQuantity, item::getQuantity, Integer::doubleValue);
-        ret.setClassification(createPlanningItemClassification(item));
+        safeSet(ret::setClassification, () -> item, this::createPlanningItemClassification);
+
         return ret;
     }
 
     @Override
-    public Classification createPlanningItemClassification(PlanItem item) {
+    public Classification createPlanningItemClassification(PurchaseItem item) {
         Classification classification = new Classification();
-        safeSet(classification::setId, item.getItem()::getCode);
-        safeSet(classification::setDescription, item.getItem()::getLabel);
+        safeSet(classification::setId, item.getPlanItem().getItem()::getCode);
+        safeSet(classification::setDescription, item.getPlanItem().getItem()::getLabel);
         return classification;
     }
 
@@ -187,19 +212,18 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
     public String getOcid(PurchaseRequisition purchaseRequisition) {
-        Validate.notNull(purchaseRequisition.getPurchaseRequestNumber(),
-                "purchaseRequestNumber must not be null!");
+        Validate.notNull(
+                purchaseRequisition.getPurchaseRequestNumber(),
+                "purchaseRequestNumber must not be null!"
+        );
         return OCID_PREFIX + purchaseRequisition.getPurchaseRequestNumber();
     }
 
     @Override
     public Release createRelease(PurchaseRequisition purchaseRequisition) {
         Release release = new Release();
-        release.setOcid(getOcid(purchaseRequisition));
-        release.setPlanning(createPlanning(
-                purchaseRequisition.getProcurementPlan(),
-                purchaseRequisition.getProject().getCabinetPaper()
-        ));
+        safeSet(release::setOcid, () -> purchaseRequisition, this::getOcid);
+        safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
         return release;
     }
 }
