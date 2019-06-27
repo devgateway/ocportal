@@ -2,6 +2,8 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -13,13 +15,15 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -59,11 +63,15 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @ExcelExport(useTranslation = true)
     private BigDecimal amountRequested;
 
-    @ExcelExport(useTranslation = true)
-    private Integer numberSubCounties;
+    @ExcelExport(justExport = true, useTranslation = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Subcounty> subcounties;
 
-    @ExcelExport(useTranslation = true)
-    private Integer numberSubWards;
+    @ExcelExport(justExport = true, useTranslation = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Ward> wards = new ArrayList<>();
 
     public CabinetPaper getCabinetPaper() {
         return cabinetPaper;
@@ -97,20 +105,20 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
         this.amountRequested = amountRequested;
     }
 
-    public Integer getNumberSubCounties() {
-        return numberSubCounties;
+    public List<Subcounty> getSubcounties() {
+        return subcounties;
     }
 
-    public void setNumberSubCounties(final Integer numberSubCounties) {
-        this.numberSubCounties = numberSubCounties;
+    public void setSubcounties(final List<Subcounty> subcounties) {
+        this.subcounties = subcounties;
     }
 
-    public Integer getNumberSubWards() {
-        return numberSubWards;
+    public List<Ward> getWards() {
+        return wards;
     }
 
-    public void setNumberSubWards(final Integer numberSubWards) {
-        this.numberSubWards = numberSubWards;
+    public void setWards(final List<Ward> wards) {
+        this.wards = wards;
     }
 
     @Override
