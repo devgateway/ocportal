@@ -63,12 +63,12 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @ExcelExport(useTranslation = true)
     private BigDecimal amountRequested;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Subcounty> subcounties;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Ward> wards = new ArrayList<>();

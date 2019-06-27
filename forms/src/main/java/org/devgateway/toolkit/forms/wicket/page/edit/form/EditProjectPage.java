@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-import com.google.common.collect.ForwardingSortedSet;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -16,7 +17,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
-import org.devgateway.toolkit.persistence.dao.Role;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
@@ -31,7 +31,10 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author idobre
@@ -97,8 +100,11 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior("change"));
+        subcounties.required();
 
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+        wards.required();
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
@@ -154,6 +160,29 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
                     validatable.error(error);
                 }
             }
+        }
+    }
+
+    class CountyAjaxFormComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
+        CountyAjaxFormComponentUpdatingBehavior(final String event) {
+            super(event);
+        }
+
+        @Override
+        protected void onUpdate(final AjaxRequestTarget target) {
+            final Collection<Subcounty> subcountyList = subcounties.getModelObject();
+            editForm.getModelObject().setWards(new ArrayList<>());
+
+            if (subcountyList.isEmpty()) {
+                wards.provider(new GenericChoiceProvider<>(wardService.findAll()));
+            } else {
+                final List<Ward> wardList = wardService.findAll().stream()
+                        .filter(ward -> subcountyList.contains(ward.getSubcounty()))
+                        .collect(Collectors.toList());
+                wards.provider(new GenericChoiceProvider<>(wardList));
+            }
+
+            target.add(wards);
         }
     }
 }

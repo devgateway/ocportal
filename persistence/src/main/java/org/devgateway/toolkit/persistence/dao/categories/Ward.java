@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
-import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -16,10 +15,16 @@ import javax.persistence.ManyToOne;
 @Entity
 @Audited
 public class Ward extends Category {
-
-    @ExcelExport(justExport = true)
     @ManyToOne
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "subcounty_id")
     private Subcounty subcounty;
+
+    public Subcounty getSubcounty() {
+        return subcounty;
+    }
+
+    public void setSubcounty(final Subcounty subcounty) {
+        this.subcounty = subcounty;
+    }
 }
