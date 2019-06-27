@@ -311,4 +311,52 @@
         </preConditions>
         <sqlFile path="Metadata1.sql"/>
     </changeSet>
+
+    <changeSet id="OCMAKU-181" author="idobre">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Kaiti"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Kibwezi East"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Kibwezi West"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Kilome"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Makueni"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Mbooni"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-180" author="idobre">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <sqlFile path="Wards.sql"/>
+    </changeSet>
 </databaseChangeLog>
