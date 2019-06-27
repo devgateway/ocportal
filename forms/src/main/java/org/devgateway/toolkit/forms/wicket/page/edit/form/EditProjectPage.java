@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import com.google.common.collect.ForwardingSortedSet;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -10,13 +11,19 @@ import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.Role;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.service.category.SubcountyService;
+import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -41,6 +48,16 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
 
     @SpringBean
     private CabinetPaperService cabinetPaperService;
+
+    @SpringBean
+    private SubcountyService subcountyService;
+
+    @SpringBean
+    private WardService wardService;
+
+    protected Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
+
+    protected Select2MultiChoiceBootstrapFormComponent<Ward> wards;
     
     public EditProjectPage(final PageParameters parameters) {
         super(parameters);
@@ -79,10 +96,9 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         ComponentUtil.addBigDecimalField(editForm, "amountRequested")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
-        ComponentUtil.addIntegerTextField(editForm, "numberSubCounties")
-                .getField().add(RangeValidator.range(1, 6));
-        ComponentUtil.addIntegerTextField(editForm, "numberSubWards")
-                .getField().add(RangeValidator.range(1, 30));
+        subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+
+        wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
