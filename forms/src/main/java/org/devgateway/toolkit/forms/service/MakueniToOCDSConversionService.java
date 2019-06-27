@@ -22,7 +22,6 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 
-import java.util.List;
 import java.util.Set;
 
 public interface MakueniToOCDSConversionService {
@@ -54,5 +53,6 @@ public interface MakueniToOCDSConversionService {
 
     Release createRelease(PurchaseRequisition purchaseRequisition);
 
-    List<Milestone> createPlanningMilestones(PurchaseRequisition purchaseRequisition);
+
+    Milestone convertPlanningMilestone(PurchaseRequisition purchaseRequisition);
 }
