@@ -5,6 +5,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
@@ -34,6 +35,7 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.DRAFT;
  */
 public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
         extends AbstractEditStatusEntityPage<T> {
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniEntityPage.class);
 
     protected ButtonContentModal revertToDraftModal;
 
@@ -43,8 +45,9 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     @SpringBean
     protected MakueniEntityServiceResolver makeniEntityServiceResolver;
 
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniEntityPage.class);
     private Fragment extraStatusEntityButtons;
+
+    protected TransparentWebMarkupContainer alertTerminated;
 
     public EditAbstractMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
@@ -108,7 +111,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     }
 
 
-
     public AbstractMakueniEntityService<T> getJpaService() {
         return (AbstractMakueniEntityService<T>) jpaService;
     }
@@ -116,6 +118,10 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        alertTerminated = new TransparentWebMarkupContainer("alertTerminated");
+        alertTerminated.setVisibilityAllowed(false);
+        editForm.add(alertTerminated);
 
         enableDisableAutosaveFields(null);
 
