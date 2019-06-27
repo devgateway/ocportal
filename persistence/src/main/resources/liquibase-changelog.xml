@@ -311,4 +311,11 @@
         </preConditions>
         <sqlFile path="Metadata1.sql"/>
     </changeSet>
+
+    <changeSet id="OCMAKU-117-staff" author="gmutuhu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <sqlFile path="Metadata2.sql"/>
+    </changeSet>
 </databaseChangeLog>
