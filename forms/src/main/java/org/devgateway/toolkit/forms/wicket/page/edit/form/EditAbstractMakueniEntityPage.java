@@ -101,7 +101,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
                 setStatusAppendComment(DBConstants.Status.DRAFT);
                 super.continueSubmit(target);
                 target.add(editForm);
-                setButtonsPermissions();
                 onAfterRevertToDraft(target);
             }
         };
