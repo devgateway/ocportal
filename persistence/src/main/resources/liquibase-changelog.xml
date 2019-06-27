@@ -363,6 +363,7 @@
     <changeSet id="OCMAKU-180" author="idobre">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="category"/>
+            <columnExists tableName="category" columnName="subcounty_id" />
         </preConditions>
         <sqlFile path="Wards.sql"/>
     </changeSet>
