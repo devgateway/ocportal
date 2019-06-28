@@ -19,6 +19,7 @@ import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -90,6 +91,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return planning;
     }
 
+
     @Override
     public Milestone convertPlanningMilestone(PurchaseRequisition purchaseRequisition) {
         Milestone milestone = new Milestone();
@@ -97,6 +99,15 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(milestone::setCode, () -> "approvedDate");
         safeSet(milestone::setDateMet, purchaseRequisition::getApprovedDate);
         return milestone;
+    }
+
+    public <C, S, R extends Supplier<S>> Supplier<S> getSupplier(Supplier<C> parentSupplier, Function<C, R> childSupplier) {
+        C c = parentSupplier.get();
+
+        if (!ObjectUtils.isEmpty(c)) {
+            return childSupplier.apply(c);
+        }
+        return null;
     }
 
     /**
@@ -109,6 +120,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
      * @param <C>
      */
     public <S, C> void safeSet(Consumer<C> consumer, Supplier<S> supplier, Function<S, C> converter) {
+        if (supplier == null || consumer == null || converter == null) {
+            return;
+        }
         S o = supplier.get();
         if (!ObjectUtils.isEmpty(o)) {
             consumer.accept(converter.apply(o));
@@ -116,8 +130,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public <S, C> void safeSetEach(Consumer<C> consumer, Supplier<Collection<S>> supplier, Function<S, C> converter) {
-        Collection<S> o = supplier.get();
+        if (supplier == null || consumer == null || converter == null) {
+            return;
+        }
 
+        Collection<S> o = supplier.get();
         if (!ObjectUtils.isEmpty(o)) {
             o.stream().map(converter).filter(Objects::nonNull).forEach(consumer);
         }
@@ -126,7 +143,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public <S> void safeSetEach(Consumer<S> consumer, Supplier<Collection<S>> supplier) {
         safeSetEach(consumer, supplier, Function.identity());
     }
-
 
 
     /**
@@ -147,7 +163,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
      * @param id
      * @return
      */
-    public String idToString(Long id) {
+    public String longIdToString(Long id) {
         return id.toString();
     }
 
@@ -156,7 +172,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
         safeSet(unit::setName, purchaseItem::getUnit);
-        safeSet(unit::setId, purchaseItem::getId, this::idToString);
+        safeSet(unit::setId, purchaseItem::getId, this::longIdToString);
         safeSet(unit::setValue, () -> purchaseItem, this::createPlanningItemUnitAmount);
         return unit;
     }
@@ -172,7 +188,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Override
     public Item createPlanningItem(PurchaseItem purchaseItem) {
         Item ocdsItem = new Item();
-        safeSet(ocdsItem::setId, purchaseItem::getId, this::idToString);
+        safeSet(ocdsItem::setId, purchaseItem::getId, this::longIdToString);
         safeSet(ocdsItem::setDescription, purchaseItem::getLabel);
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, Integer::doubleValue);
@@ -183,6 +199,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Override
     public Classification createPlanningItemClassification(PurchaseItem purchaseItem) {
+
+        getSupplier(purchaseItem::getPlanItem, )
         Classification classification = new Classification();
         safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
         safeSet(classification::setDescription, purchaseItem.getPlanItem().getItem()::getLabel);
