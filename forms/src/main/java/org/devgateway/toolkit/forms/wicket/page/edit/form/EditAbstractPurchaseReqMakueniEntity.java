@@ -16,6 +16,26 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
         extends EditAbstractMakueniEntityPage<T> {
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractPurchaseReqMakueniEntity.class);
 
+    public EditAbstractPurchaseReqMakueniEntity(final PageParameters parameters) {
+        super(parameters);
+
+        // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
+        if (entityId == null && sessionMetadataService.getSessionPurchaseRequisition() == null) {
+            logger.warn("Something wrong happened since we are trying to add a new AbstractPurchaseReqMakueni Entity "
+                    + "without having a PurchaseRequisition!");
+            setResponsePage(StatusOverviewPage.class);
+        }
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        if (isTerminated()) {
+            alertTerminated.setVisibilityAllowed(true);
+        }
+    }
+
     @Override
     protected void checkAndSendEventForDisableEditing() {
         super.checkAndSendEventForDisableEditing();
@@ -28,17 +48,5 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     public boolean isTerminated() {
         final PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
         return super.isTerminated() || (purchaseRequisition != null && purchaseRequisition.isTerminated());
-    }
-
-
-    public EditAbstractPurchaseReqMakueniEntity(final PageParameters parameters) {
-        super(parameters);
-
-        // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && sessionMetadataService.getSessionPurchaseRequisition() == null) {
-            logger.warn("Something wrong happened since we are trying to add a new AbstractPurchaseReqMakueni Entity "
-                    + "without having a PurchaseRequisition!");
-            setResponsePage(StatusOverviewPage.class);
-        }
     }
 }
