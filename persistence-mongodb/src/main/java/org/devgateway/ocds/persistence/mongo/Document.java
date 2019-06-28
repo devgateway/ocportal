@@ -405,6 +405,7 @@ public class Document {
         TENDER_NOTICE("tenderNotice"),
         AWARD_NOTICE("awardNotice"),
         CONTRACT_NOTICE("contractNotice"),
+        PROJECT_PLAN("projectPlan"),
         PROCUREMENT_PLAN("procurementPlan");
 
 

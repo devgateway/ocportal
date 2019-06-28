@@ -19,7 +19,6 @@ import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -29,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -47,7 +47,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Override
     public Tender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
-        return null;
+        Tender ocdsTender = new Tender();
+
+
+        return ocdsTender;
     }
 
 
@@ -56,6 +59,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Budget budget = new Budget();
 
         safeSet(budget::setProjectID, purchaseRequisition.getProject()::getProjectTitle);
+        safeSet(budget::setAmount, purchaseRequisition.getProject()::getAmountBudgeted, this::convertAmount);
+
 
 //        //set project id as a comma separated list of sources of funds
 //        safeSet(
@@ -69,8 +74,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return budget;
     }
 
-    public Document convertDocToProcurementPlanType(FileMetadata fm) {
+
+    public Document storeAsDocumentProcurementPlan(FileMetadata fm) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROCUREMENT_PLAN);
+    }
+
+    public Document storeAsDocumentProjectPlan(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROJECT_PLAN);
     }
 
     @Override
@@ -83,17 +93,22 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSetEach(planning.getItems()::add, purchaseRequisition::getPurchaseItems, this::createPlanningItem);
 
         safeSet(planning.getDocuments()::add, purchaseRequisition.getProcurementPlan()::getFormDoc,
-                this::convertDocToProcurementPlanType);
+                this::storeAsDocumentProcurementPlan
+        );
 
-        //TODO: planning.getDocuments().add()
-        safeSet(planning.getMilestones()::add, () -> purchaseRequisition, this::convertPlanningMilestone);
+        //TODO: also set document title to something else than uploaded document title?
+        safeSet(planning.getDocuments()::add, purchaseRequisition.getProject().getCabinetPaper()::getFormDoc,
+                this::storeAsDocumentProjectPlan
+        );
+
+        safeSet(planning.getMilestones()::add, () -> purchaseRequisition, this::createPlanningMilestone);
 
         return planning;
     }
 
 
     @Override
-    public Milestone convertPlanningMilestone(PurchaseRequisition purchaseRequisition) {
+    public Milestone createPlanningMilestone(PurchaseRequisition purchaseRequisition) {
         Milestone milestone = new Milestone();
         safeSet(milestone::setType, () -> Milestone.MilestoneType.PRE_PROCUREMENT, Milestone.MilestoneType::toValue);
         safeSet(milestone::setCode, () -> "approvedDate");
@@ -101,7 +116,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return milestone;
     }
 
-    public <C, S, R extends Supplier<S>> Supplier<S> getSupplier(Supplier<C> parentSupplier, Function<C, R> childSupplier) {
+    public <C, S, R extends Supplier<S>> Supplier<S> getSupplier(Supplier<C> parentSupplier,
+                                                                 Function<C, R> childSupplier) {
         C c = parentSupplier.get();
 
         if (!ObjectUtils.isEmpty(c)) {
@@ -173,14 +189,14 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(unit::setScheme, () -> "scheme");
         safeSet(unit::setName, purchaseItem::getUnit);
         safeSet(unit::setId, purchaseItem::getId, this::longIdToString);
-        safeSet(unit::setValue, () -> purchaseItem, this::createPlanningItemUnitAmount);
+        safeSet(unit::setValue, purchaseItem::getAmount, this::convertAmount);
         return unit;
     }
 
     @Override
-    public Amount createPlanningItemUnitAmount(PurchaseItem purchaseItem) {
+    public Amount convertAmount(BigDecimal sourceAmount) {
         Amount amount = new Amount();
-        safeSet(amount::setAmount, purchaseItem::getAmount);
+        safeSet(amount::setAmount, () -> sourceAmount);
         safeSet(amount::setCurrency, this::getCurrency);
         return amount;
     }
@@ -193,14 +209,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, Integer::doubleValue);
         safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPlanningItemClassification);
-
         return ocdsItem;
     }
 
     @Override
     public Classification createPlanningItemClassification(PurchaseItem purchaseItem) {
-
-        getSupplier(purchaseItem::getPlanItem, )
         Classification classification = new Classification();
         safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
         safeSet(classification::setDescription, purchaseItem.getPlanItem().getItem()::getLabel);

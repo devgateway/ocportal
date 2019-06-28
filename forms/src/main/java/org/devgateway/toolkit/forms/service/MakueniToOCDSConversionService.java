@@ -22,6 +22,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public interface MakueniToOCDSConversionService {
@@ -34,7 +35,7 @@ public interface MakueniToOCDSConversionService {
 
     Unit createPlanningItemUnit(PurchaseItem item);
 
-    Amount createPlanningItemUnitAmount(PurchaseItem item);
+    Amount convertAmount(BigDecimal amount);
 
     Item createPlanningItem(PurchaseItem item);
 
@@ -53,6 +54,5 @@ public interface MakueniToOCDSConversionService {
 
     Release createRelease(PurchaseRequisition purchaseRequisition);
 
-
-    Milestone convertPlanningMilestone(PurchaseRequisition purchaseRequisition);
+    Milestone createPlanningMilestone(PurchaseRequisition purchaseRequisition);
 }
