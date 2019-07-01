@@ -23,6 +23,7 @@ import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
@@ -70,7 +71,24 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsTender::setValue, tender::getTenderValue, this::convertAmount);
         safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
         safeSet(ocdsTender.getDocuments()::add, tender::getTenderLink, this::createDocumentFromUrlTenderNotice);
+        safeSet(ocdsTender::setStatus, () -> tender, this::createTenderStatus);
+        safeSet(ocdsTender::setNumberOfTenderers, tender.getPurchaseRequisition()::getTenderQuotationEvaluation,
+                this::convertNumberOfTenderers
+        );
         return ocdsTender;
+    }
+
+
+    public Integer convertNumberOfTenderers(Set<TenderQuotationEvaluation> tenderQuotationEvaluations) {
+        return PersistenceUtil.getNext(tenderQuotationEvaluations)
+    }
+
+    public Tender.Status createTenderStatus(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
+        if (tender.isTerminated()) {
+            return Tender.Status.cancelled;
+        }
+        //TODO: finish this !!
+        return Tender.Status.active;
     }
 
     public Organization createProcuringEntity(ProcuringEntity procuringEntity) {
@@ -172,8 +190,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROCUREMENT_PLAN);
     }
 
-    private Document storeAsDocumentProjectPlan(FileMetadata fm) {
-        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROJECT_PLAN);
+    private Document storeAsDocumentProjectPlan(AbstractMakueniEntity entity) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(
+                entity.getFormDoc(),
+                Document.DocumentType.PROJECT_PLAN
+        );
     }
 
     private Document storeAsDocumentTenderNotice(FileMetadata fm) {
@@ -205,13 +226,18 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         );
 
         //TODO: also set document title to something else than uploaded document title?
-        safeSet(planning.getDocuments()::add, purchaseRequisition.getProject().getCabinetPaper()::getFormDoc,
+        safeSet(planning.getDocuments()::add, purchaseRequisition.getProject()::getCabinetPaper,
                 this::storeAsDocumentProjectPlan
         );
 
         safeSet(planning.getMilestones()::add, () -> purchaseRequisition, this::createPlanningMilestone);
 
         return planning;
+    }
+
+    public Bids createBids(TenderQuotationEvaluation evaluation) {
+        Bids bids = new Bids();
+        safeSet(bid);
     }
 
 
@@ -221,8 +247,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(milestone::setType, () -> Milestone.MilestoneType.PRE_PROCUREMENT, Milestone.MilestoneType::toValue);
         safeSet(milestone::setCode, () -> "approvedDate");
         safeSet(milestone::setDateMet, purchaseRequisition::getApprovedDate);
+        safeSet(milestone::setStatus, () -> purchaseRequisition, this::createPlanningMilestoneStatus);
         return milestone;
     }
+
+
+    public Milestone.Status createPlanningMilestoneStatus(PurchaseRequisition purchaseRequisition) {
+        //TODO: implement more statuses
+        return Milestone.Status.SCHEDULED;
+    }
+
 
     public <C, S, R extends Supplier<S>> Supplier<S> getSupplier(Supplier<C> parentSupplier,
                                                                  Function<C, R> childSupplier) {
