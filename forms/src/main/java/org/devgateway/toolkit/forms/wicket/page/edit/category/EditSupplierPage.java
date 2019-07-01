@@ -12,6 +12,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
+import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -25,6 +26,9 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
     @SpringBean
     private SupplierService supplierService;
 
+    @SpringBean
+    private TargetGroupService targetGroupService;
+
     public EditSupplierPage(final PageParameters parameters) {
         super(parameters);
         jpaService = supplierService;
@@ -36,7 +40,9 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
         super.onInitialize();
 
         addCode();
-        TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
+        final TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
         address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT);
+
+        ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", targetGroupService);
     }
 }
