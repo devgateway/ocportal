@@ -11,15 +11,18 @@ import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
+import org.devgateway.ocds.persistence.mongo.Period;
 import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
+import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 
 import java.math.BigDecimal;
@@ -28,6 +31,16 @@ import java.util.Set;
 public interface MakueniToOCDSConversionService {
 
     Tender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender);
+
+    Period createTenderPeriod(org.devgateway.toolkit.persistence.dao.form.Tender tender);
+
+    Unit createTenderItemUnit(TenderItem tenderItem);
+
+    Item createTenderItem(TenderItem tenderItem);
+
+    Classification createTenderItemClassification(TenderItem tenderItem);
+
+    Tender.ProcurementMethod createProcurementMethod(ProcurementMethod procurementMethod);
 
     Budget createPlanningBudget(PurchaseRequisition purchaseRequisition);
 

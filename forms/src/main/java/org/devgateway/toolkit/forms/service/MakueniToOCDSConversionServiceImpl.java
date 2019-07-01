@@ -1,34 +1,44 @@
 package org.devgateway.toolkit.forms.service;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.Validate;
+import org.devgateway.ocds.persistence.mongo.Address;
 import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Bids;
 import org.devgateway.ocds.persistence.mongo.Budget;
 import org.devgateway.ocds.persistence.mongo.Classification;
+import org.devgateway.ocds.persistence.mongo.ContactPoint;
 import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
+import org.devgateway.ocds.persistence.mongo.Period;
 import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
+import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -42,15 +52,108 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private static final String OCID_PREFIX = "ocds-abcd-";
 
+    private ImmutableMap<String, Tender.ProcurementMethod> procurementMethodMap;
+
     @Autowired
     private MongoFileStorageService mongoFileStorageService;
 
     @Override
     public Tender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
         Tender ocdsTender = new Tender();
-
-
+        safeSet(ocdsTender::setId, tender::getId, this::longIdToString);
+        safeSet(ocdsTender::setTitle, tender::getTitle);
+        safeSet(ocdsTender::setTenderPeriod, () -> tender, this::createTenderPeriod);
+        safeSet(ocdsTender::setProcurementMethod, tender::getProcurementMethod, this::createProcurementMethod);
+        safeSetEach(ocdsTender.getItems()::add, tender::getTenderItems, this::createTenderItem);
+        safeSet(ocdsTender::setDescription, tender::getObjective);
+        safeSet(ocdsTender::setProcuringEntity, tender::getIssuedBy, this::createProcuringEntity);
+        safeSet(ocdsTender::setValue, tender::getTenderValue, this::convertAmount);
+        safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
+        safeSet(ocdsTender.getDocuments()::add, tender::getTenderLink, this::createDocumentFromUrlTenderNotice);
         return ocdsTender;
+    }
+
+    public Organization createProcuringEntity(ProcuringEntity procuringEntity) {
+        Organization ocdsProcuringEntity = new Organization();
+        safeSet(ocdsProcuringEntity::setId, procuringEntity::getId, this::longIdToString);
+        safeSet(ocdsProcuringEntity::setAddress, () -> procuringEntity, this::createProcuringEntityAddress);
+        safeSet(ocdsProcuringEntity::setName, procuringEntity::getLabel);
+        safeSet(ocdsProcuringEntity::setContactPoint, () -> procuringEntity, this::createProcuringEntityContactPoint);
+        return ocdsProcuringEntity;
+    }
+
+    public ContactPoint createProcuringEntityContactPoint(ProcuringEntity procuringEntity) {
+        ContactPoint ocdsContactPoint = new ContactPoint();
+        safeSet(ocdsContactPoint::setEmail, procuringEntity::getEmailAddress);
+        return ocdsContactPoint;
+    }
+
+    public Address createProcuringEntityAddress(ProcuringEntity procuringEntity) {
+        Address ocdsAddress = new Address();
+        safeSet(ocdsAddress::setCountryName, this::getCountry);
+        safeSet(ocdsAddress::setStreetAddress, procuringEntity::getAddress);
+        return ocdsAddress;
+    }
+
+    public String getCountry() {
+        return "Kenya";
+    }
+
+
+    @Override
+    public Item createTenderItem(TenderItem tenderItem) {
+        Item ocdsItem = new Item();
+        safeSet(ocdsItem::setId, tenderItem::getId, this::longIdToString);
+        safeSet(ocdsItem::setUnit, () -> tenderItem, this::createTenderItemUnit);
+        safeSet(ocdsItem::setQuantity, tenderItem::getQuantity, Integer::doubleValue);
+        safeSet(ocdsItem::setClassification, () -> tenderItem, this::createTenderItemClassification);
+        return ocdsItem;
+    }
+
+
+    @Override
+    public Unit createTenderItemUnit(TenderItem tenderItem) {
+        Unit unit = new Unit();
+        safeSet(unit::setScheme, () -> "scheme");
+        safeSet(unit::setName, tenderItem.getPurchaseItem()::getUnit);
+        safeSet(unit::setId, tenderItem::getId, this::longIdToString);
+        safeSet(unit::setValue, tenderItem::getUnitPrice, this::convertAmount);
+        return unit;
+    }
+
+
+    @Override
+    public Classification createTenderItemClassification(TenderItem tenderItem) {
+        Classification classification = new Classification();
+        safeSet(classification::setId, tenderItem.getPurchaseItem().getPlanItem().getItem()::getCode);
+        safeSet(classification::setDescription, tenderItem.getPurchaseItem().getPlanItem()::getDescription);
+        return classification;
+    }
+
+    @Override
+    public Tender.ProcurementMethod createProcurementMethod(ProcurementMethod procurementMethod) {
+        return procurementMethodMap.get(procurementMethod.getLabel());
+    }
+
+    @PostConstruct
+    public void init() {
+        procurementMethodMap = ImmutableMap.<String, Tender.ProcurementMethod>builder()
+                .put("Direct", Tender.ProcurementMethod.direct)
+                .put("Open tender national", Tender.ProcurementMethod.open)
+                .put("RF proposal", Tender.ProcurementMethod.limited)
+                .put("RFQ", Tender.ProcurementMethod.selective)
+                .put("Restricted tender", Tender.ProcurementMethod.limited)
+                .put("Special permitted", Tender.ProcurementMethod.limited)
+                .put("Low value procurement", Tender.ProcurementMethod.direct)
+                .put("Open tender International", Tender.ProcurementMethod.open).build();
+    }
+
+    @Override
+    public Period createTenderPeriod(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
+        Period period = new Period();
+        safeSet(period::setStartDate, tender::getInvitationDate);
+        safeSet(period::setEndDate, tender::getClosingDate);
+        return period;
     }
 
 
@@ -61,26 +164,31 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(budget::setProjectID, purchaseRequisition.getProject()::getProjectTitle);
         safeSet(budget::setAmount, purchaseRequisition.getProject()::getAmountBudgeted, this::convertAmount);
 
-
-//        //set project id as a comma separated list of sources of funds
-//        safeSet(
-//                budget::setProjectID,
-//                () -> procurementPlan.getPlanItems()
-//                        .stream()
-//                        .map(PlanItem::getSourceOfFunds)
-//                        .collect(Collectors.joining())
-//        );
-
         return budget;
     }
 
 
-    public Document storeAsDocumentProcurementPlan(FileMetadata fm) {
+    private Document storeAsDocumentProcurementPlan(FileMetadata fm) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROCUREMENT_PLAN);
     }
 
-    public Document storeAsDocumentProjectPlan(FileMetadata fm) {
+    private Document storeAsDocumentProjectPlan(FileMetadata fm) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROJECT_PLAN);
+    }
+
+    private Document storeAsDocumentTenderNotice(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.TENDER_NOTICE);
+    }
+
+    private Document createDocumentFromUrlTenderNotice(String url) {
+        return createDocumentFromUrl(url, Document.DocumentType.TENDER_NOTICE);
+    }
+
+    private Document createDocumentFromUrl(String url, Document.DocumentType documentType) {
+        Document document = new Document();
+        safeSet(document::setUrl, () -> url, URI::create);
+        safeSet(document::setDocumentType, documentType::toString);
+        return document;
     }
 
     @Override
@@ -260,6 +368,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Release release = new Release();
         safeSet(release::setOcid, () -> purchaseRequisition, this::getOcid);
         safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
+        safeSet(release::setTender, () -> PersistenceUtil.getNext(purchaseRequisition.getTender()), this::createTender);
         return release;
     }
 }
