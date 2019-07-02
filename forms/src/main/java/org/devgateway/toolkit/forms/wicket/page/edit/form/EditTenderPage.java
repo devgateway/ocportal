@@ -30,6 +30,7 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
+import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -59,6 +60,9 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
+
+    @SpringBean
+    private TargetGroupService targetGroupService;
 
     private GenericSleepFormComponent procuringEntityEmail;
 
@@ -102,6 +106,9 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
 
         ComponentUtil.addBigDecimalField(editForm, "tenderValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+
+        ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", targetGroupService);
+
         editForm.add(new TenderItemPanel("tenderItems"));
 
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");

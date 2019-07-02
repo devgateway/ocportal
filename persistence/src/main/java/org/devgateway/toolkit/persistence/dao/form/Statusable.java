@@ -19,4 +19,12 @@ public interface Statusable {
     default boolean isTerminated() {
         return DBConstants.Status.TERMINATED.equals(getStatus());
     }
+
+    /**
+     * Determine if an Object can be exported to public portal, excel export, etc...
+     */
+    default boolean isExportable() {
+        return DBConstants.Status.APPROVED.equals(getStatus())
+                || DBConstants.Status.TERMINATED.equals(getStatus());
+    }
 }

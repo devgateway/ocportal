@@ -597,7 +597,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
         return saveEditPageButton;
     }
-    
+
     protected SaveEditPageButton getRevertToDraftPageButton() {
         final SaveEditPageButton saveEditPageButton = new SaveEditPageButton("revertToDraft",
                 new StringResourceModel("revertToDraft", this, null)) {

@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
@@ -67,6 +68,11 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
 
     @ExcelExport(useTranslation = true)
     private BigDecimal tenderValue;
+
+    @ExcelExport(justExport = true, useTranslation = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private TargetGroup targetGroup;
 
     @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
@@ -151,6 +157,14 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
 
     public void setTenderValue(final BigDecimal tenderValue) {
         this.tenderValue = tenderValue;
+    }
+
+    public TargetGroup getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(final TargetGroup targetGroup) {
+        this.targetGroup = targetGroup;
     }
 
     public String getTenderLink() {
