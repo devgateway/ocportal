@@ -2,7 +2,6 @@ package org.devgateway.toolkit.persistence.spring;
 
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 
-import java.util.Optional;
 import java.util.Set;
 
 public final class PersistenceUtil {
@@ -17,7 +16,7 @@ public final class PersistenceUtil {
      * @param <T>
      * @return
      */
-    public static <T extends GenericPersistable> Optional<T> getNext(Set<T> set) {
+    public static <T extends GenericPersistable> T getNext(Set<T> set) {
         if (set == null || set.isEmpty()) {
             return null;
         }

@@ -406,6 +406,13 @@ public class Organization implements Identifiable {
             }
         }
 
+        public static String toValue(OrganizationType type) {
+            if (type == null) {
+                return null;
+            }
+            return type.value;
+        }
+
     }
 
 

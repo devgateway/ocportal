@@ -10,7 +10,9 @@ import org.devgateway.ocds.persistence.mongo.Budget;
 import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.ContactPoint;
 import org.devgateway.ocds.persistence.mongo.Contract;
+import org.devgateway.ocds.persistence.mongo.Detail;
 import org.devgateway.ocds.persistence.mongo.Document;
+import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.Milestone;
@@ -26,6 +28,7 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -72,15 +75,17 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
         safeSet(ocdsTender.getDocuments()::add, tender::getTenderLink, this::createDocumentFromUrlTenderNotice);
         safeSet(ocdsTender::setStatus, () -> tender, this::createTenderStatus);
-        safeSet(ocdsTender::setNumberOfTenderers, tender.getPurchaseRequisition()::getTenderQuotationEvaluation,
+        safeSet(
+                ocdsTender::setNumberOfTenderers,
+                () -> PersistenceUtil.getNext(tender.getPurchaseRequisition().getTenderQuotationEvaluation()),
                 this::convertNumberOfTenderers
         );
         return ocdsTender;
     }
 
 
-    public Integer convertNumberOfTenderers(Set<TenderQuotationEvaluation> tenderQuotationEvaluations) {
-        return PersistenceUtil.getNext(tenderQuotationEvaluations)
+    public Integer convertNumberOfTenderers(TenderQuotationEvaluation tenderQuotationEvaluations) {
+        return tenderQuotationEvaluations.getNumberOfBids();
     }
 
     public Tender.Status createTenderStatus(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
@@ -235,9 +240,31 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return planning;
     }
 
-    public Bids createBids(TenderQuotationEvaluation evaluation) {
-        Bids bids = new Bids();
-        safeSet(bid);
+
+    public Organization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        Organization ocdsOrg = new Organization();
+        safeSet(ocdsOrg::setName, supplier::getLabel);
+        safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertSupplierId);
+        safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
+        safeSet(ocdsOrg.getRoles()::add, () -> Organization.OrganizationType.supplier,
+                Organization.OrganizationType::toValue
+        );
+        return ocdsOrg;
+    }
+
+    public Address createSupplierAddress(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        Address ocdsAddress = new Address();
+        safeSet(ocdsAddress::setCountryName, this::getCountry);
+        safeSet(ocdsAddress::setStreetAddress, supplier::getAddress);
+        return ocdsAddress;
+    }
+
+
+    public Identifier convertSupplierId(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        Identifier identifier = new Identifier();
+        safeSet(identifier::setId, supplier::getCode);
+        safeSet(identifier::setLegalName, supplier::getLabel);
+        return identifier;
     }
 
 
@@ -374,7 +401,20 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Override
     public Bids createBids(TenderQuotationEvaluation quotationEvaluation) {
-        return null;
+        Bids bids = new Bids();
+        safeSetEach(bids.getDetails()::add, quotationEvaluation::getBids, this::createBidsDetail);
+
+
+        return bids;
+
+    }
+
+
+    public Detail createBidsDetail(Bid bid) {
+        Detail detail = new Detail();
+        safeSet(detail.getTenderers()::add, bid::getSupplier, this::convertSupplier);
+        safeSet(detail::setValue, bid::getQuotedAmount, this::convertAmount);
+        return detail;
     }
 
     @Override
