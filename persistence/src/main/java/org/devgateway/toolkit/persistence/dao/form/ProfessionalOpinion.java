@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -67,6 +68,7 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return null;
     }
@@ -78,6 +80,7 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
 
     @Override
     @Transactional
+    @JsonIgnore
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
                 .getAwardNotification()));

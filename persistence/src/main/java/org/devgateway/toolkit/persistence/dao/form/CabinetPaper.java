@@ -66,6 +66,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     }
 
     @Override
+    @JsonIgnore
     public ProcurementPlan getProcurementPlan() {
         return procurementPlan;
     }
@@ -75,6 +76,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return name;
     }
@@ -86,6 +88,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
 
     @Override
     @Transactional
+    @JsonIgnore
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }

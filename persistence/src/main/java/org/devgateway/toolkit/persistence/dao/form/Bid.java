@@ -87,6 +87,7 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
     private Boolean expanded = false;
 
     @Override
+    @JsonIgnore
     public Boolean getEditable() {
         return null;
     }
@@ -97,6 +98,7 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
     }
 
     @Override
+    @JsonIgnore
     public Boolean getExpanded() {
         return expanded;
     }

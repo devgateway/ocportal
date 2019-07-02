@@ -19,6 +19,7 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @JsonIgnore
     protected PurchaseRequisition purchaseRequisition;
 
+    @JsonIgnore
     public PurchaseRequisition getPurchaseRequisition() {
         return purchaseRequisition;
     }
@@ -28,16 +29,19 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     }
 
     @Override
+    @JsonIgnore
     public Project getProject() {
         return getPurchaseRequisition().getProject();
     }
 
+    @JsonIgnore
     public PurchaseRequisition getPurchaseRequisitionNotNull() {
         Objects.requireNonNull(purchaseRequisition, "Purchase requisition must not be null at this stage!");
         return purchaseRequisition;
     }
 
     @Override
+    @JsonIgnore
     public ProcurementPlan getProcurementPlan() {
         if (purchaseRequisition != null && purchaseRequisition.getProject() != null) {
             return purchaseRequisition.getProject().getProcurementPlan();

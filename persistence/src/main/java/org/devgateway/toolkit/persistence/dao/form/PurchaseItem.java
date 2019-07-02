@@ -79,6 +79,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     }
 
     @Override
+    @JsonIgnore
     public Boolean getEditable() {
         return null;
     }
@@ -89,6 +90,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     }
 
     @Override
+    @JsonIgnore
     public Boolean getExpanded() {
         return expanded;
     }
@@ -99,6 +101,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return planItem != null ? planItem.getLabel() : "";
     }

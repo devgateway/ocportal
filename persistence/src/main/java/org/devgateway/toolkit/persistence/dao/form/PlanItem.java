@@ -213,6 +213,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     }
 
     @Override
+    @JsonIgnore
     public Boolean getEditable() {
         return editable;
     }
@@ -223,6 +224,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     }
 
     @Override
+    @JsonIgnore
     public Boolean getExpanded() {
         return expanded;
     }
@@ -238,6 +240,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return description;
     }

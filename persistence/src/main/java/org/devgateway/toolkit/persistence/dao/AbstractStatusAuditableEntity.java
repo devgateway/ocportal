@@ -29,12 +29,15 @@ public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEnt
     protected List<StatusChangedComment> statusComments = new ArrayList<>();
 
     @Transient
+    @JsonIgnore
     private String newStatusComment;
 
     @Transient
+    @JsonIgnore
     private Boolean visibleStatusComments = false;
 
     @Transient
+    @JsonIgnore
     private Boolean visibleStatusLabel = true;
 
     @Override

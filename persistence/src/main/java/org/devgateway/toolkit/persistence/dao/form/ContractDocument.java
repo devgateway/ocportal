@@ -60,6 +60,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
     }
 
     @Override
+    @JsonIgnore
     public Boolean getEditable() {
         return null;
     }
@@ -70,6 +71,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
     }
 
     @Override
+    @JsonIgnore
     public Boolean getExpanded() {
         return expanded;
     }

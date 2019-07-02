@@ -75,6 +75,7 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
     private Boolean expanded = false;
 
     @Override
+    @JsonIgnore
     public Boolean getEditable() {
         return null;
     }
@@ -85,6 +86,7 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
     }
 
     @Override
+    @JsonIgnore
     public Boolean getExpanded() {
         return expanded;
     }

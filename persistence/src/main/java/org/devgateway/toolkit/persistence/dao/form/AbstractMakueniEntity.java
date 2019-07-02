@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -43,9 +44,11 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
      *
      * @return
      */
+    @JsonIgnore
     public abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
 
     @Override
+    @JsonIgnore
     public AbstractAuditableEntity getParent() {
         return null;
     }

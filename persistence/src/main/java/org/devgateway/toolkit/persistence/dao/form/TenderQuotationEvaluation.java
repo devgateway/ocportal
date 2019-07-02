@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
@@ -71,12 +72,14 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return null;
     }
 
     @Override
     @Transactional
+    @JsonIgnore
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
                 .getProfessionalOpinion()));

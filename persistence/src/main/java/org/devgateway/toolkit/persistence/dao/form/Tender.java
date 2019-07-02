@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -91,6 +92,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return tenderNumber + " " + tenderTitle;
     }
@@ -189,6 +191,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
         return getLabel();
     }
 
+    @JsonIgnore
     public BigDecimal getTotalAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (TenderItem item : tenderItems) {
@@ -207,6 +210,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     }
 
     @Override
+    @JsonIgnore
     public String getTitle() {
         return getTenderTitle();
     }

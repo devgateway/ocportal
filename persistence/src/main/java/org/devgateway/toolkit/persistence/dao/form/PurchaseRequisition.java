@@ -47,6 +47,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         TitleAutogeneratable {
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
     private Project project;
 
     @ExcelExport(useTranslation = true)
@@ -80,38 +81,32 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @ExcelExport(separateSheet = true, name = "Tender")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
     private Set<Tender> tender = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Tender Quotation Evaluation")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
     private Set<TenderQuotationEvaluation> tenderQuotationEvaluation = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Professional Opinion")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
     private Set<ProfessionalOpinion> professionalOpinion = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Award Notification")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
     private Set<AwardNotification> awardNotification = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Award Acceptance")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
     private Set<AwardAcceptance> awardAcceptance = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Contract")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
     private Set<Contract> contract = new HashSet<>();
 
     private boolean checkTerminated(Statusable... statusables) {
@@ -138,6 +133,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @Override
+    @JsonIgnore
     public Project getProject() {
         return project;
     }
@@ -206,6 +202,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return title;
     }
@@ -215,6 +212,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         return getLabel();
     }
 
+    @JsonIgnore
     public BigDecimal getAmount() {
         BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
@@ -336,6 +334,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @Override
+    @JsonIgnore
     public ProcurementPlan getProcurementPlan() {
         if (project != null) {
             return project.getProcurementPlan();
@@ -345,6 +344,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
 
     @Override
     @Transactional
+    @JsonIgnore
     public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(tender));
     }

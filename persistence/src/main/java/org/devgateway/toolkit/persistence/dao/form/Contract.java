@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -135,12 +136,14 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return null;
     }
 
     @Override
     @Transactional
+    @JsonIgnore
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }

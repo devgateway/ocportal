@@ -53,7 +53,6 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(separateSheet = true, name = "Projects")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "procurementPlan")
-    @JsonIgnore
     private Set<Project> projects = new HashSet<>();
 
     public ProcurementPlan() {
@@ -108,6 +107,7 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         String fullName = "";
         if (fiscalYear != null) {
@@ -129,6 +129,7 @@ public class ProcurementPlan extends AbstractMakueniEntity {
 
     @Override
     @Transactional
+    @JsonIgnore
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }

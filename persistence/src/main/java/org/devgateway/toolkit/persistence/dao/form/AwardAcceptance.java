@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -65,6 +66,7 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     }
 
     @Override
+    @JsonIgnore
     public String getLabel() {
         return null;
     }
