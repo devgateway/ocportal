@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
@@ -81,32 +82,38 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @ExcelExport(separateSheet = true, name = "Tender")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
     private Set<Tender> tender = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Tender Quotation Evaluation")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
     private Set<TenderQuotationEvaluation> tenderQuotationEvaluation = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Professional Opinion")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
     private Set<ProfessionalOpinion> professionalOpinion = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Award Notification")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
     private Set<AwardNotification> awardNotification = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Award Acceptance")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
     private Set<AwardAcceptance> awardAcceptance = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Contract")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
     @LazyToOne(value = LazyToOneOption.NO_PROXY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
     private Set<Contract> contract = new HashSet<>();
 
     private boolean checkTerminated(Statusable... statusables) {
@@ -132,26 +139,32 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         );
     }
 
+    @JsonProperty("tender")
     public Tender getSingleTender() {
         return PersistenceUtil.getNext(tender);
     }
 
+    @JsonProperty("tenderQuotationEvaluation")
     public TenderQuotationEvaluation getSingleTenderQuotationEvaluation() {
         return PersistenceUtil.getNext(tenderQuotationEvaluation);
     }
 
+    @JsonProperty("professionalOpinion")
     public ProfessionalOpinion getSingleProfessionalOpinion() {
         return PersistenceUtil.getNext(professionalOpinion);
     }
 
+    @JsonProperty("awardNotification")
     public AwardNotification getSingleAwardNotification() {
         return PersistenceUtil.getNext(awardNotification);
     }
 
+    @JsonProperty("awardAcceptance")
     public AwardAcceptance getSingleAwardAcceptance() {
         return PersistenceUtil.getNext(awardAcceptance);
     }
 
+    @JsonProperty("contract")
     public Contract getSingleContract() {
         return PersistenceUtil.getNext(contract);
     }
