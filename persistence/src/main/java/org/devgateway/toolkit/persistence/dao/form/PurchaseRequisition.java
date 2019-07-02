@@ -132,6 +132,30 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         );
     }
 
+    public Tender getSingleTender() {
+        return PersistenceUtil.getNext(tender);
+    }
+
+    public TenderQuotationEvaluation getSingleTenderQuotationEvaluation() {
+        return PersistenceUtil.getNext(tenderQuotationEvaluation);
+    }
+
+    public ProfessionalOpinion getSingleProfessionalOpinion() {
+        return PersistenceUtil.getNext(professionalOpinion);
+    }
+
+    public AwardNotification getSingleAwardNotification() {
+        return PersistenceUtil.getNext(awardNotification);
+    }
+
+    public AwardAcceptance getSingleAwardAcceptance() {
+        return PersistenceUtil.getNext(awardAcceptance);
+    }
+
+    public Contract getSingleContract() {
+        return PersistenceUtil.getNext(contract);
+    }
+
     @Override
     @JsonIgnore
     public Project getProject() {
