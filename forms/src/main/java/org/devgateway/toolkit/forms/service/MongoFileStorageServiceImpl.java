@@ -37,7 +37,12 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
             is.close();
 
             Document doc = new Document();
-            doc.setDateModified(java.sql.Date.valueOf(fm.getLastModifiedDate().get().toLocalDate()));
+            if (fm.getCreatedDate().isPresent()) {
+                doc.setDatePublished(java.sql.Date.valueOf(fm.getCreatedDate().get().toLocalDate()));
+            }
+            if (fm.getLastModifiedDate().isPresent()) {
+                doc.setDateModified(java.sql.Date.valueOf(fm.getLastModifiedDate().get().toLocalDate()));
+            }
             doc.setTitle(fm.getName());
             doc.setFormat(fm.getContentType());
             doc.setUrl(createURL(objId));

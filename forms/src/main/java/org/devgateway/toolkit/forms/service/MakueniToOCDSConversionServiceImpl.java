@@ -22,6 +22,7 @@ import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -34,7 +35,6 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,20 +72,31 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsTender::setDescription, tender::getObjective);
         safeSet(ocdsTender::setProcuringEntity, tender::getIssuedBy, this::createProcuringEntity);
         safeSet(ocdsTender::setValue, tender::getTenderValue, this::convertAmount);
-        safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
-        safeSet(ocdsTender.getDocuments()::add, tender::getTenderLink, this::createDocumentFromUrlTenderNotice);
+
         safeSet(ocdsTender::setStatus, () -> tender, this::createTenderStatus);
-        safeSet(
-                ocdsTender::setNumberOfTenderers,
-                () -> PersistenceUtil.getNext(tender.getPurchaseRequisition().getTenderQuotationEvaluation()),
+        safeSet(ocdsTender::setNumberOfTenderers,
+                () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation().orElse(null),
                 this::convertNumberOfTenderers
         );
+
+        //documents
+        safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
+        safeSet(ocdsTender.getDocuments()::add, tender::getTenderLink, this::createDocumentFromUrlTenderNotice);
+        safeSet(ocdsTender.getDocuments()::add, tender.getPurchaseRequisition()::getFormDoc,
+                this::storeAsDocumentApprovedPurchaseRequisition);
+
+        safeSetEach(ocdsTender.getDocuments()::add,
+                () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation()
+                        .map(TenderQuotationEvaluation::getFormDocs).orElse(null),
+                this::storeAsDocumentEvaluationReports);
+
+
         return ocdsTender;
     }
 
 
-    public Integer convertNumberOfTenderers(TenderQuotationEvaluation tenderQuotationEvaluations) {
-        return tenderQuotationEvaluations.getNumberOfBids();
+    public Integer convertNumberOfTenderers(TenderQuotationEvaluation tenderQuotationEvaluation) {
+        return tenderQuotationEvaluation.getBids().size();
     }
 
     public Tender.Status createTenderStatus(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
@@ -204,6 +215,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private Document storeAsDocumentTenderNotice(FileMetadata fm) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.TENDER_NOTICE);
+    }
+
+    private Document storeAsDocumentEvaluationReports(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(
+                fm, Document.DocumentType.EVALUATION_REPORTS);
+    }
+
+    private Document storeAsDocumentApprovedPurchaseRequisition(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm,
+                Document.DocumentType.X_APPROVED_PURCHASE_REQUISITION);
     }
 
     private Document createDocumentFromUrlTenderNotice(String url) {
@@ -404,7 +425,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Bids bids = new Bids();
         safeSetEach(bids.getDetails()::add, quotationEvaluation::getBids, this::createBidsDetail);
 
-
         return bids;
 
     }
@@ -414,7 +434,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Detail detail = new Detail();
         safeSet(detail.getTenderers()::add, bid::getSupplier, this::convertSupplier);
         safeSet(detail::setValue, bid::getQuotedAmount, this::convertAmount);
+        safeSet(detail::setStatus, () -> bid, this::createBidStatus);
         return detail;
+    }
+
+    public String createBidStatus(Bid bid) {
+        if (DBConstants.SupplierResponsiveness.PASS.equals(bid.getSupplierResponsiveness())) {
+            return "valid";
+        }
+
+        return "disqualified";
     }
 
     @Override
@@ -442,7 +471,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Release release = new Release();
         safeSet(release::setOcid, () -> purchaseRequisition, this::getOcid);
         safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
-        safeSet(release::setTender, () -> PersistenceUtil.getNext(purchaseRequisition.getTender()), this::createTender);
+        safeSet(release::setTender, purchaseRequisition::getSingleTender, this::createTender);
+        safeSet(release::setBids, () -> purchaseRequisition.getSingleTenderQuotationEvaluation().orElse(null),
+                this::createBids);
         return release;
     }
 }

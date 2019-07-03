@@ -15,6 +15,7 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -22,9 +23,11 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.ocds.web.db.ImportPostgresToMongo;
+import org.devgateway.toolkit.forms.service.MakueniToOCDSConversionService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.HomeStyles;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 
 /**
@@ -39,6 +42,16 @@ public class Homepage extends BasePage {
     public Homepage(final PageParameters parameters) {
         super(parameters);
     }
+
+    @SpringBean
+    private MakueniToOCDSConversionService ocdsConversionService;
+
+    @SpringBean
+    PurchaseRequisitionService purchaseRequisitionService;
+
+    @SpringBean
+    private ObjectMapper mapper;
+
 
     @Override
     protected void onInitialize() {
@@ -67,6 +80,14 @@ public class Homepage extends BasePage {
             }
         };
         add(dataExport);
+
+
+//        Release release = ocdsConversionService.createRelease(purchaseRequisitionService.findById(16200L).get());
+//        try {
+//            System.out.println(mapper.writeValueAsString(release));
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
