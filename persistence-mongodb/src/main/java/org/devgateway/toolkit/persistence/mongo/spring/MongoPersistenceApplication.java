@@ -19,13 +19,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,8 +53,30 @@ public class MongoPersistenceApplication {
     public CustomConversions customConversions() {
         return new CustomConversions(Arrays
                 .asList(new Object[]{BigDecimalToDoubleConverter.INSTANCE, DoubleToBigDecimalConverter.INSTANCE,
-                        DbObjectToGeoJsonPointConverter.INSTANCE}));
+                        DbObjectToGeoJsonPointConverter.INSTANCE,
+                        ZonedDateTimeReadConverter.INSTANCE, ZonedDateTimeWriteConverter.INSTANCE}));
     }
+
+    @ReadingConverter
+    public enum ZonedDateTimeReadConverter implements Converter<Date, ZonedDateTime> {
+        INSTANCE;
+
+        @Override
+        public ZonedDateTime convert(Date date) {
+            return date.toInstant().atZone(ZoneOffset.UTC);
+        }
+    }
+
+    @WritingConverter
+    public enum ZonedDateTimeWriteConverter implements Converter<ZonedDateTime, Date> {
+        INSTANCE;
+
+        @Override
+        public Date convert(ZonedDateTime zonedDateTime) {
+            return Date.from(zonedDateTime.toInstant());
+        }
+    }
+
 
     public enum BigDecimalToDoubleConverter implements Converter<BigDecimal, Double> {
         INSTANCE;

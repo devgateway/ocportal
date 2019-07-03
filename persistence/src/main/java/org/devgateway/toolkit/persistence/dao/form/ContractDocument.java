@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
@@ -26,6 +27,7 @@ import java.util.Set;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem,
         SingleFileMetadatable {
     @ExcelExport(justExport = true, useTranslation = true)

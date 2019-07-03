@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Labelable;
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

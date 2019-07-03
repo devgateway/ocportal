@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -28,6 +29,7 @@ import java.util.Collections;
 @Table(indexes = {@Index(columnList = "procurement_plan_id"),
         @Index(columnList = "number"),
         @Index(columnList = "name")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY)

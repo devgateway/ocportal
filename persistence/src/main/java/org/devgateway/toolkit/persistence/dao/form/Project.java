@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
@@ -35,6 +36,7 @@ import java.util.function.Consumer;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
     @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
