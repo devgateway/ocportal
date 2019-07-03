@@ -29,7 +29,7 @@ public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
     private Date awardDate;
 
     @ExcelExport(useTranslation = true)
-    private BigDecimal tenderValue;
+    private BigDecimal awardValue;
 
     @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -39,12 +39,12 @@ public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
     @ExcelExport(useTranslation = true)
     private Integer acknowledgementDays;
 
-    public BigDecimal getTenderValue() {
-        return tenderValue;
+    public BigDecimal getAwardValue() {
+        return awardValue;
     }
 
-    public void setTenderValue(final BigDecimal tenderValue) {
-        this.tenderValue = tenderValue;
+    public void setAwardValue(final BigDecimal awardValue) {
+        this.awardValue = awardValue;
     }
 
     public Integer getAcknowledgementDays() {

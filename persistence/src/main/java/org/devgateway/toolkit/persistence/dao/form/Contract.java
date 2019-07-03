@@ -34,7 +34,7 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class Contract extends AbstractPurchaseReqMakueniEntity {
     @ExcelExport(useTranslation = true)
-    private BigDecimal tenderValue;
+    private BigDecimal contractValue;
 
     @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -66,12 +66,12 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
 
-    public BigDecimal getTenderValue() {
-        return tenderValue;
+    public BigDecimal getContractValue() {
+        return contractValue;
     }
 
-    public void setTenderValue(final BigDecimal tenderValue) {
-        this.tenderValue = tenderValue;
+    public void setContractValue(final BigDecimal contractValue) {
+        this.contractValue = contractValue;
     }
 
     public Supplier getAwardee() {

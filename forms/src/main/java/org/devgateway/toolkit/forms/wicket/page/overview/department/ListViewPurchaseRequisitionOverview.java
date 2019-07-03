@@ -132,19 +132,19 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
         final Panel awardNotificationPanel = new TenderDetailPanel("awardNotificationPanel", awardNotification,
                 "Notification", awardNotification != null ? new ArrayList<>(Arrays.asList(
-                awardNotification.getAwardee(), awardNotification.getTenderValue())) : null,
+                awardNotification.getAwardee(), awardNotification.getAwardValue())) : null,
                 purchaseRequisition, EditAwardNotificationPage.class, professionalOpinion);
         containerFragment.add(awardNotificationPanel);
 
         final Panel awardAcceptancePanel = new TenderDetailPanel("awardAcceptancePanel", awardAcceptance,
                 "Acceptance", awardAcceptance != null ? new ArrayList<>(Arrays.asList(
-                awardAcceptance.getAwardee(), awardAcceptance.getTenderValue())) : null,
+                awardAcceptance.getAwardee(), awardAcceptance.getAcceptedAwardValue())) : null,
                 purchaseRequisition, EditAwardAcceptancePage.class, awardNotification);
         containerFragment.add(awardAcceptancePanel);
 
         final Panel contractPanel = new TenderDetailPanel("contractPanel", contract,
                 "Contracts", contract != null ? new ArrayList<>(Arrays.asList(
-                contract.getAwardee(), contract.getTenderValue())) : null,
+                contract.getAwardee(), contract.getContractValue())) : null,
                 purchaseRequisition, EditContractPage.class, awardAcceptance);
         containerFragment.add(contractPanel);
 
