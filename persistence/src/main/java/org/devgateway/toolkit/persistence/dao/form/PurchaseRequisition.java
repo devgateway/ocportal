@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -145,28 +146,28 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @JsonProperty("tenderQuotationEvaluation")
-    public TenderQuotationEvaluation getSingleTenderQuotationEvaluation() {
-        return PersistenceUtil.getNext(tenderQuotationEvaluation);
+    public Optional<TenderQuotationEvaluation> getSingleTenderQuotationEvaluation() {
+        return Optional.ofNullable(PersistenceUtil.getNext(tenderQuotationEvaluation));
     }
 
     @JsonProperty("professionalOpinion")
-    public ProfessionalOpinion getSingleProfessionalOpinion() {
-        return PersistenceUtil.getNext(professionalOpinion);
+    public Optional<ProfessionalOpinion> getSingleProfessionalOpinion() {
+        return Optional.of(PersistenceUtil.getNext(professionalOpinion));
     }
 
     @JsonProperty("awardNotification")
-    public AwardNotification getSingleAwardNotification() {
-        return PersistenceUtil.getNext(awardNotification);
+    public Optional<AwardNotification> getSingleAwardNotification() {
+        return Optional.of(PersistenceUtil.getNext(awardNotification));
     }
 
     @JsonProperty("awardAcceptance")
-    public AwardAcceptance getSingleAwardAcceptance() {
-        return PersistenceUtil.getNext(awardAcceptance);
+    public Optional<AwardAcceptance> getSingleAwardAcceptance() {
+        return Optional.of(PersistenceUtil.getNext(awardAcceptance));
     }
 
     @JsonProperty("contract")
-    public Contract getSingleContract() {
-        return PersistenceUtil.getNext(contract);
+    public Optional<Contract> getSingleContract() {
+        return Optional.of(PersistenceUtil.getNext(contract));
     }
 
     @Override

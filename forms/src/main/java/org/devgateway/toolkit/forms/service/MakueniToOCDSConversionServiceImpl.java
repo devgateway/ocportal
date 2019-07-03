@@ -74,17 +74,21 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsTender::setValue, tender::getTenderValue, this::convertAmount);
 
         safeSet(ocdsTender::setStatus, () -> tender, this::createTenderStatus);
-        safeSet(ocdsTender::setNumberOfTenderers, tender.getPurchaseRequisition()::getSingleTenderQuotationEvaluation,
+        safeSet(ocdsTender::setNumberOfTenderers,
+                () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation().orElse(null),
                 this::convertNumberOfTenderers
         );
 
         //documents
         safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
         safeSet(ocdsTender.getDocuments()::add, tender::getTenderLink, this::createDocumentFromUrlTenderNotice);
-        safeSet(
-                ocdsTender.getDocuments()::add, tender.getPurchaseRequisition()::getFormDoc,
-                this::storeAsDocumentEvaluationReports
-        );
+        safeSet(ocdsTender.getDocuments()::add, tender.getPurchaseRequisition()::getFormDoc,
+                this::storeAsDocumentApprovedPurchaseRequisition);
+
+        safeSetEach(ocdsTender.getDocuments()::add,
+                () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation()
+                        .map(TenderQuotationEvaluation::getFormDocs).orElse(null),
+                this::storeAsDocumentEvaluationReports);
 
 
         return ocdsTender;
@@ -214,7 +218,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     private Document storeAsDocumentEvaluationReports(FileMetadata fm) {
-        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.EVALUATION_REPORTS);
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(
+                fm, Document.DocumentType.EVALUATION_REPORTS);
+    }
+
+    private Document storeAsDocumentApprovedPurchaseRequisition(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm,
+                Document.DocumentType.X_APPROVED_PURCHASE_REQUISITION);
     }
 
     private Document createDocumentFromUrlTenderNotice(String url) {
@@ -462,7 +472,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release::setOcid, () -> purchaseRequisition, this::getOcid);
         safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
         safeSet(release::setTender, purchaseRequisition::getSingleTender, this::createTender);
-        safeSet(release::setBids, purchaseRequisition::getSingleTenderQuotationEvaluation, this::createBids);
+        safeSet(release::setBids, () -> purchaseRequisition.getSingleTenderQuotationEvaluation().orElse(null),
+                this::createBids);
         return release;
     }
 }
