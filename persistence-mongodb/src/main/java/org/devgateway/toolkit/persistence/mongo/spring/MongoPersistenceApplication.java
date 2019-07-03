@@ -25,6 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +49,16 @@ public class MongoPersistenceApplication {
     public CustomConversions customConversions() {
         return new CustomConversions(Arrays
                 .asList(new Object[]{BigDecimalToDoubleConverter.INSTANCE, DoubleToBigDecimalConverter.INSTANCE,
-                        DbObjectToGeoJsonPointConverter.INSTANCE}));
+                        DbObjectToGeoJsonPointConverter.INSTANCE, URIToStringConverter.INSTANCE}));
+    }
+
+    public enum URIToStringConverter implements Converter<URI, String> {
+        INSTANCE;
+
+        @Override
+        public String convert(final URI source) {
+            return source == null ? null : source.toString();
+        }
     }
 
     public enum BigDecimalToDoubleConverter implements Converter<BigDecimal, Double> {

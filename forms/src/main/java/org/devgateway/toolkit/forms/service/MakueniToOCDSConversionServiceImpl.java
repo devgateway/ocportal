@@ -30,9 +30,9 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
-import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +44,14 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -75,7 +78,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         safeSet(ocdsTender::setStatus, () -> tender, this::createTenderStatus);
         safeSet(ocdsTender::setNumberOfTenderers,
-                () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation().orElse(null),
+                () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation(),
                 this::convertNumberOfTenderers
         );
 
@@ -86,7 +89,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::storeAsDocumentApprovedPurchaseRequisition);
 
         safeSetEach(ocdsTender.getDocuments()::add,
-                () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation()
+                () -> Optional.ofNullable(tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation())
                         .map(TenderQuotationEvaluation::getFormDocs).orElse(null),
                 this::storeAsDocumentEvaluationReports);
 
@@ -217,6 +220,26 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.TENDER_NOTICE);
     }
 
+
+    private Document storeAsDocumentAwardNotice(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.AWARD_NOTICE);
+    }
+
+    private Document storeAsDocumentProfessionalOpinion(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(
+                fm,
+                Document.DocumentType.X_EVALUATION_PROFESSIONAL_OPINION
+        );
+    }
+
+    private Document storeAsDocumentAwardAcceptance(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(
+                fm,
+                Document.DocumentType.X_AWARD_ACCEPTANCE
+        );
+    }
+
+
     private Document storeAsDocumentEvaluationReports(FileMetadata fm) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(
                 fm, Document.DocumentType.EVALUATION_REPORTS);
@@ -331,7 +354,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         }
         S o = supplier.get();
         if (!ObjectUtils.isEmpty(o)) {
-            consumer.accept(converter.apply(o));
+            C converted = converter.apply(o);
+            if (!ObjectUtils.isEmpty(converted)) {
+                consumer.accept(converted);
+            }
         }
     }
 
@@ -424,9 +450,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Bids createBids(TenderQuotationEvaluation quotationEvaluation) {
         Bids bids = new Bids();
         safeSetEach(bids.getDetails()::add, quotationEvaluation::getBids, this::createBidsDetail);
-
         return bids;
 
+    }
+
+    public Set<Organization> createTenderersFromBids(Bids bids) {
+        return bids.getDetails().stream().flatMap(b -> b.getTenderers().stream()).collect(Collectors.toSet());
     }
 
 
@@ -446,10 +475,77 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return "disqualified";
     }
 
-    @Override
-    public Award createAward(ProfessionalOpinion professionalOpinion, AwardNotification awardNotification,
-                             AwardAcceptance awardAcceptance) {
-        return null;
+
+    public Award createAward(AwardNotification awardNotification) {
+        Award ocdsAward = new Award();
+        safeSet(ocdsAward::setTitle, awardNotification.getPurchaseRequisition().getSingleTender()::getTenderTitle);
+        safeSet(ocdsAward::setId, awardNotification.getPurchaseRequisition().getSingleTender()::getTenderNumber);
+        safeSet(ocdsAward::setDate, awardNotification::getAwardDate);
+        safeSet(ocdsAward::setValue, awardNotification::getTenderValue, this::convertAmount);
+        safeSet(ocdsAward.getSuppliers()::add, awardNotification::getAwardee, this::convertSupplier);
+        safeSet(ocdsAward::setContractPeriod, awardNotification::getAcknowledgementDays, this::convertDaysToPeriod);
+        safeSet(ocdsAward.getDocuments()::add, awardNotification::getFormDoc, this::storeAsDocumentAwardNotice);
+        safeSet(
+                ocdsAward.getDocuments()::add,
+                awardNotification.getPurchaseRequisition().getSingleProfessionalOpinion()::getFormDoc,
+                this::storeAsDocumentProfessionalOpinion
+        );
+
+        safeSet(
+                ocdsAward.getDocuments()::add,
+                () -> Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
+                        .map(AwardAcceptance::getFormDoc).orElse(null),
+                this::storeAsDocumentAwardAcceptance
+        );
+
+
+        //this will overwrite the award value taken from award notification with a possible different award value
+        //from award acceptance (if any)
+        safeSet(
+                ocdsAward::setValue,
+                () -> Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
+                        .map(AwardAcceptance::getTenderValue).orElse(null),
+                this::convertAmount
+        );
+
+        safeSet(ocdsAward::setStatus, () -> awardNotification, this::createAwardStatus);
+
+
+        return ocdsAward;
+    }
+
+    /**
+     * OCMAKU-174
+     *
+     * @param awardNotification
+     * @return
+     */
+    public Award.Status createAwardStatus(AwardNotification awardNotification) {
+
+        //Cancelled: if Terminated at Notification of award or later stage
+        if (awardNotification.isTerminated()
+                || Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
+                .map(AwardAcceptance::isTerminated).orElse(false)
+                || Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleContract())
+                .map(org.devgateway.toolkit.persistence.dao.form.Contract::isTerminated).orElse(false)
+        ) {
+            return Award.Status.cancelled;
+        }
+
+        //Active: When Acceptance of award has been approved
+        if (DBConstants.Status.APPROVED.equals(
+                Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
+                        .map(Statusable::getStatus).orElse(null))) {
+            return Award.Status.active;
+        }
+
+        return Award.Status.pending;
+    }
+
+    public Period convertDaysToPeriod(Integer days) {
+        Period period = new Period();
+        period.setDurationInDays(days);
+        return period;
     }
 
     @Override
@@ -471,9 +567,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Release release = new Release();
         safeSet(release::setOcid, () -> purchaseRequisition, this::getOcid);
         safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
+        safeSet(release::setBids, purchaseRequisition::getSingleTenderQuotationEvaluation, this::createBids);
         safeSet(release::setTender, purchaseRequisition::getSingleTender, this::createTender);
-        safeSet(release::setBids, () -> purchaseRequisition.getSingleTenderQuotationEvaluation().orElse(null),
-                this::createBids);
+
+        safeSet(Optional.ofNullable(release.getTender()).map(Tender::getTenderers).orElse(new HashSet<>())::addAll,
+                release::getBids, this::createTenderersFromBids
+        );
         return release;
     }
 }

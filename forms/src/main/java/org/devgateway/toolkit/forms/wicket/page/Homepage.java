@@ -21,6 +21,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.toolkit.forms.service.MakueniToOCDSConversionService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
@@ -43,6 +44,9 @@ public class Homepage extends BasePage {
 
     @SpringBean
     PurchaseRequisitionService purchaseRequisitionService;
+
+    @SpringBean
+    ReleaseRepository releaseRepository;
 
     @SpringBean
     private ObjectMapper mapper;
@@ -71,12 +75,14 @@ public class Homepage extends BasePage {
         add(dataExport);
 
 
-//        Release release = ocdsConversionService.createRelease(purchaseRequisitionService.findById(16200L).get());
-//        try {
-//            System.out.println(mapper.writeValueAsString(release));
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
+//        Release release = ocdsConversionService.createRelease(purchaseRequisitionService.findById(73044L).get());
+//        Release byOcid = releaseRepository.findByOcid(release.getOcid());
+//        if (byOcid != null) {
+//            releaseRepository.delete(byOcid);
 //        }
+//
+//        releaseRepository.save(release);
+
     }
 
     @Override
