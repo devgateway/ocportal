@@ -1,7 +1,11 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
@@ -16,6 +20,10 @@ import org.devgateway.toolkit.persistence.service.filterstate.form.PurchaseRequi
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * @author idobre
@@ -51,11 +59,25 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
                 new Model<>((new StringResourceModel("title", ListPurchaseRequisitionPage.this)).getString()),
                 "title", "title"));
 
-        columns.add(new PropertyColumn<>(
+        columns.add(new PropertyColumn<PurchaseRequisition, String>(
                 new Model<>((new StringResourceModel("lastModifiedDate",
                         ListPurchaseRequisitionPage.this)).getString()),
-                "lastModifiedDate", "lastModifiedDate.get"
-        ));
+                "lastModifiedDate", "lastModifiedDate") {
+            @Override
+            public void populateItem(final Item<ICellPopulator<PurchaseRequisition>> item,
+                                     final String componentId,
+                                     final IModel<PurchaseRequisition> rowModel) {
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+                final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
+
+                if (lastModifiedDate.isPresent()) {
+                    item.add(new Label(componentId, lastModifiedDate.get().format(formatter)));
+                } else {
+                    item.add(new Label(componentId, ""));
+                }
+
+            }
+        });
 
 
         addFileDownloadColumn();

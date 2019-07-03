@@ -171,15 +171,20 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
             final Collection<Subcounty> subcountyList = subcounties.getModelObject();
-            editForm.getModelObject().setWards(new ArrayList<>());
 
             if (subcountyList.isEmpty()) {
+                editForm.getModelObject().setWards(new ArrayList<>());
                 wards.provider(new GenericChoiceProvider<>(wardService.findAll()));
             } else {
                 final List<Ward> wardList = wardService.findAll().stream()
                         .filter(ward -> subcountyList.contains(ward.getSubcounty()))
                         .collect(Collectors.toList());
                 wards.provider(new GenericChoiceProvider<>(wardList));
+
+                // keep only wards that can be selected as well.
+                final List<Ward> newWards = wards.getModelObject().stream()
+                        .filter(ward -> wardList.contains(ward)).collect(Collectors.toList());
+                editForm.getModelObject().setWards(newWards);
             }
 
             target.add(wards);

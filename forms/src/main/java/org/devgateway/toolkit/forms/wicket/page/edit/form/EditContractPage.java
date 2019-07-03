@@ -54,7 +54,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         submitAndNext.setVisibilityAllowed(false);
 
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
-        ComponentUtil.addBigDecimalField(editForm, "tenderValue").required()
+        ComponentUtil.addBigDecimalField(editForm, "contractValue").required()
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "contractDate").required();

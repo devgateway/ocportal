@@ -34,7 +34,7 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     private Supplier awardee;
 
     @ExcelExport(useTranslation = true)
-    private BigDecimal tenderValue;
+    private BigDecimal acceptedAwardValue;
 
     public Date getAcceptanceDate() {
         return acceptanceDate;
@@ -52,12 +52,12 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
         this.awardee = awardee;
     }
 
-    public BigDecimal getTenderValue() {
-        return tenderValue;
+    public BigDecimal getAcceptedAwardValue() {
+        return acceptedAwardValue;
     }
 
-    public void setTenderValue(final BigDecimal tenderValue) {
-        this.tenderValue = tenderValue;
+    public void setAcceptedAwardValue(final BigDecimal acceptedAwardValue) {
+        this.acceptedAwardValue = acceptedAwardValue;
     }
 
     @Override
