@@ -40,11 +40,11 @@ import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.ValidationError;
+import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.exceptions.NullListPageClassException;
 import org.devgateway.toolkit.forms.util.MarkupCacheService;
-import org.devgateway.toolkit.forms.util.SettingsUtils;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -121,7 +121,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      * This is a wrapper model that ensures we can easily edit the properties of
      * the entity
      */
-    private CompoundPropertyModel<T> compoundModel;
+    protected CompoundPropertyModel<T> compoundModel;
 
     /**
      * generic submit button for the form
@@ -169,19 +169,24 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
     protected TextContentModal createDeleteModal() {
-        TextContentModal modal = new TextContentModal("deleteModal",
+        final TextContentModal modal = new TextContentModal("deleteModal",
                 Model.of("DELETE is an irreversible operation. Are you sure?"));
         modal.addCloseButton();
 
-        LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
+        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
             @Override
-            protected void onSubmit(AjaxRequestTarget target) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 super.onSubmit(target);
+
+                // close the modal
+                deleteModal.appendCloseDialogJavaScript(target);
                 onDelete(target);
             }
         };
+        deleteButton.setDefaultFormProcessing(false);
         deleteButton.setLabel(Model.of("DELETE"));
         modal.addButton(deleteButton);
+
         return modal;
     }
 
@@ -284,8 +289,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
 
-
-
     /**
      * Generic functionality for the save page button, this can be extended further by subclasses.
      *
@@ -308,6 +311,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             // save the object and go back to the list page
             final T saveable = editForm.getModelObject();
 
+            beforeSaveEntity(saveable);
+
             // saves the entity and flushes the changes
             jpaService.saveAndFlush(saveable);
             getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
@@ -316,7 +321,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             // attached
             entityManager.clear();
 
-            // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
+            // we flush the mondrian/wicket/reports cache to ensure it gets
+            // rebuilt
             flushReportingCaches();
 
             afterSaveEntity(saveable);
@@ -402,6 +408,12 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         }
     }
 
+    protected void beforeSaveEntity(T saveable) {
+    }
+
+    protected void beforeDeleteEntity(T deleteable) {
+    }
+
     /**
      * Trigger all parents of type {@link ListViewSectionPanel} to become visible
      * by invoking {@link ListViewSectionPanel#showSection}
@@ -460,9 +472,11 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         }
     }
 
-    protected void onDelete(AjaxRequestTarget target) {
+    protected void onDelete(final AjaxRequestTarget target) {
         final T deleteable = editForm.getModelObject();
         try {
+            beforeDeleteEntity(deleteable);
+
             jpaService.delete(deleteable);
 
             // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
@@ -505,8 +519,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         }
 
         editForm = new EditForm("editForm") {
-            private static final long serialVersionUID = 1L;
-
             @Override
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
@@ -550,7 +562,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         } else {
             final T instance = newInstance();
             if (instance != null) {
-                model = new Model(instance);
+                model = new DozerModel<>(instance);
             }
         }
 

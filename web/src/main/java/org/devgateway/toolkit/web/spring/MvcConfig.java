@@ -12,20 +12,68 @@
 package org.devgateway.toolkit.web.spring;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.apache.commons.io.FileCleaningTracker;
+import org.bson.types.ObjectId;
+import org.devgateway.ocds.web.cache.generators.GenericExcelChartKeyGenerator;
+import org.devgateway.ocds.web.cache.generators.GenericPagingRequestKeyGenerator;
+import org.devgateway.ocds.web.rest.serializers.GeoJsonPointSerializer;
+import org.devgateway.toolkit.web.generators.FieldKeyGenerator;
 import org.devgateway.toolkit.web.generators.GenericExcelKeyGenerator;
 import org.devgateway.toolkit.web.generators.GenericKeyGenerator;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addViewControllers(final ViewControllerRegistry registry) {
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/dashboard").setViewName("redirect:/ui/index.html");
+        registry.addViewController("/corruption-risk")
+                .setViewName("redirect:/ui/index.html#!/crd");
+    }
+
+    @Bean
+    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+
+        //builder.featuresToEnable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        builder.serializationInclusion(Include.NON_EMPTY).dateFormat(dateFormatGmt);
+        builder.serializerByType(GeoJsonPoint.class, new GeoJsonPointSerializer());
+        builder.serializerByType(ObjectId.class, new ToStringSerializer());
+        builder.defaultViewInclusion(true);
+
+        return builder;
+    }
+
+    @Bean(name = "genericPagingRequestKeyGenerator")
+    public KeyGenerator genericPagingRequestKeyGenerator(final ObjectMapper objectMapper) {
+        return new GenericPagingRequestKeyGenerator(objectMapper);
+    }
+
+    @Bean(name = "genericExcelChartKeyGenerator")
+    public KeyGenerator genericExcelChartKeyGenerator(final ObjectMapper objectMapper) {
+        return new GenericExcelChartKeyGenerator(objectMapper);
+    }
+
 
     @Bean(name = "genericExcelKeyGenerator")
     public KeyGenerator genericExcelKeyGenerator(final ObjectMapper objectMapper) {
@@ -34,10 +82,21 @@ public class MvcConfig implements WebMvcConfigurer {
         return new GenericExcelKeyGenerator(objectMapper);
     }
 
+    @Bean(destroyMethod = "exitWhenFinished")
+    public FileCleaningTracker fileCleaningTracker() {
+        return new FileCleaningTracker();
+    }
+
+
     @Bean(name = "genericKeyGenerator")
     public KeyGenerator genericKeyGenerator(final ObjectMapper objectMapper) {
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         return new GenericKeyGenerator(objectMapper);
+    }
+
+    @Bean(name = "fieldKeyGenerator")
+    public KeyGenerator fieldKeyGenerator() {
+        return new FieldKeyGenerator();
     }
 
     @Bean

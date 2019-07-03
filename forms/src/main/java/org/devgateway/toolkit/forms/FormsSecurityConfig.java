@@ -45,16 +45,15 @@ public class FormsSecurityConfig extends WebSecurityConfig {
     @Override
     public void configure(final WebSecurity web) throws Exception {
         super.configure(web);
-        web.ignoring().antMatchers("/img/**", "/css*/**", "/js*/**", "/assets*/**", "/wicket/resource/**/*.js",
+        web.ignoring().antMatchers("/ui/**",
+                "/img/**", "/css*/**", "/js*/**", "/assets*/**", "/wicket/resource/**/*.js",
                 "/wicket/resource/**/*.css", "/wicket/resource/**/*.png", "/wicket/resource/**/*.jpg",
-                "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**", "/resources/**",
-                "/resources/public/**");
+                "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**",
+                "/resources/**", "/resources/public/**");
     }
 
     /**
-     * This bean defines the same key in the
-     * {@link RememberMeAuthenticationProvider}
-     *
+     * This bean defines the same key in the {@link RememberMeAuthenticationProvider}
      * @return
      */
     @Bean
@@ -70,8 +69,8 @@ public class FormsSecurityConfig extends WebSecurityConfig {
      */
     @Bean
     public AbstractRememberMeServices rememberMeServices() {
-        TokenBasedRememberMeServices rememberMeServices =
-                new TokenBasedRememberMeServices(UNIQUE_SECRET_REMEMBER_ME_KEY, customJPAUserDetailsService);
+        TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices(
+                UNIQUE_SECRET_REMEMBER_ME_KEY, customJPAUserDetailsService);
         rememberMeServices.setAlwaysRemember(true);
         return rememberMeServices;
     }
@@ -83,11 +82,11 @@ public class FormsSecurityConfig extends WebSecurityConfig {
         // we do not allow anyonymous token. When
         // enabled this basically means any guest
         // user will have an annoymous default role
-        http.anonymous().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).
-                // we let Wicket create and manage sessions, so we disable
-                // session creation by spring
-                        and().csrf().disable(); // csrf protection interferes with some
-        // wicket stuff
+        http.anonymous().disable().
+                sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).
+                //we let Wicket create and manage sessions, so we disable
+                //session creation by spring
+                        and().csrf().disable();  // csrf protection interferes with some wicket stuff
 
         // we enable http rememberMe cookie for autologin
         // http.rememberMe().key(UNIQUE_SECRET_REMEMBER_ME_KEY);

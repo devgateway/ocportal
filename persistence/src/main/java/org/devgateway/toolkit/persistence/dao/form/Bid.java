@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -13,6 +14,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author gmutuhu
@@ -23,17 +25,22 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation> implements ListViewItem {
+    @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier supplier;
 
+    @ExcelExport(useTranslation = true)
     private String supplierResponsiveness;
 
+    @ExcelExport(useTranslation = true)
     private Integer supplierScore;
 
+    @ExcelExport(useTranslation = true)
     private Integer supplierRanking;
 
-    private Double quotedAmount;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal quotedAmount;
 
     public Supplier getSupplier() {
         return supplier;
@@ -51,8 +58,12 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
         return supplierRanking;
     }
 
-    public Double getQuotedAmount() {
+    public BigDecimal getQuotedAmount() {
         return quotedAmount;
+    }
+
+    public void setQuotedAmount(final BigDecimal quotedAmount) {
+        this.quotedAmount = quotedAmount;
     }
 
     public void setSupplier(final Supplier supplier) {
@@ -69,10 +80,6 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
 
     public void setSupplierRanking(final Integer supplierRanking) {
         this.supplierRanking = supplierRanking;
-    }
-
-    public void setQuotedAmount(final Double quotedAmount) {
-        this.quotedAmount = quotedAmount;
     }
 
     @Transient

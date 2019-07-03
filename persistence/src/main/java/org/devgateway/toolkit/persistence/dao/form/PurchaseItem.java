@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -15,6 +16,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author idobre
@@ -25,16 +27,20 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PlanItem planItem;
 
+    @ExcelExport(useTranslation = true)
     private Integer quantity;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String unit;
 
-    private Double amount;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal amount;
 
     @Transient
     @JsonIgnore
@@ -64,11 +70,11 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
         this.unit = unit;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(final Double amount) {
+    public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -94,7 +100,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Override
     public String getLabel() {
-        return planItem.getLabel();
+        return planItem != null ? planItem.getLabel() : "";
     }
 
     @Override

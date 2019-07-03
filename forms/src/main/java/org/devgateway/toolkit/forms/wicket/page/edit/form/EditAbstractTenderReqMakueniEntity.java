@@ -7,7 +7,9 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,18 +39,21 @@ public abstract class EditAbstractTenderReqMakueniEntity<T extends AbstractPurch
 
     private void addTenderInfo() {
         tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () ->
-                editForm.getModelObject().getPurchaseRequisition().getTender().getTenderTitle()
+                PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition().getTender()).getTenderTitle()
         );
         editForm.add(tenderTitle);
 
         tenderNumber = new GenericSleepFormComponent<>("tenderTitle", (IModel<String>) () ->
-                editForm.getModelObject().getPurchaseRequisition().getTender().getTenderNumber()
+                PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition().getTender())
+                        .getTenderNumber()
         );
         editForm.add(tenderNumber);
     }
 
     protected List<Supplier> getSuppliersInTenderQuotation() {
-        final TenderQuotationEvaluation tenderQuotationEvaluation = purchaseRequisition.getTenderQuotationEvaluation();
+        final PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
+        final TenderQuotationEvaluation tenderQuotationEvaluation = PersistenceUtil.getNext(
+                purchaseRequisition.getTenderQuotationEvaluation());
         List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && tenderQuotationEvaluation.getBids() != null) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

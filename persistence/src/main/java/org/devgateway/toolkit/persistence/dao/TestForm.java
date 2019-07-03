@@ -186,4 +186,12 @@ public class TestForm extends AbstractStatusAuditableEntity {
     public void setColorPicker(final String colorPicker) {
         this.colorPicker = colorPicker;
     }
+
+    public List<TestFormChild> getTestFormChildren() {
+        return testFormChildren;
+    }
+
+    public void setTestFormChildren(final List<TestFormChild> testFormChildren) {
+        this.testFormChildren = testFormChildren;
+    }
 }

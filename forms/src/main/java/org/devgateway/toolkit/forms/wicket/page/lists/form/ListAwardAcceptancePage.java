@@ -29,7 +29,11 @@ public class ListAwardAcceptancePage extends ListAbstractPurchaseReqMakueniEntit
 
     @Override
     protected void onInitialize() {
+        addTenderTitleColumn();
+        addFileDownloadColumn();
+        addAwardeeColumn();
         super.onInitialize();
+
     }
 
 

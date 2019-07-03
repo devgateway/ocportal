@@ -52,5 +52,11 @@ public class PurchaseRequisitionServiceImpl extends AbstractMakueniEntityService
     public List<PurchaseRequisition> findByProject(final Project project) {
         return purchaseRequisitionRepository.findByProject(project);
     }
+
+    @Cacheable
+    @Override
+    public List<PurchaseRequisition> findByProjectProcurementPlan(final ProcurementPlan procurementPlan) {
+        return purchaseRequisitionRepository.findByProjectProcurementPlan(procurementPlan);
+    }
 }
 

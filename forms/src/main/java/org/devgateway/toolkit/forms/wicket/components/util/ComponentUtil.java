@@ -9,6 +9,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
@@ -27,9 +28,9 @@ import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 import org.devgateway.toolkit.web.WebSecurityUtil;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -47,13 +48,14 @@ public final class ComponentUtil {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public static boolean canAccessAddNewButtonInDeptOverview() {
+    public static boolean canAccessAddNewButtonInDeptOverview(SessionMetadataService sessionMetadataService) {
         if (WebSecurityUtil.isCurrentUserAdmin()) {
             return true;
         } else {
-            return SessionUtil.getSessionDepartment() != null
-                    && SessionUtil.getSessionDepartment().equals(WebSecurityUtil.getCurrentAuthenticatedPerson()
-                    .getDepartment());
+            return sessionMetadataService.getSessionDepartment() != null
+                    && sessionMetadataService.getSessionDepartment().
+                    equals(WebSecurityUtil.getCurrentAuthenticatedPerson()
+                            .getDepartment());
         }
     }
 
@@ -170,6 +172,16 @@ public final class ComponentUtil {
             final String id) {
         final TextFieldBootstrapFormComponent<Long> textField = new TextFieldBootstrapFormComponent<>(id);
         textField.longValue();
+        parent.add(textField);
+
+        return textField;
+    }
+
+    public static TextFieldBootstrapFormComponent<BigDecimal> addBigDecimalField(
+            final WebMarkupContainer parent,
+            final String id) {
+        final TextFieldBootstrapFormComponent<BigDecimal> textField = new TextFieldBootstrapFormComponent<>(id);
+        textField.decimal();
         parent.add(textField);
 
         return textField;

@@ -60,8 +60,10 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPag
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
@@ -309,21 +311,31 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         ListChargeAccountPage.class, null,
                         new StringResourceModel("navbar.chargeaccounts", this, null))
                         .setIconType(FontAwesomeIconType.money));
-                
+
                 list.add(new MenuBookmarkablePageLink<ListSupplierPage>(
                         ListSupplierPage.class, null,
                         new StringResourceModel("navbar.suppliers", this, null))
                         .setIconType(FontAwesomeIconType.list));
-                
+
                 list.add(new MenuBookmarkablePageLink<ListStaffPage>(
                         ListStaffPage.class, null,
                         new StringResourceModel("navbar.stafflist", this, null))
                         .setIconType(FontAwesomeIconType.list));
-                
+
                 list.add(new MenuBookmarkablePageLink<ListProcuringEntityPage>(
                         ListProcuringEntityPage.class, null,
                         new StringResourceModel("navbar.procuringentitylist", this, null))
                         .setIconType(FontAwesomeIconType.list));
+
+                list.add(new MenuBookmarkablePageLink<ListSubcountyPage>(
+                        ListSubcountyPage.class, null,
+                        new StringResourceModel("navbar.subcountylist", this, null))
+                        .setIconType(FontAwesomeIconType.flag));
+
+                list.add(new MenuBookmarkablePageLink<ListWardPage>(
+                        ListWardPage.class, null,
+                        new StringResourceModel("navbar.wardlist", this, null))
+                        .setIconType(FontAwesomeIconType.flag));
 
                 return list;
             }
@@ -347,7 +359,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListProcurementPlanPage>(ListProcurementPlanPage.class, null,
                         new StringResourceModel("navbar.procurementPlan", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
-                
+
                 list.add(new MenuBookmarkablePageLink<ListCabinetPaperPage>(ListCabinetPaperPage.class, null,
                         new StringResourceModel("navbar.cabinetpapers", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
@@ -364,23 +376,23 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListTenderPage>(ListTenderPage.class, null,
                         new StringResourceModel("navbar.tenderdocument", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
-                
+
                 list.add(new MenuBookmarkablePageLink<ListTenderQuotationEvaluationPage>(
                         ListTenderQuotationEvaluationPage.class, null,
                         new StringResourceModel("navbar.tenderquotationevaluation", this, null))
-                                .setIconType(FontAwesomeIconType.file_text_o));
+                        .setIconType(FontAwesomeIconType.file_text_o));
 
                 list.add(new MenuBookmarkablePageLink<ListProfessionalOpinionPage>(ListProfessionalOpinionPage.class,
                         null, new StringResourceModel("navbar.professionalopinion", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
-                
+
                 list.add(new MenuBookmarkablePageLink<ListAwardNotificationPage>(ListAwardNotificationPage.class,
                         null, new StringResourceModel("navbar.awardnotification", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
                 list.add(new MenuBookmarkablePageLink<ListAwardAcceptancePage>(ListAwardAcceptancePage.class,
                         null, new StringResourceModel("navbar.awardacceptance", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
-                
+
                 list.add(new MenuBookmarkablePageLink<ListContractPage>(ListContractPage.class,
                         null, new StringResourceModel("navbar.contract", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));

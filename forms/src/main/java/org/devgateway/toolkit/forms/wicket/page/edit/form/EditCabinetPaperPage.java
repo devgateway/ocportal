@@ -10,11 +10,11 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
@@ -37,18 +37,19 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     protected CabinetPaperService cabinetPaperService;
 
     @SpringBean
-    private PermissionEntityRenderableService permissionEntityRenderableService;
+    protected SessionMetadataService sessionMetadataService;
 
-    private final ProcurementPlan procurementPlan;
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
 
     public EditCabinetPaperPage(final PageParameters parameters) {
         super(parameters);
 
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
-        this.procurementPlan = SessionUtil.getSessionPP();
+
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && this.procurementPlan == null) {
+        if (entityId == null && sessionMetadataService.getSessionPP() == null) {
             logger.warn("Something wrong happened since we are trying to add a new CabinetPaper Entity "
                     + "without having a ProcurementPlan!");
             setResponsePage(StatusOverviewPage.class);
@@ -88,7 +89,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
     @Override
     protected CabinetPaper newInstance() {
         final CabinetPaper cabinetPaper = super.newInstance();
-        cabinetPaper.setProcurementPlan(procurementPlan);
+        cabinetPaper.setProcurementPlan(sessionMetadataService.getSessionPP());
 
         return cabinetPaper;
     }

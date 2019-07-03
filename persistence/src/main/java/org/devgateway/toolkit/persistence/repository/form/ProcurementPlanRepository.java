@@ -21,7 +21,7 @@ public interface ProcurementPlanRepository extends AbstractMakueniEntityReposito
             + " like %:name% or lower(proc.fiscalYear.name) like %:name%")
     Page<ProcurementPlan> searchText(@Param("name") String name, Pageable page);
 
-    Long countByDepartmentAndFiscalYearAndIdNot(Department department, FiscalYear fiscalYear, Long id);
+    Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
     ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 }

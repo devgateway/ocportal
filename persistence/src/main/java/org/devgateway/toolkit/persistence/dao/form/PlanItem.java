@@ -8,6 +8,7 @@ import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -18,6 +19,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author idobre
@@ -28,44 +30,59 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
 public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem, Labelable {
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String description;
 
-    private Double estimatedCost;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal estimatedCost;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String unitOfIssue;
 
+    @ExcelExport(useTranslation = true)
     private Integer quantity;
 
-    private Double unitPrice;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal unitPrice;
 
-    private Double totalCost;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal totalCost;
 
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 
-    private Double targetGroupValue;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal targetGroupValue;
 
-    private Double quarter1st;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal quarter1st;
 
-    private Double quarter2nd;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal quarter2nd;
 
-    private Double quarter3rd;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal quarter3rd;
 
-    private Double quarter4th;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal quarter4th;
 
     @Transient
     @JsonIgnore
@@ -91,11 +108,11 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.description = description;
     }
 
-    public Double getEstimatedCost() {
+    public BigDecimal getEstimatedCost() {
         return estimatedCost;
     }
 
-    public void setEstimatedCost(final Double estimatedCost) {
+    public void setEstimatedCost(final BigDecimal estimatedCost) {
         this.estimatedCost = estimatedCost;
     }
 
@@ -115,19 +132,19 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(final Double unitPrice) {
+    public void setUnitPrice(final BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Double getTotalCost() {
+    public BigDecimal getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(final Double totalCost) {
+    public void setTotalCost(final BigDecimal totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -155,43 +172,43 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.targetGroup = targetGroup;
     }
 
-    public Double getTargetGroupValue() {
+    public BigDecimal getTargetGroupValue() {
         return targetGroupValue;
     }
 
-    public void setTargetGroupValue(final Double targetGroupValue) {
+    public void setTargetGroupValue(final BigDecimal targetGroupValue) {
         this.targetGroupValue = targetGroupValue;
     }
 
-    public Double getQuarter1st() {
+    public BigDecimal getQuarter1st() {
         return quarter1st;
     }
 
-    public void setQuarter1st(final Double quarter1st) {
+    public void setQuarter1st(final BigDecimal quarter1st) {
         this.quarter1st = quarter1st;
     }
 
-    public Double getQuarter2nd() {
+    public BigDecimal getQuarter2nd() {
         return quarter2nd;
     }
 
-    public void setQuarter2nd(final Double quarter2nd) {
+    public void setQuarter2nd(final BigDecimal quarter2nd) {
         this.quarter2nd = quarter2nd;
     }
 
-    public Double getQuarter3rd() {
+    public BigDecimal getQuarter3rd() {
         return quarter3rd;
     }
 
-    public void setQuarter3rd(final Double quarter3rd) {
+    public void setQuarter3rd(final BigDecimal quarter3rd) {
         this.quarter3rd = quarter3rd;
     }
 
-    public Double getQuarter4th() {
+    public BigDecimal getQuarter4th() {
         return quarter4th;
     }
 
-    public void setQuarter4th(final Double quarter4th) {
+    public void setQuarter4th(final BigDecimal quarter4th) {
         this.quarter4th = quarter4th;
     }
 

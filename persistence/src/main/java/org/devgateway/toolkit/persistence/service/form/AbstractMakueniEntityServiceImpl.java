@@ -6,7 +6,11 @@ import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityR
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -20,5 +24,14 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
     public List<T> findByFiscalYear(final FiscalYear fiscalYear) {
         final AbstractMakueniEntityRepository repository = (AbstractMakueniEntityRepository) repository();
         return repository.findByFiscalYear(fiscalYear);
+    }
+
+
+    public Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity) {
+        T loadedEntity = findById(entity.getId()).get();
+        return loadedEntity.getDirectChildrenEntities().stream().filter(Objects::nonNull)
+                .flatMap(s -> Stream.concat(Stream.of(s), s.getDirectChildrenEntities().stream()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 }

@@ -12,7 +12,7 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
 public interface ProcurementPlanService
         extends AbstractMakueniEntityService<ProcurementPlan>, TextSearchableService<ProcurementPlan> {
 
-    Long countByDepartmentAndFiscalYearAndIdNot(Department department, FiscalYear fiscalYear, Long id);
+    Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
     ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 }

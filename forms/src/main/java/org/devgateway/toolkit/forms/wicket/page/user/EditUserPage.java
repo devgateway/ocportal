@@ -12,6 +12,7 @@
 package org.devgateway.toolkit.forms.wicket.page.user;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -27,8 +28,8 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.PatternValidator;
+import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.service.SendEmailService;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.PasswordFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -205,8 +206,10 @@ public class EditUserPage extends AbstractEditPage<Person> {
             plainPassword.setVisibilityAllowed(true);
             plainPasswordCheck.setVisibilityAllowed(true);
         } else {
-            plainPassword.setVisibilityAllowed(editForm.getModelObject().getChangePasswordNextSignIn());
-            plainPasswordCheck.setVisibilityAllowed(editForm.getModelObject().getChangePasswordNextSignIn());
+            plainPassword.setVisibilityAllowed(BooleanUtils.toBoolean(
+                    editForm.getModelObject().getChangePasswordNextSignIn()));
+            plainPasswordCheck.setVisibilityAllowed(BooleanUtils.toBoolean(
+                    editForm.getModelObject().getChangePasswordNextSignIn()));
         }
 
         editForm.add(new EqualPasswordInputValidator(plainPassword.getField(), plainPasswordCheck.getField()));

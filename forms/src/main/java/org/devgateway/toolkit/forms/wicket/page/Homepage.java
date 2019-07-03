@@ -19,7 +19,7 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.HomeStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -42,12 +42,19 @@ public class Homepage extends BasePage {
             @Override
             public void onClick() {
                 // clear all session data before going to the dashboard
-                SessionUtil.clearSessionData();
+                SessionMetadataService.clearSessionData();
                 setResponsePage(StatusOverviewPage.class);
             }
         };
-
         add(dataEntryLink);
+
+        final Link<Void> dataExport = new Link<Void>("dataExport") {
+            @Override
+            public void onClick() {
+                setResponsePage(DataExportPage.class);
+            }
+        };
+        add(dataExport);
     }
 
     @Override

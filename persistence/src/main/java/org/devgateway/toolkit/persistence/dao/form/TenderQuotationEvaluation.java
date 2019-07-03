@@ -1,8 +1,11 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -24,13 +29,12 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity {
-
+    @ExcelExport(useTranslation = true)
     private Date closingDate;
 
-    private Integer numberOfBids;
-
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<Bid> bids = new ArrayList<>();
@@ -39,18 +43,9 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
         return closingDate;
     }
 
-    public Integer getNumberOfBids() {
-        return numberOfBids;
-    }
-
     public void setClosingDate(final Date closingDate) {
         this.closingDate = closingDate;
     }
-
-    public void setNumberOfBids(final Integer numberOfBids) {
-        this.numberOfBids = numberOfBids;
-    }
-
 
     public List<Bid> getBids() {
         return bids;
@@ -67,5 +62,12 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     @Override
     public String getLabel() {
         return null;
+    }
+
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+                .getProfessionalOpinion()));
     }
 }

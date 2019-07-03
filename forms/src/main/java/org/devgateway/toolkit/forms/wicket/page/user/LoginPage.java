@@ -16,6 +16,7 @@ package org.devgateway.toolkit.forms.wicket.page.user;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
@@ -38,6 +39,7 @@ import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.web.WebSecurityUtil;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -82,7 +84,6 @@ public class LoginPage extends BasePage {
         private String username;
 
         private String password;
-
         public String getUsername() {
             return username;
         }
@@ -107,8 +108,16 @@ public class LoginPage extends BasePage {
         private TextFieldBootstrapFormComponent<String> username;
 
         private PasswordFieldBootstrapFormComponent password;
-
         private String referrer;
+
+        private TextFieldBootstrapFormComponent<String> usernameField;
+        private PasswordFieldBootstrapFormComponent passwordField;
+
+        LoginForm(final String id) {
+            super(id);
+
+            pageTitle.setVisible(false);
+        }
 
         LoginForm(final String componentId, final IModel<LoginBean> model) {
             super(componentId, model);
@@ -117,12 +126,10 @@ public class LoginPage extends BasePage {
         @Override
         protected void onInitialize() {
             super.onInitialize();
-
             pageTitle.setVisible(false);
-
             retrieveReferrerFromSavedRequestIfPresent();
 
-            final NotificationPanel notificationPanel = new NotificationPanel("loginFeedback");
+            NotificationPanel notificationPanel = new NotificationPanel("loginFeedback");
             notificationPanel.hideAfter(Duration.seconds(HIDE_NOTIFICATION_SECONDS));
             notificationPanel.setOutputMarkupId(true);
             add(notificationPanel);
@@ -148,7 +155,7 @@ public class LoginPage extends BasePage {
 
                     if (session.signIn(name, pass)) {
                         final Person user = WebSecurityUtil.getCurrentAuthenticatedPerson();
-                        if (user.getChangePasswordNextSignIn()) {
+                        if (BooleanUtils.isTrue(user.getChangePasswordNextSignIn())) {
                             final PageParameters pageParam = new PageParameters();
                             pageParam.add(WebConstants.PARAM_ID, user.getId());
                             setResponsePage(ChangePasswordPage.class, pageParam);

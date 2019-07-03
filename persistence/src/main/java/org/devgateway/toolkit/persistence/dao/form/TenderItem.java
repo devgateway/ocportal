@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -12,6 +13,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 /**
  * @author gmutuhu
@@ -22,17 +24,19 @@ import javax.persistence.Transient;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PurchaseItem purchaseItem;
 
+    @ExcelExport(useTranslation = true)
     private String unitOfIssue;
 
+    @ExcelExport(useTranslation = true)
     private Integer quantity;
 
-    private Double unitPrice;
-
-    private Double totalCost;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal unitPrice;
 
     public String getUnitOfIssue() {
         return unitOfIssue;
@@ -50,20 +54,12 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(final Double unitPrice) {
+    public void setUnitPrice(final BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
-    }
-
-    public Double getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(final Double totalCost) {
-        this.totalCost = totalCost;
     }
 
     public PurchaseItem getPurchaseItem() {

@@ -29,6 +29,9 @@ public class ListAwardNotificationPage extends ListAbstractPurchaseReqMakueniEnt
 
     @Override
     protected void onInitialize() {
+        addTenderTitleColumn();
+        addFileDownloadColumn();
+        addAwardeeColumn();
         super.onInitialize();
     }
 

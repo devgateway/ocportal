@@ -4,9 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,13 +21,17 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author idobre
@@ -34,64 +43,76 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"),
         @Index(columnList = "title")})
-public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
-
+public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
+        TitleAutogeneratable {
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @NotNull
     private Project project;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private TenderQuotationEvaluation tenderQuotationEvaluation;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Tender tender;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private Contract contract;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private AwardNotification awardNotification;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private AwardAcceptance awardAcceptance;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
-    private ProfessionalOpinion professionalOpinion;
-
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String title;
 
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Staff requestedBy;
 
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ChargeAccount chargeAccount;
 
+    @ExcelExport(useTranslation = true)
     private Date requestApprovalDate;
 
+    @ExcelExport(name = "Purchase Items", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<PurchaseItem> purchaseItems = new ArrayList<>();
+
+    @ExcelExport(separateSheet = true, name = "Tender")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<Tender> tender = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Tender Quotation Evaluation")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<TenderQuotationEvaluation> tenderQuotationEvaluation = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Professional Opinion")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<ProfessionalOpinion> professionalOpinion = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Award Notification")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<AwardNotification> awardNotification = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Award Acceptance")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<AwardAcceptance> awardAcceptance = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Contract")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseRequisition")
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<Contract> contract = new HashSet<>();
 
     private boolean checkTerminated(Statusable... statusables) {
         for (Statusable statusable : statusables) {
@@ -109,8 +130,10 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
      */
     @Override
     public boolean isTerminated() {
-        return checkTerminated(tender, tenderQuotationEvaluation, professionalOpinion, awardNotification,
-                awardAcceptance, contract
+        return checkTerminated(
+                PersistenceUtil.getNext(tender), PersistenceUtil.getNext(tenderQuotationEvaluation),
+                PersistenceUtil.getNext(professionalOpinion), PersistenceUtil.getNext(awardNotification),
+                PersistenceUtil.getNext(awardAcceptance), PersistenceUtil.getNext(contract)
         );
     }
 
@@ -131,8 +154,14 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         this.purchaseRequestNumber = purchaseRequestNumber;
     }
 
+    @Override
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public Consumer<String> titleSetter() {
+        return this::setTitle;
     }
 
     public void setTitle(final String title) {
@@ -186,63 +215,124 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         return getLabel();
     }
 
-    public Double getAmount() {
-        Double amount = 0d;
+    public BigDecimal getAmount() {
+        BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
             if (item.getAmount() != null && item.getQuantity() != null) {
-                amount += (item.getAmount() * item.getQuantity());
+                amount.add(item.getAmount().multiply(new BigDecimal(item.getQuantity())));
             }
         }
 
         return amount;
     }
 
-    public TenderQuotationEvaluation getTenderQuotationEvaluation() {
-        return tenderQuotationEvaluation;
-    }
 
-    public void setTenderQuotationEvaluation(TenderQuotationEvaluation tenderQuotationEvaluation) {
-        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
-    }
-
-    public Tender getTender() {
+    public Set<Tender> getTender() {
         return tender;
     }
 
-    public void setTender(Tender tender) {
+    public void setTender(Set<Tender> tender) {
         this.tender = tender;
     }
 
-    public Contract getContract() {
-        return contract;
+    public void addTender(final Tender item) {
+        tender.add(item);
+        item.setPurchaseRequisition(this);
     }
 
-    public void setContract(Contract contract) {
-        this.contract = contract;
+    public void removeTender(final Tender item) {
+        tender.remove(item);
+        item.setPurchaseRequisition(null);
     }
 
-    public AwardNotification getAwardNotification() {
-        return awardNotification;
+    public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
+        return tenderQuotationEvaluation;
     }
 
-    public void setAwardNotification(AwardNotification awardNotification) {
-        this.awardNotification = awardNotification;
+    public void setTenderQuotationEvaluation(Set<TenderQuotationEvaluation> tenderQuotationEvaluation) {
+        this.tenderQuotationEvaluation = tenderQuotationEvaluation;
     }
 
-    public AwardAcceptance getAwardAcceptance() {
-        return awardAcceptance;
+    public void addTenderQuotationEvaluation(final TenderQuotationEvaluation item) {
+        tenderQuotationEvaluation.add(item);
+        item.setPurchaseRequisition(this);
     }
 
-    public void setAwardAcceptance(AwardAcceptance awardAcceptance) {
-        this.awardAcceptance = awardAcceptance;
+    public void removeTenderQuotationEvaluation(final TenderQuotationEvaluation item) {
+        tenderQuotationEvaluation.remove(item);
+        item.setPurchaseRequisition(null);
     }
 
-    public ProfessionalOpinion getProfessionalOpinion() {
+    public Set<ProfessionalOpinion> getProfessionalOpinion() {
         return professionalOpinion;
     }
 
-    public void setProfessionalOpinion(ProfessionalOpinion professionalOpinion) {
+    public void setProfessionalOpinion(Set<ProfessionalOpinion> professionalOpinion) {
         this.professionalOpinion = professionalOpinion;
+    }
+
+    public void addProfessionalOpinion(final ProfessionalOpinion item) {
+        professionalOpinion.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeProfessionalOpinion(final ProfessionalOpinion item) {
+        professionalOpinion.remove(item);
+        item.setPurchaseRequisition(null);
+    }
+
+    public Set<AwardNotification> getAwardNotification() {
+        return awardNotification;
+    }
+
+    public void setAwardNotification(Set<AwardNotification> awardNotification) {
+        this.awardNotification = awardNotification;
+    }
+
+    public void addAwardNotification(final AwardNotification item) {
+        awardNotification.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeAwardNotification(final AwardNotification item) {
+        awardNotification.remove(item);
+        item.setPurchaseRequisition(null);
+    }
+
+    public Set<AwardAcceptance> getAwardAcceptance() {
+        return awardAcceptance;
+    }
+
+    public void setAwardAcceptance(Set<AwardAcceptance> awardAcceptance) {
+        this.awardAcceptance = awardAcceptance;
+    }
+
+    public void addAwardAcceptance(final AwardAcceptance item) {
+        awardAcceptance.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeAwardAcceptance(final AwardAcceptance item) {
+        awardAcceptance.remove(item);
+        item.setPurchaseRequisition(null);
+    }
+
+    public Set<Contract> getContract() {
+        return contract;
+    }
+
+    public void setContract(Set<Contract> contract) {
+        this.contract = contract;
+    }
+
+    public void addContract(final Contract item) {
+        contract.add(item);
+        item.setPurchaseRequisition(this);
+    }
+
+    public void removeContract(final Contract item) {
+        contract.remove(item);
+        item.setPurchaseRequisition(null);
     }
 
     @Override
@@ -252,4 +342,11 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         }
         return null;
     }
+
+    @Override
+    @Transactional
+    public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.singletonList(PersistenceUtil.getNext(tender));
+    }
+
 }

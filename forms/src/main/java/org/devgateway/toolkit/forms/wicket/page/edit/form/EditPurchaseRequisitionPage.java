@@ -12,7 +12,7 @@ import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -21,8 +21,11 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
@@ -36,20 +39,20 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     private PurchaseRequisitionService purchaseRequisitionService;
 
     @SpringBean
+    private ProjectService projectService;
+
+    @SpringBean
     protected StaffService staffService;
 
     @SpringBean
     protected ChargeAccountService chargeAccountService;
-    
-    private final Project project;
 
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = purchaseRequisitionService;
 
-        this.project = SessionUtil.getSessionProject();
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && this.project == null) {
+        if (entityId == null && sessionMetadataService.getSessionProject() == null) {
             logger.warn("Something wrong happened since we are trying to add a new PurchaseRequisition Entity "
                     + "without having a Project!");
             setResponsePage(StatusOverviewPage.class);
@@ -93,11 +96,46 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @Override
     protected PurchaseRequisition newInstance() {
         final PurchaseRequisition purchaseRequisition = super.newInstance();
-        if (project != null) {
-            purchaseRequisition.setProject(project);
-        }  
-       
+        purchaseRequisition.setProject(sessionMetadataService.getSessionProject());
+
         return purchaseRequisition;
+    }
+
+    @Override
+    protected void beforeSaveEntity(final PurchaseRequisition purchaseRequisition) {
+        super.beforeSaveEntity(purchaseRequisition);
+
+        final Project project = purchaseRequisition.getProject();
+        project.addPurchaseRequisition(purchaseRequisition);
+        projectService.save(project);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final PurchaseRequisition purchaseRequisition) {
+        super.beforeDeleteEntity(purchaseRequisition);
+
+        final Project project = purchaseRequisition.getProject();
+        project.removePurchaseRequisition(purchaseRequisition);
+        projectService.save(project);
+    }
+
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditTenderPage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTender())) {
+            pp.set(WebConstants.PARAM_ID, PersistenceUtil.getNext(editForm.getModelObject().getTender()).getId());
+        }
+        // check if we have a Purchase Requisition in session and add it
+        if (sessionMetadataService.getSessionPurchaseRequisition() == null) {
+            sessionMetadataService.setSessionPurchaseRequisition(editForm.getModelObject());
+        }
+
+        return pp;
     }
 
     private IValidator<String> uniqueTitle() {

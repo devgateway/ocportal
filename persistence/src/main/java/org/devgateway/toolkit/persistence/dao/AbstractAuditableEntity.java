@@ -32,16 +32,16 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
     private static final long serialVersionUID = 4031407178647451427L;
 
     @Audited
-    private String createdBy;
+    protected String createdBy;
 
     @Audited
-    private ZonedDateTime createdDate;
+    protected ZonedDateTime createdDate;
 
     @Audited
-    private String lastModifiedBy;
+    protected String lastModifiedBy;
 
     @Audited
-    private ZonedDateTime lastModifiedDate;
+    protected ZonedDateTime lastModifiedDate;
 
     /**
      * Forces the envers to see this object as modified, thus enabling creation
@@ -87,7 +87,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<String> getCreatedBy() {
-        return createdBy != null ? Optional.of(createdBy) : Optional.empty();
+        return Optional.ofNullable(createdBy);
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<ZonedDateTime> getCreatedDate() {
-        return createdDate != null ? Optional.of(createdDate) : Optional.empty();
+        return Optional.ofNullable(createdDate);
     }
 
     /**
@@ -119,7 +119,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<String> getLastModifiedBy() {
-        return lastModifiedBy != null ? Optional.of(lastModifiedBy) : Optional.empty();
+        return Optional.ofNullable(lastModifiedBy);
     }
 
     /**
@@ -135,7 +135,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      */
     @Override
     public Optional<ZonedDateTime> getLastModifiedDate() {
-        return lastModifiedDate != null ? Optional.of(lastModifiedDate) : Optional.empty();
+        return Optional.ofNullable(lastModifiedDate);
     }
 
     /**

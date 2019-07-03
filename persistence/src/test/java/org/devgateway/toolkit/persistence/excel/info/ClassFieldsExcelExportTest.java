@@ -56,7 +56,7 @@ public class ClassFieldsExcelExportTest {
 
     @Test
     public void getInheritedFields() throws Exception {
-        final String[] expectedFields = {"id", "label", "valid"};
+        final String[] expectedFields = {"valid", "id", "label"};
 
         final ClassFields classFields = new ClassFieldsExcelExport(
                 new ClassFieldsDefault(TestClassImproved.class, true)

@@ -24,17 +24,15 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
 
     @Cacheable
     @Override
-    public Long countByDepartmentAndFiscalYearAndIdNot(final Department department,
-                                                       final FiscalYear fiscalYear,
-                                                       final Long id) {
-        return procurementPlanRepository.countByDepartmentAndFiscalYearAndIdNot(department, fiscalYear, id);
+    public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
+        return procurementPlanRepository.countByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
     @Override
     protected BaseJpaRepository<ProcurementPlan, Long> repository() {
         return procurementPlanRepository;
     }
-    
+
     @Override
     public TextSearchableRepository<ProcurementPlan, Long> textRepository() {
         return procurementPlanRepository;
@@ -44,7 +42,7 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     public ProcurementPlan newInstance() {
         return new ProcurementPlan();
     }
-    
+
     @Override
     @Cacheable
     public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {

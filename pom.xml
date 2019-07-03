@@ -24,21 +24,31 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <liquibase.version>3.6.3</liquibase.version>
-        <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
+        <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
+        <derby.version>10.14.2.0</derby.version>
         <pg.version>42.2.5</pg.version>
         <poi.version>4.0.1</poi.version>
         <embedded.postgres.version>2.10</embedded.postgres.version>
+        <commons.lang3.version>3.5</commons.lang3.version>
         <docker.image.prefix>devgateway/toolkit</docker.image.prefix>
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
+        <commons.lang3.version>3.5</commons.lang3.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <poi.version>3.17</poi.version>
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <jminix.version>1.2.0</jminix.version>
+        <ooxml-schemas.version>1.4</ooxml-schemas.version>
+        <swagger.version>2.9.2</swagger.version>
     </properties>
 
     <modules>
         <module>persistence</module>
         <module>web</module>
+        <module>ui</module>
         <module>forms</module>
+        <module>persistence-mongodb</module>
     </modules>
 
     <inceptionYear>2015</inceptionYear>
@@ -48,7 +58,7 @@
     </organization>
     <issueManagement>
         <system>JIRA</system>
-        <url>https://jira.dgfoundation.org/browse/DGTKIT/</url>
+        <url>https://jira.dgfoundation.org/browse/OCE/</url>
     </issueManagement>
     <ciManagement>
         <system>Jenkins</system>
@@ -62,14 +72,14 @@
         </developerConnection>
         <connection>git@github.com:devgateway/oc-makueni.git
         </connection>
-        <tag>HEAD</tag>
+        <tag>0.0.3-SNAPSHOT</tag>
     </scm>
 
     <distributionManagement>
         <repository>
-            <id>dgtoolkit-releases</id>
-            <name>dgtoolkit-releases</name>
-            <url>http://artifactory.ampdev.net/artifactory/dg-toolkit-releases</url>
+            <id>oc-explorer-releases</id>
+            <name>OC Explorer releases</name>
+            <url>http://artifactory.ampdev.net/artifactory/oc-explorer-releases/</url>
         </repository>
     </distributionManagement>
 
@@ -79,9 +89,9 @@
             <url>http://jcenter.bintray.com/</url>
         </repository>
         <repository>
-            <id>DGToolkit</id>
-            <name>DGToolkit</name>
-            <url>http://artifactory.ampdev.net/artifactory/dg-toolkit/</url>
+            <id>OCVN</id>
+            <name>OCVN</name>
+            <url>http://artifactory.ampdev.net/artifactory/ocvn/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -96,6 +106,7 @@
         </repository>
     </repositories>
 
+
     <pluginRepositories>
         <pluginRepository>
             <id>jcenter</id>
@@ -103,9 +114,9 @@
             <url>http://jcenter.bintray.com</url>
         </pluginRepository>
         <pluginRepository>
-            <id>DGToolkit</id>
-            <name>DGToolkit</name>
-            <url>http://artifactory.ampdev.net/artifactory/dg-toolkit/</url>
+            <id>OCVN</id>
+            <name>OCVN</name>
+            <url>http://artifactory.ampdev.net/artifactory/ocvn/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -124,6 +135,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -157,7 +185,8 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+            <!--
+                        <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
@@ -167,8 +196,7 @@
                     <threadCount>64</threadCount>
                     <perCoreThreadCount>true</perCoreThreadCount>
                 </configuration>
-            </plugin>
-
+            </plugin>-->
         </plugins>
         <pluginManagement>
             <plugins>
@@ -183,4 +211,5 @@
             </plugins>
         </pluginManagement>
     </build>
+
 </project>

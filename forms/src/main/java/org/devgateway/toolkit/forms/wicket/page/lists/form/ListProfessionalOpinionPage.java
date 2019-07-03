@@ -30,6 +30,8 @@ public class ListProfessionalOpinionPage extends ListAbstractPurchaseReqMakueniE
 
     @Override
     protected void onInitialize() {
+        addTenderTitleColumn();
+        addFileDownloadColumn();
         super.onInitialize();
     }
 

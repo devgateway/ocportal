@@ -62,13 +62,16 @@
 
             <div class="search-form">
                 <div class="col-md-9 no-padding">
-                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"></input>
+                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"
+                           placeholder="Search by Project Title"/>
                 </div>
                 <div class="col-md-3 no-padding">
 
                     <select wicket:id="years" class="btn btn-default project-year"></select>
 
-                    <button type="button" class="btn btn-default download"></button>
+                    <form wicket:id="excelForm">
+                        <button wicket:id="excelButton" type="button" class="btn btn-default download"></button>
+                    </form>
                 </div>
             </div>
         </div>

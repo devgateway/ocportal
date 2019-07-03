@@ -1,14 +1,20 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -19,14 +25,16 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
-
+    @ExcelExport(useTranslation = true)
     private Date acceptanceDate;
 
+    @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
-    private Double tenderValue;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal acceptedAwardValue;
 
     public Date getAcceptanceDate() {
         return acceptanceDate;
@@ -44,12 +52,12 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
         this.awardee = awardee;
     }
 
-    public Double getTenderValue() {
-        return tenderValue;
+    public BigDecimal getAcceptedAwardValue() {
+        return acceptedAwardValue;
     }
 
-    public void setTenderValue(final Double tenderValue) {
-        this.tenderValue = tenderValue;
+    public void setAcceptedAwardValue(final BigDecimal acceptedAwardValue) {
+        this.acceptedAwardValue = acceptedAwardValue;
     }
 
     @Override
@@ -61,4 +69,9 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
         return null;
     }
 
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull().getContract()));
+    }
 }

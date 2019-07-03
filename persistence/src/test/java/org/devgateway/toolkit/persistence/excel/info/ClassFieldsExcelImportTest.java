@@ -57,7 +57,7 @@ public class ClassFieldsExcelImportTest {
 
     @Test
     public void getInheritedFields() throws Exception {
-        final String[] expectedFields = {"id", "label", "valid"};
+        final String[] expectedFields = {"valid", "id", "label"};
 
         final ClassFields classFields = new ClassFieldsExcelImport(
                 new ClassFieldsDefault(TestClassImproved.class, true)

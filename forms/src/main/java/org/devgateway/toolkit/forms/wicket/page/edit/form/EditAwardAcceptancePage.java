@@ -7,16 +7,24 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.math.BigDecimal;
 
 /**
  * @author gmutuhu
@@ -26,6 +34,9 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<AwardAcceptance> {
     @SpringBean
     protected AwardAcceptanceService awardAcceptanceService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -40,8 +51,8 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue")
-                .getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addBigDecimalField(editForm, "acceptedAwardValue")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         ComponentUtil.addDateField(editForm, "acceptanceDate").required();
 
         addSupplierInfo();
@@ -54,12 +65,45 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     @Override
     protected AwardAcceptance newInstance() {
         final AwardAcceptance awardAcceptance = super.newInstance();
-        awardAcceptance.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setAwardAcceptance(awardAcceptance);
+        awardAcceptance.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
 
         return awardAcceptance;
     }
 
+    @Override
+    protected void beforeSaveEntity(final AwardAcceptance awardAcceptance) {
+        super.beforeSaveEntity(awardAcceptance);
+
+        final PurchaseRequisition purchaseRequisition = awardAcceptance.getPurchaseRequisition();
+        purchaseRequisition.addAwardAcceptance(awardAcceptance);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final AwardAcceptance awardAcceptance) {
+        super.beforeDeleteEntity(awardAcceptance);
+
+        final PurchaseRequisition purchaseRequisition = awardAcceptance.getPurchaseRequisition();
+        purchaseRequisition.removeAwardAcceptance(awardAcceptance);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditContractPage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getContract())) {
+            pp.set(WebConstants.PARAM_ID,
+                    PersistenceUtil.getNext(
+                            editForm.getModelObject().getPurchaseRequisition().getContract()).getId());
+        }
+
+        return pp;
+    }
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",

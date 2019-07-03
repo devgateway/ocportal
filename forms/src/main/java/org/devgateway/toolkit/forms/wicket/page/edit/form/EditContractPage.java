@@ -14,10 +14,14 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.math.BigDecimal;
 
 /**
  * @author gmutuhu
@@ -27,6 +31,9 @@ import org.wicketstuff.annotation.mount.MountPath;
 public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> {
     @SpringBean
     protected ContractService contractService;
+
+    @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
@@ -44,9 +51,11 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected void onInitialize() {
         super.onInitialize();
 
+        submitAndNext.setVisibilityAllowed(false);
+
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
-        ComponentUtil.addDoubleField(editForm, "tenderValue").required()
-                .getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addBigDecimalField(editForm, "contractValue").required()
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "contractDate").required();
         ComponentUtil.addDateField(editForm, "expiryDate");
@@ -60,11 +69,28 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     @Override
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
-        contract.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setContract(contract);
+        contract.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
+
         return contract;
     }
 
+    @Override
+    protected void beforeSaveEntity(final Contract contract) {
+        super.beforeSaveEntity(contract);
+
+        final PurchaseRequisition purchaseRequisition = contract.getPurchaseRequisition();
+        purchaseRequisition.addContract(contract);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final Contract contract) {
+        super.beforeDeleteEntity(contract);
+
+        final PurchaseRequisition purchaseRequisition = contract.getPurchaseRequisition();
+        purchaseRequisition.removeContract(contract);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",

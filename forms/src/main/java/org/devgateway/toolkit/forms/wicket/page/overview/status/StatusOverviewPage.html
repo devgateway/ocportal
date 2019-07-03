@@ -24,11 +24,12 @@
 
             <div class="search-form">
                 <div class="col-md-9 no-padding">
-                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"></input>
+                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"
+                           placeholder="Search by Project Title"/>
                 </div>
                 <div class="col-md-3 no-padding">
                     <select wicket:id="yearsDropdown" class="btn btn-default project-year"></select>
-                    <button type="button" class="btn btn-default download"></button>
+                    <button wicket:id="dataExport" type="button" class="btn btn-default download"></button>
                 </div>
             </div>
         </div>
@@ -38,13 +39,13 @@
               <span class="status approved">
               Approved
               </span>
-                        <span class="status terminated">
+                <span class="status terminated">
               Terminated
               </span>
-                        <span class="status submitted">
+                <span class="status submitted">
               Submitted
               </span>
-                        <span class="status draft">
+                <span class="status draft">
               Draft
               </span>
             </div>

@@ -32,7 +32,6 @@ public class DateFieldBootstrapFormComponent extends GenericBootstrapFormCompone
     private static final long serialVersionUID = 6829640010904041758L;
 
     private static final String DEFAULT_FORMAT = "dd/MM/yy";
-
     /**
      * @param id
      * @param labelModel

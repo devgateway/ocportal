@@ -26,6 +26,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
 
     Optional<T> findOne(@Nullable Specification<T> spec);
 
+    Optional<T> findByIdCached(Long id);
+
     long count(Specification<T> spec);
 
     Optional<T> findById(Long id);
@@ -33,6 +35,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
     long count();
 
     <S extends T> S save(S entity);
+
+    <S extends T> List<S> saveAll(Iterable<S> entities);
 
     <S extends T> S saveAndFlush(S entity);
 

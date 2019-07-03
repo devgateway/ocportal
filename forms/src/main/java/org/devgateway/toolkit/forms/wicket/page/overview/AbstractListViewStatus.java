@@ -10,6 +10,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.components.CompoundSectionPanel;
 
 import java.util.HashSet;
@@ -25,7 +27,10 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
 
     private ListView<T> listView;
 
-    private Set<Long> expandedContainerIds = new HashSet<>();
+    protected Set<Long> expandedContainerIds = new HashSet<>();
+
+    @SpringBean
+    protected SessionMetadataService sessionMetadataService;
 
     public AbstractListViewStatus(final String id, final IModel<List<T>> model) {
         super(id, model);

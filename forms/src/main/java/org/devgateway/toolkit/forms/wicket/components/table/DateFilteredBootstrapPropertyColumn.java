@@ -2,10 +2,13 @@ package org.devgateway.toolkit.forms.wicket.components.table;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.TextFilteredPropertyColumn;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
+import org.wicketstuff.datetime.markup.html.basic.DateLabel;
 
 import java.util.Date;
 
@@ -33,5 +36,10 @@ public class DateFilteredBootstrapPropertyColumn<T, S> extends TextFilteredPrope
         dateField.hideLabel();
         dateField.getField().add(AttributeModifier.replace("onchange", "this.form.submit();"));
         return dateField;
+    }
+
+    @Override
+    public void populateItem(Item<ICellPopulator<T>> item, String componentId, IModel<T> rowModel) {
+        item.add(DateLabel.forShortStyle(componentId, (IModel<Date>) this.getDataModel(rowModel)));
     }
 }

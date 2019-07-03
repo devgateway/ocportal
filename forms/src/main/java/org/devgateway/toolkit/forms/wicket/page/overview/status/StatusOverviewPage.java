@@ -14,21 +14,20 @@
  */
 package org.devgateway.toolkit.forms.wicket.page.overview.status;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.util.SessionUtil;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
+import org.devgateway.toolkit.forms.wicket.page.DataExportPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
@@ -45,9 +44,10 @@ import java.util.List;
 @MountPath("/statusOverview")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class StatusOverviewPage extends DataEntryBasePage {
-    private final List<FiscalYear> fiscalYears;
 
-    private FiscalYear fiscalYear;
+    private final IModel<List<FiscalYear>> fiscalYearsModel;
+
+    private final IModel<FiscalYear> fiscalYearModel;
 
     private String searchBox = "";
 
@@ -62,17 +62,32 @@ public class StatusOverviewPage extends DataEntryBasePage {
     public StatusOverviewPage(final PageParameters parameters) {
         super(parameters);
 
-        this.fiscalYears = fiscalYearService.getYearsWithData();
+        fiscalYearsModel = new LoadableDetachableModel<List<FiscalYear>>() {
 
-        // check if we already have a FY in the session and use that one, otherwise get the last one from DB
-        this.fiscalYear = SessionUtil.getSessionFiscalYear();
-        if (this.fiscalYear == null) {
-            fiscalYear = fiscalYearService.getLastFiscalYear();
-            SessionUtil.setSessionFiscalYear(fiscalYear);
+            @Override
+            protected List<FiscalYear> load() {
+                return fiscalYearService.getYearsWithData();
+            }
+        };
+
+        // we need to se the FY in the session since it's used in other parts like in the SideBar
+        if (sessionMetadataService.getSessionFiscalYear() == null) {
+            // check if we already have a FY in the session and use that one, otherwise get the last one from DB
+            sessionMetadataService.setSessionFiscalYear(fiscalYearService.getLastFiscalYear());
         }
+        fiscalYearModel = new LoadableDetachableModel<FiscalYear>() {
+            @Override
+            protected FiscalYear load() {
+                return sessionMetadataService.getSessionFiscalYear();
+            }
+        };
 
         // clear department from session
-        SessionUtil.setSessionDepartment(null);
+        sessionMetadataService.setSessionDepartment(null);
+    }
+
+    private FiscalYear getFiscalYear() {
+        return fiscalYearModel.getObject();
     }
 
     @Override
@@ -82,6 +97,14 @@ public class StatusOverviewPage extends DataEntryBasePage {
         addSearchBox();
         addYearDropdown();
 
+        final Link<Void> dataExport = new Link<Void>("dataExport") {
+            @Override
+            public void onClick() {
+                setResponsePage(DataExportPage.class);
+            }
+        };
+        add(dataExport);
+
         listViewStatusOverview = new ListViewStatusOverview("statusPanel", new ListModel<>(fetchData()));
         add(listViewStatusOverview);
     }
@@ -89,12 +112,12 @@ public class StatusOverviewPage extends DataEntryBasePage {
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("yearsDropdown",
-                new PropertyModel<FiscalYear>(this, "fiscalYear"), fiscalYears, choiceRenderer);
+                fiscalYearModel, fiscalYearsModel, choiceRenderer);
         yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                SessionUtil.setSessionFiscalYear(fiscalYear);
-
+                sessionMetadataService.setSessionFiscalYear(yearsDropdown.getModelObject());
+                fiscalYearModel.setObject(yearsDropdown.getModelObject());
                 updateDashboard(target);
             }
         });
@@ -118,13 +141,13 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
         // update the project count from sidebar as well
         sideBar.getProjectCount()
-                .setDefaultModelObject(statusOverviewService.countProjects(fiscalYear, searchBox));
+                .setDefaultModelObject(statusOverviewService.countProjects(getFiscalYear(), searchBox));
 
         target.add(listViewStatusOverview);
         target.add(sideBar.getProjectCount());
     }
 
     private List<StatusOverviewData> fetchData() {
-        return statusOverviewService.getAllProjects(fiscalYear, searchBox);
+        return statusOverviewService.getAllProjects(getFiscalYear(), searchBox);
     }
 }

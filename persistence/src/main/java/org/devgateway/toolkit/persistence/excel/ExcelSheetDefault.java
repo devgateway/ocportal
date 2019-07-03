@@ -5,6 +5,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.excel.service.TranslateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,8 +146,8 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
                         info.put(PARENTID, ExcelFieldService.getObjectID(object));
                         info.put(PARENTROWNUMBER, row.getRowNum() + 1);
 
-                        final ExcelSheet objectSepareteSheet = new ExcelSheetDefault(workbook, this.translateService,
-                                fieldClass.getSimpleName().toLowerCase(), info);
+                        final ExcelSheet objectSepareteSheet = new ExcelSheetDefault(getWorkbook(),
+                                this.translateService, fieldClass.getSimpleName().toLowerCase(), info);
                         final List<Object> newObjects = new ArrayList();
                         final Object value = getFieldValue(field, object);
 
@@ -261,6 +263,14 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
     @Override
     public void writeSheet(final Class clazz, final List<Object> objects) {
         for (Object obj : objects) {
+            // apply rules for exporting Makueni Forms (see: OCMAKU-200)
+            if (obj instanceof Statusable && !(obj instanceof CabinetPaper)) {
+                final Statusable status = (Statusable) obj;
+
+                if (!status.isExportable()) {
+                    continue;
+                }
+            }
             int lastRow = excelSheet.getLastRowNum();
             final Row row = createRow(excelSheet, ++lastRow);
 

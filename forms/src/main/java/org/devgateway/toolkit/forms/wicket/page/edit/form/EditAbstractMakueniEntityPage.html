@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="row" wicket:id="alertTerminated">
+        <div class="col-md-12 alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <p>
+                <i class="glyphicon glyphicon-info-sign"></i>
+                Please note that this process has been cancelled.
+            </p>
+        </div>
+    </div>
+
+    <wicket:child/>
+
+    <wicket:fragment wicket:id="extraStatusButtons">
+        <div wicket:id="revertToDraftModal"></div>
+    </wicket:fragment>
+
+</wicket:extend>
+</body>
+</html>

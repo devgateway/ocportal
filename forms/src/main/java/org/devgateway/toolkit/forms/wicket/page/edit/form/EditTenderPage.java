@@ -21,18 +21,25 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
+import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 /**
@@ -46,10 +53,16 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     protected TenderService tenderService;
 
     @SpringBean
+    protected PurchaseRequisitionService purchaseRequisitionService;
+
+    @SpringBean
     protected ProcurementMethodService procurementMethodService;
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
+
+    @SpringBean
+    private TargetGroupService targetGroupService;
 
     private GenericSleepFormComponent procuringEntityEmail;
 
@@ -80,7 +93,8 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
         closingDate.required();
 
-        DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
+        final DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
+        invitationDate.required();
         invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
@@ -90,7 +104,11 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
 
         addProcuringEntitySection();
 
-        ComponentUtil.addDoubleField(editForm, "tenderValue").getField().add(RangeValidator.minimum(0.0));
+        ComponentUtil.addBigDecimalField(editForm, "tenderValue")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+
+        ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", targetGroupService);
+
         editForm.add(new TenderItemPanel("tenderItems"));
 
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");
@@ -125,6 +143,23 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         });
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
+    }
+
+    @Override
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return EditTenderQuotationEvaluationPage.class;
+    }
+
+    @Override
+    protected PageParameters parametersAfterSubmitAndNext() {
+        final PageParameters pp = new PageParameters();
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation())) {
+            pp.set(WebConstants.PARAM_ID,
+                    PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition()
+                            .getTenderQuotationEvaluation()).getId());
+        }
+
+        return pp;
     }
 
     private IValidator<String> tenderDocOrTenderLinkRequiredValidator() {
@@ -167,10 +202,26 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     @Override
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
-        tender.setPurchaseRequisition(purchaseRequisition);
-        purchaseRequisition.setTender(tender);
+        tender.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
 
         return tender;
     }
 
+    @Override
+    protected void beforeSaveEntity(final Tender tender) {
+        super.beforeSaveEntity(tender);
+
+        final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
+        purchaseRequisition.addTender(tender);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final Tender tender) {
+        super.beforeDeleteEntity(tender);
+
+        final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
+        purchaseRequisition.removeTender(tender);
+        purchaseRequisitionService.save(purchaseRequisition);
+    }
 }

@@ -3,9 +3,11 @@ package org.devgateway.toolkit.persistence.dao.form;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,7 +18,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -28,37 +33,45 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class Contract extends AbstractPurchaseReqMakueniEntity {
-    private Double tenderValue;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal contractValue;
 
+    @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
+    @ExcelExport(useTranslation = true)
     private Date contractDate;
 
+    @ExcelExport(useTranslation = true)
     private Date contractApprovalDate;
 
+    @ExcelExport(useTranslation = true)
     private Date expiryDate;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
 
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity procuringEntity;
 
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
 
-    public Double getTenderValue() {
-        return tenderValue;
+    public BigDecimal getContractValue() {
+        return contractValue;
     }
 
-    public void setTenderValue(final Double tenderValue) {
-        this.tenderValue = tenderValue;
+    public void setContractValue(final BigDecimal contractValue) {
+        this.contractValue = contractValue;
     }
 
     public Supplier getAwardee() {
@@ -126,4 +139,9 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
         return null;
     }
 
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.emptyList();
+    }
 }

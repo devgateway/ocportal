@@ -1,14 +1,20 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -20,14 +26,16 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
-
+    @ExcelExport(useTranslation = true)
     private Date professionalOpinionDate;
 
+    @ExcelExport(useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
-    private Double recommendedAwardAmount;
+    @ExcelExport(useTranslation = true)
+    private BigDecimal recommendedAwardAmount;
 
     public Date getProfessionalOpinionDate() {
         return professionalOpinionDate;
@@ -45,11 +53,11 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
         this.awardee = awardee;
     }
 
-    public Double getRecommendedAwardAmount() {
+    public BigDecimal getRecommendedAwardAmount() {
         return recommendedAwardAmount;
     }
 
-    public void setRecommendedAwardAmount(final Double recommendedAwardAmount) {
+    public void setRecommendedAwardAmount(final BigDecimal recommendedAwardAmount) {
         this.recommendedAwardAmount = recommendedAwardAmount;
     }
 
@@ -68,4 +76,10 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
         return getLabel();
     }
 
+    @Override
+    @Transactional
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+                .getAwardNotification()));
+    }
 }

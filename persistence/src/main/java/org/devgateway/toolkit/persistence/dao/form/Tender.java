@@ -3,9 +3,13 @@ package org.devgateway.toolkit.persistence.dao.form;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,9 +20,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author gmutuhu
@@ -29,32 +37,48 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id"),
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")})
-public class Tender extends AbstractPurchaseReqMakueniEntity {
+public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAutogeneratable {
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderTitle;
 
+    @ExcelExport(useTranslation = true)
     private Date invitationDate;
 
+    @ExcelExport(useTranslation = true)
     private Date closingDate;
 
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String objective;
 
+    @ExcelExport(useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity issuedBy;
-    private Double tenderValue;
 
+    @ExcelExport(useTranslation = true)
+    private BigDecimal tenderValue;
+
+    @ExcelExport(justExport = true, useTranslation = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private TargetGroup targetGroup;
+
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String tenderLink;
 
+    @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
@@ -127,12 +151,20 @@ public class Tender extends AbstractPurchaseReqMakueniEntity {
         this.issuedBy = issuedBy;
     }
 
-    public Double getTenderValue() {
+    public BigDecimal getTenderValue() {
         return tenderValue;
     }
 
-    public void setTenderValue(final Double tenderValue) {
+    public void setTenderValue(final BigDecimal tenderValue) {
         this.tenderValue = tenderValue;
+    }
+
+    public TargetGroup getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(final TargetGroup targetGroup) {
+        this.targetGroup = targetGroup;
     }
 
     public String getTenderLink() {
@@ -157,13 +189,30 @@ public class Tender extends AbstractPurchaseReqMakueniEntity {
         return getLabel();
     }
 
-    public Double getTotalAmount() {
-        Double total = 0d;
+    public BigDecimal getTotalAmount() {
+        BigDecimal total = BigDecimal.ZERO;
         for (TenderItem item : tenderItems) {
             if (item.getUnitPrice() != null && item.getQuantity() != null) {
-                total += item.getUnitPrice() * item.getQuantity();
+                total.add(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
             }
         }
         return total;
+    }
+
+    @Override
+    @Transactional
+    public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+                .getTenderQuotationEvaluation()));
+    }
+
+    @Override
+    public String getTitle() {
+        return getTenderTitle();
+    }
+
+    @Override
+    public Consumer<String> titleSetter() {
+        return this::setTenderTitle;
     }
 }

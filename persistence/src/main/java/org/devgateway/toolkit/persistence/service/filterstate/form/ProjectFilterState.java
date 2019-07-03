@@ -34,7 +34,6 @@ public class ProjectFilterState extends StatusAuditableEntityFilterState<Project
         this.projectTitle = projectTitle;
     }
 
-
     public ProjectFilterState() {
 
     }
@@ -51,13 +50,15 @@ public class ProjectFilterState extends StatusAuditableEntityFilterState<Project
                     if (procurementPlan.getDepartment() != null) {
                         predicates.add(cb.equal(
                                 root.get(Project_.procurementPlan).get(ProcurementPlan_.department),
-                                procurementPlan.getDepartment()));
+                                procurementPlan.getDepartment()
+                        ));
                     }
 
                     if (procurementPlan.getFiscalYear() != null) {
                         predicates.add(cb.equal(
                                 root.get(Project_.procurementPlan).get(ProcurementPlan_.fiscalYear),
-                                procurementPlan.getFiscalYear()));
+                                procurementPlan.getFiscalYear()
+                        ));
                     }
                 }
             }
@@ -100,4 +101,6 @@ public class ProjectFilterState extends StatusAuditableEntityFilterState<Project
     public void setProcurementPlan(final ProcurementPlan procurementPlan) {
         this.procurementPlan = procurementPlan;
     }
+
+
 }

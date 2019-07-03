@@ -5,13 +5,13 @@ import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -26,13 +26,16 @@ import java.util.Set;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
-public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem {
+public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem,
+        SingleFileMetadatable {
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ContractDocumentType contractDocumentType;
 
+    @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
 
     @Transient
@@ -47,6 +50,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
         this.contractDocumentType = contractDocumentType;
     }
 
+    @Override
     public Set<FileMetadata> getFormDocs() {
         return formDocs;
     }

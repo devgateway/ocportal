@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
-import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -58,6 +57,7 @@ import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
+import org.wicketstuff.datetime.markup.html.basic.DateLabel;
 import org.wicketstuff.select2.Select2Choice;
 
 /**
@@ -69,18 +69,21 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
 
-    private Fragment entityButtonsFragment;
+    protected Fragment entityButtonsFragment;
 
     private SaveEditPageButton saveSubmitButton;
 
+    protected SaveEditPageButton submitAndNext;
+
     private SaveEditPageButton saveApproveButton;
 
-    private SaveEditPageButton saveContinueButton;
+    private SaveEditPageButton saveDraftContinueButton;
 
-    private SaveEditPageButton revertToDraftPageButton;
+    protected SaveEditPageButton revertToDraftPageButton;
 
-    protected TerminateEditPageButton saveTerminateButton;
-    protected TextContentModal terminateModal;
+    protected ModalSaveEditPageButton saveTerminateButton;
+
+    protected ButtonContentModal terminateModal;
 
     private CheckBoxYesNoToggleBootstrapFormComponent visibleStatusComments;
 
@@ -100,43 +103,88 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private HiddenField<Double> maxHeight;
 
+    protected PageParameters afterSubmitNextParameters;
+
+    protected Fragment extraStatusEntityButtonsFragment;
+
     public AbstractEditStatusEntityPage(final PageParameters parameters) {
         super(parameters);
+
     }
 
-    protected TextContentModal createTerminateModal() {
-        TextContentModal modal = new TextContentModal("terminateModal",
-                Model.of("Are you sure you want to TERMINATE the contracting process?"));
-        modal.addCloseButton();
 
-        LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                saveTerminateButton.continueSubmit(target);
-            }
-        };
-        deleteButton.setLabel(Model.of("TERMINATE"));
-        modal.addButton(deleteButton);
-        return modal;
-    }
+    public class ButtonContentModal extends TextContentModal {
+        private final Buttons.Type buttonType;
+        private LaddaAjaxButton button;
+        private IModel<String> buttonModel;
+        private ModalSaveEditPageButton modalSavePageButton;
 
-    public class TerminateEditPageButton extends SaveEditPageButton {
-        public TerminateEditPageButton(String id, IModel<String> model) {
-            super(id, model);
-
+        public ButtonContentModal(String markupId, IModel<String> model, IModel<String> buttonModel,
+                                  Buttons.Type buttonType) {
+            super(markupId, model);
+            addCloseButton();
+            this.buttonModel = buttonModel;
+            this.buttonType = buttonType;
         }
+
+        public ButtonContentModal modalSavePageButton(ModalSaveEditPageButton modalSavePageButton) {
+            this.modalSavePageButton = modalSavePageButton;
+            return this;
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+            button = new LaddaAjaxButton("button", buttonType) {
+                @Override
+                protected void onSubmit(AjaxRequestTarget target) {
+                    modalSavePageButton.continueSubmit(target);
+                }
+            };
+            addButton(button);
+            button.setDefaultFormProcessing(false);
+            button.setLabel(buttonModel);
+        }
+    }
+
+    protected ButtonContentModal createTerminateModal() {
+        ButtonContentModal buttonContentModal = new ButtonContentModal(
+                "terminateModal",
+                Model.of("Are you sure you want to TERMINATE the contracting process?"),
+                Model.of("TERMINATE"), Buttons.Type.Danger);
+        return buttonContentModal;
+    }
+
+    public class ModalSaveEditPageButton extends SaveEditPageButton {
+        private TextContentModal modal;
+
+        public ModalSaveEditPageButton(String id, IModel<String> model, TextContentModal modal) {
+            super(id, model);
+            this.modal = modal;
+        }
+
+        @Override
+        protected String getOnClickScript() {
+            return WebConstants.DISABLE_FORM_LEAVING_JS;
+        }
+
         @Override
         protected void onSubmit(AjaxRequestTarget target) {
-            terminateModal.show(true);
-            target.add(terminateModal);
+            modal.show(true);
+            target.add(modal);
         }
 
         public void continueSubmit(AjaxRequestTarget target) {
-            setStatusAppendComment(DBConstants.Status.TERMINATED);
             super.onSubmit(target);
         }
     }
 
+    @Override
+    protected void beforeSaveEntity(T saveable) {
+        super.beforeSaveEntity(saveable);
+
+        afterSubmitNextParameters = parametersAfterSubmitAndNext();
+    }
 
     @Override
     protected void onInitialize() {
@@ -169,26 +217,32 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         entityButtonsFragment = new Fragment("extraButtons", "entityButtons", this);
         editForm.replace(entityButtonsFragment);
 
+        Fragment fragment = new Fragment("extraStatusEntityButtons", "noButtons", this);
+        entityButtonsFragment.add(fragment);
+
         saveSubmitButton = getSaveSubmitPageButton();
         entityButtonsFragment.add(saveSubmitButton);
+
+        submitAndNext = getSubmitAndNextPageButton();
+        entityButtonsFragment.add(submitAndNext);
 
         saveApproveButton = getSaveApprovePageButton();
         entityButtonsFragment.add(saveApproveButton);
 
-        saveContinueButton = getSaveDraftAndContinueButton();
-        entityButtonsFragment.add(saveContinueButton);
+        saveDraftContinueButton = getSaveDraftAndContinueButton();
+        entityButtonsFragment.add(saveDraftContinueButton);
 
         revertToDraftPageButton = getRevertToDraftPageButton();
         entityButtonsFragment.add(revertToDraftPageButton);
 
-        terminateModal = createTerminateModal();
-        entityButtonsFragment.add(terminateModal);
 
         saveTerminateButton = getSaveTerminateButton();
         entityButtonsFragment.add(saveTerminateButton);
+        entityButtonsFragment.add(terminateModal);
+
 
         applyDraftSaveBehavior(saveButton);
-        applyDraftSaveBehavior(saveContinueButton);
+        applyDraftSaveBehavior(saveDraftContinueButton);
         applyDraftSaveBehavior(revertToDraftPageButton);
 
         setButtonsPermissions();
@@ -196,6 +250,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void afterSaveEntity(final T saveable) {
+        super.afterSaveEntity(saveable);
+
         getPageParameters().set(WebConstants.V_POSITION, verticalPosition.getValue())
                 .set(WebConstants.MAX_HEIGHT, maxHeight.getValue());
     }
@@ -245,15 +301,20 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         editForm.add(maxHeight);
     }
 
-    private TerminateEditPageButton getSaveTerminateButton() {
-        final TerminateEditPageButton saveEditPageButton = new TerminateEditPageButton("terminate",
-                new StringResourceModel("terminate", this, null)) {
+    private ModalSaveEditPageButton getSaveTerminateButton() {
+        terminateModal = createTerminateModal();
+        final ModalSaveEditPageButton saveEditPageButton = new ModalSaveEditPageButton("terminate",
+                new StringResourceModel("terminate", this, null), terminateModal) {
+
             @Override
-            protected String getOnClickScript() {
-                return WebConstants.DISABLE_FORM_LEAVING_JS;
+            public void continueSubmit(AjaxRequestTarget target) {
+                setStatusAppendComment(DBConstants.Status.TERMINATED);
+                super.continueSubmit(target);
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.archive);
+        saveEditPageButton.setDefaultFormProcessing(false);
+        terminateModal.modalSavePageButton(saveEditPageButton);
         return saveEditPageButton;
     }
 
@@ -262,11 +323,12 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         addAutosaveBehavior(target);
 
         saveButton.setEnabled(true);
-        saveContinueButton.setEnabled(true);
+        saveDraftContinueButton.setEnabled(true);
+        submitAndNext.setEnabled(true);
         saveSubmitButton.setEnabled(true);
 
         if (target != null) {
-            target.add(saveButton, saveSubmitButton, saveContinueButton);
+            target.add(saveButton, saveSubmitButton, saveDraftContinueButton, submitAndNext);
         }
     }
 
@@ -274,7 +336,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         // enable autosave
         if (!ComponentUtil.isPrintMode()
                 && Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT)) {
-            saveContinueButton.add(getAutosaveBehavior());
+            saveDraftContinueButton.add(getAutosaveBehavior());
             autoSaveLabel.setVisibilityAllowed(true);
             if (target != null) {
                 target.add(autoSaveLabel);
@@ -296,7 +358,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 // invoke autosave from js (execute this javascript code before components processed)
                 target.prependJavaScript("$('#" + maxHeight.getMarkupId() + "').val($(document).height()); "
                         + "$('#" + verticalPosition.getMarkupId() + "').val($(window).scrollTop()); "
-                        + "$('#" + saveContinueButton.getMarkupId() + "').click();");
+                        + "$('#" + saveDraftContinueButton.getMarkupId() + "').click();");
 
                 // disable all buttons from js
                 target.prependJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', true);");
@@ -441,6 +503,50 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return button;
     }
 
+    private SaveEditPageButton getSubmitAndNextPageButton() {
+        final SaveEditPageButton button = new SaveEditPageButton("submitAndNext",
+                new StringResourceModel("submitAndNext", this, null)) {
+            @Override
+            protected String getOnClickScript() {
+                return WebConstants.DISABLE_FORM_LEAVING_JS;
+            }
+
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                setStatusAppendComment(DBConstants.Status.SUBMITTED);
+                super.onSubmit(target);
+            }
+
+            @Override
+            protected Class<? extends BasePage> getResponsePage() {
+                return pageAfterSubmitAndNext();
+            }
+
+            @Override
+            protected PageParameters getParameterPage() {
+                return afterSubmitNextParameters;
+            }
+        };
+
+        button.setIconType(FontAwesomeIconType.tasks);
+        return button;
+    }
+
+    /**
+     * Override this function in order to redirect the user to the next page after clicking on submitAndNext button.
+     */
+    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
+        return (Class<? extends BasePage>) getPage().getClass();
+    }
+
+    /**
+     * Override this function in order to redirect the user to the next page with parameters
+     * after clicking on submitAndNext button.
+     */
+    protected PageParameters parametersAfterSubmitAndNext() {
+        return getPageParameters();
+    }
+
     private SaveEditPageButton getSaveDraftAndContinueButton() {
         final SaveEditPageButton button = new SaveEditPageButton("saveContinue",
                 new StringResourceModel("saveContinue", this, null)) {
@@ -492,7 +598,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return saveEditPageButton;
     }
 
-    private SaveEditPageButton getRevertToDraftPageButton() {
+    protected SaveEditPageButton getRevertToDraftPageButton() {
         final SaveEditPageButton saveEditPageButton = new SaveEditPageButton("revertToDraft",
                 new StringResourceModel("revertToDraft", this, null)) {
             @Override
@@ -506,13 +612,18 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 super.onSubmit(target);
                 target.add(editForm);
                 setButtonsPermissions();
+                onAfterRevertToDraft(target);
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
         return saveEditPageButton;
     }
 
-    private void setStatusAppendComment(final String status) {
+    protected void onAfterRevertToDraft(AjaxRequestTarget target) {
+
+    }
+
+    protected void setStatusAppendComment(final String status) {
         final T saveable = editForm.getModelObject();
 
         // do not save an empty comment if previous status is same as current status and comment box is empty
@@ -528,9 +639,10 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         saveable.getStatusComments().add(comment);
     }
 
-    private void setButtonsPermissions() {
+    protected void setButtonsPermissions() {
         addSaveButtonsPermissions(saveButton);
-        addSaveButtonsPermissions(saveContinueButton);
+        addSaveButtonsPermissions(saveDraftContinueButton);
+        addSaveButtonsPermissions(submitAndNext);
         addSaveButtonsPermissions(saveSubmitButton);
         addApproveButtonPermissions(saveApproveButton);
         addSaveRevertButtonPermissions(revertToDraftPageButton);
@@ -539,7 +651,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
         // no need to display the buttons on print view so we overwrite the above permissions
         if (ComponentUtil.isPrintMode()) {
-            saveContinueButton.setVisibilityAllowed(false);
+            saveDraftContinueButton.setVisibilityAllowed(false);
+            submitAndNext.setVisibilityAllowed(false);
             saveSubmitButton.setVisibilityAllowed(false);
             saveApproveButton.setVisibilityAllowed(false);
             revertToDraftPageButton.setVisibilityAllowed(false);
@@ -567,23 +680,23 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     private void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(
-                DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
     }
 
     private void addApproveButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        button.setVisibilityAllowed(
-                DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()) && !isViewMode());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
     }
 
     private void addSaveRevertButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(!isTerminated()
-                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()) && !isViewMode());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
 
         // additionally normal users should not revert anything that was already validated
         if (WebSecurityUtil.isCurrentRoleUser()
@@ -591,11 +704,11 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             button.setVisibilityAllowed(false);
         } else
 
-        //admins can revert anything, including terminated!
-        if (WebSecurityUtil.isCurrentUserAdmin()
-                && (DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()) || isTerminated())) {
-            button.setVisibilityAllowed(true);
-        }
+            //admins can revert anything, including terminated!
+            if (WebSecurityUtil.isCurrentUserAdmin()
+                    && (DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()) || isTerminated())) {
+                button.setVisibilityAllowed(true);
+            }
     }
 
     private void addDeleteButtonPermissions(final Component button) {

@@ -16,6 +16,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -30,6 +32,8 @@ import java.util.Collection;
  */
 @Component
 public class MarkupCacheService {
+    protected static final Logger logger = LoggerFactory.getLogger(MarkupCacheService.class);
+
     /**
      * start-key used to identify the reports markup
      */

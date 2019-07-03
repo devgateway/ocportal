@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.repository.category;
 
-import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.data.domain.Page;
@@ -32,13 +31,6 @@ public interface FiscalYearRepository extends TextSearchableRepository<FiscalYea
     @Query("select cat from  #{#entityName} cat where lower(cat.name) like %:name%")
     Page<FiscalYear> searchText(@Param("name") String name, Pageable page);
 
-    FiscalYear findTopByOrderByStartDateDesc();
-
-    @Query("select distinct p.fiscalYear from ProcurementPlan p")
+    @Query("select distinct p.fiscalYear from ProcurementPlan p order by p.fiscalYear.startDate desc")
     List<FiscalYear> getYearsWithData();
-
-    @Query("select fiscalYear from  #{#entityName} fiscalYear "
-            + "inner join ProcurementPlan p on p.fiscalYear.id = fiscalYear.id "
-            + "where p.department = :department")
-    List<FiscalYear> getYearsWithData(@Param("department") Department department);
 }

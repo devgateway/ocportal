@@ -6,21 +6,23 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
-import org.devgateway.toolkit.persistence.service.form.PurchaseItemService;
-public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
-    @SpringBean
-    private PurchaseItemService purchaseItemService;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     private GenericSleepFormComponent totalCost;
 
     public TenderItemPanel(final String id) {
@@ -60,22 +62,22 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
 
-        final TextFieldBootstrapFormComponent<Double> price =
-                new TextFieldBootstrapFormComponent<Double>("unitPrice") {
+        final TextFieldBootstrapFormComponent<BigDecimal> price =
+                new TextFieldBootstrapFormComponent<BigDecimal>("unitPrice") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
                         target.add(totalCost);
                     }
                 };
-        price.asDouble();
+        price.decimal();
         price.required();
-        price.getField().add(RangeValidator.minimum(0.0));
+        price.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
                 (IModel<Double>) () -> {
                     if (quantity.getModelObject() != null && price.getModelObject() != null) {
-                        return quantity.getModelObject() * price.getModelObject();
+                        return price.getModelObject().doubleValue() * quantity.getModelObject();
                     }
                     return null;
                 });
@@ -102,10 +104,17 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         protected void onInitialize() {
             super.onInitialize();
 
-            // TODO - this should be filtered based on form Procurement Plan (and possible filter by Purchase)
-            final Component planItem = ComponentUtil.addSelect2ChoiceField(this, "purchaseItem", purchaseItemService)
-                    .required();
-            planItem.add(new StopEventPropagationBehavior());
+            // filtered the list based on form Purchase Requisition
+            final Tender parentObject = (Tender) TenderItemPanel.this.getParent().getDefaultModelObject();
+            final List<PurchaseItem> purchaseItems = parentObject.getPurchaseRequisition().getPurchaseItems();
+
+            final Select2ChoiceBootstrapFormComponent<PurchaseItem> purchaseItem =
+                    new Select2ChoiceBootstrapFormComponent<>(
+                            "purchaseItem", new GenericChoiceProvider<>(purchaseItems));
+            purchaseItem.required();
+            purchaseItem.add(new StopEventPropagationBehavior());
+
+            add(purchaseItem);
         }
     }
 }

@@ -1,18 +1,29 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
+import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * @author idobre
@@ -33,11 +44,35 @@ public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
 
     @Override
     protected void onInitialize() {
+
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
                 "procurementPlan.department", "procurementPlan.department", new ListModel(departments), dataTable));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
                 "procurementPlan.fiscalYear", "procurementPlan.fiscalYear", new ListModel(fiscalYears), dataTable));
+
+        columns.add(new TextFilteredBootstrapPropertyColumn<>(
+                new Model<>((new StringResourceModel("projectTitle", ListProjectPage.this)).getString()),
+                "projectTitle", "projectTitle"));
+
+        columns.add(new PropertyColumn<Project, String>(
+                new Model<>((new StringResourceModel("lastModifiedDate", ListProjectPage.this)).getString()),
+                "lastModifiedDate", "lastModifiedDate") {
+            @Override
+            public void populateItem(final Item<ICellPopulator<Project>> item,
+                                     final String componentId,
+                                     final IModel<Project> rowModel) {
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+                final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
+
+                if (lastModifiedDate.isPresent()) {
+                    item.add(new Label(componentId, lastModifiedDate.get().format(formatter)));
+                } else {
+                    item.add(new Label(componentId, ""));
+                }
+
+            }
+        });
 
         super.onInitialize();
     }

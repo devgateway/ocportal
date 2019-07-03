@@ -30,6 +30,11 @@ public class ListTenderQuotationEvaluationPage extends ListAbstractPurchaseReqMa
 
     @Override
     protected void onInitialize() {
+
+        addTenderTitleColumn();
+
+        addFileDownloadColumn();
+
         super.onInitialize();
     }
 
