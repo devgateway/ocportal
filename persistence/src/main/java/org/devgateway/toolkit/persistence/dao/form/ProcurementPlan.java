@@ -1,12 +1,14 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
@@ -32,6 +34,8 @@ import java.util.Set;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
+@Document
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

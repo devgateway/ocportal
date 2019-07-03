@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.envers.Audited;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -66,6 +67,7 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
      *
      * @return
      */
+    @JsonIgnore
     public abstract AbstractAuditableEntity getParent();
 
     /**

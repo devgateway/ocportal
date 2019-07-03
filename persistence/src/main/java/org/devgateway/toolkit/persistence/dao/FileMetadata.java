@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -38,6 +39,7 @@ import java.io.Serializable;
 public class FileMetadata extends AbstractAuditableEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @JsonIgnore
     private FileContent content;
 
     private String name;

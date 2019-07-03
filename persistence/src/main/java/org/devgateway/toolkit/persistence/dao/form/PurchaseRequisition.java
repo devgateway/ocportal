@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
@@ -44,6 +45,7 @@ import java.util.function.Consumer;
 @Table(indexes = {@Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"),
         @Index(columnList = "title")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
         TitleAutogeneratable {
     @ManyToOne(fetch = FetchType.LAZY)

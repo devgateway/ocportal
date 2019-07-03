@@ -18,9 +18,12 @@ public abstract class AbstractChildAuditableEntity<P extends AbstractAuditableEn
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "parent_id", insertable = false, updatable = false)
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     protected P parent;
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public P getParent() {
         return parent;
     }

@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -25,6 +26,7 @@ import java.util.Date;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     @ExcelExport(useTranslation = true)
     private Date acceptanceDate;
