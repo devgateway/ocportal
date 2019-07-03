@@ -32,9 +32,6 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     @ExcelExport(useTranslation = true)
     private Date closingDate;
 
-    @ExcelExport(useTranslation = true)
-    private Integer numberOfBids;
-
     @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -46,16 +43,8 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
         return closingDate;
     }
 
-    public Integer getNumberOfBids() {
-        return numberOfBids;
-    }
-
     public void setClosingDate(final Date closingDate) {
         this.closingDate = closingDate;
-    }
-
-    public void setNumberOfBids(final Integer numberOfBids) {
-        this.numberOfBids = numberOfBids;
     }
 
     public List<Bid> getBids() {
