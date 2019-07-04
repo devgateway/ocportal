@@ -27,7 +27,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
     private GridFsOperations gridFsOperations;
 
     @Override
-    public Document storeFileAndReferenceAsDocument(FileMetadata fm, Document.DocumentType documentType) {
+    public Document storeFileAndReferenceAsDocument(FileMetadata fm, String documentType) {
         try {
             if (ObjectUtils.isEmpty(fm) || ObjectUtils.isEmpty(fm.getContent())) {
                 return null;
@@ -47,12 +47,17 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
             doc.setFormat(fm.getContentType());
             doc.setUrl(createURL(objId));
             doc.setId(objId.toString());
-            doc.setDocumentType(documentType.toString());
+            doc.setDocumentType(documentType);
 
             return doc;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Document storeFileAndReferenceAsDocument(FileMetadata fm, Document.DocumentType documentType) {
+        return storeFileAndReferenceAsDocument(fm, documentType.toString());
     }
 
 

@@ -11,6 +11,8 @@ public interface MongoFileStorageService {
 
     Document storeFileAndReferenceAsDocument(FileMetadata fm, Document.DocumentType documentType);
 
+    Document storeFileAndReferenceAsDocument(FileMetadata fm, String documentType);
+
     GridFSFile retrieveFile(ObjectId id);
 
     URI createURL(ObjectId id);

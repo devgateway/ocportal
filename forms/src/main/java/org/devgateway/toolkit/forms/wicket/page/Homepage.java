@@ -14,7 +14,6 @@
  */
 package org.devgateway.toolkit.forms.wicket.page;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -22,8 +21,9 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.service.MakueniToOCDSConversionService;
+import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.ocds.web.db.ImportPostgresToMongo;
+import org.devgateway.toolkit.forms.service.MakueniToOCDSConversionService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.HomeStyles;
@@ -47,10 +47,10 @@ public class Homepage extends BasePage {
     private MakueniToOCDSConversionService ocdsConversionService;
 
     @SpringBean
-    PurchaseRequisitionService purchaseRequisitionService;
+    private PurchaseRequisitionService purchaseRequisitionService;
 
     @SpringBean
-    ReleaseRepository releaseRepository;
+    private ReleaseRepository releaseRepository;
 
     @SpringBean
     private ObjectMapper mapper;
@@ -60,11 +60,11 @@ public class Homepage extends BasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        try {
-            importPostgresToMongo.test();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            importPostgresToMongo.test();
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
 
         final Link<Void> dataEntryLink = new Link<Void>("dataEntryLink") {
             @Override
