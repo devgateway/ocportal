@@ -36,6 +36,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
     @ExcelExport(useTranslation = true)
@@ -69,6 +70,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
         return procurementPlan;
     }
@@ -79,6 +81,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return name;
     }
@@ -91,6 +94,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @Override
     @Transactional
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }

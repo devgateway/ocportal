@@ -42,6 +42,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     public ContractDocumentType getContractDocumentType() {
@@ -63,6 +64,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -74,6 +76,7 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }

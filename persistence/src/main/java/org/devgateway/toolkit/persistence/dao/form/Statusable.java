@@ -18,6 +18,7 @@ public interface Statusable {
      * @return
      */
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     default boolean isTerminated() {
         return DBConstants.Status.TERMINATED.equals(getStatus());
     }
@@ -26,6 +27,7 @@ public interface Statusable {
      * Determine if an Object can be exported to public portal, excel export, etc...
      */
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     default boolean isExportable() {
         return DBConstants.Status.APPROVED.equals(getStatus())
                 || DBConstants.Status.TERMINATED.equals(getStatus());

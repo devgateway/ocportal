@@ -11,6 +11,7 @@ public interface SingleFileMetadatable {
     Set<FileMetadata> getFormDocs();
 
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     default FileMetadata getFormDoc() {
         return ObjectUtils.isEmpty(getFormDocs()) ? null : getFormDocs().iterator().next();
     }

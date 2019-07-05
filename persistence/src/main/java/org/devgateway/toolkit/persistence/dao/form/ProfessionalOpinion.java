@@ -71,6 +71,7 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return null;
     }
@@ -83,6 +84,7 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
     @Override
     @Transactional
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
                 .getAwardNotification()));

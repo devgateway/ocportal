@@ -47,6 +47,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
     @ExcelExport(separateSheet = true, name = "Purchase Requisitions")
@@ -129,6 +130,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return projectTitle;
     }
@@ -168,12 +170,14 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Override
     @Transactional
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return purchaseRequisitions;
     }
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getTitle() {
         return getProjectTitle();
     }

@@ -51,6 +51,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Project project;
 
     @ExcelExport(useTranslation = true)
@@ -242,6 +243,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return title;
     }
@@ -252,6 +254,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public BigDecimal getAmount() {
         BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
@@ -374,6 +377,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
         if (project != null) {
             return project.getProcurementPlan();
@@ -384,6 +388,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @Override
     @Transactional
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(tender));
     }
