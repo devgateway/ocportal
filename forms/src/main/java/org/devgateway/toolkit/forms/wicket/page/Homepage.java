@@ -14,6 +14,7 @@
  */
 package org.devgateway.toolkit.forms.wicket.page;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -60,11 +61,11 @@ public class Homepage extends BasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-//        try {
-//            importPostgresToMongo.test();
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
+       // try {
+       //     importPostgresToMongo.test();
+       // } catch (JsonProcessingException e) {
+       //     e.printStackTrace();
+       // }
 
         final Link<Void> dataEntryLink = new Link<Void>("dataEntryLink") {
             @Override

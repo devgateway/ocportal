@@ -45,10 +45,12 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
      * @return
      */
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public AbstractAuditableEntity getParent() {
         return null;
     }

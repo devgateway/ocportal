@@ -86,10 +86,12 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -101,6 +103,7 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }

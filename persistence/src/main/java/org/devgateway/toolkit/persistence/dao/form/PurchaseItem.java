@@ -46,6 +46,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     public PlanItem getPlanItem() {
@@ -82,6 +83,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -93,6 +95,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }
@@ -104,6 +107,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return planItem != null ? planItem.getLabel() : "";
     }

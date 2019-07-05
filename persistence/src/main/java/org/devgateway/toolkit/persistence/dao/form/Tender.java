@@ -95,6 +95,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return tenderNumber + " " + tenderTitle;
     }
@@ -194,6 +195,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     }
 
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public BigDecimal getTotalAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (TenderItem item : tenderItems) {
@@ -213,6 +215,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getTitle() {
         return getTenderTitle();
     }

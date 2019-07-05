@@ -17,9 +17,11 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @JoinColumn(name = "purchase_requisition_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     protected PurchaseRequisition purchaseRequisition;
 
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public PurchaseRequisition getPurchaseRequisition() {
         return purchaseRequisition;
     }
@@ -30,11 +32,13 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Project getProject() {
         return getPurchaseRequisition().getProject();
     }
 
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public PurchaseRequisition getPurchaseRequisitionNotNull() {
         Objects.requireNonNull(purchaseRequisition, "Purchase requisition must not be null at this stage!");
         return purchaseRequisition;
@@ -42,6 +46,7 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
         if (purchaseRequisition != null && purchaseRequisition.getProject() != null) {
             return purchaseRequisition.getProject().getProcurementPlan();

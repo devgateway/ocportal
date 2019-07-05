@@ -74,10 +74,12 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -89,6 +91,7 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }

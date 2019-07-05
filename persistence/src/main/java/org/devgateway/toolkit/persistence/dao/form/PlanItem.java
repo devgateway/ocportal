@@ -88,10 +88,12 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean editable = false;
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     public Item getItem() {
@@ -216,6 +218,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return editable;
     }
@@ -227,6 +230,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }
@@ -243,6 +247,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     @Override
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return description;
     }

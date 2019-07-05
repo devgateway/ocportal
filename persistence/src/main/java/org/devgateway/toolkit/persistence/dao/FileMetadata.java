@@ -39,6 +39,7 @@ import java.io.Serializable;
 public class FileMetadata extends AbstractAuditableEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @org.springframework.data.annotation.Transient
     @JsonIgnore
     private FileContent content;
 
