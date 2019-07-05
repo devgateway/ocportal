@@ -15,6 +15,8 @@
         <start-class>org.devgateway.toolkit.ui.UIWebApplication</start-class>
         <skip.frontend.build>false</skip.frontend.build>
         <checkstyle.skip>true</checkstyle.skip>
+        <npmArgs>install</npmArgs>
+        <npmScript>build</npmScript>
     </properties>
 
     <parent>
@@ -22,6 +24,7 @@
         <artifactId>makueni</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+
 
     <dependencies>
         <dependency>
@@ -40,6 +43,25 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>npm-dev</id>
+            <properties>
+                <npmArgs>--prefer-offline --no-audit --progress=false install</npmArgs>
+                <npmScript>build-dev</npmScript>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>npm-dll</id>
+            <properties>
+                <npmArgs>--no-audit --progress=false install</npmArgs>
+                <npmScript>build-dll</npmScript>
+            </properties>
+        </profile>
+    </profiles>
+
 
     <build>
         <resources>
@@ -106,7 +128,12 @@
                         </goals>
                         <!-- Optional configuration which provides for running any npm command -->
                         <configuration>
-                            <arguments>install</arguments>
+                            <environmentVariables>
+                                <npmArgs>${npmArgs}</npmArgs>
+                                <npmScript>${npmScript}</npmScript>
+                            </environmentVariables>
+
+                            <arguments>${npmArgs}</arguments>
                         </configuration>
                     </execution>
 
@@ -117,7 +144,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>run build</arguments>
+                            <arguments>run ${npmScript}</arguments>
                         </configuration>
                     </execution>
 
