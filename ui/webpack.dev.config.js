@@ -4,8 +4,8 @@ module.exports = {
   entry: ['./index.jsx'],
   output: {
     path: path.join(__dirname, 'public/ui'),
-    publicPath: "http://localhost:8090/",
-    filename: "index.min.js"
+    publicPath: "http://localhost:3000/",
+    filename: "index.js"
   },
   module: {
     loaders: [
