@@ -22,6 +22,7 @@ import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
+import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
@@ -59,6 +60,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversionService {
+
+    @Autowired
+    private ReleaseRepository releaseRepository;
 
     private static final String OCID_PREFIX = "ocds-abcd-";
 
@@ -331,6 +335,17 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(milestone::setDateMet, purchaseRequisition::getApprovedDate);
         safeSet(milestone::setStatus, () -> purchaseRequisition, this::createPlanningMilestoneStatus);
         return milestone;
+    }
+
+    @Override
+    public Release createAndPersistRelease(PurchaseRequisition purchaseRequisition) {
+        Release release = createRelease(purchaseRequisition);
+        Release byOcid = releaseRepository.findByOcid(release.getOcid());
+        if (byOcid != null) {
+            releaseRepository.delete(byOcid);
+        }
+
+        return releaseRepository.save(release);
     }
 
 

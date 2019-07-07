@@ -64,4 +64,6 @@ public interface MakueniToOCDSConversionService {
     Release createRelease(PurchaseRequisition purchaseRequisition);
 
     Milestone createPlanningMilestone(PurchaseRequisition purchaseRequisition);
+
+    Release createAndPersistRelease(PurchaseRequisition purchaseRequisition);
 }

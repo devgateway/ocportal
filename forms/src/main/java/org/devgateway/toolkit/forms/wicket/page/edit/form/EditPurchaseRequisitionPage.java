@@ -48,8 +48,6 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     protected ChargeAccountService chargeAccountService;
 
 
-
-
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = purchaseRequisitionService;
