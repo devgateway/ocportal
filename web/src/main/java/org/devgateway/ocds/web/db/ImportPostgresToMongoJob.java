@@ -12,10 +12,11 @@ import org.springframework.stereotype.Service;
 public class ImportPostgresToMongoJob {
     @Autowired
     private ImportPostgresToMongo importPostgresToMongo;
+
     /**
      * Invoke the import of all makueni data into mongo db.
      */
-    @Scheduled(cron = "0 0 23 ? * SAT *")
+    @Scheduled(cron = "0 0 23 * * SAT")
     public void backupDatabase() {
         importPostgresToMongo.importToMongo();
     }
