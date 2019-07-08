@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * @author idobre
  * @since 2019-07-02
  * <p>
- *
+ * <p>
  * Imports all the makueni data into the mongo db.
  */
 @Service
@@ -149,7 +149,9 @@ public class ImportPostgresToMongo {
 
     public FileMetadata storeFile(final FileMetadata fileMetadata) {
         try {
-            if (ObjectUtils.isEmpty(fileMetadata) || ObjectUtils.isEmpty(fileMetadata.getContent())) {
+            if (ObjectUtils.isEmpty(fileMetadata)
+                    || ObjectUtils.isEmpty(fileMetadata.getContent())
+                    || ObjectUtils.isEmpty(fileMetadata.getContent().getBytes())) {
                 return null;
             }
 
