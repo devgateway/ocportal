@@ -47,6 +47,8 @@ public class FileMetadata extends AbstractAuditableEntity implements Serializabl
 
     private String contentType;
 
+    private String url;
+
     private long size;
 
     @Override
@@ -76,6 +78,14 @@ public class FileMetadata extends AbstractAuditableEntity implements Serializabl
 
     public void setContentType(final String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(final String url) {
+        this.url = url;
     }
 
     public long getSize() {
