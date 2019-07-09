@@ -1,8 +1,8 @@
-import Table from "./index";
-import {pluckImm} from "../../tools";
+import Table from './index';
+import { pluckImm } from '../../tools';
 
-class Awards extends Table{
-  row(entry){
+class Awards extends Table {
+  row(entry) {
     let bidNo = entry.getIn(['planning', 'bidNo']);
     let awards = entry.get('awards');
     let value = awards.get('value');
@@ -12,14 +12,16 @@ class Awards extends Table{
       <td>{bidNo}</td>
       <td>{new Date(awards.get('date')).toLocaleDateString(undefined, Table.DATE_FORMAT)}</td>
       <td className="supplier-name">
-        {awards.get('suppliers').map(pluckImm('name')).join(', ')}
+        {awards.get('suppliers')
+        .map(pluckImm('name'))
+        .join(', ')}
       </td>
       <td>{this.maybeFormat(value.get('amount'))} {value.get('currency')}</td>
-    </tr>
+    </tr>;
   }
-
-  render(){
-    if(!this.props.data) return null;
+  
+  render() {
+    if (!this.props.data) return null;
     return (
       <table className="table table-striped table-hover awards-table">
         <thead>
@@ -34,7 +36,7 @@ class Awards extends Table{
         {this.props.data.map(this.row.bind(this))}
         </tbody>
       </table>
-    )
+    );
   }
 }
 

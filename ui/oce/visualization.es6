@@ -12,12 +12,12 @@ class Visualization extends translatable(Component) {
     this.state = this.state || {};
     this.state.loading = true;
   }
-
+  
   buildUrl(ep) {
     const { filters } = this.props;
     return new URI(`${API_ROOT}/${ep}`).addSearch(filters.toJS());
   }
-
+  
   fetch() {
     const { endpoint, endpoints } = this.constructor;
     const { requestNewData } = this.props;
@@ -28,12 +28,14 @@ class Visualization extends translatable(Component) {
     }
     if (endpoints) {
       console.warn('endpoints property is deprecated', endpoints);
-      promise = Promise.all(endpoints.map(this.buildUrl.bind(this)).map(fetchEP));
+      promise = Promise.all(endpoints.map(this.buildUrl.bind(this))
+      .map(fetchEP));
     }
     if (typeof this.getCustomEP === 'function') {
       const customEP = this.getCustomEP();
       if (Array.isArray(customEP)) {
-        promise = Promise.all(customEP.map(this.buildUrl.bind(this)).map(fetchEP));
+        promise = Promise.all(customEP.map(this.buildUrl.bind(this))
+        .map(fetchEP));
       } else {
         promise = fetchEP(this.buildUrl(customEP));
       }
@@ -41,20 +43,24 @@ class Visualization extends translatable(Component) {
     if (!promise) return;
     this.setState({ loading: true });
     promise
-      .then(this.transform.bind(this))
-      .then(fromJS)
-      .then(data => requestNewData([], data))
-      .then(() => this.setState({ loading: false }));
+    .then(this.transform.bind(this))
+    .then(fromJS)
+    .then(data => requestNewData([], data))
+    .then(() => this.setState({ loading: false }));
   }
-
-  transform(data) { return data; }
-
-  getData() { return this.props.data; }
-
+  
+  transform(data) {
+    return data;
+  }
+  
+  getData() {
+    return this.props.data;
+  }
+  
   componentDidMount() {
     this.fetch();
   }
-
+  
   componentDidUpdate(prevProps) {
     if (this.props.filters !== prevProps.filters) this.fetch();
   }

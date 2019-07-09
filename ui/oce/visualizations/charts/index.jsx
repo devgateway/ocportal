@@ -14,7 +14,7 @@ class Chart extends Visualization {
   getData() {
     return super.getData();
   }
-
+  
   getDecoratedLayout() {
     const { title, xAxisRange, yAxisRange, styling, width, height, margin, legend } = this.props;
     const layout = this.getLayout();
@@ -28,7 +28,7 @@ class Chart extends Visualization {
       layout.xaxis.titlefont = {
         color: styling.charts.axisLabelColor,
       };
-
+      
       layout.yaxis.titlefont = {
         color: styling.charts.axisLabelColor,
       };
@@ -43,16 +43,16 @@ class Chart extends Visualization {
     }
     return layout;
   }
-
+  
   componentDidMount() {
     super.componentDidMount();
     Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout());
   }
-
+  
   componentWillUnmount() {
     Plotly.Plots.purge(this.chartContainer);
   }
-
+  
   componentDidUpdate(prevProps) {
     super.componentDidUpdate(prevProps);
     if (this.constructor.UPDATABLE_FIELDS.some(prop =>
@@ -64,22 +64,24 @@ class Chart extends Visualization {
       setTimeout(() => Plotly.relayout(this.chartContainer, this.getDecoratedLayout()));
     }
   }
-
+  
   hasNoData() {
     return this.getData().length === 0;
   }
-
+  
   render() {
     const { loading } = this.state;
     const hasNoData = !loading && this.hasNoData();
     return (<div className="chart-container">
       {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
       {loading && <div className="message">
-        {this.t('general:loading')}<br />
-        <img src="assets/loading-bubbles.svg" alt="" />
+        {this.t('general:loading')}<br/>
+        <img src="assets/loading-bubbles.svg" alt=""/>
       </div>}
       <ReactIgnore>
-        <div ref={(c) => { this.chartContainer = c; }} />
+        <div ref={(c) => {
+          this.chartContainer = c;
+        }}/>
       </ReactIgnore>
     </div>);
   }
@@ -87,7 +89,9 @@ class Chart extends Visualization {
 
 Chart.getFillerDatum = seed => Map(seed);
 
-Chart.getMaxField = data => data.flatten().filter((value, key) => value && key !== 'year' && key !== 'month').reduce(max, 0);
+Chart.getMaxField = data => data.flatten()
+.filter((value, key) => value && key !== 'year' && key !== 'month')
+.reduce(max, 0);
 
 Chart.UPDATABLE_FIELDS = ['data'];
 
