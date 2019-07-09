@@ -21,8 +21,8 @@ import java.util.Set;
  * @since 2019-04-01
  */
 @MappedSuperclass
-public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity implements Labelable,
-        SingleFileMetadatable {
+public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity
+        implements Labelable, SingleFileMetadatable {
     @ExcelExport(useTranslation = true,
             onlyForClass = {ProcurementPlan.class, Project.class, PurchaseRequisition.class, ProfessionalOpinion.class})
     private Date approvedDate;
