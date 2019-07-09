@@ -37,7 +37,6 @@ import java.util.Optional;
  */
 @Configuration
 @EnableCaching
-@Profile("!integration")
 @EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class CacheConfiguration {
     @Bean(name = "auditingDateTimeProvider")
@@ -63,6 +62,7 @@ public class CacheConfiguration {
     }
 
     @Bean(destroyMethod = "dispose", initMethod = "init")
+    @Profile("!integration")
     public ManagementService ehCacheManagementService(final EhCacheManagerFactoryBean factory) {
         final ManagementService managementService =
                 new ManagementService(factory.getObject(), mbeanServer, true, true, true, true);
