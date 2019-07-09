@@ -47,6 +47,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @SpringBean
     protected ChargeAccountService chargeAccountService;
 
+
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = purchaseRequisitionService;
@@ -91,6 +92,13 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         formDocs.required();
         editForm.add(formDocs);
         saveTerminateButton.setVisibilityAllowed(false);
+
+//        Release release = ocdsConversionService.createRelease(editForm.getModelObject());
+//        try {
+//            System.out.println(mapper.writeValueAsString(release));
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override

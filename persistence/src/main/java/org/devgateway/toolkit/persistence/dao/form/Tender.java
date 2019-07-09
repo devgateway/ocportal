@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -37,6 +39,7 @@ import java.util.function.Consumer;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id"),
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAutogeneratable {
     @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
@@ -91,6 +94,8 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return tenderNumber + " " + tenderTitle;
     }
@@ -189,6 +194,8 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
         return getLabel();
     }
 
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public BigDecimal getTotalAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (TenderItem item : tenderItems) {
@@ -207,6 +214,8 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getTitle() {
         return getTenderTitle();
     }

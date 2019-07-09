@@ -236,6 +236,18 @@ To build the module simply invoke
 
 This will create a fat jar project, and copy all front-end dependencies inside the jar, so you don't need dependency discovery on the front-end when the module starts up. We use the great [frontend-maven-plugin](https://github.com/eirslett/frontend-maven-plugin) to encapsulate node related tools functionality.
 
+In order to speed up building of frontend for backend developers, we have created a few maven profiles to help. This is how you can build the frontend using maven faster, for development use only:
+
+- build the dll bundle using the Maven profile `npm-dll`
+
+`mvn package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dmaven.compile.fork=true -P npm-dll -Xverify:none -XX:+TieredCompilation -XX:TieredStopAtLevel=1`
+
+Now you can build the regular ui module faster, by reusing the dll bundle, by using `npm-dev` 
+
+`mvn package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dmaven.compile.fork=true -P npm-dev -Xverify:none -XX:+TieredCompilation -XX:TieredStopAtLevel=1`
+
+If you change the frontend dependencies, you ned to run the `npm-dll` profile again, but other than that, the `/dll` folder is retained even between `mvn clean` goals
+
 ### Running the UI module as a Spring Boot fat jar
 
 As with any other module in OCVN this can be run as a java app:

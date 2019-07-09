@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 
 /**
@@ -16,6 +17,8 @@ public interface Statusable {
      * Default terminated scenario means the status was put to TERMINATED
      * @return
      */
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     default boolean isTerminated() {
         return DBConstants.Status.TERMINATED.equals(getStatus());
     }
@@ -23,6 +26,8 @@ public interface Statusable {
     /**
      * Determine if an Object can be exported to public portal, excel export, etc...
      */
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     default boolean isExportable() {
         return DBConstants.Status.APPROVED.equals(getStatus())
                 || DBConstants.Status.TERMINATED.equals(getStatus());

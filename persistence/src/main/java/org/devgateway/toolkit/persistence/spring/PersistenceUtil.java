@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.persistence.spring;
 
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 
 import java.util.Set;
 
@@ -21,5 +23,12 @@ public final class PersistenceUtil {
             return null;
         }
         return set.iterator().next();
+    }
+
+    public static <S extends Statusable> S getPublishable(S statusable) {
+        if (statusable != null && DBConstants.Status.PUBLISHABLE.contains(statusable.getStatus())) {
+            return statusable;
+        }
+        return null;
     }
 }

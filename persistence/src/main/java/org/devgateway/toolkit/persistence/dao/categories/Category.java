@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao.categories;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
@@ -33,6 +34,7 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @DiscriminatorColumn(length = Category.DTYPE_COLUMN_LENGTH)
 @Table(indexes = {@Index(columnList = "label"), @Index(columnList = "DTYPE")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Category extends AbstractAuditableEntity implements Serializable, Labelable {
     static final int DTYPE_COLUMN_LENGTH = 100;
 

@@ -1,15 +1,19 @@
 package org.devgateway.ocds.persistence.mongo;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -396,4 +400,51 @@ public class Document {
                 .isEquals();
     }
 
-}
+    public enum DocumentType {
+
+        TENDER_NOTICE("tenderNotice"),
+        AWARD_NOTICE("awardNotice"),
+        CONTRACT_NOTICE("contractNotice"),
+        PROJECT_PLAN("projectPlan"),
+        PROCUREMENT_PLAN("procurementPlan"),
+        EVALUATION_REPORTS("evaluationReports"),
+        X_APPROVED_PURCHASE_REQUISITION("x_approvedPurchaseRequisition"),
+        X_EVALUATION_PROFESSIONAL_OPINION("x_evaluationProfessionalOpinion"),
+        X_AWARD_ACCEPTANCE("x_awardAcceptance");
+
+        private final String value;
+        private static final Map<String, Document.DocumentType> CONSTANTS = new HashMap<>();
+
+        static {
+            for (Document.DocumentType c : values()) {
+                CONSTANTS.put(c.value, c);
+            }
+        }
+
+        DocumentType(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        @JsonValue
+        public String value() {
+            return this.value;
+        }
+
+        @JsonCreator
+        public static Document.DocumentType fromValue(String value) {
+            Document.DocumentType constant = CONSTANTS.get(value);
+            if (constant == null) {
+                throw new IllegalArgumentException(value);
+            } else {
+                return constant;
+            }
+        }
+    }
+
+
+    }

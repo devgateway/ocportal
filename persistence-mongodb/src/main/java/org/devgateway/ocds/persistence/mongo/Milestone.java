@@ -402,6 +402,58 @@ public class Milestone {
                 .isEquals();
     }
 
+    public enum MilestoneType {
+
+        PRE_PROCUREMENT("preProcurement"),
+        APPROVAL("approval"),
+        ENGAGEMENT("engagement"),
+        ASSESSMENT("assessment"),
+        DELIVERY("delivery"),
+        REPORTING("reporting"),
+        FINANCING("financing");
+
+
+        private final String value;
+        private static final Map<String, MilestoneType> CONSTANTS = new HashMap<>();
+
+        static {
+            for (MilestoneType c : values()) {
+                CONSTANTS.put(c.value, c);
+            }
+        }
+
+        MilestoneType(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+
+        @JsonValue
+        public String value() {
+            return this.value;
+        }
+
+        public static MilestoneType fromValue(String value) {
+            MilestoneType constant = CONSTANTS.get(value);
+            if (constant == null) {
+                throw new IllegalArgumentException(value);
+            } else {
+                return constant;
+            }
+        }
+
+        public static String toValue(MilestoneType type) {
+            if (type == null) {
+                return null;
+            }
+            return type.value;
+        }
+    }
+
+
     public enum Status {
 
         SCHEDULED("scheduled"),

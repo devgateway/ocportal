@@ -26,15 +26,22 @@ public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEnt
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OrderColumn(name = "index")
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     protected List<StatusChangedComment> statusComments = new ArrayList<>();
 
     @Transient
+    @org.springframework.data.annotation.Transient
+    @JsonIgnore
     private String newStatusComment;
 
     @Transient
+    @org.springframework.data.annotation.Transient
+    @JsonIgnore
     private Boolean visibleStatusComments = false;
 
     @Transient
+    @org.springframework.data.annotation.Transient
+    @JsonIgnore
     private Boolean visibleStatusLabel = true;
 
     @Override

@@ -239,8 +239,6 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
 
     @Override
     public void setLabel(String label) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

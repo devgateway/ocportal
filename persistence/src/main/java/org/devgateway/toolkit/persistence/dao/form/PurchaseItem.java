@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Labelable;
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -44,6 +46,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     public PlanItem getPlanItem() {
@@ -79,6 +82,8 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -89,6 +94,8 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }
@@ -99,6 +106,8 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return planItem != null ? planItem.getLabel() : "";
     }

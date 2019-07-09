@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
@@ -35,6 +36,7 @@ import java.util.function.Consumer;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
     @ExcelExport(separateSheet = true, useTranslation = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -45,12 +47,12 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
     @ExcelExport(separateSheet = true, name = "Purchase Requisitions")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "project")
-    @JsonIgnore
     private Set<PurchaseRequisition> purchaseRequisitions = new HashSet<>();
 
     @ExcelExport(useTranslation = true)
@@ -127,6 +129,8 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return projectTitle;
     }
@@ -165,11 +169,15 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     @Override
     @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return purchaseRequisitions;
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getTitle() {
         return getProjectTitle();
     }

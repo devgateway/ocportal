@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -28,12 +29,14 @@ import java.util.Collections;
 @Table(indexes = {@Index(columnList = "procurement_plan_id"),
         @Index(columnList = "number"),
         @Index(columnList = "name")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
     @ExcelExport(useTranslation = true)
@@ -66,6 +69,8 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
         return procurementPlan;
     }
@@ -75,6 +80,8 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return name;
     }
@@ -86,6 +93,8 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
 
     @Override
     @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }

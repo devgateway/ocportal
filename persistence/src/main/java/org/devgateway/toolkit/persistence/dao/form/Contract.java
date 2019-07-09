@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -32,6 +34,7 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Contract extends AbstractPurchaseReqMakueniEntity {
     @ExcelExport(useTranslation = true)
     private BigDecimal contractValue;
@@ -135,12 +138,16 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return null;
     }
 
     @Override
     @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }

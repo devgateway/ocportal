@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
@@ -43,10 +45,13 @@ import java.util.function.Consumer;
 @Table(indexes = {@Index(columnList = "project_id"),
         @Index(columnList = "purchaseRequestNumber"),
         @Index(columnList = "title")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
         TitleAutogeneratable {
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Project project;
 
     @ExcelExport(useTranslation = true)
@@ -137,7 +142,38 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         );
     }
 
+    @JsonProperty("tender")
+    public Tender getSingleTender() {
+        return PersistenceUtil.getNext(tender);
+    }
+
+    @JsonProperty("tenderQuotationEvaluation")
+    public TenderQuotationEvaluation getSingleTenderQuotationEvaluation() {
+        return PersistenceUtil.getNext(tenderQuotationEvaluation);
+    }
+
+    @JsonProperty("professionalOpinion")
+    public ProfessionalOpinion getSingleProfessionalOpinion() {
+        return PersistenceUtil.getNext(professionalOpinion);
+    }
+
+    @JsonProperty("awardNotification")
+    public AwardNotification getSingleAwardNotification() {
+        return PersistenceUtil.getNext(awardNotification);
+    }
+
+    @JsonProperty("awardAcceptance")
+    public AwardAcceptance getSingleAwardAcceptance() {
+        return PersistenceUtil.getNext(awardAcceptance);
+    }
+
+    @JsonProperty("contract")
+    public Contract getSingleContract() {
+        return PersistenceUtil.getNext(contract);
+    }
+
     @Override
+    @JsonIgnore
     public Project getProject() {
         return project;
     }
@@ -206,6 +242,8 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return title;
     }
@@ -215,6 +253,8 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         return getLabel();
     }
 
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public BigDecimal getAmount() {
         BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
@@ -336,6 +376,8 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
         if (project != null) {
             return project.getProcurementPlan();
@@ -345,6 +387,8 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
 
     @Override
     @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(tender));
     }
