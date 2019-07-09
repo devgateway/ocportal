@@ -65,6 +65,7 @@
   "tabs:eProcurement:title": "E-Procurement",
   "tabs:efficiency:title": "Efficiency",
   "tabs:overview:title": "Overview",
+  "tabs:tenders:title": "Tenders",
   "tabs:location:title": "Location",
   "charts:avgNrBids:xAxisTitle": "Year",
   "charts:avgNrBids:yAxisTitle": "Number",

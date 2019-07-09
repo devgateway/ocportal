@@ -3,6 +3,7 @@ import cn from 'classnames';
 import ReactDOM from 'react-dom';
 import OCApp from '../oce';
 import OverviewTab from '../oce/tabs/overview';
+import TendersTab from '../oce/tabs/tenders';
 import LocationTab from '../oce/tabs/location';
 import CompetitivenessTab from '../oce/tabs/competitiveness';
 import EfficiencyTab from '../oce/tabs/efficiency';
@@ -26,8 +27,9 @@ OCEDemoLocation.CENTER = [37, -100];
 class OCEMakueni extends OCApp {
   constructor(props) {
     super(props);
+    this.registerTab(TendersTab);
     this.registerTab(OverviewTab);
-    this.registerTab(OCEDemoLocation);
+    // this.registerTab(OCEDemoLocation);
     this.registerTab(CompetitivenessTab);
     this.registerTab(EfficiencyTab);
     this.registerTab(EProcurementTab);
