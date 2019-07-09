@@ -134,9 +134,9 @@ class OCEMakueni extends OCApp {
               <img src="assets/makueni-logo.png" alt="Makueni"/>
             </div>
             
-            <div className="header-icons language-switcher">
-              {this.languageSwitcher()}
-            </div>
+            {/*<div className="header-icons language-switcher">*/}
+            {/*  {this.languageSwitcher()}*/}
+            {/*</div>*/}
           </div>
           
           <div className="col-sm-7">
@@ -152,11 +152,11 @@ class OCEMakueni extends OCApp {
           </div>
         </header>
         <div className="header-tools row">
-          <div className="col-md-3">
-            {this.dashboardSwitcher()}
-          </div>
+          {/*<div className="col-md-3">*/}
+          {/*  {this.dashboardSwitcher()}*/}
+          {/*</div>*/}
           
-          <div className="col-md-6">
+          <div className="col-md-9">
           
           </div>
           <div className="col-md-3 export">
