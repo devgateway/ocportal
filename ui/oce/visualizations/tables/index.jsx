@@ -1,12 +1,12 @@
 import Visualization from '../../visualization';
-import backendYearFilterable from "../../backend-year-filterable";
+import backendYearFilterable from '../../backend-year-filterable';
 
-class Table extends backendYearFilterable(Visualization){
-  maybeFormat(number){
-    const {tables: tableStyling} = this.props.styling;
+class Table extends backendYearFilterable(Visualization) {
+  maybeFormat(number) {
+    const { tables: tableStyling } = this.props.styling;
     return tableStyling && tableStyling.currencyFormatter ?
-        tableStyling.currencyFormatter(number) :
-        number;
+      tableStyling.currencyFormatter(number) :
+      number;
   }
 }
 

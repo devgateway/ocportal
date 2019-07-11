@@ -1,6 +1,5 @@
 import Visualization from '../visualization';
-import { Set, List } from 'immutable';
-import { Map } from 'immutable';
+import { List, Set } from 'immutable';
 import DefaultComparison from '../comparison';
 import Chart from '../visualizations/charts/index';
 import { download } from '../tools';

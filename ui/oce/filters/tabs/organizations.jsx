@@ -1,7 +1,6 @@
 import Tab from './index';
 import ProcuringEntity from '../procuring-entity';
 import Supplier from '../supplier.jsx';
-import { Set } from 'immutable';
 
 class Organizations extends Tab {
   render() {

@@ -178,7 +178,7 @@ class OCApp extends React.Component {
       <div className="row filter compare">
         <div className={cn('col-md-12 filter-header', { selected: compareOpen })}
              onClick={_ => this.setState({ compareOpen: !compareOpen })}>
-          <i className="glyphicon glyphicon-tasks pull-left" />
+          <i className="glyphicon glyphicon-tasks pull-left"/>
           <div className="pull-left title">{this.t('header:comparison:title')}</div>
           <div className={'pull-right toggler ' + (compareOpen ? 'up' : 'down')}></div>
         </div>

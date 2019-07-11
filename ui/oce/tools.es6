@@ -1,7 +1,7 @@
 import URI from 'urijs';
 /**
- * Returns a function that will invoke `func` property on its argument
- * @param {Function} func
+ * Returns a function that will invoke `funcName` property on its argument
+ * @param {Function} funcName
  * @returns {Function}
  */
 export const callFunc = funcName => obj => obj[funcName]();

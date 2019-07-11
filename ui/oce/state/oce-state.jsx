@@ -1,5 +1,6 @@
 import { Map } from 'immutable';
 import State from './index';
+
 export const API_ROOT = '/api';
 
 export const OCE = new State({ name: 'oce' });
@@ -13,21 +14,24 @@ export const filters = CRD.input({
 const datelessFilters = CRD.mapping({
   name: 'datelessFilters',
   deps: [filters],
-  mapper: filters => filters.delete('years').delete('months'),
+  mapper: filters => filters.delete('years')
+  .delete('months'),
 });
 
 export const datefulFilters = CRD.mapping({
   name: 'datefulFilters',
   deps: [datelessFilters, filters],
-  mapper: (datelessFilters, filters) =>
+  mapper: (datelessFilters, filters) => {
     datelessFilters.set('year', filters.get('years'))
-      .set('month', filters.get('months'))
+    .set('month', filters.get('months'))
+  }
+  
 });
 
 const indicatorTypesMappingURL = CRD.input({
   name: 'indicatorTypesMappingURL',
   initial: `${API_ROOT}/indicatorTypesMapping`,
-})
+});
 
 export const indicatorTypesMapping = CRD.remote({
   name: 'indicatorTypesMapping',
