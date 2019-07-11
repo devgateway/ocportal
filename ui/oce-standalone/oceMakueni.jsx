@@ -7,11 +7,11 @@ import CompetitivenessTab from '../oce/tabs/competitiveness';
 import EfficiencyTab from '../oce/tabs/efficiency';
 import EProcurementTab from '../oce/tabs/e-procurement';
 import { fetchJson } from '../oce/tools';
+import Header from '../oce/layout/header';
 
 class OCEMakueni extends OCApp {
   constructor(props) {
     super(props);
-    // this.registerTab(MakueniTenders);
     this.registerTab(OverviewTab);
     // this.registerTab(OCEDemoLocation);
     this.registerTab(CompetitivenessTab);
@@ -112,43 +112,9 @@ class OCEMakueni extends OCApp {
   
   render() {
     return (
-      <div className="container-fluid dashboard-default"
-           onClick={() => this.setState({ menuBox: '' })}>
-        <header className="branding row">
-          <div className="col-sm-3">
-            <div className="logo-wrapper">
-              <img src="assets/makueni-logo.png" alt="Makueni"/>
-            </div>
-            
-            {/*<div className="header-icons language-switcher">*/}
-            {/*  {this.languageSwitcher()}*/}
-            {/*</div>*/}
-          </div>
-          
-          <div className="col-sm-7">
-            <div className="row">
-              <div className="navigation">
-                {this.navigation()}
-              </div>
-            </div>
-          </div>
-          
-          <div className="col-sm-2">
-            {this.loginBox()}
-          </div>
-        </header>
-        <div className="header-tools row">
-          {/*<div className="col-md-3">*/}
-          {/*  {this.dashboardSwitcher()}*/}
-          {/*</div>*/}
-          
-          <div className="col-md-9">
-          
-          </div>
-          <div className="col-md-3 export">
-            {this.exportBtn()}
-          </div>
-        </div>
+      <div className="container-fluid dashboard-default">
+        <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
+                selected="m-and-e"/>
         
         <div className="row content">
           <div className="col-xs-4 col-md-3 menu">
