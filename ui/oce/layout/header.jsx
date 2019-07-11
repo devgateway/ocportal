@@ -1,16 +1,30 @@
 import React from 'react';
 import translatable from '../translatable';
+import cn from 'classnames';
 
 import './Header.less';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
     super(props);
-    
+  
     this.state = {
       exporting: false,
-      selected: props.section || '',
+      selected: props.selected || '',
     };
+    
+    this.tabs = [
+      {
+        name: 'makueni',
+        title: 'Tenders',
+        icon: 'assets/icons/overview.svg'
+      },
+      {
+        name: 'm-and-e',
+        title: 'Charts',
+        icon: 'assets/icons/eprocurement.svg'
+      }
+    ];
     
     this.changeOption = this.changeOption.bind(this);
     this.isActive = this.isActive.bind(this);
@@ -60,23 +74,32 @@ export default class Header extends translatable(React.Component) {
     
     return (<div>
       <header className="branding row">
-        <div className="col-sm-6">
+        <div className="col-sm-8">
           <div className="logo-wrapper">
             <img src="assets/makueni-logo.png" alt="Makueni"/>
           </div>
         </div>
         
-        <div className="col-sm-6">
+        <div className="col-sm-4">
           <div className="row">
             <div className="navigation">
-              <div onClick={() => this.changeOption('makueni')}>
-                Tenders
-              </div>
-              
-              <div onClick={() => this.changeOption('m-and-e')}>
-                Charts
-              </div>
-            
+              {
+                this.tabs.map(tab => {
+                  return (<a
+                      key={tab.name}
+                      href="javascript:void(0);"
+                      className={cn('', { active: this.isActive(tab.name) })}
+                      onClick={() => this.changeOption(tab.name)}
+                    >
+                <span className="circle">
+                  <img className="nav-icon" alt="navigation icon" src={tab.icon}/>
+                </span>
+                      &nbsp;
+                      {tab.title}
+                    </a>
+                  );
+                })
+              }
             </div>
           </div>
         </div>
