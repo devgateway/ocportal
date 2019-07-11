@@ -1,11 +1,11 @@
 import translatable from '../translatable';
 
-class Page extends translatable(React.Component){
-  scrollTop(){
+class Page extends translatable(React.Component) {
+  scrollTop() {
     window.scrollTo(0, 0);
   }
-
-  componentDidMount(){
+  
+  componentDidMount() {
     this.scrollTop();
   }
 }
