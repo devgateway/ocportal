@@ -2,7 +2,7 @@ import React from 'react';
 import translatable from '../translatable';
 import cn from 'classnames';
 
-import './Header.less';
+import './header.less';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
@@ -70,8 +70,6 @@ export default class Header extends translatable(React.Component) {
   }
   
   render() {
-    console.log(this.state);
-    
     return (<div>
       <header className="branding row">
         <div className="col-sm-8">

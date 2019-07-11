@@ -48,6 +48,14 @@ public class Homepage extends BasePage {
         };
         add(dataEntryLink);
 
+        final Link<Void> publicPortalLink = new Link<Void>("publicPortalLink") {
+            @Override
+            public void onClick() {
+                setResponsePage(PublicPortalPage.class);
+            }
+        };
+        add(publicPortalLink);
+
         final Link<Void> dataExport = new Link<Void>("dataExport") {
             @Override
             public void onClick() {
