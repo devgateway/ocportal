@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import ViewSwitcher from '../oce/switcher.jsx';
 import './style.less';
 import OCEMakueni from './oceMakueni';
-import MakueniTenders from '../oce/makueni/makueniTenders';
+import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
 const translations = {

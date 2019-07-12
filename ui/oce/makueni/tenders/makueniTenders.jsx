@@ -1,9 +1,7 @@
-import CRDPage from '../corruption-risk/page';
-import Header from '../layout/header';
-import BootstrapTableWrapper from '../corruption-risk/archive/bootstrap-table-wrapper';
-import { mtFilters, page, pageSize, tendersCountRemote, tendersData } from './state';
-import { mkContractLink } from '../corruption-risk/tools';
-import { Map } from 'immutable';
+import CRDPage from '../../corruption-risk/page';
+import Header from '../../layout/header';
+import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
+import { page, pageSize, tendersCountRemote, tendersData } from './state';
 
 import './makueniTenders.less';
 
@@ -89,19 +87,16 @@ class MakueniTenders extends CRDPage {
             onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
             count={count}
             columns={[{
-              title: 'Tender name',
-              dataField: 'name',
+              title: 'ID',
+              dataField: 'id',
               width: '20%',
-              dataFormat: mkContractLink(navigate),
+              // dataFormat: mkContractLink(navigate),
             }, {
-              title: 'Award status',
-              dataField: 'awardStatus',
+              title: 'Department',
+              dataField: 'department',
             }, {
-              title: 'Tender amount',
-              dataField: 'tenderAmount',
-            }, {
-              title: 'Contracts',
-              dataField: 'awardAmount',
+              title: 'Fiscal Year',
+              dataField: 'fiscalYear',
             }]}
           />
         </div>

@@ -1,4 +1,4 @@
-import { API_ROOT, OCE } from '../state/oce-state';
+import { API_ROOT, OCE } from '../../state/oce-state';
 import { Map } from 'immutable';
 
 // makeuni tenders state
@@ -45,10 +45,14 @@ const tendersRemote = mtState.remote({
 export const tendersData = mtState.mapping({
   name: 'tendersData',
   deps: [tendersRemote],
-  mapper: raw => raw
-    // raw.map(datum => {
-    //   return datum;
-    // })
+  mapper: raw =>
+    raw.map(datum => {
+      return {
+        id: datum.id,
+        department: datum.department.label,
+        fiscalYear: datum.fiscalYear.label,
+      };
+    })
 });
 
 const mtCountEP = mtState.input({
