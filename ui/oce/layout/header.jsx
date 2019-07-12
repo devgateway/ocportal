@@ -7,7 +7,7 @@ import './header.less';
 export default class Header extends translatable(React.Component) {
   constructor(props) {
     super(props);
-    
+  
     this.state = {
       exporting: false,
       selected: props.selected || '',
@@ -15,9 +15,14 @@ export default class Header extends translatable(React.Component) {
     
     this.tabs = [
       {
-        name: 'makueni',
+        name: 'tender',
         title: 'Tenders',
         icon: 'assets/icons/efficiency.svg'
+      },
+      {
+        name: 'procurement-plan',
+        title: 'Procurement Plan',
+        icon: 'assets/icons/compare.svg'
       },
       {
         name: 'm-and-e',

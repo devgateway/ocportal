@@ -3,6 +3,7 @@ import ViewSwitcher from '../oce/switcher.jsx';
 import './style.less';
 import OCEMakueni from './oceMakueni';
 import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
+import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
 const translations = {
@@ -44,7 +45,8 @@ CorruptionRickDashboard.STYLING.charts.traceColors = ['#234e6d', '#3f7499', '#80
 class OceSwitcher extends ViewSwitcher {
 }
 
-OceSwitcher.views['makueni'] = MakueniTenders;
+OceSwitcher.views['tender'] = MakueniTenders;
+OceSwitcher.views['procurement-plan'] = MakueniProcurementPlans;
 OceSwitcher.views['m-and-e'] = OCEMakueni;
 OceSwitcher.views.crd = CorruptionRickDashboard;
 

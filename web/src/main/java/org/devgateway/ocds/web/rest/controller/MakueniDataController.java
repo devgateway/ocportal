@@ -39,4 +39,22 @@ public class MakueniDataController extends GenericOCDSController {
 
         return mongoTemplate.count(new Query(), ProcurementPlan.class);
     }
+
+    @ApiOperation(value = "Fetch Makueni Procurement Plans")
+    @RequestMapping(value = "/api/makueni/procurementPlans",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<ProcurementPlan> makueniProcurementPlans(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
+
+        return mongoTemplate.findAll(ProcurementPlan.class);
+    }
+
+    @ApiOperation(value = "Counts Makueni Procurement Plans")
+    @RequestMapping(value = "/api/makueni/procurementPlansCount",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public Long makueniProcurementPlansCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
+
+        return mongoTemplate.count(new Query(), ProcurementPlan.class);
+    }
 }
