@@ -3,7 +3,7 @@ import ViewSwitcher from '../oce/switcher.jsx';
 import './style.less';
 import OCEMakueni from './oceMakueni';
 import MakueniTenders from '../oce/makueni/makueniTenders';
-// import CorruptionRickDashboard from '../oce/corruption-risk';
+import CorruptionRickDashboard from '../oce/corruption-risk';
 
 const translations = {
   en_US: require('../../web/public/languages/en_US.json'),
@@ -38,16 +38,15 @@ const styling = {
 OCEMakueni.STYLING = styling;
 OCEMakueni.TRANSLATIONS = translations;
 
-// TODO
-// CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
-// CorruptionRickDashboard.STYLING.charts.traceColors = ['#234e6d', '#3f7499', '#80b1d3', '#afd5ee', '#d9effd'];
+CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
+CorruptionRickDashboard.STYLING.charts.traceColors = ['#234e6d', '#3f7499', '#80b1d3', '#afd5ee', '#d9effd'];
 
 class OceSwitcher extends ViewSwitcher {
 }
 
 OceSwitcher.views['makueni'] = MakueniTenders;
 OceSwitcher.views['m-and-e'] = OCEMakueni;
-// OceSwitcher.views.crd = CorruptionRickDashboard;
+OceSwitcher.views.crd = CorruptionRickDashboard;
 
 ReactDOM.render(<OceSwitcher
   translations={translations.en_US}
