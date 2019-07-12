@@ -44,7 +44,8 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/procurementPlans",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    public List<ProcurementPlan> makueniProcurementPlans(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
+    public List<ProcurementPlan> makueniProcurementPlans(
+            @ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
 
         return mongoTemplate.findAll(ProcurementPlan.class);
     }
