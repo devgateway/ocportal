@@ -15,9 +15,14 @@ export default class Header extends translatable(React.Component) {
     
     this.tabs = [
       {
-        name: 'makueni',
+        name: 'tender',
         title: 'Tenders',
-        icon: 'assets/icons/overview.svg'
+        icon: 'assets/icons/efficiency.svg'
+      },
+      {
+        name: 'procurement-plan',
+        title: 'Procurement Plan',
+        icon: 'assets/icons/compare.svg'
       },
       {
         name: 'm-and-e',
@@ -104,9 +109,16 @@ export default class Header extends translatable(React.Component) {
       </header>
       
       <div className="header-tools row">
-        <div className="col-md-9">
-        
+        <div className="col-md-3 total-item">
+          <span className="total-label">Total Tenders</span>
+          <span className="total-number">123</span>
         </div>
+        <div className="col-md-4 total-item">
+          <span className="total-label">Total Tender Amount</span>
+          <span className="total-number">100,000</span>
+        </div>
+        
+        <div className="col-md-2"></div>
         <div className="col-md-3 export">
           {this.exportBtn()}
         </div>

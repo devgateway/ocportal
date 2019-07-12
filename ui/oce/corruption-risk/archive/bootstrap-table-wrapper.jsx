@@ -33,15 +33,15 @@ export default class BootstrapTableWrapper extends React.PureComponent {
       >
         <TableHeaderColumn dataField="id" isKey hidden/>
         {columns.map(({ title, ...props }) => (
-          <TableHeaderColumn {...props}>
+          <TableHeaderColumn key={title} {...props}>
             {title}
           </TableHeaderColumn>
         ))}
       </BootstrapTable>
-    )
+    );
   }
 }
 
 BootstrapTableWrapper.defaultProps = {
   bordered: false
-}
+};
