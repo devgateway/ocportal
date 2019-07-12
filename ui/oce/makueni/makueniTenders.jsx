@@ -1,8 +1,9 @@
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
 import BootstrapTableWrapper from '../corruption-risk/archive/bootstrap-table-wrapper';
-import { page, pageSize, tendersCountRemote, tendersData } from './state';
+import { mtFilters, page, pageSize, tendersCountRemote, tendersData } from './state';
 import { mkContractLink } from '../corruption-risk/tools';
+import { Map } from 'immutable';
 
 import './makueniTenders.less';
 
@@ -10,14 +11,15 @@ import './makueniTenders.less';
 const NAME = 'MakueniTenders';
 
 class MakueniTenders extends CRDPage {
+  
   constructor(props) {
     super(props);
     
     this.state = {
       data: []
     };
-  
-    console.log("------------------------------------------------");
+    
+    console.log('------------------------------------------------');
   }
   
   componentDidMount() {
@@ -51,8 +53,16 @@ class MakueniTenders extends CRDPage {
     });
   }
   
+  shouldComponentUpdate(nextProps, nextState) {
+    return JSON.stringify(this.state) !== JSON.stringify(nextState)
+      || JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  }
+  
+  
   render() {
     console.log(JSON.stringify(this.state, null, '\t'));
+    
+    // mtFilters.assign('[[AAAA]]', new Map({ age: 5 }));
     
     const { data, count } = this.state;
     const { navigate } = this.props;
@@ -84,49 +94,16 @@ class MakueniTenders extends CRDPage {
               width: '20%',
               dataFormat: mkContractLink(navigate),
             }, {
-              title: 'OCID',
-              dataField: 'id',
-              dataFormat: mkContractLink(navigate),
-            }, {
               title: 'Award status',
               dataField: 'awardStatus',
             }, {
               title: 'Tender amount',
               dataField: 'tenderAmount',
             }, {
-              title: this.t('crd:contracts:list:awardAmount'),
+              title: 'Contracts',
               dataField: 'awardAmount',
-            }, {
-              title: 'Number of bidders',
-              dataField: 'nrBidders',
-            }, {
-              title: 'Number of flags',
-              dataField: 'nrFlags',
             }]}
           />
-          
-          {/*<TendersList*/}
-          {/*  {...wireProps(this)}*/}
-          {/*  requestNewData={(_, data) => this.setState({ table: data })}*/}
-          {/*  dataEP="procuringEntitiesByFlags"*/}
-          {/*  countEP="procuringEntitiesByFlags/count"*/}
-          {/*  filters={filters}*/}
-          {/*  // searchQuery={searchQuery}*/}
-          {/*  // navigate={navigate}*/}
-          {/*/>*/}
-          
-          {/*<Archive*/}
-          {/*  {...wireProps(this)}*/}
-          {/*  requestNewData={this.requestNewData.bind(this)}*/}
-          {/*  searchQuery={searchQuery}*/}
-          {/*  doSearch={doSearch}*/}
-          {/*  navigate={navigate}*/}
-          {/*  className="procuring-entities-page"*/}
-          {/*  topSearchPlaceholder={this.t('crd:procuringEntities:top-search')}*/}
-          {/*  List={TendersList}*/}
-          {/*  dataEP="procuringEntitiesByFlags"*/}
-          {/*  countEP="procuringEntitiesByFlags/count"*/}
-          {/*/>*/}
         </div>
       </div>
     

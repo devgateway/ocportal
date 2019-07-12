@@ -24,18 +24,16 @@ const filters = mtState.mapping({
   name: 'filters',
   deps: [mtFilters, page, pageSize],
   mapper: (mtFilters, page, pageSize) => {
-    console.log('>>> change!');
-    console.log(JSON.stringify(mtFilters, null, '\t'));
-    
     return mtFilters
     .set('pageSize', pageSize)
-    .set('pageNumber', page - 1);
+    .set('pageNumber', page === 0 ? page : page - 1);
   }
 });
 
+
 const mtEP = mtState.input({
   name: 'makueniTendersEP',
-  initial: `${API_ROOT}/flaggedRelease/all`,
+  initial: `${API_ROOT}/makueni/tenders`,
 });
 
 const tendersRemote = mtState.remote({
@@ -47,15 +45,15 @@ const tendersRemote = mtState.remote({
 export const tendersData = mtState.mapping({
   name: 'tendersData',
   deps: [tendersRemote],
-  mapper: raw =>
-    raw.map(datum => {
-      return datum;
-    })
+  mapper: raw => raw
+    // raw.map(datum => {
+    //   return datum;
+    // })
 });
 
 const mtCountEP = mtState.input({
   name: 'makueniTendersCountEP',
-  initial: `${API_ROOT}/flaggedRelease/count`,
+  initial: `${API_ROOT}/makueni/tendersCount`,
 });
 
 export const tendersCountRemote = mtState.remote({
