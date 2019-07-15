@@ -1,9 +1,12 @@
 import CRDPage from '../../corruption-risk/page';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
-import { page, pageSize, ppCountRemote, ppData } from './state';
+import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
 
 import '../makueni.less';
+import FiltersWrapper from '../filters/FiltersWrapper';
+import FilterItem from '../filters/FilterItem';
+import FilterItemDep from '../filters/FilterItemDep';
 
 
 const NAME = 'MakueniPP';
@@ -56,6 +59,9 @@ class MakueniProcurementPlans extends CRDPage {
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
   
+  filters() {
+    return <FiltersWrapper filters={ppFilters} translations={this.props.translations}/>;
+  }
   
   render() {
     console.log(JSON.stringify(this.state, null, '\t'));
@@ -72,7 +78,12 @@ class MakueniProcurementPlans extends CRDPage {
       
       <div className="makueni-procurement-plan content row">
         <div className="col-md-3 filters">
-          <h3>Filters</h3>
+          <div className="row">
+            <div className="filters-hint col-md-12">
+              {this.t('filters:hint')}
+            </div>
+            {this.filters()}
+          </div>
         </div>
         
         <div className="col-md-9">
