@@ -63,9 +63,11 @@ public class MakueniDataController extends GenericOCDSController {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
         final Criteria criteria = new Criteria().andOperator(
-                createFilterCriteria("department._id", filter.getDepartment()));
+                createFilterCriteria("department._id", filter.getDepartment()),
+                createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
-        final Aggregation aggregation = newAggregation(match(criteria));
+        final Aggregation aggregation = newAggregation(match(criteria),
+                project("formDocs", "department", "fiscalYear", "status", "approvedDate"));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", ProcurementPlan.class)
                 .getMappedResults();
@@ -94,9 +96,25 @@ public class MakueniDataController extends GenericOCDSController {
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
-
     }
 
+    @ApiOperation(value = "Display the available Procurement Plan FY.")
+    @RequestMapping(value = "/api/makueni/filters/fiscalYears", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> getFiscalYears() {
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final DBObject project = new BasicDBObject("_id._id", 1);
+        project.put("_id.label", "$_id.name");
+        project.put("_id.startDate", 1);
+        project.put("_id.endDate", 1);
+
+        final Aggregation aggregation = newAggregation(project("fiscalYear", Fields.UNDERSCORE_ID),
+                group("fiscalYear"), new CustomOperation(new Document("$project", project)));
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
+    }
 
     private Criteria createFilterCriteria(final String filterName, final Object filterValues) {
         if (filterValues == null) {

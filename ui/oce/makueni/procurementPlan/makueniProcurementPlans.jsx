@@ -2,12 +2,9 @@ import CRDPage from '../../corruption-risk/page';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
+import FiltersWrapper from '../filters/FiltersWrapper';
 
 import '../makueni.less';
-import FiltersWrapper from '../filters/FiltersWrapper';
-import FilterItem from '../filters/FilterItem';
-import FilterItemDep from '../filters/FilterItemDep';
-
 
 const NAME = 'MakueniPP';
 

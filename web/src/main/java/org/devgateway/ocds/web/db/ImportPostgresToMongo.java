@@ -129,7 +129,9 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("status", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("department.label", Sort.Direction.ASC));
+                new Index().on("department._id", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("fiscalYear._id", Sort.Direction.ASC));
 
 
         // clear cache
@@ -184,6 +186,10 @@ public class ImportPostgresToMongo {
      * @return
      */
     private <S extends Statusable> List<S> filterNotExportable(final Collection<S> collection) {
+        if (collection == null || collection.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         return collection.parallelStream()
                 .filter(item -> item.isExportable())
                 .collect(Collectors.toList());

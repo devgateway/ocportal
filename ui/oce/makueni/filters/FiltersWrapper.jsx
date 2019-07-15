@@ -3,6 +3,7 @@ import Component from '../../pure-render-component';
 import cn from 'classnames';
 import FilterItemDep from './FilterItemDep';
 import { Map } from 'immutable';
+import FilterItemFY from './FilterItemFY';
 
 class FiltersWrapper extends translatable(Component) {
   constructor(props) {
@@ -62,6 +63,6 @@ class FiltersWrapper extends translatable(Component) {
   }
 }
 
-FiltersWrapper.ITEMS = [FilterItemDep];
+FiltersWrapper.ITEMS = [FilterItemDep, FilterItemFY];
 
 export default FiltersWrapper;

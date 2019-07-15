@@ -8,7 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class MakueniFilterPagingRequest extends TextSearchRequest {
     @ApiModelProperty(value = "Department identifier")
-    Long department;
+    private Long department;
+
+    @ApiModelProperty(value = "Fiscal Year identifier")
+    private Long fiscalYear;
 
     public Long getDepartment() {
         return department;
@@ -16,5 +19,13 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
 
     public void setDepartment(final Long department) {
         this.department = department;
+    }
+
+    public Long getFiscalYear() {
+        return fiscalYear;
+    }
+
+    public void setFiscalYear(final Long fiscalYear) {
+        this.fiscalYear = fiscalYear;
     }
 }
