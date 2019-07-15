@@ -48,7 +48,7 @@ import java.util.function.Consumer;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
         TitleAutogeneratable {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     @org.springframework.data.annotation.Transient

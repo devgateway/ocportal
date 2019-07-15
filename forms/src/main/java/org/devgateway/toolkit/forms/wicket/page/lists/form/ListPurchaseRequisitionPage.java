@@ -107,7 +107,7 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
             @Override
             public void populateItem(final Item<ICellPopulator<PurchaseRequisition>> cellItem, final String componentId,
                                      final IModel<PurchaseRequisition> model) {
-                if (DBConstants.Status.PUBLISHABLE.contains(model.getObject().getStatus())) {
+                if (DBConstants.Status.EXPORTABLE.contains(model.getObject().getStatus())) {
                     cellItem.add(new ListPurchaseRequisitionPage.OcdsPanel(componentId,
                             new Model<>(model.getObject().getId())));
                 } else {

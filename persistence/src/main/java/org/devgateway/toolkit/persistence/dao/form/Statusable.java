@@ -29,7 +29,6 @@ public interface Statusable {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     default boolean isExportable() {
-        return DBConstants.Status.APPROVED.equals(getStatus())
-                || DBConstants.Status.TERMINATED.equals(getStatus());
+        return DBConstants.Status.EXPORTABLE.contains(getStatus());
     }
 }

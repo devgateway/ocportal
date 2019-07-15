@@ -379,7 +379,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             return;
         }
         S o = supplier.get();
-        if (o instanceof Statusable && PersistenceUtil.getPublishable((Statusable) o) == null) {
+        if (o instanceof Statusable && !((Statusable) o).isExportable()) {
             return;
         }
         if (!ObjectUtils.isEmpty(o)) {
@@ -396,7 +396,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         }
 
         Collection<S> o = supplier.get();
-        if (o instanceof Statusable && PersistenceUtil.getPublishable((Statusable) o) == null) {
+        if (o instanceof Statusable && !((Statusable) o).isExportable()) {
             return;
         }
         if (!ObjectUtils.isEmpty(o)) {
@@ -525,9 +525,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         safeSet(
                 ocdsAward.getDocuments()::add,
-                () -> Optional.ofNullable(PersistenceUtil.getPublishable(
-                        awardNotification.getPurchaseRequisition().getSingleAwardAcceptance()))
-                        .map(AwardAcceptance::getFormDoc).orElse(null),
+                () -> Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
+                        .filter(Statusable::isExportable).map(AwardAcceptance::getFormDoc).orElse(null),
                 this::storeAsDocumentAwardAcceptance
         );
 
@@ -536,8 +535,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         //from award acceptance (if any)
         safeSet(
                 ocdsAward::setValue,
-                () -> Optional.ofNullable(PersistenceUtil.getPublishable(
-                        awardNotification.getPurchaseRequisition().getSingleAwardAcceptance()))
+                () -> Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
+                        .filter(Statusable::isExportable)
                         .map(AwardAcceptance::getAcceptedAwardValue).orElse(null),
                 this::convertAmount
         );
