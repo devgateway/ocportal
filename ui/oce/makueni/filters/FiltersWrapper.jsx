@@ -2,7 +2,7 @@ import translatable from '../../translatable';
 import Component from '../../pure-render-component';
 import cn from 'classnames';
 import FilterItemDep from './FilterItemDep';
-import { ppFilters } from '../procurementPlan/state';
+import { Map } from 'immutable';
 
 class FiltersWrapper extends translatable(Component) {
   constructor(props) {
@@ -25,8 +25,7 @@ class FiltersWrapper extends translatable(Component) {
   }
   
   reset() {
-    // TODO reset!
-    this.props.onUpdate(Map());
+    this.props.filters.assign('[[FiltersWrapper]]', Map());
   }
   
   listItems() {
@@ -40,21 +39,18 @@ class FiltersWrapper extends translatable(Component) {
           <div className={'pull-right toggler ' + (expanded.has(index) ? 'up' : 'down')}></div>
         </div>
         
-        {expanded.has(index)
-          ? <div className="col-md-12">
-            <Item filters={this.props.filters}/>
-            
-            <section className="buttons">
-              <button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>
-                {this.t('filters:apply')}
-              </button>
-              <button className="btn btn-reset pull-right" onClick={e => this.reset()}>
-                {this.t('filters:reset')}
-              </button>
-            </section>
-          </div>
-          : null
-        }
+        <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
+          <Item filters={this.props.filters}/>
+          
+          <section className="buttons">
+            <button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>
+              {this.t('filters:apply')}
+            </button>
+            <button className="btn btn-reset pull-right" onClick={e => this.reset()}>
+              {this.t('filters:reset')}
+            </button>
+          </section>
+        </div>
       </div>
     );
   }

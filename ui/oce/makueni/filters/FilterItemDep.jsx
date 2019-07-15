@@ -2,7 +2,6 @@ import { API_ROOT } from '../../state/oce-state';
 import { ppState } from '../procurementPlan/state';
 import FilterItem from './FilterItem';
 import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
-import { PEInfo } from '../../corruption-risk/procuring-entities/single/state';
 
 class FilterItemDep extends FilterItem {
   
@@ -10,71 +9,81 @@ class FilterItemDep extends FilterItem {
     super(props);
     
     this.state = {
-      loaded: false
+      selected: 'all'
     };
     
     this.filterEP = ppState.input({
-      name: 'filterEP',
+      name: 'filterDepEP',
       initial: `${API_ROOT}/makueni/filters/departments`,
     });
     
     this.filterRemote = ppState.remote({
-      name: 'filterRemote',
+      name: 'filterDepRemote',
       url: this.filterEP,
     });
     
     this.filterData = ppState.mapping({
-      name: 'filterData',
+      name: 'filterDepData',
       deps: [this.filterRemote],
       mapper: data => this.setState({ data: data })
     });
-    
-    console.log('>>>>>>');
-    
+  
     this.handleChange = this.handleChange.bind(this);
   }
   
   componentDidMount() {
-    if (!this.state.loaded) {
-      // TODO - change this in upper class
+    if (this.state.data === undefined) {
       this.filterData.getState(this.constructor.getName());
-      
-      this.setState({ loaded: true });
     }
+  
+    this.props.filters.addListener('[[FilterItemDep]]', () => this.updateBindings());
+  }
+  
+  componentWillUnmount() {
+    this.props.filters.removeListener('[[FilterItemDep]]');
+  }
+  
+  updateBindings() {
+    Promise.all([
+      this.props.filters.getState('[[FilterItemDep]]'),
+    ])
+    .then(([item]) => {
+      // update internal state on reset
+      if (item.get('department') === undefined) {
+        this.setState({ selected: 'all' })
+      }
+    });
   }
   
   handleChange(e) {
     const { filters } = this.props;
     const filterVal = e.target.value;
-  
-    filters.getState().then(value => {
+    
+    filters.getState()
+    .then(value => {
       if (filterVal === 'all') {
-        filters.assign('Department Filter', value.set("department", undefined));
+        filters.assign('[[FilterItemDep]]', value.set('department', undefined));
       } else {
-        filters.assign('Department Filter', value.set("department", filterVal));
+        filters.assign('[[FilterItemDep]]', value.set('department', filterVal));
       }
     });
     
-    
+    this.setState({ selected: filterVal })
   }
   
   render() {
-    const { data } = this.state;
-    
-    console.log(this.state);
+    const { data, selected } = this.state;
     
     return (
-      <FormGroup controlId="formControlsSelect">
+      <FormGroup>
         <ControlLabel>Select a Department</ControlLabel>
-        <FormControl componentClass="select" placeholder="select" onChange={this.handleChange}>
+        <FormControl componentClass="select" placeholder="select" onChange={this.handleChange} value={selected}>
           <option value="all">All</option>
           {
             data !== undefined
-              ? data.map(item => <option key={item.code} value={item._id}>{item.label}</option>)
+              ? data.map(item => <option key={item.label} value={item._id}>{item.label}</option>)
               : null
           }
-          {/*<option value="select">select</option>*/}
-          {/*<option value="other">...</option>*/}
         </FormControl>
       </FormGroup>
     );

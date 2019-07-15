@@ -64,10 +64,6 @@ class MakueniProcurementPlans extends CRDPage {
   }
   
   render() {
-    console.log(JSON.stringify(this.state, null, '\t'));
-    
-    // mtFilters.assign('[[AAAA]]', new Map({ age: 5 }));
-    
     const { data, count } = this.state;
     const { navigate } = this.props;
     
