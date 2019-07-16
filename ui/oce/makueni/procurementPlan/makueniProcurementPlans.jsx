@@ -60,6 +60,15 @@ class MakueniProcurementPlans extends CRDPage {
     return <FiltersWrapper filters={ppFilters} translations={this.props.translations}/>;
   }
   
+  ppLink(navigate) {
+    return (ppId) => (
+      <a href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
+         className="pp-link">
+        More Details
+      </a>
+    );
+  }
+  
   render() {
     const { data, count } = this.state;
     const { navigate } = this.props;
@@ -94,7 +103,7 @@ class MakueniProcurementPlans extends CRDPage {
               title: 'ID',
               dataField: 'id',
               width: '20%',
-              // dataFormat: mkContractLink(navigate),
+              dataFormat: this.ppLink(navigate),
             }, {
               title: 'Department',
               dataField: 'department',
