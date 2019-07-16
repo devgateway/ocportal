@@ -4,21 +4,27 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
+import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -35,6 +41,10 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 // @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
 // @Cacheable
 public class MakueniDataController extends GenericOCDSController {
+    private static final Logger logger = LoggerFactory.getLogger(MakueniDataController.class);
+
+    @Autowired
+    private ProcurementPlanMongoRepository procurementPlanMongoRepository;
 
     @ApiOperation(value = "Fetch Makueni Tenders")
     @RequestMapping(value = "/api/makueni/tenders",
@@ -79,6 +89,20 @@ public class MakueniDataController extends GenericOCDSController {
             produces = "application/json")
     public Integer makueniProcurementPlansCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
         return makueniProcurementPlans(filter).size();
+    }
+
+    @RequestMapping(value = "/api/makueni/procurementPlan/id/{id:^[0-9\\-]*$}",
+            method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    @ApiOperation(value = "Finds ProcurementPlan by the given id")
+    public ProcurementPlan procurementPlanById(@PathVariable final Long id) {
+        final Optional<ProcurementPlan> procurementPlan = procurementPlanMongoRepository.findById(id);
+
+        if (procurementPlan.isPresent()) {
+            return procurementPlan.get();
+        } else {
+            logger.error("We didn't found a ProcurementPlan with the ID: " + id);
+            return null;
+        }
     }
 
     @ApiOperation(value = "Display the available Procurement Plan Departments.")

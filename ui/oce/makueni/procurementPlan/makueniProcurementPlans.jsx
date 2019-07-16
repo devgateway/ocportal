@@ -5,6 +5,7 @@ import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
 import FiltersWrapper from '../filters/FiltersWrapper';
 
 import '../makueni.less';
+import ProcurementPlan from './single/procurementPlan';
 
 const NAME = 'MakueniPP';
 
@@ -21,6 +22,8 @@ class MakueniProcurementPlans extends CRDPage {
   }
   
   componentDidMount() {
+    super.componentDidMount();
+    
     ppData.addListener(NAME, () => this.updateBindings());
     page.addListener(NAME, () => this.updateBindings());
     pageSize.addListener(NAME, () => this.updateBindings());
@@ -71,7 +74,8 @@ class MakueniProcurementPlans extends CRDPage {
   
   render() {
     const { data, count } = this.state;
-    const { navigate } = this.props;
+    const { navigate, route } = this.props;
+    const [page, id] = route;
     
     return (<div className="container-fluid dashboard-default">
       
@@ -89,29 +93,35 @@ class MakueniProcurementPlans extends CRDPage {
         </div>
         
         <div className="col-md-9">
-          <h1>Makueni Procurement Plans</h1>
-          
-          <BootstrapTableWrapper
-            bordered
-            data={data}
-            page={this.state.page}
-            pageSize={this.state.pageSize}
-            onPageChange={newPage => page.assign(NAME, newPage)}
-            onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
-            count={count}
-            columns={[{
-              title: 'ID',
-              dataField: 'id',
-              width: '20%',
-              dataFormat: this.ppLink(navigate),
-            }, {
-              title: 'Department',
-              dataField: 'department',
-            }, {
-              title: 'Fiscal Year',
-              dataField: 'fiscalYear',
-            }]}
-          />
+          {
+            page === undefined
+              ? <div>
+                <h1>Makueni Procurement Plans</h1>
+                
+                <BootstrapTableWrapper
+                  bordered
+                  data={data}
+                  page={this.state.page}
+                  pageSize={this.state.pageSize}
+                  onPageChange={newPage => page.assign(NAME, newPage)}
+                  onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
+                  count={count}
+                  columns={[{
+                    title: 'ID',
+                    dataField: 'id',
+                    width: '20%',
+                    dataFormat: this.ppLink(navigate),
+                  }, {
+                    title: 'Department',
+                    dataField: 'department',
+                  }, {
+                    title: 'Fiscal Year',
+                    dataField: 'fiscalYear',
+                  }]}
+                />
+              </div>
+              : <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}/>
+          }
         </div>
       </div>
     
