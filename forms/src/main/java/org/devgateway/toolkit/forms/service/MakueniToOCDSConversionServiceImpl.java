@@ -14,7 +14,9 @@ import org.devgateway.ocds.persistence.mongo.Detail;
 import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Item;
+import org.devgateway.ocds.persistence.mongo.MakueniItem;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
+import org.devgateway.ocds.persistence.mongo.MakueniTender;
 import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.Period;
@@ -25,6 +27,7 @@ import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -72,8 +75,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private MongoFileStorageService mongoFileStorageService;
 
     @Override
-    public Tender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
-        Tender ocdsTender = new Tender();
+    public MakueniTender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
+        MakueniTender ocdsTender = new MakueniTender();
         safeSet(ocdsTender::setId, tender::getId, this::longIdToString);
         safeSet(ocdsTender::setTitle, tender::getTitle);
         safeSet(ocdsTender::setTenderPeriod, () -> tender, this::createTenderPeriod);
@@ -82,7 +85,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsTender::setDescription, tender::getObjective);
         safeSet(ocdsTender::setProcuringEntity, tender::getIssuedBy, this::createProcuringEntity);
         safeSet(ocdsTender::setValue, tender::getTenderValue, this::convertAmount);
-
+        safeSet(ocdsTender::setTargetGroup, tender::getTargetGroup, this::categoryLabel);
         safeSet(ocdsTender::setStatus, () -> tender, this::createTenderStatus);
         safeSet(ocdsTender::setNumberOfTenderers,
                 () -> tender.getPurchaseRequisition().getSingleTenderQuotationEvaluation(),
@@ -124,6 +127,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsProcuringEntity::setName, procuringEntity::getLabel);
         safeSet(ocdsProcuringEntity::setContactPoint, () -> procuringEntity, this::createProcuringEntityContactPoint);
         return ocdsProcuringEntity;
+    }
+
+    public String categoryLabel(Category category) {
+        return category.getLabel();
     }
 
     public ContactPoint createProcuringEntityContactPoint(ProcuringEntity procuringEntity) {
@@ -448,13 +455,15 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     @Override
-    public Item createPlanningItem(PurchaseItem purchaseItem) {
-        Item ocdsItem = new Item();
+    public MakueniItem createPlanningItem(PurchaseItem purchaseItem) {
+        MakueniItem ocdsItem = new MakueniItem();
         safeSet(ocdsItem::setId, purchaseItem::getId, this::longIdToString);
         safeSet(ocdsItem::setDescription, purchaseItem::getLabel);
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, Integer::doubleValue);
         safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPlanningItemClassification);
+        safeSet(ocdsItem::setTargetGroup, purchaseItem.getPlanItem()::getTargetGroup, this::categoryLabel);
+        safeSet(ocdsItem::setTargetGroupValue, purchaseItem.getPlanItem()::getTargetGroupValue, this::convertAmount);
         return ocdsItem;
     }
 

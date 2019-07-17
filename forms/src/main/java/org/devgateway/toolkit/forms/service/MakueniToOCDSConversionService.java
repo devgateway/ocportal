@@ -8,6 +8,7 @@ import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
+import org.devgateway.ocds.persistence.mongo.MakueniTender;
 import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.Period;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 public interface MakueniToOCDSConversionService {
 
-    Tender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender);
+    MakueniTender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender);
 
     Period createTenderPeriod(org.devgateway.toolkit.persistence.dao.form.Tender tender);
 
