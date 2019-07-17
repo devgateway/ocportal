@@ -282,14 +282,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         safeSet(planning::setBudget, () -> purchaseRequisition, this::createPlanningBudget);
 
-        //TODO: set planning extension items
         safeSetEach(planning.getItems()::add, purchaseRequisition::getPurchaseItems, this::createPlanningItem);
 
         safeSet(planning.getDocuments()::add, purchaseRequisition.getProcurementPlan()::getFormDoc,
                 this::storeAsDocumentProcurementPlan
         );
 
-        //TODO: also set document title to something else than uploaded document title?
         safeSet(planning.getDocuments()::add, purchaseRequisition.getProject()::getCabinetPaper,
                 this::storeAsDocumentProjectPlan
         );

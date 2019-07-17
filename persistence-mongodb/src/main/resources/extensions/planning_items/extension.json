@@ -1,0 +1,17 @@
+{
+  "name": {
+    "en": "Planning Items"
+  },
+  "description": {
+    "en": "Allowing Item elements in Planning section"
+  },
+  "documentationUrl": {
+    "en": "https://extensions.open-contracting.org/en/extensions/bids/"
+  },
+  "compatibility": [
+    "1.1"
+  ],
+  "schemas": [
+    "release-schema.json"
+  ]
+}
