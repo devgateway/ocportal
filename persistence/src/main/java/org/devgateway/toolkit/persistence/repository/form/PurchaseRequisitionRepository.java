@@ -31,6 +31,8 @@ public interface PurchaseRequisitionRepository extends AbstractMakueniEntityRepo
             "awardNotification", "awardAcceptance", "contract", "purchaseItems"})
     List<PurchaseRequisition> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
 
+    List<PurchaseRequisition> findByStatus(String status);
+
     @Override
     @Query("select c from  #{#entityName} c where c.project.procurementPlan.fiscalYear = :fiscalYear")
     List<PurchaseRequisition> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);

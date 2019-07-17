@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.APPROVED;
+
 /**
  * @author idobre
  * @since 2019-04-17
@@ -58,5 +60,11 @@ public class PurchaseRequisitionServiceImpl extends AbstractMakueniEntityService
     public List<PurchaseRequisition> findByProjectProcurementPlan(final ProcurementPlan procurementPlan) {
         return purchaseRequisitionRepository.findByProjectProcurementPlan(procurementPlan);
     }
+
+    @Override
+    public List<PurchaseRequisition> getApprovedPurchaseRequisitions() {
+        return purchaseRequisitionRepository.findByStatus(APPROVED);
+    }
+
 }
 

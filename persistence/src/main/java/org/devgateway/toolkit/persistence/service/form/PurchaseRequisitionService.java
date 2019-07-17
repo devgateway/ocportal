@@ -18,5 +18,7 @@ public interface PurchaseRequisitionService extends AbstractMakueniEntityService
     List<PurchaseRequisition> findByProject(Project project);
 
     List<PurchaseRequisition> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
+
+    List<PurchaseRequisition> getApprovedPurchaseRequisitions();
 }
 

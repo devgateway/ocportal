@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.service;
+package org.devgateway.ocds.web.convert;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.Validate;
@@ -40,6 +40,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,7 +75,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Autowired
     private MongoFileStorageService mongoFileStorageService;
 
-    @Override
+    @Autowired
+    PurchaseRequisitionService purchaseRequisitionService;
+
+
     public MakueniTender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
         MakueniTender ocdsTender = new MakueniTender();
         safeSet(ocdsTender::setId, tender::getId, this::longIdToString);
@@ -151,7 +155,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    @Override
     public Item createTenderItem(TenderItem tenderItem) {
         Item ocdsItem = new Item();
         safeSet(ocdsItem::setId, tenderItem::getId, this::longIdToString);
@@ -162,7 +165,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    @Override
     public Unit createTenderItemUnit(TenderItem tenderItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
@@ -173,7 +175,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    @Override
     public Classification createTenderItemClassification(TenderItem tenderItem) {
         Classification classification = new Classification();
         safeSet(classification::setId, tenderItem.getPurchaseItem().getPlanItem().getItem()::getCode);
@@ -181,7 +182,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return classification;
     }
 
-    @Override
     public Tender.ProcurementMethod createProcurementMethod(ProcurementMethod procurementMethod) {
         return procurementMethodMap.get(procurementMethod.getLabel());
     }
@@ -199,7 +199,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 .put("Open tender International", Tender.ProcurementMethod.open).build();
     }
 
-    @Override
     public Period createTenderPeriod(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
         Period period = new Period();
         safeSet(period::setStartDate, tender::getInvitationDate);
@@ -208,7 +207,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    @Override
     public Budget createPlanningBudget(PurchaseRequisition purchaseRequisition) {
         Budget budget = new Budget();
 
@@ -283,7 +281,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return document;
     }
 
-    @Override
     public MakueniPlanning createPlanning(PurchaseRequisition purchaseRequisition) {
         MakueniPlanning planning = new MakueniPlanning();
 
@@ -332,7 +329,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    @Override
     public Milestone createPlanningMilestone(PurchaseRequisition purchaseRequisition) {
         Milestone milestone = new Milestone();
         safeSet(milestone::setType, () -> Milestone.MilestoneType.PRE_PROCUREMENT, Milestone.MilestoneType::toValue);
@@ -351,6 +347,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         }
 
         return releaseRepository.save(release);
+    }
+
+    @Override
+    public void convertAndSaveAllApprovedPurchaseRequisitions() {
+
     }
 
 
@@ -436,7 +437,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return id.toString();
     }
 
-    @Override
     public Unit createPlanningItemUnit(PurchaseItem purchaseItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
@@ -446,7 +446,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return unit;
     }
 
-    @Override
     public Amount convertAmount(BigDecimal sourceAmount) {
         Amount amount = new Amount();
         safeSet(amount::setAmount, () -> sourceAmount);
@@ -454,7 +453,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return amount;
     }
 
-    @Override
     public MakueniItem createPlanningItem(PurchaseItem purchaseItem) {
         MakueniItem ocdsItem = new MakueniItem();
         safeSet(ocdsItem::setId, purchaseItem::getId, this::longIdToString);
@@ -467,7 +465,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return ocdsItem;
     }
 
-    @Override
     public Classification createPlanningItemClassification(PurchaseItem purchaseItem) {
         Classification classification = new Classification();
         safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
@@ -475,17 +472,14 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return classification;
     }
 
-    @Override
     public Amount.Currency getCurrency() {
         return Amount.Currency.KES;
     }
 
-    @Override
     public Set<Organization> createParties(Tender tender, Planning planning) {
         return null;
     }
 
-    @Override
     public Bids createBids(TenderQuotationEvaluation quotationEvaluation) {
         Bids bids = new Bids();
         safeSetEach(bids.getDetails()::add, quotationEvaluation::getBids, this::createBidsDetail);
@@ -554,7 +548,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return ocdsAward;
     }
 
-    @Override
     public Contract createContract(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
         Contract ocdsContract = new Contract();
         safeSet(ocdsContract::setId, contract::getReferenceNumber);
@@ -646,4 +639,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release.getContracts()::add, purchaseRequisition::getSingleContract, this::createContract);
         return release;
     }
+
+
 }
