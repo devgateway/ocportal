@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @author idobre
  * @since 2019-07-02
  */
-public interface ProcurementPlanMongoRepository extends MongoRepository<ProcurementPlan, String> {
+public interface ProcurementPlanMongoRepository extends MongoRepository<ProcurementPlan, Long> {
 
 }
