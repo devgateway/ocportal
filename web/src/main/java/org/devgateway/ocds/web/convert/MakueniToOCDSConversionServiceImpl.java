@@ -42,6 +42,8 @@ import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,7 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -65,6 +68,10 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversionService {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(MakueniToOCDSConversionServiceImpl.class);
+
+
     @Autowired
     private ReleaseRepository releaseRepository;
 
@@ -76,7 +83,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private MongoFileStorageService mongoFileStorageService;
 
     @Autowired
-    PurchaseRequisitionService purchaseRequisitionService;
+    private PurchaseRequisitionService purchaseRequisitionService;
 
 
     public MakueniTender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
@@ -346,12 +353,14 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             releaseRepository.delete(byOcid);
         }
 
-        return releaseRepository.save(release);
+        Release save = releaseRepository.save(release);
+        logger.info("Saved " + save.getOcid());
+        return save;
     }
 
     @Override
     public void convertAndSaveAllApprovedPurchaseRequisitions() {
-
+        purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
     }
 
 
@@ -637,6 +646,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         safeSet(release.getAwards()::add, purchaseRequisition::getSingleAwardNotification, this::createAward);
         safeSet(release.getContracts()::add, purchaseRequisition::getSingleContract, this::createContract);
+        safeSet(release::setDate, Instant::now, Date::from);
         return release;
     }
 

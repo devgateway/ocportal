@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.APPROVED;
 
@@ -62,7 +63,7 @@ public class PurchaseRequisitionServiceImpl extends AbstractMakueniEntityService
     }
 
     @Override
-    public List<PurchaseRequisition> getApprovedPurchaseRequisitions() {
+    public Stream<PurchaseRequisition> findByStatusApproved() {
         return purchaseRequisitionRepository.findByStatus(APPROVED);
     }
 
