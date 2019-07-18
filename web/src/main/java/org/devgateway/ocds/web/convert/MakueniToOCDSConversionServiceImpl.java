@@ -22,12 +22,15 @@ import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.Period;
 import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
+import org.devgateway.ocds.persistence.mongo.Tag;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -53,9 +56,12 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -68,9 +74,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversionService {
 
-
     private static final Logger logger = LoggerFactory.getLogger(MakueniToOCDSConversionServiceImpl.class);
-
 
     @Autowired
     private ReleaseRepository releaseRepository;
@@ -94,7 +98,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsTender::setProcurementMethod, tender::getProcurementMethod, this::createProcurementMethod);
         safeSetEach(ocdsTender.getItems()::add, tender::getTenderItems, this::createTenderItem);
         safeSet(ocdsTender::setDescription, tender::getObjective);
-        safeSet(ocdsTender::setProcuringEntity, tender::getIssuedBy, this::createProcuringEntity);
+        safeSet(ocdsTender::setProcuringEntity, tender::getIssuedBy, this::convertProcuringEntity);
         safeSet(ocdsTender::setValue, tender::getTenderValue, this::convertAmount);
         safeSet(ocdsTender::setTargetGroup, tender::getTargetGroup, this::categoryLabel);
         safeSet(ocdsTender::setStatus, () -> tender, this::createTenderStatus);
@@ -119,6 +123,35 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
+    public void addOrUpdateOrganizationSetByRole(HashMap<String, Organization> orgs, Organization o) {
+        if (ObjectUtils.isEmpty(o)) {
+            return;
+        }
+        if (!orgs.containsKey(o.getId())) {
+            orgs.put(o.getId(), o);
+        } else {
+            orgs.get(o.getId()).getRoles().addAll(o.getRoles());
+        }
+    }
+
+    public Collection<Organization> createParties(Release release) {
+        HashMap<String, Organization> orgs = new HashMap<>();
+        addOrUpdateOrganizationSetByRole(orgs, release.getBuyer());
+
+        if (!ObjectUtils.isEmpty(release.getTender())) {
+            addOrUpdateOrganizationSetByRole(orgs, release.getTender().getProcuringEntity());
+        }
+
+        if (!ObjectUtils.isEmpty(release.getAwards())) {
+            release.getAwards().stream().filter(a -> !a.getSuppliers().isEmpty())
+                    .flatMap(a -> a.getSuppliers().stream()).forEach(
+                    s -> addOrUpdateOrganizationSetByRole(orgs, s));
+        }
+
+        return orgs.values();
+    }
+
+
     public Integer convertNumberOfTenderers(TenderQuotationEvaluation tenderQuotationEvaluation) {
         return tenderQuotationEvaluation.getBids().size();
     }
@@ -131,12 +164,33 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return Tender.Status.active;
     }
 
-    public Organization createProcuringEntity(ProcuringEntity procuringEntity) {
+    public Organization convertBuyer(Department department) {
+        Organization ocdsBuyer = new Organization();
+        safeSet(ocdsBuyer::setName, () -> department, this::categoryLabel);
+        safeSet(ocdsBuyer::setId, () -> department, this::entityIdToString);
+        safeSet(ocdsBuyer::setIdentifier, () -> department, this::convertCategoryToIdentifier);
+        safeSet(ocdsBuyer.getRoles()::add, () -> Organization.OrganizationType.buyer,
+                Organization.OrganizationType::toValue
+        );
+        return ocdsBuyer;
+    }
+
+    public String entityIdToString(GenericPersistable p) {
+        return p.getId().toString();
+    }
+
+
+    public Organization convertProcuringEntity(ProcuringEntity procuringEntity) {
         Organization ocdsProcuringEntity = new Organization();
         safeSet(ocdsProcuringEntity::setId, procuringEntity::getId, this::longIdToString);
+        safeSet(ocdsProcuringEntity::setIdentifier, () -> procuringEntity, this::convertCategoryToIdentifier);
         safeSet(ocdsProcuringEntity::setAddress, () -> procuringEntity, this::createProcuringEntityAddress);
         safeSet(ocdsProcuringEntity::setName, procuringEntity::getLabel);
         safeSet(ocdsProcuringEntity::setContactPoint, () -> procuringEntity, this::createProcuringEntityContactPoint);
+        safeSet(ocdsProcuringEntity.getRoles()::add, () -> Organization.OrganizationType.procuringEntity,
+                Organization.OrganizationType::toValue
+        );
+
         return ocdsProcuringEntity;
     }
 
@@ -312,7 +366,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Organization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
         Organization ocdsOrg = new Organization();
         safeSet(ocdsOrg::setName, supplier::getLabel);
-        safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertSupplierId);
+        safeSet(ocdsOrg::setId, () -> supplier, this::entityIdToString);
+        safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryToIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
         safeSet(ocdsOrg.getRoles()::add, () -> Organization.OrganizationType.supplier,
                 Organization.OrganizationType::toValue
@@ -328,10 +383,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public Identifier convertSupplierId(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+    public Identifier convertCategoryToIdentifier(Category category) {
         Identifier identifier = new Identifier();
-        safeSet(identifier::setId, supplier::getCode);
-        safeSet(identifier::setLegalName, supplier::getLabel);
+        safeSet(identifier::setId, category::getId, this::longIdToString);
+        safeSet(identifier::setLegalName, category::getLabel);
         return identifier;
     }
 
@@ -359,7 +414,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     @Override
-    public void convertAndSaveAllApprovedPurchaseRequisitions() {
+    public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
         purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
     }
 
@@ -566,6 +621,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setValue, contract::getContractValue, this::convertAmount);
         safeSet(ocdsContract::setDateSigned, contract::getApprovedDate);
         safeSetEach(ocdsContract.getDocuments()::add, contract::getContractDocs, this::storeAsDocumentContractNotice);
+        safeSet(ocdsContract::setAwardID, contract.getPurchaseRequisition().getSingleTender()::getTenderNumber);
         safeSet(ocdsContract::setStatus, contract::getStatus, this::createContractStatus);
 
         return ocdsContract;
@@ -632,6 +688,28 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return OCID_PREFIX + purchaseRequisition.getPurchaseRequestNumber();
     }
 
+
+    public List<Tag> createReleaseTag(Release release) {
+        List<Tag> tags = new ArrayList<>();
+
+        if (!ObjectUtils.isEmpty(release.getPlanning())) {
+            tags.add(Tag.planning);
+        }
+
+        if (!ObjectUtils.isEmpty(release.getTender())) {
+            tags.add(Tag.tender);
+        }
+
+        if (!ObjectUtils.isEmpty(release.getContracts())) {
+            tags.add(Tag.contract);
+        }
+
+        if (!ObjectUtils.isEmpty(release.getAwards())) {
+            tags.add(Tag.award);
+        }
+        return tags;
+    }
+
     @Override
     public Release createRelease(PurchaseRequisition purchaseRequisition) {
         Release release = new Release();
@@ -639,6 +717,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
         safeSet(release::setBids, purchaseRequisition::getSingleTenderQuotationEvaluation, this::createBids);
         safeSet(release::setTender, purchaseRequisition::getSingleTender, this::createTender);
+        safeSet(release::setBuyer, purchaseRequisition.getProject().getProcurementPlan()::getDepartment,
+                this::convertBuyer
+        );
 
         safeSet(Optional.ofNullable(release.getTender()).map(Tender::getTenderers).orElse(new HashSet<>())::addAll,
                 release::getBids, this::createTenderersFromBids
@@ -647,6 +728,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release.getAwards()::add, purchaseRequisition::getSingleAwardNotification, this::createAward);
         safeSet(release.getContracts()::add, purchaseRequisition::getSingleContract, this::createContract);
         safeSet(release::setDate, Instant::now, Date::from);
+        safeSet(release.getParties()::addAll, () -> release, this::createParties);
+        safeSet(release.getTag()::addAll, () -> release, this::createReleaseTag);
+        safeSet(release::setInitiationType, () -> Release.InitiationType.tender);
+
+
         return release;
     }
 

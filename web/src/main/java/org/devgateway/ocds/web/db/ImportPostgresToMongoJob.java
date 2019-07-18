@@ -22,8 +22,8 @@ public class ImportPostgresToMongoJob {
      * Invoke the import of all makueni data into mongo db.
      */
     @Scheduled(cron = "0 0 23 * * SAT")
-    public void backupDatabase() {
+    public void importOcdsMakueniToMongo() {
         importPostgresToMongo.importToMongo();
-        makueniToOCDSConversionService.convertAndSaveAllApprovedPurchaseRequisitions();
+        makueniToOCDSConversionService.convertToOcdsAndSaveAllApprovedPurchaseRequisitions();
     }
 }

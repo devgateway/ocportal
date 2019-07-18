@@ -11,6 +11,6 @@ public interface MakueniToOCDSConversionService {
 
     Release createAndPersistRelease(PurchaseRequisition purchaseRequisition);
 
-    void convertAndSaveAllApprovedPurchaseRequisitions();
+    void convertToOcdsAndSaveAllApprovedPurchaseRequisitions();
 
 }
