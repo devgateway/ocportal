@@ -98,6 +98,7 @@ public class OcdsController extends GenericOCDSController {
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by/2.0/"));
             releasePackage.setPublicationPolicy(new URI("https://github.com/open-contracting/sample-data/"));
             releasePackage.setUri(new URI(SERVER_DOMAIN + "/api/ocds/package/ocid/" + release.getOcid()));
+            releasePackage.setVersion("1.1");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

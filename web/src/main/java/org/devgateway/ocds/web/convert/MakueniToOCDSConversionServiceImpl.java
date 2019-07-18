@@ -395,6 +395,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Milestone milestone = new Milestone();
         safeSet(milestone::setType, () -> Milestone.MilestoneType.PRE_PROCUREMENT, Milestone.MilestoneType::toValue);
         safeSet(milestone::setCode, () -> "approvedDate");
+        safeSet(milestone::setId, purchaseRequisition::getId, this::longIdToString);
         safeSet(milestone::setDateMet, purchaseRequisition::getApprovedDate);
         safeSet(milestone::setStatus, () -> purchaseRequisition, this::createPlanningMilestoneStatus);
         return milestone;
