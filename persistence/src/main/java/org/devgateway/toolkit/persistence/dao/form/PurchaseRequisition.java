@@ -259,7 +259,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
             if (item.getAmount() != null && item.getQuantity() != null) {
-                amount.add(item.getAmount().multiply(new BigDecimal(item.getQuantity())));
+                amount.add(item.getAmount().multiply(item.getQuantity()));
             }
         }
 

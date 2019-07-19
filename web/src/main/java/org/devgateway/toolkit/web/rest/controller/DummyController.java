@@ -139,7 +139,7 @@ public class DummyController {
                 item.setDescription("Description " + (currentSize + i));
                 item.setEstimatedCost(new BigDecimal(100.0));
                 item.setUnitOfIssue("unit of issue....");
-                item.setQuantity(1001);
+                item.setQuantity(new BigDecimal(1001));
                 item.setUnitPrice(new BigDecimal(200.34));
                 item.setTotalCost(new BigDecimal(2295000.503));
                 item.setProcurementMethod(procurementMethods.get(random.nextInt(procurementMethods.size())));

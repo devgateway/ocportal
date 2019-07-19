@@ -363,8 +363,16 @@
     <changeSet id="OCMAKU-180" author="idobre">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="category"/>
-            <columnExists tableName="category" columnName="subcounty_id" />
+            <columnExists tableName="category" columnName="subcounty_id"/>
         </preConditions>
         <sqlFile path="Wards.sql"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-177" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender_item"/>
+            <columnExists tableName="tender_item" columnName="quantity"/>
+        </preConditions>
+        <sql></sql>
     </changeSet>
 </databaseChangeLog>
