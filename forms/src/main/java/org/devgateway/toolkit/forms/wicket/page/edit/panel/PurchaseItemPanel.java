@@ -58,7 +58,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     }
                 };
         quantity.decimal();
-        quantity.getField().add(RangeValidator.minimum(0));
+        quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         quantity.required();
         item.add(quantity);
 

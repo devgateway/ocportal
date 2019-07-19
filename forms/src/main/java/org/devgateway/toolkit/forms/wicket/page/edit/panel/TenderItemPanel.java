@@ -54,7 +54,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                 };
         quantity.decimal();
-        quantity.getField().add(RangeValidator.minimum(1));
+        quantity.getField().add(RangeValidator.minimum(BigDecimal.ONE));
         quantity.required();
         item.add(quantity);
 
