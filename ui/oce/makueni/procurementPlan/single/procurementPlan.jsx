@@ -171,9 +171,23 @@ class ProcurementPlan extends CRDPage {
                     </div>)
                   }
                   
-                  
-                  <div className="row">
-                    <div className="col-md-12"></div>
+                  <div className="row padding-top-10">
+                    <div className="col-md-6">
+                      <div className="item-label">Procurement Plan Documents</div>
+                      
+                      {
+                        data.formDocs.map(doc => <div key={doc.id}>
+                          <a className="item-value download">
+                            <i className="glyphicon glyphicon-download"/>
+                            <span>{doc.name}</span>
+                          </a>
+                        </div>)
+                      }
+                    </div>
+                    <div className="col-md-6">
+                      <div className="item-label">Approved Date</div>
+                      <div className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
+                    </div>
                   </div>
                 </div>
                 : null
