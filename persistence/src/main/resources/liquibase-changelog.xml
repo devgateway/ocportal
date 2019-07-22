@@ -363,8 +363,38 @@
     <changeSet id="OCMAKU-180" author="idobre">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="category"/>
-            <columnExists tableName="category" columnName="subcounty_id" />
+            <columnExists tableName="category" columnName="subcounty_id"/>
         </preConditions>
         <sqlFile path="Wards.sql"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-177-1" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender_item"/>
+            <tableExists tableName="tender_item_aud"/>
+            <columnExists tableName="tender_item" columnName="quantity"/>
+        </preConditions>
+        <sql>alter table tender_item alter column quantity type double precision</sql>
+        <sql>alter table tender_item_aud alter column quantity type double precision</sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-177-2" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="plan_item"/>
+            <tableExists tableName="plan_item_aud"/>
+            <columnExists tableName="plan_item" columnName="quantity"/>
+        </preConditions>
+        <sql>alter table plan_item alter column quantity type double precision</sql>
+        <sql>alter table plan_item_aud alter column quantity type double precision</sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-177-3" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="purchase_item"/>
+            <tableExists tableName="purchase_item_aud"/>
+            <columnExists tableName="purchase_item" columnName="quantity"/>
+        </preConditions>
+        <sql>alter table purchase_item alter column quantity type double precision</sql>
+        <sql>alter table purchase_item_aud alter column quantity type double precision</sql>
     </changeSet>
 </databaseChangeLog>

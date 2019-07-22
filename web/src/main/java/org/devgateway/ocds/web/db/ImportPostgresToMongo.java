@@ -1,11 +1,9 @@
 package org.devgateway.ocds.web.db;
 
-import com.google.common.io.ByteSource;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import org.bson.types.ObjectId;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
+import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
@@ -23,11 +21,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -45,8 +40,6 @@ import java.util.stream.Collectors;
 @Service
 public class ImportPostgresToMongo {
     private static final Logger logger = LoggerFactory.getLogger(ImportPostgresToMongo.class);
-
-    private static final String DOWNLOAD_PREFIX = "/makueniFile/";
 
     @Resource
     private ImportPostgresToMongo self; // Self-autowired reference to proxified bean of this class.
@@ -66,6 +59,10 @@ public class ImportPostgresToMongo {
     @Autowired
     private GridFsOperations gridFsOperations;
 
+    @Autowired
+    private MongoFileStorageService mongoFileStorageService;
+
+
     @Transactional(readOnly = true)
     public void importToMongo() {
         long startTime = System.nanoTime();
@@ -73,7 +70,7 @@ public class ImportPostgresToMongo {
 
         // first clean the procurement plan collection and delete all saved files
         mongoTemplate.dropCollection(ProcurementPlan.class);
-        gridFsOperations.delete(new Query(Criteria.where("metadata.path").is(DOWNLOAD_PREFIX)));
+        gridFsOperations.delete(MongoFileStorageService.MAKUENI_FILES_QUERY);
 
         final List<ProcurementPlan> procurementPlans = filterNotExportable(procurementPlanService.findAll());
         // check which forms are exportable
@@ -121,7 +118,7 @@ public class ImportPostgresToMongo {
 
 
         final List<GridFSFile> gridFSFiles = new ArrayList<>();
-        gridFsOperations.find(new Query(Criteria.where("metadata.path").is(DOWNLOAD_PREFIX))).into(gridFSFiles);
+        gridFsOperations.find(MongoFileStorageService.MAKUENI_FILES_QUERY).into(gridFSFiles);
 
         procurementPlanMongoRepository.saveAll(procurementPlans);
 
@@ -145,34 +142,10 @@ public class ImportPostgresToMongo {
 
     public void storeMakueniFormFiles(final Set<FileMetadata> formDocs) {
         for (final FileMetadata fileMetadata : formDocs) {
-            self.storeFile(fileMetadata);
+            mongoFileStorageService.storeFile(fileMetadata);
         }
     }
 
-    public FileMetadata storeFile(final FileMetadata fileMetadata) {
-        try {
-            if (ObjectUtils.isEmpty(fileMetadata)
-                    || ObjectUtils.isEmpty(fileMetadata.getContent())
-                    || ObjectUtils.isEmpty(fileMetadata.getContent().getBytes())) {
-                return null;
-            }
-
-            final DBObject metaData = new BasicDBObject();
-            metaData.put("path", DOWNLOAD_PREFIX);
-
-            final InputStream is = ByteSource.wrap(fileMetadata.getContent().getBytes()).openStream();
-            final ObjectId objId = gridFsOperations.store(
-                    is, fileMetadata.getName(), fileMetadata.getContentType(), metaData);
-            is.close();
-
-            fileMetadata.setUrl(DOWNLOAD_PREFIX + objId);
-
-            return fileMetadata;
-        } catch (IOException e) {
-            logger.error("Error wile saving a file.", e);
-            throw new RuntimeException(e);
-        }
-    }
 
     public GridFSFile retrieveFile(ObjectId id) {
         return gridFsOperations.findOne(new Query(Criteria.where(Fields.UNDERSCORE_ID).is(id)));

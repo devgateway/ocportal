@@ -38,6 +38,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_EMPTY_JSON_ARRAYS;
+
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
@@ -60,6 +62,7 @@ public class MvcConfig implements WebMvcConfigurer {
         builder.serializerByType(GeoJsonPoint.class, new GeoJsonPointSerializer());
         builder.serializerByType(ObjectId.class, new ToStringSerializer());
         builder.defaultViewInclusion(true);
+        builder.featuresToDisable(WRITE_EMPTY_JSON_ARRAYS);
 
         return builder;
     }

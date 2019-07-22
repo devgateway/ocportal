@@ -21,7 +21,7 @@ import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.devgateway.ocds.persistence.mongo.Release;
-import org.devgateway.toolkit.forms.service.MakueniToOCDSConversionService;
+import org.devgateway.ocds.web.convert.MakueniToOCDSConversionService;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
@@ -107,7 +107,7 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
             @Override
             public void populateItem(final Item<ICellPopulator<PurchaseRequisition>> cellItem, final String componentId,
                                      final IModel<PurchaseRequisition> model) {
-                if (DBConstants.Status.PUBLISHABLE.contains(model.getObject().getStatus())) {
+                if (DBConstants.Status.EXPORTABLE.contains(model.getObject().getStatus())) {
                     cellItem.add(new ListPurchaseRequisitionPage.OcdsPanel(componentId,
                             new Model<>(model.getObject().getId())));
                 } else {

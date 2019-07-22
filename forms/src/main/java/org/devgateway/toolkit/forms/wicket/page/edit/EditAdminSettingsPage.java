@@ -9,7 +9,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.ocds.web.db.ImportPostgresToMongo;
+import org.devgateway.ocds.web.db.ImportPostgresToMongoJob;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
@@ -48,7 +48,7 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
     private CacheManager cacheManager;
 
     @SpringBean
-    private ImportPostgresToMongo importPostgresToMongo;
+    private ImportPostgresToMongoJob importPostgresToMongoJob;
 
     @SpringBean
     private AdminSettingsService adminSettingsService;
@@ -127,7 +127,7 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
             @Override
             public void onClick(final Optional<AjaxRequestTarget> target) {
-                importPostgresToMongo.importToMongo();
+                importPostgresToMongoJob.importOcdsMakueniToMongo();
             }
 
         };

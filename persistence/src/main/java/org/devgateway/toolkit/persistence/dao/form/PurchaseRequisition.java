@@ -48,7 +48,7 @@ import java.util.function.Consumer;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
         TitleAutogeneratable {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     @org.springframework.data.annotation.Transient
@@ -259,7 +259,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
             if (item.getAmount() != null && item.getQuantity() != null) {
-                amount.add(item.getAmount().multiply(new BigDecimal(item.getQuantity())));
+                amount.add(item.getAmount().multiply(item.getQuantity()));
             }
         }
 

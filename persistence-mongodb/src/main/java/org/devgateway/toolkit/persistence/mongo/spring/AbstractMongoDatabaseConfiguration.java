@@ -37,6 +37,7 @@ public abstract class AbstractMongoDatabaseConfiguration {
                 new Index().on("roles", Direction.ASC));
         getTemplate().indexOps(Organization.class).ensureIndex(new Index().on("name", Direction.ASC).unique());
         getTemplate().indexOps(DefaultLocation.class).ensureIndex(new Index().on("description", Direction.ASC));
+        getTemplate().indexOps("fs.files").ensureIndex(new Index().on("md5", Direction.ASC));
         getLogger().info("Added mandatory Mongo indexes");
     }
 

@@ -1,0 +1,17 @@
+{
+  "name": {
+    "en": "Target Groups"
+  },
+  "description": {
+    "en": "Procurement Plan Target Groups"
+  },
+  "documentationUrl": {
+    "en": "https://extensions.open-contracting.org/en/extensions/bids/"
+  },
+  "compatibility": [
+    "1.1"
+  ],
+  "schemas": [
+    "release-schema.json"
+  ]
+}

@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -30,6 +31,8 @@ public interface PurchaseRequisitionRepository extends AbstractMakueniEntityRepo
     @EntityGraph(attributePaths = {"project", "tender", "tenderQuotationEvaluation", "professionalOpinion",
             "awardNotification", "awardAcceptance", "contract", "purchaseItems"})
     List<PurchaseRequisition> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
+
+    Stream<PurchaseRequisition> findByStatus(String status);
 
     @Override
     @Query("select c from  #{#entityName} c where c.project.procurementPlan.fiscalYear = :fiscalYear")

@@ -98,4 +98,10 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
+
+    @Override
+    @JsonIgnore
+    public boolean isExportable() {
+        return true;
+    }
 }
