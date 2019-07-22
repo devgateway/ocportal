@@ -48,10 +48,6 @@ class ProcurementPlan extends CRDPage {
     const { navigate } = this.props;
     const { data } = this.state;
     
-    if (data) {
-      console.log(data.formDocs);
-    }
-    
     return (<div className="procurement-plan makueni-form">
       <div className="row">
         <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-12">

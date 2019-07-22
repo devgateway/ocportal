@@ -51,6 +51,7 @@ export const ppData = ppState.mapping({
         id: datum.id,
         department: datum.department.label,
         fiscalYear: datum.fiscalYear.label,
+        formDocs: datum.formDocs
       };
     })
 });
