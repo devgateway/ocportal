@@ -25,6 +25,7 @@ import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tag;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
+import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -78,6 +79,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Autowired
     private ReleaseRepository releaseRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     private static final String OCID_PREFIX = "ocds-abcd-";
 
@@ -416,6 +420,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Override
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
+        releaseRepository.deleteAll();
         purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
     }
 
@@ -733,9 +738,26 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release.getTag()::addAll, () -> release, this::createReleaseTag);
         safeSet(release::setInitiationType, () -> Release.InitiationType.tender);
 
+        addPartiesToOrganizationCollection(release.getParties());
 
         return release;
     }
 
+
+    private void addPartiesToOrganizationCollection(Set<Organization> parties) {
+        parties.forEach(p -> {
+            Optional<Organization> organization = organizationRepository.findById(p.getId());
+            if (organization.isPresent()) {
+                if (!organization.get().getRoles().containsAll(p.getRoles())) {
+                    organization.get().getRoles().addAll(p.getRoles());
+                    organizationRepository.save(organization.get());
+                }
+            } else {
+                organizationRepository.save(p);
+            }
+
+        });
+
+    }
 
 }
