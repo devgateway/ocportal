@@ -29,7 +29,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
     private static final Logger logger = LoggerFactory.getLogger(MongoFileStorageServiceImpl.class);
 
 
-    public static final String DOWNLOAD_PREFIX = "http://localhost:8090/file/";
+    public static final String DOWNLOAD_PREFIX = "http://localhost:8090/api/file/";
 
     @Autowired
     private GridFsOperations gridFsOperations;

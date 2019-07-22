@@ -1,6 +1,7 @@
 import CRDPage from '../../../corruption-risk/page';
 import { ppState } from '../state';
 import { API_ROOT } from '../../../state/oce-state';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 class ProcurementPlan extends CRDPage {
   constructor(props) {
@@ -46,6 +47,10 @@ class ProcurementPlan extends CRDPage {
   render() {
     const { navigate } = this.props;
     const { data } = this.state;
+    
+    if (data) {
+      console.log(data.formDocs);
+    }
     
     return (<div className="procurement-plan makueni-form">
       <div className="row">
@@ -177,16 +182,26 @@ class ProcurementPlan extends CRDPage {
                       
                       {
                         data.formDocs.map(doc => <div key={doc.id}>
-                          <a className="item-value download">
-                            <i className="glyphicon glyphicon-download"/>
-                            <span>{doc.name}</span>
-                          </a>
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id="download-tooltip">
+                                Click to download the file
+                              </Tooltip>
+                            }>
+  
+                            <a className="item-value download" href={doc.url} target="_blank">
+                              <i className="glyphicon glyphicon-download"/>
+                              <span>{doc.name}</span>
+                            </a>
+                          </OverlayTrigger>
                         </div>)
                       }
                     </div>
                     <div className="col-md-6">
                       <div className="item-label">Approved Date</div>
-                      <div className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
+                      <div
+                        className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
                     </div>
                   </div>
                 </div>

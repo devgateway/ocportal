@@ -2,9 +2,13 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.io.IOUtils;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
+import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
@@ -16,13 +20,16 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +52,12 @@ public class MakueniDataController extends GenericOCDSController {
 
     @Autowired
     private ProcurementPlanMongoRepository procurementPlanMongoRepository;
+
+    @Autowired
+    private MongoFileStorageService mongoFileStorageService;
+
+    @Autowired
+    private GridFsOperations gridFsOperations;
 
     @ApiOperation(value = "Fetch Makueni Tenders")
     @RequestMapping(value = "/api/makueni/tenders",
@@ -138,6 +151,20 @@ public class MakueniDataController extends GenericOCDSController {
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
+    }
+
+    @RequestMapping(value = "/api/file/{id:^[a-zA-Z0-9\\-]*$}",
+            method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    @ApiOperation(value = "Downloads a Makueni file")
+    public void downloadFile(@PathVariable final String id, final HttpServletResponse response) throws IOException {
+        final GridFSFile file = mongoFileStorageService.retrieveFile(new ObjectId(id));
+
+        if (file != null) {
+            response.setHeader("Content-Disposition", "attachment; filename=" + file.getFilename());
+            response.getOutputStream().write(IOUtils.toByteArray(gridFsOperations.getResource(file).getInputStream()));
+        } else {
+            logger.error("File with id: " + id + " not found!");
+        }
     }
 
     private Criteria createFilterCriteria(final String filterName, final Object filterValues) {
