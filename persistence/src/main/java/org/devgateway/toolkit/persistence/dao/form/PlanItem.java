@@ -49,7 +49,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     private String unitOfIssue;
 
     @ExcelExport(useTranslation = true)
-    private Integer quantity;
+    private BigDecimal quantity;
 
     @ExcelExport(useTranslation = true)
     private BigDecimal unitPrice;
@@ -128,11 +128,11 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.unitOfIssue = unitOfIssue;
     }
 
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(final Integer quantity) {
+    public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
     }
 

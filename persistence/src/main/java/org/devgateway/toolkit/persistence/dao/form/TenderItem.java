@@ -35,7 +35,7 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
     private String unitOfIssue;
 
     @ExcelExport(useTranslation = true)
-    private Integer quantity;
+    private BigDecimal quantity;
 
     @ExcelExport(useTranslation = true)
     private BigDecimal unitPrice;
@@ -48,11 +48,11 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
         this.unitOfIssue = unitOfIssue;
     }
 
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(final Integer quantity) {
+    public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
     }
 
