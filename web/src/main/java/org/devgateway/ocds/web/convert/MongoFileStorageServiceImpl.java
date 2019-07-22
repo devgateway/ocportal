@@ -11,6 +11,7 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -18,6 +19,7 @@ import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -25,14 +27,22 @@ import java.net.URISyntaxException;
 
 @Service
 public class MongoFileStorageServiceImpl implements MongoFileStorageService {
-
     private static final Logger logger = LoggerFactory.getLogger(MongoFileStorageServiceImpl.class);
 
-
-    public static final String DOWNLOAD_PREFIX = "http://localhost:8090/api/file/";
+    public static final String DOWNLOAD_PREFIX = "/api/file/";
 
     @Autowired
     private GridFsOperations gridFsOperations;
+
+    @Value("${serverURL}")
+    private String serverURL;
+
+    private String downloadURL;
+
+    @PostConstruct
+    public void init() {
+        downloadURL = serverURL + DOWNLOAD_PREFIX;
+    }
 
     public String computeFileMd5(FileMetadata fileMetadata) {
         return DigestUtils.md5Hex(fileMetadata.getContent().getBytes());
@@ -61,7 +71,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
                 is.close();
             }
 
-            fileMetadata.setUrl(DOWNLOAD_PREFIX + objId);
+            fileMetadata.setUrl(downloadURL + objId);
 
             return fileMetadata;
         } catch (IOException e) {
