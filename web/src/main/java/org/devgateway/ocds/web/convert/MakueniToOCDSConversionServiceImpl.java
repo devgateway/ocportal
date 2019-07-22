@@ -225,7 +225,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setId, tenderItem::getId, this::longIdToString);
         safeSet(ocdsItem::setUnit, () -> tenderItem, this::createTenderItemUnit);
         safeSet(ocdsItem::setQuantity, tenderItem::getQuantity, Integer::doubleValue);
-        safeSet(ocdsItem::setClassification, () -> tenderItem, this::createTenderItemClassification);
+        safeSet(ocdsItem::setClassification, tenderItem::getPurchaseItem, this::createPurchaseItemClassification);
         return ocdsItem;
     }
 
@@ -239,11 +239,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return unit;
     }
 
-
-    public Classification createTenderItemClassification(TenderItem tenderItem) {
+    public Classification createPurchaseItemClassification(PurchaseItem purchaseItem) {
         Classification classification = new Classification();
-        safeSet(classification::setId, tenderItem.getPurchaseItem().getPlanItem().getItem()::getCode);
-        safeSet(classification::setDescription, tenderItem.getPurchaseItem().getPlanItem()::getDescription);
+        safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
+        safeSet(classification::setDescription, purchaseItem.getPlanItem().getItem()::getLabel);
         return classification;
     }
 
@@ -529,18 +528,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setDescription, purchaseItem::getLabel);
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, Integer::doubleValue);
-        safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPlanningItemClassification);
+        safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPurchaseItemClassification);
         safeSet(ocdsItem::setTargetGroup, purchaseItem.getPlanItem()::getTargetGroup, this::categoryLabel);
         safeSet(ocdsItem::setTargetGroupValue, purchaseItem.getPlanItem()::getTargetGroupValue, this::convertAmount);
         return ocdsItem;
     }
 
-    public Classification createPlanningItemClassification(PurchaseItem purchaseItem) {
-        Classification classification = new Classification();
-        safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
-        safeSet(classification::setDescription, purchaseItem.getPlanItem().getItem()::getLabel);
-        return classification;
-    }
 
     public Amount.Currency getCurrency() {
         return Amount.Currency.KES;
