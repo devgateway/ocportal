@@ -15,6 +15,7 @@ import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniItem;
+import org.devgateway.ocds.persistence.mongo.MakueniOrganization;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.MakueniTender;
 import org.devgateway.ocds.persistence.mongo.Milestone;
@@ -366,8 +367,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public Organization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
-        Organization ocdsOrg = new Organization();
+    public MakueniOrganization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        MakueniOrganization ocdsOrg = new MakueniOrganization();
         safeSet(ocdsOrg::setName, supplier::getLabel);
         safeSet(ocdsOrg::setId, () -> supplier, this::entityIdToString);
         safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryToIdentifier);
@@ -375,6 +376,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsOrg.getRoles()::add, () -> Organization.OrganizationType.supplier,
                 Organization.OrganizationType::toValue
         );
+        safeSet(ocdsOrg::setTargetGroup, supplier::getTargetGroup, this::categoryLabel);
         return ocdsOrg;
     }
 
@@ -604,6 +606,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                         .map(AwardAcceptance::getAcceptedAwardValue).orElse(null),
                 this::convertAmount
         );
+
+        //same as above, but awardee
+        safeSet(ocdsAward.getSuppliers()::add, () -> Optional.ofNullable(awardNotification.getPurchaseRequisition().
+                getSingleAwardAcceptance())
+                .filter(Statusable::isExportable)
+                .map(AwardAcceptance::getAwardee).orElse(null), this::convertSupplier);
 
         safeSet(ocdsAward::setStatus, () -> awardNotification, this::createAwardStatus);
 

@@ -28,6 +28,14 @@
           "$ref": "#/definitions/TargetGroup"
         }
       }
+    },
+    "Organization": {
+      "properties": {
+        "targetGroup": {
+          "title": "Target Group",
+          "$ref": "#/definitions/TargetGroup"
+        }
+      }
     }
   }
 }
