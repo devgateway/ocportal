@@ -140,6 +140,36 @@ public class MakueniDataController extends GenericOCDSController {
         }
     }
 
+    @RequestMapping(value = "/api/makueni/project/id/{id:^[0-9\\-]*$}",
+            method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    @ApiOperation(value = "Finds a Project by the given id")
+    public Document projectById(@PathVariable final Long id) {
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Aggregation aggregation = newAggregation(project("_id", "projects"),
+                unwind("projects"),
+                match(Criteria.where("projects._id").is(id)));
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getUniqueMappedResult();
+    }
+
+    @RequestMapping(value = "/api/makueni/purchaseReq/id/{id:^[0-9\\-]*$}",
+            method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    @ApiOperation(value = "Finds a Purchase Requisition by the given id")
+    public Document purchaseReqById(@PathVariable final Long id) {
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Aggregation aggregation = newAggregation(project("projects"),
+                unwind("projects"),
+                unwind("projects.purchaseRequisitions"),
+                project("projects.purchaseRequisitions"),
+                match(Criteria.where("purchaseRequisitions._id").is(id)));
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getUniqueMappedResult();
+    }
+
     @ApiOperation(value = "Display the available Procurement Plan Departments.")
     @RequestMapping(value = "/api/makueni/filters/departments", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")

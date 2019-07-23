@@ -68,8 +68,8 @@ class MakueniTenders extends CRDPage {
     return (tender) => (<div>
       {
         tender !== undefined
-          ? <a href={`#!/tender/t/${tender._id}`} onClick={() => navigate('t', tender._id)}
-               className="more-details-link">
+          ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
+               onClick={() => navigate('t', tender.purchaseReqId)} className="more-details-link">
             {tender.tenderTitle}
           </a>
           : 'No Tender'
@@ -81,7 +81,7 @@ class MakueniTenders extends CRDPage {
     return (project) => (<div>
       {
         project !== undefined
-          ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('t', project._id)}
+          ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('p', project._id)}
                className="more-details-link">
             {project.projectTitle}
           </a>
@@ -179,7 +179,8 @@ class MakueniTenders extends CRDPage {
                 />
               </div>
               : page === 't'
-              ? <PurchaseReqView id={id} navigate={navigate} translations={this.props.translations}/>
+              ? <PurchaseReqView selected={1} id={id} navigate={navigate}
+                                 translations={this.props.translations}/>
               : <Project id={id} navigate={navigate} translations={this.props.translations}/>
           }
         </div>

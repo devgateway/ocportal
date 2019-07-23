@@ -51,7 +51,7 @@ export const tendersData = mtState.mapping({
         tender;
       if (datum.projects !== undefined && datum.projects.purchaseRequisitions !== undefined
         && datum.projects.purchaseRequisitions.tender !== undefined) {
-        tender = datum.projects.purchaseRequisitions.tender;
+        tender = { purchaseReqId: datum.projects.purchaseRequisitions._id, ...datum.projects.purchaseRequisitions.tender[0] };
       }
       if (datum.projects !== undefined) {
         project = {
@@ -64,7 +64,7 @@ export const tendersData = mtState.mapping({
         id: datum._id,
         department: datum.department.label,
         fiscalYear: datum.fiscalYear.name,
-        tender: tender !== undefined ? tender[0] : undefined,
+        tender: tender !== undefined ? tender : undefined,
         project: project !== undefined ? project : undefined
       };
     })

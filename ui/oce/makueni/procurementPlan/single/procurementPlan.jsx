@@ -135,14 +135,14 @@ class ProcurementPlan extends CRDPage {
                           <div className="item-label">Source of Funds</div>
                           <div className="item-value">{planItem.sourceOfFunds}</div>
                         </div>
-                        {
-                          planItem.targetGroup !== undefined
-                            ? <div className="col-md-3">
-                              <div className="item-label">Target Group</div>
-                              <div className="item-value">{planItem.targetGroup.label}</div>
-                            </div>
-                            : null
-                        }
+                        <div className="col-md-3">
+                          <div className="item-label">Target Group</div>
+                          {
+                            planItem.targetGroup !== undefined
+                              ? <div className="item-value">{planItem.targetGroup.label}</div>
+                              : null
+                          }
+                        </div>
                         <div className="col-md-3">
                           <div className="item-label">
                             Target Group Value
@@ -185,7 +185,7 @@ class ProcurementPlan extends CRDPage {
                                 Click to download the file
                               </Tooltip>
                             }>
-  
+                            
                             <a className="item-value download" href={doc.url} target="_blank">
                               <i className="glyphicon glyphicon-download"/>
                               <span>{doc.name}</span>
