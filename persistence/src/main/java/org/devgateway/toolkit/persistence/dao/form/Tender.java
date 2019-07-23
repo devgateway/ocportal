@@ -200,7 +200,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
         BigDecimal total = BigDecimal.ZERO;
         for (TenderItem item : tenderItems) {
             if (item.getUnitPrice() != null && item.getQuantity() != null) {
-                total.add(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
+                total.add(item.getUnitPrice().multiply(item.getQuantity()));
             }
         }
         return total;

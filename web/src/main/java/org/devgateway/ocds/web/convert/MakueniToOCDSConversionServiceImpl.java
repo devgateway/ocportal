@@ -225,7 +225,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Item ocdsItem = new Item();
         safeSet(ocdsItem::setId, tenderItem::getId, this::longIdToString);
         safeSet(ocdsItem::setUnit, () -> tenderItem, this::createTenderItemUnit);
-        safeSet(ocdsItem::setQuantity, tenderItem::getQuantity, Integer::doubleValue);
+        safeSet(ocdsItem::setQuantity, tenderItem::getQuantity, BigDecimal::doubleValue);
         safeSet(ocdsItem::setClassification, tenderItem::getPurchaseItem, this::createPurchaseItemClassification);
         return ocdsItem;
     }
@@ -529,7 +529,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setId, purchaseItem::getId, this::longIdToString);
         safeSet(ocdsItem::setDescription, purchaseItem::getLabel);
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
-        safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, Integer::doubleValue);
+        safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, BigDecimal::doubleValue);
         safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPurchaseItemClassification);
         safeSet(ocdsItem::setTargetGroup, purchaseItem.getPlanItem()::getTargetGroup, this::categoryLabel);
         safeSet(ocdsItem::setTargetGroupValue, purchaseItem.getPlanItem()::getTargetGroupValue, this::convertAmount);

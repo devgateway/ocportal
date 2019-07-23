@@ -50,15 +50,15 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
 
     @Override
     public void populateCompoundListItem(final ListItem<PurchaseItem> item) {
-        final TextFieldBootstrapFormComponent<Integer> quantity =
-                new TextFieldBootstrapFormComponent<Integer>("quantity") {
+        final TextFieldBootstrapFormComponent<BigDecimal> quantity =
+                new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
                         target.add(totalCost);
                     }
                 };
-        quantity.integer();
-        quantity.getField().add(RangeValidator.minimum(0));
+        quantity.decimal();
+        quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         quantity.required();
         item.add(quantity);
 
@@ -79,9 +79,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         item.add(amount);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<Double>) () -> {
+                (IModel<BigDecimal>) () -> {
                     if (quantity.getModelObject() != null && amount.getModelObject() != null) {
-                        return amount.getModelObject().doubleValue() * quantity.getModelObject();
+                        return amount.getModelObject().multiply(quantity.getModelObject());
                     }
                     return null;
                 });

@@ -35,7 +35,7 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     private PlanItem planItem;
 
     @ExcelExport(useTranslation = true)
-    private Integer quantity;
+    private BigDecimal quantity;
 
     @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
@@ -57,11 +57,11 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
         this.planItem = planItem;
     }
 
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(final Integer quantity) {
+    public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
     }
 
