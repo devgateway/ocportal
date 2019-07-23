@@ -32,8 +32,10 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -53,6 +55,8 @@ public class TendersByItemClassification extends GenericOCDSController {
         public static final String ITEMS_CLASSIFICATION = "items.classification";
         public static final String DESCRIPTION = "description";
         public static final String TOTAL_TENDER_AMOUNT = "totalTenderAmount";
+        public static final String TOTAL_AMOUNT = "totalAmount";
+        public static final String TOTAL_ITEMS = "totalItems";
     }
 
     @ApiOperation(value = "This should show the number of tenders per tender.items.classification."
@@ -78,5 +82,33 @@ public class TendersByItemClassification extends GenericOCDSController {
 
         return releaseAgg(agg);
     }
+
+    @ApiOperation(value = "Y axis = Top 10 of the Total Cost per item in Tender doc. Both, Total Cost and the item "
+            + "details are being taken from the tender doc.\n"
+            + "X Axis = Item Details (on from IFMIS. The description of each item will be the same defined in the "
+            + "procurement plan but selected in the tender doc)")
+    @RequestMapping(value = "/api/totalAmountByItem", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> totalAmountByItem(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+
+        Aggregation agg = newAggregation(
+                match(where(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                        .and(MongoConstants.FieldNames.TENDER_ITEMS_UNIT_VALUE_AMOUNT).exists(true)
+                        .and(MongoConstants.FieldNames.TENDER_ITEMS_QUANTITY).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter,
+                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
+                unwind("tender.items"),
+                project().and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)
+                        .as(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)
+                        .and(MongoConstants.FieldNames.TENDER_ITEMS_QUANTITY)
+                        .multiply(MongoConstants.FieldNames.TENDER_ITEMS_UNIT_VALUE_AMOUNT).as(Keys.TOTAL_AMOUNT),
+                group(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION).count().as(Keys.TOTAL_ITEMS)
+                        .sum(Keys.TOTAL_AMOUNT).as(Keys.TOTAL_AMOUNT),
+                sort(Direction.DESC, Keys.TOTAL_AMOUNT), limit(10));
+
+        return releaseAgg(agg);
+    }
+
 
 }
