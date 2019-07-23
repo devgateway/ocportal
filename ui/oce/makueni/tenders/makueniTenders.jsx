@@ -6,6 +6,8 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import '../makueni.less';
 import FiltersWrapper from '../filters/FiltersWrapper';
+import Project from './single/Project';
+import PurchaseReqView from './single/PurchaseReqView';
 
 
 const NAME = 'MakueniTenders';
@@ -134,44 +136,52 @@ class MakueniTenders extends CRDPage {
         </div>
         
         <div className="col-md-9">
-          <h1>Makueni Tenders</h1>
-          
-          <BootstrapTableWrapper
-            bordered
-            data={data}
-            page={this.state.page}
-            pageSize={this.state.pageSize}
-            onPageChange={newPage => page.assign(NAME, newPage)}
-            onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
-            count={count}
-            columns={[{
-              title: 'Tender Title',
-              dataField: 'tender',
-              dataFormat: this.tenderLink(navigate),
-            }, {
-              title: 'Department',
-              dataField: 'department',
-            }, {
-              title: 'Fiscal Year',
-              dataField: 'fiscalYear',
-            }, {
-              title: 'Closing Date',
-              dataField: 'tender',
-              dataFormat: (cell, row) => cell !== undefined ? new Date(cell.closingDate).toLocaleDateString() : ''
-            }, {
-              title: 'Tender Value',
-              dataField: 'tender',
-              dataFormat: (cell, row) => cell !== undefined ? this.props.styling.charts.hoverFormatter(cell.tenderValue) : ''
-            }, {
-              title: 'Project',
-              dataField: 'project',
-              dataFormat: this.projectLink(navigate)
-            }, {
-              title: 'Tender Documents',
-              dataField: 'tender',
-              dataFormat: this.downloadFiles(),
-            }]}
-          />
+          {
+            page === undefined
+              ? <div>
+                <h1>Makueni Tenders</h1>
+                
+                <BootstrapTableWrapper
+                  bordered
+                  data={data}
+                  page={this.state.page}
+                  pageSize={this.state.pageSize}
+                  onPageChange={newPage => page.assign(NAME, newPage)}
+                  onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
+                  count={count}
+                  columns={[{
+                    title: 'Tender Title',
+                    dataField: 'tender',
+                    dataFormat: this.tenderLink(navigate),
+                  }, {
+                    title: 'Department',
+                    dataField: 'department',
+                  }, {
+                    title: 'Fiscal Year',
+                    dataField: 'fiscalYear',
+                  }, {
+                    title: 'Closing Date',
+                    dataField: 'tender',
+                    dataFormat: (cell, row) => cell !== undefined ? new Date(cell.closingDate).toLocaleDateString() : ''
+                  }, {
+                    title: 'Tender Value',
+                    dataField: 'tender',
+                    dataFormat: (cell, row) => cell !== undefined ? this.props.styling.charts.hoverFormatter(cell.tenderValue) : ''
+                  }, {
+                    title: 'Project',
+                    dataField: 'project',
+                    dataFormat: this.projectLink(navigate)
+                  }, {
+                    title: 'Tender Documents',
+                    dataField: 'tender',
+                    dataFormat: this.downloadFiles(),
+                  }]}
+                />
+              </div>
+              : page === 't'
+              ? <PurchaseReqView id={id} navigate={navigate} translations={this.props.translations}/>
+              : <Project id={id} navigate={navigate} translations={this.props.translations}/>
+          }
         </div>
       </div>
     

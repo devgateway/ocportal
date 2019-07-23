@@ -50,7 +50,7 @@ class ProcurementPlan extends CRDPage {
     
     return (<div className="procurement-plan makueni-form">
       <div className="row">
-        <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-12">
+        <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-3">
         <span className="back-icon">
           <span className="previous">&#8249;</span>
         </span>
