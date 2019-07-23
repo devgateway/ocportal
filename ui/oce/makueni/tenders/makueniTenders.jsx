@@ -1,10 +1,11 @@
 import CRDPage from '../../corruption-risk/page';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
-import { page, pageSize, tendersCountRemote, tendersData } from './state';
+import { mtFilters, page, pageSize, tendersCountRemote, tendersData } from './state';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import '../makueni.less';
+import FiltersWrapper from '../filters/FiltersWrapper';
 
 
 const NAME = 'MakueniTenders';
@@ -55,6 +56,10 @@ class MakueniTenders extends CRDPage {
   shouldComponentUpdate(nextProps, nextState) {
     return JSON.stringify(this.state) !== JSON.stringify(nextState)
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
+  }
+  
+  filters() {
+    return <FiltersWrapper filters={mtFilters} translations={this.props.translations}/>;
   }
   
   tenderLink(navigate) {
@@ -109,10 +114,9 @@ class MakueniTenders extends CRDPage {
   render() {
     // console.log(JSON.stringify(this.state, null, '\t'));
     
-    // mtFilters.assign('[[AAAA]]', new Map({ age: 5 }));
-    
     const { data, count } = this.state;
-    const { navigate } = this.props;
+    const { navigate, route } = this.props;
+    const [page, id] = route;
     
     return (<div className="container-fluid dashboard-default">
       
@@ -121,7 +125,12 @@ class MakueniTenders extends CRDPage {
       
       <div className="makueni-tenders content row">
         <div className="col-md-3 filters">
-          <h3>Filters</h3>
+          <div className="row">
+            <div className="filters-hint col-md-12">
+              {this.t('filters:hint')}
+            </div>
+            {this.filters()}
+          </div>
         </div>
         
         <div className="col-md-9">
