@@ -118,11 +118,6 @@ class Tender extends React.Component {
       
       <div className="row padding-top-10">
         <div className="col-md-6">
-          <div className="item-label">Tender Link</div>
-          <div className="item-value">{tender.tenderLink}</div>
-        </div>
-        
-        <div className="col-md-6">
           <div className="item-label">Upload Tender</div>
           {
             tender.formDocs.map(doc => <div key={doc._id}>
@@ -141,6 +136,10 @@ class Tender extends React.Component {
               </OverlayTrigger>
             </div>)
           }
+        </div>
+        <div className="col-md-6">
+          <div className="item-label">Tender Link</div>
+          <div className="item-value">{tender.tenderLink}</div>
         </div>
       </div>
     </div>);
