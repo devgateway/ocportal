@@ -15,6 +15,7 @@ import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniItem;
+import org.devgateway.ocds.persistence.mongo.MakueniOrganization;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.MakueniTender;
 import org.devgateway.ocds.persistence.mongo.Milestone;
@@ -25,6 +26,7 @@ import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tag;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Unit;
+import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -78,6 +80,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Autowired
     private ReleaseRepository releaseRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     private static final String OCID_PREFIX = "ocds-abcd-";
 
@@ -221,7 +226,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setId, tenderItem::getId, this::longIdToString);
         safeSet(ocdsItem::setUnit, () -> tenderItem, this::createTenderItemUnit);
         safeSet(ocdsItem::setQuantity, tenderItem::getQuantity, BigDecimal::doubleValue);
-        safeSet(ocdsItem::setClassification, () -> tenderItem, this::createTenderItemClassification);
+        safeSet(ocdsItem::setClassification, tenderItem::getPurchaseItem, this::createPurchaseItemClassification);
         return ocdsItem;
     }
 
@@ -235,11 +240,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return unit;
     }
 
-
-    public Classification createTenderItemClassification(TenderItem tenderItem) {
+    public Classification createPurchaseItemClassification(PurchaseItem purchaseItem) {
         Classification classification = new Classification();
-        safeSet(classification::setId, tenderItem.getPurchaseItem().getPlanItem().getItem()::getCode);
-        safeSet(classification::setDescription, tenderItem.getPurchaseItem().getPlanItem()::getDescription);
+        safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
+        safeSet(classification::setDescription, purchaseItem.getPlanItem().getItem()::getLabel);
         return classification;
     }
 
@@ -363,8 +367,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public Organization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
-        Organization ocdsOrg = new Organization();
+    public MakueniOrganization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        MakueniOrganization ocdsOrg = new MakueniOrganization();
         safeSet(ocdsOrg::setName, supplier::getLabel);
         safeSet(ocdsOrg::setId, () -> supplier, this::entityIdToString);
         safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryToIdentifier);
@@ -372,6 +376,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsOrg.getRoles()::add, () -> Organization.OrganizationType.supplier,
                 Organization.OrganizationType::toValue
         );
+        safeSet(ocdsOrg::setTargetGroup, supplier::getTargetGroup, this::categoryLabel);
         return ocdsOrg;
     }
 
@@ -416,6 +421,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Override
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
+        releaseRepository.deleteAll();
         purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
     }
 
@@ -524,18 +530,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setDescription, purchaseItem::getLabel);
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, BigDecimal::doubleValue);
-        safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPlanningItemClassification);
+        safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPurchaseItemClassification);
         safeSet(ocdsItem::setTargetGroup, purchaseItem.getPlanItem()::getTargetGroup, this::categoryLabel);
         safeSet(ocdsItem::setTargetGroupValue, purchaseItem.getPlanItem()::getTargetGroupValue, this::convertAmount);
         return ocdsItem;
     }
 
-    public Classification createPlanningItemClassification(PurchaseItem purchaseItem) {
-        Classification classification = new Classification();
-        safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
-        safeSet(classification::setDescription, purchaseItem.getPlanItem().getItem()::getLabel);
-        return classification;
-    }
 
     public Amount.Currency getCurrency() {
         return Amount.Currency.KES;
@@ -606,6 +606,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                         .map(AwardAcceptance::getAcceptedAwardValue).orElse(null),
                 this::convertAmount
         );
+
+        //same as above, but awardee
+        safeSet(ocdsAward.getSuppliers()::add, () -> Optional.ofNullable(awardNotification.getPurchaseRequisition().
+                getSingleAwardAcceptance())
+                .filter(Statusable::isExportable)
+                .map(AwardAcceptance::getAwardee).orElse(null), this::convertSupplier);
 
         safeSet(ocdsAward::setStatus, () -> awardNotification, this::createAwardStatus);
 
@@ -733,9 +739,26 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release.getTag()::addAll, () -> release, this::createReleaseTag);
         safeSet(release::setInitiationType, () -> Release.InitiationType.tender);
 
+        addPartiesToOrganizationCollection(release.getParties());
 
         return release;
     }
 
+
+    private void addPartiesToOrganizationCollection(Set<Organization> parties) {
+        parties.forEach(p -> {
+            Optional<Organization> organization = organizationRepository.findById(p.getId());
+            if (organization.isPresent()) {
+                if (!organization.get().getRoles().containsAll(p.getRoles())) {
+                    organization.get().getRoles().addAll(p.getRoles());
+                    organizationRepository.save(organization.get());
+                }
+            } else {
+                organizationRepository.save(p);
+            }
+
+        });
+
+    }
 
 }
