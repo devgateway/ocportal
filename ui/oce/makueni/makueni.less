@@ -1,5 +1,75 @@
+.tender {
+    .navigation-view {
+        overflow: hidden;
+        background-color: #F9F9F9;
+
+        @active-text-color: #29722d;
+        @active-tab-color: #204e6e;
+
+        a {
+            display: table-cell;
+            width: 1%;
+            cursor: pointer;
+            text-decoration: none;
+            text-transform: uppercase;
+            float: none;
+            outline: none;
+            padding: 15px 1px;
+            transition: 0.3s;
+            font-size: 14px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 3px solid #F9F9F9;
+
+            &:hover {
+                color: @active-tab-color;
+                border-bottom: 3px solid @active-tab-color;
+            }
+
+            &.active {
+                color: @active-text-color;
+                border-bottom: 3px solid @active-tab-color;
+
+                &:hover {
+                    color: @active-tab-color;
+                }
+            }
+        }
+    }
+}
 
 .makueni-form {
+    .back-link {
+        color: #337ab7;
+        font-size: 20px;
+        font-weight: 700;
+        text-decoration: none;
+        padding-top: 10px;
+
+        .back-icon {
+            padding-right: 10px;
+
+            .previous {
+                text-decoration: none;
+                display: inline-block;
+                padding: 10px 20px;
+
+                background-color: #f1f1f1;
+                color: black;
+                border-radius: 50%;
+            }
+
+            .previous:hover {
+                background-color: #ddd;
+                color: black;
+            }
+        }
+
+        &:hover {
+            color: #285f8f;
+        }
+    }
+
     .page-title {
         border-bottom: 1px solid #eeeeee;
         font-size: 22px;
@@ -53,85 +123,25 @@
 }
 
 .procurement-plan {
-    .back-link {
+
+}
+
+.makueni-procurement-plan {
+    a.download-file {
         color: #337ab7;
-        font-size: 20px;
-        font-weight: 700;
+        cursor: pointer;
         text-decoration: none;
-        padding-top: 10px;
-
-        .back-icon {
-            padding-right: 10px;
-
-            .previous {
-                text-decoration: none;
-                display: inline-block;
-                padding: 10px 20px;
-
-                background-color: #f1f1f1;
-                color: black;
-                border-radius: 50%;
-            }
-
-            .previous:hover {
-                background-color: #ddd;
-                color: black;
-            }
-        }
+        font-weight: bold;
 
         &:hover {
             color: #285f8f;
         }
     }
-}
 
-.makueni-procurement-plan {
-    .pp-link {
-        color: #337ab7;
-        font-size: 16px;
-        font-weight: 700;
-        text-decoration: none;
-
-        position: relative;
-        z-index: 1;
-        display: inline-flex;
-
-        padding-left: 10px;
-        padding-bottom: 5px;
-        padding-right: 10px;
+    .glyphicon {
+        color: #29722d;
+        margin-right: 5px;
     }
-
-    .pp-link:hover {
-        color: #285f8f;
-    }
-
-    .pp-link::before {
-        content: "";
-        width: 100%;
-        height: 100%;
-        background-image: linear-gradient(to top, #fed330 25%, rgba(0, 0, 0, 0) 20%);
-
-        position: absolute;
-        left: 0;
-        z-index: -1;
-
-        will-change: width;
-        transform-origin: left bottom
-    }
-
-    .pp-link:hover::before {
-        width: 0;
-    }
-
-    .pp-link::before {
-        transition: width .1s ease-out;
-    }
-
-    .pp-link:hover::before {
-        transition-duration: .15s;
-    }
-
-
 }
 
 .filters {
@@ -277,4 +287,67 @@
             }
         }
     }
+}
+
+.makueni-tenders {
+    a.download-file {
+        color: #337ab7;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+            color: #285f8f;
+        }
+    }
+
+    .glyphicon {
+        color: #29722d;
+        margin-right: 5px;
+    }
+}
+
+a.more-details-link {
+    color: #337ab7;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+
+    padding-left: 10px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+}
+
+a.more-details-link:hover {
+    color: #285f8f;
+}
+
+a.more-details-link::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to top, #fed330 25%, rgba(0, 0, 0, 0) 20%);
+
+    position: absolute;
+    left: 0;
+    z-index: -1;
+
+    will-change: width;
+    transform-origin: left bottom
+}
+
+a.more-details-link:hover::before {
+    width: 0;
+}
+
+a.more-details-link::before {
+    transition: width .1s ease-out;
+}
+
+a.more-details-link:hover::before {
+    transition-duration: .15s;
 }

@@ -1,7 +1,6 @@
 package org.devgateway.ocds.web.db;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
-import org.bson.types.ObjectId;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -14,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.index.Index;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,11 +140,6 @@ public class ImportPostgresToMongo {
         for (final FileMetadata fileMetadata : formDocs) {
             mongoFileStorageService.storeFile(fileMetadata);
         }
-    }
-
-
-    public GridFSFile retrieveFile(ObjectId id) {
-        return gridFsOperations.findOne(new Query(Criteria.where(Fields.UNDERSCORE_ID).is(id)));
     }
 
     /**

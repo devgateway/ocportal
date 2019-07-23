@@ -3,6 +3,7 @@ import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
 import FiltersWrapper from '../filters/FiltersWrapper';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import '../makueni.less';
 import ProcurementPlan from './single/procurementPlan';
@@ -66,9 +67,32 @@ class MakueniProcurementPlans extends CRDPage {
   ppLink(navigate) {
     return (ppId) => (
       <a href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
-         className="pp-link">
+         className="more-details-link">
         More Details
       </a>
+    );
+  }
+  
+  downloadFiles() {
+    return (formDocs) => (<div>
+        {
+          formDocs.map(doc => <div key={doc.id}>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip id="download-tooltip">
+                  Click to download the file
+                </Tooltip>
+              }>
+              
+              <a className="download-file" href={doc.url} target="_blank">
+                <i className="glyphicon glyphicon-download"/>
+                <span>{doc.name}</span>
+              </a>
+            </OverlayTrigger>
+          </div>)
+        }
+      </div>
     );
   }
   
@@ -117,10 +141,15 @@ class MakueniProcurementPlans extends CRDPage {
                   }, {
                     title: 'Fiscal Year',
                     dataField: 'fiscalYear',
+                  }, {
+                    title: 'Procurement Plan Files',
+                    dataField: 'formDocs',
+                    dataFormat: this.downloadFiles(),
                   }]}
                 />
               </div>
-              : <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}/>
+              :
+              <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}/>
           }
         </div>
       </div>
