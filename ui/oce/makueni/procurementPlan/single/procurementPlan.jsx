@@ -1,6 +1,7 @@
 import CRDPage from '../../../corruption-risk/page';
 import { ppState } from '../state';
 import { API_ROOT } from '../../../state/oce-state';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 class ProcurementPlan extends CRDPage {
   constructor(props) {
@@ -49,7 +50,7 @@ class ProcurementPlan extends CRDPage {
     
     return (<div className="procurement-plan makueni-form">
       <div className="row">
-        <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-12">
+        <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-3">
         <span className="back-icon">
           <span className="previous">&#8249;</span>
         </span>
@@ -134,14 +135,14 @@ class ProcurementPlan extends CRDPage {
                           <div className="item-label">Source of Funds</div>
                           <div className="item-value">{planItem.sourceOfFunds}</div>
                         </div>
-                        {
-                          planItem.targetGroup !== undefined
-                            ? <div className="col-md-3">
-                              <div className="item-label">Target Group</div>
-                              <div className="item-value">{planItem.targetGroup.label}</div>
-                            </div>
-                            : null
-                        }
+                        <div className="col-md-3">
+                          <div className="item-label">Target Group</div>
+                          {
+                            planItem.targetGroup !== undefined
+                              ? <div className="item-value">{planItem.targetGroup.label}</div>
+                              : null
+                          }
+                        </div>
                         <div className="col-md-3">
                           <div className="item-label">
                             Target Group Value
@@ -177,16 +178,26 @@ class ProcurementPlan extends CRDPage {
                       
                       {
                         data.formDocs.map(doc => <div key={doc.id}>
-                          <a className="item-value download">
-                            <i className="glyphicon glyphicon-download"/>
-                            <span>{doc.name}</span>
-                          </a>
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id="download-tooltip">
+                                Click to download the file
+                              </Tooltip>
+                            }>
+                            
+                            <a className="item-value download" href={doc.url} target="_blank">
+                              <i className="glyphicon glyphicon-download"/>
+                              <span>{doc.name}</span>
+                            </a>
+                          </OverlayTrigger>
                         </div>)
                       }
                     </div>
                     <div className="col-md-6">
                       <div className="item-label">Approved Date</div>
-                      <div className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
+                      <div
+                        className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
                     </div>
                   </div>
                 </div>
