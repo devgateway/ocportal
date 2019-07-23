@@ -47,10 +47,25 @@ export const tendersData = mtState.mapping({
   deps: [tendersRemote],
   mapper: raw =>
     raw.map(datum => {
+      let project,
+        tender;
+      if (datum.projects !== undefined && datum.projects.purchaseRequisitions !== undefined
+        && datum.projects.purchaseRequisitions.tender !== undefined) {
+        tender = datum.projects.purchaseRequisitions.tender;
+      }
+      if (datum.projects !== undefined) {
+        project = {
+          _id: datum.projects._id,
+          projectTitle: datum.projects.projectTitle
+        };
+      }
+      
       return {
-        id: datum.id,
+        id: datum._id,
         department: datum.department.label,
-        fiscalYear: datum.fiscalYear.label,
+        fiscalYear: datum.fiscalYear.name,
+        tender: tender !== undefined ? tender[0] : undefined,
+        project: project !== undefined ? project : undefined
       };
     })
 });

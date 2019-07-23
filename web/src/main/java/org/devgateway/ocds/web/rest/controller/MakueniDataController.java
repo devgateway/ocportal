@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -34,9 +34,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.skip;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
@@ -59,22 +62,38 @@ public class MakueniDataController extends GenericOCDSController {
     @Autowired
     private GridFsOperations gridFsOperations;
 
+    @Resource
+    private MakueniDataController self; // Self-autowired reference to proxified bean of this class.
+
     @ApiOperation(value = "Fetch Makueni Tenders")
     @RequestMapping(value = "/api/makueni/tenders",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    public List<ProcurementPlan> makueniTenders(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
+    public List<Document> makueniTenders(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
-        return mongoTemplate.findAll(ProcurementPlan.class);
+        final Criteria criteria = new Criteria().andOperator(
+                createFilterCriteria("department._id", filter.getDepartment()),
+                createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
+
+        final Aggregation aggregation = newAggregation(match(criteria),
+                project("_id", "department", "fiscalYear", "projects"),
+                unwind("projects"),
+                unwind("projects.purchaseRequisitions"),
+                skip(filter.getSkip()),
+                limit(filter.getPageSize()));
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
     }
 
     @ApiOperation(value = "Counts Makueni Tenders")
     @RequestMapping(value = "/api/makueni/tendersCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    public Long makueniTendersCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
-
-        return mongoTemplate.count(new Query(), ProcurementPlan.class);
+    public Integer makueniTendersCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
+        // TODO - fix this for pagination...
+        return self.makueniTenders(filter).size();
     }
 
     @ApiOperation(value = "Fetch Makueni Procurement Plans")
@@ -90,7 +109,9 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
         final Aggregation aggregation = newAggregation(match(criteria),
-                project("formDocs", "department", "fiscalYear", "status", "approvedDate"));
+                project("formDocs", "department", "fiscalYear", "status", "approvedDate"),
+                skip(filter.getSkip()),
+                limit(filter.getPageSize()));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", ProcurementPlan.class)
                 .getMappedResults();
@@ -101,7 +122,8 @@ public class MakueniDataController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     public Integer makueniProcurementPlansCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
-        return makueniProcurementPlans(filter).size();
+        // TODO - fix this for pagination...
+        return self.makueniProcurementPlans(filter).size();
     }
 
     @RequestMapping(value = "/api/makueni/procurementPlan/id/{id:^[0-9\\-]*$}",

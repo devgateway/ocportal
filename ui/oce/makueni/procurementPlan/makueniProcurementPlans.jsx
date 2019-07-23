@@ -67,7 +67,7 @@ class MakueniProcurementPlans extends CRDPage {
   ppLink(navigate) {
     return (ppId) => (
       <a href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
-         className="pp-link">
+         className="more-details-link">
         More Details
       </a>
     );

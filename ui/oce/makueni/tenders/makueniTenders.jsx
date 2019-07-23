@@ -2,6 +2,7 @@ import CRDPage from '../../corruption-risk/page';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import { page, pageSize, tendersCountRemote, tendersData } from './state';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import '../makueni.less';
 
@@ -56,9 +57,57 @@ class MakueniTenders extends CRDPage {
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
   
+  tenderLink(navigate) {
+    return (tender) => (<div>
+      {
+        tender !== undefined
+          ? <a href={`#!/tender/t/${tender._id}`} onClick={() => navigate('t', tender._id)}
+               className="more-details-link">
+            {tender.tenderTitle}
+          </a>
+          : 'No Tender'
+      }
+    </div>);
+  }
+  
+  projectLink(navigate) {
+    return (project) => (<div>
+      {
+        project !== undefined
+          ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('t', project._id)}
+               className="more-details-link">
+            {project.projectTitle}
+          </a>
+          : 'No Project'
+      }
+    </div>);
+  }
+  
+  downloadFiles() {
+    return (tender) => (<div>
+        {
+          tender && tender.formDocs.map(doc => <div key={doc}>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip id="download-tooltip">
+                  Click to download the file
+                </Tooltip>
+              }>
+              
+              <a className="download-file" href={doc.url} target="_blank">
+                <i className="glyphicon glyphicon-download"/>
+                <span>{doc.name}</span>
+              </a>
+            </OverlayTrigger>
+          </div>)
+        }
+      </div>
+    );
+  }
   
   render() {
-    console.log(JSON.stringify(this.state, null, '\t'));
+    // console.log(JSON.stringify(this.state, null, '\t'));
     
     // mtFilters.assign('[[AAAA]]', new Map({ age: 5 }));
     
@@ -87,16 +136,31 @@ class MakueniTenders extends CRDPage {
             onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
             count={count}
             columns={[{
-              title: 'ID',
-              dataField: 'id',
-              width: '20%',
-              // dataFormat: mkContractLink(navigate),
+              title: 'Tender Title',
+              dataField: 'tender',
+              dataFormat: this.tenderLink(navigate),
             }, {
               title: 'Department',
               dataField: 'department',
             }, {
               title: 'Fiscal Year',
               dataField: 'fiscalYear',
+            }, {
+              title: 'Closing Date',
+              dataField: 'tender',
+              dataFormat: (cell, row) => cell !== undefined ? new Date(cell.closingDate).toLocaleDateString() : ''
+            }, {
+              title: 'Tender Value',
+              dataField: 'tender',
+              dataFormat: (cell, row) => cell !== undefined ? this.props.styling.charts.hoverFormatter(cell.tenderValue) : ''
+            }, {
+              title: 'Project',
+              dataField: 'project',
+              dataFormat: this.projectLink(navigate)
+            }, {
+              title: 'Tender Documents',
+              dataField: 'tender',
+              dataFormat: this.downloadFiles(),
             }]}
           />
         </div>
