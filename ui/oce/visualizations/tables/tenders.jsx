@@ -8,30 +8,29 @@ const getDate = (obj/*tender obj*/, key/*date key*/) => obj.hasIn(['tenderPeriod
 class Tenders extends Table {
   row(entry) {
     let bidNo = entry.getIn(['planning', 'bidNo']);
-    let tender = entry.get('tender');
+    let buyer = entry.get('buyer');
+    let tender = entry.get('tender')
     let value = tender.get('value');
-    
+
     // TODO - change the key when we have a bidNo
     return (<tr key={bidNo + tender}>
-        <td>{bidNo}</td>
-        <td>{getDate(tender, 'startDate')}</td>
+       {/*<td>{bidNo}</td>*/}
         <td>{getDate(tender, 'endDate')}</td>
-        <td className="procuring-entity-title">{tender.getIn(['procuringEntity', 'name'])}</td>
+        <td className="procuring-entity-title">{buyer.getIn(['name'])}</td>
         <td>{this.maybeFormat(value.get('amount'))} {value.get('currency')}</td>
       </tr>
     );
   }
-  
+
   render() {
     if (!this.props.data) return null;
     return (
       <table className="table table-striped table-hover tenders-table">
         <thead>
         <tr>
-          <th>{this.t('tables:top10tenders:number')}</th>
-          <th>{this.t('tables:top10tenders:startDate')}</th>
+          {/*<th>{this.t('tables:top10tenders:number')}</th>*/}
           <th>{this.t('tables:top10tenders:endDate')}</th>
-          <th>{this.t('tables:top10tenders:procuringEntity')}</th>
+          <th>{this.t('tables:top10tenders:buyer')}</th>
           <th>{this.t('tables:top10tenders:estimatedValue')}</th>
         </tr>
         </thead>

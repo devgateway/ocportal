@@ -116,8 +116,8 @@ public class TopTenController extends GenericOCDSController {
      */
     @ApiOperation(value = "Returns the top ten largest active tenders."
             + " The amount is taken from the tender.value.amount field." + " The returned data will contain"
-            + "the following fields: " + "tender.date, tender.value.amount, tender.tenderPeriod, "
-            + "tender.procuringEntity.name")
+            + "the following fields: " + "tender.tenderPeriod.endDate, tender.value.amount, "
+            + "buyer.name")
     @RequestMapping(value = "/api/topTenLargestTenders", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     public List<Document> topTenLargestTenders(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
@@ -125,14 +125,14 @@ public class TopTenController extends GenericOCDSController {
         BasicDBObject project = new BasicDBObject();
         project.put(Fields.UNDERSCORE_ID, 0);
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
-        project.put("tender.tenderPeriod", 1);
-        project.put("tender.procuringEntity.name", 1);
+        project.put(getTenderDateField(), 1);
+        project.put(MongoConstants.FieldNames.BUYER_NAME, 1);
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 new CustomOperation(new Document("$project", project)),
                 sort(Direction.DESC, MongoConstants.FieldNames.TENDER_VALUE_AMOUNT), limit(10)
