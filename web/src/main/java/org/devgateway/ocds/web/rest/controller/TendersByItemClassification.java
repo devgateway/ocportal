@@ -97,7 +97,7 @@ public class TendersByItemClassification extends GenericOCDSController {
                         .and(MongoConstants.FieldNames.TENDER_ITEMS_UNIT_VALUE_AMOUNT).exists(true)
                         .and(MongoConstants.FieldNames.TENDER_ITEMS_QUANTITY).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
+                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE))),
                 unwind("tender.items"),
                 project().and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)
                         .as(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)
