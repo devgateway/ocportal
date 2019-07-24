@@ -1,6 +1,6 @@
-import BidsByItem from "./bids-by-item";
+import CatChart from './cat-chart';
 
-class TotalAmountsByItem extends BidsByItem{
+class TotalAmountsByItem extends CatChart{
   static getName(t){return t('charts:amountsByItem:title')}
 
   getLayout(){
@@ -19,5 +19,10 @@ class TotalAmountsByItem extends BidsByItem{
 
 TotalAmountsByItem.excelEP = '';
 TotalAmountsByItem.CAT_VALUE_FIELD = 'totalTenderAmount';
+
+
+TotalAmountsByItem.endpoint = 'totalAmountByItem';
+TotalAmountsByItem.CAT_NAME_FIELD = "description";
+TotalAmountsByItem.CAT_VALUE_FIELD = "totalAmount";
 
 export default TotalAmountsByItem;
