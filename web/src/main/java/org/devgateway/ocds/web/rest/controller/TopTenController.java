@@ -60,8 +60,8 @@ public class TopTenController extends GenericOCDSController {
         public static final String PROCURING_ENTITY = "procuringEntity";
         public static final String TOTAL_AWARD_AMOUNT = "totalAwardAmount";
         public static final String TOTAL_CONTRACTS = "totalContracts";
-        public static final String PROCURING_ENTITY_IDS = "procuringEntityIds";
-        public static final String PROCURING_ENTITY_IDS_COUNT = "procuringEntityIdsCount";
+        public static final String BUYER_IDS = "buyerIds";
+        public static final String BUYER_IDS_COUNT = "buyerIdsCount";
         public static final String SUPPLIER_ID = "supplierId";
     }
 
@@ -155,7 +155,7 @@ public class TopTenController extends GenericOCDSController {
         project.put(Fields.UNDERSCORE_ID, 0);
         project.put(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID, 1);
         project.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
-        project.put(MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID, 1);
+        project.put(MongoConstants.FieldNames.BUYER_ID, 1);
 
         BasicDBObject group = new BasicDBObject();
         group.put(Fields.UNDERSCORE_ID, ref(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID));
@@ -163,8 +163,8 @@ public class TopTenController extends GenericOCDSController {
                 Keys.TOTAL_AWARD_AMOUNT, new BasicDBObject("$sum", ref(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT)));
         group.put(Keys.TOTAL_CONTRACTS, new BasicDBObject("$sum", 1));
         group.put(
-                Keys.PROCURING_ENTITY_IDS,
-                new BasicDBObject("$addToSet", ref(MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID))
+                Keys.BUYER_IDS,
+                new BasicDBObject("$addToSet", ref(MongoConstants.FieldNames.BUYER_ID))
         );
 
 
@@ -183,9 +183,9 @@ public class TopTenController extends GenericOCDSController {
                 limit(10),
                 project().and(Fields.UNDERSCORE_ID).
                         as(Keys.SUPPLIER_ID).
-                        andInclude(Keys.TOTAL_AWARD_AMOUNT, Keys.TOTAL_CONTRACTS, Keys.PROCURING_ENTITY_IDS)
+                        andInclude(Keys.TOTAL_AWARD_AMOUNT, Keys.TOTAL_CONTRACTS, Keys.BUYER_IDS)
                         .andExclude(Fields.UNDERSCORE_ID)
-                        .and(Keys.PROCURING_ENTITY_IDS).size().as(Keys.PROCURING_ENTITY_IDS_COUNT)
+                        .and(Keys.BUYER_IDS).size().as(Keys.BUYER_IDS_COUNT)
         );
 
         return releaseAgg(agg);

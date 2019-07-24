@@ -77,9 +77,9 @@ public class TopTenControllerTest extends AbstractEndPointControllerTest {
         Assert.assertEquals(6000000d, first.get(TopTenController.Keys.TOTAL_AWARD_AMOUNT));
         Assert.assertEquals(1, first.get(TopTenController.Keys.TOTAL_CONTRACTS));
         Assert.assertEquals("E09000005",
-                ((Collection) first.get(TopTenController.Keys.PROCURING_ENTITY_IDS)).iterator().next());
+                ((Collection) first.get(TopTenController.Keys.BUYER_IDS)).iterator().next());
         Assert.assertEquals("GB-COH-1234567845", first.get(TopTenController.Keys.SUPPLIER_ID));
-        Assert.assertEquals(1, first.get(TopTenController.Keys.PROCURING_ENTITY_IDS_COUNT));
+        Assert.assertEquals(1, first.get(TopTenController.Keys.BUYER_IDS_COUNT));
 
         Assert.assertEquals(2, topTenLargestSuppliers.size());
 
