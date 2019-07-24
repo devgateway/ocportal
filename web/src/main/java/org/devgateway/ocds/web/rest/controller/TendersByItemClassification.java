@@ -11,13 +11,10 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
-import org.devgateway.toolkit.persistence.mongo.aggregate.CustomProjectionOperation;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort.Direction;
@@ -57,28 +54,30 @@ public class TendersByItemClassification extends GenericOCDSController {
         public static final String TOTAL_TENDER_AMOUNT = "totalTenderAmount";
         public static final String TOTAL_AMOUNT = "totalAmount";
         public static final String TOTAL_ITEMS = "totalItems";
+        public static final String TENDER_COUNT = "tenderCount";
     }
 
     @ApiOperation(value = "This should show the number of tenders per tender.items.classification."
-            + "The tender date is taken from tender.tenderPeriod.startDate.")
+            + "The tender date is taken from tender.tenderPeriod.endDate.")
     @RequestMapping(value = "/api/tendersByItemClassification", method = { RequestMethod.POST,
             RequestMethod.GET }, produces = "application/json")
     public List<Document> tendersByItemClassification(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
-        DBObject project = new BasicDBObject();
-        project.put(Fields.UNDERSCORE_ID, 0);
-        project.put("tender." + Keys.ITEMS_CLASSIFICATION, 1);
-        project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
 
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                match(where(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
-                new CustomProjectionOperation(project), unwind("tender.items"),
-                group("$tender." + Keys.ITEMS_CLASSIFICATION).count().as(Keys.TOTAL_TENDERS)
-                        .sum(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT).as(Keys.TOTAL_TENDER_AMOUNT),
-                sort(Direction.ASC, Fields.UNDERSCORE_ID));
+                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE))),
+                unwind(MongoConstants.FieldNames.TENDER_ITEMS),
+                project().and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)
+                        .as("itemsClassification")
+                        .andInclude(Fields.UNDERSCORE_ID),
+                group(Fields.UNDERSCORE_ID, "itemsClassification"),
+                group("itemsClassification").count().as(Keys.TENDER_COUNT),
+                sort(Direction.DESC, Keys.TENDER_COUNT),
+                limit(10)
+        );
 
         return releaseAgg(agg);
     }
