@@ -1,14 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.TendersByItemClassification;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
@@ -18,6 +10,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author idobre
@@ -55,7 +54,7 @@ public class TendersByItemExcelController extends ExcelChartOCDSController {
 
         final List<Number> totalTenderAmount = excelChartHelper.getValuesFromDBObject(numberOfTendersByItem,
                 categories, TendersByItemClassification.Keys.DESCRIPTION,
-                TendersByItemClassification.Keys.TOTAL_TENDERS);
+                TendersByItemClassification.Keys.TENDER_COUNT);
         if (!totalTenderAmount.isEmpty()) {
             values.add(totalTenderAmount);
         }

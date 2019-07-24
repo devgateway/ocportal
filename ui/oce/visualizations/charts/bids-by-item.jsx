@@ -20,6 +20,6 @@ class BidsByItem extends CatChart{
 BidsByItem.endpoint = 'tendersByItemClassification';
 BidsByItem.excelEP = 'tendersByItemExcelChart';
 BidsByItem.CAT_NAME_FIELD = "description";
-BidsByItem.CAT_VALUE_FIELD = "totalTenders";
+BidsByItem.CAT_VALUE_FIELD = "tenderCount";
 
 export default BidsByItem;
