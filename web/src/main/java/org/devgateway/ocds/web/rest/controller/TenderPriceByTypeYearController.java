@@ -60,7 +60,7 @@ public class TenderPriceByTypeYearController extends GenericOCDSController {
                         .exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE
                         ))),
                 new CustomProjectionOperation(project), group("tender." + Keys.PROCUREMENT_METHOD)
                         .sum(ref(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)).as(Keys.TOTAL_TENDER_AMOUNT),
