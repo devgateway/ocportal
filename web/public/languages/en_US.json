@@ -119,7 +119,7 @@
   "maps:tenderLocations:tabs:overview:nrOfTenders": "Number of Tenders:",
   "maps:tenderLocations:tabs:overview:totalFundingByLocation": "Total Funding for the location",
   "tables:top10awards:number": "Number",
-  "tables:top10awards:date": "Date",
+  "tables:top10awards:date": "Award Date",
   "tables:top10awards:supplier": "Supplier",
   "tables:top10awards:value": "Value",
   "tables:top10awards:title": "Top 10 largest awards",

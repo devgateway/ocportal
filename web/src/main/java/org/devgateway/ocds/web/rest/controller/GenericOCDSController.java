@@ -92,6 +92,15 @@ public abstract class GenericOCDSController {
         return MongoConstants.FieldNames.TENDER_PERIOD_END_DATE;
     }
 
+    /**
+     * The date field that is used to calculate the "award date"
+     *
+     * @return
+     */
+    protected String awardDateField() {
+        return MongoConstants.FieldNames.AWARDS_DATE;
+    }
+
     protected <Z> List<Z> releaseAgg(Aggregation agg, AggregationOptions options, Class<Z> clazz) {
         return mongoTemplate.aggregate(agg.withOptions(options), "release", clazz)
                 .getMappedResults();

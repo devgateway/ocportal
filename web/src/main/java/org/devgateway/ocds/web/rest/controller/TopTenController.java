@@ -87,8 +87,8 @@ public class TopTenController extends GenericOCDSController {
 
         BasicDBObject project = new BasicDBObject();
         project.put(Fields.UNDERSCORE_ID, 0);
-        project.put(MongoConstants.FieldNames.AWARDS_DATE, 1);
-        project.put("awards.suppliers.name", 1);
+        project.put(awardDateField(), 1);
+        project.put(MongoConstants.FieldNames.AWARDS_SUPPLIERS_NAME, 1);
         project.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
         project.put("planning.budget", 1);
 
@@ -98,8 +98,8 @@ public class TopTenController extends GenericOCDSController {
                         .is(Award.Status.active.toString())
                         .andOperator(getDefaultFilterCriteria(filter))),
                 unwind("awards"),
-                match(getYearFilterCriteria(filter.awardFiltering(), MongoConstants.FieldNames.AWARDS_DATE)),
-                new CustomOperation(new Document("$project", project)),
+                match(getYearFilterCriteria(filter.awardFiltering(), awardDateField())),
+                new CustomProjectionOperation(project),
                 sort(Direction.DESC, MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT), limit(10)
         );
 

@@ -6,10 +6,10 @@ class Awards extends Table {
     let bidNo = entry.getIn(['planning', 'bidNo']);
     let awards = entry.get('awards');
     let value = awards.get('value');
-    
+
     // TODO - change the key when we have a bidNo
     return <tr key={bidNo + awards}>
-      <td>{bidNo}</td>
+      {/*<td>{bidNo}</td>*/}
       <td>{new Date(awards.get('date')).toLocaleDateString(undefined, Table.DATE_FORMAT)}</td>
       <td className="supplier-name">
         {awards.get('suppliers')
@@ -19,14 +19,14 @@ class Awards extends Table {
       <td>{this.maybeFormat(value.get('amount'))} {value.get('currency')}</td>
     </tr>;
   }
-  
+
   render() {
     if (!this.props.data) return null;
     return (
       <table className="table table-striped table-hover awards-table">
         <thead>
         <tr>
-          <th>{this.t('tables:top10awards:number')}</th>
+          {/*<th>{this.t('tables:top10awards:number')}</th>*/}
           <th>{this.t('tables:top10awards:date')}</th>
           <th>{this.t('tables:top10awards:supplier')}</th>
           <th>{this.t('tables:top10awards:value')}</th>
