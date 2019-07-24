@@ -87,16 +87,18 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
 
         DBObject project = new BasicDBObject();
         project.put(Fields.UNDERSCORE_ID, 0);
-        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
+        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.AWARDS_DATE));
         project.put("tenderLengthDays", tenderLengthDays);
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE)
-                        .exists(true).and(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE)
+                        .exists(true).and(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE).exists(true)
+                        .and(MongoConstants.FieldNames.AWARDS_DATE).exists(true)
                         .exists(true).andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                MongoConstants.FieldNames.AWARDS_DATE
                         ))),
+                unwind("awards"),
                 new CustomProjectionOperation(project),
                 getYearlyMonthlyGroupingOperation(filter).avg("$tenderLengthDays").as(Keys.AVERAGE_TENDER_DAYS),
                 transformYearlyGrouping(filter).andInclude(Keys.AVERAGE_TENDER_DAYS),
