@@ -64,7 +64,7 @@ public class FrequentTenderersController extends GenericOCDSController {
                         .and(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE
                         ))),
                 unwind("tender.tenderers"),
                 unwind("awards"),
@@ -72,7 +72,7 @@ public class FrequentTenderersController extends GenericOCDSController {
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearFilterCriteria(
                                 filter.awardFiltering(),
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE
                         ))),
                 project().and(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).as("supplierId")
                         .and("tender.tenderers._id").as("tendererId").andExclude(
@@ -88,6 +88,7 @@ public class FrequentTenderersController extends GenericOCDSController {
                                 Criteria.where("cmp").is(1)).thenValueOf("$tendererId")
                                 .otherwiseValueOf("$supplierId")).as("tendererId2"),
                 group("tendererId1", "tendererId2").count().as("pairCount"),
+                match(where("pairCount").gt(1)),
                 sort(Sort.Direction.DESC, "pairCount"), skip(filter.getSkip()), limit(filter.getPageSize())
         );
 
