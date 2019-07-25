@@ -204,6 +204,24 @@ public class MakueniDataController extends GenericOCDSController {
                 .getUniqueMappedResult();
     }
 
+    @RequestMapping(value = "/api/makueni/contractStats",
+            method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+    @ApiOperation(value = "Fetch Contract Stats")
+    public Document makueniContractStats() {
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Aggregation aggregation = newAggregation(
+                unwind("projects"),
+                unwind("projects.purchaseRequisitions"),
+                unwind("projects.purchaseRequisitions.contract"),
+                group().count().as("count").sum("projects.purchaseRequisitions.contract.contractValue").as("value"));
+
+        logger.error(aggregation.toString());
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getUniqueMappedResult();
+    }
+
     @ApiOperation(value = "Display the available Procurement Plan Departments.")
     @RequestMapping(value = "/api/makueni/filters/departments", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
