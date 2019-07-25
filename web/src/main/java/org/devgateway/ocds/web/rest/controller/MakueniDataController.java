@@ -216,8 +216,6 @@ public class MakueniDataController extends GenericOCDSController {
                 unwind("projects.purchaseRequisitions.contract"),
                 group().count().as("count").sum("projects.purchaseRequisitions.contract.contractValue").as("value"));
 
-        logger.error(aggregation.toString());
-
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getUniqueMappedResult();
     }
