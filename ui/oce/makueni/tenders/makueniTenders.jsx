@@ -114,8 +114,7 @@ class MakueniTenders extends CRDPage {
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
-    const navigationPage = route.page;
-    const id = route.id;
+    const [navigationPage, id] = route;
   
     return (<div className="container-fluid dashboard-default">
       
