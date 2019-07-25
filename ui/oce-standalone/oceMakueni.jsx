@@ -18,7 +18,7 @@ class OCEMakueni extends OCApp {
     this.registerTab(EfficiencyTab);
     this.registerTab(EProcurementTab);
   }
-  
+
   fetchBidTypes() {
     fetchJson('/api/ocds/bidType/all')
     .then(data =>
@@ -28,7 +28,7 @@ class OCEMakueni extends OCApp {
       })
     );
   }
-  
+
   loginBox() {
     let linkUrl;
     let text;
@@ -47,7 +47,7 @@ class OCEMakueni extends OCApp {
       </a>
     );
   }
-  
+
   dashboardSwitcher() {
     const { dashboardSwitcherOpen } = this.state;
     const { onSwitch } = this.props;
@@ -67,7 +67,7 @@ class OCEMakueni extends OCApp {
       </div>
     );
   }
-  
+
   exportBtn() {
     if (this.state.exporting) {
       return (
@@ -87,13 +87,12 @@ class OCEMakueni extends OCApp {
         </span>
         <div className="export-btn">
           <button className="btn btn-default" disabled>
-            <i className="glyphicon glyphicon-download-alt"/>
           </button>
         </div>
       </div>
     );
   }
-  
+
   languageSwitcher() {
     const { TRANSLATIONS } = this.constructor;
     const { locale: selectedLocale } = this.state;
@@ -109,13 +108,13 @@ class OCEMakueni extends OCApp {
       </a>
     ));
   }
-  
+
   render() {
     return (
       <div className="container-fluid dashboard-default">
         <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
                 selected="m-and-e"/>
-        
+
         <div className="row content">
           <div className="col-xs-4 col-md-3 menu">
             <div className="row">
@@ -126,20 +125,20 @@ class OCEMakueni extends OCApp {
               {this.comparison()}
             </div>
           </div>
-          
+
           <div className="col-xs-8 col-md-9">
             <div className="row">
               <div className="navigation">
                 {this.navigation()}
               </div>
             </div>
-  
+
             <div className="row">
               {this.content()}
             </div>
           </div>
         </div>
-        
+
         {this.showMonths() && <div
           className="col-xs-offset-4 col-md-offset-3 col-xs-8 col-md-9 months-bar"
           role="navigation"

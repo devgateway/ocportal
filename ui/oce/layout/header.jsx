@@ -7,12 +7,12 @@ import './header.less';
 export default class Header extends translatable(React.Component) {
   constructor(props) {
     super(props);
-  
+
     this.state = {
       exporting: false,
       selected: props.selected || '',
     };
-    
+
     this.tabs = [
       {
         name: 'tender',
@@ -30,16 +30,16 @@ export default class Header extends translatable(React.Component) {
         icon: 'assets/icons/eprocurement.svg'
       }
     ];
-    
+
     this.changeOption = this.changeOption.bind(this);
     this.isActive = this.isActive.bind(this);
   }
-  
+
   changeOption(option) {
     this.setState({ selected: option });
     this.props.onSwitch(option);
   }
-  
+
   isActive(option) {
     const { selected } = this.state;
     if (selected === '') {
@@ -47,7 +47,7 @@ export default class Header extends translatable(React.Component) {
     }
     return selected === option;
   }
-  
+
   exportBtn() {
     if (this.state.exporting) {
       return (
@@ -67,13 +67,12 @@ export default class Header extends translatable(React.Component) {
         </span>
         <div className="export-btn">
           <button className="btn btn-default" disabled>
-            <i className="glyphicon glyphicon-download-alt"/>
           </button>
         </div>
       </div>
     );
   }
-  
+
   render() {
     return (<div>
       <header className="branding row">
@@ -82,7 +81,7 @@ export default class Header extends translatable(React.Component) {
             <img src="assets/makueni-logo.png" alt="Makueni"/>
           </div>
         </div>
-        
+
         <div className="col-sm-4">
           <div className="row">
             <div className="navigation">
@@ -94,10 +93,6 @@ export default class Header extends translatable(React.Component) {
                       className={cn('', { active: this.isActive(tab.name) })}
                       onClick={() => this.changeOption(tab.name)}
                     >
-                <span className="circle">
-                  <img className="nav-icon" alt="navigation icon" src={tab.icon}/>
-                </span>
-                      &nbsp;
                       {tab.title}
                     </a>
                   );
@@ -107,7 +102,7 @@ export default class Header extends translatable(React.Component) {
           </div>
         </div>
       </header>
-      
+
       <div className="header-tools row">
         <div className="col-md-3 total-item">
           <span className="total-label">Total Tenders</span>
@@ -117,7 +112,7 @@ export default class Header extends translatable(React.Component) {
           <span className="total-label">Total Tender Amount</span>
           <span className="total-number">100,000</span>
         </div>
-        
+
         <div className="col-md-2"></div>
         <div className="col-md-3 export">
           {this.exportBtn()}

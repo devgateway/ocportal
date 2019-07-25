@@ -46,6 +46,7 @@ header.branding {
 .menu {
     background: #F9F9F9;
     //position: fixed;
+    padding-bottom: 100px;
 
     .filters-hint {
         @filtersFontSize: 16px;
@@ -279,6 +280,7 @@ footer.main-footer {
 .navigation {
     overflow: hidden;
     background-color: #223a49;
+    padding-right:15px;
 
     @active-text-color: #d1a725;
 
@@ -291,7 +293,7 @@ footer.main-footer {
         float: none;
         border: none;
         outline: none;
-        padding: 21px 8px;
+        padding: 22px 8px;
         transition: 0.3s;
         font-size: 14px;
         text-align: center;
@@ -394,15 +396,21 @@ footer.main-footer {
     height: 64px;
 
     .export-title {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: bold;
         color: white;
         line-height: 64px;
+        padding-left: 20px;
+        text-transform: uppercase;
     }
 
     .export-btn {
         button {
-            width: 70px;
+          background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIzLjAuMywgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMjAgMTIwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxMjAgMTIwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+CgkuUm91bmRfeDAwMjBfMTl7ZmlsbDpub25lO3N0cm9rZTojZmZmZmZmO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDB7ZmlsbDpub25lO3N0cm9rZTojZmZmZmZmO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojZmZmZmZmO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KPC9zdHlsZT4KPGc+Cgk8cmVjdCB4PSI2NS4yIiB5PSI2MyIgdHJhbnNmb3JtPSJtYXRyaXgoLTEgOS4wMDM5ODVlLTExIC05LjAwMzk4NWUtMTEgLTEgMTUyLjMzMzMgMTQ4KSIgY2xhc3M9InN0MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjIyIi8+Cgk8bGluZSBjbGFzcz0ic3QwIiB4MT0iNzYuMiIgeTE9IjYzIiB4Mj0iNzYuMiIgeTI9Ijc5Ii8+Cgk8cG9seWxpbmUgY2xhc3M9InN0MCIgcG9pbnRzPSI3MC4yLDczIDc2LjIsNzkgODIuMiw3MyAJIi8+Cgk8bGluZSBjbGFzcz0iUm91bmRfeDAwMjBfMTkiIHgxPSI1MS4yIiB5MT0iMzQiIHgyPSI2MS4yIiB5Mj0iNDgiLz4KCTxsaW5lIGNsYXNzPSJzdDEiIHgxPSI2MS4yIiB5MT0iNDgiIHgyPSI4OS4yIiB5Mj0iNDgiLz4KCTxwb2x5bGluZSBjbGFzcz0ic3QxIiBwb2ludHM9Ijg5LjIsNTkgODkuMiw0MSA1Ni4yLDQxIDUxLjIsMzQgMzEuMiwzNCAzMS4yLDQxIDMxLjIsODUgNTcuMiw4NSAJIi8+CjwvZz4KPC9zdmc+Cg==");
+          background-repeat: no-repeat;
+          background-size: 120% 120%;
+          background-position: center center;
+          width: 70px;
         }
     }
 }
@@ -432,4 +440,10 @@ footer.main-footer {
         margin-left: .4em;
         cursor: pointer;
     }
+}
+
+.makueni-tenders{
+  .react-bs-table-pagination{
+    margin-bottom: 10px;
+  }
 }
