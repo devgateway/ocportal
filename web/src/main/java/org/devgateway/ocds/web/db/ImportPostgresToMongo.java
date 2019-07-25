@@ -70,14 +70,14 @@ public class ImportPostgresToMongo {
 
         final List<ProcurementPlan> procurementPlans = filterNotExportable(procurementPlanService.findAll());
         // check which forms are exportable
-        procurementPlans.parallelStream().forEach(pp -> {
+        procurementPlans.stream().forEach(pp -> {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
 
-            pp.getProjects().parallelStream().forEach(project -> {
+            pp.getProjects().stream().forEach(project -> {
                 project.setPurchaseRequisitions(
                         new HashSet<>(filterNotExportable(project.getPurchaseRequisitions())));
 
-                project.getPurchaseRequisitions().parallelStream().forEach(pr -> {
+                project.getPurchaseRequisitions().stream().forEach(pr -> {
                     pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
 
@@ -154,7 +154,7 @@ public class ImportPostgresToMongo {
             return new ArrayList<>();
         }
 
-        return collection.parallelStream()
+        return collection.stream()
                 .filter(item -> item.isExportable())
                 .collect(Collectors.toList());
     }
