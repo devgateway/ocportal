@@ -20,8 +20,6 @@ class MakueniTenders extends CRDPage {
     this.state = {
       data: []
     };
-    
-    console.log('------------------------------------------------');
   }
   
   componentDidMount() {
@@ -114,12 +112,10 @@ class MakueniTenders extends CRDPage {
   }
   
   render() {
-    // console.log(JSON.stringify(this.state, null, '\t'));
-    
     const { data, count } = this.state;
     const { navigate, route } = this.props;
-    const [page, id] = route;
-    
+    const [navigationPage, id] = route;
+  
     return (<div className="container-fluid dashboard-default">
       
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
@@ -137,7 +133,7 @@ class MakueniTenders extends CRDPage {
         
         <div className="col-md-9">
           {
-            page === undefined
+            navigationPage === undefined
               ? <div>
                 <h1>Makueni Tenders</h1>
                 
@@ -178,7 +174,7 @@ class MakueniTenders extends CRDPage {
                   }]}
                 />
               </div>
-              : page === 't'
+              : navigationPage === 't'
               ? <PurchaseReqView selected={1} id={id} navigate={navigate}
                                  translations={this.props.translations}/>
               : <Project id={id} navigate={navigate} translations={this.props.translations}/>
