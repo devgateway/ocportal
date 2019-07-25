@@ -140,8 +140,24 @@ public class MakueniDataController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     public Integer makueniProcurementPlansCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
-        // TODO - fix this for pagination...
-        return self.makueniProcurementPlans(filter).size();
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Criteria criteria = new Criteria().andOperator(
+                createFilterCriteria("department._id", filter.getDepartment()),
+                createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
+
+        final Aggregation aggregation = newAggregation(match(criteria),
+                project("formDocs", "department", "fiscalYear", "status", "approvedDate"),
+                group().count().as("count"));
+
+        final Document doc = mongoTemplate.aggregate(
+                aggregation.withOptions(options), "procurementPlan", Document.class).getUniqueMappedResult();
+
+        if (doc == null) {
+            return 0;
+        } else {
+            return (Integer) doc.get("count");
+        }
     }
 
     @RequestMapping(value = "/api/makueni/procurementPlan/id/{id:^[0-9\\-]*$}",

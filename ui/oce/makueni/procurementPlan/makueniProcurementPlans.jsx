@@ -18,8 +18,6 @@ class MakueniProcurementPlans extends CRDPage {
     this.state = {
       data: []
     };
-    
-    console.log('------------------------------------------------');
   }
   
   componentDidMount() {
@@ -99,7 +97,8 @@ class MakueniProcurementPlans extends CRDPage {
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
-    const [page, id] = route;
+    const navigationPage = route.page;
+    const id = route.id;
     
     return (<div className="container-fluid dashboard-default">
       
@@ -118,7 +117,7 @@ class MakueniProcurementPlans extends CRDPage {
         
         <div className="col-md-9">
           {
-            page === undefined
+            navigationPage === undefined
               ? <div>
                 <h1>Makueni Procurement Plans</h1>
                 
