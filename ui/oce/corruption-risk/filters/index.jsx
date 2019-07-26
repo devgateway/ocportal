@@ -31,7 +31,6 @@ class Filters extends translatable(React.Component) {
         </div>
         <div className="col-md-2 download">
           <button className="btn btn-default" disabled>
-            <i className="glyphicon glyphicon-download-alt"></i>
           </button>
         </div>
       </div>
