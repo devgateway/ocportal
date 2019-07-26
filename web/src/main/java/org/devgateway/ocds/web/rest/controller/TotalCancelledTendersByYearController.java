@@ -57,14 +57,16 @@ public class TotalCancelledTendersByYearController extends GenericOCDSController
 
 
         DBObject project = new BasicDBObject();
-        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
+
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_STATUS).is(Tender.Status.cancelled.toString())
-                        .and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                        .and(getTenderDateField()).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
+                                getTenderDateField()
+                        ))),
                 new CustomOperation(new Document("$project", project)),
                 getYearlyMonthlyGroupingOperation(filter).
                 sum(ref(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)).as(Keys.TOTAL_CANCELLED_TENDERS_AMOUNT),
