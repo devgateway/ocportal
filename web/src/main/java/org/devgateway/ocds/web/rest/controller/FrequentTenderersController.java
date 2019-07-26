@@ -62,17 +62,14 @@ public class FrequentTenderersController extends GenericOCDSController {
         Aggregation agg = newAggregation(
                 match(where("tender.tenderers.1").exists(true).and("awards.suppliers.0").exists(true)
                         .and(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()
                         ))),
                 unwind("tender.tenderers"),
                 unwind("awards"),
                 unwind("awards.suppliers"),
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearFilterCriteria(
-                                filter.awardFiltering(),
-                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE
+                                filter.awardFiltering(), getTenderDateField()
                         ))),
                 project().and(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).as("supplierId")
                         .and("tender.tenderers._id").as("tendererId").andExclude(
