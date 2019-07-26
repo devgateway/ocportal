@@ -52,7 +52,7 @@ public class AverageNumberOfTenderersController extends GenericOCDSController {
     }
 
     @ApiOperation(value = "Calculate average number of tenderers, by year. The endpoint can be filtered"
-            + "by year read from tender.tenderPeriod.startDate. "
+            + "by year read from tender.tenderPeriod.end. "
             + "The number of tenderers are read from tender.numberOfTenderers")
 
     @RequestMapping(value = "/api/averageNumberOfTenderersYearly",
@@ -60,14 +60,15 @@ public class AverageNumberOfTenderersController extends GenericOCDSController {
     public List<Document> averageNumberOfTenderersYearly(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
         DBObject project = new BasicDBObject();
-        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
         project.put(MongoConstants.FieldNames.TENDER_NO_TENDERERS, 1);
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_NO_TENDERERS).gt(0)
-                        .and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                        .and(getTenderDateField()).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
+                                getTenderDateField()
+                        ))),
                 new CustomProjectionOperation(project),
                 group(getYearlyMonthlyGroupingFields(filter)).avg(MongoConstants.FieldNames.TENDER_NO_TENDERERS)
                         .as(Keys.AVERAGE_NO_OF_TENDERERS),
