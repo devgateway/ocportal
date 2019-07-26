@@ -88,20 +88,19 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
 
     @ApiOperation(value = "Cost effectiveness of Awards: Displays the total amount of active awards grouped by year."
             + "The tender entity, for each award, has to have amount value. The year is calculated from "
-            + MongoConstants.FieldNames.TENDER_PERIOD_START_DATE)
+            + MongoConstants.FieldNames.AWARDS_DATE)
     @RequestMapping(value = "/api/costEffectivenessAwardAmount",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> costEffectivenessAwardAmount(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
         DBObject project = new BasicDBObject();
-        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
-        project.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
+        addYearlyMonthlyProjection(filter, project, ref(getAwardDateField()));
         project.put("totalAwardsWithTender", new BasicDBObject(
                 "$cond",
                 Arrays.asList(new BasicDBObject(
                         "$gt",
-                        Arrays.asList(ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE), null)
+                        Arrays.asList(ref(getAwardDateField()), null)
                 ), 1, 0)
         ));
         project.put(
@@ -110,7 +109,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
                         "$cond",
                         Arrays.asList(new BasicDBObject(
                                         "$gt",
-                                        Arrays.asList(ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE), null)
+                                        Arrays.asList(ref(getAwardDateField()), null)
                                 ),
                                 "$awards.value.amount", 0
                         )
@@ -119,9 +118,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
 
         Aggregation agg = Aggregation.newAggregation(
                 match(where("awards").elemMatch(where("status").is(Award.Status.active.toString()))
-                        .and(MongoConstants.FieldNames.AWARDS_DATE)
-                        .exists(true)
-                        .and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE)
+                        .and(getAwardDateField())
                         .exists(true)),
                 getMatchDefaultFilterOperation(filter), unwind("awards"),
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
@@ -130,7 +127,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
                         .
                                 andOperator(getYearDefaultFilterCriteria(
                                         filter,
-                                        MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                        getAwardDateField()
                                 ))),
                 new CustomProjectionOperation(project),
                 getYearlyMonthlyGroupingOperation(filter)
@@ -157,15 +154,15 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
     @ApiOperation(value = "Cost effectiveness of Tenders:"
             + " Displays the total amount of the active tenders that have active awards, "
             + "grouped by year. Only tenders.status=active"
-            + "are taken into account. The year is calculated from tenderPeriod.startDate")
+            + "are taken into account. The year is calculated from awards.date")
     @RequestMapping(value = "/api/costEffectivenessTenderAmount",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> costEffectivenessTenderAmount(
             @ModelAttribute @Valid final GroupingFilterPagingRequest filter) {
 
         DBObject project = new BasicDBObject();
-        project.put("year", new BasicDBObject("$year", ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE)));
-        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
+        project.put("year", new BasicDBObject("$year", ref(getAwardDateField())));
+        addYearlyMonthlyProjection(filter, project, ref(getAwardDateField()));
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
         project.put(Fields.UNDERSCORE_ID, "$tender._id");
         project.put(
@@ -211,11 +208,11 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
 
         Aggregation agg = Aggregation.newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_STATUS).is(Tender.Status.active.toString()).
-                        and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE)
+                        and(getAwardDateField())
                         .exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                getAwardDateField()
                         ))),
                 getMatchDefaultFilterOperation(filter),
                 new CustomUnwindOperation("$awards", true),

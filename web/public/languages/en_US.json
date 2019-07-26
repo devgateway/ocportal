@@ -83,7 +83,7 @@
   "charts:amountsByItem:xAxisTitle": "Item",
   "charts:amountsByItem:yAxisTitle": "Amount",
   "charts:costEffectiveness:traces:awardPrice": "Award Price",
-  "charts:costEffectiveness:traces:tenderPrice": "Bid Price",
+  "charts:costEffectiveness:traces:tenderPrice": "Tender Price",
   "charts:costEffectiveness:traces:difference": "Difference",
   "charts:costEffectiveness:xAxisTitle": "Year",
   "charts:costEffectiveness:yAxisTitle": "Amount",
