@@ -45,6 +45,7 @@ public final class MongoConstants {
         public static final String TENDER_VALUE = "tender.value";
         public static final String TENDER_VALUE_AMOUNT = "tender.value.amount";
         public static final String TENDER_NO_TENDERERS = "tender.numberOfTenderers";
+        public static final String TENDER_TENDERERS_ID = "tender.tenderers._id";
         public static final String TENDER_PROC_METHOD = "tender.procurementMethod";
         public static final String TENDER_STATUS = "tender.status";
         public static final String TENDER_SUBMISSION_METHOD = "tender.submissionMethod";

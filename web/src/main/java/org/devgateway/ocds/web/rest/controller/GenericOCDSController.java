@@ -97,6 +97,16 @@ public abstract class GenericOCDSController {
      *
      * @return
      */
+    protected String getAwardDateField() {
+        return MongoConstants.FieldNames.AWARDS_DATE;
+    }
+
+
+    /**
+     * The date field that is used to calculate the "award date"
+     *
+     * @return
+     */
     protected String awardDateField() {
         return MongoConstants.FieldNames.AWARDS_DATE;
     }
