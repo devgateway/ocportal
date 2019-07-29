@@ -62,7 +62,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -717,6 +716,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return tags;
     }
 
+    public int getTenderersFromTender(Tender tender) {
+        if (tender.getTenderers() != null) {
+            return tender.getTenderers().size();
+        }
+        return 0;
+    }
+
     @Override
     public Release createRelease(PurchaseRequisition purchaseRequisition) {
         Release release = new Release();
@@ -728,9 +734,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::convertBuyer
         );
 
-        safeSet(Optional.ofNullable(release.getTender()).map(Tender::getTenderers).orElse(new HashSet<>())::addAll,
-                release::getBids, this::createTenderersFromBids
-        );
+        safeSet(release.getTender()::setTenderers, release::getBids, this::createTenderersFromBids);
+        safeSet(release.getTender()::setNumberOfTenderers, release::getTender, this::getTenderersFromTender);
 
         safeSet(release.getAwards()::add, purchaseRequisition::getSingleAwardNotification, this::createAward);
         safeSet(release.getContracts()::add, purchaseRequisition::getSingleContract, this::createContract);
