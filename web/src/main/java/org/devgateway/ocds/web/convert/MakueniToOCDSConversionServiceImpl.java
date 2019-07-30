@@ -424,17 +424,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         releaseRepository.deleteAll();
+        organizationRepository.deleteAll();
         purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
     }
 
-
     public Milestone.Status createPlanningMilestoneStatus(PurchaseRequisition purchaseRequisition) {
         //TODO: implement more statuses
         return Milestone.Status.SCHEDULED;
     }
-
 
     public <C, S, R extends Supplier<S>> Supplier<S> getSupplier(Supplier<C> parentSupplier,
                                                                  Function<C, R> childSupplier) {
