@@ -2,6 +2,7 @@ package org.devgateway.ocds.web.convert;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.Address;
 import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
@@ -420,16 +421,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Override
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         releaseRepository.deleteAll();
+        organizationRepository.deleteAll();
         purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
+        stopWatch.stop();
+        logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
     }
-
 
     public Milestone.Status createPlanningMilestoneStatus(PurchaseRequisition purchaseRequisition) {
         //TODO: implement more statuses
         return Milestone.Status.SCHEDULED;
     }
-
 
     public <C, S, R extends Supplier<S>> Supplier<S> getSupplier(Supplier<C> parentSupplier,
                                                                  Function<C, R> childSupplier) {

@@ -1,6 +1,7 @@
 package org.devgateway.ocds.web.db;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
+import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -61,7 +62,8 @@ public class ImportPostgresToMongo {
 
     @Transactional(readOnly = true)
     public void importToMongo() {
-        long startTime = System.nanoTime();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         logger.info("Mongo import started");
 
         // first clean the procurement plan collection and delete all saved files
@@ -126,14 +128,11 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("fiscalYear._id", Sort.Direction.ASC));
 
-
         // clear cache
         cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
 
-
-        long endTime = System.nanoTime();
-        double duration = (endTime - startTime) / 1000000000.0;
-        logger.info("Mongo import ended in: " + duration);
+        stopWatch.stop();
+        logger.info("Mongo import ended in: " + stopWatch.getTime() + "ms");
     }
 
     public void storeMakueniFormFiles(final Set<FileMetadata> formDocs) {
