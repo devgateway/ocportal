@@ -16,30 +16,27 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
     return [{
       values: data.map(pluckImm('value')).toJS(),
       labels: labels,
-      textinfo: 'value',
-      type: 'pie',
-      hoverlabel: {
-        bgcolor: '#144361'
-      },
-      marker: {
-        colors: ['#fac329', '#144361', '#3372b1']//if you change this colors you'll have to also change it for the custom legend in ./style.less
-      },
-      outsidetextfont: {
-        size: 15,
-        color: '#00c50f'
-      },
-      insidetextfont: {
-        size: 15,
-        color: '#00c50f'
-      },
+      textinfo: 'value+percent+label',
+      type: 'pie'
+      //,
+      // marker: {
+      //   colors: ['#dca402', '#144361', '#3372b1']//if you change this colors you'll have to also change it for the custom legend in ./style.less
+      // },
+      // outsidetextfont: {
+      //   size: 15,
+      //   color: '#00c50f'
+      // },
+      // insidetextfont: {
+      //   size: 15,
+      //   color: '#00c50f'
+      // },
     }];
   }
 
   getLayout(){
     const {width} = this.props;
     return {
-      showlegend: false,
-      paper_bgcolor: 'rgba(0,0,0,0)'
+      showlegend: true
     }
   }
 }
