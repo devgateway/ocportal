@@ -1,36 +1,51 @@
-import FrontendDateFilterableChart from "./frontend-date-filterable";
-import {pluckImm} from "../../tools";
+import Plotly from "plotly.js/lib/core";
+import backendYearFilterable from "../../backend-year-filterable";
+import Chart from './index';
+import { pluckImm } from '../../tools';
 
-class ShareProcAwardedAgpo extends FrontendDateFilterableChart{
-  static getName(t){return t('charts:percentWithTenders:title')}
+Plotly.register([
+  require('plotly.js/lib/pie')
+]);
 
+
+class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
   getData(){
-    let data = super.getData();
-    console.log(data);
-
+    const data = super.getData();
+    if(!data || !data.count()) return [];
+    const labels = data.map(pluckImm('_id')).toJS();
     return [{
-      x: data.map(pluckImm('_id')).toArray(),
-      y: data.map(pluckImm('value')).toArray(),
+      values: data.map(pluckImm('value')).toJS(),
+      labels: labels,
+      textinfo: 'value',
       type: 'pie',
+      hoverlabel: {
+        bgcolor: '#144361'
+      },
       marker: {
-        color: this.props.styling.charts.traceColors[0]
-      }
+        colors: ['#fac329', '#144361', '#3372b1']//if you change this colors you'll have to also change it for the custom legend in ./style.less
+      },
+      outsidetextfont: {
+        size: 15,
+        color: '#00c50f'
+      },
+      insidetextfont: {
+        size: 15,
+        color: '#00c50f'
+      },
     }];
   }
 
   getLayout(){
+    const {width} = this.props;
     return {
-      xaxis: {
-        title:  this.t('charts:percentWithTenders:xAxisTitle')
-      },
-      yaxis: {
-        title: this.t('charts:percentWithTenders:yAxisTitle')
-      }
+      showlegend: false,
+      paper_bgcolor: 'rgba(0,0,0,0)'
     }
   }
 }
 
+ShareProcAwardedAgpo.getName = t => t('charts:shareProcAwardedAgpo:title');
 ShareProcAwardedAgpo.endpoint = 'shareProcurementsAwardedAgpo';
-ShareProcAwardedAgpo.excelEP = 'tendersWithLinkedProcurementPlanExcelChart';
+
 
 export default ShareProcAwardedAgpo;

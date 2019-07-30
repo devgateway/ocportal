@@ -14,7 +14,7 @@ class Chart extends Visualization {
   getData() {
     return super.getData();
   }
-  
+
   getDecoratedLayout() {
     const { title, xAxisRange, yAxisRange, styling, width, height, margin, legend } = this.props;
     const layout = this.getLayout();
@@ -25,13 +25,17 @@ class Chart extends Visualization {
     if (xAxisRange) layout.xaxis.range = xAxisRange;
     if (yAxisRange) layout.yaxis.range = yAxisRange;
     if (styling) {
-      layout.xaxis.titlefont = {
-        color: styling.charts.axisLabelColor,
-      };
-      
-      layout.yaxis.titlefont = {
-        color: styling.charts.axisLabelColor,
-      };
+      if(layout.xaxis) {
+        layout.xaxis.titlefont = {
+          color: styling.charts.axisLabelColor,
+        };
+      }
+
+      if(layout.yaxis) {
+        layout.yaxis.titlefont = {
+          color: styling.charts.axisLabelColor,
+        };
+      }
     }
     if (legend === 'h') {
       layout.legend = layout.legend || {};
@@ -43,16 +47,16 @@ class Chart extends Visualization {
     }
     return layout;
   }
-  
+
   componentDidMount() {
     super.componentDidMount();
     Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout());
   }
-  
+
   componentWillUnmount() {
     Plotly.Plots.purge(this.chartContainer);
   }
-  
+
   componentDidUpdate(prevProps) {
     super.componentDidUpdate(prevProps);
     if (this.constructor.UPDATABLE_FIELDS.some(prop =>
@@ -64,11 +68,11 @@ class Chart extends Visualization {
       setTimeout(() => Plotly.relayout(this.chartContainer, this.getDecoratedLayout()));
     }
   }
-  
+
   hasNoData() {
     return this.getData().length === 0;
   }
-  
+
   render() {
     const { loading } = this.state;
     const hasNoData = !loading && this.hasNoData();
