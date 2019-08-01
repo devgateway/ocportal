@@ -1,6 +1,7 @@
 package org.devgateway.ocds.web.convert;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.Address;
@@ -15,6 +16,7 @@ import org.devgateway.ocds.persistence.mongo.Detail;
 import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Item;
+import org.devgateway.ocds.persistence.mongo.MakueniAward;
 import org.devgateway.ocds.persistence.mongo.MakueniItem;
 import org.devgateway.ocds.persistence.mongo.MakueniOrganization;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
@@ -71,6 +73,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -426,8 +429,29 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         releaseRepository.deleteAll();
         organizationRepository.deleteAll();
         purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
+        postProcess();
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
+    }
+
+    public void postProcess() {
+        applyFirstTimeWinners();
+    }
+
+    public void applyFirstTimeWinners() {
+        Stream<Release> allOrderByEndDateStream =
+                releaseRepository.findAllNonEmptyEndDatesAwardSuppliersOrderByEndDateDesc();
+        Set<String> org = Sets.newConcurrentHashSet();
+
+        allOrderByEndDateStream.forEach(r -> {
+            MakueniAward award = (MakueniAward) r.getAwards().iterator().next();
+            Organization supplier = award.getSuppliers().iterator().next();
+            if (!org.contains(supplier.getId())) {
+                org.add(supplier.getId());
+                award.setFirstTimeWinner(true);
+                releaseRepository.save(r); //this is not very efficient, we should use update
+            }
+        });
     }
 
     public Milestone.Status createPlanningMilestoneStatus(PurchaseRequisition purchaseRequisition) {
@@ -577,8 +601,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public Award createAward(AwardNotification awardNotification) {
-        Award ocdsAward = new Award();
+    public MakueniAward createAward(AwardNotification awardNotification) {
+        MakueniAward ocdsAward = new MakueniAward();
         safeSet(ocdsAward::setTitle, awardNotification.getPurchaseRequisition().getSingleTender()::getTenderTitle);
         safeSet(ocdsAward::setId, awardNotification.getPurchaseRequisition().getSingleTender()::getTenderNumber);
         safeSet(ocdsAward::setDate, awardNotification::getAwardDate);
