@@ -1,0 +1,17 @@
+{
+  "name": {
+    "en": "First Time Winners"
+  },
+  "description": {
+    "en": "Award flagged as first time winner, should any of the suppliers be first time winners. In case of Makueni we only have one supplier"
+  },
+  "documentationUrl": {
+    "en": "https://extensions.open-contracting.org/en/extensions/bids/"
+  },
+  "compatibility": [
+    "1.1"
+  ],
+  "schemas": [
+    "release-schema.json"
+  ]
+}
