@@ -449,8 +449,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             if (!org.contains(supplier.getId())) {
                 org.add(supplier.getId());
                 award.setFirstTimeWinner(true);
-                releaseRepository.save(r); //this is not very efficient, we should use update
+            } else {
+                award.setFirstTimeWinner(false);
             }
+            releaseRepository.save(r); //this is not very efficient, we should use update
         });
     }
 

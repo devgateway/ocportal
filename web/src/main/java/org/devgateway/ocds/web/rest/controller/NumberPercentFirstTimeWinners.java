@@ -50,24 +50,24 @@ public class NumberPercentFirstTimeWinners extends GenericOCDSController {
 
         DBObject project = new BasicDBObject();
         addYearlyMonthlyProjection(filter, project, ref(getAwardDateField()));
-        project.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
         project.put(
-                "firstTimeWinner",
+                "firstTimeWinnerAwards",
                 new BasicDBObject("$toInt", ref(MongoConstants.FieldNames.AWARDS_FIRST_TIME_WINNER))
         );
 
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT).exists(true)
-                        .and(MongoConstants.FieldNames.AWARDS_DATE).exists(true)
+                match(where(MongoConstants.FieldNames.AWARDS_DATE).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(filter, getAwardDateField()))),
                 unwind("awards"),
                 unwind("awards.suppliers"),
                 new CustomProjectionOperation(project),
-                getYearlyMonthlyGroupingOperation(filter).sum("firstTimeWinner")
-                        .as("firstTimeWinner"),
-                transformYearlyGrouping(filter).andInclude("firstTimeWinner"),
+                getYearlyMonthlyGroupingOperation(filter).sum("firstTimeWinnerAwards")
+                        .as("firstTimeWinnerAwards").count().as("countAwards"),
+                transformYearlyGrouping(filter).andInclude("firstTimeWinnerAwards", "countAwards")
+                        .and("firstTimeWinnerAwards").divide("countAwards").as("percentFirstTimeWinner"),
                 getSortByYearMonth(filter)
         );
+
         return releaseAgg(agg);
     }
 }
