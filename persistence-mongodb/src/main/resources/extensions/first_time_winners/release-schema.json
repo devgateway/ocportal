@@ -1,0 +1,15 @@
+{
+  "definitions": {
+    "Award": {
+      "properties": {
+        "firstTimeWinner": {
+          "title": "First Time Winner",
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
