@@ -19,6 +19,7 @@ import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
@@ -41,9 +43,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 public class SmallRepetitiveDirectAwardsByBuyer extends GenericOCDSController {
 
-    public static final Double AWARD_THRESHOLD = 30000d;
-
-    @ApiOperation(value = "")
+    @ApiOperation(value = "Number of suppliers that receive two or more direct awards on similar items, by Department")
     @RequestMapping(value = "/api/smallRepetitiveDirectAwardsByBuyer",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> smallRepetitiveDirectAwardsByBuyer(@ModelAttribute
@@ -53,11 +53,18 @@ public class SmallRepetitiveDirectAwardsByBuyer extends GenericOCDSController {
                         .and(MongoConstants.FieldNames.AWARDS_VALUE).exists(true)
                         .and(MongoConstants.FieldNames.BUYER_NAME).exists(true)
                         .and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION).exists(true)
-                        .and(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT).exists(true).lt(AWARD_THRESHOLD)
                         .andOperator(getYearDefaultFilterCriteria(filter, getAwardDateField()))),
+                unwind(MongoConstants.FieldNames.TENDER_ITEMS),
                 unwind("awards"),
                 unwind("awards.suppliers"),
-                project(MongoConstants.FieldNames.BUYER_NAME)
+                project().and(MongoConstants.FieldNames.BUYER_NAME).as("buyerName")
+                        .and(MongoConstants.FieldNames.AWARDS_SUPPLIERS_NAME).as("supplierName")
+                        .and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION_ID).as("itemsClassification")
+                        .and(Fields.UNDERSCORE_ID).as("id"),
+                group("id", "buyerName", "supplierName", "itemsClassification"),
+                group("buyerName", "supplierName", "itemsClassification").count().as("count"),
+                match(where("count").gte(1)),
+                group("buyerName").count().as("cnt")
         );
         return releaseAgg(agg);
     }

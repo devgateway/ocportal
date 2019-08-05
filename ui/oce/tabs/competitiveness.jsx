@@ -6,6 +6,8 @@ import FrequentTenderers from '../visualizations/tables/frequent-tenderers';
 import AvgTenderersByBuyer from '../visualizations/charts/avg-number-tenderers-buyer';
 import ShareProcAwardedAgpo from '../visualizations/charts/share-proc-awarded-agpo';
 import NoPercent1StTimeWinner from '../visualizations/charts/no-percent-1st-time-winner';
+import SmallRepetitiveDirectAwardsBuyer
+  from '../visualizations/charts/small-repetitive-direct-award';
 
 class Competitiveness extends Tab {
   static getName(t) {
@@ -15,5 +17,5 @@ class Competitiveness extends Tab {
 
 Competitiveness.icon = 'competitive';
 Competitiveness.visualizations = [CostEffectiveness, ProcurementMethod, AvgNrBids, FrequentTenderers,
-  AvgTenderersByBuyer, ShareProcAwardedAgpo, NoPercent1StTimeWinner];
+  AvgTenderersByBuyer, ShareProcAwardedAgpo, NoPercent1StTimeWinner, SmallRepetitiveDirectAwardsBuyer];
 export default Competitiveness;
