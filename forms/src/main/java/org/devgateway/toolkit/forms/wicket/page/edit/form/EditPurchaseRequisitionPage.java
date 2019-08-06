@@ -96,13 +96,6 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         formDocs.required();
         editForm.add(formDocs);
         saveTerminateButton.setVisibilityAllowed(false);
-
-//        Release release = ocdsConversionService.createRelease(editForm.getModelObject());
-//        try {
-//            System.out.println(mapper.writeValueAsString(release));
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
