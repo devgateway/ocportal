@@ -97,28 +97,28 @@ class PurchaseReqView extends CRDPage {
   
     switch (selected) {
       case 1:
-        return <Tender data={data.tender}/>;
+        return <Tender data={data.tender} styling={this.props.styling}/>;
       
       case 2:
-        return <PurchaseReq data={data}/>;
+        return <PurchaseReq data={data} styling={this.props.styling}/>;
       
       case 3:
-        return <TenderQuotation data={data.tenderQuotationEvaluation}/>;
+        return <TenderQuotation data={data.tenderQuotationEvaluation} styling={this.props.styling}/>;
       
       case 4:
-        return <ProfessionalOpinion data={data.professionalOpinion}/>;
+        return <ProfessionalOpinion data={data.professionalOpinion} styling={this.props.styling}/>;
       
       case 5:
-        return <Notification data={data.awardNotification}/>;
+        return <Notification data={data.awardNotification} styling={this.props.styling}/>;
       
       case 6:
-        return <Award data={data.awardAcceptance}/>;
+        return <Award data={data.awardAcceptance} styling={this.props.styling}/>;
       
       case 7:
-        return <Contract data={data.contract}/>;
+        return <Contract data={data.contract} styling={this.props.styling}/>;
       
       default:
-        return <Tender data={data.tender}/>;
+        return <Tender data={data.tender} styling={this.props.styling}/>;
     }
   }
   

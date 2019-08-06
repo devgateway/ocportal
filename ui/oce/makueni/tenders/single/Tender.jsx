@@ -4,13 +4,14 @@ class Tender extends React.Component {
   
   render() {
     const { data } = this.props;
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
     
     if (data === undefined) {
       return null;
     }
     
     const tender = data[0];
-    
+  
     return (<div>
       <div className="row padding-top-10">
         <div className="col-md-6">
@@ -26,11 +27,11 @@ class Tender extends React.Component {
       <div className="row padding-top-10">
         <div className="col-md-4">
           <div className="item-label">Invitation to Tender Date</div>
-          <div className="item-value">{new Date(tender.invitationDate).toLocaleDateString()}</div>
+          <div className="item-value">{formatDate(tender.invitationDate)}</div>
         </div>
         <div className="col-md-4">
           <div className="item-label">Closing Date</div>
-          <div className="item-value">{new Date(tender.closingDate).toLocaleDateString()}</div>
+          <div className="item-value">{formatDate(tender.closingDate)}</div>
         </div>
         <div className="col-md-4">
           <div className="item-label">Procurement Method</div>
@@ -63,7 +64,7 @@ class Tender extends React.Component {
       <div className="row padding-top-10">
         <div className="col-md-6">
           <div className="item-label">Tender Value</div>
-          <div className="item-value">{tender.tenderValue}</div>
+          <div className="item-value">{currencyFormatter(tender.tenderValue)}</div>
         </div>
         <div className="col-md-6">
           <div className="item-label">Target Group</div>
@@ -87,9 +88,9 @@ class Tender extends React.Component {
             {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
                 <div className="row">
-                  <div className="col-md-6">
+                  <div className="col-md-12">
                     <div className="item-label">Item</div>
-                    <div className="item-value">{tenderItem.purchaseItem.planItem.item.label}</div>
+                    <div className="item-value">{tenderItem.purchaseItem.planItem.description} - {tenderItem.purchaseItem.planItem.item.label}</div>
                   </div>
                 </div>
                 <div className="row">
@@ -99,15 +100,15 @@ class Tender extends React.Component {
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Quantity</div>
-                    <div className="item-value">{tenderItem.quantity}</div>
+                    <div className="item-value">{currencyFormatter(tenderItem.quantity)}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Unit Price</div>
-                    <div className="item-value">{tenderItem.unitPrice}</div>
+                    <div className="item-value">{currencyFormatter(tenderItem.unitPrice)}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Total Cost</div>
-                    <div className="item-value">{tenderItem.quantity * tenderItem.unitPrice}</div>
+                    <div className="item-value">{currencyFormatter(tenderItem.quantity * tenderItem.unitPrice)}</div>
                   </div>
                 </div>
               </div>)

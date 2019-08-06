@@ -5,6 +5,8 @@ class Award extends React.Component {
   render() {
     const { data } = this.props;
   
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
+  
     if (data === undefined) {
       return null;
     }
@@ -15,11 +17,11 @@ class Award extends React.Component {
       <div className="row padding-top-10">
         <div className="col-md-3">
           <div className="item-label">Accepted Award Value</div>
-          <div className="item-value">{awardAcceptance.acceptedAwardValue}</div>
+          <div className="item-value">{currencyFormatter(awardAcceptance.acceptedAwardValue)}</div>
         </div>
         <div className="col-md-3">
           <div className="item-label">Date</div>
-          <div className="item-value">{new Date(awardAcceptance.acceptanceDate).toLocaleDateString()}</div>
+          <div className="item-value">{formatDate(awardAcceptance.acceptanceDate)}</div>
         </div>
         <div className="col-md-3">
           <div className="item-label">Supplier Name</div>

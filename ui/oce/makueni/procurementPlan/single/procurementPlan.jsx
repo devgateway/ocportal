@@ -48,6 +48,8 @@ class ProcurementPlan extends CRDPage {
     const { navigate } = this.props;
     const { data } = this.state;
     
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
+    
     return (<div className="procurement-plan makueni-form">
       <div className="row">
         <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-3">
@@ -106,7 +108,7 @@ class ProcurementPlan extends CRDPage {
                       <div className="row padding-top-10">
                         <div className="col-md-3">
                           <div className="item-label">Estimated Cost</div>
-                          <div className="item-value">{planItem.estimatedCost}</div>
+                          <div className="item-value">{currencyFormatter(planItem.estimatedCost)}</div>
                         </div>
                         <div className="col-md-2">
                           <div className="item-label">Unit Of Issue</div>
@@ -114,15 +116,15 @@ class ProcurementPlan extends CRDPage {
                         </div>
                         <div className="col-md-2">
                           <div className="item-label">Quantity</div>
-                          <div className="item-value">{planItem.quantity}</div>
+                          <div className="item-value">{currencyFormatter(planItem.quantity)}</div>
                         </div>
                         <div className="col-md-2">
                           <div className="item-label">Unit Price</div>
-                          <div className="item-value">{planItem.unitPrice}</div>
+                          <div className="item-value">{currencyFormatter(planItem.unitPrice)}</div>
                         </div>
                         <div className="col-md-3">
                           <div className="item-label">Total Cost</div>
-                          <div className="item-value">{planItem.totalCost}</div>
+                          <div className="item-value">{currencyFormatter(planItem.totalCost)}</div>
                         </div>
                       </div>
                       
@@ -147,26 +149,27 @@ class ProcurementPlan extends CRDPage {
                           <div className="item-label">
                             Target Group Value
                           </div>
-                          <div className="item-value">{planItem.targetGroupValue}</div>
+                          <div
+                            className="item-value">{currencyFormatter(planItem.targetGroupValue)}</div>
                         </div>
                       </div>
                       
                       <div className="row padding-top-10">
                         <div className="col-md-3">
                           <div className="item-label">1st Quarter</div>
-                          <div className="item-value">{planItem.quarter1st}</div>
+                          <div className="item-value">{currencyFormatter(planItem.quarter1st)}</div>
                         </div>
                         <div className="col-md-3">
                           <div className="item-label">2nd Quarter</div>
-                          <div className="item-value">{planItem.quarter2nd}</div>
+                          <div className="item-value">{currencyFormatter(planItem.quarter2nd)}</div>
                         </div>
                         <div className="col-md-3">
                           <div className="item-label">3rd Quarter</div>
-                          <div className="item-value">{planItem.quarter3rd}</div>
+                          <div className="item-value">{currencyFormatter(planItem.quarter3rd)}</div>
                         </div>
                         <div className="col-md-3">
                           <div className="item-label">4th Quarter</div>
-                          <div className="item-value">{planItem.quarter4th}</div>
+                          <div className="item-value">{currencyFormatter(planItem.quarter4th)}</div>
                         </div>
                       </div>
                     </div>)
@@ -197,7 +200,7 @@ class ProcurementPlan extends CRDPage {
                     <div className="col-md-6">
                       <div className="item-label">Approved Date</div>
                       <div
-                        className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
+                        className="item-value">{formatDate(data.approvedDate)}</div>
                     </div>
                   </div>
                 </div>

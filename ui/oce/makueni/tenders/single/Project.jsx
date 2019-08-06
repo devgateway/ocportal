@@ -47,6 +47,8 @@ class Project extends CRDPage {
   render() {
     const { navigate } = this.props;
     const { data } = this.state;
+  
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
     
     return (<div className="project makueni-form">
       <div className="row">
@@ -99,11 +101,11 @@ class Project extends CRDPage {
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Amount Budgeted</div>
-                <div className="item-value">{data.amountBudgeted}</div>
+                <div className="item-value">{currencyFormatter(data.amountBudgeted)}</div>
               </div>
               <div className="col-md-6">
                 <div className="item-label">Amount Requested</div>
-                <div className="item-value">{data.amountRequested}</div>
+                <div className="item-value">{currencyFormatter(data.amountRequested)}</div>
               </div>
             </div>
     
@@ -121,7 +123,7 @@ class Project extends CRDPage {
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Approved Date</div>
-                <div className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
+                <div className="item-value">{formatDate(data.approvedDate)}</div>
               </div>
             </div>
           </div>
