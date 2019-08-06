@@ -4,6 +4,7 @@ class TenderQuotation extends React.Component {
   
   render() {
     const { data } = this.props;
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
     
     if (data === undefined) {
       return null;
@@ -16,7 +17,7 @@ class TenderQuotation extends React.Component {
         <div className="col-md-6">
           <div className="item-label">Closing Date</div>
           <div
-            className="item-value">{new Date(tenderQuotationEvaluation.closingDate).toLocaleDateString()}</div>
+            className="item-value">{formatDate(tenderQuotationEvaluation.closingDate)}</div>
         </div>
       </div>
   
@@ -45,15 +46,15 @@ class TenderQuotation extends React.Component {
                 <div className="row">
                   <div className="col-md-3">
                     <div className="item-label">Supplier Score</div>
-                    <div className="item-value">{bids.supplierScore}</div>
+                    <div className="item-value">{currencyFormatter(bids.supplierScore)}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Supplier Ranking</div>
-                    <div className="item-value">{bids.supplierRanking}</div>
+                    <div className="item-value">{currencyFormatter(bids.supplierRanking)}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Quoted Price</div>
-                    <div className="item-value">{bids.quotedAmount}</div>
+                    <div className="item-value">{currencyFormatter(bids.quotedAmount)}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Supplier Responsiveness</div>

@@ -17,6 +17,23 @@ const MILLION = 1000000;
 const THOUSAND = 1000;
 const formatNumber = number => number.toLocaleString(undefined, { maximumFractionDigits: 2 });
 
+const formatDate = stringDate => {
+  let date = new Date(stringDate);
+  let dd = date.getDate();
+  let mm = date.getMonth() + 1;
+  const yyyy = date.getFullYear().toString().substr(-2);
+  
+  if (dd < 10) {
+    dd = `0${dd}`;
+  }
+  
+  if (mm < 10) {
+    mm = `0${mm}`;
+  }
+  
+  return `${dd}/${mm}/${yyyy}`;
+};
+
 const styling = {
   charts: {
     axisLabelColor: '#cc3c3b',
@@ -33,6 +50,7 @@ const styling = {
   },
   tables: {
     currencyFormatter: formatNumber,
+    formatDate: formatDate
   },
 };
 

@@ -4,6 +4,7 @@ class PurchaseReq extends React.Component {
   
   render() {
     const { data } = this.props;
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
     
     if (data === undefined) {
       return null;
@@ -33,7 +34,7 @@ class PurchaseReq extends React.Component {
         <div className="col-md-4">
           <div className="item-label">Request Approval Date</div>
           <div
-            className="item-value">{new Date(data.requestApprovalDate).toLocaleDateString()}</div>
+            className="item-value">{formatDate(data.requestApprovalDate)}</div>
         </div>
       </div>
       
@@ -61,15 +62,15 @@ class PurchaseReq extends React.Component {
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Quantity</div>
-                    <div className="item-value">{pr.quantity}</div>
+                    <div className="item-value">{currencyFormatter(pr.quantity)}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Unit Price</div>
-                    <div className="item-value">{pr.amount}</div>
+                    <div className="item-value">{currencyFormatter(pr.amount)}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Total Cost</div>
-                    <div className="item-value">{pr.quantity * pr.amount}</div>
+                    <div className="item-value">{currencyFormatter(pr.quantity * pr.amount)}</div>
                   </div>
                 </div>
               </div>)
@@ -103,7 +104,7 @@ class PurchaseReq extends React.Component {
         <div className="col-md-6">
           <div className="item-label">Approved Date</div>
           <div
-            className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
+            className="item-value">{formatDate(data.approvedDate)}</div>
         </div>
       </div>
     </div>);

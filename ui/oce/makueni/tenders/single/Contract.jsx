@@ -4,7 +4,8 @@ class Contract extends React.Component {
   
   render() {
     const { data } = this.props;
-  
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
+    
     if (data === undefined) {
       return null;
     }
@@ -19,11 +20,11 @@ class Contract extends React.Component {
         </div>
         <div className="col-md-4">
           <div className="item-label">Contract Date</div>
-          <div className="item-value">{new Date(contract.contractDate).toLocaleDateString()}</div>
+          <div className="item-value">{formatDate(contract.contractDate)}</div>
         </div>
         <div className="col-md-4">
           <div className="item-label">Expiry Date</div>
-          <div className="item-value">{new Date(contract.expiryDate).toLocaleDateString()}</div>
+          <div className="item-value">{formatDate(contract.expiryDate)}</div>
         </div>
       </div>
   
@@ -45,11 +46,11 @@ class Contract extends React.Component {
         </div>
         <div className="col-md-4">
           <div className="item-label">Contract Value</div>
-          <div className="item-value">{contract.contractValue}</div>
+          <div className="item-value">{currencyFormatter(contract.contractValue)}</div>
         </div>
         <div className="col-md-4">
           <div className="item-label">Contract Approved Date</div>
-          <div className="item-value">{new Date(contract.contractApprovalDate).toLocaleDateString()}</div>
+          <div className="item-value">{formatDate(contract.contractApprovalDate)}</div>
         </div>
       </div>
   

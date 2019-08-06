@@ -147,7 +147,8 @@ class MakueniProcurementPlans extends CRDPage {
                 />
               </div>
               :
-              <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}/>
+              <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}
+                               styling={this.props.styling}/>
           }
         </div>
       </div>
