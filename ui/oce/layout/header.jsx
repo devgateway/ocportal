@@ -3,16 +3,17 @@ import translatable from '../translatable';
 import cn from 'classnames';
 
 import './header.less';
+import { API_ROOT, OCE } from '../state/oce-state';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       exporting: false,
       selected: props.selected || '',
     };
-
+    
     this.tabs = [
       {
         name: 'tender',
@@ -30,16 +31,41 @@ export default class Header extends translatable(React.Component) {
         icon: 'assets/icons/eprocurement.svg'
       }
     ];
-
+    
     this.changeOption = this.changeOption.bind(this);
     this.isActive = this.isActive.bind(this);
+    
+    this.headerState = OCE.substate({ name: 'headerState' });
+    
+    this.statsUrl = this.headerState.input({
+      name: 'makueniPPCountEP',
+      initial: `${API_ROOT}/makueni/contractStats`,
+    });
+    
+    this.statsInfo = this.headerState.remote({
+      name: 'statsInfo',
+      url: this.statsUrl,
+    });
   }
-
+  
+  componentDidMount() {
+    this.statsInfo.addListener('Header', () => {
+      this.statsInfo.getState()
+      .then(data => {
+        this.setState({ data: data });
+      });
+    });
+  }
+  
+  componentWillUnmount() {
+    this.statsInfo.removeListener('Header');
+  }
+  
   changeOption(option) {
     this.setState({ selected: option });
     this.props.onSwitch(option);
   }
-
+  
   isActive(option) {
     const { selected } = this.state;
     if (selected === '') {
@@ -47,7 +73,7 @@ export default class Header extends translatable(React.Component) {
     }
     return selected === option;
   }
-
+  
   exportBtn() {
     if (this.state.exporting) {
       return (
@@ -72,8 +98,11 @@ export default class Header extends translatable(React.Component) {
       </div>
     );
   }
-
+  
   render() {
+    const { data } = this.state;
+    const currencyFormatter = this.props.styling.tables.currencyFormatter;
+    
     return (<div>
       <header className="branding row">
         <div className="col-sm-8">
@@ -81,7 +110,7 @@ export default class Header extends translatable(React.Component) {
             <img src="assets/makueni-logo.png" alt="Makueni"/>
           </div>
         </div>
-
+        
         <div className="col-sm-4">
           <div className="row">
             <div className="navigation">
@@ -102,17 +131,23 @@ export default class Header extends translatable(React.Component) {
           </div>
         </div>
       </header>
-
+      
       <div className="header-tools row">
-        <div className="col-md-3 total-item">
-          <span className="total-label">Total Tenders</span>
-          <span className="total-number">123</span>
-        </div>
-        <div className="col-md-4 total-item">
-          <span className="total-label">Total Tender Amount</span>
-          <span className="total-number">100,000</span>
-        </div>
-
+        {
+          data !== undefined
+            ? <div>
+              <div className="col-md-3 total-item">
+                <span className="total-label">Total Tenders</span>
+                <span className="total-number">{data.count}</span>
+              </div>
+              <div className="col-md-4 total-item">
+                <span className="total-label">Total Tender Amount</span>
+                <span className="total-number">{currencyFormatter(data.value)}</span>
+              </div>
+            </div>
+            : null
+        }
+        
         <div className="col-md-2"></div>
         <div className="col-md-3 export">
           {this.exportBtn()}

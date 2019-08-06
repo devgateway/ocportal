@@ -13,29 +13,29 @@ import PurchaseReqView from './single/PurchaseReqView';
 const NAME = 'MakueniTenders';
 
 class MakueniTenders extends CRDPage {
-
+  
   constructor(props) {
     super(props);
-
+    
     this.state = {
       data: []
     };
   }
-
+  
   componentDidMount() {
     tendersData.addListener(NAME, () => this.updateBindings());
     page.addListener(NAME, () => this.updateBindings());
     pageSize.addListener(NAME, () => this.updateBindings());
     tendersCountRemote.addListener(NAME, () => this.updateBindings());
   }
-
+  
   componentWillUnmount() {
     tendersData.removeListener(NAME);
     page.removeListener(NAME);
     pageSize.removeListener(NAME);
     tendersCountRemote.removeListener(NAME);
   }
-
+  
   updateBindings() {
     Promise.all([
       tendersData.getState(NAME),
@@ -52,16 +52,16 @@ class MakueniTenders extends CRDPage {
       });
     });
   }
-
+  
   shouldComponentUpdate(nextProps, nextState) {
     return JSON.stringify(this.state) !== JSON.stringify(nextState)
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
-
+  
   filters() {
     return <FiltersWrapper filters={mtFilters} translations={this.props.translations}/>;
   }
-
+  
   tenderLink(navigate) {
     return (tender) => (<div>
       {
@@ -74,7 +74,7 @@ class MakueniTenders extends CRDPage {
       }
     </div>);
   }
-
+  
   projectLink(navigate) {
     return (project) => (<div>
       {
@@ -87,7 +87,7 @@ class MakueniTenders extends CRDPage {
       }
     </div>);
   }
-
+  
   downloadFiles() {
     return (tender) => (<div>
         {
@@ -99,7 +99,7 @@ class MakueniTenders extends CRDPage {
                   Click to download the file
                 </Tooltip>
               }>
-
+              
               <a className="download-file" href={doc.url} target="_blank">
                 <i className="glyphicon glyphicon-download"/>
                 <span>{doc.name}</span>
@@ -110,17 +110,17 @@ class MakueniTenders extends CRDPage {
       </div>
     );
   }
-
+  
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
     const [navigationPage, id] = route;
-
+    
     return (<div className="container-fluid dashboard-default">
-
+      
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
-              selected="tender"/>
-
+              styling={this.props.styling} selected="tender"/>
+      
       <div className="makueni-tenders content row">
         <div className="col-md-3 filters">
           <div className="row">
@@ -130,13 +130,13 @@ class MakueniTenders extends CRDPage {
             {this.filters()}
           </div>
         </div>
-
+        
         <div className="col-md-9">
           {
             navigationPage === undefined
               ? <div>
                 <h1>Makueni Tenders</h1>
-
+                
                 <BootstrapTableWrapper
                   bordered
                   data={data}
@@ -181,7 +181,7 @@ class MakueniTenders extends CRDPage {
           }
         </div>
       </div>
-
+    
     </div>);
   }
 }
