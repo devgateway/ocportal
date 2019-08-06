@@ -10,7 +10,7 @@ class Tender extends React.Component {
     }
     
     const tender = data[0];
-    
+  
     return (<div>
       <div className="row padding-top-10">
         <div className="col-md-6">
@@ -87,9 +87,9 @@ class Tender extends React.Component {
             {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
                 <div className="row">
-                  <div className="col-md-6">
+                  <div className="col-md-12">
                     <div className="item-label">Item</div>
-                    <div className="item-value">{tenderItem.purchaseItem.planItem.item.label}</div>
+                    <div className="item-value">{tenderItem.purchaseItem.planItem.description} - {tenderItem.purchaseItem.planItem.item.label}</div>
                   </div>
                 </div>
                 <div className="row">

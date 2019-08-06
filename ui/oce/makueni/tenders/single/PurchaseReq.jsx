@@ -49,9 +49,9 @@ class PurchaseReq extends React.Component {
             {
               data.purchaseItems.map(pr => <div key={pr._id} className="box">
                 <div className="row">
-                  <div className="col-md-6">
+                  <div className="col-md-12">
                     <div className="item-label">Item</div>
-                    <div className="item-value">{pr.planItem.item.label}</div>
+                    <div className="item-value">{pr.planItem.description} - {pr.planItem.item.label}</div>
                   </div>
                 </div>
                 <div className="row">
