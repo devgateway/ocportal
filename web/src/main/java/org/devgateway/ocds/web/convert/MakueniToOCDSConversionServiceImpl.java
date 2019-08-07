@@ -775,6 +775,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release::setInitiationType, () -> Release.InitiationType.tender);
 
         addPartiesToOrganizationCollection(release.getParties());
+        addTenderersToOrganizationCollection(release.getTender().getTenderers());
 
         return release;
     }
@@ -793,7 +794,15 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             }
 
         });
+    }
 
+    private void addTenderersToOrganizationCollection(Set<Organization> tenderers) {
+        tenderers.forEach(p -> {
+            Optional<Organization> organization = organizationRepository.findById(p.getId());
+            if (!organization.isPresent()) {
+                organizationRepository.save(p);
+            }
+        });
     }
 
 }
