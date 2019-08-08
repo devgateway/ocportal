@@ -20,7 +20,7 @@ public class Supplier extends Category {
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String address;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, name="Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;

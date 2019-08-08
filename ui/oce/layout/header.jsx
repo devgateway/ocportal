@@ -1,6 +1,7 @@
 import React from 'react';
 import translatable from '../translatable';
 import cn from 'classnames';
+import URI from 'urijs';
 
 import './header.less';
 import { API_ROOT, OCE } from '../state/oce-state';
@@ -75,9 +76,14 @@ export default class Header extends translatable(React.Component) {
   }
   
   exportBtn() {
+    const url = new URI('/api/makueni/excelExport');
+    
     if (this.state.exporting) {
       return (
         <div className="export-progress">
+          <span className="export-title">
+            Download the Data
+          </span>
           <div className="progress">
             <div className="progress-bar progress-bar-danger" role="progressbar"
                  style={{ width: '100%' }}>
@@ -91,10 +97,10 @@ export default class Header extends translatable(React.Component) {
         <span className="export-title">
           Download the Data
         </span>
-        <div className="export-btn">
-          <button className="btn btn-default" disabled>
+        <a className="export-btn" href={url} download="export.zip">
+          <button className="btn btn-default">
           </button>
-        </div>
+        </a>
       </div>
     );
   }
