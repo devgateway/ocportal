@@ -55,6 +55,14 @@ public class Homepage extends BasePage {
             }
         };
         add(publicPortalLink);
+        
+        final Link<Void> corruptionRiskDashboard = new Link<Void>("corruptionRiskDashboard") {
+            @Override
+            public void onClick() {
+                setResponsePage(CorruptionRiskDashboardPage.class);
+            }
+        };
+        add(corruptionRiskDashboard); 
 
         final Link<Void> dataExport = new Link<Void>("dataExport") {
             @Override

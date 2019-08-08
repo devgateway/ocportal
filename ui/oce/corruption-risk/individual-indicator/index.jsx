@@ -95,14 +95,16 @@ class IndividualIndicatorChart extends CustomPopupChart {
     const data = super.getData();
     if (!data) return null;
     let datum;
+    
     if (monthly) {
       datum = data.find((datum) => {
         const month = datum.get('month');
-        return year === this.t(`general:months:${month}`);
+        return year == this.t(`general:months:${month}`);
       });
-    } else {
-      datum = data.find(datum => datum.get('year') === year);
+    } else {       
+      datum = data.find(datum => datum.get('year') == year);
     }
+   
     return (
       <div className="crd-popup" style={{
         top: popup.top,
