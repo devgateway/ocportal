@@ -71,7 +71,10 @@ class PurchaseReqView extends CRDPage {
     this.prInfo.addListener('PR', () => {
       this.prInfo.getState()
       .then(data => {
-        this.setState({ data: data.purchaseRequisitions });
+        this.setState({
+          data: data.purchaseRequisitions,
+          department: data.department,
+          fiscalYear: data.fiscalYear});
       });
     });
   }
@@ -93,40 +96,38 @@ class PurchaseReqView extends CRDPage {
   }
   
   displayTab() {
-    const { selected, data } = this.state;
+    const { selected, data, department, fiscalYear } = this.state;
   
     switch (selected) {
       case 1:
-        return <Tender data={data.tender} styling={this.props.styling}/>;
+        return <Tender data={data.tender} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 2:
-        return <PurchaseReq data={data} styling={this.props.styling}/>;
+        return <PurchaseReq data={data} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 3:
-        return <TenderQuotation data={data.tenderQuotationEvaluation} styling={this.props.styling}/>;
+        return <TenderQuotation data={data.tenderQuotationEvaluation} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 4:
-        return <ProfessionalOpinion data={data.professionalOpinion} styling={this.props.styling}/>;
+        return <ProfessionalOpinion data={data.professionalOpinion} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 5:
-        return <Notification data={data.awardNotification} styling={this.props.styling}/>;
+        return <Notification data={data.awardNotification} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 6:
-        return <Award data={data.awardAcceptance} styling={this.props.styling}/>;
+        return <Award data={data.awardAcceptance} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 7:
-        return <Contract data={data.contract} styling={this.props.styling}/>;
+        return <Contract data={data.contract} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       default:
-        return <Tender data={data.tender} styling={this.props.styling}/>;
+        return <Tender data={data.tender} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
     }
   }
   
   render() {
     const { navigate } = this.props;
     const { data } = this.state;
-    
-    // console.log(data);
     
     return (<div className="tender makueni-form">
       <div className="row">
