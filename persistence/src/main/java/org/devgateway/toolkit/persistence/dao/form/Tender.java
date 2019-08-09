@@ -41,47 +41,47 @@ import java.util.function.Consumer;
         @Index(columnList = "tenderNumber")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAutogeneratable {
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Tender ID")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Tender Name")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderTitle;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Invitation to Tender Date")
     private Date invitationDate;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Tender Objective")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String objective;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Tender Issued By")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity issuedBy;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Tender Value")
     private BigDecimal tenderValue;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Tender Link")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String tenderLink;
 
-    @ExcelExport(separateSheet = true, useTranslation = true)
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Tender Items")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")

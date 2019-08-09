@@ -29,15 +29,15 @@ import java.util.Date;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Professional Opinion Date")
     private Date professionalOpinionDate;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Awardee")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Recommended Award Amount")
     private BigDecimal recommendedAwardAmount;
 
     public Date getProfessionalOpinionDate() {

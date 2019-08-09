@@ -29,19 +29,19 @@ import java.math.BigDecimal;
 @Table(indexes = {@Index(columnList = "parent_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PlanItem planItem;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Unit of Issue")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String unit;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal amount;
 
     @Transient

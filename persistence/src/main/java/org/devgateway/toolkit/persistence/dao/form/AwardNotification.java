@@ -28,10 +28,10 @@ import java.util.Date;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Date")
     private Date awardDate;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Award Value")
     private BigDecimal awardValue;
 
     @ExcelExport(name = "Supplier")
@@ -39,7 +39,7 @@ public class AwardNotification extends AbstractPurchaseReqMakueniEntity {
     @ManyToOne
     private Supplier awardee;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Acknowledge Receipt of Award Timeline")
     private Integer acknowledgementDays;
 
     public BigDecimal getAwardValue() {

@@ -30,7 +30,7 @@ public class DataExportService {
 
         if (procurementPlan.isPresent()) {
             return excelGeneratorService.getExcelDownload(
-                    new ArrayList<>(Arrays.asList(procurementPlan.get())));
+                    new ArrayList<>(Arrays.asList(procurementPlan.get())), true);
         } else {
             return null;
         }

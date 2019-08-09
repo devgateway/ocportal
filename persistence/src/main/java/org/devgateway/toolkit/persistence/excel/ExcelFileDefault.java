@@ -31,6 +31,10 @@ public class ExcelFileDefault implements ExcelFile {
         this.workbook = new SXSSFWorkbook(100);
     }
 
+    public ExcelFileDefault(final List<Object> objects) {
+        this(objects, null);
+    }
+
     @Override
     public Workbook createWorkbook() {
         // don't do anything if the list of objects is empty, just display the error message.

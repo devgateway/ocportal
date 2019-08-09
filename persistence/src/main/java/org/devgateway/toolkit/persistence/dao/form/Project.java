@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
-    @ExcelExport(separateSheet = true, useTranslation = true)
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Paper")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private CabinetPaper cabinetPaper;
@@ -55,22 +55,22 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @OneToMany(mappedBy = "project")
     private Set<PurchaseRequisition> purchaseRequisitions = new HashSet<>();
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Project Title")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String projectTitle;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Amount Budgeted")
     private BigDecimal amountBudgeted;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Amount Requested")
     private BigDecimal amountRequested;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Subcounty> subcounties;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Wards")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Ward> wards = new ArrayList<>();

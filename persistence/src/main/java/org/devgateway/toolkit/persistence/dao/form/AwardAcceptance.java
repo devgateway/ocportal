@@ -28,7 +28,7 @@ import java.util.Date;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Date")
     private Date acceptanceDate;
 
     @ExcelExport(name = "Supplier")
@@ -36,7 +36,7 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     @ManyToOne
     private Supplier awardee;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Accepted Award Value")
     private BigDecimal acceptedAwardValue;
 
     public Date getAcceptanceDate() {

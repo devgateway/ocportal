@@ -39,11 +39,11 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Name")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String name;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Cabinet/Ministerial Paper Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String number;
 
