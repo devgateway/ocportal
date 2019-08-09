@@ -26,18 +26,18 @@ import java.math.BigDecimal;
 @Table(indexes = {@Index(columnList = "parent_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PurchaseItem purchaseItem;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Unit of Issue")
     private String unitOfIssue;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal unitPrice;
 
     public String getUnitOfIssue() {

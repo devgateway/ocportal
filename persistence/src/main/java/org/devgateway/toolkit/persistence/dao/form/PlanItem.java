@@ -32,58 +32,58 @@ import java.math.BigDecimal;
 @Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem, Labelable {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Description")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String description;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Estimated Cost")
     private BigDecimal estimatedCost;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Unit Of Issue")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String unitOfIssue;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal unitPrice;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Total Cost")
     private BigDecimal totalCost;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Source of Funds")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Target Group Value")
     private BigDecimal targetGroupValue;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "1st Quarter")
     private BigDecimal quarter1st;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "2nd Quarter")
     private BigDecimal quarter2nd;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "3rd Quarter")
     private BigDecimal quarter3rd;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "4th Quarter")
     private BigDecimal quarter4th;
 
     @Transient

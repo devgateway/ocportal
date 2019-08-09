@@ -54,25 +54,25 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @org.springframework.data.annotation.Transient
     private Project project;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Purchase Request Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Title")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String title;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Staff requestedBy;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Charge Account")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ChargeAccount chargeAccount;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Request Approval Date")
     private Date requestApprovalDate;
 
     @ExcelExport(name = "Purchase Items", separateSheet = true)
@@ -131,6 +131,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     /**
      * Calculates if this {@link PurchaseRequisition} is terminated. This involves going through all stages and
      * checking if any of them is terminated
+     *
      * @return
      */
     @Override

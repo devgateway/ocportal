@@ -37,17 +37,17 @@ import java.util.Set;
 @Document
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProcurementPlan extends AbstractMakueniEntity {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Department")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private FiscalYear fiscalYear;
 
-    @ExcelExport(separateSheet = true, useTranslation = true)
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Procurement Plan Items")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
@@ -62,7 +62,7 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     public ProcurementPlan() {
 
     }
-    
+
     public Department getDepartment() {
         return department;
     }
