@@ -3,7 +3,13 @@ import FeedbackPage from '../../FeedbackPage';
 
 class Tender extends FeedbackPage {
   getFeedbackSubject() {
-    return escape("Makueni Public Portal - Tender");
+    const { department, fiscalYear } = this.props;
+    
+    let metadata;
+    if (department !== undefined) {
+      metadata = " - " + department.label + " - " + fiscalYear.name;
+    }
+    return escape("Tender" + metadata);
   }
   
   render() {

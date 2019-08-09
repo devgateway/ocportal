@@ -33,13 +33,23 @@ class Project extends FeedbackPage {
     this.projectInfo.addListener('Project', () => {
       this.projectInfo.getState()
       .then(data => {
-        this.setState({ data: data.projects });
+        this.setState({ data: data });
       });
     });
   }
   
   componentWillUnmount() {
     this.projectInfo.removeListener('Project');
+  }
+  
+  getFeedbackSubject() {
+    const { data } = this.state;
+  
+    let metadata;
+    if (data !== undefined) {
+      metadata = " - " + data.department.label + " - " + data.fiscalYear.name;
+    }
+    return escape("Project" + metadata);
   }
   
   render() {
@@ -72,12 +82,12 @@ class Project extends FeedbackPage {
             <div className="row">
               <div className="col-md-6">
                 <div className="item-label">Project Title</div>
-                <div className="item-value">{data.projectTitle}</div>
+                <div className="item-value">{data.projects.projectTitle}</div>
               </div>
               <div className="col-md-6">
                 <div className="item-label">Cabinet Paper</div>
                 {
-                  data.cabinetPaper.formDocs.map(doc => <div key={doc._id}>
+                  data.projects.cabinetPaper.formDocs.map(doc => <div key={doc._id}>
                     <OverlayTrigger
                       placement="bottom"
                       overlay={
@@ -99,29 +109,29 @@ class Project extends FeedbackPage {
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Amount Budgeted</div>
-                <div className="item-value">{currencyFormatter(data.amountBudgeted)}</div>
+                <div className="item-value">{currencyFormatter(data.projects.amountBudgeted)}</div>
               </div>
               <div className="col-md-6">
                 <div className="item-label">Amount Requested</div>
-                <div className="item-value">{currencyFormatter(data.amountRequested)}</div>
+                <div className="item-value">{currencyFormatter(data.projects.amountRequested)}</div>
               </div>
             </div>
     
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Sub-Counties</div>
-                <div className="item-value">{data.subcounties.map(item => item.label).join(', ')}</div>
+                <div className="item-value">{data.projects.subcounties.map(item => item.label).join(', ')}</div>
               </div>
               <div className="col-md-6">
                 <div className="item-label">Wards</div>
-                <div className="item-value">{data.wards.map(item => item.label).join(', ')}</div>
+                <div className="item-value">{data.projects.wards.map(item => item.label).join(', ')}</div>
               </div>
             </div>
     
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Approved Date</div>
-                <div className="item-value">{formatDate(data.approvedDate)}</div>
+                <div className="item-value">{formatDate(data.projects.approvedDate)}</div>
               </div>
             </div>
           </div>

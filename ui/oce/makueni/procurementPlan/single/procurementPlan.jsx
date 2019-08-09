@@ -42,6 +42,16 @@ class ProcurementPlan extends FeedbackPage {
     this.ppInfo.removeListener('PP');
   }
   
+  getFeedbackSubject() {
+    const { data } = this.state;
+    
+    let metadata;
+    if (data !== undefined) {
+      metadata = " - " + data.department.label + " - " + data.fiscalYear.name;
+    }
+    return escape("Procurement Plan" + metadata);
+  }
+  
   render() {
     const { navigate } = this.props;
     const { data } = this.state;

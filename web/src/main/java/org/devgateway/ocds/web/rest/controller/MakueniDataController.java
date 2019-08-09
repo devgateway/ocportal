@@ -180,7 +180,7 @@ public class MakueniDataController extends GenericOCDSController {
     public Document projectById(@PathVariable final Long id) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
-        final Aggregation aggregation = newAggregation(project("_id", "projects"),
+        final Aggregation aggregation = newAggregation(project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
                 match(Criteria.where("projects._id").is(id)));
 
@@ -194,10 +194,10 @@ public class MakueniDataController extends GenericOCDSController {
     public Document purchaseReqById(@PathVariable final Long id) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
-        final Aggregation aggregation = newAggregation(project("projects"),
+        final Aggregation aggregation = newAggregation(project("department", "fiscalYear", "projects"),
                 unwind("projects"),
                 unwind("projects.purchaseRequisitions"),
-                project("projects.purchaseRequisitions"),
+                project("department", "fiscalYear", "projects.purchaseRequisitions"),
                 match(Criteria.where("purchaseRequisitions._id").is(id)));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
