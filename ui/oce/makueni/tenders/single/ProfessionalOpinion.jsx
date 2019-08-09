@@ -1,6 +1,7 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class ProfessionalOpinion extends React.Component {
+class ProfessionalOpinion extends FeedbackPage {
   
   render() {
     const { data } = this.props;
@@ -57,7 +58,8 @@ class ProfessionalOpinion extends React.Component {
             className="item-value">{formatDate(professionalOpinion.approvedDate)}</div>
         </div>
       </div>
-    
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

@@ -1,6 +1,10 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class Tender extends React.Component {
+class Tender extends FeedbackPage {
+  getFeedbackSubject() {
+    return escape("Makueni Public Portal - Tender");
+  }
   
   render() {
     const { data } = this.props;
@@ -11,7 +15,7 @@ class Tender extends React.Component {
     }
     
     const tender = data[0];
-  
+    
     return (<div>
       <div className="row padding-top-10">
         <div className="col-md-6">
@@ -90,7 +94,8 @@ class Tender extends React.Component {
                 <div className="row">
                   <div className="col-md-12">
                     <div className="item-label">Item</div>
-                    <div className="item-value">{tenderItem.purchaseItem.planItem.description} - {tenderItem.purchaseItem.planItem.item.label}</div>
+                    <div
+                      className="item-value">{tenderItem.purchaseItem.planItem.description} - {tenderItem.purchaseItem.planItem.item.label}</div>
                   </div>
                 </div>
                 <div className="row">
@@ -108,7 +113,8 @@ class Tender extends React.Component {
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Total Cost</div>
-                    <div className="item-value">{currencyFormatter(tenderItem.quantity * tenderItem.unitPrice)}</div>
+                    <div
+                      className="item-value">{currencyFormatter(tenderItem.quantity * tenderItem.unitPrice)}</div>
                   </div>
                 </div>
               </div>)
@@ -129,7 +135,7 @@ class Tender extends React.Component {
                     Click to download the file
                   </Tooltip>
                 }>
-        
+                
                 <a className="item-value download" href={doc.url} target="_blank">
                   <i className="glyphicon glyphicon-download"/>
                   <span>{doc.name}</span>
@@ -143,6 +149,8 @@ class Tender extends React.Component {
           <div className="item-value">{tender.tenderLink}</div>
         </div>
       </div>
+      
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

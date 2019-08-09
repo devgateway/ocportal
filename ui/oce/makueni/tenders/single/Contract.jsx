@@ -1,6 +1,7 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class Contract extends React.Component {
+class Contract extends FeedbackPage {
   
   render() {
     const { data } = this.props;
@@ -97,6 +98,8 @@ class Contract extends React.Component {
           </div>
           : null
       }
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

@@ -1,6 +1,7 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class PurchaseReq extends React.Component {
+class PurchaseReq extends FeedbackPage {
   
   render() {
     const { data } = this.props;
@@ -107,6 +108,8 @@ class PurchaseReq extends React.Component {
             className="item-value">{formatDate(data.approvedDate)}</div>
         </div>
       </div>
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

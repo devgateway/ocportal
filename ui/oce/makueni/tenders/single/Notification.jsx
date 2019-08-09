@@ -1,6 +1,7 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class Notification extends React.Component {
+class Notification extends FeedbackPage {
   
   render() {
     const { data } = this.props;
@@ -66,6 +67,8 @@ class Notification extends React.Component {
           }
         </div>
       </div>
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

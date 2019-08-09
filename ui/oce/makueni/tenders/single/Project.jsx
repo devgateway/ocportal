@@ -1,9 +1,9 @@
-import CRDPage from '../../../corruption-risk/page';
 import { API_ROOT } from '../../../state/oce-state';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { mtState } from '../state';
+import FeedbackPage from '../../FeedbackPage';
 
-class Project extends CRDPage {
+class Project extends FeedbackPage {
   constructor(props) {
     super(props);
     
@@ -26,8 +26,6 @@ class Project extends CRDPage {
   }
   
   componentDidMount() {
-    super.componentDidMount();
-    
     const { id } = this.props;
     
     this.projectID.assign('Project', id);
@@ -129,6 +127,8 @@ class Project extends CRDPage {
           </div>
           : null
       }
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
   
