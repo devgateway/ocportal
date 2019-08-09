@@ -98,8 +98,8 @@ export default class Header extends translatable(React.Component) {
           Download the Data
         </span>
         <div className="export-btn">
-        <a href={url} download="export.zip"><button className="json"></button></a>
-          <button className="xls"></button>
+        <a href={url} download="export.zip"><button className="xls"></button></a>
+          <button className="json"></button>
         </div>
       </div>
     );
