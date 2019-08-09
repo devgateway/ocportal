@@ -1,9 +1,9 @@
-import CRDPage from '../../../corruption-risk/page';
 import { ppState } from '../state';
 import { API_ROOT } from '../../../state/oce-state';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class ProcurementPlan extends CRDPage {
+class ProcurementPlan extends FeedbackPage {
   constructor(props) {
     super(props);
     
@@ -26,8 +26,6 @@ class ProcurementPlan extends CRDPage {
   }
   
   componentDidMount() {
-    super.componentDidMount();
-    
     const { id } = this.props;
     
     this.ppID.assign('PP', id);
@@ -42,6 +40,16 @@ class ProcurementPlan extends CRDPage {
   
   componentWillUnmount() {
     this.ppInfo.removeListener('PP');
+  }
+  
+  getFeedbackSubject() {
+    const { data } = this.state;
+    
+    let metadata;
+    if (data !== undefined) {
+      metadata = " - " + data.department.label + " - " + data.fiscalYear.name;
+    }
+    return escape("Procurement Plan" + metadata);
   }
   
   render() {
@@ -209,6 +217,8 @@ class ProcurementPlan extends CRDPage {
           </div>
           : null
       }
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

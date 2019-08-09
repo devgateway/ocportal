@@ -7,7 +7,10 @@ import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.GenericOCDSController;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.devgateway.ocds.web.util.SettingsUtils;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
+import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -36,12 +42,21 @@ public class ExcelExportController extends GenericOCDSController {
     protected final Logger logger = LoggerFactory.getLogger(ExcelExportController.class);
     @Autowired
     protected AdminSettingsRepository adminSettingsRepository;
+
     @Autowired
     private SettingsUtils settingsUtils;
+
     @Autowired
     private ExcelGenerator excelGenerator;
+
     @Autowired
     private FileCleaningTracker fileCleaningTracker;
+
+    @Autowired
+    private ProcurementPlanService procurementPlanService;
+
+    @Autowired
+    private ExcelGeneratorService excelGeneratorService;
 
     @ApiOperation(value = "Export releases in Excel format.")
     @RequestMapping(value = "/api/ocds/excelExport", method = {RequestMethod.GET, RequestMethod.POST})
@@ -86,5 +101,27 @@ public class ExcelExportController extends GenericOCDSController {
             zout.close();
             response.flushBuffer();
         }
+    }
+
+    @ApiOperation(value = "Export Makueni Data in Excel format.")
+    @RequestMapping(value = "/api/makueni/excelExport", method = {RequestMethod.GET, RequestMethod.POST})
+    public void makueniExcelExport(final HttpServletResponse response) throws IOException {
+        final List<ProcurementPlan> procurementPlans = procurementPlanService.findAll();
+
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=" + "excel-export.zip");
+        response.flushBuffer();
+        ZipOutputStream zout = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+        zout.setMethod(ZipOutputStream.DEFLATED);
+        zout.setLevel(Deflater.NO_COMPRESSION);
+
+        ZipEntry ze = new ZipEntry("Makueni Data.xlsx");
+        zout.putNextEntry(ze);
+        byte[] bytes = excelGeneratorService.getExcelDownload(new ArrayList<>(procurementPlans), false);
+        zout.write(bytes, 0, bytes.length);
+        zout.closeEntry();
+        response.flushBuffer();
+        zout.close();
+        response.flushBuffer();
     }
 }

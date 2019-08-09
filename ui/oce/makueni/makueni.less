@@ -1,10 +1,10 @@
+@active-text-color: #29722d;
+@active-tab-color: #204e6e;
+
 .tender {
     .navigation-view {
         overflow: hidden;
         background-color: #F9F9F9;
-
-        @active-text-color: #29722d;
-        @active-tab-color: #204e6e;
 
         a {
             display: table-cell;
@@ -367,6 +367,29 @@ a.more-details-link::before {
 
 a.more-details-link:hover::before {
     transition-duration: .15s;
+}
+
+.feedback-section {
+    padding-top: 40px;
+    padding-right: 20px;
+    font-size: 18px;
+    font-weight: bold;
+
+    a {
+        cursor: pointer;
+        text-decoration: none;
+        color: #337ab7;
+
+        &:hover {
+            color: @active-tab-color;
+        }
+    }
+
+    .feedback-icon {
+        width: 36px;
+        height: 36px;
+        padding-left: 5px;
+    }
 }
 
 .rc-slider-track{

@@ -36,7 +36,7 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Contract extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
 
     @ExcelExport(name = "Supplier")
@@ -44,25 +44,25 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
     @ManyToOne
     private Supplier awardee;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Contract Date")
     private Date contractDate;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Contract Approved Date")
     private Date contractApprovalDate;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Expiry Date")
     private Date expiryDate;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Reference Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Procuring Entity Name")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity procuringEntity;
 
-    @ExcelExport(separateSheet = true, useTranslation = true)
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Contract Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
