@@ -15,8 +15,10 @@ class Tenders extends Table {
     // TODO - change the key when we have a bidNo
     return (<tr key={bidNo + tender}>
        {/*<td>{bidNo}</td>*/}
+        <td>{getDate(tender, 'startDate')}</td>
         <td>{getDate(tender, 'endDate')}</td>
         <td className="procuring-entity-title">{buyer.getIn(['name'])}</td>
+        <td className="procuring-entity-title">{tender.getIn(['title'])}</td>
         <td>{this.maybeFormat(value.get('amount'))} {value.get('currency')}</td>
       </tr>
     );
@@ -29,8 +31,10 @@ class Tenders extends Table {
         <thead>
         <tr>
           {/*<th>{this.t('tables:top10tenders:number')}</th>*/}
+          <th>{this.t('tables:top10tenders:startDate')}</th>
           <th>{this.t('tables:top10tenders:endDate')}</th>
           <th>{this.t('tables:top10tenders:buyer')}</th>
+          <th>{this.t('tables:top10tenders:tenderTitle')}</th>
           <th>{this.t('tables:top10tenders:estimatedValue')}</th>
         </tr>
         </thead>
