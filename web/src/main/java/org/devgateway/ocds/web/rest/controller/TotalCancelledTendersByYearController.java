@@ -55,15 +55,15 @@ public class TotalCancelledTendersByYearController extends GenericOCDSController
             produces = "application/json")
     public List<Document> totalCancelledTendersByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
+        clearTenderStatus(filter); //this endpoint is about tender status, so we clear any previously set tender status
+        filter.getTenderStatus().add(Tender.Status.cancelled.toString());
 
         DBObject project = new BasicDBObject();
         addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
 
-
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_STATUS).is(Tender.Status.cancelled.toString())
-                        .and(getTenderDateField()).exists(true)
+                match(where(getTenderDateField()).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(filter,
                                 getTenderDateField()
                         ))),

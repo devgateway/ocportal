@@ -49,6 +49,7 @@
   "filters:dashboard:manageDashboards": "Manage dashboards",
   "filters:dashboard:manageUsers": "Manage users",
   "filters:procuringEntity:title": "Procuring entity",
+  "filters:buyer:title": "Buyer/Department",
   "filters:supplier:title": "Supplier",
   "filters:tenderPrice:title": "Tender price",
   "filters:multipleSelect:selectAll": "Select all",

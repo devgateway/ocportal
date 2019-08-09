@@ -65,6 +65,8 @@ public final class MongoConstants {
 
         public static final String AWARD_STATUS = "awardStatus";
 
+        public static final String TENDER_STATUS = "tenderStatus";
+
         public static final String BID_TYPE_ID = "bidTypeId";
 
         public static final String NOT_BID_TYPE_ID = "notBidTypeId";
@@ -74,6 +76,8 @@ public final class MongoConstants {
         public static final String NOT_PROCURING_ENTITY_ID = "notProcuringEntityId";
 
         public static final String SUPPLIER_ID = "supplierId";
+
+        public static final String BUYER_ID = "buyerId";
 
         public static final String BIDDER_ID = "bidderId";
 
