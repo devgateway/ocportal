@@ -27,8 +27,8 @@
             }
 
             &.active {
-                color: @active-text-color;
-                border-bottom: 3px solid @active-text-color;
+                color: @active-tab-color;
+                border-bottom: 3px solid @active-tab-color;
 
                 &:hover {
                     color: @active-tab-color;
@@ -41,8 +41,8 @@
 
 .makueni-form {
     .back-link {
-        color: #337ab7;
-        font-size: 20px;
+        color: #29722d;
+        font-size: 14px;
         font-weight: 700;
         text-decoration: none;
         padding-top: 10px;
@@ -87,12 +87,12 @@
     }
 
     a {
-        color: #337ab7;
+        color: #29722d;
         cursor: pointer;
         text-decoration: none;
 
         &:hover {
-            color: #285f8f;
+            color: #337ab7;
         }
     }
 
@@ -352,4 +352,11 @@ a.more-details-link::before {
 
 a.more-details-link:hover::before {
     transition-duration: .15s;
+}
+
+.rc-slider-track{
+  background-color: #204e6e;
+}
+.rc-slider-handle{
+  border: 2px solid #204e6e;
 }
