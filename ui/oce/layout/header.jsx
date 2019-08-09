@@ -92,8 +92,8 @@ export default class Header extends translatable(React.Component) {
           Download the Data
         </span>
         <div className="export-btn">
-          <button className="btn btn-default" disabled>
-          </button>
+          <button className="json"></button>
+          <button className="xls"></button>
         </div>
       </div>
     );
@@ -136,7 +136,7 @@ export default class Header extends translatable(React.Component) {
         {
           data !== undefined
             ? <div>
-              <div className="col-md-3 total-item">
+              <div className="col-md-2 total-item">
                 <span className="total-label">Total Contracts</span>
                 <span className="total-number">{data.count}</span>
               </div>

@@ -28,10 +28,11 @@
 
             &.active {
                 color: @active-text-color;
-                border-bottom: 3px solid @active-tab-color;
+                border-bottom: 3px solid @active-text-color;
 
                 &:hover {
                     color: @active-tab-color;
+                    border-bottom: 3px solid @active-text-color;
                 }
             }
         }
@@ -47,21 +48,22 @@
         padding-top: 10px;
 
         .back-icon {
-            padding-right: 10px;
-
             .previous {
+                float: left;
                 text-decoration: none;
-                display: inline-block;
-                padding: 10px 20px;
-
-                background-color: #f1f1f1;
+                display: block;
                 color: black;
-                border-radius: 50%;
+                margin-right: 10px;
             }
-
             .previous:hover {
                 background-color: #ddd;
                 color: black;
+            }
+            .back-text{
+              display: block;
+              float: left;
+              font-size: 15px;
+              line-height: 200%;
             }
         }
 

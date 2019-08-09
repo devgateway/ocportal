@@ -56,7 +56,7 @@ class ProcurementPlan extends CRDPage {
         <span className="back-icon">
           <span className="previous">&#8249;</span>
         </span>
-          <span>
+          <span className="back-text">
           Go Back
         </span>
         </a>
