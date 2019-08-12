@@ -27,19 +27,19 @@ class Cancelled extends translatable(React.Component){
             onClick={_ => this.setState({percents: !percents})}
             dangerouslySetInnerHTML={{__html: percents ? '&#8363;' : '%'}}
         />
-        <img
-            src="assets/icons/export-black.svg"
-            width="16"
-            height="16"
-            className="chart-export-icon"
-            onClick={e => download({
-              ep: Chart.excelEP,
-              filters,
-              years,
-              months,
-              t: this.t.bind(this)
-            })}
-        />
+        {/*<img*/}
+        {/*    src="assets/icons/export-black.svg"*/}
+        {/*    width="16"*/}
+        {/*    height="16"*/}
+        {/*    className="chart-export-icon"*/}
+        {/*    onClick={e => download({*/}
+        {/*      ep: Chart.excelEP,*/}
+        {/*      filters,*/}
+        {/*      years,*/}
+        {/*      months,*/}
+        {/*      t: this.t.bind(this)*/}
+        {/*    })}*/}
+        {/*/>*/}
 
         <img
             src="assets/icons/camera.svg"
