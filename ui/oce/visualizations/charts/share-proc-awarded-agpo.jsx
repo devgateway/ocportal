@@ -13,10 +13,17 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
     const data = super.getData();
     if(!data || !data.count()) return [];
     const labels = data.map(pluckImm('_id')).toJS();
+    const values = data.map(pluckImm('value')).toJS();
+    const text = [];
+    for (let i = 0; i < values.length; i += 1) {
+      text.push(this.props.styling.charts.hoverFormatter(values[i]));
+    }
     return [{
-      values: data.map(pluckImm('value')).toJS(),
+      values: values,
       labels: labels,
-      textinfo: 'value+percent+label',
+      text: text,
+      textinfo: 'text+percent+label',
+      hoverinfo: 'text+percent',
       type: 'pie'
       //,
       // marker: {
