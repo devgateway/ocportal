@@ -9,7 +9,7 @@ class FilterItems extends FilterItemTypeAhead {
 }
 
 FilterItems.getName = () => 'Items';
-FilterItems.getProperty = () => 'items';
+FilterItems.getProperty = () => 'item';
 FilterItems.getEP = () => '/makueni/filters/items';
 
 export default FilterItems;

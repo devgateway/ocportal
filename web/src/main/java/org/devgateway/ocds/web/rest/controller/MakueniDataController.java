@@ -11,10 +11,13 @@ import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMong
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
-import org.devgateway.toolkit.persistence.dao.categories.Item;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
+import org.devgateway.toolkit.persistence.service.category.SubcountyService;
+import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
@@ -67,6 +69,12 @@ public class MakueniDataController extends GenericOCDSController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private SubcountyService subcountyService;
+
+    @Autowired
+    private WardService wardService;
 
     @Autowired
     private GridFsOperations gridFsOperations;
@@ -272,6 +280,38 @@ public class MakueniDataController extends GenericOCDSController {
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
+    }
+
+    @ApiOperation(value = "Display the available Sub Counties.")
+    @RequestMapping(value = "/api/makueni/filters/subcounties", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> getSubcounty() {
+        final List<Document> results = new ArrayList<>();
+        final List<Subcounty> items = subcountyService.findAll();
+
+        items.sort(Comparator.comparing(Category::getLabel));
+
+        items.stream().forEach(item -> results.add(new Document()
+                .append("id", item.getId())
+                .append("label", item.getLabel())));
+
+        return results;
+    }
+
+    @ApiOperation(value = "Display the available Wards.")
+    @RequestMapping(value = "/api/makueni/filters/wards", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> getWard() {
+        final List<Document> results = new ArrayList<>();
+        final List<Ward> items = wardService.findAll();
+
+        items.sort(Comparator.comparing(Category::getLabel));
+
+        items.stream().forEach(item -> results.add(new Document()
+                .append("id", item.getId())
+                .append("label", item.getLabel())));
+
+        return results;
     }
 
     @ApiOperation(value = "Display the available Procurement Plan FY.")

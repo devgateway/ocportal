@@ -13,6 +13,15 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
     @ApiModelProperty(value = "Fiscal Year identifier")
     private Long fiscalYear;
 
+    @ApiModelProperty(value = "Item identifier")
+    private Long item;
+
+    @ApiModelProperty(value = "Subcounty identifier")
+    private Long subcounty;
+
+    @ApiModelProperty(value = "Ward identifier")
+    private Long ward;
+
     public Long getDepartment() {
         return department;
     }
@@ -27,5 +36,29 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
 
     public void setFiscalYear(final Long fiscalYear) {
         this.fiscalYear = fiscalYear;
+    }
+
+    public Long getItem() {
+        return item;
+    }
+
+    public void setItem(final Long item) {
+        this.item = item;
+    }
+
+    public Long getSubcounty() {
+        return subcounty;
+    }
+
+    public void setSubcounty(final Long subcounty) {
+        this.subcounty = subcounty;
+    }
+
+    public Long getWard() {
+        return ward;
+    }
+
+    public void setWard(final Long ward) {
+        this.ward = ward;
     }
 }

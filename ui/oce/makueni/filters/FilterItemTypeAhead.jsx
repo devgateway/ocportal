@@ -24,14 +24,16 @@ class FilterItemTypeAhead extends FilterItemSingleSelect {
   
   handleChange(filterVal) {
     const { filters } = this.props;
-    
+  
     filters.getState()
     .then(value => {
       if (filterVal.length === 0) {
         filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), undefined));
         this.setState({ selected: [] });
       } else {
-        filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), filterVal[0]._id));
+        const id = filterVal[0]._id !== undefined ? filterVal[0]._id : filterVal[0].id;
+        
+        filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), id));
         this.setState({ selected: [filterVal[0]] });
       }
     });
@@ -39,9 +41,9 @@ class FilterItemTypeAhead extends FilterItemSingleSelect {
   
   render() {
     const { data, selected } = this.state;
-    
+  
     return (
-      <Typeahead id="filter-items"
+      <Typeahead id={"filter-" + this.constructor.getProperty()}
                  onChange={this.handleChange}
                  options={data === undefined ? [] : data}
                  clearButton={true}
