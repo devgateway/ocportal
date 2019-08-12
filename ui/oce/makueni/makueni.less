@@ -1,5 +1,6 @@
 @active-text-color: #29722d;
 @active-tab-color: #204e6e;
+@border-grey: #f6f6f6;
 
 .tender {
     .navigation-view {
@@ -342,29 +343,9 @@ a.more-details-link {
 a.more-details-link:hover {
     color: #285f8f;
 }
-
-a.more-details-link::before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(to top, #fed330 25%, rgba(0, 0, 0, 0) 20%);
-
-    position: absolute;
-    left: 0;
-    z-index: -1;
-
-    will-change: width;
-    transform-origin: left bottom
-}
-
-a.more-details-link:hover::before {
-    width: 0;
-}
-
 a.more-details-link::before {
     transition: width .1s ease-out;
 }
-
 a.more-details-link:hover::before {
     transition-duration: .15s;
 }
@@ -391,10 +372,27 @@ a.more-details-link:hover::before {
         padding-left: 5px;
     }
 }
-
-.rc-slider-track{
-  background-color: #204e6e;
+.rc-slider{
+  margin-left: 5%;
+  width: 90%;
+  .rc-slider-track{
+    background-color: @active-tab-color;
+  }
+  .rc-slider-handle{
+    border: 2px solid @active-tab-color;
+  }
 }
-.rc-slider-handle{
-  border: 2px solid #204e6e;
+.react-bs-table-bordered{
+  border-radius: 0;
+  border-right: 2px solid @border-grey;
+  border-top: 2px solid @border-grey;
+}
+.table-bordered,
+.table-bordered>tbody>tr>td,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>td,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>thead>tr>th{
+  border: 2px solid @border-grey;
 }
