@@ -127,6 +127,13 @@ public class ImportPostgresToMongo {
                 new Index().on("department._id", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("fiscalYear._id", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.subcounties._id", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.wards._id", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                        Sort.Direction.ASC));
 
         // clear cache
         cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());

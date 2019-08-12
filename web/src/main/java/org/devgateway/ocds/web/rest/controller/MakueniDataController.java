@@ -93,10 +93,17 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
+        final Criteria criteriaTender = new Criteria().andOperator(
+                createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
+                createFilterCriteria("projects.wards._id", filter.getWard()),
+                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                        filter.getItem()));
+
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
                 unwind("projects.purchaseRequisitions"),
+                match(criteriaTender),
                 skip(filter.getSkip()),
                 limit(filter.getPageSize()));
 
@@ -115,10 +122,17 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
+        final Criteria criteriaTender = new Criteria().andOperator(
+                createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
+                createFilterCriteria("projects.wards._id", filter.getWard()),
+                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                        filter.getItem()));
+
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
                 unwind("projects.purchaseRequisitions"),
+                match(criteriaTender),
                 group().count().as("count"));
 
         final Document doc = mongoTemplate.aggregate(
