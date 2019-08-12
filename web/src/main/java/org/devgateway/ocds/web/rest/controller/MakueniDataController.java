@@ -36,6 +36,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -97,7 +98,9 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
                 createFilterCriteria("projects.wards._id", filter.getWard()),
                 createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
-                        filter.getItem()));
+                        filter.getItem()),
+                createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
+                        filter.getMin(), filter.getMax()));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -126,7 +129,9 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
                 createFilterCriteria("projects.wards._id", filter.getWard()),
                 createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
-                        filter.getItem()));
+                        filter.getItem()),
+                createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
+                        filter.getMin(), filter.getMax()));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -366,5 +371,20 @@ public class MakueniDataController extends GenericOCDSController {
         }
 
         return where(filterName).is(filterValues);
+    }
+
+    private Criteria createRangeFilterCriteria(final String filterName, final BigDecimal min, final BigDecimal max) {
+        if (min == null && max == null) {
+            return new Criteria();
+        }
+
+        Criteria criteria = where(filterName);
+        if (min != null) {
+            criteria = criteria.gte(min);
+        }
+        if (max != null) {
+            criteria = criteria.lte(max);
+        }
+        return criteria;
     }
 }

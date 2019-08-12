@@ -2,6 +2,8 @@ package org.devgateway.ocds.web.rest.controller.request;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
+
 /**
  * @author idobre
  * @since 2019-07-12
@@ -21,6 +23,12 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
 
     @ApiModelProperty(value = "Ward identifier")
     private Long ward;
+
+    @ApiModelProperty(value = "Tender min value")
+    private BigDecimal min;
+
+    @ApiModelProperty(value = "Tender max value")
+    private BigDecimal max;
 
     public Long getDepartment() {
         return department;
@@ -60,5 +68,21 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
 
     public void setWard(final Long ward) {
         this.ward = ward;
+    }
+
+    public BigDecimal getMin() {
+        return min;
+    }
+
+    public void setMin(final BigDecimal min) {
+        this.min = min;
+    }
+
+    public BigDecimal getMax() {
+        return max;
+    }
+
+    public void setMax(final BigDecimal max) {
+        this.max = max;
     }
 }

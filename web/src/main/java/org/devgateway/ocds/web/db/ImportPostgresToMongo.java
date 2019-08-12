@@ -134,6 +134,8 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
                         Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.purchaseRequisitions.tender.tenderValue", Sort.Direction.ASC));
 
         // clear cache
         cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
