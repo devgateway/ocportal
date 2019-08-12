@@ -6,6 +6,8 @@ import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
 import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+
 const translations = {
   en_US: require('../../web/public/languages/en_US.json'),
   es_ES: require('../../web/public/languages/es_ES.json'),

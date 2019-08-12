@@ -4,6 +4,7 @@ import cn from 'classnames';
 import FilterItemDep from './FilterItemDep';
 import { Map } from 'immutable';
 import FilterItemFY from './FilterItemFY';
+import FilterItems from './FilterItems';
 
 class FiltersWrapper extends translatable(Component) {
   constructor(props) {
@@ -63,6 +64,6 @@ class FiltersWrapper extends translatable(Component) {
   }
 }
 
-FiltersWrapper.ITEMS = [FilterItemDep, FilterItemFY];
+FiltersWrapper.ITEMS = [FilterItemDep, FilterItemFY, FilterItems];
 
 export default FiltersWrapper;

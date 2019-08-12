@@ -10,8 +10,11 @@ import org.bson.types.ObjectId;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
+import org.devgateway.toolkit.persistence.dao.categories.Category;
+import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
+import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
@@ -58,6 +64,9 @@ public class MakueniDataController extends GenericOCDSController {
 
     @Autowired
     private MongoFileStorageService mongoFileStorageService;
+
+    @Autowired
+    private ItemService itemService;
 
     @Autowired
     private GridFsOperations gridFsOperations;
@@ -232,6 +241,34 @@ public class MakueniDataController extends GenericOCDSController {
 
         final Aggregation aggregation = newAggregation(project("department", Fields.UNDERSCORE_ID),
                 group("department"), new CustomOperation(new Document("$project", project)));
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
+    }
+
+    @ApiOperation(value = "Display the available Items.")
+    @RequestMapping(value = "/api/makueni/filters/items", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> getItems() {
+
+        /* Use this if we want to export ALL Items
+        final List<Document> results = new ArrayList<>();
+        final List<Item> items = itemService.findAll()
+                .parallelStream()
+                .filter(item -> item.getLabel() != null).collect(Collectors.toList());
+
+        items.sort(Comparator.comparing(Category::getLabel));
+
+        items.stream().forEach(item -> results.add(new Document()
+                .append("id", item.getId())
+                .append("label", item.getLabel())));
+
+        return results;
+        */
+
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+        final Aggregation aggregation = newAggregation(project("planItems"),
+                unwind("planItems"), project("planItems.item"), group("item"));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
