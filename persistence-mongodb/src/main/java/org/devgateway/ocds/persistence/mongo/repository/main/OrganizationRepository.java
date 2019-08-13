@@ -22,7 +22,7 @@ public interface OrganizationRepository extends GenericOrganizationRepository<Or
     @Query(value = "{ $or: [ {'_id' : ?0 }, " + "{'name': ?0} ] }")
     Organization findByIdOrName(String idName);
 
-    @Query(value = "{'identifier._id': { $in : ?0 }}")
+    @Query(value = "{'_id': { $in : ?0 }}")
     List<Organization> findByIdCollection(Collection<String> idCol);
 
     @Query(value = "{$and: [{'identifier._id': ?0} , { 'roles': ?1 } ] }")
