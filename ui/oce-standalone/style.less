@@ -8,6 +8,11 @@
 @circle-grey: #666666;
 @tab-light-grey: #f2f2f2;
 @border-grey: #f6f6f6;
+@gray: #b1b1b1;
+@active-color: #808080;
+@hover-blue: #3090bd;
+@color-regular-gray: #8d8d8d;
+@base-space: 20px;
 
 
 .content {
@@ -81,12 +86,6 @@ header.branding {
         color: white;
     }
 
-    @gray: #b1b1b1;
-    @active-color: #808080;
-
-    @hover-blue: #3090bd;
-    @color-regular-gray: #8d8d8d;
-    @base-space: 20px;
 
     .filters {
         .filter {
@@ -420,6 +419,9 @@ footer.main-footer {
         line-height: 64px;
         padding-left: 20px;
         text-transform: uppercase;
+        @media screen and (max-width: 1024px){
+          padding-left: 50px;
+        }
     }
 
     .export-btn {
