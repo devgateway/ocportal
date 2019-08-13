@@ -7,10 +7,6 @@ class FilterAmount extends FilterRange {
     this.setState({ minValue: 0, maxValue: 100000000 });
     
   }
-  
-  getTitle() {
-    return '';
-  }
 }
 
 FilterAmount.getName = () => 'Amount';

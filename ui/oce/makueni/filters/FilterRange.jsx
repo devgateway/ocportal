@@ -24,10 +24,10 @@ class FilterRange extends translatable(React.Component) {
       this.props.filters.getState(this.constructor.getName()),
     ])
     .then(([item]) => {
-      const { minValue, maxValue } = this.state;
-      
       // update internal state on reset
-      if (item.get('min') === undefined && item.get('max') === undefined) {
+      if (item.get('min') === undefined && item.get('max') === undefined && this.state !== null) {
+        const { minValue, maxValue } = this.state;
+        
         this.setState({ min: minValue, max: maxValue });
       }
     });
@@ -35,7 +35,7 @@ class FilterRange extends translatable(React.Component) {
   
   handleChange(values) {
     const { filters } = this.props;
-  
+    
     const self = this;
     delayUserInput('amount', function () {
       filters.getState()
@@ -58,9 +58,6 @@ class FilterRange extends translatable(React.Component) {
     
     return (
       <section className="field">
-        <header>
-          {this.getTitle()}
-        </header>
         <section className="options range">
           <RCRange
             allowCross={false}
