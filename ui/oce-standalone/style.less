@@ -210,44 +210,52 @@ aside {
 @yearsBarBottom: 34px;
 @yearsBarHeight: 30px;
 
-.years-bar, .months-bar {
-    position: fixed;
-    bottom: @yearsBarBottom;
-    border-bottom: 2px solid #c5c5c5;
-    z-index: 10000;
-    padding-left: 0;
-    padding-right: 0;
-    display: table;
-    height: @yearsBarHeight;
+.date-filter {
+    .years-bar, .months-bar {
+        color: #333;
+        height: @yearsBarHeight;
 
-    a {
-        display: table-cell;
-        background-color: #e6e6e6;
-        color: #bbbbbb;
-        text-decoration: none;
-        padding: 5px 0 5px 20px;
-        border-right: 2px #f2f2f2 solid;
+        a {
+            background-color: #e6e6e6;
+            color: #bbbbbb;
+            text-decoration: none;
+            padding: 5px 0 5px 10px;
+            border-right: 2px #f2f2f2 solid;
 
-        &:hover {
-            background-color: #707070;
-        }
-
-        .glyphicon {
-            visibility: hidden;
-        }
-
-        &:last-child {
-            border-right: none;
-        }
-
-        &.active {
-            color: white;
-            background-color: #808080;
+            &:hover {
+                background-color: #707070;
+            }
 
             .glyphicon {
-                visibility: visible;
+                visibility: hidden;
+            }
+
+            &.active {
+                color: white;
+                background-color: #808080;
+
+                .glyphicon {
+                    visibility: visible;
+                }
             }
         }
+
+        a:last-child .ctrl-click-hint {
+            right: 10px;
+        }
+
+        a:hover .ctrl-click-hint {
+            display: block;
+        }
+    }
+
+    .months-bar {
+        margin-bottom: 80px;
+    }
+
+    .hint {
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     .ctrl-click-hint {
@@ -256,18 +264,6 @@ aside {
         top: @yearsBarHeight + 10;
         color: #fff;
     }
-
-    a:last-child .ctrl-click-hint {
-        right: 10px;
-    }
-
-    a:hover .ctrl-click-hint {
-        display: block;
-    }
-}
-
-.months-bar {
-    bottom: @yearsBarBottom + @yearsBarHeight + 1;
 }
 
 footer.main-footer {
