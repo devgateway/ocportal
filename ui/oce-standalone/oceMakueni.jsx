@@ -128,7 +128,7 @@ class OCEMakueni extends OCApp {
 
           <div className="col-xs-8 col-md-9">
             <div className="row">
-              <div className="navigation">
+              <div className="navigation subnav">
                 {this.navigation()}
               </div>
             </div>

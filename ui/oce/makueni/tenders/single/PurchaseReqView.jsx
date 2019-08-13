@@ -97,7 +97,8 @@ class PurchaseReqView extends CRDPage {
   
   displayTab() {
     const { selected, data, department, fiscalYear } = this.state;
-  
+    const tenderTitle = data.tender[0].tenderTitle;
+    
     switch (selected) {
       case 1:
         return <Tender data={data.tender} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
@@ -106,22 +107,28 @@ class PurchaseReqView extends CRDPage {
         return <PurchaseReq data={data} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 3:
-        return <TenderQuotation data={data.tenderQuotationEvaluation} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <TenderQuotation data={data.tenderQuotationEvaluation} tenderTitle={tenderTitle}
+                                department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 4:
-        return <ProfessionalOpinion data={data.professionalOpinion} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <ProfessionalOpinion data={data.professionalOpinion} tenderTitle={tenderTitle}
+                                    department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 5:
-        return <Notification data={data.awardNotification} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <Notification data={data.awardNotification} tenderTitle={tenderTitle}
+                             department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 6:
-        return <Award data={data.awardAcceptance} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <Award data={data.awardAcceptance} department={department} tenderTitle={tenderTitle}
+                      fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       case 7:
-        return <Contract data={data.contract} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <Contract data={data.contract} department={department} tenderTitle={tenderTitle}
+                         fiscalYear={fiscalYear} styling={this.props.styling}/>;
       
       default:
-        return <Tender data={data.tender} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <Tender data={data.tender} department={department} tenderTitle={tenderTitle}
+                       fiscalYear={fiscalYear} styling={this.props.styling}/>;
     }
   }
   

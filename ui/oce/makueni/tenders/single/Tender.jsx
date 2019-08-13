@@ -3,13 +3,17 @@ import FeedbackPage from '../../FeedbackPage';
 
 class Tender extends FeedbackPage {
   getFeedbackSubject() {
-    const { department, fiscalYear } = this.props;
+    const { data, department, fiscalYear } = this.props;
     
     let metadata;
-    if (department !== undefined) {
-      metadata = " - " + department.label + " - " + fiscalYear.name;
+    if (data !== undefined) {
+      const tender = data[0];
+      
+      metadata = ' - ' + tender.tenderTitle
+        + ' - ' + department.label
+        + ' - ' + fiscalYear.name;
     }
-    return escape("Tender" + metadata);
+    return escape('Tender' + metadata);
   }
   
   render() {

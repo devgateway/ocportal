@@ -2,6 +2,7 @@ package org.devgateway.ocds.web.db;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
 import org.apache.commons.lang3.time.StopWatch;
+import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -15,6 +16,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Index;
+import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,6 +129,21 @@ public class ImportPostgresToMongo {
                 new Index().on("department._id", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("fiscalYear._id", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.subcounties._id", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.wards._id", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                        Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.purchaseRequisitions.tender.tenderValue", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new TextIndexDefinition.TextIndexDefinitionBuilder()
+                        .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)
+                        .onField("projects.purchaseRequisitions.tender.tenderTitle")
+                        .onField("projects.projectTitle")
+                        .build());
 
         // clear cache
         cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());

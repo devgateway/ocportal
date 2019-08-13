@@ -44,10 +44,12 @@ class Project extends FeedbackPage {
   
   getFeedbackSubject() {
     const { data } = this.state;
-  
+    
     let metadata;
     if (data !== undefined) {
-      metadata = " - " + data.department.label + " - " + data.fiscalYear.name;
+      metadata = " - " + data.projects.projectTitle
+        + " - " + data.department.label
+        + " - " + data.fiscalYear.name;
     }
     return escape("Project" + metadata);
   }

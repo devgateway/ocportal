@@ -5,37 +5,37 @@ import { mtFilters, page, pageSize, tendersCountRemote, tendersData } from './st
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import '../makueni.less';
-import FiltersWrapper from '../filters/FiltersWrapper';
 import Project from './single/Project';
 import PurchaseReqView from './single/PurchaseReqView';
+import FiltersTendersWrapper from '../filters/FiltersTendersWrapper';
 
 
 const NAME = 'MakueniTenders';
 
 class MakueniTenders extends CRDPage {
-  
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
       data: []
     };
   }
-  
+
   componentDidMount() {
     tendersData.addListener(NAME, () => this.updateBindings());
     page.addListener(NAME, () => this.updateBindings());
     pageSize.addListener(NAME, () => this.updateBindings());
     tendersCountRemote.addListener(NAME, () => this.updateBindings());
   }
-  
+
   componentWillUnmount() {
     tendersData.removeListener(NAME);
     page.removeListener(NAME);
     pageSize.removeListener(NAME);
     tendersCountRemote.removeListener(NAME);
   }
-  
+
   updateBindings() {
     Promise.all([
       tendersData.getState(NAME),
@@ -52,18 +52,18 @@ class MakueniTenders extends CRDPage {
       });
     });
   }
-  
+
   shouldComponentUpdate(nextProps, nextState) {
     return JSON.stringify(this.state) !== JSON.stringify(nextState)
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
-  
+
   filters() {
-    return <FiltersWrapper filters={mtFilters} translations={this.props.translations}/>;
+    return <FiltersTendersWrapper filters={mtFilters} translations={this.props.translations}/>;
   }
-  
+
   tenderLink(navigate) {
-    return (tender) => (<div>
+    return (tender) => (<div className="tender-title">
       {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
@@ -74,7 +74,7 @@ class MakueniTenders extends CRDPage {
       }
     </div>);
   }
-  
+
   projectLink(navigate) {
     return (project) => (<div>
       {
@@ -87,7 +87,7 @@ class MakueniTenders extends CRDPage {
       }
     </div>);
   }
-  
+
   downloadFiles() {
     return (tender) => (<div>
         {
@@ -99,9 +99,9 @@ class MakueniTenders extends CRDPage {
                   Click to download the file
                 </Tooltip>
               }>
-              
+
               <a className="download-file" href={doc.url} target="_blank">
-                <i className="glyphicon glyphicon-download"/>
+               <i className="glyphicon glyphicon-download"/>
                 <span>{doc.name}</span>
               </a>
             </OverlayTrigger>
@@ -110,17 +110,17 @@ class MakueniTenders extends CRDPage {
       </div>
     );
   }
-  
+
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
     const [navigationPage, id] = route;
-    
+
     return (<div className="container-fluid dashboard-default">
-      
+
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
               styling={this.props.styling} selected="tender"/>
-      
+
       <div className="makueni-tenders content row">
         <div className="col-md-3 filters">
           <div className="row">
@@ -130,13 +130,13 @@ class MakueniTenders extends CRDPage {
             {this.filters()}
           </div>
         </div>
-        
+
         <div className="col-md-9">
           {
             navigationPage === undefined
               ? <div>
                 <h1>Makueni Tenders</h1>
-                
+
                 <BootstrapTableWrapper
                   bordered
                   data={data}
@@ -183,7 +183,7 @@ class MakueniTenders extends CRDPage {
           }
         </div>
       </div>
-    
+
     </div>);
   }
 }

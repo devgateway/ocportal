@@ -13,7 +13,7 @@ class Tab extends Visualization {
     return dontWrap ? rendered : <section key={index} ref={ref}>
       <h4 className="page-header">
         {getName(this.t.bind(this))}
-        {exportable && Component.excelEP && <img
+        {exportable && Component.excelEP && false && <img
           src="assets/icons/export-black.svg"
           width="16"
           height="16"
@@ -36,7 +36,7 @@ class Tab extends Visualization {
       {rendered}
     </section>;
   }
-  
+
   compare(Component, index) {
     let {
       compareBy, comparisonData, comparisonCriteriaValues, filters, requestNewComparisonData, years, bidTypes
@@ -61,7 +61,7 @@ class Tab extends Visualization {
       styling={styling}
     />;
   }
-  
+
   render() {
     let { filters, compareBy, requestNewData, data, years, months, monthly, width, translations, styling } = this.props;
     return <div className="col-sm-12">
@@ -85,7 +85,7 @@ class Tab extends Visualization {
       )}
     </div>;
   }
-  
+
   static computeYears(data) {
     if (!data) return Set();
     return this.visualizations.reduce((years, visualization, index) =>
@@ -94,7 +94,7 @@ class Tab extends Visualization {
           years
       , Set());
   }
-  
+
   static computeComparisonYears(data) {
     if (!data) return Set();
     return this.visualizations.reduce((years, visualization, index) =>
@@ -108,7 +108,7 @@ class Tab extends Visualization {
         )
       , Set());
   }
-  
+
   componentDidMount() {
     window.scrollTo(0, 0);
   }
