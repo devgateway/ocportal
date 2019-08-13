@@ -18,6 +18,9 @@
 .content {
     margin-top: @headerHeight * 2;
     margin-bottom: 96px;
+    @media screen and (max-width: 1024px) {
+      margin-top: 175px;
+    }
 }
 
 header.branding {
@@ -73,7 +76,7 @@ header.branding {
     }
 
     .btn-apply {
-        background-color: #29722d;
+        background-color: @themeGreen;
         color: white;
         margin-left: 10px !important;
         margin-bottom: @base-space / 2;
@@ -110,6 +113,11 @@ header.branding {
 
             .title {
                 font-weight: bold;
+                @media screen and (max-width: 1024px) {
+                  display:block;
+                  line-height: 100%;
+                  margin-top: -3px;
+                }
             }
 
             .toggler {
@@ -361,11 +369,11 @@ footer.main-footer {
 
 .btn {
     &.btn-primary {
-        background-color: #0B7F58;
-        border-color: #0B7F58;
+        background-color: @themeGreen;
+        border-color: @themeGreen;
 
         &:hover {
-            background-color: darken(#0B7F58, 10%);
+            background-color: darken(@themeGreen, 10%);
         }
     }
 }
@@ -406,7 +414,7 @@ footer.main-footer {
 }
 
 .export {
-    background-color: #29722d;
+    background-color: @themeGreen;
     float: right;
     height: 64px;
     margin-right: 15px;
@@ -443,6 +451,9 @@ footer.main-footer {
             background-repeat: no-repeat;
             background-position: center center;
             background-size: 45px 45px;
+            @media screen and (max-width: 1024px) {
+              background-size: 60px 60px;
+            }
           }
 
           &.xls{
@@ -450,6 +461,9 @@ footer.main-footer {
             background-repeat: no-repeat;
             background-position: center center;
             background-size: 45px 45px;
+            @media screen and (max-width: 1024px) {
+              background-size: 60px 60px;
+            }
           }
 
         }

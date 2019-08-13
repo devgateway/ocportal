@@ -210,6 +210,9 @@
                     font-size: 16px;
                     color: @hover-blue;
                     background-color: #E5EAEB;
+                    @media screen and (max-width: 1024px) {
+                      padding-bottom: 20px;
+                    }
                 }
 
                 &:hover {
@@ -229,6 +232,9 @@
                     display: block;
                     padding-bottom: 10px;
                     padding-top: 10px;
+                    @media screen and (max-width: 1024px) {
+                      padding-bottom: 50px;
+                    }
                 }
             }
 
@@ -240,15 +246,26 @@
                 width: 10px;
                 height: 20px;
                 display: block;
+                @media screen and (max-width: 1024px) {
+                  background-size: 15px 15px;
+                  height: 20px;
+                  width: 15px;
+                }
 
                 &.down {
                     transform: rotate(0);
                     transition: all 200ms ease;
+                    @media screen and (max-width: 1024px){
+                      background-position: 0 -3px;
+                    }
                 }
 
                 &.up {
                     transform: rotate(180deg);
                     transition: all 200ms ease;
+                    @media screen and (max-width: 1024px){
+                      background-position: 0 8px;
+                    }
                 }
             }
 
