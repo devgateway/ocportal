@@ -63,7 +63,7 @@ class MakueniTenders extends CRDPage {
   }
 
   tenderLink(navigate) {
-    return (tender) => (<div className="no-tender">
+    return (tender) => (<div className="tender-title">
       {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
