@@ -287,12 +287,14 @@ footer.main-footer {
     padding-right:15px;
 
     &.subnav{
-      background-color:  none;
+      background-color: transparent;
       border-bottom: 2px solid @border-grey;
       a{
         color: @themeGreen;
         &:hover, &.active{
+          background-color: transparent;
           color: @headerColor;
+          font-weight: bold;
         }
       }
     }
@@ -485,9 +487,9 @@ footer.main-footer {
     margin-bottom: 10px;
     .btn{
       border: 2px solid transparent;
-      &.btn-default{
-        border-color: @border-grey;
-      }
+    }
+    .btn-default{
+      border-color: @border-grey;
     }
   }
 }

@@ -135,15 +135,14 @@
         cursor: pointer;
         text-decoration: none;
         font-weight: bold;
-
+        &:before{
+          font-family: 'Glyphicons Halflings';
+          content:"\e026";
+          color: #29722d;
+        }
         &:hover {
             color: #285f8f;
         }
-    }
-
-    .glyphicon {
-        color: #29722d;
-        margin-right: 5px;
     }
 }
 
@@ -384,8 +383,7 @@ a.more-details-link:hover::before {
 }
 .react-bs-table-bordered{
   border-radius: 0;
-  border-right: 2px solid @border-grey;
-  border-top: 2px solid @border-grey;
+  border: 1px solid transparent;
 }
 .table-bordered,
 .table-bordered>tbody>tr>td,
