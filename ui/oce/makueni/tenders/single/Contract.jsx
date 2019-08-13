@@ -3,11 +3,13 @@ import FeedbackPage from '../../FeedbackPage';
 
 class Contract extends FeedbackPage {
   getFeedbackSubject() {
-    const { department, fiscalYear } = this.props;
-    
+    const { tenderTitle, department, fiscalYear } = this.props;
+  
     let metadata;
     if (department !== undefined) {
-      metadata = " - " + department.label + " - " + fiscalYear.name;
+      metadata = " - " + tenderTitle
+        + " - " + department.label
+        + " - " + fiscalYear.name;
     }
     return escape("Contract" + metadata);
   }

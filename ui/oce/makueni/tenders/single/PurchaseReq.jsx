@@ -3,11 +3,13 @@ import FeedbackPage from '../../FeedbackPage';
 
 class PurchaseReq extends FeedbackPage {
   getFeedbackSubject() {
-    const { department, fiscalYear } = this.props;
+    const { data, department, fiscalYear } = this.props;
     
     let metadata;
-    if (department !== undefined) {
-      metadata = " - " + department.label + " - " + fiscalYear.name;
+    if (data !== undefined) {
+      metadata = " - " + data.title
+        + " - " + department.label
+        + " - " + fiscalYear.name;
     }
     return escape("Purchase Requisition" + metadata);
   }

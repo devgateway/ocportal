@@ -5,9 +5,9 @@ import { mtFilters, page, pageSize, tendersCountRemote, tendersData } from './st
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import '../makueni.less';
-import FiltersWrapper from '../filters/FiltersWrapper';
 import Project from './single/Project';
 import PurchaseReqView from './single/PurchaseReqView';
+import FiltersTendersWrapper from '../filters/FiltersTendersWrapper';
 
 
 const NAME = 'MakueniTenders';
@@ -59,7 +59,7 @@ class MakueniTenders extends CRDPage {
   }
 
   filters() {
-    return <FiltersWrapper filters={mtFilters} translations={this.props.translations}/>;
+    return <FiltersTendersWrapper filters={mtFilters} translations={this.props.translations}/>;
   }
 
   tenderLink(navigate) {

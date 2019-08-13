@@ -31,6 +31,8 @@ class FiltersWrapper extends translatable(Component) {
   
   listItems() {
     const { expanded } = this.state;
+    const { translations } = this.props;
+    
     return this.constructor.ITEMS.map((Item, index) => <div
         key={index}
         className="row filter">
@@ -41,12 +43,12 @@ class FiltersWrapper extends translatable(Component) {
         </div>
         
         <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
-          <Item filters={this.props.filters}/>
+          <Item filters={this.props.filters} translations={translations}/>
           
           <section className="buttons">
-            <button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>
-              {this.t('filters:apply')}
-            </button>
+            {/*<button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>*/}
+            {/*  {this.t('filters:apply')}*/}
+            {/*</button>*/}
             <button className="btn btn-reset pull-right" onClick={e => this.reset()}>
               {this.t('filters:reset')}
             </button>

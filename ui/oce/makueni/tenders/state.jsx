@@ -80,3 +80,14 @@ export const tendersCountRemote = mtState.remote({
   url: mtCountEP,
   params: filters,
 });
+
+export const delayUserInput = (function () {
+  var timeoutHandles = {};
+  return function (id, callback, ms) {
+    if (timeoutHandles[id]) {
+      clearTimeout(timeoutHandles[id]);
+    }
+    
+    timeoutHandles[id] = setTimeout(callback, ms);
+  };
+})();

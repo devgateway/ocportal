@@ -10,8 +10,14 @@ import org.bson.types.ObjectId;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
+import org.devgateway.toolkit.persistence.dao.categories.Category;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
+import org.devgateway.toolkit.persistence.service.category.ItemService;
+import org.devgateway.toolkit.persistence.service.category.SubcountyService;
+import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +69,15 @@ public class MakueniDataController extends GenericOCDSController {
     private MongoFileStorageService mongoFileStorageService;
 
     @Autowired
+    private ItemService itemService;
+
+    @Autowired
+    private SubcountyService subcountyService;
+
+    @Autowired
+    private WardService wardService;
+
+    @Autowired
     private GridFsOperations gridFsOperations;
 
     @Resource
@@ -76,10 +94,19 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
+        final Criteria criteriaTender = new Criteria().andOperator(
+                createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
+                createFilterCriteria("projects.wards._id", filter.getWard()),
+                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                        filter.getItem()),
+                createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
+                        filter.getMin(), filter.getMax()));
+
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
                 unwind("projects.purchaseRequisitions"),
+                match(criteriaTender),
                 skip(filter.getSkip()),
                 limit(filter.getPageSize()));
 
@@ -98,10 +125,19 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
+        final Criteria criteriaTender = new Criteria().andOperator(
+                createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
+                createFilterCriteria("projects.wards._id", filter.getWard()),
+                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                        filter.getItem()),
+                createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
+                        filter.getMin(), filter.getMax()));
+
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
                 unwind("projects.purchaseRequisitions"),
+                match(criteriaTender),
                 group().count().as("count"));
 
         final Document doc = mongoTemplate.aggregate(
@@ -237,6 +273,66 @@ public class MakueniDataController extends GenericOCDSController {
                 .getMappedResults();
     }
 
+    @ApiOperation(value = "Display the available Items.")
+    @RequestMapping(value = "/api/makueni/filters/items", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> getItems() {
+
+        /* Use this if we want to export ALL Items
+        final List<Document> results = new ArrayList<>();
+        final List<Item> items = itemService.findAll()
+                .parallelStream()
+                .filter(item -> item.getLabel() != null).collect(Collectors.toList());
+
+        items.sort(Comparator.comparing(Category::getLabel));
+
+        items.stream().forEach(item -> results.add(new Document()
+                .append("id", item.getId())
+                .append("label", item.getLabel())));
+
+        return results;
+        */
+
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+        final Aggregation aggregation = newAggregation(project("planItems"),
+                unwind("planItems"), project("planItems.item"), group("item"));
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
+    }
+
+    @ApiOperation(value = "Display the available Sub Counties.")
+    @RequestMapping(value = "/api/makueni/filters/subcounties", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> getSubcounty() {
+        final List<Document> results = new ArrayList<>();
+        final List<Subcounty> items = subcountyService.findAll();
+
+        items.sort(Comparator.comparing(Category::getLabel));
+
+        items.stream().forEach(item -> results.add(new Document()
+                .append("id", item.getId())
+                .append("label", item.getLabel())));
+
+        return results;
+    }
+
+    @ApiOperation(value = "Display the available Wards.")
+    @RequestMapping(value = "/api/makueni/filters/wards", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> getWard() {
+        final List<Document> results = new ArrayList<>();
+        final List<Ward> items = wardService.findAll();
+
+        items.sort(Comparator.comparing(Category::getLabel));
+
+        items.stream().forEach(item -> results.add(new Document()
+                .append("id", item.getId())
+                .append("label", item.getLabel())));
+
+        return results;
+    }
+
     @ApiOperation(value = "Display the available Procurement Plan FY.")
     @RequestMapping(value = "/api/makueni/filters/fiscalYears", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
@@ -275,5 +371,20 @@ public class MakueniDataController extends GenericOCDSController {
         }
 
         return where(filterName).is(filterValues);
+    }
+
+    private Criteria createRangeFilterCriteria(final String filterName, final BigDecimal min, final BigDecimal max) {
+        if (min == null && max == null) {
+            return new Criteria();
+        }
+
+        Criteria criteria = where(filterName);
+        if (min != null) {
+            criteria = criteria.gte(min);
+        }
+        if (max != null) {
+            criteria = criteria.lte(max);
+        }
+        return criteria;
     }
 }
