@@ -135,10 +135,8 @@
         cursor: pointer;
         text-decoration: none;
         font-weight: bold;
-        &:before{
-          font-family: 'Glyphicons Halflings';
-          content:"\e026";
-          color: #29722d;
+        .glyphicon{
+          margin-right: 3px;
         }
         &:hover {
             color: #285f8f;
@@ -323,11 +321,16 @@
         margin-right: 5px;
     }
 }
-
+.no-tender{
+  color: #666666;
+  font-size: 16px;
+  padding-left: 10px;
+}
 a.more-details-link {
     color: #337ab7;
     font-size: 16px;
     font-weight: 700;
+    line-height: 120%;
     text-decoration: none;
 
     position: relative;
@@ -337,6 +340,7 @@ a.more-details-link {
     padding-left: 10px;
     padding-bottom: 5px;
     padding-right: 10px;
+
 }
 
 a.more-details-link:hover {
@@ -358,7 +362,7 @@ a.more-details-link:hover::before {
     a {
         cursor: pointer;
         text-decoration: none;
-        color: #337ab7;
+        color: #29722d;
 
         &:hover {
             color: @active-tab-color;
@@ -366,9 +370,9 @@ a.more-details-link:hover::before {
     }
 
     .feedback-icon {
-        width: 36px;
-        height: 36px;
-        padding-left: 5px;
+        width: 30px;
+        height: 30px;
+        padding-left: 8px;
     }
 }
 .rc-slider{

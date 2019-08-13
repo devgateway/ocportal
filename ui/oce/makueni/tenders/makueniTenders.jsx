@@ -63,7 +63,7 @@ class MakueniTenders extends CRDPage {
   }
 
   tenderLink(navigate) {
-    return (tender) => (<div>
+    return (tender) => (<div className="no-tender">
       {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
@@ -101,6 +101,7 @@ class MakueniTenders extends CRDPage {
               }>
 
               <a className="download-file" href={doc.url} target="_blank">
+               <i className="glyphicon glyphicon-download"/>
                 <span>{doc.name}</span>
               </a>
             </OverlayTrigger>

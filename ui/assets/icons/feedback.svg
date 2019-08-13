@@ -3,10 +3,10 @@
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#303C42;}
-	.st1{fill:#EAEAEA;}
+	.st0{fill:#29722D;}
+	.st1{fill:#FFFFFF;}
 	.st2{opacity:0.1;enable-background:new    ;}
-	.st3{fill:#FFFFFF;}
+	.st3{fill:#EAEAEA;}
 	.st4{fill:url(#SVGID_1_);}
 </style>
 <path class="st0" d="M426.7,21.3h-384C19.1,21.3,0,40.5,0,64v416c0,4.3,2.6,8.2,6.6,9.9c1.3,0.6,2.7,0.8,4.1,0.8
@@ -27,8 +27,8 @@
 		c-0.7,3.5,0.4,7.1,2.9,9.6c2,2,4.8,3.1,7.5,3.1c0.7,0,1.4-0.1,2.1-0.2l53.3-10.7c2.1-0.4,4-1.4,5.5-2.9l106.7-106.7c0,0,0,0,0,0
 		s0,0,0,0l23.2-23.2c0,0,0,0,0,0c7.6-7.6,12-18.1,12-28.9C512,82.3,493.7,64,471.2,64z"/>
 </g>
-<polygon class="st3" points="357.4,246.2 322.9,253.1 329.8,218.6 426.7,121.7 454.2,149.3 "/>
-<path class="st1" d="M485,118.6l-15.6,15.6l-27.6-27.6L457.4,91c3.6-3.6,8.6-5.7,13.8-5.7c10.8,0,19.5,8.8,19.5,19.5
+<polygon class="st1" points="357.4,246.2 322.9,253.1 329.8,218.6 426.7,121.7 454.2,149.3 "/>
+<path class="st3" d="M485,118.6l-15.6,15.6l-27.6-27.6L457.4,91c3.6-3.6,8.6-5.7,13.8-5.7c10.8,0,19.5,8.8,19.5,19.5
 	C490.7,110,488.6,115,485,118.6z"/>
 <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-356.7261" y1="236.6976" x2="-351.5237" y2="241.907" gradientTransform="matrix(21.3333 0 0 21.3333 7970.6553 -4833.9707)">
 	<stop  offset="0" style="stop-color:#000000;stop-opacity:0.1"/>
