@@ -46,9 +46,9 @@ class FiltersWrapper extends translatable(Component) {
           <Item filters={this.props.filters} translations={translations}/>
           
           <section className="buttons">
-            <button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>
-              {this.t('filters:apply')}
-            </button>
+            {/*<button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>*/}
+            {/*  {this.t('filters:apply')}*/}
+            {/*</button>*/}
             <button className="btn btn-reset pull-right" onClick={e => this.reset()}>
               {this.t('filters:reset')}
             </button>
