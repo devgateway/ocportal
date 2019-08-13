@@ -126,14 +126,13 @@ public class TopTenController extends GenericOCDSController {
         project.put(Fields.UNDERSCORE_ID, 0);
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
         project.put(getTenderDateField(), 1);
+        project.put(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE, 1);
         project.put(MongoConstants.FieldNames.BUYER_NAME, 1);
+        project.put(MongoConstants.FieldNames.TENDER_TITLE, 1);
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                getTenderDateField()
-                        ))),
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 new CustomOperation(new Document("$project", project)),
                 sort(Direction.DESC, MongoConstants.FieldNames.TENDER_VALUE_AMOUNT), limit(10)
         );

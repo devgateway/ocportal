@@ -69,6 +69,8 @@ public class TenderPercentagesController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> percentTendersCancelled(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
+        clearTenderStatus(filter); //this endpoint is about tender status, so we clear any previously set tender status
+
         DBObject project1 = new BasicDBObject();
         addYearlyMonthlyProjection(filter, project1, ref(getTenderDateField()));
         project1.put(MongoConstants.FieldNames.TENDER_STATUS, 1);

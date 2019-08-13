@@ -102,7 +102,7 @@ class MakueniProcurementPlans extends CRDPage {
     return (<div className="container-fluid dashboard-default">
       
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
-              selected="procurement-plan"/>
+              styling={this.props.styling} selected="procurement-plan"/>
       
       <div className="makueni-procurement-plan content row">
         <div className="col-md-3 filters">
@@ -147,7 +147,8 @@ class MakueniProcurementPlans extends CRDPage {
                 />
               </div>
               :
-              <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}/>
+              <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}
+                               styling={this.props.styling}/>
           }
         </div>
       </div>

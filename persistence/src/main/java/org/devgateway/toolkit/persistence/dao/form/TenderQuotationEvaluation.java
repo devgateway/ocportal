@@ -32,10 +32,10 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
 
-    @ExcelExport(separateSheet = true, useTranslation = true)
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Bids")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")

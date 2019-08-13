@@ -32,16 +32,16 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
     @ManyToOne
     private Supplier supplier;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Supplier Responsiveness")
     private String supplierResponsiveness;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Supplier Score")
     private Integer supplierScore;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Supplier Ranking")
     private Integer supplierRanking;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Quoted Price")
     private BigDecimal quotedAmount;
 
     public Supplier getSupplier() {

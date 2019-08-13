@@ -24,13 +24,13 @@ import java.util.Set;
 @MappedSuperclass
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity
         implements Labelable, SingleFileMetadatable {
-    @ExcelExport(useTranslation = true,
+    @ExcelExport(useTranslation = true, name = "Approved Date",
             onlyForClass = {ProcurementPlan.class, Project.class, PurchaseRequisition.class, ProfessionalOpinion.class})
     private Date approvedDate;
 
     @ExcelExport(justExport = true, useTranslation = true, onlyForClass = {ProcurementPlan.class, CabinetPaper.class,
             PurchaseRequisition.class, Tender.class, TenderQuotationEvaluation.class, ProfessionalOpinion.class,
-            AwardNotification.class, AwardAcceptance.class})
+            AwardNotification.class, AwardAcceptance.class}, name = "Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;

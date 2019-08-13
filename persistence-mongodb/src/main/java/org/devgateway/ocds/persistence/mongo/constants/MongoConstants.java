@@ -27,6 +27,7 @@ public final class MongoConstants {
         public static final String BUYER_ID = "buyer._id";
         public static final String BUYER_NAME = "buyer.name";
         public static final String AWARDS_DATE = "awards.date";
+        public static final String AWARDS_FIRST_TIME_WINNER = "awards.firstTimeWinner";
         public static final String AWARDS_STATUS = "awards.status";
         public static final String AWARDS_SUPPLIERS_ID = "awards.suppliers._id";
         public static final String AWARDS_SUPPLIERS_NAME = "awards.suppliers.name";
@@ -34,6 +35,7 @@ public final class MongoConstants {
         public static final String AWARDS_VALUE = "awards.value";
         public static final String TENDER_ITEMS = "tender.items";
         public static final String TENDER_ITEMS_CLASSIFICATION = "tender.items.classification";
+        public static final String TENDER_ITEMS_CLASSIFICATION_ID = "tender.items.classification._id";
         public static final String TENDER_ITEMS_UNIT_VALUE_AMOUNT = "tender.items.unit.value.amount";
         public static final String TENDER_ITEMS_QUANTITY = "tender.items.quantity";
         public static final String TENDER_PERIOD_START_DATE = "tender.tenderPeriod.startDate";
@@ -51,6 +53,7 @@ public final class MongoConstants {
         public static final String TENDER_SUBMISSION_METHOD = "tender.submissionMethod";
         public static final String BIDS_DETAILS_TENDERERS_ID = "bids.details.tenderers._id";
         public static final String BIDS_DETAILS_VALUE_AMOUNT = "bids.details.value.amount";
+        public static final String AWARDS_SUPPLIERS_TARGET_GROUP = "awards.suppliers.targetGroup";
         public static final String FLAGS_TOTAL_FLAGGED = "flags.totalFlagged";
         public static final String FLAGS_COUNT = "flags.flaggedStats.count";
     }
@@ -62,6 +65,8 @@ public final class MongoConstants {
 
         public static final String AWARD_STATUS = "awardStatus";
 
+        public static final String TENDER_STATUS = "tenderStatus";
+
         public static final String BID_TYPE_ID = "bidTypeId";
 
         public static final String NOT_BID_TYPE_ID = "notBidTypeId";
@@ -71,6 +76,8 @@ public final class MongoConstants {
         public static final String NOT_PROCURING_ENTITY_ID = "notProcuringEntityId";
 
         public static final String SUPPLIER_ID = "supplierId";
+
+        public static final String BUYER_ID = "buyerId";
 
         public static final String BIDDER_ID = "bidderId";
 

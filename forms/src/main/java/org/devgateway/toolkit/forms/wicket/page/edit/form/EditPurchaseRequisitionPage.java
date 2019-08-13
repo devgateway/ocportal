@@ -10,6 +10,7 @@ import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
@@ -64,6 +65,9 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     protected void onInitialize() {
         super.onInitialize();
 
+        editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.department"));
+        editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.fiscalYear"));
+
         final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "title");
         title.required();
         title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
@@ -92,13 +96,6 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         formDocs.required();
         editForm.add(formDocs);
         saveTerminateButton.setVisibilityAllowed(false);
-
-//        Release release = ocdsConversionService.createRelease(editForm.getModelObject());
-//        try {
-//            System.out.println(mapper.writeValueAsString(release));
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override

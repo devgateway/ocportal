@@ -10,6 +10,8 @@ export const pluck = fieldName => obj => obj[fieldName];
 
 export const pluckImm = (fieldName, ...args) => imm => imm.get(fieldName, ...args);
 
+export const asPercent = (fr) => 100 * fr.toFixed(4);
+
 export const fetchJson = url => fetch(url, { credentials: 'same-origin' }).then(callFunc('json'));
 
 export function debounce(cb, delay = 200) {

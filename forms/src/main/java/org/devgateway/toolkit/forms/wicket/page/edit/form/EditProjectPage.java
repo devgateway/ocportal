@@ -11,6 +11,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
@@ -79,6 +80,9 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         super.onInitialize();
 
         submitAndNext.setVisibilityAllowed(false);
+
+        editForm.add(new GenericSleepFormComponent<>("procurementPlan.department"));
+        editForm.add(new GenericSleepFormComponent<>("procurementPlan.fiscalYear"));
 
         final TextFieldBootstrapFormComponent<String> projectTitle =
                 ComponentUtil.addTextField(editForm, "projectTitle");

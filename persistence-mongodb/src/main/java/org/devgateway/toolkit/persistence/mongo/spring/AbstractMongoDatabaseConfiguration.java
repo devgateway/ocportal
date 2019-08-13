@@ -91,9 +91,13 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.AWARDS_DATE, Direction.ASC));
         getTemplate().indexOps(Release.class)
+                .ensureIndex(new Index().on(MongoConstants.FieldNames.AWARDS_FIRST_TIME_WINNER, Direction.ASC));
+        getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, Direction.ASC));
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, Direction.ASC));
+        getTemplate().indexOps(Release.class).ensureIndex(new Index().
+                on(MongoConstants.FieldNames.AWARDS_SUPPLIERS_TARGET_GROUP, Direction.ASC));
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_NO_TENDERERS, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().on(

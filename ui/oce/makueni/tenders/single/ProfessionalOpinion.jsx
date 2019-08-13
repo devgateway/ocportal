@@ -1,9 +1,20 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class ProfessionalOpinion extends React.Component {
+class ProfessionalOpinion extends FeedbackPage {
+  getFeedbackSubject() {
+    const { department, fiscalYear } = this.props;
+    
+    let metadata;
+    if (department !== undefined) {
+      metadata = " - " + department.label + " - " + fiscalYear.name;
+    }
+    return escape("Professional Opinion" + metadata);
+  }
   
   render() {
     const { data } = this.props;
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
     
     if (data === undefined) {
       return null;
@@ -16,7 +27,7 @@ class ProfessionalOpinion extends React.Component {
         <div className="col-md-4">
           <div className="item-label">Professional Opinion Date</div>
           <div
-            className="item-value">{new Date(professionalOpinion.professionalOpinionDate).toLocaleDateString()}</div>
+            className="item-value">{formatDate(professionalOpinion.professionalOpinionDate)}</div>
         </div>
         <div className="col-md-4">
           <div className="item-label">Awardee</div>
@@ -24,7 +35,7 @@ class ProfessionalOpinion extends React.Component {
         </div>
         <div className="col-md-4">
           <div className="item-label">Recommended Award Amount</div>
-          <div className="item-value">{professionalOpinion.recommendedAwardAmount}</div>
+          <div className="item-value">{currencyFormatter(professionalOpinion.recommendedAwardAmount)}</div>
         </div>
       </div>
       
@@ -53,10 +64,11 @@ class ProfessionalOpinion extends React.Component {
         <div className="col-md-6">
           <div className="item-label">Approved Date</div>
           <div
-            className="item-value">{new Date(professionalOpinion.approvedDate).toLocaleDateString()}</div>
+            className="item-value">{formatDate(professionalOpinion.approvedDate)}</div>
         </div>
       </div>
-    
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

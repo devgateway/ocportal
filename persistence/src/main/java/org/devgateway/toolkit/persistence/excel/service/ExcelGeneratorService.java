@@ -56,8 +56,13 @@ public class ExcelGeneratorService {
      * @return byte[]
      * @throws IOException
      */
-    public byte[] getExcelDownload(final List<Object> objects) throws IOException {
-        final ExcelFile excelFile = new ExcelFileDefault(objects, translateService);
+    public byte[] getExcelDownload(final List<Object> objects, final boolean useTranslations) throws IOException {
+        final ExcelFile excelFile;
+        if (useTranslations) {
+            excelFile = new ExcelFileDefault(objects, translateService);
+        } else {
+            excelFile = new ExcelFileDefault(objects);
+        }
         final Workbook workbook = excelFile.createWorkbook();
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();

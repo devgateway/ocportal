@@ -15,7 +15,28 @@ const translations = {
 const BILLION = 1000000000;
 const MILLION = 1000000;
 const THOUSAND = 1000;
-const formatNumber = number => number.toLocaleString(undefined, { maximumFractionDigits: 2 });
+const formatNumber = number => number === undefined ? number : number.toLocaleString(undefined, { maximumFractionDigits: 2 });
+
+const formatDate = stringDate => {
+  if (stringDate === undefined) {
+    return undefined;
+  }
+  
+  let date = new Date(stringDate);
+  let dd = date.getDate();
+  let mm = date.getMonth() + 1;
+  const yyyy = date.getFullYear().toString().substr(-2);
+  
+  if (dd < 10) {
+    dd = `0${dd}`;
+  }
+  
+  if (mm < 10) {
+    mm = `0${mm}`;
+  }
+  
+  return `${dd}/${mm}/${yyyy}`;
+};
 
 const styling = {
   charts: {
@@ -33,6 +54,7 @@ const styling = {
   },
   tables: {
     currencyFormatter: formatNumber,
+    formatDate: formatDate
   },
 };
 
@@ -41,6 +63,9 @@ OCEMakueni.TRANSLATIONS = translations;
 
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
 CorruptionRickDashboard.STYLING.charts.traceColors = ['#234e6d', '#3f7499', '#80b1d3', '#afd5ee', '#d9effd'];
+
+MakueniTenders.STYLING = styling;
+MakueniProcurementPlans.STYLING = styling;
 
 class OceSwitcher extends ViewSwitcher {
 }

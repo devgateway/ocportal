@@ -1,10 +1,21 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import FeedbackPage from '../../FeedbackPage';
 
-class Notification extends React.Component {
+class Notification extends FeedbackPage {
+  getFeedbackSubject() {
+    const { department, fiscalYear } = this.props;
+    
+    let metadata;
+    if (department !== undefined) {
+      metadata = " - " + department.label + " - " + fiscalYear.name;
+    }
+    return escape("Notification" + metadata);
+  }
   
   render() {
     const { data } = this.props;
-  
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
+    
     if (data === undefined) {
       return null;
     }
@@ -15,11 +26,11 @@ class Notification extends React.Component {
       <div className="row padding-top-10">
         <div className="col-md-4">
           <div className="item-label">Award Value</div>
-          <div className="item-value">{awardNotification.awardValue}</div>
+          <div className="item-value">{currencyFormatter(awardNotification.awardValue)}</div>
         </div>
         <div className="col-md-4">
           <div className="item-label">Date</div>
-          <div className="item-value">{new Date(awardNotification.awardDate).toLocaleDateString()}</div>
+          <div className="item-value">{formatDate(awardNotification.awardDate)}</div>
         </div>
         <div className="col-md-4">
           <div className="item-label">Acknowledge Receipt of Award Timeline</div>
@@ -65,6 +76,8 @@ class Notification extends React.Component {
           }
         </div>
       </div>
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
 }

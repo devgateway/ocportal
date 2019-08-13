@@ -113,7 +113,7 @@ class OCEMakueni extends OCApp {
     return (
       <div className="container-fluid dashboard-default">
         <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
-                selected="m-and-e"/>
+                styling={this.props.styling} selected="m-and-e"/>
 
         <div className="row content">
           <div className="col-xs-4 col-md-3 menu">

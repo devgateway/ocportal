@@ -1,9 +1,9 @@
-import CRDPage from '../../../corruption-risk/page';
 import { API_ROOT } from '../../../state/oce-state';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { mtState } from '../state';
+import FeedbackPage from '../../FeedbackPage';
 
-class Project extends CRDPage {
+class Project extends FeedbackPage {
   constructor(props) {
     super(props);
     
@@ -26,8 +26,6 @@ class Project extends CRDPage {
   }
   
   componentDidMount() {
-    super.componentDidMount();
-    
     const { id } = this.props;
     
     this.projectID.assign('Project', id);
@@ -35,7 +33,7 @@ class Project extends CRDPage {
     this.projectInfo.addListener('Project', () => {
       this.projectInfo.getState()
       .then(data => {
-        this.setState({ data: data.projects });
+        this.setState({ data: data });
       });
     });
   }
@@ -44,9 +42,21 @@ class Project extends CRDPage {
     this.projectInfo.removeListener('Project');
   }
   
+  getFeedbackSubject() {
+    const { data } = this.state;
+  
+    let metadata;
+    if (data !== undefined) {
+      metadata = " - " + data.department.label + " - " + data.fiscalYear.name;
+    }
+    return escape("Project" + metadata);
+  }
+  
   render() {
     const { navigate } = this.props;
     const { data } = this.state;
+  
+    const { currencyFormatter, formatDate } = this.props.styling.tables;
     
     return (<div className="project makueni-form">
       <div className="row">
@@ -54,7 +64,7 @@ class Project extends CRDPage {
         <span className="back-icon">
           <span className="previous">&#8249;</span>
         </span>
-          <span>
+          <span className="back-text">
           Go Back
         </span>
         </a>
@@ -72,12 +82,12 @@ class Project extends CRDPage {
             <div className="row">
               <div className="col-md-6">
                 <div className="item-label">Project Title</div>
-                <div className="item-value">{data.projectTitle}</div>
+                <div className="item-value">{data.projects.projectTitle}</div>
               </div>
               <div className="col-md-6">
                 <div className="item-label">Cabinet Paper</div>
                 {
-                  data.cabinetPaper.formDocs.map(doc => <div key={doc._id}>
+                  data.projects.cabinetPaper.formDocs.map(doc => <div key={doc._id}>
                     <OverlayTrigger
                       placement="bottom"
                       overlay={
@@ -99,34 +109,36 @@ class Project extends CRDPage {
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Amount Budgeted</div>
-                <div className="item-value">{data.amountBudgeted}</div>
+                <div className="item-value">{currencyFormatter(data.projects.amountBudgeted)}</div>
               </div>
               <div className="col-md-6">
                 <div className="item-label">Amount Requested</div>
-                <div className="item-value">{data.amountRequested}</div>
+                <div className="item-value">{currencyFormatter(data.projects.amountRequested)}</div>
               </div>
             </div>
     
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Sub-Counties</div>
-                <div className="item-value">{data.subcounties.map(item => item.label).join(', ')}</div>
+                <div className="item-value">{data.projects.subcounties.map(item => item.label).join(', ')}</div>
               </div>
               <div className="col-md-6">
                 <div className="item-label">Wards</div>
-                <div className="item-value">{data.wards.map(item => item.label).join(', ')}</div>
+                <div className="item-value">{data.projects.wards.map(item => item.label).join(', ')}</div>
               </div>
             </div>
     
             <div className="row padding-top-10">
               <div className="col-md-6">
                 <div className="item-label">Approved Date</div>
-                <div className="item-value">{new Date(data.approvedDate).toLocaleDateString()}</div>
+                <div className="item-value">{formatDate(data.projects.approvedDate)}</div>
               </div>
             </div>
           </div>
           : null
       }
+  
+      {this.getFeedbackMessage()}
     </div>);
   }
   

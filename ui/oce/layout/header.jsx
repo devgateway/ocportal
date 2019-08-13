@@ -1,8 +1,10 @@
 import React from 'react';
 import translatable from '../translatable';
 import cn from 'classnames';
+import URI from 'urijs';
 
 import './header.less';
+import { API_ROOT, OCE } from '../state/oce-state';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
@@ -33,6 +35,31 @@ export default class Header extends translatable(React.Component) {
 
     this.changeOption = this.changeOption.bind(this);
     this.isActive = this.isActive.bind(this);
+
+    this.headerState = OCE.substate({ name: 'headerState' });
+
+    this.statsUrl = this.headerState.input({
+      name: 'makueniPPCountEP',
+      initial: `${API_ROOT}/makueni/contractStats`,
+    });
+
+    this.statsInfo = this.headerState.remote({
+      name: 'statsInfo',
+      url: this.statsUrl,
+    });
+  }
+
+  componentDidMount() {
+    this.statsInfo.addListener('Header', () => {
+      this.statsInfo.getState()
+      .then(data => {
+        this.setState({ data: data });
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    this.statsInfo.removeListener('Header');
   }
 
   changeOption(option) {
@@ -49,9 +76,14 @@ export default class Header extends translatable(React.Component) {
   }
 
   exportBtn() {
+    const url = new URI('/api/makueni/excelExport');
+
     if (this.state.exporting) {
       return (
         <div className="export-progress">
+          <span className="export-title">
+            Download the Data
+          </span>
           <div className="progress">
             <div className="progress-bar progress-bar-danger" role="progressbar"
                  style={{ width: '100%' }}>
@@ -66,14 +98,17 @@ export default class Header extends translatable(React.Component) {
           Download the Data
         </span>
         <div className="export-btn">
-          <button className="btn btn-default" disabled>
-          </button>
+        <a href={url} download="export.zip"><button className="xls"></button></a>
+          <button className="json"></button>
         </div>
       </div>
     );
   }
 
   render() {
+    const { data } = this.state;
+    const currencyFormatter = this.props.styling.tables.currencyFormatter;
+
     return (<div>
       <header className="branding row">
         <div className="col-sm-8">
@@ -104,16 +139,21 @@ export default class Header extends translatable(React.Component) {
       </header>
 
       <div className="header-tools row">
-        <div className="col-md-3 total-item">
-          <span className="total-label">Total Tenders</span>
-          <span className="total-number">123</span>
-        </div>
-        <div className="col-md-4 total-item">
-          <span className="total-label">Total Tender Amount</span>
-          <span className="total-number">100,000</span>
-        </div>
+        {
+          data !== undefined
+            ? <div>
+              <div className="col-md-2 total-item">
+                <span className="total-label">Total Contracts</span>
+                <span className="total-number">{data.count}</span>
+              </div>
+              <div className="col-md-4 total-item">
+                <span className="total-label">Total Contract Amount</span>
+                <span className="total-number">{currencyFormatter(data.value)}</span>
+              </div>
+            </div>
+            : null
+        }
 
-        <div className="col-md-2"></div>
         <div className="col-md-3 export">
           {this.exportBtn()}
         </div>
