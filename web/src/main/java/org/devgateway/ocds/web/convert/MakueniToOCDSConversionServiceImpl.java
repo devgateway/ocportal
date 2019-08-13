@@ -176,7 +176,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Organization ocdsBuyer = new Organization();
         safeSet(ocdsBuyer::setName, () -> department, this::categoryLabel);
         safeSet(ocdsBuyer::setId, () -> department, this::entityIdToString);
-        safeSet(ocdsBuyer::setIdentifier, () -> department, this::convertCategoryToIdentifier);
+        safeSet(ocdsBuyer::setIdentifier, () -> department, this::convertCategoryCodeToIdentifier);
+        safeSet(ocdsBuyer.getAdditionalIdentifiers()::add, () -> department, this::convertCategoryToIdentifier);
 //        safeSet(
 //                ocdsBuyer.getAdditionalIdentifiers()::add, () -> department,
 //                this::convertCategoryCodeToIdentifier
@@ -382,8 +383,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         MakueniOrganization ocdsOrg = new MakueniOrganization();
         safeSet(ocdsOrg::setName, supplier::getLabel);
         safeSet(ocdsOrg::setId, () -> supplier, this::entityIdToString);
-        safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryToIdentifier);
-        safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryCodeToIdentifier);
+        safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryCodeToIdentifier);
+        safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryToIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
         safeSet(ocdsOrg.getRoles()::add, () -> Organization.OrganizationType.supplier,
                 Organization.OrganizationType::toValue

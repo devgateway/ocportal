@@ -9,17 +9,17 @@ class Suppliers extends orgnamesFetching(Table) {
     .filter(id => !this.state.orgNames[id])
     .toJS();
   }
-  
+
   row(entry) {
     const id = entry.get('supplierId');
     return <tr key={id}>
       <td>{this.getOrgName(id)}</td>
       <td>{entry.get('totalContracts')}</td>
-      <td>{entry.get('procuringEntityIdsCount')}</td>
+      <td>{entry.get('buyerIdsCount')}</td>
       <td>{this.maybeFormat(entry.get('totalAwardAmount'))}</td>
     </tr>;
   }
-  
+
   render() {
     if (!this.props.data) return null;
     return (
