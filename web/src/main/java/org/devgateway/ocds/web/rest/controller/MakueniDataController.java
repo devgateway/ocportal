@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
@@ -100,7 +101,8 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
                         filter.getItem()),
                 createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
-                        filter.getMin(), filter.getMax()));
+                        filter.getMin(), filter.getMax()),
+                createTextCriteria(filter.getText()));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -131,7 +133,8 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
                         filter.getItem()),
                 createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
-                        filter.getMin(), filter.getMax()));
+                        filter.getMin(), filter.getMax()),
+                createTextCriteria(filter.getText()));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -385,6 +388,20 @@ public class MakueniDataController extends GenericOCDSController {
         if (max != null) {
             criteria = criteria.lte(max);
         }
+        return criteria;
+    }
+
+    private Criteria createTextCriteria(final String text) {
+        if (text == null || text.isEmpty()) {
+            return new Criteria();
+        }
+
+        Criteria criteria = new Criteria();
+        criteria.orOperator(where("projects.purchaseRequisitions.tender.tenderTitle")
+                        .regex(Pattern.compile(text, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)),
+                where("projects.projectTitle")
+                        .regex(Pattern.compile(text, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)));
+
         return criteria;
     }
 }
