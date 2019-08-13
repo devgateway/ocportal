@@ -1,8 +1,14 @@
 @headerColor: #223a49;
+@themeGreen: #29722d;
 @footerColor: #095a14;
 @active-tab-color: #204e6e;
 @base-unit: 1em;
 @headerHeight: 64px;
+@active-text-color: #d1a725;
+@circle-grey: #666666;
+@tab-light-grey: #f2f2f2;
+@border-grey: #f6f6f6;
+
 
 .content {
     margin-top: @headerHeight * 2;
@@ -274,15 +280,24 @@ footer.main-footer {
     z-index: 1;
 }
 
-@circle-grey: #666666;
-@tab-light-grey: #f2f2f2;
 
 .navigation {
     overflow: hidden;
     background-color: #223a49;
     padding-right:15px;
 
-    @active-text-color: #d1a725;
+    &.subnav{
+      background-color: transparent;
+      border-bottom: 2px solid @border-grey;
+      a{
+        color: @themeGreen;
+        &:hover, &.active{
+          background-color: transparent;
+          color: @headerColor;
+          font-weight: bold;
+        }
+      }
+    }
 
     a {
         display: table-cell;
@@ -296,7 +311,7 @@ footer.main-footer {
         outline: none;
         padding: 23px 8px 24px 8px;
         transition: 0.3s;
-        font-size: 9px;
+        font-size: 10px;
         text-align: center;
 
         &:hover, &.active {
@@ -470,5 +485,11 @@ footer.main-footer {
 .makueni-tenders{
   .react-bs-table-pagination{
     margin-bottom: 10px;
+    .btn{
+      border: 2px solid transparent;
+    }
+    .btn-default{
+      border-color: @border-grey;
+    }
   }
 }

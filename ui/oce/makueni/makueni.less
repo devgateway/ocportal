@@ -1,5 +1,6 @@
 @active-text-color: #29722d;
 @active-tab-color: #204e6e;
+@border-grey: #f6f6f6;
 
 .tender {
     .navigation-view {
@@ -134,15 +135,12 @@
         cursor: pointer;
         text-decoration: none;
         font-weight: bold;
-
+        .glyphicon{
+          margin-right: 3px;
+        }
         &:hover {
             color: #285f8f;
         }
-    }
-
-    .glyphicon {
-        color: #29722d;
-        margin-right: 5px;
     }
 }
 
@@ -323,11 +321,16 @@
         margin-right: 5px;
     }
 }
-
+.tender-title{
+  color: #666666;
+  font-size: 16px;
+  padding-left: 10px;
+}
 a.more-details-link {
     color: #337ab7;
     font-size: 16px;
     font-weight: 700;
+    line-height: 120%;
     text-decoration: none;
 
     position: relative;
@@ -337,34 +340,16 @@ a.more-details-link {
     padding-left: 10px;
     padding-bottom: 5px;
     padding-right: 10px;
+    padding-left:0;
+
 }
 
 a.more-details-link:hover {
     color: #285f8f;
 }
-
-a.more-details-link::before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(to top, #fed330 25%, rgba(0, 0, 0, 0) 20%);
-
-    position: absolute;
-    left: 0;
-    z-index: -1;
-
-    will-change: width;
-    transform-origin: left bottom
-}
-
-a.more-details-link:hover::before {
-    width: 0;
-}
-
 a.more-details-link::before {
     transition: width .1s ease-out;
 }
-
 a.more-details-link:hover::before {
     transition-duration: .15s;
 }
@@ -378,7 +363,7 @@ a.more-details-link:hover::before {
     a {
         cursor: pointer;
         text-decoration: none;
-        color: #337ab7;
+        color: #29722d;
 
         &:hover {
             color: @active-tab-color;
@@ -386,15 +371,31 @@ a.more-details-link:hover::before {
     }
 
     .feedback-icon {
-        width: 36px;
-        height: 36px;
-        padding-left: 5px;
+        width: 30px;
+        height: 30px;
+        padding-left: 8px;
     }
 }
-
-.rc-slider-track{
-  background-color: #204e6e;
+.rc-slider{
+  margin-left: 5%;
+  width: 90%;
+  .rc-slider-track{
+    background-color: @active-tab-color;
+  }
+  .rc-slider-handle{
+    border: 2px solid @active-tab-color;
+  }
 }
-.rc-slider-handle{
-  border: 2px solid #204e6e;
+.react-bs-table-bordered{
+  border-radius: 0;
+  border: 1px solid transparent;
+}
+.table-bordered,
+.table-bordered>tbody>tr>td,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>td,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>thead>tr>th{
+  border: 2px solid @border-grey;
 }
