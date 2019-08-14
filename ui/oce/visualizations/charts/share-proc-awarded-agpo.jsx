@@ -9,6 +9,7 @@ Plotly.register([
 
 
 class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
+
   getData(){
     const data = super.getData();
     if(!data || !data.count()) return [];
@@ -22,7 +23,7 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
       values: values,
       labels: labels,
       text: text,
-      textinfo: 'text+percent+label',
+      textposition: 'inside',
       hoverinfo: 'text+percent',
       type: 'pie'
       //,
@@ -41,7 +42,6 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
   }
 
   getLayout(){
-    const {width} = this.props;
     return {
       showlegend: true
     }
