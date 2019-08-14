@@ -48,8 +48,8 @@ class OCApp extends React.Component {
   
   componentDidMount() {
     this.fetchBidTypes();
-    this.fetchYears();
-    this.fetchUserInfo();
+    // this.fetchYears();
+    // this.fetchUserInfo();
     
     // const calcYearsBarWidth = () => this.setState({
     //   width: document.querySelector('.years-bar').offsetWidth - 30,
@@ -88,7 +88,7 @@ class OCApp extends React.Component {
     .count() === 1;
   }
   
-  yearsBar() {debugger;
+  yearsBar() {
     const { years, selectedYears } = this.state;
     const toggleYear = year => this.setState({
       selectedYears: selectedYears.has(+year) ?
@@ -120,8 +120,7 @@ class OCApp extends React.Component {
   
   content() {
     const {
-      filters, compareBy, comparisonCriteriaValues, currentTab, selectedYears, selectedMonths,
-      bidTypes, width, locale
+      filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width, locale
     } = this.state;
     const Tab = this.tabs[currentTab];
     return (<Tab
@@ -134,9 +133,9 @@ class OCApp extends React.Component {
       }
       data={this.state.data.get(currentTab) || fromJS({})}
       comparisonData={this.state.comparisonData.get(currentTab) || fromJS({})}
-      monthly={this.showMonths()}
-      years={selectedYears}
-      months={selectedMonths}
+      monthly={filters.get('monthly')}
+      years={filters.get('selectedYears') !== undefined ? filters.get('selectedYears') : new Set()}
+      months={filters.get('selectedMonths') !== undefined ? filters.get('selectedMonths') : new Set()}
       bidTypes={bidTypes}
       width={width}
       translations={this.constructor.TRANSLATIONS[locale]}
