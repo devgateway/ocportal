@@ -1,6 +1,7 @@
 import translatable from '../../translatable';
 import { fetchJson, pluck, range } from '../../tools';
 import cn from 'classnames';
+import { delayUserInput } from '../tenders/state';
 
 class FilterDateYearMonth extends translatable(React.Component) {
   constructor(props) {
@@ -10,11 +11,11 @@ class FilterDateYearMonth extends translatable(React.Component) {
       selectedMonths: range(1, 12),
     };
     
-    // this.handleChange = this.handleChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
   
   componentDidMount() {
-    // this.props.filters.addListener(this.constructor.getName(), () => this.updateBindings());
+    this.props.filters.addListener(this.constructor.getName(), () => this.updateBindings());
     
     fetchJson('/api/tendersAwardsYears')
     .then((data) => {
@@ -30,7 +31,47 @@ class FilterDateYearMonth extends translatable(React.Component) {
   }
   
   componentWillUnmount() {
-    // this.props.filters.removeListener(this.constructor.getName());
+    this.props.filters.removeListener(this.constructor.getName());
+  }
+  
+  updateBindings() {
+    Promise.all([
+      this.props.filters.getState(this.constructor.getName()),
+    ])
+    .then(([item]) => {
+      // update internal state on reset
+      // TODO
+      // if (item.get('text') === undefined) {
+      //   this.setState({ value: '' });
+      // }
+    });
+  }
+  
+  handleChange() {
+    const { filters } = this.props;
+    const self = this;
+    
+    delayUserInput('amount', function () {
+      filters.getState()
+      .then(value => {
+        const { selectedMonths, selectedYears } = self.state;
+  
+        let newValue = value;
+        if (selectedYears.length !== 0) {
+          newValue = newValue.set('years', selectedYears);
+          if (selectedYears.length === 1) {
+            newValue = newValue.set('months', selectedMonths);
+          } else {
+            newValue = newValue.delete('months');
+          }
+        } else {
+          newValue = newValue.delete('years');
+          newValue = newValue.delete('months');
+        }
+        
+        filters.assign(self.constructor.getName(), newValue);
+      });
+    }, 1000);
   }
   
   showMonths() {
@@ -39,8 +80,6 @@ class FilterDateYearMonth extends translatable(React.Component) {
     if (years === undefined) {
       return false;
     }
-    
-    console.log(selectedYears.filter(x => years.includes(x)));
     
     return selectedYears.filter(x => years.includes(x)).length === 1;
   }
@@ -65,6 +104,8 @@ class FilterDateYearMonth extends translatable(React.Component) {
         this.setState({
           selectedMonths: newSelection
         });
+        
+        this.handleChange();
       }}
     >
       <i className="glyphicon glyphicon-ok-circle"/> {this.t(`general:months:${month}`)}
@@ -86,13 +127,19 @@ class FilterDateYearMonth extends translatable(React.Component) {
       this.setState({
         selectedYears: newSelection
       });
+      
+      this.handleChange();
     };
     
-    const toggleOthersYears = year => this.setState({
-      selectedYears: selectedYears.length === 1 && selectedYears.includes(year) ?
-        years :
-        [year],
-    });
+    const toggleOthersYears = year => {
+      this.setState({
+        selectedYears: selectedYears.length === 1 && selectedYears.includes(year) ?
+          years :
+          [year],
+      });
+      
+      this.handleChange();
+    };
     
     return years.sort()
     .map(year =>
@@ -112,10 +159,6 @@ class FilterDateYearMonth extends translatable(React.Component) {
   }
   
   render() {
-    // const { value } = this.state;
-    
-    console.log(this.state);
-    
     const { years } = this.state;
     if (years === undefined) {
       return null;
