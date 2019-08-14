@@ -21,6 +21,8 @@ import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.Fields;
@@ -56,10 +58,8 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  * @author idobre
  * @since 2019-07-12
  */
-
 @RestController
-// @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
-// @Cacheable
+@CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "genericPagingRequestJson")
 public class MakueniDataController extends GenericOCDSController {
     private static final Logger logger = LoggerFactory.getLogger(MakueniDataController.class);
 
@@ -88,6 +88,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/tenders",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
+    @Cacheable
     public List<Document> makueniTenders(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
@@ -102,7 +103,8 @@ public class MakueniDataController extends GenericOCDSController {
                         filter.getItem()),
                 createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
                         filter.getMin(), filter.getMax()),
-                createTextCriteria(filter.getText()));
+                createTextCriteria(filter.getText()),
+                getYearFilterCriteria(filter, "projects.purchaseRequisitions.tender.closingDate"));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -120,6 +122,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/tendersCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
+    @Cacheable
     public Integer makueniTendersCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
@@ -134,7 +137,8 @@ public class MakueniDataController extends GenericOCDSController {
                         filter.getItem()),
                 createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
                         filter.getMin(), filter.getMax()),
-                createTextCriteria(filter.getText()));
+                createTextCriteria(filter.getText()),
+                getYearFilterCriteria(filter, "projects.purchaseRequisitions.tender.closingDate"));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -157,6 +161,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/procurementPlans",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
+    @Cacheable
     public List<ProcurementPlan> makueniProcurementPlans(
             @ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
@@ -178,6 +183,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/procurementPlansCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
+    @Cacheable
     public Integer makueniProcurementPlansCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
@@ -202,6 +208,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/procurementPlan/id/{id:^[0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     @ApiOperation(value = "Finds ProcurementPlan by the given id")
+    @Cacheable
     public ProcurementPlan procurementPlanById(@PathVariable final Long id) {
         final Optional<ProcurementPlan> procurementPlan = procurementPlanMongoRepository.findById(id);
 
@@ -216,6 +223,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/project/id/{id:^[0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     @ApiOperation(value = "Finds a Project by the given id")
+    @Cacheable
     public Document projectById(@PathVariable final Long id) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
@@ -230,6 +238,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/purchaseReq/id/{id:^[0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     @ApiOperation(value = "Finds a Purchase Requisition by the given id")
+    @Cacheable
     public Document purchaseReqById(@PathVariable final Long id) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
@@ -246,6 +255,7 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/contractStats",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     @ApiOperation(value = "Fetch Contract Stats")
+    @Cacheable
     public Document makueniContractStats() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
@@ -262,6 +272,7 @@ public class MakueniDataController extends GenericOCDSController {
     @ApiOperation(value = "Display the available Procurement Plan Departments.")
     @RequestMapping(value = "/api/makueni/filters/departments", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
+    @Cacheable
     public List<Document> getDepartments() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
@@ -279,6 +290,7 @@ public class MakueniDataController extends GenericOCDSController {
     @ApiOperation(value = "Display the available Items.")
     @RequestMapping(value = "/api/makueni/filters/items", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
+    @Cacheable
     public List<Document> getItems() {
 
         /* Use this if we want to export ALL Items
@@ -307,6 +319,7 @@ public class MakueniDataController extends GenericOCDSController {
     @ApiOperation(value = "Display the available Sub Counties.")
     @RequestMapping(value = "/api/makueni/filters/subcounties", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
+    @Cacheable
     public List<Document> getSubcounty() {
         final List<Document> results = new ArrayList<>();
         final List<Subcounty> items = subcountyService.findAll();
@@ -323,6 +336,7 @@ public class MakueniDataController extends GenericOCDSController {
     @ApiOperation(value = "Display the available Wards.")
     @RequestMapping(value = "/api/makueni/filters/wards", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
+    @Cacheable
     public List<Document> getWard() {
         final List<Document> results = new ArrayList<>();
         final List<Ward> items = wardService.findAll();
@@ -339,6 +353,7 @@ public class MakueniDataController extends GenericOCDSController {
     @ApiOperation(value = "Display the available Procurement Plan FY.")
     @RequestMapping(value = "/api/makueni/filters/fiscalYears", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
+    @Cacheable
     public List<Document> getFiscalYears() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 

@@ -1,8 +1,10 @@
 package org.devgateway.ocds.web.rest.controller.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Range;
 
 import java.math.BigDecimal;
+import java.util.TreeSet;
 
 /**
  * @author idobre
@@ -29,6 +31,20 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
 
     @ApiModelProperty(value = "Tender max value")
     private BigDecimal max;
+
+    @ApiModelProperty(value = "This parameter will filter the content based on year. " + "The minimum year allowed is "
+            + MIN_REQ_YEAR + " and the maximum allowed is " + MAX_REQ_YEAR
+            + ".It will check if the startDate and endDate are within the year range. "
+            + "To check which fields are used to read start/endDate from, have a look at each endpoint definition.")
+    private TreeSet<@Range(min = MIN_REQ_YEAR, max = MAX_REQ_YEAR) Integer> year;
+
+    @ApiModelProperty(value = "This parameter will filter the content based on month. "
+            + "The minimum month allowed is "
+            + MIN_MONTH + " and the maximum allowed is " + MAX_MONTH
+            + "This parameter does nothing if used without the year parameter, as filtering and aggregating by month "
+            + "makes no sense without filtering by year. This parameter is also ignored when using multiple year "
+            + "parameters, so it only works if and only if the year parameter has one value.")
+    private TreeSet<@Range(min = MIN_MONTH, max = MAX_MONTH) Integer> month;
 
     public Long getDepartment() {
         return department;
@@ -84,5 +100,21 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
 
     public void setMax(final BigDecimal max) {
         this.max = max;
+    }
+
+    public TreeSet<Integer> getYear() {
+        return year;
+    }
+
+    public void setYear(final TreeSet<Integer> year) {
+        this.year = year;
+    }
+
+    public TreeSet<Integer> getMonth() {
+        return month;
+    }
+
+    public void setMonth(final TreeSet<Integer> month) {
+        this.month = month;
     }
 }

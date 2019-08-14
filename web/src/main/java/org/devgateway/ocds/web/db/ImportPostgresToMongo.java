@@ -122,7 +122,6 @@ public class ImportPostgresToMongo {
 
         procurementPlanMongoRepository.saveAll(procurementPlans);
 
-        // TODO - create more indexes
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("status", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
@@ -138,6 +137,8 @@ public class ImportPostgresToMongo {
                         Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.purchaseRequisitions.tender.tenderValue", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.purchaseRequisitions.tender.closingDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new TextIndexDefinition.TextIndexDefinitionBuilder()
                         .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)

@@ -51,13 +51,13 @@ class OCApp extends React.Component {
     this.fetchYears();
     this.fetchUserInfo();
     
-    const calcYearsBarWidth = () => this.setState({
-      width: document.querySelector('.years-bar').offsetWidth - 30,
-    });
+    // const calcYearsBarWidth = () => this.setState({
+    //   width: document.querySelector('.years-bar').offsetWidth - 30,
+    // });
     
-    calcYearsBarWidth();
+    // calcYearsBarWidth();
     
-    window.addEventListener('resize', debounce(calcYearsBarWidth));
+    // window.addEventListener('resize', debounce(calcYearsBarWidth));
   }
   
   setLocale(locale) {
@@ -88,7 +88,7 @@ class OCApp extends React.Component {
     .count() === 1;
   }
   
-  yearsBar() {
+  yearsBar() {debugger;
     const { years, selectedYears } = this.state;
     const toggleYear = year => this.setState({
       selectedYears: selectedYears.has(+year) ?
