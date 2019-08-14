@@ -16,9 +16,11 @@ class FilterDateYearMonth extends translatable(React.Component) {
   }
   
   componentDidMount() {
-    this.props.filters.addListener(this.constructor.getName(), () => this.updateBindings());
+    if (this.props.filters !== undefined) {
+      this.props.filters.addListener(this.constructor.getName(), () => this.updateBindings());
+    }
     
-    fetchJson('/api/tendersAwardsYears')
+    fetchJson(this.constructor.getEP())
     .then((data) => {
       const years = data.map(pluck('_id'));
       
@@ -30,7 +32,9 @@ class FilterDateYearMonth extends translatable(React.Component) {
   }
   
   componentWillUnmount() {
-    this.props.filters.removeListener(this.constructor.getName());
+    if (this.props.filters !== undefined) {
+      this.props.filters.removeListener(this.constructor.getName());
+    }
   }
   
   updateBindings() {
@@ -47,31 +51,52 @@ class FilterDateYearMonth extends translatable(React.Component) {
     });
   }
   
+  componentWillReceiveProps(nextProps) {
+    // update internal state on reset
+    const { years } = this.state;
+    
+    if (nextProps.state !== undefined && nextProps.state.size === 0) {
+      this.setState({ selectedYears: years, selectedMonths: range(1, 12) });
+    }
+  }
+  
   handleChange() {
     const { filters } = this.props;
     const self = this;
     
-    delayUserInput('amount', function () {
-      filters.getState()
-      .then(value => {
-        const { selectedMonths, selectedYears } = self.state;
-        
-        let newValue;
-        if (selectedYears.length !== 0) {
-          newValue = value.set('year', Set(selectedYears));
-          if (selectedYears.length === 1) {
-            newValue = newValue.set('month', Set(selectedMonths));
+    if (filters !== undefined) {
+      delayUserInput('date', function () {
+        filters.getState()
+        .then(value => {
+          const { selectedMonths, selectedYears } = self.state;
+          
+          let newValue;
+          if (selectedYears.length !== 0) {
+            newValue = value.set('year', Set(selectedYears));
+            if (selectedYears.length === 1) {
+              newValue = newValue.set('month', Set(selectedMonths));
+            } else {
+              newValue = newValue.delete('month');
+            }
           } else {
-            newValue = newValue.delete('month');
+            newValue = value.delete('year')
+            .delete('month');
           }
-        } else {
-          newValue = value.delete('year')
-          .delete('month');
-        }
-        
-        filters.assign(self.constructor.getName(), newValue);
-      });
-    }, 1500);
+          
+          filters.assign(self.constructor.getName(), newValue);
+        });
+      }, 1500);
+    }
+    
+    if (this.props.onUpdate !== undefined) {
+      delayUserInput('date', function () {
+        const { selectedMonths, selectedYears } = self.state;
+  
+        self.props.onUpdate('selectedYears', Set(selectedYears));
+        self.props.onUpdate('selectedMonths', Set(selectedMonths));
+        self.props.onUpdate('monthly', self.showMonths());
+      }, 100);
+    }
   }
   
   showMonths() {
