@@ -125,11 +125,17 @@
     }
 }
 
-.procurement-plan {
-
-}
-
 .makueni-procurement-plan {
+    .content{
+      @media screen and (max-width: 1024px) {
+        background: #f9f9f9;
+      }
+    }
+    .col-main-content{
+      @media screen and (max-width: 1024px) {
+        background: #ffffff;
+      }
+    }
     a.download-file {
         color: #29722d;
         cursor: pointer;
@@ -210,16 +216,24 @@
                     font-size: 16px;
                     color: @hover-blue;
                     background-color: #E5EAEB;
+                    @media screen and (max-width: 1024px) {
+                      padding-bottom: 25px;
+                    }
                 }
 
                 &:hover {
-                    color: @color-regular-gray;
+                    color: @hover-blue;
                     background-color: #E5EAEB;
                 }
             }
 
             .title {
                 font-weight: bold;
+                @media screen and (max-width: 1024px) {
+                  display: block;
+                  line-height: 100%;
+                  margin-top: -4px;
+                }
             }
 
             .filter-content {
@@ -229,6 +243,9 @@
                     display: block;
                     padding-bottom: 10px;
                     padding-top: 10px;
+                    @media screen and (max-width: 1024px) {
+                      padding-bottom: 50px;
+                    }
                 }
             }
 
@@ -240,15 +257,26 @@
                 width: 10px;
                 height: 20px;
                 display: block;
+                @media screen and (max-width: 1024px) {
+                  background-size: 15px 15px;
+                  height: 20px;
+                  width: 15px;
+                }
 
                 &.down {
                     transform: rotate(0);
                     transition: all 200ms ease;
+                    @media screen and (max-width: 1024px){
+                      background-position: 0 -3px;
+                    }
                 }
 
                 &.up {
                     transform: rotate(180deg);
                     transition: all 200ms ease;
+                    @media screen and (max-width: 1024px){
+                      background-position: 0 8px;
+                    }
                 }
             }
 
@@ -303,8 +331,28 @@
         }
     }
 }
+.charts-content{
+    @media screen and (max-width: 1024px) {
+      background: #f9f9f9;
+    }
+  .col-main-content{
+    @media screen and (max-width: 1024px) {
+      background: #ffffff;
+    }
+  }
 
+}
 .makueni-tenders {
+  .content{
+    @media screen and (max-width: 1024px) {
+      background: #f9f9f9;
+    }
+  }
+  .col-main-content{
+    @media screen and (max-width: 1024px) {
+      background: #ffffff;
+    }
+  }
     a.download-file {
         color: #29722d;
         cursor: pointer;

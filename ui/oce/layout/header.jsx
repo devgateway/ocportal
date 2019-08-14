@@ -100,13 +100,13 @@ export default class Header extends translatable(React.Component) {
     
     return (<div>
       <header className="branding row">
-        <div className="col-sm-8">
+        <div className="col-md-8 col-sm-6">
           <div className="logo-wrapper">
             <img src="assets/makueni-logo.png" alt="Makueni"/>
           </div>
         </div>
         
-        <div className="col-sm-4">
+        <div className="col-md-4 col-sm-6">
           <div className="row">
             <div className="navigation">
               {
@@ -131,11 +131,11 @@ export default class Header extends translatable(React.Component) {
         {
           data !== undefined
             ? <div>
-              <div className="col-md-3 total-item">
+              <div className="col-md-2 col-sm-6 total-item">
                 <span className="total-label">Total Contracts</span>
                 <span className="total-number">{data.count}</span>
               </div>
-              <div className="col-md-4 total-item">
+              <div className="col-md-4 col-sm-6 total-item">
                 <span className="total-label">Total Contract Amount</span>
                 <span className="total-number">{currencyFormatter(data.value)}</span>
               </div>
@@ -143,7 +143,7 @@ export default class Header extends translatable(React.Component) {
             : null
         }
         
-        <div className="col-md-3 export">
+        <div className="col-md-3 col-sm-12 export">
           {this.exportBtn()}
         </div>
       </div>

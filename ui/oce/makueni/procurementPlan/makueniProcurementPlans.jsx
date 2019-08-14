@@ -11,31 +11,31 @@ import ProcurementPlan from './single/procurementPlan';
 const NAME = 'MakueniPP';
 
 class MakueniProcurementPlans extends CRDPage {
-  
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
       data: []
     };
   }
-  
+
   componentDidMount() {
     super.componentDidMount();
-    
+
     ppData.addListener(NAME, () => this.updateBindings());
     page.addListener(NAME, () => this.updateBindings());
     pageSize.addListener(NAME, () => this.updateBindings());
     ppCountRemote.addListener(NAME, () => this.updateBindings());
   }
-  
+
   componentWillUnmount() {
     ppData.removeListener(NAME);
     page.removeListener(NAME);
     pageSize.removeListener(NAME);
     ppCountRemote.removeListener(NAME);
   }
-  
+
   updateBindings() {
     Promise.all([
       ppData.getState(NAME),
@@ -52,16 +52,16 @@ class MakueniProcurementPlans extends CRDPage {
       });
     });
   }
-  
+
   shouldComponentUpdate(nextProps, nextState) {
     return JSON.stringify(this.state) !== JSON.stringify(nextState)
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
-  
+
   filters() {
     return <FiltersWrapper filters={ppFilters} translations={this.props.translations}/>;
   }
-  
+
   ppLink(navigate) {
     return (ppId) => (
       <a href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
@@ -70,7 +70,7 @@ class MakueniProcurementPlans extends CRDPage {
       </a>
     );
   }
-  
+
   downloadFiles() {
     return (formDocs) => (<div>
         {
@@ -82,7 +82,7 @@ class MakueniProcurementPlans extends CRDPage {
                   Click to download the file
                 </Tooltip>
               }>
-              
+
               <a className="download-file" href={doc.url} target="_blank">
                 <i className="glyphicon glyphicon-download"/>
                 <span>{doc.name}</span>
@@ -93,19 +93,19 @@ class MakueniProcurementPlans extends CRDPage {
       </div>
     );
   }
-  
+
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
     const [navigationPage, id] = route;
-    
+
     return (<div className="container-fluid dashboard-default">
-      
+
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
               styling={this.props.styling} selected="procurement-plan"/>
-      
+
       <div className="makueni-procurement-plan content row">
-        <div className="col-md-3 filters">
+        <div className="col-md-3 col-sm-3 filters">
           <div className="row">
             <div className="filters-hint col-md-12">
               {this.t('filters:hint')}
@@ -113,13 +113,13 @@ class MakueniProcurementPlans extends CRDPage {
             {this.filters()}
           </div>
         </div>
-        
-        <div className="col-md-9">
+
+        <div className="col-md-9 col-sm-9 col-main-content">
           {
             navigationPage === undefined
               ? <div>
                 <h1>Makueni Procurement Plans</h1>
-                
+
                 <BootstrapTableWrapper
                   bordered
                   data={data}
@@ -152,7 +152,7 @@ class MakueniProcurementPlans extends CRDPage {
           }
         </div>
       </div>
-    
+
     </div>);
   }
 }

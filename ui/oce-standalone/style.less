@@ -8,11 +8,20 @@
 @circle-grey: #666666;
 @tab-light-grey: #f2f2f2;
 @border-grey: #f6f6f6;
+@gray: #b1b1b1;
+@active-color: #808080;
+@hover-blue: #3090bd;
+@color-regular-gray: #8d8d8d;
+@base-space: 20px;
 
 
 .content {
     margin-top: @headerHeight * 2;
     margin-bottom: 96px;
+    @media screen and (max-width: 1024px) {
+      background-color: #f9f9f9;
+      margin-top: 175px;
+    }
 }
 
 header.branding {
@@ -68,7 +77,7 @@ header.branding {
     }
 
     .btn-apply {
-        background-color: #29722d;
+        background-color: @themeGreen;
         color: white;
         margin-left: 10px !important;
         margin-bottom: @base-space / 2;
@@ -81,12 +90,6 @@ header.branding {
         color: white;
     }
 
-    @gray: #b1b1b1;
-    @active-color: #808080;
-
-    @hover-blue: #3090bd;
-    @color-regular-gray: #8d8d8d;
-    @base-space: 20px;
 
     .filters {
         .filter {
@@ -101,6 +104,9 @@ header.branding {
                     font-size: 16px;
                     color: @hover-blue;
                     background-color: #E5EAEB;
+                    @media screen and (max-width: 1024px) {
+                      padding-bottom: 25px;
+                    }
                 }
 
                 &:hover {
@@ -111,6 +117,11 @@ header.branding {
 
             .title {
                 font-weight: bold;
+                @media screen and (max-width: 1024px) {
+                  display: block;
+                  line-height: 100%;
+                  margin-top: -4px;
+                }
             }
 
             .toggler {
@@ -121,15 +132,26 @@ header.branding {
                 width: 10px;
                 height: 20px;
                 display: block;
+                @media screen and (max-width: 1024px) {
+                  background-size: 15px 15px;
+                  height: 20px;
+                  width: 15px;
+                }
 
                 &.down {
                     transform: rotate(0);
                     transition: all 200ms ease;
+                    @media screen and (max-width: 1024px){
+                      background-position: 0 -3px;
+                    }
                 }
 
                 &.up {
                     transform: rotate(180deg);
                     transition: all 200ms ease;
+                    @media screen and (max-width: 1024px){
+                      background-position: 0 8px;
+                    }
                 }
             }
 
@@ -358,11 +380,11 @@ footer.main-footer {
 
 .btn {
     &.btn-primary {
-        background-color: #0B7F58;
-        border-color: #0B7F58;
+        background-color: @themeGreen;
+        border-color: @themeGreen;
 
         &:hover {
-            background-color: darken(#0B7F58, 10%);
+            background-color: darken(@themeGreen, 10%);
         }
     }
 }
@@ -403,7 +425,7 @@ footer.main-footer {
 }
 
 .export {
-    background-color: #29722d;
+    background-color: @themeGreen;
     float: right;
     height: 64px;
     margin-right: 15px;
@@ -416,6 +438,9 @@ footer.main-footer {
         line-height: 64px;
         padding-left: 20px;
         text-transform: uppercase;
+        @media screen and (max-width: 1024px){
+          padding-left: 50px;
+        }
     }
 
     .export-btn {
@@ -437,6 +462,9 @@ footer.main-footer {
             background-repeat: no-repeat;
             background-position: center center;
             background-size: 45px 45px;
+            @media screen and (max-width: 1024px) {
+              background-size: 60px 60px;
+            }
           }
 
           &.xls{
@@ -444,6 +472,9 @@ footer.main-footer {
             background-repeat: no-repeat;
             background-position: center center;
             background-size: 45px 45px;
+            @media screen and (max-width: 1024px) {
+              background-size: 60px 60px;
+            }
           }
 
         }

@@ -122,7 +122,7 @@ class MakueniTenders extends CRDPage {
               styling={this.props.styling} selected="tender"/>
 
       <div className="makueni-tenders content row">
-        <div className="col-md-3 filters">
+        <div className="col-md-3 col-sm-3 filters">
           <div className="row">
             <div className="filters-hint col-md-12">
               {this.t('filters:hint')}
@@ -131,7 +131,7 @@ class MakueniTenders extends CRDPage {
           </div>
         </div>
 
-        <div className="col-md-9">
+        <div className="col-md-9 col-sm-9 col-main-content">
           {
             navigationPage === undefined
               ? <div>
