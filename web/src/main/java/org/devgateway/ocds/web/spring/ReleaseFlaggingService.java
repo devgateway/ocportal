@@ -16,6 +16,7 @@ import org.devgateway.ocds.web.flags.release.ReleaseFlagI077Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI085Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI171Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI180Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI184Processor;
 import org.devgateway.toolkit.persistence.mongo.spring.MongoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,8 @@ public class ReleaseFlaggingService {
     private ReleaseFlagI085Processor releaseFlagI085Processor;
     @Autowired
     private ReleaseFlagI171Processor releaseFlagI171Processor;
+    @Autowired
+    private ReleaseFlagI184Processor releaseFlagI184Processor;
 
 
     @Autowired
@@ -138,9 +141,9 @@ public class ReleaseFlaggingService {
                 releaseFlagI180Processor,
                 releaseFlagI002Processor,
                 releaseFlagI085Processor,
-                releaseFlagI171Processor
+                releaseFlagI171Processor,
+                releaseFlagI184Processor
         ));
-
-     //processAndSaveFlagsForAllReleases(this::logMessage);
+        //processAndSaveFlagsForAllReleases(this::logMessage);
     }
 }

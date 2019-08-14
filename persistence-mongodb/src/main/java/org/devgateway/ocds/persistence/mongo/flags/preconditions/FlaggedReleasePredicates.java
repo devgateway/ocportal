@@ -2,6 +2,7 @@ package org.devgateway.ocds.persistence.mongo.flags.preconditions;
 
 
 import org.devgateway.ocds.persistence.mongo.Award;
+import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.Tender;
 
@@ -68,6 +69,14 @@ public final class FlaggedReleasePredicates {
                     p -> p.getAwards()
                             .stream().anyMatch(a -> Award.Status.active.equals(a.getStatus()))
             );
+
+    public static final NamedPredicate<FlaggedRelease> ACTIVE_CONTRACT =
+            new NamedPredicate<>(
+                    "Needs to have at least one active contract",
+                    p -> p.getContracts()
+                            .stream().anyMatch(a -> Contract.Status.active.equals(a.getStatus()))
+            );
+
 
     public static final NamedPredicate<FlaggedRelease> AWARDED_AMOUNT =
             new NamedPredicate<>(
