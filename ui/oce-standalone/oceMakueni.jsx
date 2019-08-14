@@ -115,7 +115,7 @@ class OCEMakueni extends OCApp {
         <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
                 styling={this.props.styling} selected="m-and-e"/>
 
-        <div className="row content">
+        <div className="row content charts-content">
           <div className="col-xs-4 col-md-3 menu">
             <div className="row">
               <div className="filters-hint col-md-12">
@@ -126,7 +126,7 @@ class OCEMakueni extends OCApp {
             </div>
           </div>
 
-          <div className="col-xs-8 col-md-9">
+          <div className="col-xs-8 col-md-9 col-main-content">
             <div className="row">
               <div className="navigation subnav">
                 {this.navigation()}
