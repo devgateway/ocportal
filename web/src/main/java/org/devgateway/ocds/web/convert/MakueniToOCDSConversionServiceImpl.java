@@ -87,7 +87,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    private static final String OCID_PREFIX = "ocds-abcd-";
+    private static final String OCID_PREFIX = "ocds-muq5cl-";
 
     private ImmutableMap<String, Tender.ProcurementMethod> procurementMethodMap;
 
