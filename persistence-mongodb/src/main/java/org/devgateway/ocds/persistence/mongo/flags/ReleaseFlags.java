@@ -42,6 +42,9 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     //i171: Bid is too close to budget, estimate or preferred solution
     private Flag i171;
 
+    //i184: Difference between the contract price and winning bid
+    private Flag i184;
+
     private Collection<FlagTypeCount> flaggedStats;
 
     private Collection<FlagTypeCount> eligibleStats;
@@ -188,6 +191,14 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
         } else {
             flagCnt++;
         }
+    }
+
+    public Flag getI184() {
+        return i184;
+    }
+
+    public void setI184(Flag i184) {
+        this.i184 = i184;
     }
 }
 
