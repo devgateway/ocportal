@@ -3,6 +3,7 @@
  */
 package org.devgateway.ocds.web.spring;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.flags.AbstractFlaggedReleaseFlagProcessor;
 import org.devgateway.ocds.persistence.mongo.flags.ReleaseFlags;
@@ -63,6 +64,7 @@ public class ReleaseFlaggingService {
     @Autowired
     private ReleaseFlagI171Processor releaseFlagI171Processor;
 
+
     @Autowired
     private CacheManager cacheManager;
 
@@ -101,6 +103,8 @@ public class ReleaseFlaggingService {
     }
 
     public void processAndSaveFlagsForAllReleases(Consumer<String> logMessage) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
         logMessage.accept("<b>RUNNING CORRUPTION FLAGGING.</b>");
 
@@ -109,10 +113,8 @@ public class ReleaseFlaggingService {
         MongoUtil.processRepositoryItemsPaginated(releaseRepository, this::processAndSaveFlagsForRelease,
                 this::logMessage);
 
-        logMessage.accept("<b>CORRUPTION FLAGGING COMPLETE.</b>");
-
-        //clear caches manually
-        cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
+        stopWatch.stop();
+        logMessage.accept("<b>CORRUPTION FLAGGING COMPLETE.</b>. Elapsed " + stopWatch.getTime() + "ms");
     }
 
     /**

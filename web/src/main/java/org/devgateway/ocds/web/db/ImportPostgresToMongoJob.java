@@ -1,6 +1,7 @@
 package org.devgateway.ocds.web.db;
 
 import org.devgateway.ocds.web.convert.MakueniToOCDSConversionService;
+import org.devgateway.ocds.web.spring.ReleaseFlaggingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +24,9 @@ public class ImportPostgresToMongoJob {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private ReleaseFlaggingService releaseFlaggingService;
+
     /**
      * Invoke the import of all makueni data into mongo db.
      */
@@ -31,6 +35,7 @@ public class ImportPostgresToMongoJob {
     public void importOcdsMakueniToMongo() {
         importPostgresToMongo.importToMongo();
         makueniToOCDSConversionService.convertToOcdsAndSaveAllApprovedPurchaseRequisitions();
+        releaseFlaggingService.processAndSaveFlagsForAllReleases(releaseFlaggingService::logMessage);
         cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
     }
 }
