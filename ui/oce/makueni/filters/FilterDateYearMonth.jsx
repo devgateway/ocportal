@@ -39,10 +39,11 @@ class FilterDateYearMonth extends translatable(React.Component) {
     ])
     .then(([item]) => {
       // update internal state on reset
-      // TODO
-      // if (item.get('text') === undefined) {
-      //   this.setState({ value: '' });
-      // }
+      const { years } = this.state;
+      
+      if (item.get('year') === undefined && item.get('month') === undefined) {
+        this.setState({ selectedYears: years, selectedMonths: range(1, 12) });
+      }
     });
   }
   
@@ -64,12 +65,13 @@ class FilterDateYearMonth extends translatable(React.Component) {
             newValue = newValue.delete('month');
           }
         } else {
-          newValue = value.delete('year').delete('month');
+          newValue = value.delete('year')
+          .delete('month');
         }
         
         filters.assign(self.constructor.getName(), newValue);
       });
-    }, 2000);
+    }, 1500);
   }
   
   showMonths() {
