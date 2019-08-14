@@ -13,6 +13,7 @@ import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.DefaultFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.GroupingFilterPagingRequest;
+import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
 import org.slf4j.Logger;
@@ -543,6 +544,14 @@ public abstract class GenericOCDSController {
         tmpMap.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
 
         filterProjectMap = Collections.unmodifiableMap(tmpMap);
+    }
+
+    protected Criteria getYearFilterCriteria(final MakueniFilterPagingRequest filter, final String dateProperty) {
+        final YearFilterPagingRequest yearFilterPagingRequest = new YearFilterPagingRequest();
+        yearFilterPagingRequest.setYear(filter.getYear());
+        yearFilterPagingRequest.setMonth(filter.getMonth());
+
+        return getYearFilterCriteria(yearFilterPagingRequest, dateProperty);
     }
 
     protected Criteria getYearFilterCriteria(final YearFilterPagingRequest filter, final String dateProperty) {

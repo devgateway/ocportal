@@ -102,7 +102,8 @@ public class MakueniDataController extends GenericOCDSController {
                         filter.getItem()),
                 createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
                         filter.getMin(), filter.getMax()),
-                createTextCriteria(filter.getText()));
+                createTextCriteria(filter.getText()),
+                getYearFilterCriteria(filter, "projects.purchaseRequisitions.tender.closingDate"));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -134,7 +135,8 @@ public class MakueniDataController extends GenericOCDSController {
                         filter.getItem()),
                 createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
                         filter.getMin(), filter.getMax()),
-                createTextCriteria(filter.getText()));
+                createTextCriteria(filter.getText()),
+                getYearFilterCriteria(filter, "projects.purchaseRequisitions.tender.closingDate"));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),

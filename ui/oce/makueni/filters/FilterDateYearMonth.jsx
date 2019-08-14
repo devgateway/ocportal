@@ -1,6 +1,7 @@
 import translatable from '../../translatable';
 import { fetchJson, pluck, range } from '../../tools';
 import cn from 'classnames';
+import { Set } from 'immutable';
 import { delayUserInput } from '../tenders/state';
 
 class FilterDateYearMonth extends translatable(React.Component) {
@@ -19,10 +20,8 @@ class FilterDateYearMonth extends translatable(React.Component) {
     
     fetchJson('/api/tendersAwardsYears')
     .then((data) => {
-      // const years = data.map(pluck('_id'));
+      const years = data.map(pluck('_id'));
       
-      const years = [2012, 2013, 2014, 2016, 2017, 2018, 2020, 2021, 2022];
-      // const years = [2012, 2013];
       this.setState({
         years,
         selectedYears: years,
@@ -55,23 +54,22 @@ class FilterDateYearMonth extends translatable(React.Component) {
       filters.getState()
       .then(value => {
         const { selectedMonths, selectedYears } = self.state;
-  
-        let newValue = value;
+        
+        let newValue;
         if (selectedYears.length !== 0) {
-          newValue = newValue.set('years', selectedYears);
+          newValue = value.set('year', Set(selectedYears));
           if (selectedYears.length === 1) {
-            newValue = newValue.set('months', selectedMonths);
+            newValue = newValue.set('month', Set(selectedMonths));
           } else {
-            newValue = newValue.delete('months');
+            newValue = newValue.delete('month');
           }
         } else {
-          newValue = newValue.delete('years');
-          newValue = newValue.delete('months');
+          newValue = value.delete('year').delete('month');
         }
         
         filters.assign(self.constructor.getName(), newValue);
       });
-    }, 1000);
+    }, 2000);
   }
   
   showMonths() {
