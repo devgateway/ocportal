@@ -23,6 +23,9 @@ public final class FlaggedReleasePredicates {
             "Needs to have tender procuring entity", p -> p.getTender() != null
             && p.getTender().getProcuringEntity() != null);
 
+    public static final NamedPredicate<FlaggedRelease> BUYER = new NamedPredicate<>(
+            "Needs to have buyer", p -> p.getBuyer() != null);
+
     public static final NamedPredicate<FlaggedRelease> MULTIPLE_BIDS = new NamedPredicate<>(
             "Needs to have at least two bids", p -> p.getBids() != null
             && p.getBids().getDetails() != null && p.getBids().getDetails().size() >= 2);
@@ -55,6 +58,14 @@ public final class FlaggedReleasePredicates {
                     p -> p.getTender() != null
                             && Tender.ProcurementMethod.limited.equals(p.getTender().getProcurementMethod())
             );
+
+    public static final NamedPredicate<FlaggedRelease> DIRECT_PROCUREMENT_METHOD =
+            new NamedPredicate<>(
+                    "Needs to have direct tender procurement method",
+                    p -> p.getTender() != null
+                            && Tender.ProcurementMethod.direct.equals(p.getTender().getProcurementMethod())
+            );
+
 
     public static final NamedPredicate<FlaggedRelease> ACTIVE_AWARD_WITH_DATE =
             new NamedPredicate<>(
