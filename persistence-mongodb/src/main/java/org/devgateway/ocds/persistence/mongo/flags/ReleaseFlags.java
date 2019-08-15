@@ -48,6 +48,9 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     //i016 Purchase splitting to avoid procurement thresholds
     private Flag i016;
 
+    //i182 Lowest evaluated bidder is considered non-responsive
+    private Flag i182;
+
     private Collection<FlagTypeCount> flaggedStats;
 
     private Collection<FlagTypeCount> eligibleStats;
@@ -210,6 +213,14 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
 
     public void setI016(Flag i016) {
         this.i016 = i016;
+    }
+
+    public Flag getI182() {
+        return i182;
+    }
+
+    public void setI182(Flag i182) {
+        this.i182 = i182;
     }
 }
 
