@@ -45,6 +45,9 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     //i184: Difference between the contract price and winning bid
     private Flag i184;
 
+    //i016 Purchase splitting to avoid procurement thresholds
+    private Flag i016;
+
     private Collection<FlagTypeCount> flaggedStats;
 
     private Collection<FlagTypeCount> eligibleStats;
@@ -199,6 +202,14 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
 
     public void setI184(Flag i184) {
         this.i184 = i184;
+    }
+
+    public Flag getI016() {
+        return i016;
+    }
+
+    public void setI016(Flag i016) {
+        this.i016 = i016;
     }
 }
 
