@@ -152,7 +152,7 @@ public class ReleaseFlaggingService {
                 releaseFlagI171Processor,
                 releaseFlagI184Processor,
                 releaseFlagI016Processor,
-                releaseFlagI045Processor
+                releaseFlagI045Processor,
                 releaseFlagI182Processor
         ));
         //processAndSaveFlagsForAllReleases(this::logMessage);
