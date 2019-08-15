@@ -1,13 +1,14 @@
 package org.devgateway.ocds.web.flags.release;
 
 
-import java.util.Arrays;
-import java.util.Collections;
-import javax.annotation.PostConstruct;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.flags.Flag;
 import org.devgateway.ocds.persistence.mongo.flags.preconditions.FlaggedReleasePredicates;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author mpostelnicu
@@ -36,8 +37,9 @@ public class ReleaseFlagI180Processor extends ReleaseFlagI077Processor {
     protected void setPredicates() {
         preconditionsPredicates = Collections.synchronizedList(
                 Arrays.asList(FlaggedReleasePredicates.ACTIVE_AWARD_WITH_DATE,
-                        FlaggedReleasePredicates.TENDER_PROCURING_ENTITY,
-                        FlaggedReleasePredicates.LIMITED_PROCUREMENT_METHOD));
+                        FlaggedReleasePredicates.BUYER,
+                        FlaggedReleasePredicates.DIRECT_PROCUREMENT_METHOD
+                ));
 
         reInitialize();
     }
