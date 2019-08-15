@@ -51,6 +51,9 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     //i045 Supplier wins disproportionate number of contracts of the same type
     private Flag i045;
 
+    //i182 Lowest evaluated bidder is considered non-responsive
+    private Flag i182;
+
     private Collection<FlagTypeCount> flaggedStats;
 
     private Collection<FlagTypeCount> eligibleStats;
@@ -221,6 +224,14 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
 
     public void setI045(Flag i045) {
         this.i045 = i045;
+    }
+
+    public Flag getI182() {
+        return i182;
+    }
+
+    public void setI182(Flag i182) {
+        this.i182 = i182;
     }
 }
 
