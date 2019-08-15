@@ -135,6 +135,10 @@
       @media screen and (max-width: 1024px) {
         background: #ffffff;
       }
+      @media screen and (max-width: 600px) {
+        overflow-x:scroll;
+        padding-top: 30px;
+      }
     }
     a.download-file {
         color: #29722d;
@@ -352,6 +356,10 @@
     @media screen and (max-width: 1024px) {
       background: #ffffff;
     }
+    @media screen and (max-width: 600px) {
+      overflow-x:scroll;
+      padding-top: 30px;
+    }
   }
     a.download-file {
         color: #29722d;
@@ -432,6 +440,11 @@ a.more-details-link:hover::before {
   }
   .rc-slider-handle{
     border: 2px solid @active-tab-color;
+  }
+}
+.react-bs-table-container{
+  @media screen and (max-width: 600px) {
+    width: 150%;
   }
 }
 .react-bs-table-bordered{
