@@ -4,12 +4,12 @@ package org.devgateway.ocds.web.flags.release;
 import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.Item;
+import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.flags.AbstractFlaggedReleaseFlagProcessor;
 import org.devgateway.ocds.persistence.mongo.flags.Flag;
 import org.devgateway.ocds.persistence.mongo.flags.FlagType;
 import org.devgateway.ocds.persistence.mongo.flags.preconditions.FlaggedReleasePredicates;
 import org.devgateway.ocds.web.rest.controller.SelectiveAwardsByBuyerItemSupplier;
-import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
 @Component
 public class ReleaseFlagI016Processor extends AbstractFlaggedReleaseFlagProcessor {
 
-    private Map<String, Long> countMap;
+    protected Map<String, Long> countMap;
 
     @Autowired
-    private SelectiveAwardsByBuyerItemSupplier selectiveAwardsByBuyerItemSupplier;
+    protected SelectiveAwardsByBuyerItemSupplier selectiveAwardsByBuyerItemSupplier;
 
     @Override
     protected void setFlag(Flag flag, FlaggedRelease flaggable) {
@@ -58,7 +58,7 @@ public class ReleaseFlagI016Processor extends AbstractFlaggedReleaseFlagProcesso
         return false;
     }
 
-    private String buildKey(String buyerId, String supplierId, String itemsClass) {
+    protected String buildKey(String buyerId, String supplierId, String itemsClass) {
         return buyerId + "-" + supplierId + "-" + itemsClass;
     }
 
@@ -66,7 +66,7 @@ public class ReleaseFlagI016Processor extends AbstractFlaggedReleaseFlagProcesso
     public void reInitialize() {
         List<SelectiveAwardsByBuyerItemSupplier.SelectiveAwardsResponse> selectiveAwardsResponses =
                 selectiveAwardsByBuyerItemSupplier
-                        .selectiveAwardsByBuyerItemSupplier(new YearFilterPagingRequest());
+                        .selectiveAwardsByBuyerItemSupplier(2, Tender.ProcurementMethod.selective, null);
         countMap = new ConcurrentHashMap<>();
         selectiveAwardsResponses.forEach(r ->
                 countMap.put(buildKey(r.getBuyerId(), r.getSupplierId(), r.getItemsClassification()), r.getCount())

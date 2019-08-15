@@ -21,16 +21,16 @@ import java.util.List;
 @RestController
 @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
 @Cacheable
-public class FlagI016CrosstabController extends AbstractFlagCrosstabController {
+public class FlagI045CrosstabController extends AbstractFlagCrosstabController {
 
     @Override
     protected String getFlagProperty() {
-        return FlagsConstants.I016_VALUE;
+        return FlagsConstants.I045_VALUE;
     }
 
     @Override
-    @ApiOperation(value = "Crosstab for flag i016")
-    @RequestMapping(value = "/api/flags/i016/crosstab",
+    @ApiOperation(value = "Crosstab for flag i045")
+    @RequestMapping(value = "/api/flags/i045/crosstab",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> flagStats(@ModelAttribute @Valid YearFilterPagingRequest filter) {
         return super.flagStats(filter);
