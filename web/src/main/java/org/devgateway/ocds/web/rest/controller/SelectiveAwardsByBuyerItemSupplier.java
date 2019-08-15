@@ -11,21 +11,17 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
-import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.Fields;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -82,18 +78,34 @@ public class SelectiveAwardsByBuyerItemSupplier extends GenericOCDSController {
         }
     }
 
-    @ApiOperation(value = "No of awards per supplier per buyer per item for selective procurements")
-    @RequestMapping(value = "/api/selectiveAwardsByBuyerItemSupplier",
-            method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    public List<SelectiveAwardsResponse> selectiveAwardsByBuyerItemSupplier(@ModelAttribute @Valid final
-                                                                            YearFilterPagingRequest filter) {
+    private Criteria getProcMethodCriteria(Tender.ProcurementMethod method) {
+        if (method == null) {
+            return new Criteria();
+        }
+        return where(MongoConstants.FieldNames.TENDER_PROC_METHOD).is(method.toString());
+    }
+
+    private Criteria getSinceDate(Integer years) {
+        if (years == null) {
+            return new Criteria();
+        }
+
+        LocalDate now = LocalDate.now();
+        LocalDate date = LocalDate.of(now.getYear() - years, now.getMonth(), now.getDayOfMonth());
+
+        return where(getTenderDateField()).gte(date);
+    }
+
+    public List<SelectiveAwardsResponse> selectiveAwardsByBuyerItemSupplier(int tresh,
+                                                                            Tender.ProcurementMethod method,
+                                                                            Integer years) {
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_PROC_METHOD).is(
-                        Tender.ProcurementMethod.selective.toString())
+                match(
+                        getProcMethodCriteria(method)
                         .and(MongoConstants.FieldNames.AWARDS_VALUE).exists(true)
                         .and(MongoConstants.FieldNames.BUYER_ID).exists(true)
                         .and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter, getAwardDateField()))),
+                                .andOperator(getSinceDate(years))),
                 unwind(MongoConstants.FieldNames.TENDER_ITEMS),
                 unwind("awards"),
                 unwind("awards.suppliers"),
@@ -103,7 +115,7 @@ public class SelectiveAwardsByBuyerItemSupplier extends GenericOCDSController {
                         .and(Fields.UNDERSCORE_ID).as("id"),
                 group("id", "buyerId", "supplierId", "itemsClassification"),
                 group("buyerId", "supplierId", "itemsClassification").count().as("count"),
-                match(where("count").gte(2))
+                match(where("count").gte(tresh))
         );
         return releaseAgg(agg, SelectiveAwardsResponse.class);
     }

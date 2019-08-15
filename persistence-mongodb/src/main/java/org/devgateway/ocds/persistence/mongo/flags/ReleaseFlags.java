@@ -48,6 +48,9 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     //i016 Purchase splitting to avoid procurement thresholds
     private Flag i016;
 
+    //i045 Supplier wins disproportionate number of contracts of the same type
+    private Flag i045;
+
     //i182 Lowest evaluated bidder is considered non-responsive
     private Flag i182;
 
@@ -213,6 +216,14 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
 
     public void setI016(Flag i016) {
         this.i016 = i016;
+    }
+
+    public Flag getI045() {
+        return i045;
+    }
+
+    public void setI045(Flag i045) {
+        this.i045 = i045;
     }
 
     public Flag getI182() {

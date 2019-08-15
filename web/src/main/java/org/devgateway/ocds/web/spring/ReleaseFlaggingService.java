@@ -13,6 +13,7 @@ import org.devgateway.ocds.web.flags.release.ReleaseFlagI007Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI016Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI019Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI038Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI045Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI077Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI085Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI171Processor;
@@ -70,6 +71,8 @@ public class ReleaseFlaggingService {
     private ReleaseFlagI184Processor releaseFlagI184Processor;
     @Autowired
     private ReleaseFlagI016Processor releaseFlagI016Processor;
+    @Autowired
+    private ReleaseFlagI045Processor releaseFlagI045Processor;
     @Autowired
     private ReleaseFlagI182Processor releaseFlagI182Processor;
 
@@ -149,6 +152,7 @@ public class ReleaseFlaggingService {
                 releaseFlagI171Processor,
                 releaseFlagI184Processor,
                 releaseFlagI016Processor,
+                releaseFlagI045Processor,
                 releaseFlagI182Processor
         ));
         //processAndSaveFlagsForAllReleases(this::logMessage);
