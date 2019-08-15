@@ -10,6 +10,7 @@ import org.devgateway.ocds.persistence.mongo.flags.ReleaseFlags;
 import org.devgateway.ocds.persistence.mongo.repository.main.FlaggedReleaseRepository;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI002Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI007Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI016Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI019Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI038Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI077Processor;
@@ -66,7 +67,8 @@ public class ReleaseFlaggingService {
     private ReleaseFlagI171Processor releaseFlagI171Processor;
     @Autowired
     private ReleaseFlagI184Processor releaseFlagI184Processor;
-
+    @Autowired
+    private ReleaseFlagI016Processor releaseFlagI016Processor;
 
     @Autowired
     private CacheManager cacheManager;
@@ -142,8 +144,9 @@ public class ReleaseFlaggingService {
                 releaseFlagI002Processor,
                 releaseFlagI085Processor,
                 releaseFlagI171Processor,
-                releaseFlagI184Processor
+                releaseFlagI184Processor,
+                releaseFlagI016Processor
         ));
-        //processAndSaveFlagsForAllReleases(this::logMessage);
+//        processAndSaveFlagsForAllReleases(this::logMessage);
     }
 }
