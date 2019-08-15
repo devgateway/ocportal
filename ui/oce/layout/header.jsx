@@ -131,11 +131,11 @@ export default class Header extends translatable(React.Component) {
         {
           data !== undefined
             ? <div>
-              <div className="col-md-2 col-sm-6 total-item">
+              <div className="col-lg-3 col-md-3 col-sm-6 total-item">
                 <span className="total-label">Total Contracts</span>
                 <span className="total-number">{data.count}</span>
               </div>
-              <div className="col-md-4 col-sm-6 total-item">
+              <div className="col-lg-4 col-md-5 col-sm-6 total-item">
                 <span className="total-label">Total Contract Amount</span>
                 <span className="total-number">{currencyFormatter(data.value)}</span>
               </div>
