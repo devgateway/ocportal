@@ -27,7 +27,7 @@ import java.util.Set;
 @Component
 public class ReleaseFlagI019Processor extends AbstractFlaggedReleaseFlagProcessor {
 
-    public static final int MAX_ALLOWED_DAYS_TENDER_END_DATE_AWARD_DATE = 60;
+    public static final int MAX_ALLOWED_DAYS_CONTRACT_DATE_AWARD_DATE = 60;
 
     @Override
     protected void setFlag(Flag flag, FlaggedRelease flaggable) {
@@ -42,11 +42,12 @@ public class ReleaseFlagI019Processor extends AbstractFlaggedReleaseFlagProcesso
             return false;
         }
 
-        Days daysBetween = Days.daysBetween(new DateTime(flaggable.getTender().getTenderPeriod().getEndDate()),
+        Days daysBetween = Days.daysBetween(
+                new DateTime(flaggable.getContracts().iterator().next().getDateSigned()),
                 new DateTime(award.get().getDate()));
         rationale.append("Days between: ").append(daysBetween.getDays()).append("; Max allowed days: ")
-                .append(MAX_ALLOWED_DAYS_TENDER_END_DATE_AWARD_DATE).append(";");
-        return daysBetween.getDays() > MAX_ALLOWED_DAYS_TENDER_END_DATE_AWARD_DATE;
+                .append(MAX_ALLOWED_DAYS_CONTRACT_DATE_AWARD_DATE).append(";");
+        return daysBetween.getDays() > MAX_ALLOWED_DAYS_CONTRACT_DATE_AWARD_DATE;
     }
 
 
@@ -60,8 +61,8 @@ public class ReleaseFlagI019Processor extends AbstractFlaggedReleaseFlagProcesso
     protected void setPredicates() {
         preconditionsPredicates = Collections.synchronizedList(Arrays.asList(
                 FlaggedReleasePredicates.ACTIVE_AWARD_WITH_DATE,
-                FlaggedReleasePredicates.OPEN_PROCUREMENT_METHOD,
-                FlaggedReleasePredicates.TENDER_END_DATE
+                FlaggedReleasePredicates.TENDER_END_DATE,
+                FlaggedReleasePredicates.ACTIVE_CONTRACT
         ));
     }
 }
