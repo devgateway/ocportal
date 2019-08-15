@@ -55,12 +55,12 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
                 .toString();
     }
 
-    @ApiOperation(value = "Returns the frequent suppliers of a procuringEntity split by a time interval. "
+    @ApiOperation(value = "Returns the frequent suppliers of a buyer split by a time interval. "
             + "The time interval is "
             + "a parameter and represents the number of days to take as interval, starting with today and going back "
             + "till the last award date. The awards are grouped by procuringEntity, supplier and the time interval. "
             + "maxAwards parameter is used to designate what is the maximum number of awards granted to one supplier "
-            + "by the same procuringEntity inside one timeInterval. The default value for maxAwards is 3 (days) and the"
+            + "by the same buyer inside one timeInterval. The default value for maxAwards is 3 (days) and the"
             + " default value for intervalDays is 365.")
     @RequestMapping(value = "/api/frequentSuppliersTimeInterval", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -74,7 +74,7 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
             now = new Date();
         }
         DBObject project = new BasicDBObject();
-        project.put(MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID, 1);
+        project.put(MongoConstants.FieldNames.BUYER_ID, 1);
         project.put(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID, 1);
         project.put(MongoConstants.FieldNames.AWARDS_DATE, 1);
         project.put(Fields.UNDERSCORE_ID, 0);
@@ -87,13 +87,13 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
         )));
 
         Aggregation agg = Aggregation.newAggregation(
-                match(where("tender.procuringEntity").exists(true).and("awards.suppliers.0").exists(true)
+                match(where(MongoConstants.FieldNames.BUYER_ID).exists(true).and("awards.suppliers.0").exists(true)
                         .and(MongoConstants.FieldNames.AWARDS_DATE).exists(true)),
                 unwind("awards"),
                 unwind("awards.suppliers"),
                 new CustomProjectionOperation(project),
                 group(Fields.from(
-                        Fields.field("procuringEntityId", MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID),
+                        Fields.field("buyerId", MongoConstants.FieldNames.BUYER_ID),
                         Fields.field("supplierId", MongoConstants
                                 .FieldNames.AWARDS_SUPPLIERS_ID),
                         Fields.field("timeInterval", "timeInterval")
