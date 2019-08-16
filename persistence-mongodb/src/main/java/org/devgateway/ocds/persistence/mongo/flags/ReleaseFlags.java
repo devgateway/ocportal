@@ -54,6 +54,9 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     //i182 Lowest evaluated bidder is considered non-responsive
     private Flag i182;
 
+    //i083 The same companies always bid, the same companies always win, and the same companies always lose
+    private Flag i083;
+
     private Collection<FlagTypeCount> flaggedStats;
 
     private Collection<FlagTypeCount> eligibleStats;
@@ -232,6 +235,14 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
 
     public void setI182(Flag i182) {
         this.i182 = i182;
+    }
+
+    public Flag getI083() {
+        return i083;
+    }
+
+    public void setI083(Flag i083) {
+        this.i083 = i083;
     }
 }
 

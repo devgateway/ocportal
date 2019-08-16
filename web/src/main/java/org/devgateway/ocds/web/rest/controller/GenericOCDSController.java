@@ -33,6 +33,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -131,6 +132,17 @@ public abstract class GenericOCDSController {
 
     protected <Z> List<Z> releaseAgg(Aggregation agg, Class<Z> clazz) {
         return releaseAgg(agg, Aggregation.newAggregationOptions().allowDiskUse(true).build(), clazz);
+    }
+
+    protected Criteria getSinceDate(Integer years) {
+        if (years == null) {
+            return new Criteria();
+        }
+
+        LocalDate now = LocalDate.now();
+        LocalDate date = LocalDate.of(now.getYear() - years, now.getMonth(), now.getDayOfMonth());
+
+        return where(getTenderDateField()).gte(date);
     }
 
     /**

@@ -15,6 +15,7 @@ import org.devgateway.ocds.web.flags.release.ReleaseFlagI019Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI038Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI045Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI077Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI083Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI085Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI171Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI180Processor;
@@ -75,6 +76,9 @@ public class ReleaseFlaggingService {
     private ReleaseFlagI045Processor releaseFlagI045Processor;
     @Autowired
     private ReleaseFlagI182Processor releaseFlagI182Processor;
+    @Autowired
+    private ReleaseFlagI083Processor releaseFlagI083Processor;
+
 
     @Autowired
     private CacheManager cacheManager;
@@ -153,8 +157,9 @@ public class ReleaseFlaggingService {
                 releaseFlagI184Processor,
                 releaseFlagI016Processor,
                 releaseFlagI045Processor,
-                releaseFlagI182Processor
+                releaseFlagI182Processor,
+                releaseFlagI083Processor
         ));
-        //processAndSaveFlagsForAllReleases(this::logMessage);
+//        processAndSaveFlagsForAllReleases(this::logMessage);
     }
 }

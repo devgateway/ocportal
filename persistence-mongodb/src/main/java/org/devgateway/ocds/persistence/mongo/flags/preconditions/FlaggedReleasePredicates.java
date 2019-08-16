@@ -30,6 +30,10 @@ public final class FlaggedReleasePredicates {
             "Needs to have at least two bids", p -> p.getBids() != null
             && p.getBids().getDetails() != null && p.getBids().getDetails().size() >= 2);
 
+    public static final NamedPredicate<FlaggedRelease> AT_LEAST_ONE_BID = new NamedPredicate<>(
+            "Needs to have at least one bid", p -> p.getBids() != null
+            && p.getBids().getDetails() != null && p.getBids().getDetails().size() >= 1);
+
     public static final NamedPredicate<FlaggedRelease> TENDER_VALUE_AMOUNT = new NamedPredicate<>(
             "Needs to have tender value amount", p -> p.getTender() != null
             && p.getTender().getValue() != null && p.getTender().getValue().getAmount() != null);

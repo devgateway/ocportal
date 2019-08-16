@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -81,16 +80,7 @@ public class SelectiveAwardsByBuyerItemSupplier extends GenericOCDSController {
         return where(MongoConstants.FieldNames.TENDER_PROC_METHOD).is(method.toString());
     }
 
-    private Criteria getSinceDate(Integer years) {
-        if (years == null) {
-            return new Criteria();
-        }
 
-        LocalDate now = LocalDate.now();
-        LocalDate date = LocalDate.of(now.getYear() - years, now.getMonth(), now.getDayOfMonth());
-
-        return where(getTenderDateField()).gte(date);
-    }
 
     public List<SelectiveAwardsResponse> selectiveAwardsByBuyerItemSupplier(int tresh,
                                                                             Tender.ProcurementMethod method,
