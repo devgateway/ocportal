@@ -84,8 +84,8 @@ public abstract class AbstractFlagCrosstabController extends AbstractFlagControl
         DBObject projectPercentage = getProjectPercentage(filter);
 
         Aggregation agg = newAggregation(
-                match(getYearDefaultFilterCriteria(filter, getYearProperty())
-                        .and(getYearProperty()).exists(true)
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField())
+                        .and(getTenderDateField()).exists(true)
                         .and(getFlagProperty()).is(true)),
                 new CustomProjectionOperation(projectPrepare),
                 new CustomGroupingOperation(group),
