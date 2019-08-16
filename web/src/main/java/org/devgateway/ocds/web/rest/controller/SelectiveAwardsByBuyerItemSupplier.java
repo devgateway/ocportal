@@ -13,8 +13,6 @@ package org.devgateway.ocds.web.rest.controller;
 
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,8 +33,6 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  * @author mpostelnicu
  */
 @RestController
-@CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
-@Cacheable
 public class SelectiveAwardsByBuyerItemSupplier extends GenericOCDSController {
 
     public static class SelectiveAwardsResponse implements Serializable {
