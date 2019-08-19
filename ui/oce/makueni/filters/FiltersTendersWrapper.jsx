@@ -18,4 +18,7 @@ class FiltersTendersWrapper extends FiltersWrapper {
 FiltersTendersWrapper.ITEMS = [FilterTitle, FilterItemDep, FilterItemFY, FilterItems,
   FilterSubcounties, FilterWards, FilterAmount, FilterTenderDate];
 
+FiltersTendersWrapper.CLASS = ['title-search', 'department', 'fiscal-year', 'items',
+  'subcounties', 'wards', 'amount', 'date'];
+
 export default FiltersTendersWrapper;
