@@ -21,10 +21,10 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
     private Long item;
 
     @ApiModelProperty(value = "Subcounty identifier")
-    private Long subcounty;
+    private TreeSet<Long> subcounty;
 
     @ApiModelProperty(value = "Ward identifier")
-    private Long ward;
+    private TreeSet<Long> ward;
 
     @ApiModelProperty(value = "Tender min value")
     private BigDecimal min;
@@ -70,19 +70,19 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
         this.item = item;
     }
 
-    public Long getSubcounty() {
+    public TreeSet<Long> getSubcounty() {
         return subcounty;
     }
 
-    public void setSubcounty(final Long subcounty) {
+    public void setSubcounty(final TreeSet<Long> subcounty) {
         this.subcounty = subcounty;
     }
 
-    public Long getWard() {
+    public TreeSet<Long> getWard() {
         return ward;
     }
 
-    public void setWard(final Long ward) {
+    public void setWard(final TreeSet<Long> ward) {
         this.ward = ward;
     }
 

@@ -5,6 +5,7 @@ class FilterWards extends FilterItemTypeAhead {
   constructor(props) {
     super(props);
     
+    this.state.multiple = true;
   }
 }
 
