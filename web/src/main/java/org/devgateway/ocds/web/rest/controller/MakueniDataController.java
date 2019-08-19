@@ -347,7 +347,9 @@ public class MakueniDataController extends GenericOCDSController {
 
         items.stream().forEach(item -> results.add(new Document()
                 .append("id", item.getId())
-                .append("label", item.getLabel())));
+                .append("label", item.getLabel())
+                .append("subcounty", item.getSubcounty().getLabel())
+                .append("subcountyId", item.getSubcounty().getId())));
 
         return results;
     }

@@ -52,7 +52,7 @@ class FiltersWrapper extends translatable(Component) {
         </div>
         
         <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
-          <Item translations={translations} filters={this.props.filters}
+          <Item translations={translations} filters={this.props.filters} localFilters={this.state.localFilters}
                 onUpdate={(key, update) => this.setState({ localFilters: this.state.localFilters.set(key, update) })}
           />
           
