@@ -34,16 +34,21 @@ class FilterRange extends translatable(React.Component) {
   }
   
   handleChange(values) {
-    const { filters } = this.props;
+    const { filters, onUpdate } = this.props;
     
     const self = this;
     delayUserInput('amount', function () {
       filters.getState()
       .then(value => {
-        filters.assign(self.constructor.getName(), value.set('min', values.min)
-        .set('max', values.max));
+        if (onUpdate === undefined) {
+          filters.assign(self.constructor.getName(), value.set('min', values.min)
+          .set('max', values.max));
+        } else {
+          onUpdate('min', values.min);
+          onUpdate('max', values.max);
+        }
       });
-    }, 1000);
+    }, 100);
     
     this.setState(values);
   };

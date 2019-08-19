@@ -23,12 +23,16 @@ class FilterItemTypeAhead extends FilterItemSingleSelect {
   }
   
   handleChange(filterVal) {
-    const { filters } = this.props;
-  
+    const { filters, onUpdate } = this.props;
+    
     filters.getState()
     .then(value => {
       if (filterVal.length === 0) {
-        filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), undefined));
+        if (onUpdate === undefined) {
+          filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), undefined));
+        } else {
+          onUpdate(this.constructor.getProperty(), undefined);
+        }
         this.setState({ selected: [] });
       } else {
         // do we have a multi select option?
@@ -36,12 +40,21 @@ class FilterItemTypeAhead extends FilterItemSingleSelect {
           const ids = filterVal
           .map(item => item._id !== undefined ? item._id : item.id);
   
-          filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), ids));
+          if (onUpdate === undefined) {
+            filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), ids));
+          } else {
+            onUpdate(this.constructor.getProperty(), ids);
+          }
           this.setState({ selected: filterVal });
         } else {
           const id = filterVal[0]._id !== undefined ? filterVal[0]._id : filterVal[0].id;
+  
+          if (onUpdate === undefined) {
+            filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), id));
+          } else {
+            onUpdate(this.constructor.getProperty(), id);
+          }
           
-          filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), id));
           this.setState({ selected: [filterVal[0]] });
         }
       }

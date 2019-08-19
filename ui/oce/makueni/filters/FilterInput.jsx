@@ -34,16 +34,20 @@ class FilterInput extends translatable(React.Component) {
   }
   
   handleChange(e) {
-    const { filters } = this.props;
+    const { filters, onUpdate } = this.props;
     const inputValue = e.target.value;
     
     const self = this;
     delayUserInput('amount', function () {
       filters.getState()
       .then(value => {
-        filters.assign(self.constructor.getName(), value.set('text', inputValue));
+        if (onUpdate === undefined) {
+          filters.assign(self.constructor.getName(), value.set('text', inputValue));
+        } else {
+          onUpdate('text', inputValue);
+        }
       });
-    }, 2000);
+    }, 100);
     
     this.setState({ value: inputValue });
   }

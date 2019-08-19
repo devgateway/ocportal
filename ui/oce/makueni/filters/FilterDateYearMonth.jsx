@@ -61,7 +61,7 @@ class FilterDateYearMonth extends translatable(React.Component) {
   }
   
   handleChange() {
-    const { filters } = this.props;
+    const { filters, onUpdate } = this.props;
     const self = this;
     
     if (filters !== undefined) {
@@ -82,20 +82,25 @@ class FilterDateYearMonth extends translatable(React.Component) {
             newValue = value.delete('year')
             .delete('month');
           }
-          
-          filters.assign(self.constructor.getName(), newValue);
-        });
-      }, 1500);
-    }
-    
-    if (this.props.onUpdate !== undefined) {
-      delayUserInput('date', function () {
-        const { selectedMonths, selectedYears } = self.state;
   
-        self.props.onUpdate('selectedYears', Set(selectedYears));
-        self.props.onUpdate('selectedMonths', Set(selectedMonths));
-        self.props.onUpdate('monthly', self.showMonths());
+          if (onUpdate === undefined) {
+            filters.assign(self.constructor.getName(), newValue);
+          } else {
+            onUpdate('year', Set(selectedYears));
+            onUpdate('month', Set(selectedMonths));
+          }
+        });
       }, 100);
+    } else {
+      if (this.props.onUpdate !== undefined) {
+        delayUserInput('date', function () {
+          const { selectedMonths, selectedYears } = self.state;
+      
+          self.props.onUpdate('selectedYears', Set(selectedYears));
+          self.props.onUpdate('selectedMonths', Set(selectedMonths));
+          self.props.onUpdate('monthly', self.showMonths());
+        }, 100);
+      }
     }
   }
   
