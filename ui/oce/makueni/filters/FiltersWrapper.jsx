@@ -11,6 +11,7 @@ class FiltersWrapper extends translatable(Component) {
     
     this.state = {
       expanded: new Set(),
+      localFilters: Map()
     };
   }
   
@@ -27,15 +28,23 @@ class FiltersWrapper extends translatable(Component) {
   
   reset() {
     this.props.filters.assign('[[FiltersWrapper]]', Map());
+    
+    this.setState({
+      localFilters: Map()
+    });
+  }
+  
+  apply() {
+    this.props.filters.assign('[[FiltersWrapper]]', this.state.localFilters);
   }
   
   listItems() {
-    const { expanded } = this.state;
+    const { expanded, localFilters } = this.state;
     const { translations } = this.props;
     
     return this.constructor.ITEMS.map((Item, index) => <div
         key={index}
-        className={"row filter " + this.constructor.CLASS[index]}>
+        className={'row filter ' + this.constructor.CLASS[index]}>
         <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
              onClick={_ => this.toggleItem(index)}>
           <div className="pull-left title">{Item.getName(this.t.bind(this))}</div>
@@ -43,12 +52,14 @@ class FiltersWrapper extends translatable(Component) {
         </div>
         
         <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
-          <Item filters={this.props.filters} translations={translations}/>
+          <Item translations={translations} filters={this.props.filters} localFilters={this.state.localFilters}
+                onUpdate={(key, update) => this.setState({ localFilters: this.state.localFilters.set(key, update) })}
+          />
           
           <section className="buttons">
-            {/*<button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>*/}
-            {/*  {this.t('filters:apply')}*/}
-            {/*</button>*/}
+            <button className="btn btn-apply pull-right" onClick={e => this.apply()}>
+              {this.t('filters:apply')}
+            </button>
             <button className="btn btn-reset pull-right" onClick={e => this.reset()}>
               {this.t('filters:reset')}
             </button>

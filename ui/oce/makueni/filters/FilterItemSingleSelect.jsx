@@ -55,15 +55,23 @@ class FilterItemSingleSelect extends translatable(React.Component) {
   }
   
   handleChange(e) {
-    const { filters } = this.props;
+    const { filters, onUpdate } = this.props;
     const filterVal = e.target.value;
     
     filters.getState()
     .then(value => {
       if (filterVal === 'all') {
-        filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), undefined));
+        if (onUpdate === undefined) {
+          filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), undefined));
+        } else {
+          onUpdate(this.constructor.getProperty(), undefined);
+        }
       } else {
-        filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), filterVal));
+        if (onUpdate === undefined) {
+          filters.assign(this.constructor.getName(), value.set(this.constructor.getProperty(), filterVal));
+        } else {
+          onUpdate(this.constructor.getProperty(), filterVal);
+        }
       }
     });
     

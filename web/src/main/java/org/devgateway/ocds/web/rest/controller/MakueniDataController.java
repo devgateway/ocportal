@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -345,7 +347,9 @@ public class MakueniDataController extends GenericOCDSController {
 
         items.stream().forEach(item -> results.add(new Document()
                 .append("id", item.getId())
-                .append("label", item.getLabel())));
+                .append("label", item.getLabel())
+                .append("subcounty", item.getSubcounty().getLabel())
+                .append("subcountyId", item.getSubcounty().getId())));
 
         return results;
     }
@@ -389,6 +393,14 @@ public class MakueniDataController extends GenericOCDSController {
         }
 
         return where(filterName).is(filterValues);
+    }
+
+    private <S> Criteria createFilterCriteria(final String filterName, final Set<S> filterValues) {
+        if (ObjectUtils.isEmpty(filterValues)) {
+            return new Criteria();
+        }
+
+        return where(filterName).in(filterValues.toArray());
     }
 
     private Criteria createRangeFilterCriteria(final String filterName, final BigDecimal min, final BigDecimal max) {

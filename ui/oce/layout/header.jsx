@@ -9,11 +9,11 @@ import { API_ROOT, OCE } from '../state/oce-state';
 export default class Header extends translatable(React.Component) {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       selected: props.selected || '',
     };
-
+    
     this.tabs = [
       {
         name: 'tender',
@@ -31,23 +31,23 @@ export default class Header extends translatable(React.Component) {
         icon: 'assets/icons/eprocurement.svg'
       }
     ];
-
+    
     this.changeOption = this.changeOption.bind(this);
     this.isActive = this.isActive.bind(this);
-
+    
     this.headerState = OCE.substate({ name: 'headerState' });
-
+    
     this.statsUrl = this.headerState.input({
       name: 'makueniPPCountEP',
       initial: `${API_ROOT}/makueni/contractStats`,
     });
-
+    
     this.statsInfo = this.headerState.remote({
       name: 'statsInfo',
       url: this.statsUrl,
     });
   }
-
+  
   componentDidMount() {
     this.statsInfo.addListener('Header', () => {
       this.statsInfo.getState()
@@ -56,16 +56,16 @@ export default class Header extends translatable(React.Component) {
       });
     });
   }
-
+  
   componentWillUnmount() {
     this.statsInfo.removeListener('Header');
   }
-
+  
   changeOption(option) {
     this.setState({ selected: option });
     this.props.onSwitch(option);
   }
-
+  
   isActive(option) {
     const { selected } = this.state;
     if (selected === '') {
@@ -73,11 +73,11 @@ export default class Header extends translatable(React.Component) {
     }
     return selected === option;
   }
-
+  
   exportBtn() {
     const excelURL = new URI('/api/makueni/excelExport');
     const jsonURL = new URI('/api/ocds/package/all');
-
+    
     return (<div>
         <span className="export-title">
           Download the Data
@@ -93,19 +93,19 @@ export default class Header extends translatable(React.Component) {
       </div>
     );
   }
-
+  
   render() {
     const { data } = this.state;
     const currencyFormatter = this.props.styling.tables.currencyFormatter;
-
+    
     return (<div>
       <header className="branding row">
         <div className="col-md-8 col-sm-6 col-xs-12">
-          <div className="logo-wrapper">
-            <img src="assets/makueni-logo.png" alt="Makueni"/>
-          </div>
+          <a className="logo-wrapper" href="#!/">
+              <img src="assets/makueni-logo.png" alt="Makueni"/>
+          </a>
         </div>
-
+        
         <div className="col-md-4 col-sm-6 col-xs-12">
           <div className="row">
             <div className="navigation">
@@ -126,7 +126,7 @@ export default class Header extends translatable(React.Component) {
           </div>
         </div>
       </header>
-
+      
       <div className="header-tools row">
         {
           data !== undefined
@@ -142,7 +142,7 @@ export default class Header extends translatable(React.Component) {
             </div>
             : null
         }
-
+        
         <div className="col-md-3 col-sm-12 export">
           {this.exportBtn()}
         </div>
