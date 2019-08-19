@@ -35,7 +35,7 @@ class FiltersWrapper extends translatable(Component) {
     
     return this.constructor.ITEMS.map((Item, index) => <div
         key={index}
-        className="row filter">
+        className={"row filter " + this.constructor.CLASS[index]}>
         <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
              onClick={_ => this.toggleItem(index)}>
           <div className="pull-left title">{Item.getName(this.t.bind(this))}</div>
@@ -66,5 +66,6 @@ class FiltersWrapper extends translatable(Component) {
 }
 
 FiltersWrapper.ITEMS = [FilterItemDep, FilterItemFY];
+FiltersWrapper.CLASS = ['department', 'fiscal-year'];
 
 export default FiltersWrapper;
