@@ -1,6 +1,5 @@
 import { Typeahead } from 'react-bootstrap-typeahead';
 import FilterItemSingleSelect from './FilterItemSingleSelect';
-import { range } from '../../tools';
 
 class FilterItemTypeAhead extends FilterItemSingleSelect {
   constructor(props) {

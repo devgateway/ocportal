@@ -1,10 +1,10 @@
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
 import { ControlLabel, FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
 
 import './alerts.less';
 import { API_ROOT, OCE } from '../state/oce-state';
-import { ppState } from '../makueni/procurementPlan/state';
 
 class Alerts extends CRDPage {
   
@@ -13,7 +13,9 @@ class Alerts extends CRDPage {
     
     this.state = {
       departments: [],
+      departmentsSelected: [],
       items: [],
+      itemsSelected: [],
       emailPatter: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
       email: '',
       emailValid: true
@@ -39,18 +41,16 @@ class Alerts extends CRDPage {
     });
     
     
-    
-  
     this.itemEP = this.alertsState.input({
       name: 'filterItemEp',
       initial: `${API_ROOT}` + '/makueni/filters/items/all',
     });
-  
+    
     this.itemRemote = this.alertsState.remote({
       name: 'filterItemRemote',
       url: this.itemEP,
     });
-  
+    
     this.itemData = this.alertsState.mapping({
       name: 'filterItemData',
       deps: [this.itemRemote],
@@ -62,8 +62,8 @@ class Alerts extends CRDPage {
   }
   
   componentDidMount() {
-    this.depData.getState("Alerts");
-    this.itemData.getState("Alerts");
+    this.depData.getState('Alerts');
+    this.itemData.getState('Alerts');
   }
   
   validateEmail() {
@@ -99,7 +99,7 @@ class Alerts extends CRDPage {
   
   
   render() {
-    console.log(this.state);
+    const { departments, departmentsSelected, items, itemsSelected } = this.state;
     
     return (<div className="container-fluid dashboard-default">
         
@@ -120,7 +120,7 @@ class Alerts extends CRDPage {
               </div>
               
               <div className="col-md-6">
-                <FormGroup validationState={this.validateEmail()}>
+                <FormGroup validationState={this.validateEmail()} bsSize={"large"}>
                   <ControlLabel>Enter your email address</ControlLabel>
                   <FormControl
                     type="email"
@@ -143,11 +143,42 @@ class Alerts extends CRDPage {
               <div className="col-md-12">
                 <h4 className="sub-title">Alert Preferences</h4>
               </div>
+              <div className="col-md-2">
+                When a New Tender is released
+              </div>
+              <div className="col-md-5">
+                <Typeahead id='departments'
+                           name={'departments'}
+                           onChange={this.handleChange}
+                           options={departments === undefined ? [] : departments}
+                           clearButton={true}
+                           placeholder={'For this Department(s)'}
+                           selected={departmentsSelected}
+                           multiple={true}
+                           isLoading={departments === undefined}
+                           bsSize={"large"}
+                           highlightOnlyResult={true}
+                />
+              </div>
+              <div className="col-md-5">
+                <Typeahead id='items'
+                           name={'items'}
+                           onChange={this.handleChange}
+                           options={items === undefined ? [] : items}
+                           clearButton={true}
+                           placeholder={'For this Item(s)'}
+                           selected={itemsSelected}
+                           multiple={true}
+                           isLoading={items === undefined}
+                           bsSize={"large"}
+                           highlightOnlyResult={true}
+                />
+              </div>
             </div>
             
             <div className="row apply-button">
               <div className="col-md-6">
-                <button className="btn btn-info submit" type="submit"
+                <button className="btn btn-info btn-lg submit" type="submit"
                         onClick={() => console.log('Submit!')}>Apply Subscription Preferences
                 </button>
               </div>
