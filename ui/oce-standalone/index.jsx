@@ -7,6 +7,7 @@ import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcu
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import Alerts from '../oce/alerts/Alerts';
 
 const translations = {
   en_US: require('../../web/public/languages/en_US.json'),
@@ -74,6 +75,7 @@ class OceSwitcher extends ViewSwitcher {
 
 OceSwitcher.views['tender'] = MakueniTenders;
 OceSwitcher.views['procurement-plan'] = MakueniProcurementPlans;
+OceSwitcher.views['alerts'] = Alerts;
 OceSwitcher.views['m-and-e'] = OCEMakueni;
 OceSwitcher.views.crd = CorruptionRickDashboard;
 
