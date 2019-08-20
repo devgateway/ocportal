@@ -11,10 +11,13 @@ import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMong
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
+import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
@@ -46,6 +49,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
@@ -73,6 +77,9 @@ public class MakueniDataController extends GenericOCDSController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private DepartmentService departmentService;
 
     @Autowired
     private SubcountyService subcountyService;
@@ -289,13 +296,39 @@ public class MakueniDataController extends GenericOCDSController {
                 .getMappedResults();
     }
 
+    @ApiOperation(value = "Display ALL Procurement Plan Departments.")
+    @RequestMapping(value = "/api/makueni/filters/departments/all", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    @Cacheable
+    public List<Document> getAllDepartments() {
+        final List<Document> results = new ArrayList<>();
+        final List<Department> departments = departmentService.findAll();
+
+        departments.stream().forEach(item -> results.add(new Document()
+                .append("id", item.getId())
+                .append("label", item.getLabel())));
+
+        return results;
+    }
+
     @ApiOperation(value = "Display the available Items.")
     @RequestMapping(value = "/api/makueni/filters/items", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
     public List<Document> getItems() {
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+        final Aggregation aggregation = newAggregation(project("planItems"),
+                unwind("planItems"), project("planItems.item"), group("item"));
 
-        /* Use this if we want to export ALL Items
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
+    }
+
+    @ApiOperation(value = "Display ALL Items.")
+    @RequestMapping(value = "/api/makueni/filters/items/all", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    @Cacheable
+    public List<Document> getAllItems() {
         final List<Document> results = new ArrayList<>();
         final List<Item> items = itemService.findAll()
                 .parallelStream()
@@ -308,14 +341,6 @@ public class MakueniDataController extends GenericOCDSController {
                 .append("label", item.getLabel())));
 
         return results;
-        */
-
-        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
-        final Aggregation aggregation = newAggregation(project("planItems"),
-                unwind("planItems"), project("planItems.item"), group("item"));
-
-        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
-                .getMappedResults();
     }
 
     @ApiOperation(value = "Display the available Sub Counties.")
