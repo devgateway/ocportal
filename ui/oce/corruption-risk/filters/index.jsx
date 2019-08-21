@@ -35,10 +35,10 @@ class Filters extends translatable(React.Component) {
 }
 
 Filters.BOXES = [
-  Organizations,
-  ProcurementMethodBox,
+  DateBox,
   ValueAmount,
-  DateBox
+  ProcurementMethodBox,
+  Organizations
 ];
 
 export default Filters;
