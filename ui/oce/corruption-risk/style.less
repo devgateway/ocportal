@@ -74,7 +74,7 @@
 
   &>.filters-bar{
     font-family: 'Montserrat', sans-serif;
-    background: #FAFAFA;
+    border-bottom: 2px solid #f6f6f6;
     top: @headerHeight;
     height: @headerHeight;
     left: 0;
@@ -201,7 +201,6 @@
   }
 
   aside {
-    @leftPadding: 30px;
     bottom: 0;
     background: transparent;
     border-right: none;
@@ -292,29 +291,28 @@
         background: #f9f9f9;
         cursor: pointer;
         display: block;
-        font-size: 12px;
+        font-size: 15px;
         line-height: 40px;
-        padding: 8px 0 8px 35px;
+        padding: 5px 0 5px 15px;
         text-decoration: none;
         white-space: nowrap;
-        height: @headerHeight;
 
         &:first-child{
           border-top: 1px solid #e6eaee;
         }
 
         .count{
-          color: #a9b2c0;
+          color: #000000;
           display: inline-block;
           margin-left: 10px;
         }
 
         &.archive-link {
-          background: #ecf7ff;
+          background: #f9f9f9;
         }
 
         &.contracts-link{
-          background: #dbf0ff;
+          background: #f9f9f9;
         }
 
         img{
@@ -344,7 +342,7 @@
       }
 
       .crd-description{
-        padding: 8px 8px 8px 25px;
+        padding: 15px 25px 8px 25px;
         display: none;
       }
 
