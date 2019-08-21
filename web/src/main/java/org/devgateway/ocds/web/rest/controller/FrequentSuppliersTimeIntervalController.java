@@ -44,7 +44,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class FrequentSuppliersTimeIntervalController extends GenericOCDSController {
 
     public static String getFrequentSuppliersResponseKey(FrequentSuppliersResponse response) {
-        return getFrequentSuppliersResponseKey(response.getIdentifier().getProcuringEntityId(),
+        return getFrequentSuppliersResponseKey(response.getIdentifier().getBuyerId(),
                 response.getIdentifier().getSupplierId(), response.getIdentifier().getTimeInterval()
         );
     }
@@ -109,16 +109,16 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
 
     public static class FrequentSuppliersId implements Serializable {
 
-        private String procuringEntityId;
+        private String buyerId;
         private String supplierId;
         private Integer timeInterval;
 
-        public String getProcuringEntityId() {
-            return procuringEntityId;
+        public String getBuyerId() {
+            return buyerId;
         }
 
-        public void setProcuringEntityId(String procuringEntityId) {
-            this.procuringEntityId = procuringEntityId;
+        public void setBuyerId(String buyerId) {
+            this.buyerId = buyerId;
         }
 
         public String getSupplierId() {
@@ -139,7 +139,7 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
 
         @Override
         public String toString() {
-            return "procuringEntityId=" + procuringEntityId + "; supplierId=" + supplierId
+            return "procuringEntityId=" + buyerId + "; supplierId=" + supplierId
                     + "; timeInterval=" + timeInterval;
         }
     }
