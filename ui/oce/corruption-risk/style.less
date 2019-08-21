@@ -94,29 +94,28 @@
       font-family: 'Source Sans Pro', sans-serif;
       font-size: 12px;
       font-weight: bold;
-      padding: @base-space-sm * 2 @base-space-sm * 3 @base-space-sm * 2 @base-space-sm * 3;
+      padding: 20px 30px 20px 30px;
       margin-right: 35px;
       @media (max-width: 1024px) {
-        margin-right: @base-space-sm / 2;
+        margin-right: 5px;
       }
       @media (max-width: 969px) {
-        padding: 0 @base-space-sm / 2;
+        padding: 0 5px;
       }
     }
 
     .filter{
       @boxFilterColor: #0083e5;
       @boxWidth: 500px;
-      float: right;
+      float: left;
       height: @extend;
-      padding: @base-space-sm 0;
+      padding: 10px 0;
       margin-right: 16px;
       margin-top: @base-space-sm / 2;
       color: #899cb1;
       cursor: pointer;
       border-top: 3px solid transparent;
       border-bottom: 3px solid transparent;
-      text-transform: uppercase;
       &.active{
         border-bottom: 3px solid @boxFilterColor;
       }
@@ -179,7 +178,7 @@
       padding: 14px 15px;
       text-align: right;
       button {
-        padding: @base-space-sm / 2 25px;
+        padding: 5px 25px;
         margin-right: @gutterRight;
         @media (max-width: 1200px) {
           margin-right: @gutterRightMd;
@@ -195,11 +194,11 @@
         display: inline-block;
         background: #add3ee;
         color: white;
-        padding: @base-space-sm / 2;
+        padding: 5px;
         margin: 1px;
         font-weight: bold;
         text-transform: uppercase;
-        width: @base-space-sm * 4;
+        width: 40px;
         user-select: none;
         &.selected{
           background: #4278b0;
@@ -229,13 +228,13 @@
     .total-flags{
       background: #fafafa;
       margin: 15px -15px 0 -30px;
-      padding-bottom: @base-space-sm * 5;
+      padding-bottom: 50px;
       @infoWidth: 250px;
-      border-radius: @base-space-sm / 2;
+      border-radius: 5px;
       border: 1px solid #e7ebef;
       border-left-style: none;
       .counter{
-        padding: @base-space-sm 20px 15px 20px;
+        padding: 10px 20px 15px 20px;
         &:first-child {
           border-bottom: 1px solid #e7ebef;
         }
@@ -253,7 +252,7 @@
       .crd-legend{
         width: @infoWidth;
         @boxSize: 11px;
-        margin: @base-space-sm * 2 auto;
+        margin: 20px auto;
         div{
           width: @infoWidth / 4;
           float: left;
@@ -311,7 +310,7 @@
         .count{
           color: #000000;
           display: inline-block;
-          margin-left: @base-space-sm;
+          margin-left: 10px;
         }
 
         &.archive-link {
@@ -324,8 +323,8 @@
 
         img{
           display: inline-block;
-          margin-right: @base-space-sm * 2;
-          width: @base-space-sm * 2;
+          margin-right: 20px;
+          width: 20px;
           &.white {
             display: none;
           }
@@ -368,7 +367,7 @@
 
         .glyphicon {
           color: #34ac45;
-          padding: @base-space-sm 30px;
+          padding: 10px 30px;
           font-size: 1.5em;
         }
       }
@@ -489,7 +488,7 @@
     }
 
     .indicator-tile-container{
-      padding: @base-space-sm;
+      padding: 10px;
       .border{
         border: 1px solid #e6eaee;
         border-radius: 5px;
@@ -507,7 +506,7 @@
         p{
           color: #156d03;
           height: 5.3em;
-          margin-bottom: @base-space-sm;
+          margin-bottom: 10px;
         }
       }
     }
@@ -668,7 +667,7 @@
       padding-top: 15px;
     }
     .contact{
-      padding-top: @base-space-sm;
+      padding-top: 10px;
     }
     .btn-primary{
       background-color: #33a9f7;
