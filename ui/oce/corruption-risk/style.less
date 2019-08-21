@@ -3,11 +3,15 @@
 @headerHeight: 57px;
 @gutterRight: 80pt;
 @gutterRightMd: 60pt;
+@base-space-sm: 10px;
+@extend: 100%;
+@theme-blue: #144361;
+@theme-green:
 
 .dashboard-corruption-risk {
   &>header{
     font-family: 'Montserrat', sans-serif;
-    background: #144361;
+    background: @theme-blue;
     &.branding {
       height: @headerHeight;
     }
@@ -17,9 +21,9 @@
     }
 
     img.logo {
-      width: 60px;
+      width: @base-space-sm * 6;
       margin-left: 25px;
-      margin-top: 10px;
+      margin-top: @base-space-sm;
     }
 
     .dash-switcher-wrapper{
@@ -27,40 +31,42 @@
       color: #9fa9ba;
       h1{
         cursor: pointer;
-        padding: 5px;
+        padding: @base-space-sm / 2;
         &.corruption-dash-title{
           color: #ffffff;
           font-size: 18px;
           font-weight: 600;
-          margin-top: 5px;
+          margin-top: @base-space-sm / 2;
         }
         .glyphicon{
           font-size: .53em;
-          margin-left: 10px;
-          top: 0px;
+          margin-left: @base-space-sm;
+          top: 0;
         }
       }
       .dashboard-switcher{
         background: rgb(20, 67, 97);
         font-weight: 500;
-        padding: 5px;
+        padding: @base-space-sm / 2;
         border-top: 1px dotted white;
         a {
           color: white;
         }
       }
     }
-
+    .react-bs-table-pagination{
+      margin-bottom: @base-space-sm;
+    }
     .header-right {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       .login-wrapper{
-        margin-right: 30px;
+        margin-right: @base-space-sm * 3;
         @media (max-width: 1200px) {
           margin-right: @gutterRightMd;
         }
-        margin-left: 10px;
+        margin-left: @base-space-sm;
         button {
           background: transparent;
           border-color: transparent;
@@ -102,10 +108,10 @@
       @boxFilterColor: #0083e5;
       @boxWidth: 500px;
       float: left;
-      height: 100%;
+      height: @extend;
       padding: 10px 0;
       margin-right: 16px;
-      margin-top: 5px;
+      margin-top: @base-space-sm / 2;
       color: #899cb1;
       cursor: pointer;
       border-top: 3px solid transparent;
@@ -131,7 +137,7 @@
         .dropdown{
           display: block;
           position: absolute;
-          top: 100%;
+          top: @extend;
           left: 50%;
           margin-top: 3px;
           margin-left: -@boxWidth/2;
@@ -142,7 +148,7 @@
           .box-content{
             overflow-y: auto;
             padding: 25px 25px 80px 25px;
-            height: 100%;
+            height: @extend;
           }
           .controls{
             background: white;
@@ -205,7 +211,7 @@
     bottom: 0;
     background: transparent;
     border-right: none;
-    height: 100%;
+    height: @extend;
     padding-left: @leftPadding;
     top: @headerHeight * 2;
 
@@ -240,7 +246,7 @@
           float: right;
           font-size: 1.5vw;
           font-weight: bold;
-          color: #144361;
+          color: @theme-blue;
         }
       }
       .crd-legend{
@@ -260,7 +266,6 @@
             margin-top: 4px;
             margin-right: @boxSize / 2;
             transform: translateY(1px);
-            border: 2px solid red;
             border-radius: @boxSize;
           }
         }
@@ -466,7 +471,7 @@
     .crosstab-box {
       padding: 15px;
       hr {
-        width: 100%;
+        width: @extend;
       }
     }
 
@@ -580,7 +585,7 @@
         .crd-popup{
           display: block;
           top: auto;
-          bottom: 100%;
+          bottom: @extend;
           left: 50%;
           margin-left: -150px;
         }
@@ -588,7 +593,7 @@
 
       &.popup-left:hover .crd-popup{
         left: auto;
-        right: 100%;
+        right: @extend;
         top: 50%;
         bottom: auto;
         margin-left: 0;
@@ -598,7 +603,7 @@
     }
 
     .popup-left .crd-popup .arrow{
-      left: 100%;
+      left: @extend;
       bottom: 50%;
     }
   }
@@ -626,7 +631,7 @@
     width: @popupWidth;
     height: auto;
     max-height: 99%;
-    left: (100% - @popupWidth) / 2;
+    left: (@extend - @popupWidth) / 2;
     padding: 30px;
     overflow-x: hidden;
     overflow-y: auto;

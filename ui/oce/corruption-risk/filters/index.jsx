@@ -10,7 +10,7 @@ class Filters extends translatable(React.Component) {
     const { BOXES } = this.constructor;
     return (
       <div className="row filters-bar" onMouseDown={e => e.stopPropagation()}>
-        <div className="col-md-10">
+        <div className="col-md-12">
           <div className="title">{this.t('filters:hint')}</div>
           {BOXES.map((Box, index) => {
             return (
@@ -28,10 +28,6 @@ class Filters extends translatable(React.Component) {
               />
             );
           })}
-        </div>
-        <div className="col-md-2 download">
-          <button className="btn btn-default" disabled>
-          </button>
         </div>
       </div>
     );

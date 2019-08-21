@@ -338,9 +338,6 @@ class CorruptionRiskDashboard extends React.Component {
             </div>
           </div>
           <div className="col-sm-5 header-right">
-            <span className="language-switcher">
-              {this.languageSwitcher()}
-            </span>
             <span className="login-wrapper">
               {!disabledApiSecurity && this.loginBox()}
             </span>
