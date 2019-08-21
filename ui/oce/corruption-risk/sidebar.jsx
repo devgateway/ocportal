@@ -50,7 +50,7 @@ class Sidebar extends translatable(React.PureComponent) {
               {this.t('tabs:overview:title')}
             </a>
 
-            <p className="crd-description small">
+            <p className="crd-description">
               {this.t('crd:description')}
             </p>
 

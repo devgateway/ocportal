@@ -10,8 +10,10 @@ class Filters extends translatable(React.Component) {
     const { BOXES } = this.constructor;
     return (
       <div className="row filters-bar" onMouseDown={e => e.stopPropagation()}>
-        <div className="col-md-12">
-          <div className="title">{this.t('filters:hint')}</div>
+        <div className="col-md-3 crd-filter-title">
+        <div className="title">{this.t('filters:hint')}</div>
+        </div>
+        <div className="col-md-9 crd-horizontal-filters">
           {BOXES.map((Box, index) => {
             return (
               <Box
@@ -35,10 +37,10 @@ class Filters extends translatable(React.Component) {
 }
 
 Filters.BOXES = [
-  Organizations,
-  ProcurementMethodBox,
+  DateBox,
   ValueAmount,
-  DateBox
+  ProcurementMethodBox,
+  Organizations
 ];
 
 export default Filters;

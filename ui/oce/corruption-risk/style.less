@@ -62,11 +62,11 @@
       align-items: center;
       justify-content: flex-end;
       .login-wrapper{
-        margin-right: @base-space-sm * 3;
+        text-align: center;
+        width: @extend;
         @media (max-width: 1200px) {
           margin-right: @gutterRightMd;
         }
-        margin-left: @base-space-sm;
         button {
           background: transparent;
           border-color: transparent;
@@ -79,7 +79,7 @@
   }
 
   &>.filters-bar{
-    background-color: #ffffff;
+    background-color: #204e6e;
     font-family: 'Montserrat', sans-serif;
     border-bottom: 2px solid #f6f6f6;
     top: @headerHeight;
@@ -90,12 +90,12 @@
     z-index: 10;
     .title {
       color: #1088cb;
+      background-color: #ffffff;
       float: left;
       font-family: 'Source Sans Pro', sans-serif;
-      font-size: 12px;
+      font-size: 15px;
       font-weight: bold;
       padding: 20px 30px 20px 30px;
-      margin-right: 35px;
       @media (max-width: 1024px) {
         margin-right: 5px;
       }
@@ -103,11 +103,10 @@
         padding: 0 5px;
       }
     }
-
     .filter{
       @boxFilterColor: #0083e5;
       @boxWidth: 500px;
-      float: left;
+      float: right;
       height: @extend;
       padding: 10px 0;
       margin-right: 16px;
@@ -126,7 +125,9 @@
       }
 
       .box-title {
-        font-size: 14px;
+        color: #ffffff;
+        font-size: 15px;
+        text-transform: uppercase;
       }
 
       &.open{
@@ -286,12 +287,13 @@
 
     [role=navigation]{
       font-family: 'Source Sans Pro', sans-serif;
-      margin-left: -@leftPadding;
       margin-top: -1px;
       border-right: 1px solid #e7ebef;
       border-bottom-right-radius: 5px;
+      margin-right: 10px;
+      margin-left: -15px;
       a {
-        font-weight: normal;
+        font-weight: 700;
         border-bottom: 1px solid #e6eaee;
         color: #000000;
         background: #f9f9f9;
@@ -348,6 +350,7 @@
       }
 
       .crd-description{
+        font-size: 15px;
         padding: 15px 25px 8px 25px;
         display: none;
       }
