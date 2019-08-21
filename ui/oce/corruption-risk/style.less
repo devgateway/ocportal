@@ -17,10 +17,9 @@
     }
 
     img.logo {
-      width: 45px;
-      height: 45px;
+      width: 60px;
       margin-left: 25px;
-      margin-top: 5px;
+      margin-top: 10px;
     }
 
     .dash-switcher-wrapper{
@@ -30,11 +29,10 @@
         cursor: pointer;
         padding: 5px;
         &.corruption-dash-title{
-          color: #9fa9ba;
+          color: #ffffff;
           font-size: 18px;
           font-weight: 600;
-          margin-top: 14px;
-          margin-left: 10px;
+          margin-top: 5px;
         }
         .glyphicon{
           font-size: .53em;
@@ -58,14 +56,17 @@
       align-items: center;
       justify-content: flex-end;
       .login-wrapper{
-        margin-right: @gutterRight;
+        margin-right: 30px;
         @media (max-width: 1200px) {
           margin-right: @gutterRightMd;
         }
         margin-left: 10px;
         button {
-          width: 150px;
-          background: #35ae46;
+          background: transparent;
+          border-color: transparent;
+          color: #cccccc;
+          font-weight: 600;
+          text-transform: uppercase;
         }
       }
     }
@@ -81,11 +82,12 @@
     position: fixed;
     z-index: 10;
     .title {
-      text-transform: uppercase;
+      color: #1088cb;
       float: left;
+      font-family: 'Source Sans Pro', sans-serif;
       font-size: 12px;
       font-weight: bold;
-      padding: 20px 30px 20px 85px;
+      padding: 20px 30px 20px 30px;
       margin-right: 35px;
       @media (max-width: 1024px) {
         margin-right: 5px;
@@ -117,7 +119,7 @@
       }
 
       .box-title {
-        font-size: 12px;
+        font-size: 14px;
       }
 
       &.open{
@@ -134,8 +136,7 @@
           margin-left: -@boxWidth/2;
           width: @boxWidth;
           height: 400px;
-          border: 3px @boxFilterColor solid;
-          border-radius: 3px;
+          border: 2px #eeeeee solid;
           background-color: white;
           .box-content{
             overflow-y: auto;
@@ -279,23 +280,22 @@
     }
 
     [role=navigation]{
-      font-family: Montserrat, sans-serif;
+      font-family: 'Source Sans Pro', sans-serif;
       margin-left: -@leftPadding;
       margin-top: -1px;
       border-right: 1px solid #e7ebef;
       border-bottom-right-radius: 5px;
       a {
-        font-weight: 600;
+        font-weight: normal;
         border-bottom: 1px solid #e6eaee;
         color: #000000;
-        background: #fafafa;
+        background: #f9f9f9;
         cursor: pointer;
         display: block;
         font-size: 12px;
         line-height: 40px;
         padding: 8px 0 8px 35px;
         text-decoration: none;
-        text-transform: uppercase;
         white-space: nowrap;
         height: @headerHeight;
 
@@ -320,15 +320,15 @@
         img{
           display: inline-block;
           margin-right: 20px;
-          width: 32px;
+          width: 20px;
           &.white {
             display: none;
           }
         }
 
         &.active, &:hover{
-          background: #35ae46;
-          color: white;
+          background: #e5eaeb;
+          color: #3090bd;
           .count {
             color: white;
           }

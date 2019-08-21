@@ -48,7 +48,6 @@ class Sidebar extends translatable(React.PureComponent) {
               <img className="blue" src="assets/icons/blue/overview.svg" alt="Overview icon" />
               <img className="white" src="assets/icons/white/overview.svg" alt="Overview icon" />
               {this.t('tabs:overview:title')}
-              <i className="glyphicon glyphicon-info-sign" />
             </a>
 
             <p className="crd-description small">
