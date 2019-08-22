@@ -1,6 +1,6 @@
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
-import { ControlLabel, FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
+import { Alert, ControlLabel, FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 
 import './alerts.less';
@@ -13,12 +13,13 @@ class Alerts extends CRDPage {
     
     this.state = {
       departments: [],
-      departmentsSelected: [],
+      fetchedDepartments: [],
       items: [],
-      itemsSelected: [],
+      fetchedItems: [],
       emailPatter: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
       email: '',
-      emailValid: true
+      emailValid: true,
+      error: false
     };
     
     /* ************************ create the state for Selectors ************************ */
@@ -37,7 +38,7 @@ class Alerts extends CRDPage {
     this.depData = this.alertsState.mapping({
       name: 'filterDepData',
       deps: [this.depRemote],
-      mapper: data => this.setState({ departments: data })
+      mapper: data => this.setState({ fetchedDepartments: data })
     });
     
     
@@ -54,11 +55,12 @@ class Alerts extends CRDPage {
     this.itemData = this.alertsState.mapping({
       name: 'filterItemData',
       deps: [this.itemRemote],
-      mapper: data => this.setState({ items: data })
+      mapper: data => this.setState({ fetchedItems: data })
     });
     
     
     this.handleChange = this.handleChange.bind(this);
+    this.submit = this.submit.bind(this);
   }
   
   componentDidMount() {
@@ -84,10 +86,9 @@ class Alerts extends CRDPage {
     const name = e.target.name;
     const value = e.target.value;
     
-    console.log(name + ' - ' + value);
-    
     this.setState({
-      [name]: value
+      [name]: value,
+      error: false
     });
     
     if (name === 'email') {
@@ -97,9 +98,35 @@ class Alerts extends CRDPage {
     }
   }
   
+  submit() {
+    const { departments, items, email, emailPatter } = this.state;
+    let error = false;
+    
+    // more validations
+    if ((departments === undefined || departments.length === 0)
+      && (items === undefined || items.length === 0)) {
+      error = true;
+    }
+    if (!email.match(emailPatter)) {
+      error = true;
+      
+      this.setState({
+        emailValid: email.match(emailPatter)
+      });
+    }
+    
+    if (error) {
+      this.setState({ error });
+      
+      return 0;
+    } else {
+      console.log('>>> SENDING!');
+    }
+  }
+  
   
   render() {
-    const { departments, departmentsSelected, items, itemsSelected } = this.state;
+    const { departments, fetchedDepartments, items, fetchedItems, error } = this.state;
     
     return (<div className="container-fluid dashboard-default">
         
@@ -120,7 +147,7 @@ class Alerts extends CRDPage {
               </div>
               
               <div className="col-md-6">
-                <FormGroup validationState={this.validateEmail()} bsSize={"large"}>
+                <FormGroup validationState={this.validateEmail()} bsSize={'large'}>
                   <ControlLabel>Enter your email address</ControlLabel>
                   <FormControl
                     type="email"
@@ -143,34 +170,51 @@ class Alerts extends CRDPage {
               <div className="col-md-12">
                 <h4 className="sub-title">Alert Preferences</h4>
               </div>
+              <div className="col-md-2"></div>
+              <div className="col-md-5">
+                <ControlLabel>Receive alerts for all Tenders from this Department</ControlLabel>
+              </div>
+              <div className="col-md-5">
+                <ControlLabel>Receive alerts for these Items from all Departments</ControlLabel>
+              </div>
+            </div>
+            <div className="row">
               <div className="col-md-2">
                 When a New Tender is released
               </div>
               <div className="col-md-5">
                 <Typeahead id='departments'
-                           name={'departments'}
-                           onChange={this.handleChange}
-                           options={departments === undefined ? [] : departments}
+                           onChange={(selected) => this.handleChange({
+                             target: {
+                               name: 'departments',
+                               value: selected
+                             }
+                           })}
+                           options={fetchedDepartments === undefined ? [] : fetchedDepartments}
                            clearButton={true}
                            placeholder={'For this Department(s)'}
-                           selected={departmentsSelected}
+                           selected={departments}
                            multiple={true}
-                           isLoading={departments === undefined}
-                           bsSize={"large"}
+                           isLoading={fetchedDepartments === undefined}
+                           bsSize={'large'}
                            highlightOnlyResult={true}
                 />
               </div>
               <div className="col-md-5">
                 <Typeahead id='items'
-                           name={'items'}
-                           onChange={this.handleChange}
-                           options={items === undefined ? [] : items}
+                           onChange={(selected) => this.handleChange({
+                             target: {
+                               name: 'items',
+                               value: selected
+                             }
+                           })}
+                           options={fetchedItems === undefined ? [] : fetchedItems}
                            clearButton={true}
                            placeholder={'For this Item(s)'}
-                           selected={itemsSelected}
+                           selected={items}
                            multiple={true}
-                           isLoading={items === undefined}
-                           bsSize={"large"}
+                           isLoading={fetchedItems === undefined}
+                           bsSize={'large'}
                            highlightOnlyResult={true}
                 />
               </div>
@@ -179,10 +223,23 @@ class Alerts extends CRDPage {
             <div className="row apply-button">
               <div className="col-md-6">
                 <button className="btn btn-info btn-lg submit" type="submit"
-                        onClick={() => console.log('Submit!')}>Apply Subscription Preferences
+                        onClick={this.submit}>Apply Subscription Preferences
                 </button>
               </div>
             </div>
+            
+            {
+              error
+                ? <div className="row validation-message">
+                  <div className="col-md-12">
+                    <Alert bsStyle="danger">
+                      <i className="glyphicon glyphicon-exclamation-sign"></i>&nbsp;
+                      Please enter a valid email addres and select at least 1 Department or 1 Item
+                    </Alert>
+                  </div>
+                </div>
+                : null
+            }
           </div>
         </div>
       </div>
