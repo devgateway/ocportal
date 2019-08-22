@@ -314,7 +314,7 @@ class CorruptionRiskDashboard extends React.Component {
           />
         }
         <header className="branding row">
-          <div className="col-sm-7 logo-wrapper">
+          <div className="col-sm-10 logo-wrapper">
             <img className="logo" src="assets/dg-logo-small.png" alt="DG logo" />
             <div className={cn('dash-switcher-wrapper', { open: dashboardSwitcherOpen })}>
               <h1
@@ -337,10 +337,7 @@ class CorruptionRiskDashboard extends React.Component {
               }
             </div>
           </div>
-          <div className="col-sm-5 header-right">
-            <span className="language-switcher">
-              {this.languageSwitcher()}
-            </span>
+          <div className="col-sm-2 header-right">
             <span className="login-wrapper">
               {!disabledApiSecurity && this.loginBox()}
             </span>
