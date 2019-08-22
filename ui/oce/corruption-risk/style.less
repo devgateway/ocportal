@@ -9,6 +9,7 @@
 @leftPadding: 15px;
 
 .dashboard-corruption-risk {
+  padding-left: 0;
   &>header{
     font-family: 'Montserrat', sans-serif;
     background: @theme-blue;
@@ -34,9 +35,9 @@
         padding: @base-space-sm / 2;
         &.corruption-dash-title{
           color: #ffffff;
-          font-size: 18px;
+          font-size: 17px;
           font-weight: 600;
-          margin-top: @base-space-sm / 2;
+          margin-top: 3px;
         }
         .glyphicon{
           font-size: .53em;
@@ -48,7 +49,8 @@
         background: rgb(20, 67, 97);
         font-weight: 500;
         padding: @base-space-sm / 2;
-        border-top: 1px dotted white;
+        border-top: 1px solid #204e6e;
+        margin-top: -10px;
         a {
           color: white;
         }
@@ -58,6 +60,7 @@
       margin-bottom: @base-space-sm;
     }
     .header-right {
+      background-color: #29722d;
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -70,8 +73,9 @@
         button {
           background: transparent;
           border-color: transparent;
-          color: #cccccc;
+          color: #ffffff;
           font-weight: 600;
+          outline: none;
           text-transform: uppercase;
         }
       }
@@ -88,21 +92,23 @@
     right: 0;
     position: fixed;
     z-index: 10;
-    .title {
-      color: #1088cb;
+    .crd-filter-title{
       background-color: #ffffff;
-      float: left;
-      font-family: 'Source Sans Pro', sans-serif;
-      font-size: 15px;
-      font-weight: bold;
-      padding: 20px 30px 20px 30px;
-      @media (max-width: 1024px) {
-        margin-right: 5px;
-      }
-      @media (max-width: 969px) {
-        padding: 0 5px;
+      .title {
+        color: #1088cb;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 17px 20px;
+        @media (max-width: 1024px) {
+          margin-right: 5px;
+        }
+        @media (max-width: 969px) {
+          padding: 0 5px;
+        }
       }
     }
+
     .filter{
       @boxFilterColor: #0083e5;
       @boxWidth: 500px;
@@ -126,7 +132,7 @@
 
       .box-title {
         color: #ffffff;
-        font-size: 15px;
+        font-size: 13px;
         text-transform: uppercase;
       }
 
@@ -213,7 +219,7 @@
     background: transparent;
     border-right: none;
     height: @extend;
-    padding-left: @leftPadding;
+    padding-left: 0;
     top: @headerHeight * 2;
 
     .small {
@@ -290,7 +296,7 @@
       margin-top: -1px;
       border-right: 1px solid #e7ebef;
       border-bottom-right-radius: 5px;
-      margin-right: 10px;
+      margin-right: 0;
       margin-left: -15px;
       a {
         font-weight: 700;
