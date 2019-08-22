@@ -139,7 +139,6 @@ public class DummyController {
                 item.setEstimatedCost(new BigDecimal(100.0));
                 item.setUnitOfIssue("unit of issue....");
                 item.setQuantity(new BigDecimal(1001));
-                item.setTotalCost(new BigDecimal(2295000.503));
                 item.setProcurementMethod(procurementMethods.get(random.nextInt(procurementMethods.size())));
                 item.setSourceOfFunds("dk20fk0-2-ck-sk93-0001");
                 item.setTargetGroup(targetGroups.get(random.nextInt(targetGroups.size())));

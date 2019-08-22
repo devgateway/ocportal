@@ -50,6 +50,8 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     private final PlanItemFilterBean listFilterBean;
 
+    private GenericSleepFormComponent totalCost;
+
     public PlanItemPanel(final String id) {
         super(id);
 
@@ -82,14 +84,42 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
         final PlanItem planItem = item.getModelObject();
         if (planItem.getEditable()) {
-            ComponentUtil.addBigDecimalField(item, "estimatedCost").required()
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
             ComponentUtil.addTextField(item, "unitOfIssue").required()
                     .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-            ComponentUtil.addBigDecimalField(item, "quantity").required()
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
-            ComponentUtil.addBigDecimalField(item, "totalCost").required()
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+
+            final TextFieldBootstrapFormComponent<BigDecimal> quantity =
+                    new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
+                        @Override
+                        protected void onUpdate(final AjaxRequestTarget target) {
+                            target.add(totalCost);
+                        }
+                    };
+            quantity.decimal();
+            quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            quantity.required();
+            item.add(quantity);
+
+            final TextFieldBootstrapFormComponent<BigDecimal> estimatedCost =
+                    new TextFieldBootstrapFormComponent<BigDecimal>("estimatedCost") {
+                        @Override
+                        protected void onUpdate(final AjaxRequestTarget target) {
+                            target.add(totalCost);
+                        }
+                    };
+            estimatedCost.decimal();
+            estimatedCost.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            estimatedCost.required();
+            item.add(estimatedCost);
+
+            totalCost = new GenericSleepFormComponent<>("totalCost",
+                    (IModel<BigDecimal>) () -> {
+                        if (quantity.getModelObject() != null && estimatedCost.getModelObject() != null) {
+                            return estimatedCost.getModelObject().multiply(quantity.getModelObject());
+                        }
+                        return null;
+                    });
+            totalCost.setOutputMarkupId(true);
+            item.add(totalCost);
 
             ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
             final TextFieldBootstrapFormComponent<String> sourceOfFunds = ComponentUtil.addTextField(item,
@@ -113,8 +143,12 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             item.add(new GenericSleepFormComponent<>("estimatedCost"));
             item.add(new GenericSleepFormComponent<>("unitOfIssue"));
             item.add(new GenericSleepFormComponent<>("quantity"));
-            item.add(new GenericSleepFormComponent<>("unitPrice"));
-            item.add(new GenericSleepFormComponent<>("totalCost"));
+            item.add(new GenericSleepFormComponent<>("totalCost", (IModel<BigDecimal>) () -> {
+                if (planItem.getQuantity() != null && planItem.getEstimatedCost() != null) {
+                    return planItem.getEstimatedCost().multiply(planItem.getQuantity());
+                }
+                return null;
+            }));
 
             item.add(new GenericSleepFormComponent<>("procurementMethod"));
             item.add(new GenericSleepFormComponent<>("sourceOfFunds"));

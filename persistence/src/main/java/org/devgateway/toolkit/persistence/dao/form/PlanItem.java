@@ -47,9 +47,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true, name = "Total Cost")
-    private BigDecimal totalCost;
-
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -119,14 +116,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
-    }
-
-    public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(final BigDecimal totalCost) {
-        this.totalCost = totalCost;
     }
 
     public ProcurementMethod getProcurementMethod() {
