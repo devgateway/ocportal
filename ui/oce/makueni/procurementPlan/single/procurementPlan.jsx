@@ -102,13 +102,9 @@ class ProcurementPlan extends FeedbackPage {
                   {
                     data.planItems.map(planItem => <div key={planItem.id} className="box">
                       <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                           <div className="item-label">Item</div>
                           <div className="item-value">{planItem.item.label}</div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="item-label">Description</div>
-                          <div className="item-value">{planItem.description}</div>
                         </div>
                       </div>
                       

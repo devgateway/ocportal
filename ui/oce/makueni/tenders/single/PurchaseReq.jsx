@@ -62,9 +62,13 @@ class PurchaseReq extends FeedbackPage {
             {
               data.purchaseItems.map(pr => <div key={pr._id} className="box">
                 <div className="row">
-                  <div className="col-md-12">
+                  <div className="col-md-6">
                     <div className="item-label">Item</div>
-                    <div className="item-value">{pr.planItem.description} - {pr.planItem.item.label}</div>
+                    <div className="item-value">{pr.planItem.item.label}</div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="item-label">Description</div>
+                    <div className="item-value">{pr.description}</div>
                   </div>
                 </div>
                 <div className="row">

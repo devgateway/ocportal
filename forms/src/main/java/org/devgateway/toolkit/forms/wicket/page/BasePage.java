@@ -12,7 +12,6 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuDivider;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
@@ -29,7 +28,6 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -418,6 +416,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         new StringResourceModel("navbar.users", this, null))
                         .setIconType(FontAwesomeIconType.users));
 
+                /*
                 list.add(new MenuBookmarkablePageLink<ListTestFormPage>(ListTestFormPage.class, null,
                         new StringResourceModel("navbar.testcomponents", this, null))
                         .setIconType(FontAwesomeIconType.android));
@@ -468,7 +467,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         };
                 uiBrowserLink.setIconType(FontAwesomeIconType.rocket).setEnabled(true);
                 list.add(uiBrowserLink);
-
+                */
                 list.add(new MenuDivider());
 
                 list.add(new MenuBookmarkablePageLink<Void>(EditAdminSettingsPage.class,
