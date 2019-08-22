@@ -88,8 +88,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             ComponentUtil.addBigDecimalField(item, "quantity").required()
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
-            ComponentUtil.addBigDecimalField(item, "unitPrice").required()
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
             ComponentUtil.addBigDecimalField(item, "totalCost").required()
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 

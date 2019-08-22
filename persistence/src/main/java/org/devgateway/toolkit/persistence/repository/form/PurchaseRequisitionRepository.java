@@ -21,10 +21,8 @@ import java.util.stream.Stream;
 @Transactional
 public interface PurchaseRequisitionRepository extends AbstractMakueniEntityRepository<PurchaseRequisition> {
     @Override
-    @Query("select purchase from #{#entityName} purchase where lower(purchase.title) like %:name%")
-    Page<PurchaseRequisition> searchText(@Param("name") String name, Pageable page);
-
-    Long countByProjectProcurementPlanAndTitleAndIdNot(ProcurementPlan procurementPlan, String title, Long id);
+    @Query("select purchase from #{#entityName} purchase where lower(purchase.purchaseRequestNumber) like %:search%")
+    Page<PurchaseRequisition> searchText(@Param("search") String search, Pageable page);
 
     List<PurchaseRequisition> findByProject(Project project);
 

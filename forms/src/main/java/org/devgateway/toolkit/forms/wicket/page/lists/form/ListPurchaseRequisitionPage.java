@@ -23,7 +23,6 @@ import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.web.convert.MakueniToOCDSConversionService;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
-import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -129,10 +128,6 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
                 new Model<>((new StringResourceModel("fiscalYear", ListPurchaseRequisitionPage.this)).getString()),
                 "project.procurementPlan.fiscalYear", "project.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));
-
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(
-                new Model<>((new StringResourceModel("title", ListPurchaseRequisitionPage.this)).getString()),
-                "title", "title"));
 
         columns.add(new PropertyColumn<PurchaseRequisition, String>(
                 new Model<>((new StringResourceModel("lastModifiedDate",

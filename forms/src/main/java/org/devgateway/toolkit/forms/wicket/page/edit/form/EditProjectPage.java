@@ -105,10 +105,8 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior("change"));
-        subcounties.required();
 
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
-        wards.required();
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 

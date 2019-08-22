@@ -44,14 +44,6 @@ public class PurchaseRequisitionServiceImpl extends AbstractMakueniEntityService
 
     @Cacheable
     @Override
-    public Long countByProjectProcurementPlanAndTitleAndIdNot(final ProcurementPlan procurementPlan,
-                                               final String title,
-                                               final Long id) {
-        return purchaseRequisitionRepository.countByProjectProcurementPlanAndTitleAndIdNot(procurementPlan, title, id);
-    }
-
-    @Cacheable
-    @Override
     public List<PurchaseRequisition> findByProject(final Project project) {
         return purchaseRequisitionRepository.findByProject(project);
     }

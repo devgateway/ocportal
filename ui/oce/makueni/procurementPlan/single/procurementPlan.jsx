@@ -111,20 +111,16 @@ class ProcurementPlan extends FeedbackPage {
                       
                       <div className="row padding-top-10">
                         <div className="col-md-3">
-                          <div className="item-label">Estimated Cost</div>
+                          <div className="item-label">Estimated Cost per Unit</div>
                           <div className="item-value">{currencyFormatter(planItem.estimatedCost)}</div>
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                           <div className="item-label">Unit Of Issue</div>
                           <div className="item-value">{planItem.unitOfIssue}</div>
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                           <div className="item-label">Quantity</div>
                           <div className="item-value">{currencyFormatter(planItem.quantity)}</div>
-                        </div>
-                        <div className="col-md-2">
-                          <div className="item-label">Unit Price</div>
-                          <div className="item-value">{currencyFormatter(planItem.unitPrice)}</div>
                         </div>
                         <div className="col-md-3">
                           <div className="item-label">Total Cost</div>
@@ -138,7 +134,7 @@ class ProcurementPlan extends FeedbackPage {
                           <div className="item-value">{planItem.procurementMethod.label}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Source of Funds</div>
+                          <div className="item-label">Account</div>
                           <div className="item-value">{planItem.sourceOfFunds}</div>
                         </div>
                         <div className="col-md-3">

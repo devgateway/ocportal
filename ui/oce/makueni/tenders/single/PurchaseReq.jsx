@@ -24,26 +24,19 @@ class PurchaseReq extends FeedbackPage {
     
     return (<div>
       <div className="row padding-top-10">
-        <div className="col-md-6">
-          <div className="item-label">Purchase Requisition Title</div>
-          <div className="item-value">{data.title}</div>
-        </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           <div className="item-label">Purchase Request Number</div>
           <div className="item-value">{data.purchaseRequestNumber}</div>
         </div>
-      </div>
-      
-      <div className="row padding-top-10">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="item-label">Requested By</div>
           <div className="item-value">{data.requestedBy.label}</div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="item-label">Charge Account</div>
           <div className="item-value">{data.chargeAccount.label}</div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="item-label">Request Approval Date</div>
           <div
             className="item-value">{formatDate(data.requestApprovalDate)}</div>

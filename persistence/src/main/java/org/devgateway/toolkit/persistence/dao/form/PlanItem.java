@@ -37,7 +37,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @ManyToOne
     private Item item;
 
-    @ExcelExport(useTranslation = true, name = "Estimated Cost")
+    @ExcelExport(useTranslation = true, name = "Estimated Cost per Unit")
     private BigDecimal estimatedCost;
 
     @ExcelExport(useTranslation = true, name = "Unit Of Issue")
@@ -47,9 +47,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true, name = "Unit Price")
-    private BigDecimal unitPrice;
-
     @ExcelExport(useTranslation = true, name = "Total Cost")
     private BigDecimal totalCost;
 
@@ -58,7 +55,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
-    @ExcelExport(useTranslation = true, name = "Source of Funds")
+    @ExcelExport(useTranslation = true, name = "Account")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
@@ -122,14 +119,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(final BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
     }
 
     public BigDecimal getTotalCost() {
