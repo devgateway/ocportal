@@ -4,17 +4,14 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -63,16 +60,14 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.department"));
         editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.fiscalYear"));
 
-        final TextFieldBootstrapFormComponent<String> purchaseRequestNumber =
-                ComponentUtil.addTextField(editForm, "purchaseRequestNumber");
-        purchaseRequestNumber.required();
-        purchaseRequestNumber.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        purchaseRequestNumber.getField().add(new UniquePropertyEntryValidator<>(
-                getString("uniqueNumber"),
-                purchaseRequisitionService::findOne,
-                (o, v) -> (root, query, cb)
-                        -> cb.equal(cb.lower(root.get(PurchaseRequisition_.purchaseRequestNumber)), v.toLowerCase()),
-                editForm.getModel()));
+        final GenericSleepFormComponent purchaseRequestNumber =
+                new GenericSleepFormComponent<>("purchaseRequestNumber");
+        editForm.add(purchaseRequestNumber);
+        if (entityId == null) {
+            purchaseRequestNumber.setVisibilityAllowed(false);
+        } else {
+            purchaseRequestNumber.setVisibilityAllowed(true);
+        }
 
         ComponentUtil.addSelect2ChoiceField(editForm, "requestedBy", staffService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "chargeAccount", chargeAccountService).required();
@@ -103,6 +98,19 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         final Project project = purchaseRequisition.getProject();
         project.addPurchaseRequisition(purchaseRequisition);
         projectService.save(project);
+    }
+
+    @Override
+    protected void afterSaveEntity(final PurchaseRequisition saveable) {
+        super.afterSaveEntity(saveable);
+
+        // autogenerate the number
+        if (saveable.getPurchaseRequestNumber() == null) {
+            saveable.setPurchaseRequestNumber(saveable.getProcurementPlan().getDepartment().getCode()
+                    + "/" + saveable.getId());
+
+            jpaService.saveAndFlush(saveable);
+        }
     }
 
     @Override
