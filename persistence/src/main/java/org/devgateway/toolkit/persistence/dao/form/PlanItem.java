@@ -29,7 +29,7 @@ import java.math.BigDecimal;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
+@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
@@ -37,11 +37,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @ManyToOne
     private Item item;
 
-    @ExcelExport(useTranslation = true, name = "Description")
-    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
-    private String description;
-
-    @ExcelExport(useTranslation = true, name = "Estimated Cost")
+    @ExcelExport(useTranslation = true, name = "Estimated Cost per Unit")
     private BigDecimal estimatedCost;
 
     @ExcelExport(useTranslation = true, name = "Unit Of Issue")
@@ -51,18 +47,12 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true, name = "Unit Price")
-    private BigDecimal unitPrice;
-
-    @ExcelExport(useTranslation = true, name = "Total Cost")
-    private BigDecimal totalCost;
-
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
-    @ExcelExport(useTranslation = true, name = "Source of Funds")
+    @ExcelExport(useTranslation = true, name = "Account")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
@@ -104,14 +94,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.item = item;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
     public BigDecimal getEstimatedCost() {
         return estimatedCost;
     }
@@ -134,22 +116,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(final BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(final BigDecimal totalCost) {
-        this.totalCost = totalCost;
     }
 
     public ProcurementMethod getProcurementMethod() {
@@ -249,7 +215,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return description;
+        return item != null ? item.getLabel() : "";
     }
 
     @Override

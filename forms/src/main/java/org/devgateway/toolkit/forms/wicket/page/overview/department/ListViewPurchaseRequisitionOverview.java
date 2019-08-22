@@ -84,7 +84,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         header.add(AttributeAppender.append("class", "tender"));   // add specific class to tender overview header
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
 
-        headerFragment.add(new Label("title"));
+        headerFragment.add(new Label("title", "Purchase Requisition " + (item.getIndex() + 1)));
 
         header.add(headerFragment);
     }
@@ -107,7 +107,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         final Contract contract = PersistenceUtil.getNext(purchaseRequisition.getContract());
 
         final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel", purchaseRequisition,
-                purchaseRequisition.getTitle(), new ArrayList<>(Arrays.asList(
+                purchaseRequisition.getPurchaseRequestNumber(), new ArrayList<>(Arrays.asList(
                 purchaseRequisition.getRequestApprovalDate(), purchaseRequisition.getAmount())),
                 purchaseRequisition, EditPurchaseRequisitionPage.class, null);
         containerFragment.add(requisitionPanel);

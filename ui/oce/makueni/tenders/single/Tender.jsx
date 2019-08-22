@@ -102,10 +102,14 @@ class Tender extends FeedbackPage {
             {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
                 <div className="row">
-                  <div className="col-md-12">
+                  <div className="col-md-6">
                     <div className="item-label">Item</div>
                     <div
-                      className="item-value">{tenderItem.purchaseItem.planItem.description} - {tenderItem.purchaseItem.planItem.item.label}</div>
+                      className="item-value">{tenderItem.purchaseItem.planItem.item.label}</div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="item-label">Description</div>
+                    <div className="item-value">{tenderItem.description}</div>
                   </div>
                 </div>
                 <div className="row">

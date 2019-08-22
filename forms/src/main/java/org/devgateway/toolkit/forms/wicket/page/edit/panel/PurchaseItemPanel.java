@@ -118,6 +118,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
             planItem.required();
             planItem.add(new StopEventPropagationBehavior());
 
+            final Component description = ComponentUtil.addTextField(this, "description");
+            description.add(new StopEventPropagationBehavior());
+
             add(planItem);
         }
     }

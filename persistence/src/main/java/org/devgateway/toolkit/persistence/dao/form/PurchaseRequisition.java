@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * @author idobre
@@ -43,11 +42,9 @@ import java.util.function.Consumer;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "project_id"),
-        @Index(columnList = "purchaseRequestNumber"),
-        @Index(columnList = "title")})
+        @Index(columnList = "purchaseRequestNumber")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
-        TitleAutogeneratable {
+public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
     @ManyToOne(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -57,10 +54,6 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @ExcelExport(useTranslation = true, name = "Purchase Request Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
-
-    @ExcelExport(useTranslation = true, name = "Title")
-    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
-    private String title;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -191,20 +184,6 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         this.purchaseRequestNumber = purchaseRequestNumber;
     }
 
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public Consumer<String> titleSetter() {
-        return this::setTitle;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
     public Staff getRequestedBy() {
         return requestedBy;
     }
@@ -246,7 +225,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return title;
+        return purchaseRequestNumber;
     }
 
     @Override

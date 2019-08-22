@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
@@ -35,6 +36,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +64,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     protected Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
 
     protected Select2MultiChoiceBootstrapFormComponent<Ward> wards;
-    
+
     public EditProjectPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = projectService;
@@ -74,7 +76,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
             setResponsePage(StatusOverviewPage.class);
         }
     }
-    
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -103,12 +105,49 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         ComponentUtil.addBigDecimalField(editForm, "amountRequested")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
 
+        final IndicatingAjaxFallbackLink allSubcounties = new IndicatingAjaxFallbackLink<Void>("allSubcounties") {
+            @Override
+            public void onClick(final Optional<AjaxRequestTarget> target) {
+                editForm.getModelObject().setSubcounties(new ArrayList<>(subcountyService.findAll()));
+                editForm.getModelObject().setWards(new ArrayList<>());
+
+                wards.provider(new GenericChoiceProvider<>(new ArrayList<>(wardService.findAll())));
+
+                if (target.isPresent()) {
+                    target.get().add(subcounties);
+                    target.get().add(wards);
+                }
+            }
+
+        };
+        editForm.add(allSubcounties);
+
+        final IndicatingAjaxFallbackLink allWards = new IndicatingAjaxFallbackLink<Void>("allWards") {
+            @Override
+            public void onClick(final Optional<AjaxRequestTarget> target) {
+                final Collection<Subcounty> subcountyList = subcounties.getModelObject();
+                final List<Ward> wardList;
+                if (subcountyList.isEmpty()) {
+                    wardList = new ArrayList<>(wardService.findAll());
+                } else {
+                    wardList = wardService.findAll().stream()
+                            .filter(ward -> subcountyList.contains(ward.getSubcounty()))
+                            .collect(Collectors.toList());
+                }
+                editForm.getModelObject().setWards(wardList);
+
+                if (target.isPresent()) {
+                    target.get().add(wards);
+                }
+            }
+
+        };
+        editForm.add(allWards);
+
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior("change"));
-        subcounties.required();
 
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
-        wards.required();
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
@@ -178,7 +217,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
 
             if (subcountyList.isEmpty()) {
                 editForm.getModelObject().setWards(new ArrayList<>());
-                wards.provider(new GenericChoiceProvider<>(wardService.findAll()));
+                wards.provider(new GenericChoiceProvider<>(new ArrayList<>(wardService.findAll())));
             } else {
                 final List<Ward> wardList = wardService.findAll().stream()
                         .filter(ward -> subcountyList.contains(ward.getSubcounty()))

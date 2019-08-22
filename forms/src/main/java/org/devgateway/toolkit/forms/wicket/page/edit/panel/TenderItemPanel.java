@@ -114,6 +114,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
             purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
 
+            final Component description = ComponentUtil.addTextField(this, "description");
+            description.add(new StopEventPropagationBehavior());
+
             add(purchaseItem);
         }
     }
