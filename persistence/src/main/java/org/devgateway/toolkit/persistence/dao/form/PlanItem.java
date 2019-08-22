@@ -29,17 +29,13 @@ import java.math.BigDecimal;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
+@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
-
-    @ExcelExport(useTranslation = true, name = "Description")
-    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
-    private String description;
 
     @ExcelExport(useTranslation = true, name = "Estimated Cost")
     private BigDecimal estimatedCost;
@@ -102,14 +98,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
 
     public void setItem(final Item item) {
         this.item = item;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
     }
 
     public BigDecimal getEstimatedCost() {
@@ -249,7 +237,7 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return description;
+        return item != null ? item.getLabel() : "";
     }
 
     @Override

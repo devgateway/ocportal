@@ -26,13 +26,19 @@ import java.math.BigDecimal;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id")})
+@Table(indexes = {@Index(columnList = "parent_id"),
+        @Index(columnList = "plan_item_id"),
+        @Index(columnList = "description")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PlanItem planItem;
+
+    @ExcelExport(useTranslation = true, name = "Description")
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
+    private String description;
 
     @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
@@ -79,6 +85,14 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     public void setAmount(final BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
     @Override

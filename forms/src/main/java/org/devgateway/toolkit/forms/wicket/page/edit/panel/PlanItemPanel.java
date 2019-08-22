@@ -33,7 +33,6 @@ import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author idobre
@@ -154,7 +153,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     error.addKey("planItemHasErrors");
                     error(error);
                 } else {
-                    Boolean descriptionError = false;
+                    /*Boolean descriptionError = false;
                     // check that we have unique descriptions (at least the last element)
                     final List<PlanItem> planItems = PlanItemPanel.this.getModelObject();
                     if (planItems.size() > 2) {
@@ -176,7 +175,9 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                         error(error);
                     } else {
                         super.onSubmit(target);
-                    }
+                    } */
+
+                    super.onSubmit(target);
                 }
 
                 target.add(addButtonNotificationPanel);
@@ -218,12 +219,8 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             if (planItem.getEditable()) {
                 final Component item = ComponentUtil.addSelect2ChoiceField(this, "item", itemService).required();
                 item.add(new StopEventPropagationBehavior());
-
-                final Component description = ComponentUtil.addTextField(this, "description").required();
-                description.add(new StopEventPropagationBehavior());
             } else {
                 add(new GenericSleepFormComponent<>("item"));
-                add(new GenericSleepFormComponent<>("description"));
             }
         }
     }

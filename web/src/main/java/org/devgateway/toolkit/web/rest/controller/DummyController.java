@@ -136,7 +136,6 @@ public class DummyController {
             for (int i = 0; i < 100; i++) {
                 final PlanItem item = new PlanItem();
                 item.setItem(items.get(random.nextInt(items.size())));
-                item.setDescription("Description " + (currentSize + i));
                 item.setEstimatedCost(new BigDecimal(100.0));
                 item.setUnitOfIssue("unit of issue....");
                 item.setQuantity(new BigDecimal(1001));
