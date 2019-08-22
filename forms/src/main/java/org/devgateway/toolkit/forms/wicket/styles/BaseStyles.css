@@ -244,7 +244,13 @@ hr.edit-separator {
     box-shadow: none;
     padding-left: 10px;
 }
-
+.form-wrapper textarea[disabled],
+.form-wrapper textarea.form-control[disabled]{
+  padding: 10px;
+}
+.form-wrapper textarea.form-control{
+  border:1px solid #eeeeee;
+}
 .form-wrapper .input-group .form-control,
 .form-wrapper .input-group .form-control:first-child {
     border: 1px solid #eeeeee;
