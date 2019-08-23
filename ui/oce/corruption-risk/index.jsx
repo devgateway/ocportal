@@ -372,7 +372,7 @@ class CorruptionRiskDashboard extends React.Component {
             this.setState({ data: this.state.data.setIn(path, newData) })}
           allYears={allYears}
         />
-        <div className="col-sm-offset-3 col-sm-9 content">
+        <div className="col-sm-offset-3 col-md-9 col-sm-10 content">
           {this.getPage()}
         </div>
       </div>
