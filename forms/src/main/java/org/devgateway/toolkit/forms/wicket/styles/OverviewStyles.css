@@ -207,6 +207,7 @@
     background-size: 20px 20px;
     border: 1px solid #dfe3e9;
     box-shadow: none;
+    padding: 5px;
 }
 
 .btn.btn-add {
@@ -757,10 +758,6 @@
     margin-bottom: 15px;
 }
 
-.tender-detail .tender-header {
-    background: salmon;
-}
-
 .tender-header .tender-label {
     float: left;
     font-size: 12px;
@@ -813,4 +810,14 @@
 
 .borderless tr td {
     border: none !important;
+}
+
+@-moz-document url-prefix(){
+  .btn.btn-default.project-year{
+    text-indent: 5px;
+  }
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .btn.btn-default.project-year{
+    text-indent: 15px;
 }
