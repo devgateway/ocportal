@@ -819,5 +819,5 @@
 }
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
   .btn.btn-default.project-year{
-    text-indent: 15px;
+    padding-left: 40px;
 }
