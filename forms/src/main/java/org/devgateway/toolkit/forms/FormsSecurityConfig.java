@@ -48,7 +48,7 @@ public class FormsSecurityConfig extends WebSecurityConfig {
         web.ignoring().antMatchers("/ui/**",
                 "/img/**", "/css*/**", "/js*/**", "/assets*/**", "/wicket/resource/**/*.js",
                 "/wicket/resource/**/*.css", "/wicket/resource/**/*.png", "/wicket/resource/**/*.jpg",
-                "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**",
+                "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**", "/verifyEmail/**",
                 "/resources/**", "/resources/public/**");
     }
 

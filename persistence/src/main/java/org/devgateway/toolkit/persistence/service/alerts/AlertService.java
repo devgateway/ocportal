@@ -1,0 +1,12 @@
+package org.devgateway.toolkit.persistence.service.alerts;
+
+import org.devgateway.toolkit.persistence.dao.alerts.Alert;
+import org.devgateway.toolkit.persistence.service.BaseJpaService;
+
+/**
+ * @author idobre
+ * @since 23/08/2019
+ */
+public interface AlertService extends BaseJpaService<Alert> {
+    Alert findBySecret(String secret);
+}

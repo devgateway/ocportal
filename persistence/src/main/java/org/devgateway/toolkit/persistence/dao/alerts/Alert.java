@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.alerts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
@@ -10,8 +11,11 @@ import org.hibernate.envers.Audited;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import java.util.Date;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,11 +23,15 @@ import java.util.Set;
  * @author idobre
  * @since 2019-08-21
  */
-
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-// @Table(indexes = {@Index(columnList = "aaa"), @Index(columnList = "bbb")})
+@Table(indexes = {@Index(columnList = "email"),
+        @Index(columnList = "emailVerified"),
+        @Index(columnList = "alertable"),
+        @Index(columnList = "secret"),
+        @Index(columnList = "failCount"),
+        @Index(columnList = "lastChecked")})
 public class Alert extends AbstractAuditableEntity {
     private String email;
 
@@ -32,16 +40,35 @@ public class Alert extends AbstractAuditableEntity {
     // use this flag to unsubscribe users
     private Boolean alertable = true;
 
-    // TODO - check "creation date",
-    private Date lastChecked;
+    @JsonIgnore
+    private String secret;
+
+    @JsonIgnore
+    private LocalDateTime secretValidUntil;
+
+    @JsonIgnore
+    private Integer failCount;
+
+    private LocalDateTime lastChecked;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ManyToMany
     private Set<Department> departments = new HashSet<>();
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ManyToMany
     private Set<Item> items = new HashSet<>();
+
+    public Alert() {
+
+    }
+
+    public Alert(final String email, final Set<Department> departments, final Set<Item> items) {
+        this.email = email;
+        this.departments = new HashSet<>(departments);
+        this.items = new HashSet<>(items);
+        this.lastChecked = LocalDateTime.now();
+    }
 
     @Override
     public AbstractAuditableEntity getParent() {
@@ -72,11 +99,35 @@ public class Alert extends AbstractAuditableEntity {
         this.alertable = alertable;
     }
 
-    public Date getLastChecked() {
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(final String secret) {
+        this.secret = secret;
+    }
+
+    public LocalDateTime getSecretValidUntil() {
+        return secretValidUntil;
+    }
+
+    public void setSecretValidUntil(final LocalDateTime secretValidUntil) {
+        this.secretValidUntil = secretValidUntil;
+    }
+
+    public Integer getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(final Integer failCount) {
+        this.failCount = failCount;
+    }
+
+    public LocalDateTime getLastChecked() {
         return lastChecked;
     }
 
-    public void setLastChecked(final Date lastChecked) {
+    public void setLastChecked(final LocalDateTime lastChecked) {
         this.lastChecked = lastChecked;
     }
 
