@@ -129,7 +129,7 @@ class Alerts extends CRDPage {
         name: 'subscribeAlertEP',
         initial: `${API_ROOT}` + '/makueni/alerts/subscribeAlert',
       });
-  
+      
       this.subscribeAlertData = this.alertsState.input({
         name: 'subscribeAlertData',
         initial: {
@@ -138,28 +138,28 @@ class Alerts extends CRDPage {
           items: this.state.items.map(item => item.id)
         }
       });
-  
+      
       this.subscribeAlertURL = this.alertsState.remote({
         name: 'subscribeAlertURL',
         url: this.subscribeAlertEP,
         params: this.subscribeAlertData,
       });
-  
+      
       this.subscribeAlertResponse = this.alertsState.mapping({
         name: 'subscribeAlertResponse',
         deps: [this.subscribeAlertURL],
         mapper: data => {
-          console.log(data);
+          this.setState({ serverResponse: data });
         }
       });
-  
+      
       this.subscribeAlertResponse.getState('SubscribeAlerts');
     }
   }
   
   
   render() {
-    const { departments, fetchedDepartments, items, fetchedItems, error } = this.state;
+    const { departments, fetchedDepartments, items, fetchedItems, error, serverResponse } = this.state;
     return (<div className="container-fluid dashboard-default">
         
         <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
@@ -268,6 +268,23 @@ class Alerts extends CRDPage {
                       <i className="glyphicon glyphicon-exclamation-sign"></i>&nbsp;
                       Please enter a valid email addres and select at least 1 Department or 1 Item
                     </Alert>
+                  </div>
+                </div>
+                : null
+            }
+            
+            {
+              serverResponse === true
+                ? <div className="row validation-message">
+                  <div className="col-md-12">
+                    <h4>
+                      <Alert bsStyle="info">
+                        A confirmation email was send to {this.state.email} address.
+                        <br/>
+                        Please check your email and click on provided URL in order to validate your
+                        email address.
+                      </Alert>
+                    </h4>
                   </div>
                 </div>
                 : null

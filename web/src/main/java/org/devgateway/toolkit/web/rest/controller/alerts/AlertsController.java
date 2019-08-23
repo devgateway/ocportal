@@ -71,6 +71,8 @@ public class AlertsController {
                 items = new HashSet<>();
             }
 
+            // TODO - check that this user doesn't have a similar Alert.
+
             final Alert alert = new Alert(alertsRequest.getEmail(), departments, items);
             final String secret = RandomStringUtils.randomAlphanumeric(32);
             alert.setSecret(secret);
