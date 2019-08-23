@@ -7,7 +7,6 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
@@ -62,9 +61,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         quantity.required();
         item.add(quantity);
 
-        ComponentUtil.addTextField(item, "unit").required()
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-
+        // ComponentUtil.addTextField(item, "unit").required()
+        //         .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
         final TextFieldBootstrapFormComponent<BigDecimal> amount =
                 new TextFieldBootstrapFormComponent<BigDecimal>("amount") {

@@ -58,7 +58,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         quantity.required();
         item.add(quantity);
 
-        ComponentUtil.addTextField(item, "unitOfIssue").required()
+        ComponentUtil.addTextField(item, "unitOfIssue")
                 .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
 
