@@ -67,9 +67,6 @@
       .login-wrapper{
         text-align: center;
         width: @extend;
-        @media (max-width: 1200px) {
-          margin-right: @gutterRightMd;
-        }
         button {
           background: transparent;
           border-color: transparent;
@@ -94,6 +91,9 @@
     z-index: 10;
     .crd-filter-title{
       background-color: #ffffff;
+      @media (max-width: 1024px) {
+        display:none;
+      }
       .title {
         color: #1088cb;
         font-family: 'Source Sans Pro', sans-serif;

@@ -185,6 +185,11 @@ hr.edit-separator {
     margin-top: 10px;
     white-space:nowrap;
 }
+@media (max-width: 1024px) {
+    .accordion-toggle .show-all{
+      margin-right: 20px;
+    }
+}
 
 .show-all:hover {
     color: #66b558;
