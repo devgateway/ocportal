@@ -15,10 +15,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
+import org.devgateway.ocds.web.rest.controller.request.DefaultFilterPagingRequest;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomProjectionOperation;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.Fields;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,7 +69,8 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
     public List<FrequentSuppliersResponse> frequentSuppliersTimeInterval(
             @RequestParam(defaultValue = "365", required = false) Integer intervalDays,
             @RequestParam(defaultValue = "3", required = false) Integer maxAwards,
-            @RequestParam(required = false) Date now
+            @RequestParam(required = false) Date now,
+            @RequestParam(required = false) String procurementMethod
     ) {
 
         if (now == null) {
@@ -86,9 +89,16 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
                 ), DAY_MS)), intervalDays)
         )));
 
+        DefaultFilterPagingRequest request = new DefaultFilterPagingRequest();
+        clearTenderStatus(request);
+        if (!ObjectUtils.isEmpty(procurementMethod)) {
+            request.getProcurementMethod().add(procurementMethod);
+        }
+
         Aggregation agg = Aggregation.newAggregation(
                 match(where(MongoConstants.FieldNames.BUYER_ID).exists(true).and("awards.suppliers.0").exists(true)
-                        .and(MongoConstants.FieldNames.AWARDS_DATE).exists(true)),
+                        .and(MongoConstants.FieldNames.AWARDS_DATE).exists(true)
+                        .andOperator(getDefaultFilterCriteria(request))),
                 unwind("awards"),
                 unwind("awards.suppliers"),
                 new CustomProjectionOperation(project),
@@ -100,7 +110,7 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
                 )).
                         count().as("count"),
                 project("count").and("identifier").previousOperation(),
-                match(where("count").gt(maxAwards)),
+                match(where("count").gte(maxAwards)),
                 sort(Sort.Direction.DESC, "count")
         );
 

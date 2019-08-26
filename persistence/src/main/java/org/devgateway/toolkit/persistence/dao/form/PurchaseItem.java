@@ -43,10 +43,6 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
     @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true, name = "Unit of Issue")
-    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
-    private String unit;
-
     @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal amount;
 
@@ -69,14 +65,6 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisiti
 
     public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(final String unit) {
-        this.unit = unit;
     }
 
     public BigDecimal getAmount() {

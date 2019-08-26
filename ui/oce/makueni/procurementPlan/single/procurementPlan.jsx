@@ -112,7 +112,7 @@ class ProcurementPlan extends FeedbackPage {
                       <div className="row padding-top-10">
                         <div className="col-md-3">
                           <div className="item-label">Unit Of Issue</div>
-                          <div className="item-value">{planItem.unitOfIssue}</div>
+                          <div className="item-value">{planItem.unitOfIssue.label}</div>
                         </div>
                         <div className="col-md-3">
                           <div className="item-label">Quantity</div>

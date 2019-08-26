@@ -70,7 +70,7 @@ PercentPESpending.Donut = class extends CenterTextDonut.Donut {
       hole: 0.8,
       type: 'pie',
       marker: {
-        colors: ['#40557d', '#289df5'],
+        colors: ['#3371b1', '#289df5'],
       },
     }];
   }

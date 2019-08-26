@@ -75,13 +75,18 @@ public class ReleaseFlagI077Processor extends AbstractFlaggedReleaseFlagProcesso
         nowDouble = new Double(now.getTime());
         List<FrequentSuppliersTimeIntervalController.FrequentSuppliersResponse> frequentSuppliersTimeInterval
                 = frequentSuppliersTimeIntervalController.frequentSuppliersTimeInterval(getIntervalDays(),
-                getMaxAwards(), now);
+                getMaxAwards(), now, getProcurementMethod()
+        );
 
         frequentSuppliersMap = new ConcurrentHashMap<>();
 
         frequentSuppliersTimeInterval.
                 forEach(response -> frequentSuppliersMap.put(
                         FrequentSuppliersTimeIntervalController.getFrequentSuppliersResponseKey(response), response));
+    }
+
+    protected String getProcurementMethod() {
+        return null;
     }
 
     protected Integer getMaxAwards() {

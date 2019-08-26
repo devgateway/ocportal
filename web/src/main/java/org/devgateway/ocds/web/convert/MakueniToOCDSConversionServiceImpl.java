@@ -246,7 +246,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Unit createTenderItemUnit(TenderItem tenderItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
-        safeSet(unit::setName, tenderItem.getPurchaseItem()::getUnit);
+        safeSet(unit::setName, () -> tenderItem.getPurchaseItem().getPlanItem().getUnitOfIssue().getLabel());
         safeSet(unit::setId, tenderItem::getId, this::longIdToString);
         safeSet(unit::setValue, tenderItem::getUnitPrice, this::convertAmount);
         return unit;
@@ -510,7 +510,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             if (!ObjectUtils.isEmpty(converted)) {
                 consumer.accept(converted);
             }
-            }
+        }
     }
 
     public <S, C> void safeSetEach(Consumer<C> consumer, Supplier<Collection<S>> supplier, Function<S, C> converter) {
@@ -557,7 +557,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Unit createPlanningItemUnit(PurchaseItem purchaseItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
-        safeSet(unit::setName, purchaseItem::getUnit);
+        safeSet(unit::setName, () -> purchaseItem.getPlanItem().getUnitOfIssue().getLabel());
         safeSet(unit::setId, purchaseItem::getId, this::longIdToString);
         safeSet(unit::setValue, purchaseItem::getAmount, this::convertAmount);
         return unit;

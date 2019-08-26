@@ -29,6 +29,13 @@ ul.homepage-menu li {
     width: 18%;
 }
 
+@media screen and (max-width: 768px){
+  ul.homepage-menu li{
+    float: none;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+}
 ul.homepage-menu li button {
     background-position: center center;
     background-repeat: no-repeat;
