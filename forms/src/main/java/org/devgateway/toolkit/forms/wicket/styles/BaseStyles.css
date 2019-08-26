@@ -185,6 +185,11 @@ hr.edit-separator {
     margin-top: 10px;
     white-space:nowrap;
 }
+@media (max-width: 1024px) {
+    .accordion-toggle .show-all{
+      margin-right: 30px;
+    }
+}
 
 .show-all:hover {
     color: #66b558;
@@ -353,6 +358,13 @@ hr.edit-separator {
 
 /* Buttons
 -------------------------------------------------- */
+
+@media (max-width: 768px) {
+    form.edit-form .btn{
+      margin-bottom: 10px !important;
+    }
+}
+
 .btn.btn-delete {
     background-color: #d02929;
     border: 1px solid #d02929;
@@ -446,4 +458,12 @@ hr.edit-separator {
 }
 .status-section .toggle-group label{
   margin-top: 0;
+}
+@media (max-width: 1024px){
+  table.table.table-hover.list-table{
+    table-layout: fixed;
+  }
+  table.table.table-hover.list-table>tbody>tr>td{
+    font-size: 11px;
+  }
 }
