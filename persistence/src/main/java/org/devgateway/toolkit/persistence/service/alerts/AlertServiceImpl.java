@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author idobre
  * @since 23/08/2019
@@ -27,6 +29,12 @@ public class AlertServiceImpl extends BaseJpaServiceImpl<Alert> implements Alert
     public Alert findBySecret(final String secret) {
         return alertRepository.findBySecret(secret);
     }
+
+    @Override
+    public List<Alert> findByEmail(final String email) {
+        return alertRepository.findByEmail(email);
+    }
+
 
     @Override
     public Alert newInstance() {

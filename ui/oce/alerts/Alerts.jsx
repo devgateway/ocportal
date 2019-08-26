@@ -160,6 +160,7 @@ class Alerts extends CRDPage {
   
   render() {
     const { departments, fetchedDepartments, items, fetchedItems, error, serverResponse } = this.state;
+  
     return (<div className="container-fluid dashboard-default">
         
         <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
@@ -274,7 +275,7 @@ class Alerts extends CRDPage {
             }
             
             {
-              serverResponse === true
+              (serverResponse !== undefined && serverResponse.status === true)
                 ? <div className="row validation-message">
                   <div className="col-md-12">
                     <h4>
@@ -283,6 +284,21 @@ class Alerts extends CRDPage {
                         <br/>
                         Please check your email and click on provided URL in order to validate your
                         email address.
+                      </Alert>
+                    </h4>
+                  </div>
+                </div>
+                : null
+            }
+            {
+              (serverResponse !== undefined && serverResponse.status === false)
+                ? <div className="row validation-message">
+                  <div className="col-md-12">
+                    <h4>
+                      <Alert bsStyle="danger">
+                        Error subscribing!
+                        <br/>
+                        {serverResponse.message}
                       </Alert>
                     </h4>
                   </div>

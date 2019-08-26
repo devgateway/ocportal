@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,12 +51,16 @@ public class AlertsController {
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @Transactional
-    public Boolean subscribeAlert(@ModelAttribute @Valid final AlertsRequest alertsRequest) {
+    public Map subscribeAlert(@ModelAttribute @Valid final AlertsRequest alertsRequest) {
+        final Map<String, Object> response = new HashMap();
         try {
             // we should subscribe to at least 1 Department or 1 Item
             if (CollectionUtils.isEmpty(alertsRequest.getDepartments())
                     && CollectionUtils.isEmpty(alertsRequest.getItems())) {
-                return false;
+
+                response.put("status", false);
+                response.put("message", "Please subscribe to at least 1 Department or 1 Item");
+                return response;
             }
 
             final Set<Department> departments;
@@ -71,7 +78,19 @@ public class AlertsController {
                 items = new HashSet<>();
             }
 
-            // TODO - check that this user doesn't have a similar Alert.
+            // check that this user doesn't have a similar Alert.
+            final List<Alert> existingAlerts = alertService.findByEmail(alertsRequest.getEmail());
+            if (!existingAlerts.isEmpty()) {
+                for (final Alert item : existingAlerts) {
+                    if (CollectionUtils.isEqualCollection(item.getDepartments(), departments)
+                            && CollectionUtils.isEqualCollection(item.getItems(), items)) {
+
+                        response.put("status", false);
+                        response.put("message", alertsRequest.getEmail() + " is already subscribed to a similar Alert");
+                        return response;
+                    }
+                }
+            }
 
             final Alert alert = new Alert(alertsRequest.getEmail(), departments, items);
             final String secret = RandomStringUtils.randomAlphanumeric(32);
@@ -82,7 +101,8 @@ public class AlertsController {
             alertService.saveAndFlush(alert);
             alertsEmailService.sendVerifyEmail(alert);
 
-            return true;
+            response.put("status", true);
+            return response;
         } catch (Exception e) {
             logger.error("Exception while subscribing to alerts", e);
             throw e;
