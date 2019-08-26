@@ -14,6 +14,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstra
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
@@ -26,6 +27,8 @@ import java.util.List;
  * @since 2019-04-17
  */
 public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchaseRequisition> {
+    private GenericSleepFormComponent unit;
+
     private GenericSleepFormComponent totalCost;
 
     public PurchaseItemPanel(final String id) {
@@ -61,8 +64,16 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         quantity.required();
         item.add(quantity);
 
-        // ComponentUtil.addTextField(item, "unit").required()
-        //         .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        unit = new GenericSleepFormComponent<>("unit",
+                (IModel<Unit>) () -> {
+                    if (item.getModelObject().getPlanItem() != null
+                            && item.getModelObject().getPlanItem().getUnitOfIssue() != null) {
+                        return item.getModelObject().getPlanItem().getUnitOfIssue();
+                    }
+                    return null;
+                });
+        unit.setOutputMarkupId(true);
+        item.add(unit);
 
         final TextFieldBootstrapFormComponent<BigDecimal> amount =
                 new TextFieldBootstrapFormComponent<BigDecimal>("amount") {
@@ -111,8 +122,14 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     (PurchaseRequisition) PurchaseItemPanel.this.getParent().getDefaultModelObject();
             final List<PlanItem> planItems = parentObject.getProject().getProcurementPlan().getPlanItems();
 
-            final Select2ChoiceBootstrapFormComponent<PlanItem> planItem = new Select2ChoiceBootstrapFormComponent<>(
-                    "planItem", new GenericChoiceProvider<>(planItems));
+            final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
+                    new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",
+                            new GenericChoiceProvider<>(planItems)) {
+                        @Override
+                        protected void onUpdate(final AjaxRequestTarget target) {
+                            target.add(unit);
+                        }
+                    };
             planItem.required();
             planItem.add(new StopEventPropagationBehavior());
 

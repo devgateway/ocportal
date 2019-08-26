@@ -7,7 +7,6 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
@@ -15,6 +14,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstra
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
@@ -23,6 +23,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
+    private GenericSleepFormComponent unit;
+
     private GenericSleepFormComponent totalCost;
 
     public TenderItemPanel(final String id) {
@@ -58,8 +60,17 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         quantity.required();
         item.add(quantity);
 
-        ComponentUtil.addTextField(item, "unitOfIssue")
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        unit = new GenericSleepFormComponent<>("unit",
+                (IModel<Unit>) () -> {
+                    if (item.getModelObject().getPurchaseItem() != null
+                            && item.getModelObject().getPurchaseItem().getPlanItem() != null
+                            && item.getModelObject().getPurchaseItem().getPlanItem().getUnitOfIssue() != null) {
+                        return item.getModelObject().getPurchaseItem().getPlanItem().getUnitOfIssue();
+                    }
+                    return null;
+                });
+        unit.setOutputMarkupId(true);
+        item.add(unit);
 
 
         final TextFieldBootstrapFormComponent<BigDecimal> price =
@@ -109,8 +120,13 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
             final List<PurchaseItem> purchaseItems = parentObject.getPurchaseRequisition().getPurchaseItems();
 
             final Select2ChoiceBootstrapFormComponent<PurchaseItem> purchaseItem =
-                    new Select2ChoiceBootstrapFormComponent<>(
-                            "purchaseItem", new GenericChoiceProvider<>(purchaseItems));
+                    new Select2ChoiceBootstrapFormComponent<PurchaseItem>(
+                            "purchaseItem", new GenericChoiceProvider<>(purchaseItems)) {
+                        @Override
+                        protected void onUpdate(final AjaxRequestTarget target) {
+                            target.add(unit);
+                        }
+                    };
             purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
 

@@ -9,6 +9,7 @@ import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -40,9 +41,10 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @ExcelExport(useTranslation = true, name = "Estimated Cost per Unit")
     private BigDecimal estimatedCost;
 
-    @ExcelExport(useTranslation = true, name = "Unit Of Issue")
-    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
-    private String unitOfIssue;
+    @ExcelExport(justExport = true, useTranslation = true, name = "Unit Of Issue")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private Unit unitOfIssue;
 
     @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
@@ -102,11 +104,11 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.estimatedCost = estimatedCost;
     }
 
-    public String getUnitOfIssue() {
+    public Unit getUnitOfIssue() {
         return unitOfIssue;
     }
 
-    public void setUnitOfIssue(final String unitOfIssue) {
+    public void setUnitOfIssue(final Unit unitOfIssue) {
         this.unitOfIssue = unitOfIssue;
     }
 
@@ -215,7 +217,14 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return item != null ? item.getLabel() : "";
+        if (item != null) {
+            if (unitOfIssue != null) {
+                return item.getLabel() + " -- " + unitOfIssue.getLabel();
+            } else {
+                return item.getLabel();
+            }
+        }
+        return "";
     }
 
     @Override

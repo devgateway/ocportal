@@ -30,6 +30,7 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
+import org.devgateway.toolkit.persistence.service.category.UnitService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -41,6 +42,9 @@ import java.math.BigDecimal;
 public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPlan> {
     @SpringBean
     private ItemService itemService;
+
+    @SpringBean
+    private UnitService unitService;
 
     @SpringBean
     private ProcurementMethodService procurementMethodService;
@@ -84,8 +88,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
         final PlanItem planItem = item.getModelObject();
         if (planItem.getEditable()) {
-            ComponentUtil.addTextField(item, "unitOfIssue").required()
-                    .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+            ComponentUtil.addSelect2ChoiceField(item, "unitOfIssue", unitService).required();
 
             final TextFieldBootstrapFormComponent<BigDecimal> quantity =
                     new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
