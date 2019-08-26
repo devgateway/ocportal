@@ -4,7 +4,31 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.StopWatch;
-import org.devgateway.ocds.persistence.mongo.*;
+import org.devgateway.ocds.persistence.mongo.Address;
+import org.devgateway.ocds.persistence.mongo.Amount;
+import org.devgateway.ocds.persistence.mongo.Award;
+import org.devgateway.ocds.persistence.mongo.Bids;
+import org.devgateway.ocds.persistence.mongo.Budget;
+import org.devgateway.ocds.persistence.mongo.Classification;
+import org.devgateway.ocds.persistence.mongo.ContactPoint;
+import org.devgateway.ocds.persistence.mongo.Contract;
+import org.devgateway.ocds.persistence.mongo.Detail;
+import org.devgateway.ocds.persistence.mongo.Document;
+import org.devgateway.ocds.persistence.mongo.Identifier;
+import org.devgateway.ocds.persistence.mongo.Item;
+import org.devgateway.ocds.persistence.mongo.MakueniAward;
+import org.devgateway.ocds.persistence.mongo.MakueniItem;
+import org.devgateway.ocds.persistence.mongo.MakueniOrganization;
+import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
+import org.devgateway.ocds.persistence.mongo.MakueniTender;
+import org.devgateway.ocds.persistence.mongo.Milestone;
+import org.devgateway.ocds.persistence.mongo.Organization;
+import org.devgateway.ocds.persistence.mongo.Period;
+import org.devgateway.ocds.persistence.mongo.Planning;
+import org.devgateway.ocds.persistence.mongo.Release;
+import org.devgateway.ocds.persistence.mongo.Tag;
+import org.devgateway.ocds.persistence.mongo.Tender;
+import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -486,7 +510,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             if (!ObjectUtils.isEmpty(converted)) {
                 consumer.accept(converted);
             }
-            }
+        }
     }
 
     public <S, C> void safeSetEach(Consumer<C> consumer, Supplier<Collection<S>> supplier, Function<S, C> converter) {
