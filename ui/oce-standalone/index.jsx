@@ -24,20 +24,20 @@ const formatDate = stringDate => {
   if (stringDate === undefined) {
     return undefined;
   }
-  
+
   let date = new Date(stringDate);
   let dd = date.getDate();
   let mm = date.getMonth() + 1;
   const yyyy = date.getFullYear().toString().substr(-2);
-  
+
   if (dd < 10) {
     dd = `0${dd}`;
   }
-  
+
   if (mm < 10) {
     mm = `0${mm}`;
   }
-  
+
   return `${dd}/${mm}/${yyyy}`;
 };
 
@@ -65,7 +65,7 @@ OCEMakueni.STYLING = styling;
 OCEMakueni.TRANSLATIONS = translations;
 
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
-CorruptionRickDashboard.STYLING.charts.traceColors = ['#234e6d', '#3f7499', '#80b1d3', '#afd5ee', '#d9effd'];
+CorruptionRickDashboard.STYLING.charts.traceColors = ['#3371b1', '#2b9ff6', '#5db7fb', '#86cafd', '#bbe2ff'];
 
 MakueniTenders.STYLING = styling;
 MakueniProcurementPlans.STYLING = styling;
