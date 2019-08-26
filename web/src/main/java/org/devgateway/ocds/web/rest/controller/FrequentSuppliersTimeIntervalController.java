@@ -90,9 +90,9 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
         )));
 
         DefaultFilterPagingRequest request = new DefaultFilterPagingRequest();
+        clearTenderStatus(request);
         if (!ObjectUtils.isEmpty(procurementMethod)) {
             request.getProcurementMethod().add(procurementMethod);
-            clearTenderStatus(request);
         }
 
         Aggregation agg = Aggregation.newAggregation(
@@ -110,7 +110,7 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
                 )).
                         count().as("count"),
                 project("count").and("identifier").previousOperation(),
-                match(where("count").gt(maxAwards)),
+                match(where("count").gte(maxAwards)),
                 sort(Sort.Direction.DESC, "count")
         );
 
