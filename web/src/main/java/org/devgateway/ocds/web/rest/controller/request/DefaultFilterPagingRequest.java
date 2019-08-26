@@ -63,7 +63,7 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     private TreeSet<String> tenderLoc;
 
     @ApiModelProperty(value = "This will filter after tender.procurementMethod")
-    private TreeSet<String> procurementMethod;
+    private TreeSet<String> procurementMethod = new TreeSet<>();
 
     @ApiModelProperty(value = "This will filter after tender.value.amount and will specify a minimum"
             + "Use /api/tenderValueInterval to get the minimum allowed.")

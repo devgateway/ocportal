@@ -2,6 +2,7 @@ package org.devgateway.ocds.web.flags.release;
 
 
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
+import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.flags.Flag;
 import org.devgateway.ocds.persistence.mongo.flags.preconditions.FlaggedReleasePredicates;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,10 @@ public class ReleaseFlagI180Processor extends ReleaseFlagI077Processor {
         flaggable.getFlags().setI180(flag);
     }
 
+    @Override
+    protected String getProcurementMethod() {
+        return Tender.ProcurementMethod.direct.toString();
+    }
 
     @PostConstruct
     @Override
