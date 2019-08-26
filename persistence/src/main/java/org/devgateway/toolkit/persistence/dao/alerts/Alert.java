@@ -8,12 +8,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -47,9 +44,13 @@ public class Alert extends AbstractAuditableEntity {
     private LocalDateTime secretValidUntil;
 
     @JsonIgnore
-    private Integer failCount;
+    private Integer failCount = 0;
 
     private LocalDateTime lastChecked;
+
+    private LocalDateTime lastSendDate;
+
+    private String lastErrorMessage;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
@@ -129,6 +130,22 @@ public class Alert extends AbstractAuditableEntity {
 
     public void setLastChecked(final LocalDateTime lastChecked) {
         this.lastChecked = lastChecked;
+    }
+
+    public LocalDateTime getLastSendDate() {
+        return lastSendDate;
+    }
+
+    public void setLastSendDate(final LocalDateTime lastSendDate) {
+        this.lastSendDate = lastSendDate;
+    }
+
+    public String getLastErrorMessage() {
+        return lastErrorMessage;
+    }
+
+    public void setLastErrorMessage(final String lastErrorMessage) {
+        this.lastErrorMessage = lastErrorMessage;
     }
 
     public Set<Department> getDepartments() {

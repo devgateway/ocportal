@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.alerts;
 
+import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -17,13 +18,11 @@ import javax.persistence.Entity;
 @Entity
 @Audited
 // @Table(indexes = {@Index(columnList = "email")})
-public class AlertsStatistics {
+public class AlertsStatistics extends AbstractAuditableEntity {
     private Integer numberSentAlerts = 0;
 
     // all time values are in milliseconds
     private Long dbTime = 0L;
-
-    private Long creationTime = 0L;
 
     private Long sendingTime = 0L;
 
@@ -32,20 +31,16 @@ public class AlertsStatistics {
     private transient Long dbTimeStart = 0L;
 
     @Transient
-    private transient Long creationTimeStart = 0L;
-
-    @Transient
     private transient Long sendingTimeStart = 0L;
 
     public void addStats(final AlertsStatistics stats) {
         this.dbTime += stats.getDbTime();
-        this.creationTime += stats.getCreationTime();
         this.sendingTime += stats.getSendingTime();
         this.numberSentAlerts += stats.getNumberSentAlerts();
     }
 
     public long getTotalProcessingTime() {
-        return dbTime + creationTime + sendingTime;
+        return dbTime + sendingTime;
     }
 
     /**
@@ -62,23 +57,6 @@ public class AlertsStatistics {
         if (this.dbTimeStart != 0) {
             this.dbTime += System.currentTimeMillis() - this.dbTimeStart;
             this.dbTimeStart = 0L;
-        }
-    }
-
-    /**
-     * Marks message creation processing
-     */
-    public void startCreationStage() {
-        this.creationTimeStart = System.currentTimeMillis();
-    }
-
-    /**
-     * Marks end of message creation processing
-     */
-    public void endCreationStage() {
-        if (this.creationTimeStart != 0) {
-            this.creationTime += System.currentTimeMillis() - this.creationTimeStart;
-            this.creationTimeStart = 0L;
         }
     }
 
@@ -115,19 +93,16 @@ public class AlertsStatistics {
         this.dbTime = dbTime;
     }
 
-    public Long getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(final Long creationTime) {
-        this.creationTime = creationTime;
-    }
-
     public Long getSendingTime() {
         return sendingTime;
     }
 
     public void setSendingTime(final Long sendingTime) {
         this.sendingTime = sendingTime;
+    }
+
+    @Override
+    public AbstractAuditableEntity getParent() {
+        return null;
     }
 }

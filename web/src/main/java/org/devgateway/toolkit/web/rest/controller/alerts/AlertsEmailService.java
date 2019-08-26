@@ -54,6 +54,15 @@ public class AlertsEmailService {
         }
     }
 
+    public void sendEmailAlert(final Alert alert, final SimpleMailMessage message) throws MailException {
+        try {
+            javaMailSender.send(message);
+        } catch (MailException e) {
+            logger.error("Failed to send email alert for for: " + alert.getEmail(), e);
+            throw e;
+        }
+    }
+
 
     private static String createURL(final HttpServletRequest request, final String resourcePath) {
         final int port = request.getServerPort();
