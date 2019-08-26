@@ -65,19 +65,19 @@ class PurchaseReq extends FeedbackPage {
                   </div>
                 </div>
                 <div className="row">
-                  {/*<div className="col-md-3">*/}
-                  {/*  <div className="item-label">Unit of Issue</div>*/}
-                  {/*  <div className="item-value">{pr.unit}</div>*/}
-                  {/*</div>*/}
-                  <div className="col-md-4">
+                  <div className="col-md-3">
+                    <div className="item-label">Unit of Issue</div>
+                    <div className="item-value">{pr.planItem.unitOfIssue.label}</div>
+                  </div>
+                  <div className="col-md-3">
                     <div className="item-label">Quantity</div>
                     <div className="item-value">{currencyFormatter(pr.quantity)}</div>
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <div className="item-label">Unit Price</div>
                     <div className="item-value">{currencyFormatter(pr.amount)}</div>
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <div className="item-label">Total Cost</div>
                     <div className="item-value">{currencyFormatter(pr.quantity * pr.amount)}</div>
                   </div>
