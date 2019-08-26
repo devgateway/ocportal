@@ -653,7 +653,12 @@
 }
 
 .status-panel.project {
-    margin-top: -10px;
+    margin-top: -10px
+}
+@media screen and (max-width: 768px){
+  .status-panel.project {
+    padding-bottom: 30px;
+  }
 }
 
 .status-panel.project .project-title {
@@ -814,4 +819,7 @@
 
 .borderless tr td {
     border: none !important;
+}
+.toggle.off .toggle-group{
+  left: -85%;
 }
