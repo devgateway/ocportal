@@ -39,22 +39,11 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String description;
 
-    @ExcelExport(useTranslation = true, name = "Unit of Issue")
-    private String unitOfIssue;
-
     @ExcelExport(useTranslation = true, name = "Quantity")
     private BigDecimal quantity;
 
     @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal unitPrice;
-
-    public String getUnitOfIssue() {
-        return unitOfIssue;
-    }
-
-    public void setUnitOfIssue(final String unitOfIssue) {
-        this.unitOfIssue = unitOfIssue;
-    }
 
     public BigDecimal getQuantity() {
         return quantity;

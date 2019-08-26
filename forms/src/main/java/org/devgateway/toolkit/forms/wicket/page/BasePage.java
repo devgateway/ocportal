@@ -61,6 +61,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
@@ -334,6 +335,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         ListWardPage.class, null,
                         new StringResourceModel("navbar.wardlist", this, null))
                         .setIconType(FontAwesomeIconType.flag));
+
+                list.add(new MenuBookmarkablePageLink<ListUnitPage>(
+                        ListUnitPage.class, null,
+                        new StringResourceModel("navbar.unitlist", this, null))
+                        .setIconType(FontAwesomeIconType.list));
 
                 return list;
             }

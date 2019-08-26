@@ -115,7 +115,8 @@ class Tender extends FeedbackPage {
                 <div className="row">
                   <div className="col-md-3">
                     <div className="item-label">Unit of Issue</div>
-                    <div className="item-value">{tenderItem.unitOfIssue}</div>
+                    <div
+                      className="item-value">{tenderItem.purchaseItem.planItem.unitOfIssue.label}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Quantity</div>
