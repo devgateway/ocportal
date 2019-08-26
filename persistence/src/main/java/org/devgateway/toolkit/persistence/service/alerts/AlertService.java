@@ -13,4 +13,6 @@ public interface AlertService extends BaseJpaService<Alert> {
     Alert findBySecret(String secret);
 
     List<Alert> findByEmail(String email);
+
+    void unsubscribeAlert(Alert alert);
 }

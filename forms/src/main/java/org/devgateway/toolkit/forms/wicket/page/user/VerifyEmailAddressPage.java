@@ -41,10 +41,8 @@ public class VerifyEmailAddressPage extends BasePage {
         super(parameters);
 
         pageTitle.setVisibilityAllowed(false);
-
         secret = parameters.get(0).toOptionalString();
     }
-
 
     @Override
     protected void onInitialize() {

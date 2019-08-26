@@ -35,6 +35,12 @@ public class AlertServiceImpl extends BaseJpaServiceImpl<Alert> implements Alert
         return alertRepository.findByEmail(email);
     }
 
+    @Override
+    @Transactional
+    public void unsubscribeAlert(final Alert alert) {
+        alert.setAlertable(false);
+        alertRepository.saveAndFlush(alert);
+    }
 
     @Override
     public Alert newInstance() {

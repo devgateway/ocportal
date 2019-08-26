@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -18,7 +18,7 @@ import java.net.URI;
  *
  * Service used to send user email alerts.
  */
-@Component
+@Service
 public class AlertsEmailService {
     private static final Logger logger = LoggerFactory.getLogger(AlertsEmailService.class);
 

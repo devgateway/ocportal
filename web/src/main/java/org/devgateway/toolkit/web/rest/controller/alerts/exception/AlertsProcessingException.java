@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.exceptions;
+package org.devgateway.toolkit.web.rest.controller.alerts.exception;
 
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 
