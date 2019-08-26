@@ -14,6 +14,11 @@
 .container-fluid {
     padding-left: 0 !important;
 }
+@media screen and (max-width: 600px){
+  .container-fluid {
+      padding-right: 0;
+  }
+}
 
 [class*="col-"].no-padding {
     padding-left: 0 !important;
@@ -43,6 +48,14 @@
     position: fixed;
     top: 60px;
     bottom: 0;
+}
+@media screen and (max-width: 600px){
+  .sidebar{
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    top: auto;
+  }
 }
 
 /* Scrollbar styling  (in Chrome) */
@@ -162,6 +175,12 @@
     position: relative;
 }
 
+@media screen and (max-width: 600px){
+  .main-content {
+      margin-left: 0;
+  }
+}
+
 .header {
     background: #ffffff;
     margin: 0;
@@ -190,6 +209,12 @@
     font-size: 18px;
     margin: 5px 0 0 0;
     text-transform: uppercase;
+}
+
+@media screen and (max-width: 600px){
+  .search-panel h3{
+    margin-bottom: 15px;
+  }
 }
 
 .search-panel .search-form {
@@ -458,6 +483,12 @@
     background-position: 99% center;
 }
 
+@media screen and (max-width: 600px){
+  .status-panel.collapsed {
+    padding-bottom: 30px;
+  }
+}
+
 .collapse-content {
     border-left: 3px solid #223a49;
     border-right: 1px solid #dfe3e9;
@@ -654,11 +685,6 @@
 
 .status-panel.project {
     margin-top: -10px
-}
-@media screen and (max-width: 768px){
-  .status-panel.project {
-    padding-bottom: 30px;
-  }
 }
 
 .status-panel.project .project-title {
