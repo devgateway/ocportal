@@ -2,13 +2,20 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
@@ -20,7 +27,10 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author idobre
@@ -35,9 +45,54 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         super(id);
     }
 
+    protected class ListItemsValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            final Set<PlanItem> planItems = new HashSet<>();
+            final List<PurchaseItem> purchaseItems = PurchaseItemPanel.this.getModelObject();
+            for (final PurchaseItem purchaseItem : purchaseItems) {
+                planItems.add(purchaseItem.getPlanItem());
+            }
+
+            if (purchaseItems.size() != 0 && purchaseItems.size() != planItems.size()) {
+                final ListView<PurchaseItem> list = (ListView<PurchaseItem>) PurchaseItemPanel.this
+                        .get("listWrapper").get("list");
+                if (list != null) {
+                    for (int i = 0; i < list.size(); i++) {
+                        final TransparentWebMarkupContainer accordion =
+                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
+
+                        final GenericBootstrapFormComponent planItem =
+                                (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
+                                        .get("headerField").get("planItem");
+
+                        if (planItem != null) {
+                            planItem.getField().error(getString("uniqueItem"));
+
+                            final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
+                            if (target.isPresent()) {
+                                target.get().add(planItem.getBorder());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        final Form form = (Form) getParent();
+        if (form != null) {
+            form.add(new ListItemsValidator());
+        }
     }
 
     @Override
