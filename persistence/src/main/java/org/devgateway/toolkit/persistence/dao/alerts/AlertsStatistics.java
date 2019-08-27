@@ -33,6 +33,14 @@ public class AlertsStatistics extends AbstractAuditableEntity {
     @Transient
     private transient Long sendingTimeStart = 0L;
 
+    public AlertsStatistics() {
+
+    }
+
+    public AlertsStatistics(final Integer numberSentAlerts) {
+        this.numberSentAlerts = numberSentAlerts;
+    }
+
     public void addStats(final AlertsStatistics stats) {
         this.dbTime += stats.getDbTime();
         this.sendingTime += stats.getSendingTime();

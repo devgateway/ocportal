@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
+import org.bson.Document;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.alerts.AlertsStatistics;
 import org.devgateway.toolkit.persistence.service.alerts.AlertService;
@@ -10,6 +11,9 @@ import org.devgateway.toolkit.web.rest.controller.alerts.exception.AlertsProcess
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 
 /**
  * @author idobre
@@ -40,12 +48,15 @@ public class AlertsManagerImpl implements AlertsManager {
     @Autowired
     private AlertsStatisticsService alertsStatisticsService;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     @Override
     public void sendAlerts() {
         final List<Alert> alerts = getAlertableUsers();
 
         logger.info(alerts.size() + " alerts(s) will be processed.");
-        List<Alert>[] lists = splitList(alerts);
+        final List<Alert>[] lists = splitList(alerts);
         logger.info(lists.length + " threads will be created.");
 
         // create and start alerts threads
@@ -78,32 +89,32 @@ public class AlertsManagerImpl implements AlertsManager {
     @Transactional
     public AlertsStatistics processAlert(final Alert alert) throws AlertsProcessingException {
         try {
-            final AlertsStatistics stats = new AlertsStatistics();
+            final AlertsStatistics stats = new AlertsStatistics(1);
+            final LocalDateTime now = LocalDateTime.now();
 
-            if (true) {
+            // get the Tenders for the email alert
+            final List<Document> documents = getTendersForAlert(alert, stats);
 
-                stats.startDbAccess();
-                // get tender alert.
-                stats.endDbAccess();
-
-                stats.setNumberSentAlerts(1);
-
-                sendAlertMessage(alert, stats);
-
-                // update Alert...
-                alert.setLastChecked(LocalDateTime.now());
-                alert.setFailCount(0);
-                alert.setLastSendDate(LocalDateTime.now());
-                alert.setLastErrorMessage(null);
-                alertService.saveAndFlush(alert);
-            } else {
-
+            if (documents.isEmpty()) {
+                alert.setLastChecked(now);
+                return stats;
             }
+
+            // send the alert
+            sendAlertMessage(alert, documents, stats);
+
+            // Update Alert in case of success
+            alert.setFailCount(0);
+            alert.setLastChecked(now);
+            alert.setLastSendDate(now);
+            alert.setLastErrorMessage(null);
+            alertService.saveAndFlush(alert);
 
             return stats;
         } catch (Exception e) {
             logger.error("Error processing alert: " + alert.getId(), e);
 
+            // Update Alert in case of failure
             alert.setFailCount(alert.getFailCount() + 1);
             alert.setLastErrorMessage(e.getMessage());
             alertService.saveAndFlush(alert);
@@ -112,8 +123,8 @@ public class AlertsManagerImpl implements AlertsManager {
         }
     }
 
-    private void sendAlertMessage(Alert alert, AlertsStatistics stats) throws MailException {
-
+    private void sendAlertMessage(final Alert alert, final List<Document> documents, final AlertsStatistics stats)
+            throws MailException {
         stats.startSendingStage();
 
         final SimpleMailMessage message = createMailMessage(alert);
@@ -135,6 +146,25 @@ public class AlertsManagerImpl implements AlertsManager {
                 + "Makueni Portal Team");
 
         return msg;
+    }
+
+    private List<Document> getTendersForAlert(final Alert alert, AlertsStatistics stats) {
+        stats.startDbAccess();
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Aggregation aggregation = newAggregation(
+                project("_id", "department", "fiscalYear", "projects"),
+                unwind("projects"),
+                unwind("projects.purchaseRequisitions"),
+                unwind("projects.purchaseRequisitions.tender"));
+
+        final List<Document> documents = mongoTemplate.aggregate(
+                aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
+
+        stats.endDbAccess();
+
+        return documents;
     }
 
     /**
