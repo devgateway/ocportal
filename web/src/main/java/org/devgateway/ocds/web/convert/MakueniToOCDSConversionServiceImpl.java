@@ -557,7 +557,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Unit createPlanningItemUnit(PurchaseItem purchaseItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
-        safeSet(unit::setName, () -> purchaseItem.getPlanItem().getUnitOfIssue().getLabel());
+        safeSet(unit::setName, purchaseItem.getPlanItem().getUnitOfIssue()::getLabel);
         safeSet(unit::setId, purchaseItem::getId, this::longIdToString);
         safeSet(unit::setValue, purchaseItem::getAmount, this::convertAmount);
         return unit;
