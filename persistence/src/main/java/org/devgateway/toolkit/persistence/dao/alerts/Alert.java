@@ -20,9 +20,9 @@ import java.util.Set;
  * @since 2019-08-21
  */
 
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Entity
-@Audited
+// @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+// @Entity
+// @Audited
 // @Table(indexes = {@Index(columnList = "aaa"), @Index(columnList = "bbb")})
 public class Alert extends AbstractAuditableEntity {
     private String email;
