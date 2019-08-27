@@ -54,15 +54,15 @@ class OverviewChart extends FrontendDateFilterableChart {
     return {
       xaxis: {
         title: {
-          text: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+          this.props.monthly ? this.t('general:month') : this.t('general:year'),
           font:{
             color: '#223a49'
           }
-        }
+        },
         type: 'category'
       },
       yaxis: {
-        title:{
+        title: {
           text: this.t('charts:overview:yAxisName'),
           font:{
             color: '#223a49'
