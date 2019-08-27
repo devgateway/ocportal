@@ -15,11 +15,11 @@ class OverviewChart extends FrontendDateFilterableChart {
       award: awards[date]
     }));
   }
-  
+
   getRawData() {
     return super.getData();
   }
-  
+
   getData() {
     const data = super.getData();
     if (!data) return [];
@@ -27,7 +27,7 @@ class OverviewChart extends FrontendDateFilterableChart {
       award: this.t('charts:overview:traces:award'),
       tender: this.t('charts:overview:traces:tender')
     };
-    
+
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly ?
       data.map(pluckImm('month'))
@@ -35,7 +35,7 @@ class OverviewChart extends FrontendDateFilterableChart {
       .toArray() :
       data.map(pluckImm('year'))
       .toArray();
-    
+
     return Object.keys(LINES)
     .map((key, index) => ({
         x: dates,
@@ -49,7 +49,7 @@ class OverviewChart extends FrontendDateFilterableChart {
       })
     );
   }
-  
+
   getLayout() {
     return {
       xaxis: {
@@ -57,7 +57,12 @@ class OverviewChart extends FrontendDateFilterableChart {
         type: 'category'
       },
       yaxis: {
-        title: this.t('charts:overview:yAxisName'),
+        title:{
+          text: this.t('charts:overview:yAxisName'),
+          font:{
+            color: '#223a49'
+          }
+        },
         exponentformat: 'none',
         tickprefix: '   '
       }
