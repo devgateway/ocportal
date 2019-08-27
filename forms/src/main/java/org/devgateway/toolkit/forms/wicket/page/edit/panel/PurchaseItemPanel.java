@@ -56,7 +56,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
             final Set<PlanItem> planItems = new HashSet<>();
             final List<PurchaseItem> purchaseItems = PurchaseItemPanel.this.getModelObject();
             for (final PurchaseItem purchaseItem : purchaseItems) {
-                planItems.add(purchaseItem.getPlanItem());
+                if (purchaseItem.getPlanItem() != null) {
+                    planItems.add(purchaseItem.getPlanItem());
+                }
             }
 
             if (purchaseItems.size() != 0 && purchaseItems.size() != planItems.size()) {
