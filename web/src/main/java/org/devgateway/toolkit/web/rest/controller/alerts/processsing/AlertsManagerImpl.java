@@ -161,10 +161,17 @@ public class AlertsManagerImpl implements AlertsManager {
         stats.startDbAccess();
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
-        final Criteria criteria = new Criteria().orOperator(
-                createFilterCriteria("department._id", alert.getDepartments()),
-                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
-                        alert.getItems()));
+        final List<Criteria> criteriaList = new ArrayList<>();
+        if (!alert.getDepartments().isEmpty()) {
+            criteriaList.add(createFilterCriteria("department._id", alert.getDepartments()));
+        }
+        if (!alert.getItems().isEmpty()) {
+            criteriaList.add(createFilterCriteria(
+                    "projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                    alert.getItems()));
+        }
+
+        final Criteria criteria = new Criteria().orOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 
         final Aggregation aggregation = newAggregation(
                 project("_id", "department", "fiscalYear", "projects"),
