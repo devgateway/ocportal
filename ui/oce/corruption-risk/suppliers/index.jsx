@@ -22,7 +22,7 @@ class SList extends PaginatedTable {
     const { searchQuery } = this.props;
     const eps = super.getCustomEP();
     return searchQuery ?
-      eps.map(ep => ep.addSearch('text', searchQuery)) :
+      eps.map(ep => ep.addSearch('text',  decodeURIComponent(searchQuery))) :
       eps;
   }
 
@@ -116,16 +116,19 @@ class Suppliers extends CRDPage {
   onNewDataRequested(path, newData) {
     const supplierIds = newData.get('data').map(pluckImm('supplierId'));
     this.setState({ winLossFlagInfo: Map() });
-    fetchEP(new URI('/api/procurementsWonLost').addSearch({
-      bidderId: supplierIds.toJS(),
-    })).then(result => {
-      this.setState({
-        winLossFlagInfo: Map(result.map(datum => [
-          datum.applied._id,
-          datum
-        ]))
-      });
-    });
+    if (supplierIds.toJS().length !== 0) {
+      fetchEP(new URI('/api/procurementsWonLost').addSearch({
+        bidderId: supplierIds.toJS(),
+      }))
+        .then(result => {
+          this.setState({
+            winLossFlagInfo: Map(result.map(datum => [
+              datum.applied._id,
+              datum
+            ]))
+          });
+        });
+    }
     this.props.requestNewData(
       path,
       newData.set('count', newData.getIn(['count', 0, 'count'], 0))
