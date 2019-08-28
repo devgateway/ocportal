@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
 import org.bson.Document;
+import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.alerts.AlertsStatistics;
 import org.devgateway.toolkit.persistence.service.alerts.AlertService;
@@ -14,18 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
  * @author idobre
@@ -152,11 +161,22 @@ public class AlertsManagerImpl implements AlertsManager {
         stats.startDbAccess();
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
+        final Criteria criteria = new Criteria().orOperator(
+                createFilterCriteria("department._id", alert.getDepartments()),
+                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                        alert.getItems()));
+
         final Aggregation aggregation = newAggregation(
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
                 unwind("projects.purchaseRequisitions"),
-                unwind("projects.purchaseRequisitions.tender"));
+                unwind("projects.purchaseRequisitions.tender"),
+                match(where("projects.purchaseRequisitions.tender.closingDate").gte(new Date())),
+                match(where("projects.purchaseRequisitions.lastModifiedDate")    // TODO change to "gte"
+                        .lte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))),
+                match(criteria));
+
+        logger.error(">>>>> " + aggregation);
 
         final List<Document> documents = mongoTemplate.aggregate(
                 aggregation.withOptions(options), "procurementPlan", Document.class)
@@ -200,5 +220,18 @@ public class AlertsManagerImpl implements AlertsManager {
         }
 
         return (List[]) splitted.toArray(new List[splitted.size()]);
+    }
+
+    private <S extends GenericPersistable> Criteria createFilterCriteria(
+            final String filterName, final Set<S> filterValues) {
+        if (ObjectUtils.isEmpty(filterValues)) {
+            return new Criteria();
+        }
+
+        final Set<Long> ids = filterValues.stream()
+                .map(GenericPersistable::getId)
+                .collect(Collectors.toSet());
+
+        return where(filterName).in(ids.toArray());
     }
 }

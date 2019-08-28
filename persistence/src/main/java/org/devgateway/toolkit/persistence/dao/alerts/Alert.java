@@ -2,12 +2,14 @@ package org.devgateway.toolkit.persistence.dao.alerts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
@@ -50,6 +52,7 @@ public class Alert extends AbstractAuditableEntity {
 
     private LocalDateTime lastSendDate;
 
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH)
     private String lastErrorMessage;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

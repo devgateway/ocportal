@@ -21,6 +21,8 @@ import javax.persistence.Entity;
 public class AlertsStatistics extends AbstractAuditableEntity {
     private Integer numberSentAlerts = 0;
 
+    private Integer numberErrors = 0;
+
     // all time values are in milliseconds
     private Long dbTime = 0L;
 
@@ -45,6 +47,7 @@ public class AlertsStatistics extends AbstractAuditableEntity {
         this.dbTime += stats.getDbTime();
         this.sendingTime += stats.getSendingTime();
         this.numberSentAlerts += stats.getNumberSentAlerts();
+        this.numberErrors += stats.getNumberErrors();
     }
 
     public long getTotalProcessingTime() {
@@ -91,6 +94,14 @@ public class AlertsStatistics extends AbstractAuditableEntity {
 
     public void setNumberSentAlerts(final Integer numberSentAlerts) {
         this.numberSentAlerts = numberSentAlerts;
+    }
+
+    public Integer getNumberErrors() {
+        return numberErrors;
+    }
+
+    public void setNumberErrors(final Integer numberErrors) {
+        this.numberErrors = numberErrors;
     }
 
     public Long getDbTime() {

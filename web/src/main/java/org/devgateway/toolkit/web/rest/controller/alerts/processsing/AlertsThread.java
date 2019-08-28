@@ -79,7 +79,7 @@ public class AlertsThread extends Thread {
                 // add to global thread statistics data
                 this.threadStats.addStats(stats);
             } catch (Exception e) {
-                this.errors++;
+                threadStats.setNumberErrors(++this.errors);
                 logger.error(getName()
                         + " : Couldn't process alert: " + alert.getId() + " - email: " + alert.getEmail(), e);
             }
