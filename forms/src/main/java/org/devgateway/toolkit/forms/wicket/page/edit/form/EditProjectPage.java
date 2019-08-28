@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -119,6 +120,10 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
                 }
             }
 
+            @Override
+            public void onEvent(final IEvent<?> event) {
+                ComponentUtil.enableDisableEvent(this, event);
+            }
         };
         editForm.add(allSubcounties);
 
@@ -141,6 +146,10 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
                 }
             }
 
+            @Override
+            public void onEvent(final IEvent<?> event) {
+                ComponentUtil.enableDisableEvent(this, event);
+            }
         };
         editForm.add(allWards);
 
