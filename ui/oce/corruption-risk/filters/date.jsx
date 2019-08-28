@@ -57,7 +57,7 @@ class DateBox extends FilterBox{
              </span>
            )
         })}
-        <p>
+        <p className="hint">
           {this.t('yearsBar:ctrlClickHint')}
         </p>
         <div className="toggleable-wrapper">
