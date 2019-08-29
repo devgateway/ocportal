@@ -506,5 +506,10 @@ hr.edit-separator {
     color: #21ad59 !important;
 }
 
+.fa.fa-frown-o.unsubscribe {
+    font-size: 7em;
+    color: #333;
+}
+
 /*
 -------------------------------------------------- */

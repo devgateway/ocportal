@@ -65,7 +65,8 @@ public class AlertsManagerImpl implements AlertsManager {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public void sendAlerts() {
+    @Transactional
+    public synchronized void sendAlerts() {
         final List<Alert> alerts = getAlertableUsers();
 
         logger.info(alerts.size() + " alerts(s) will be processed.");
@@ -91,10 +92,10 @@ public class AlertsManagerImpl implements AlertsManager {
 
                 globalStats.addStats(thread.getThreadStats());
             }
+
+            alertsStatisticsService.saveAndFlush(globalStats);
         } catch (InterruptedException e) {
             logger.error("Couldn't join all threads", e);
-        } finally {
-            alertsStatisticsService.saveAndFlush(globalStats);
         }
     }
 
@@ -166,13 +167,13 @@ public class AlertsManagerImpl implements AlertsManager {
         msg.setSubject("Makueni OC Portal - Notifications");
 
         msg.setText("Hello,\n\n"
-                + "You have subscribed to receive alerts from Makueni OC Portal." +
-                " Please use the links bellow to check the latest updates \n\n"
+                + "You have subscribed to receive alerts from Makueni OC Portal."
+                + " Please use the links bellow to check the latest updates \n\n"
                 + tenderLinks.toString() + "\n\n"
                 + "Thanks,\n"
                 + "Makueni Portal Team \n\n\n"
-                + "Don't want to receive this email alerts anymore? Click the link: " +
-                "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
+                + "If you do not want to receive our email alerts anymore please click on the following link: "
+                + "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
 
         return msg;
     }
@@ -202,8 +203,6 @@ public class AlertsManagerImpl implements AlertsManager {
                 match(where("projects.purchaseRequisitions.lastModifiedDate")    // TODO change to "gte"
                         .lte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))),
                 match(criteria));
-
-        logger.error(">>>>> " + aggregation);
 
         final List<Document> documents = mongoTemplate.aggregate(
                 aggregation.withOptions(options), "procurementPlan", Document.class)
