@@ -1,10 +1,14 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.slf4j.Logger;
@@ -46,6 +50,28 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
         if (isTerminated()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
+    }
+
+    @Override
+    protected ModalSaveEditPageButton getRevertToDraftPageButton() {
+        ModalSaveEditPageButton revertToDraftPageButton = super.getRevertToDraftPageButton();
+        if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
+            revertToDraftPageButton.setLabel(new StringResourceModel("reactivate", this, null));
+        }
+        return revertToDraftPageButton;
+    }
+
+    @Override
+    protected ButtonContentModal createRevertToDraftModal() {
+        ButtonContentModal revertToDraftModal = super.createRevertToDraftModal();
+        if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
+            revertToDraftModal = new ButtonContentModal(
+                    "revertToDraftModal",
+                    new StringResourceModel("reactivateModal", this, null),
+                    Model.of("REACTIVATE"), Buttons.Type.Warning
+            );
+        }
+        return revertToDraftModal;
     }
 
     @Override
