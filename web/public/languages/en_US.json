@@ -322,7 +322,7 @@
   "crd:contracts:list:procuringEntity": "Procuring entity",
   "crd:contracts:list:awardAmount": "Award Amount",
   "crd:contracts:top-search": "Search within contracts",
-  "crd:contracts:hint": "Click box to search OCIDs",
+  "crd:contracts:hint": "Click box to perform exact phrase search",
   "crd:contracts:top-search:resultsFor:sg": "$#$ result for \"$#$\"",
   "crd:contracts:top-search:resultsFor:pl": "$#$ results for \"$#$\"",
   "crd:contracts:top-search:nothingFound": "Nothing found",
