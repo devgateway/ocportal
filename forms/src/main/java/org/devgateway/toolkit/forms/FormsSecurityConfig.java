@@ -49,11 +49,12 @@ public class FormsSecurityConfig extends WebSecurityConfig {
                 "/img/**", "/css*/**", "/js*/**", "/assets*/**", "/wicket/resource/**/*.js",
                 "/wicket/resource/**/*.css", "/wicket/resource/**/*.png", "/wicket/resource/**/*.jpg",
                 "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**", "/verifyEmail/**",
-                "/resources/**", "/resources/public/**");
+                "/unsubscribeEmail/**", "/resources/**", "/resources/public/**");
     }
 
     /**
      * This bean defines the same key in the {@link RememberMeAuthenticationProvider}
+     *
      * @return
      */
     @Bean

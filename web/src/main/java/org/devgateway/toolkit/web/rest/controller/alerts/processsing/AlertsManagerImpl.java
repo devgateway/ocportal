@@ -12,6 +12,7 @@ import org.devgateway.toolkit.web.rest.controller.alerts.exception.AlertsProcess
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
@@ -47,6 +48,9 @@ public class AlertsManagerImpl implements AlertsManager {
     private static final Integer MAX_FAIL_COUNT = 3;
 
     private static final int THREAD_COUNT = 2;
+
+    @Value("${serverURL}")
+    private String serverURL;
 
     @Autowired
     private AlertService alertService;
@@ -136,23 +140,39 @@ public class AlertsManagerImpl implements AlertsManager {
             throws MailException {
         stats.startSendingStage();
 
-        final SimpleMailMessage message = createMailMessage(alert);
+        final SimpleMailMessage message = createMailMessage(alert, documents);
         alertsEmailService.sendEmailAlert(alert, message);
 
         stats.endSendingStage();
     }
 
-    private SimpleMailMessage createMailMessage(final Alert alert) {
+    private SimpleMailMessage createMailMessage(final Alert alert, final List<Document> documents) {
         final SimpleMailMessage msg = new SimpleMailMessage();
+
+        final StringBuilder tenderLinks = new StringBuilder();
+        for (final Document document : documents) {
+            final Document project = (Document) document.get("projects");
+            final Document purchaseReq = (Document) project.get("purchaseRequisitions");
+            final Long purchaseReqId = (Long) purchaseReq.get("_id");
+
+            final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, purchaseReqId);
+            tenderLinks.append("* <a target=\"_blank\" href=\"" + tenderUrl + "\">" + tenderUrl + "</a>\n");
+        }
+
+        final String unsubscribeURL = String.format("%s/unsubscribeEmail/%s", serverURL, alert.getSecret());
 
         msg.setTo(alert.getEmail());
         msg.setFrom("noreply@dgstg.org");
         msg.setSubject("Makueni OC Portal - Notifications");
 
         msg.setText("Hello,\n\n"
-                + "Alerts....\n\n"
+                + "You have subscribed to receive alerts from Makueni OC Portal." +
+                " Please use the links bellow to check the latest updates \n\n"
+                + tenderLinks.toString() + "\n\n"
                 + "Thanks,\n"
-                + "Makueni Portal Team");
+                + "Makueni Portal Team \n\n\n"
+                + "Don't want to receive this email alerts anymore? Click the link: " +
+                "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
 
         return msg;
     }
