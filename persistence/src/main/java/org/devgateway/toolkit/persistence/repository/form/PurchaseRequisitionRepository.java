@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -20,16 +21,16 @@ import java.util.List;
 @Transactional
 public interface PurchaseRequisitionRepository extends AbstractMakueniEntityRepository<PurchaseRequisition> {
     @Override
-    @Query("select purchase from #{#entityName} purchase where lower(purchase.title) like %:name%")
-    Page<PurchaseRequisition> searchText(@Param("name") String name, Pageable page);
-
-    Long countByProjectProcurementPlanAndTitleAndIdNot(ProcurementPlan procurementPlan, String title, Long id);
+    @Query("select purchase from #{#entityName} purchase where lower(purchase.purchaseRequestNumber) like %:search%")
+    Page<PurchaseRequisition> searchText(@Param("search") String search, Pageable page);
 
     List<PurchaseRequisition> findByProject(Project project);
 
     @EntityGraph(attributePaths = {"project", "tender", "tenderQuotationEvaluation", "professionalOpinion",
             "awardNotification", "awardAcceptance", "contract", "purchaseItems"})
     List<PurchaseRequisition> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
+
+    Stream<PurchaseRequisition> findByStatus(String status);
 
     @Override
     @Query("select c from  #{#entityName} c where c.project.procurementPlan.fiscalYear = :fiscalYear")

@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.service.filterstate.form;
 
-import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -21,8 +20,6 @@ import java.util.List;
 public class PurchaseRequisitionFilterState extends StatusAuditableEntityFilterState<PurchaseRequisition> {
     private Project project;
 
-    private String title;
-
     @Override
     public Specification<PurchaseRequisition> getSpecification() {
         return (root, query, cb) -> {
@@ -42,11 +39,6 @@ public class PurchaseRequisitionFilterState extends StatusAuditableEntityFilterS
                                 .get(ProcurementPlan_.fiscalYear), procurementPlan.getFiscalYear()));
                     }
                 }
-
-                if (StringUtils.isNotBlank(title)) {
-                    predicates.add(cb.like(
-                            cb.lower(root.get(PurchaseRequisition_.title)), "%" + title.toLowerCase() + "%"));
-                }
             }
 
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
@@ -60,13 +52,5 @@ public class PurchaseRequisitionFilterState extends StatusAuditableEntityFilterS
 
     public void setProject(final Project project) {
         this.project = project;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }

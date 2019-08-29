@@ -3,16 +3,7 @@
  */
 package org.devgateway.ocds.persistence.dao;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -21,7 +12,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author mpost
@@ -59,7 +57,6 @@ public class UserDashboard extends AbstractAuditableEntity implements Serializab
 
     @Override
     public AbstractAuditableEntity getParent() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -81,8 +78,6 @@ public class UserDashboard extends AbstractAuditableEntity implements Serializab
 
     @Override
     public void setLabel(String label) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

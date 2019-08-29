@@ -2,6 +2,7 @@ import FilterBox from "./box";
 import ProcuringEntity from "../../filters/procuring-entity";
 import Supplier from "../../filters/supplier";
 import {Set} from "immutable";
+import Buyer from '../../filters/buyer';
 
 class Organizations extends FilterBox{
   isActive(){
@@ -24,6 +25,7 @@ class Organizations extends FilterBox{
       <div className="box-content">
         {this.renderChild(ProcuringEntity, 'procuringEntityId')}
         {this.renderChild(Supplier, 'supplierId')}
+        {this.renderChild(Buyer, 'buyerId')}
       </div>
     )
   }

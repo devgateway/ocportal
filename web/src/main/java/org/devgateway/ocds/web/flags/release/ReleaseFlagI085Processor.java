@@ -1,20 +1,22 @@
 package org.devgateway.ocds.web.flags.release;
 
-import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Detail;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.flags.AbstractFlaggedReleaseFlagProcessor;
 import org.devgateway.ocds.persistence.mongo.flags.Flag;
 import org.devgateway.ocds.persistence.mongo.flags.FlagType;
 import org.devgateway.ocds.persistence.mongo.flags.preconditions.FlaggedReleasePredicates;
-import org.devgateway.ocds.web.rest.controller.GenericOCDSController;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,15 +27,22 @@ import java.util.Set;
 @Component
 public class ReleaseFlagI085Processor extends AbstractFlaggedReleaseFlagProcessor {
 
-    public static final BigDecimal I085_LOW_THRESH = BigDecimal.valueOf(0.2);
-    public static final BigDecimal I085_HI_THRESH = BigDecimal.valueOf(0.8);
+    private MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
+
+    public BigDecimal getPercent(BigDecimal left, BigDecimal right) {
+        if (left.equals(right) || right.equals(BigDecimal.ZERO)) {
+            return null;
+        }
+        BigDecimal divide = left.divide(right, mc);
+        return divide;
+    }
 
     @PostConstruct
     @Override
     protected void setPredicates() {
         preconditionsPredicates = Collections.synchronizedList(Arrays.asList(
-                FlaggedReleasePredicates.ACTIVE_AWARD,
-                FlaggedReleasePredicates.ELECTRONIC_SUBMISSION
+                FlaggedReleasePredicates.ACTIVE_AWARD, FlaggedReleasePredicates.OPEN_PROCUREMENT_METHOD,
+                FlaggedReleasePredicates.MULTIPLE_BIDS
         ));
     }
 
@@ -44,49 +53,32 @@ public class ReleaseFlagI085Processor extends AbstractFlaggedReleaseFlagProcesso
 
     @Override
     protected Set<FlagType> flagTypes() {
-        return new HashSet<FlagType>(Arrays.asList(FlagType.FRAUD, FlagType.COLLUSION));
+        return new HashSet<>(Arrays.asList(FlagType.FRAUD, FlagType.COLLUSION));
     }
 
     @Override
     protected Boolean calculateFlag(FlaggedRelease flaggable, StringBuffer rationale) {
-        boolean result = false;
-
+        List<BigDecimal> bids = new ArrayList<>();
         for (Detail bid : flaggable.getBids().getDetails()) {
-            for (Award award : flaggable.getAwards()) {
-                if (!Award.Status.active.equals(award.getStatus()) || bid.getValue() == null
-                        || bid.getValue().getAmount() == null || award.getValue() == null || award.getValue()
-                        .getAmount() == null || !award.getValue().getCurrency().equals(bid.getValue().getCurrency())
-                        || award.getValue().getAmount().equals(bid.getValue().getAmount())) {
-                    continue;
-                }
+            bids.add(bid.getValue().getAmount());
+        }
+        for (int x = 0; x < bids.size(); x++) {
+            for (int y = 0; y < bids.size(); y++) {
+                BigDecimal percent = getPercent(bids.get(x), bids.get(y));
 
-                BigDecimal d = award.getValue().getAmount().subtract(bid.getValue().getAmount())
-                        .abs().divide(award.getValue().getAmount().max(bid.getValue().getAmount()),
-                                5, BigDecimal.ROUND_HALF_UP);
-                if (d.compareTo(I085_HI_THRESH) > 0 || d.compareTo(I085_LOW_THRESH) < 0) {
-                    continue;
-                }
-
-
-                BigDecimal dLeft = relativeDistanceLeft(bid.getValue().getAmount(), award.getValue().getAmount()).
-                        multiply(GenericOCDSController.ONE_HUNDRED);
-
-                BigDecimal dRight = relativeDistanceRight(bid.getValue().getAmount(), award.getValue().getAmount()).
-                        multiply(GenericOCDSController.ONE_HUNDRED);
-
-                //using the same logic as owen here...
-                if (dLeft.doubleValue() % 1 == 0 || dRight.doubleValue() % 1 == 0) {
-                    result = true;
-                    rationale.append("Award=").append(award.getValue().getAmount().setScale(
-                            5, BigDecimal.ROUND_HALF_UP))
-                            .append(" with bid=").append(bid.getValue().getAmount().setScale(
-                            5, BigDecimal.ROUND_HALF_UP))
-                            .append("; ");
-                    break;
+                //percent has to be non null, with scale of 2 or less, and less than twice the other number
+                if (percent != null && percent.scale() <= 2 && percent.compareTo(BigDecimal.valueOf(2)) < 0) {
+                    rationale.append("Bids ")
+                            .append(bids.get(x))
+                            .append(" and ")
+                            .append(bids.get(y))
+                            .append(" are an exact % apart: ")
+                            .append(percent);
+                    return true;
                 }
             }
         }
-        return result;
+        return false;
     }
 
 }

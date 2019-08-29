@@ -2,6 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
@@ -30,6 +31,9 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        editForm.add(new GenericSleepFormComponent<>("purchaseRequisition.project.procurementPlan.department"));
+        editForm.add(new GenericSleepFormComponent<>("purchaseRequisition.project.procurementPlan.fiscalYear"));
 
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);

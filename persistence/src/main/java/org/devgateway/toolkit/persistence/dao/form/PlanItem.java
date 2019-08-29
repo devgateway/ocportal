@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Labelable;
@@ -8,6 +9,7 @@ import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -28,68 +30,62 @@ import java.math.BigDecimal;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id"), @Index(columnList = "description")})
+@Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> implements ListViewItem, Labelable {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
 
-    @ExcelExport(useTranslation = true)
-    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
-    private String description;
-
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Estimated Cost per Unit")
     private BigDecimal estimatedCost;
 
-    @ExcelExport(useTranslation = true)
-    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
-    private String unitOfIssue;
+    @ExcelExport(justExport = true, useTranslation = true, name = "Unit Of Issue")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private Unit unitOfIssue;
 
-    @ExcelExport(useTranslation = true)
-    private Integer quantity;
+    @ExcelExport(useTranslation = true, name = "Quantity")
+    private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true)
-    private BigDecimal unitPrice;
-
-    @ExcelExport(useTranslation = true)
-    private BigDecimal totalCost;
-
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Account")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Target Group Value")
     private BigDecimal targetGroupValue;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "1st Quarter")
     private BigDecimal quarter1st;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "2nd Quarter")
     private BigDecimal quarter2nd;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "3rd Quarter")
     private BigDecimal quarter3rd;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "4th Quarter")
     private BigDecimal quarter4th;
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean editable = false;
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     public Item getItem() {
@@ -100,14 +96,6 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.item = item;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
     public BigDecimal getEstimatedCost() {
         return estimatedCost;
     }
@@ -116,36 +104,20 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
         this.estimatedCost = estimatedCost;
     }
 
-    public String getUnitOfIssue() {
+    public Unit getUnitOfIssue() {
         return unitOfIssue;
     }
 
-    public void setUnitOfIssue(final String unitOfIssue) {
+    public void setUnitOfIssue(final Unit unitOfIssue) {
         this.unitOfIssue = unitOfIssue;
     }
 
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(final Integer quantity) {
+    public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(final BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(final BigDecimal totalCost) {
-        this.totalCost = totalCost;
     }
 
     public ProcurementMethod getProcurementMethod() {
@@ -213,6 +185,8 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return editable;
     }
@@ -223,6 +197,8 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }
@@ -238,8 +214,17 @@ public class PlanItem extends AbstractChildAuditableEntity<ProcurementPlan> impl
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return description;
+        if (item != null) {
+            if (unitOfIssue != null) {
+                return item.getLabel() + " -- " + unitOfIssue.getLabel();
+            } else {
+                return item.getLabel();
+            }
+        }
+        return "";
     }
 
     @Override

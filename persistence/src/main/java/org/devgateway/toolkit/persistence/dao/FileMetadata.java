@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -38,11 +39,15 @@ import java.io.Serializable;
 public class FileMetadata extends AbstractAuditableEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @org.springframework.data.annotation.Transient
+    @JsonIgnore
     private FileContent content;
 
     private String name;
 
     private String contentType;
+
+    private String url;
 
     private long size;
 
@@ -73,6 +78,14 @@ public class FileMetadata extends AbstractAuditableEntity implements Serializabl
 
     public void setContentType(final String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(final String url) {
+        this.url = url;
     }
 
     public long getSize() {

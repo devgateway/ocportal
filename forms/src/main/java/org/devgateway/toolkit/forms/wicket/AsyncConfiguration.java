@@ -17,7 +17,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     public ThreadPoolTaskExecutor getAsyncExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setMaxPoolSize(1);
-        taskExecutor.setThreadNamePrefix("VNImportServiceExecutor-");
+        taskExecutor.setThreadNamePrefix("AsyncExecutor-");
         return taskExecutor;
     }
 

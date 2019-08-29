@@ -24,8 +24,8 @@ class CostEffectiveness extends FrontendDateFilterableChart{
     let data = super.getData();
     if(!data) return [];
     let traces = [
-      this.mkTrace(this.t('charts:costEffectiveness:traces:awardPrice'), 0),
-      this.mkTrace(this.t('charts:costEffectiveness:traces:difference'), 1)
+      this.mkTrace(this.t('charts:costEffectiveness:traces:tenderPrice'), 0),
+      this.mkTrace(this.t('charts:costEffectiveness:traces:awardPrice'), 1)
     ];
 
     let {hoverFormatter} = this.props.styling.charts;
@@ -36,12 +36,12 @@ class CostEffectiveness extends FrontendDateFilterableChart{
           datum.get('year');
       traces.forEach(trace => trace.x.push(date));
       let tender = datum.get('totalTenderAmount');
-      let diff = datum.get('diffTenderAwardAmount');
+      let award = datum.get('totalAwardAmount');
       traces[0].y.push(tender);
-      traces[1].y.push(diff);
+      traces[1].y.push(award);
       if(hoverFormatter){
         traces[0].text.push(hoverFormatter(tender));
-        traces[1].text.push(hoverFormatter(diff));
+        traces[1].text.push(hoverFormatter(award));
       }
     });
 
@@ -50,7 +50,7 @@ class CostEffectiveness extends FrontendDateFilterableChart{
 
   getLayout(){
     return {
-      barmode: "relative",
+      barmode: "group",
       xaxis: {
         title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
         type: "category"

@@ -1,7 +1,7 @@
 import URI from 'urijs';
 /**
- * Returns a function that will invoke `func` property on its argument
- * @param {Function} func
+ * Returns a function that will invoke `funcName` property on its argument
+ * @param {Function} funcName
  * @returns {Function}
  */
 export const callFunc = funcName => obj => obj[funcName]();
@@ -9,6 +9,8 @@ export const callFunc = funcName => obj => obj[funcName]();
 export const pluck = fieldName => obj => obj[fieldName];
 
 export const pluckImm = (fieldName, ...args) => imm => imm.get(fieldName, ...args);
+
+export const asPercent = (fr) => 100 * fr.toFixed(4);
 
 export const fetchJson = url => fetch(url, { credentials: 'same-origin' }).then(callFunc('json'));
 

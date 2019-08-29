@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -23,13 +24,13 @@ import java.util.Set;
 @MappedSuperclass
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity
         implements Labelable, SingleFileMetadatable {
-    @ExcelExport(useTranslation = true,
+    @ExcelExport(useTranslation = true, name = "Approved Date",
             onlyForClass = {ProcurementPlan.class, Project.class, PurchaseRequisition.class, ProfessionalOpinion.class})
     private Date approvedDate;
 
     @ExcelExport(justExport = true, useTranslation = true, onlyForClass = {ProcurementPlan.class, CabinetPaper.class,
             PurchaseRequisition.class, Tender.class, TenderQuotationEvaluation.class, ProfessionalOpinion.class,
-            AwardNotification.class, AwardAcceptance.class})
+            AwardNotification.class, AwardAcceptance.class}, name = "Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
@@ -43,9 +44,13 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
      *
      * @return
      */
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public AbstractAuditableEntity getParent() {
         return null;
     }

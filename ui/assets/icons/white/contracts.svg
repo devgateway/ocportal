@@ -1,12 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 22.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 23.0.6, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#ffffff;}
+	.st0{fill:none;stroke:#29722A;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;}
+	.st1{fill:#29722A;}
 </style>
-<path class="st0" d="M28.5,87.7h24v-12h-24V87.7z M28.5,111.7h24v-12h-24V111.7z M28.5,63.7h24v-12h-24V63.7z M124.5,63.7h-12h-24
-	v12v48v72h84v-12v-12h12h12v-96v-12H124.5z M100.5,99.7h48v12h-48V99.7z M100.5,147.7h24v12h-24V147.7z M160.5,183.7h-60v-12h60
-	V183.7z M160.5,135.7h-60v-12h60V135.7z M172.5,87.7h-72v-12h72V87.7z M112.5,3.8H4.5v120v12h72v-12v-60v-12h36V3.8z M100.5,39.7
-	h-36v24v12v36v12h-48v-12v-12v-12v-12v-12v-12v-12v-12v-12h48h24h12V39.7z M28.5,39.7h24v-12h-24V39.7z"/>
+<rect x="35.2" y="41.1" class="st0" width="44" height="32"/>
+<polygon class="st0" points="28.2,34.1 28.2,59.1 21.2,59.1 21.2,27.1 65.2,27.1 65.2,34.1 "/>
+<polygon class="st0" points="35.2,41.1 35.2,66.1 28.2,66.1 28.2,34.1 72.2,34.1 72.2,41.1 "/>
+<circle class="st1" cx="54.2" cy="36.1" r="1"/>
+<circle class="st1" cx="57.2" cy="39.1" r="1"/>
+<circle class="st1" cx="60.2" cy="36.1" r="1"/>
+<circle class="st1" cx="66.2" cy="36.1" r="1"/>
+<circle class="st1" cx="63.2" cy="39.1" r="1"/>
+<circle class="st1" cx="69.2" cy="39.1" r="1"/>
+<circle class="st1" cx="48.2" cy="36.1" r="1"/>
+<circle class="st1" cx="51.2" cy="39.1" r="1"/>
+<circle class="st1" cx="30.2" cy="36.1" r="1"/>
+<circle class="st1" cx="30.2" cy="42.1" r="1"/>
+<circle class="st1" cx="33.2" cy="39.1" r="1"/>
+<circle class="st1" cx="33.2" cy="45.1" r="1"/>
+<circle class="st1" cx="36.2" cy="36.1" r="1"/>
+<circle class="st1" cx="42.2" cy="36.1" r="1"/>
+<circle class="st1" cx="39.2" cy="39.1" r="1"/>
+<circle class="st1" cx="45.2" cy="39.1" r="1"/>
+<circle class="st1" cx="30.2" cy="48.1" r="1"/>
+<circle class="st1" cx="30.2" cy="54.1" r="1"/>
+<circle class="st1" cx="33.2" cy="51.1" r="1"/>
+<circle class="st1" cx="33.2" cy="57.1" r="1"/>
+<circle class="st1" cx="30.2" cy="60.1" r="1"/>
+<circle class="st1" cx="30.2" cy="66.1" r="1"/>
+<circle class="st1" cx="33.2" cy="63.1" r="1"/>
+<g>
+	<line class="st0" x1="66" y1="49" x2="66" y2="53.9"/>
+	<line class="st0" x1="66" y1="49" x2="61.1" y2="49"/>
+	<line class="st0" x1="66" y1="49" x2="59.1" y2="55.9"/>
+	<path class="st0" d="M68.2,63c-0.8-1.5-3.6-3.1-3.6-3.1c-0.6-0.4-1.4-0.4-1.8,0.2c0,0-0.9,1.1-1.2,1.3c-1.1,0.7-2.1,0.7-3.1-0.3
+		l-2.3-2.3l-2.3-2.3c-1-1-1-2-0.3-3.1c0.2-0.2,1.3-1.2,1.3-1.2c0.7-0.4,0.6-1.1,0.2-1.8c0,0-1.7-2.8-3.1-3.6
+		c-0.6-0.3-1.4-0.2-1.9,0.3l-1,1c-3.3,3.3-1.7,7,1.6,10.2l3,3l3,3c3.3,3.3,7,4.9,10.2,1.6l1-1C68.4,64.4,68.6,63.6,68.2,63z"/>
+	<path class="st0" d="M58.7,61.2c0,0,1.8,1.8,4.5,2"/>
+	<path class="st0" d="M54.2,56.7c0,0-2.2-1.8-2.4-4.5"/>
+</g>
 </svg>

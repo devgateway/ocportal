@@ -1,25 +1,27 @@
-import Table from "./index";
-import {pluckImm} from "../../tools";
-import orgnamesFetching from "../../orgnames-fetching";
+import Table from './index';
+import { pluckImm } from '../../tools';
+import orgnamesFetching from '../../orgnames-fetching';
 
-class Suppliers extends orgnamesFetching(Table){
-  getOrgsWithoutNamesIds(){
-    if(!this.props.data) return [];
-    return this.props.data.map(pluckImm('supplierId')).filter(id => !this.state.orgNames[id]).toJS();
+class Suppliers extends orgnamesFetching(Table) {
+  getOrgsWithoutNamesIds() {
+    if (!this.props.data) return [];
+    return this.props.data.map(pluckImm('supplierId'))
+    .filter(id => !this.state.orgNames[id])
+    .toJS();
   }
 
-  row(entry){
+  row(entry) {
     const id = entry.get('supplierId');
     return <tr key={id}>
       <td>{this.getOrgName(id)}</td>
       <td>{entry.get('totalContracts')}</td>
-      <td>{entry.get('procuringEntityIdsCount')}</td>
+      <td>{entry.get('buyerIdsCount')}</td>
       <td>{this.maybeFormat(entry.get('totalAwardAmount'))}</td>
-    </tr>
+    </tr>;
   }
 
-  render(){
-    if(!this.props.data) return null;
+  render() {
+    if (!this.props.data) return null;
     return (
       <table className="table table-striped table-hover suppliers-table">
         <thead>
@@ -34,7 +36,7 @@ class Suppliers extends orgnamesFetching(Table){
         {this.props.data.map(entry => this.row(entry))}
         </tbody>
       </table>
-    )
+    );
   }
 }
 

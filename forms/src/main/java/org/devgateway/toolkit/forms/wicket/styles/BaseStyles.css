@@ -108,7 +108,8 @@ h1.pageTitle {
 
 /* List View Styles
 -------------------------------------------------- */
-.list-edit-button {
+button.list-edit-button {
+    margin-bottom: 5px;
     min-width: 70px;
 }
 
@@ -180,7 +181,14 @@ hr.edit-separator {
     font-style: italic;
     font-weight: bold;
     line-height: 120%;
+    margin-right: 10px;
     margin-top: 10px;
+    white-space:nowrap;
+}
+@media (max-width: 1024px) {
+    .accordion-toggle .show-all{
+      margin-right: 30px;
+    }
 }
 
 .show-all:hover {
@@ -244,7 +252,13 @@ hr.edit-separator {
     box-shadow: none;
     padding-left: 10px;
 }
-
+.form-wrapper textarea[disabled],
+.form-wrapper textarea.form-control[disabled]{
+  padding: 10px;
+}
+.form-group textarea.form-control{
+  border:1px solid #eeeeee;
+}
 .form-wrapper .input-group .form-control,
 .form-wrapper .input-group .form-control:first-child {
     border: 1px solid #eeeeee;
@@ -307,7 +321,7 @@ hr.edit-separator {
 .label.label-warning,
 .label.label-term {
     font-size: 10px;
-    padding: 5px 20px;
+    padding: 10px 20px;
 }
 
 /* Selector Styles (Select 2)
@@ -344,6 +358,13 @@ hr.edit-separator {
 
 /* Buttons
 -------------------------------------------------- */
+
+@media (max-width: 768px) {
+    form.edit-form .btn{
+      margin-bottom: 10px !important;
+    }
+}
+
 .btn.btn-delete {
     background-color: #d02929;
     border: 1px solid #d02929;
@@ -416,4 +437,33 @@ hr.edit-separator {
     background-color: #333333;
     border: 1px solid #333333;
     color: #ffffff;
+}
+.status-section{
+  margin-bottom: 35px;
+}
+.status-section .status{
+  padding-top:25px;
+}
+.status-section .checkbox{
+  display:inline;
+  overflow:hidden;
+}
+.status-section label{
+  float: left;
+  margin-right: 10px;
+  display:inline;
+}
+.status-section .checkbox label{
+  margin-top: -3px;
+}
+.status-section .toggle-group label{
+  margin-top: 0;
+}
+@media (max-width: 1024px){
+  table.table.table-hover.list-table{
+    table-layout: fixed;
+  }
+  table.table.table-hover.list-table>tbody>tr>td{
+    font-size: 11px;
+  }
 }

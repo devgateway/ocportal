@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
@@ -26,20 +27,22 @@ import java.util.Set;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem,
         SingleFileMetadatable {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Contract Document Type")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ContractDocumentType contractDocumentType;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Document")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     public ContractDocumentType getContractDocumentType() {
@@ -60,6 +63,8 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -70,6 +75,8 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }

@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
@@ -31,7 +33,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * @author idobre
@@ -41,33 +42,30 @@ import java.util.function.Consumer;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "project_id"),
-        @Index(columnList = "purchaseRequestNumber"),
-        @Index(columnList = "title")})
-public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable,
-        TitleAutogeneratable {
-    @ManyToOne(fetch = FetchType.LAZY)
+        @Index(columnList = "purchaseRequestNumber")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class PurchaseRequisition extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
+    @ManyToOne(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Project project;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Purchase Request Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
 
-    @ExcelExport(useTranslation = true)
-    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
-    private String title;
-
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Staff requestedBy;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Charge Account")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ChargeAccount chargeAccount;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Request Approval Date")
     private Date requestApprovalDate;
 
     @ExcelExport(name = "Purchase Items", separateSheet = true)
@@ -126,6 +124,7 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     /**
      * Calculates if this {@link PurchaseRequisition} is terminated. This involves going through all stages and
      * checking if any of them is terminated
+     *
      * @return
      */
     @Override
@@ -137,7 +136,38 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         );
     }
 
+    @JsonProperty("tender")
+    public Tender getSingleTender() {
+        return PersistenceUtil.getNext(tender);
+    }
+
+    @JsonProperty("tenderQuotationEvaluation")
+    public TenderQuotationEvaluation getSingleTenderQuotationEvaluation() {
+        return PersistenceUtil.getNext(tenderQuotationEvaluation);
+    }
+
+    @JsonProperty("professionalOpinion")
+    public ProfessionalOpinion getSingleProfessionalOpinion() {
+        return PersistenceUtil.getNext(professionalOpinion);
+    }
+
+    @JsonProperty("awardNotification")
+    public AwardNotification getSingleAwardNotification() {
+        return PersistenceUtil.getNext(awardNotification);
+    }
+
+    @JsonProperty("awardAcceptance")
+    public AwardAcceptance getSingleAwardAcceptance() {
+        return PersistenceUtil.getNext(awardAcceptance);
+    }
+
+    @JsonProperty("contract")
+    public Contract getSingleContract() {
+        return PersistenceUtil.getNext(contract);
+    }
+
     @Override
+    @JsonIgnore
     public Project getProject() {
         return project;
     }
@@ -152,20 +182,6 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
 
     public void setPurchaseRequestNumber(final String purchaseRequestNumber) {
         this.purchaseRequestNumber = purchaseRequestNumber;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public Consumer<String> titleSetter() {
-        return this::setTitle;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
     }
 
     public Staff getRequestedBy() {
@@ -206,8 +222,10 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return title;
+        return purchaseRequestNumber;
     }
 
     @Override
@@ -215,11 +233,13 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
         return getLabel();
     }
 
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public BigDecimal getAmount() {
         BigDecimal amount = BigDecimal.ZERO;
         for (PurchaseItem item : purchaseItems) {
             if (item.getAmount() != null && item.getQuantity() != null) {
-                amount.add(item.getAmount().multiply(new BigDecimal(item.getQuantity())));
+                amount.add(item.getAmount().multiply(item.getQuantity()));
             }
         }
 
@@ -336,6 +356,8 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
         if (project != null) {
             return project.getProcurementPlan();
@@ -345,6 +367,8 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
 
     @Override
     @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(tender));
     }

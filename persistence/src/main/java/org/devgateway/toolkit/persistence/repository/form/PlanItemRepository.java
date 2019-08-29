@@ -15,6 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface PlanItemRepository extends TextSearchableRepository<PlanItem, Long> {
     @Override
-    @Query("select planItem from  #{#entityName} planItem where lower(planItem.description) like %:description%")
-    Page<PlanItem> searchText(@Param("description") String description, Pageable page);
+    @Query("select planItem from  #{#entityName} planItem where lower(planItem.item.label) like %:search%")
+    Page<PlanItem> searchText(@Param("search") String search, Pageable page);
 }

@@ -230,6 +230,8 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             add(revisionsPageLink);
             MetaDataRoleAuthorizationStrategy.authorize(
                     revisionsPageLink, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+
+            revisionsPageLink.setVisibilityAllowed(false);
         }
     }
 

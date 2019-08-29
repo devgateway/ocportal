@@ -42,6 +42,21 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     //i171: Bid is too close to budget, estimate or preferred solution
     private Flag i171;
 
+    //i184: Difference between the contract price and winning bid
+    private Flag i184;
+
+    //i016 Purchase splitting to avoid procurement thresholds
+    private Flag i016;
+
+    //i045 Supplier wins disproportionate number of contracts of the same type
+    private Flag i045;
+
+    //i182 Lowest evaluated bidder is considered non-responsive
+    private Flag i182;
+
+    //i083 The same companies always bid, the same companies always win, and the same companies always lose
+    private Flag i083;
+
     private Collection<FlagTypeCount> flaggedStats;
 
     private Collection<FlagTypeCount> eligibleStats;
@@ -188,6 +203,46 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
         } else {
             flagCnt++;
         }
+    }
+
+    public Flag getI184() {
+        return i184;
+    }
+
+    public void setI184(Flag i184) {
+        this.i184 = i184;
+    }
+
+    public Flag getI016() {
+        return i016;
+    }
+
+    public void setI016(Flag i016) {
+        this.i016 = i016;
+    }
+
+    public Flag getI045() {
+        return i045;
+    }
+
+    public void setI045(Flag i045) {
+        this.i045 = i045;
+    }
+
+    public Flag getI182() {
+        return i182;
+    }
+
+    public void setI182(Flag i182) {
+        this.i182 = i182;
+    }
+
+    public Flag getI083() {
+        return i083;
+    }
+
+    public void setI083(Flag i083) {
+        this.i083 = i083;
     }
 }
 

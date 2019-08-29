@@ -36,7 +36,7 @@ public abstract class AbstractFlagStatsController extends AbstractFlagController
     protected DBObject getProjectPrepare(final YearFilterPagingRequest year) {
         DBObject projectPrepare = new BasicDBObject();
         projectPrepare.put(getFlagProperty(), 1);
-        addYearlyMonthlyProjection(year, projectPrepare, ref(getYearProperty()));
+        addYearlyMonthlyProjection(year, projectPrepare, ref(getTenderDateField()));
         return projectPrepare;
     }
 
@@ -100,7 +100,8 @@ public abstract class AbstractFlagStatsController extends AbstractFlagController
         DBObject projectPercentage = getProjectPercentage(filter);
 
         Aggregation agg = newAggregation(
-                match(getYearDefaultFilterCriteria(filter, getYearProperty()).and(getYearProperty()).exists(true)),
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField()).and(getTenderDateField())
+                        .exists(true)),
                 new CustomProjectionOperation(projectPrepare),
                 new CustomGroupingOperation(group),
                 new CustomProjectionOperation(projectPercentage),

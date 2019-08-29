@@ -136,12 +136,8 @@ public class DummyController {
             for (int i = 0; i < 100; i++) {
                 final PlanItem item = new PlanItem();
                 item.setItem(items.get(random.nextInt(items.size())));
-                item.setDescription("Description " + (currentSize + i));
                 item.setEstimatedCost(new BigDecimal(100.0));
-                item.setUnitOfIssue("unit of issue....");
-                item.setQuantity(1001);
-                item.setUnitPrice(new BigDecimal(200.34));
-                item.setTotalCost(new BigDecimal(2295000.503));
+                item.setQuantity(new BigDecimal(1001));
                 item.setProcurementMethod(procurementMethods.get(random.nextInt(procurementMethods.size())));
                 item.setSourceOfFunds("dk20fk0-2-ck-sk93-0001");
                 item.setTargetGroup(targetGroups.get(random.nextInt(targetGroups.size())));
@@ -210,7 +206,6 @@ public class DummyController {
                     for (int j = 0; j < 3; j++) {
                         final PurchaseRequisition purchaseRequisition = new PurchaseRequisition();
                         purchaseRequisition.setProject(project);
-                        purchaseRequisition.setTitle("Purchase Requisition " + i + j + "-" + random.nextInt(50000));
                         purchaseRequisition.setPurchaseRequestNumber("# " + i + j + "-" + random.nextInt(50000));
 
                         prs.add(purchaseRequisition);

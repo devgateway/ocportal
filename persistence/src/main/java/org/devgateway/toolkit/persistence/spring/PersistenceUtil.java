@@ -22,4 +22,5 @@ public final class PersistenceUtil {
         }
         return set.iterator().next();
     }
+
 }

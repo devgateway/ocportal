@@ -11,8 +11,8 @@ import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
-import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
@@ -20,7 +20,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
-import org.devgateway.toolkit.persistence.dao.form.CabinetPaper_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -68,17 +67,13 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         name.getField().add(uniqueName());
 
-        final TextFieldBootstrapFormComponent<String> numberField = ComponentUtil.addTextField(editForm, "number");
-        numberField.required()
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-
-        numberField.getField().add(new UniquePropertyEntryValidator<>(
-                getString("uniqueCabinetPaperNumber"),
-                cabinetPaperService::findOne,
-                (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(CabinetPaper_.number)), v.toLowerCase()),
-                editForm.getModel()
-        ));
-
+        final GenericSleepFormComponent number = new GenericSleepFormComponent<>("number");
+        editForm.add(number);
+        if (entityId == null) {
+            number.setVisibilityAllowed(false);
+        } else {
+            number.setVisibilityAllowed(true);
+        }
 
         final FileInputBootstrapFormComponent doc = new FileInputBootstrapFormComponent("formDocs");
         doc.maxFiles(1);
@@ -134,6 +129,19 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         if (ComponentUtil.isPrintMode()) {
             saveButton.setVisibilityAllowed(false);
             deleteButton.setVisibilityAllowed(false);
+        }
+    }
+
+    @Override
+    protected void afterSaveEntity(final CabinetPaper saveable) {
+        super.afterSaveEntity(saveable);
+
+        // autogenerate the number
+        if (saveable.getNumber() == null) {
+            saveable.setNumber(saveable.getProcurementPlan().getDepartment().getCode()
+                    + "/" + saveable.getId());
+
+            jpaService.saveAndFlush(saveable);
         }
     }
 

@@ -2,6 +2,7 @@ package org.devgateway.ocds.persistence.mongo.flags.preconditions;
 
 
 import org.devgateway.ocds.persistence.mongo.Award;
+import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.Tender;
 
@@ -21,6 +22,17 @@ public final class FlaggedReleasePredicates {
     public static final NamedPredicate<FlaggedRelease> TENDER_PROCURING_ENTITY = new NamedPredicate<>(
             "Needs to have tender procuring entity", p -> p.getTender() != null
             && p.getTender().getProcuringEntity() != null);
+
+    public static final NamedPredicate<FlaggedRelease> BUYER = new NamedPredicate<>(
+            "Needs to have buyer", p -> p.getBuyer() != null);
+
+    public static final NamedPredicate<FlaggedRelease> MULTIPLE_BIDS = new NamedPredicate<>(
+            "Needs to have at least two bids", p -> p.getBids() != null
+            && p.getBids().getDetails() != null && p.getBids().getDetails().size() >= 2);
+
+    public static final NamedPredicate<FlaggedRelease> AT_LEAST_ONE_BID = new NamedPredicate<>(
+            "Needs to have at least one bid", p -> p.getBids() != null
+            && p.getBids().getDetails() != null && p.getBids().getDetails().size() >= 1);
 
     public static final NamedPredicate<FlaggedRelease> TENDER_VALUE_AMOUNT = new NamedPredicate<>(
             "Needs to have tender value amount", p -> p.getTender() != null
@@ -51,6 +63,14 @@ public final class FlaggedReleasePredicates {
                             && Tender.ProcurementMethod.limited.equals(p.getTender().getProcurementMethod())
             );
 
+    public static final NamedPredicate<FlaggedRelease> DIRECT_PROCUREMENT_METHOD =
+            new NamedPredicate<>(
+                    "Needs to have direct tender procurement method",
+                    p -> p.getTender() != null
+                            && Tender.ProcurementMethod.direct.equals(p.getTender().getProcurementMethod())
+            );
+
+
     public static final NamedPredicate<FlaggedRelease> ACTIVE_AWARD_WITH_DATE =
             new NamedPredicate<>(
                     "Needs to have at least one active award with date",
@@ -64,6 +84,14 @@ public final class FlaggedReleasePredicates {
                     p -> p.getAwards()
                             .stream().anyMatch(a -> Award.Status.active.equals(a.getStatus()))
             );
+
+    public static final NamedPredicate<FlaggedRelease> ACTIVE_CONTRACT =
+            new NamedPredicate<>(
+                    "Needs to have at least one active contract",
+                    p -> p.getContracts()
+                            .stream().anyMatch(a -> Contract.Status.active.equals(a.getStatus()))
+            );
+
 
     public static final NamedPredicate<FlaggedRelease> AWARDED_AMOUNT =
             new NamedPredicate<>(

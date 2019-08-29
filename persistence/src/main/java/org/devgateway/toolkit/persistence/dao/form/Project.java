@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
@@ -35,8 +36,9 @@ import java.util.function.Consumer;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
-    @ExcelExport(separateSheet = true, useTranslation = true)
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Paper")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private CabinetPaper cabinetPaper;
@@ -45,30 +47,30 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
     @ExcelExport(separateSheet = true, name = "Purchase Requisitions")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "project")
-    @JsonIgnore
     private Set<PurchaseRequisition> purchaseRequisitions = new HashSet<>();
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Project Title")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String projectTitle;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Amount Budgeted")
     private BigDecimal amountBudgeted;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Amount Requested")
     private BigDecimal amountRequested;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Subcounty> subcounties;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Wards")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Ward> wards = new ArrayList<>();
@@ -127,6 +129,8 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return projectTitle;
     }
@@ -165,11 +169,15 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     @Override
     @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return purchaseRequisitions;
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getTitle() {
         return getProjectTitle();
     }

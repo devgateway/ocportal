@@ -1,7 +1,7 @@
 import Tab from './index';
 import ProcuringEntity from '../procuring-entity';
 import Supplier from '../supplier.jsx';
-import { Set } from 'immutable';
+import Buyer from '../buyer';
 
 class Organizations extends Tab {
   render() {
@@ -15,7 +15,8 @@ Organizations.getName = t => t('filters:tabs:organizations:title');
 
 Organizations.FILTERS = [
   ['procuringEntityId', ProcuringEntity],
-  ['supplierId', Supplier]
+  ['supplierId', Supplier],
+  ['buyerId', Buyer]
 ];
 
 export default Organizations;

@@ -6,6 +6,7 @@ import ProcurementRules from './tabs/procurement-rules.jsx';
 import Amounts from './tabs/amounts';
 import { Map } from 'immutable';
 import URI from 'urijs';
+import FilterChartsTab from './tabs/date';
 
 const dashboardId = new URI(location).search(true).dashboardId;
 
@@ -40,7 +41,7 @@ class Filters extends translatable(Component) {
     const { expanded } = this.state;
     return this.constructor.TABS.map((Tab, index) => <div
         key={index}
-        className="row filter">
+        className={"row filter " + this.constructor.CLASS[index]}>
         <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
              onClick={_ => this.toggleTab(index)}>
           <div className="pull-left title">{Tab.getName(this.t.bind(this))}</div>
@@ -83,6 +84,7 @@ class Filters extends translatable(Component) {
   }
 }
 
-Filters.TABS = [Organizations, ProcurementRules, Amounts];
+Filters.TABS = [Organizations, ProcurementRules, Amounts, FilterChartsTab];
+Filters.CLASS = ['organizations', 'procurement-method', 'amounts', 'date'];
 
 export default Filters;

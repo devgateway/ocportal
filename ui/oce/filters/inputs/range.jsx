@@ -1,10 +1,9 @@
 import translatable from '../../translatable';
 import Component from '../../pure-render-component';
 import RCRange from 'rc-slider/lib/Range';
-import { callFunc } from '../../tools';
 import 'rc-slider/assets/index.css';
 
-class FormattedNumberInput extends React.Component {
+export class FormattedNumberInput extends React.Component {
   getFormattedValue() {
     const { value } = this.props;
     return value && value.toLocaleString();

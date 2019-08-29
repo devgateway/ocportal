@@ -3,11 +3,14 @@
  */
 package org.devgateway.ocds.web.rest.controller.request;
 
+import com.google.common.collect.Sets;
 import io.swagger.annotations.ApiModelProperty;
+import org.devgateway.ocds.persistence.mongo.Tender;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.TreeSet;
 
 /**
@@ -22,6 +25,9 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#award-status")
     private TreeSet<String> awardStatus;
 
+    @ApiModelProperty(value = "Filter by tender.status, possible values are available from the OCDS standard page"
+            + "http://standard.open-contracting.org/latest/en/schema/codelists/#tender-status")
+    private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(Tender.Status.active.toString()));
 
     @ApiModelProperty(value = "This corresponds to the tender.items.classification._id")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> bidTypeId;
@@ -46,6 +52,10 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> supplierId;
 
+    @ApiModelProperty(value = "This is the id of the organization/buyer entity. "
+            + "Corresponds to the OCDS Organization.identifier")
+    private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> buyerId;
+
     @ApiModelProperty(value = "This is the new bidder format bids.details.tenderers._id")
     private TreeSet<String> bidderId;
 
@@ -53,7 +63,7 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     private TreeSet<String> tenderLoc;
 
     @ApiModelProperty(value = "This will filter after tender.procurementMethod")
-    private TreeSet<String> procurementMethod;
+    private TreeSet<String> procurementMethod = new TreeSet<>();
 
     @ApiModelProperty(value = "This will filter after tender.value.amount and will specify a minimum"
             + "Use /api/tenderValueInterval to get the minimum allowed.")
@@ -248,5 +258,21 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setTotalFlagged(TreeSet<Integer> totalFlagged) {
         this.totalFlagged = totalFlagged;
+    }
+
+    public TreeSet<String> getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(TreeSet<String> buyerId) {
+        this.buyerId = buyerId;
+    }
+
+    public TreeSet<String> getTenderStatus() {
+        return tenderStatus;
+    }
+
+    public void setTenderStatus(TreeSet<String> tenderStatus) {
+        this.tenderStatus = tenderStatus;
     }
 }

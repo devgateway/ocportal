@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.repository.category;
 
-import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.springframework.transaction.annotation.Transactional;
 

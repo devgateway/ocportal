@@ -11,3 +11,4 @@ npm-debug.log
 /webpack-test/bundle.js
 /public/
 /.checkstyle
+/dll/lib.js

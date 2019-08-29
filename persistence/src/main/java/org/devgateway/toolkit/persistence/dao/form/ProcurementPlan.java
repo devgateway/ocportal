@@ -1,12 +1,14 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
@@ -32,18 +34,20 @@ import java.util.Set;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
+@Document
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProcurementPlan extends AbstractMakueniEntity {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Department")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;
 
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private FiscalYear fiscalYear;
 
-    @ExcelExport(separateSheet = true, useTranslation = true)
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Procurement Plan Items")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
@@ -53,13 +57,12 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(separateSheet = true, name = "Projects")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "procurementPlan")
-    @JsonIgnore
     private Set<Project> projects = new HashSet<>();
 
     public ProcurementPlan() {
 
     }
-    
+
     public Department getDepartment() {
         return department;
     }
@@ -108,6 +111,8 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         String fullName = "";
         if (fiscalYear != null) {
@@ -129,6 +134,8 @@ public class ProcurementPlan extends AbstractMakueniEntity {
 
     @Override
     @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }

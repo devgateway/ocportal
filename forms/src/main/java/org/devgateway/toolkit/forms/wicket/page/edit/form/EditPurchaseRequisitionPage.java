@@ -3,22 +3,15 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.IValidator;
-import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
@@ -47,6 +40,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @SpringBean
     protected ChargeAccountService chargeAccountService;
 
+
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = purchaseRequisitionService;
@@ -63,21 +57,17 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     protected void onInitialize() {
         super.onInitialize();
 
-        final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "title");
-        title.required();
-        title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        title.getField().add(uniqueTitle());
+        editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.department"));
+        editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.fiscalYear"));
 
-        final TextFieldBootstrapFormComponent<String> purchaseRequestNumber =
-                ComponentUtil.addTextField(editForm, "purchaseRequestNumber");
-        purchaseRequestNumber.required();
-        purchaseRequestNumber.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        purchaseRequestNumber.getField().add(new UniquePropertyEntryValidator<>(
-                getString("uniqueNumber"),
-                purchaseRequisitionService::findOne,
-                (o, v) -> (root, query, cb)
-                        -> cb.equal(cb.lower(root.get(PurchaseRequisition_.purchaseRequestNumber)), v.toLowerCase()),
-                editForm.getModel()));
+        final GenericSleepFormComponent purchaseRequestNumber =
+                new GenericSleepFormComponent<>("purchaseRequestNumber");
+        editForm.add(purchaseRequestNumber);
+        if (entityId == null) {
+            purchaseRequestNumber.setVisibilityAllowed(false);
+        } else {
+            purchaseRequestNumber.setVisibilityAllowed(true);
+        }
 
         ComponentUtil.addSelect2ChoiceField(editForm, "requestedBy", staffService).required();
         ComponentUtil.addSelect2ChoiceField(editForm, "chargeAccount", chargeAccountService).required();
@@ -111,6 +101,19 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     }
 
     @Override
+    protected void afterSaveEntity(final PurchaseRequisition saveable) {
+        super.afterSaveEntity(saveable);
+
+        // autogenerate the number
+        if (saveable.getPurchaseRequestNumber() == null) {
+            saveable.setPurchaseRequestNumber(saveable.getProcurementPlan().getDepartment().getCode()
+                    + "/" + saveable.getId());
+
+            jpaService.saveAndFlush(saveable);
+        }
+    }
+
+    @Override
     protected void beforeDeleteEntity(final PurchaseRequisition purchaseRequisition) {
         super.beforeDeleteEntity(purchaseRequisition);
 
@@ -130,39 +133,9 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         if (!ObjectUtils.isEmpty(editForm.getModelObject().getTender())) {
             pp.set(WebConstants.PARAM_ID, PersistenceUtil.getNext(editForm.getModelObject().getTender()).getId());
         }
-        // check if we have a Purchase Requisition in session and add it
-        if (sessionMetadataService.getSessionPurchaseRequisition() == null) {
-            sessionMetadataService.setSessionPurchaseRequisition(editForm.getModelObject());
-        }
+        // add current Purchase Requisition in session
+        sessionMetadataService.setSessionPurchaseRequisition(editForm.getModelObject());
 
         return pp;
-    }
-
-    private IValidator<String> uniqueTitle() {
-        final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
-        return new UniqueTitleValidator(id.toLong(-1));
-    }
-
-    public class UniqueTitleValidator implements IValidator<String> {
-        private final Long id;
-
-        public UniqueTitleValidator(final Long id) {
-            this.id = id;
-        }
-
-        @Override
-        public void validate(final IValidatable<String> validatable) {
-            final String titleValue = validatable.getValue();
-            final Project project = editForm.getModelObject().getProject();
-
-            if (project != null && titleValue != null) {
-                ProcurementPlan procurementPlan = project.getProcurementPlan();
-                if (purchaseRequisitionService
-                        .countByProjectProcurementPlanAndTitleAndIdNot(procurementPlan, titleValue, id) > 0) {
-                    final ValidationError error = new ValidationError(getString("uniqueTitle"));
-                    validatable.error(error);
-                }
-            }
-        }
     }
 }

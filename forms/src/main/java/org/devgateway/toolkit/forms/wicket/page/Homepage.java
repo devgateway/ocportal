@@ -48,6 +48,22 @@ public class Homepage extends BasePage {
         };
         add(dataEntryLink);
 
+        final Link<Void> publicPortalLink = new Link<Void>("publicPortalLink") {
+            @Override
+            public void onClick() {
+                setResponsePage(PublicPortalPage.class);
+            }
+        };
+        add(publicPortalLink);
+        
+        final Link<Void> corruptionRiskDashboard = new Link<Void>("corruptionRiskDashboard") {
+            @Override
+            public void onClick() {
+                setResponsePage(CorruptionRiskDashboardPage.class);
+            }
+        };
+        add(corruptionRiskDashboard); 
+
         final Link<Void> dataExport = new Link<Void>("dataExport") {
             @Override
             public void onClick() {
@@ -55,6 +71,16 @@ public class Homepage extends BasePage {
             }
         };
         add(dataExport);
+
+
+//        Release release = ocdsConversionService.createRelease(purchaseRequisitionService.findById(73044L).get());
+//        Release byOcid = releaseRepository.findByOcid(release.getOcid());
+//        if (byOcid != null) {
+//            releaseRepository.delete(byOcid);
+//        }
+//
+//        releaseRepository.save(release);
+
     }
 
     @Override

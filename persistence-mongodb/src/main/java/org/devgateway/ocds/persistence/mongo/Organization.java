@@ -13,12 +13,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.devgateway.ocds.persistence.mongo.excel.annotation.ExcelExport;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -122,7 +121,7 @@ public class Organization implements Identifiable {
             + "[partyRole codelist](http://standard.open-contracting.org/latest/en/schema/codelists/#party-role). "
             + "Values from the provided codelist should be used wherever possible, though extended values can be "
             + "provided if the codelist does not have a relevant code.")
-    private List<String> roles = new ArrayList<String>();
+    private Set<String> roles = new TreeSet<>();
     /**
      * Details
      * <p>
@@ -277,7 +276,7 @@ public class Organization implements Identifiable {
      * have a relevant code.
      */
     @JsonProperty("roles")
-    public List<String> getRoles() {
+    public Set<String> getRoles() {
         return roles;
     }
 
@@ -290,7 +289,7 @@ public class Organization implements Identifiable {
      * have a relevant code.
      */
     @JsonProperty("roles")
-    public void setRoles(List<String> roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
 
@@ -404,6 +403,13 @@ public class Organization implements Identifiable {
             } else {
                 return constant;
             }
+        }
+
+        public static String toValue(OrganizationType type) {
+            if (type == null) {
+                return null;
+            }
+            return type.value;
         }
 
     }

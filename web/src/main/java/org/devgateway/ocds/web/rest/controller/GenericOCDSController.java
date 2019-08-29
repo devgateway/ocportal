@@ -13,6 +13,7 @@ import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.DefaultFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.GroupingFilterPagingRequest;
+import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -69,6 +71,10 @@ public abstract class GenericOCDSController {
     @Autowired
     protected MongoTemplate mongoTemplate;
 
+    protected void clearTenderStatus(DefaultFilterPagingRequest filter) {
+        filter.getTenderStatus().clear();
+    }
+
     /**
      * Gets the date of the first day of the year (01.01.year)
      *
@@ -81,6 +87,34 @@ public abstract class GenericOCDSController {
         cal.set(Calendar.DAY_OF_YEAR, 1);
         Date start = cal.getTime();
         return start;
+    }
+
+    /**
+     * The date field that is used to calculate the "tender date"
+     *
+     * @return
+     */
+    protected String getTenderDateField() {
+        return MongoConstants.FieldNames.TENDER_PERIOD_END_DATE;
+    }
+
+    /**
+     * The date field that is used to calculate the "award date"
+     *
+     * @return
+     */
+    protected String getAwardDateField() {
+        return MongoConstants.FieldNames.AWARDS_DATE;
+    }
+
+
+    /**
+     * The date field that is used to calculate the "award date"
+     *
+     * @return
+     */
+    protected String awardDateField() {
+        return MongoConstants.FieldNames.AWARDS_DATE;
     }
 
     protected <Z> List<Z> releaseAgg(Aggregation agg, AggregationOptions options, Class<Z> clazz) {
@@ -98,6 +132,17 @@ public abstract class GenericOCDSController {
 
     protected <Z> List<Z> releaseAgg(Aggregation agg, Class<Z> clazz) {
         return releaseAgg(agg, Aggregation.newAggregationOptions().allowDiskUse(true).build(), clazz);
+    }
+
+    protected Criteria getSinceDate(Integer years) {
+        if (years == null) {
+            return new Criteria();
+        }
+
+        LocalDate now = LocalDate.now();
+        LocalDate date = LocalDate.of(now.getYear() - years, now.getMonth(), now.getDayOfMonth());
+
+        return where(getTenderDateField()).gte(date);
     }
 
     /**
@@ -207,6 +252,10 @@ public abstract class GenericOCDSController {
 
     protected Criteria getAwardStatusFilterCriteria(final DefaultFilterPagingRequest filter) {
         return createFilterCriteria(MongoConstants.FieldNames.AWARDS_STATUS, filter.getAwardStatus(), filter);
+    }
+
+    protected Criteria getTenderStatusFilterCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(MongoConstants.FieldNames.TENDER_STATUS, filter.getTenderStatus(), filter);
     }
 
 
@@ -379,7 +428,7 @@ public abstract class GenericOCDSController {
 
     private <S> Criteria createFilterCriteria(final String filterName, final Set<S> filterValues,
                                               final DefaultFilterPagingRequest filter) {
-        if (filterValues == null) {
+        if (ObjectUtils.isEmpty(filterValues)) {
             return new Criteria();
         }
         return where(filterName).in(filterValues.toArray());
@@ -387,7 +436,7 @@ public abstract class GenericOCDSController {
 
     private <S> Criteria createNotFilterCriteria(final String filterName, final Set<S> filterValues,
                                                  final DefaultFilterPagingRequest filter) {
-        if (filterValues == null) {
+        if (ObjectUtils.isEmpty(filterValues)) {
             return new Criteria();
         }
         return where(filterName).not().in(filterValues.toArray());
@@ -466,6 +515,17 @@ public abstract class GenericOCDSController {
                 where("status").is(Award.Status.active.toString()).and("suppliers._id").in(filter.getSupplierId()));
     }
 
+    /**
+     * Appends the buyer entity id for this filter
+     *
+     * @param filter
+     * @return the {@link Criteria} for this filter
+     */
+    protected Criteria getBuyerIdCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(
+                MongoConstants.FieldNames.BUYER_ID, filter.getBuyerId(), filter);
+    }
+
 
     protected Criteria getBidderIdCriteria(final DefaultFilterPagingRequest filter) {
         return createFilterCriteria("bids.details.tenderers._id", filter.getBidderId(), filter);
@@ -496,6 +556,14 @@ public abstract class GenericOCDSController {
         tmpMap.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
 
         filterProjectMap = Collections.unmodifiableMap(tmpMap);
+    }
+
+    protected Criteria getYearFilterCriteria(final MakueniFilterPagingRequest filter, final String dateProperty) {
+        final YearFilterPagingRequest yearFilterPagingRequest = new YearFilterPagingRequest();
+        yearFilterPagingRequest.setYear(filter.getYear());
+        yearFilterPagingRequest.setMonth(filter.getMonth());
+
+        return getYearFilterCriteria(yearFilterPagingRequest, dateProperty);
     }
 
     protected Criteria getYearFilterCriteria(final YearFilterPagingRequest filter, final String dateProperty) {
@@ -545,6 +613,7 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.PROCURING_ENTITY_ID, getProcuringEntityIdCriteria(filter));
         map.put(MongoConstants.Filters.NOT_PROCURING_ENTITY_ID, getNotProcuringEntityIdCriteria(filter));
         map.put(MongoConstants.Filters.SUPPLIER_ID, getSupplierIdCriteria(filter));
+        map.put(MongoConstants.Filters.BUYER_ID, getBuyerIdCriteria(filter));
         map.put(MongoConstants.Filters.PROCUREMENT_METHOD, getProcurementMethodCriteria(filter));
         map.put(MongoConstants.Filters.TENDER_LOC, getByTenderDeliveryLocationIdentifier(filter));
         map.put(MongoConstants.Filters.TENDER_VALUE, getByTenderAmountIntervalCriteria(filter));
@@ -553,6 +622,7 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.FLAG_TYPE, getFlagTypeFilterCriteria(filter));
         map.put(MongoConstants.Filters.ELECTRONIC_SUBMISSION, getElectronicSubmissionCriteria(filter));
         map.put(MongoConstants.Filters.AWARD_STATUS, getAwardStatusFilterCriteria(filter));
+        map.put(MongoConstants.Filters.TENDER_STATUS, getTenderStatusFilterCriteria(filter));
         map.put(MongoConstants.Filters.BIDDER_ID, getBidderIdCriteria(filter));
         map.put(MongoConstants.Filters.TOTAL_FLAGGED, getTotalFlaggedCriteria(filter));
         map.put(MongoConstants.Filters.TEXT, getTextCriteria(filter));
@@ -576,7 +646,6 @@ public abstract class GenericOCDSController {
      *
      * @param criteria
      * @return
-     * @see Criteria#createCriteriaList(Criteria[])
      */
     private BasicDBList createTextSearchFriendlyCriteriaList(CriteriaDefinition[] criteria) {
         BasicDBList bsonList = new BasicDBList();

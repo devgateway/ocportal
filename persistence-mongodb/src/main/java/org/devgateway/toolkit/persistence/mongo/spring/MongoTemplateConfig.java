@@ -31,6 +31,10 @@ public class MongoTemplateConfig {
     public MongoTemplate mongoTemplate() throws Exception {
         MongoTemplate template = new MongoTemplate(new SimpleMongoDbFactory(new MongoClientURI(properties.getUri())));
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
+
+        // CALL THIS MANULLY, so that all the default converters will be registered!
+        ((MappingMongoConverter) template.getConverter()).afterPropertiesSet();
+
         return template;
     }
 

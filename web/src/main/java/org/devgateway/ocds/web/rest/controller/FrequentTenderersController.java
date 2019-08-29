@@ -11,34 +11,31 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
+import org.devgateway.toolkit.persistence.mongo.aggregate.CustomProjectionOperation;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.ComparisonOperators;
-import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
 import org.springframework.data.mongodb.core.aggregation.Fields;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.skip;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -59,36 +56,27 @@ public class FrequentTenderersController extends GenericOCDSController {
             produces = "application/json")
     public List<Document> frequentTenderers(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
+        DBObject project = new BasicDBObject();
+        //project.put(Fields.UNDERSCORE_ID, 0);
+        project.put("tendererId1", ref(MongoConstants.FieldNames.TENDER_TENDERERS_ID));
+        project.put("tendererId2", ref(MongoConstants.FieldNames.TENDER_TENDERERS_ID));
+
+        DBObject projectCmp = new BasicDBObject();
+        projectCmp.put("tendererId1", 1);
+        projectCmp.put("tendererId2", 1);
+        projectCmp.put("cmp", new BasicDBObject("$cmp", Arrays.asList("$tendererId1", "$tendererId2")));
+
         Aggregation agg = newAggregation(
-                match(where("tender.tenderers.1").exists(true).and("awards.suppliers.0").exists(true)
-                        .and(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                match(where("tender.tenderers.1").exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()
                         ))),
-                unwind("tender.tenderers"),
-                unwind("awards"),
-                unwind("awards.suppliers"),
-                match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
-                        .andOperator(getYearFilterCriteria(
-                                filter.awardFiltering(),
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
-                        ))),
-                project().and(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).as("supplierId")
-                        .and("tender.tenderers._id").as("tendererId").andExclude(
-                        Fields.UNDERSCORE_ID)
-                        .and(ComparisonOperators.valueOf(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).
-                                compareTo("tender.tenderers._id")).as("cmp"),
-                match((where("cmp").ne(0))),
-                project("supplierId", "tendererId", "cmp")
-                        .and(ConditionalOperators.when(
-                                Criteria.where("cmp").is(1)).thenValueOf("$supplierId")
-                                .otherwiseValueOf("$tendererId")).as("tendererId1")
-                        .and(ConditionalOperators.when(
-                                Criteria.where("cmp").is(1)).thenValueOf("$tendererId")
-                                .otherwiseValueOf("$supplierId")).as("tendererId2"),
+                new CustomProjectionOperation(project),
+                unwind("tendererId1"),
+                unwind("tendererId2"),
+                new CustomProjectionOperation(projectCmp),
+                match(where("cmp").is(1)), // keep only one pair, the one ordered tendererId1<tendererId2, drop the rest
                 group("tendererId1", "tendererId2").count().as("pairCount"),
-                sort(Sort.Direction.DESC, "pairCount"), skip(filter.getSkip()), limit(filter.getPageSize())
+                match(where("pairCount").gt(1))
         );
 
         return releaseAgg(agg);

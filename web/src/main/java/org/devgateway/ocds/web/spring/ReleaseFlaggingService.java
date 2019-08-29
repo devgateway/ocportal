@@ -3,18 +3,24 @@
  */
 package org.devgateway.ocds.web.spring;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.flags.AbstractFlaggedReleaseFlagProcessor;
 import org.devgateway.ocds.persistence.mongo.flags.ReleaseFlags;
 import org.devgateway.ocds.persistence.mongo.repository.main.FlaggedReleaseRepository;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI002Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI007Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI016Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI019Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI038Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI045Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI077Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI083Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI085Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI171Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI180Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI182Processor;
+import org.devgateway.ocds.web.flags.release.ReleaseFlagI184Processor;
 import org.devgateway.toolkit.persistence.mongo.spring.MongoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +68,17 @@ public class ReleaseFlaggingService {
     private ReleaseFlagI085Processor releaseFlagI085Processor;
     @Autowired
     private ReleaseFlagI171Processor releaseFlagI171Processor;
+    @Autowired
+    private ReleaseFlagI184Processor releaseFlagI184Processor;
+    @Autowired
+    private ReleaseFlagI016Processor releaseFlagI016Processor;
+    @Autowired
+    private ReleaseFlagI045Processor releaseFlagI045Processor;
+    @Autowired
+    private ReleaseFlagI182Processor releaseFlagI182Processor;
+    @Autowired
+    private ReleaseFlagI083Processor releaseFlagI083Processor;
+
 
     @Autowired
     private CacheManager cacheManager;
@@ -101,6 +118,8 @@ public class ReleaseFlaggingService {
     }
 
     public void processAndSaveFlagsForAllReleases(Consumer<String> logMessage) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
         logMessage.accept("<b>RUNNING CORRUPTION FLAGGING.</b>");
 
@@ -109,10 +128,8 @@ public class ReleaseFlaggingService {
         MongoUtil.processRepositoryItemsPaginated(releaseRepository, this::processAndSaveFlagsForRelease,
                 this::logMessage);
 
-        logMessage.accept("<b>CORRUPTION FLAGGING COMPLETE.</b>");
-
-        //clear caches manually
-        cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
+        stopWatch.stop();
+        logMessage.accept("<b>CORRUPTION FLAGGING COMPLETE.</b>. Elapsed " + stopWatch.getTime() + "ms");
     }
 
     /**
@@ -136,9 +153,13 @@ public class ReleaseFlaggingService {
                 releaseFlagI180Processor,
                 releaseFlagI002Processor,
                 releaseFlagI085Processor,
-                releaseFlagI171Processor
+                releaseFlagI171Processor,
+                releaseFlagI184Processor,
+                releaseFlagI016Processor,
+                releaseFlagI045Processor,
+                releaseFlagI182Processor,
+                releaseFlagI083Processor
         ));
-
-     //processAndSaveFlagsForAllReleases(this::logMessage);
+//        processAndSaveFlagsForAllReleases(this::logMessage);
     }
 }

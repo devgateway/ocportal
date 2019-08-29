@@ -13,7 +13,7 @@ class CorruptionType extends CustomPopupChart {
     TRACES.forEach((trace) => {
       grouped[trace] = {};
     });
-
+    
     const { monthly } = this.props;
     data.forEach((datum) => {
       const type = datum.get('type');
@@ -27,49 +27,54 @@ class CorruptionType extends CustomPopupChart {
       grouped[type] = grouped[type] || {};
       grouped[type][date] = datum.toJS();
     });
-
+    
     return grouped;
   }
-
+  
   getData() {
     const data = super.getData();
     if (!data) return [];
     const { styling, months, monthly, years } = this.props;
     const grouped = this.groupData(data);
-
+    
     const commonYears = new Set();
-
+    
     if (!monthly) {
-      Object.values(grouped).forEach(corruptionType =>
-        Object.keys(corruptionType).forEach(year => commonYears.add(year))
+      Object.values(grouped)
+      .forEach(corruptionType =>
+        Object.keys(corruptionType)
+        .forEach(year => commonYears.add(year))
       );
     }
-
-    return Object.keys(grouped).map((type, index) => {
+    
+    return Object.keys(grouped)
+    .map((type, index) => {
       const dataForType = grouped[type];
       let values = [];
       let dates = [];
       if (monthly) {
         dates = range(1, 12)
-          .filter(month => months.has(month))
-          .map(month => this.t(`general:months:${month}`));
-
+        .filter(month => months.has(month))
+        .map(month => this.t(`general:months:${month}`));
+        
         values = dates.map(month => (dataForType[month] ? dataForType[month].flaggedCount : 0));
       } else if (years.count()) {
-        dates = years.sort().toArray();
+        dates = years.sort()
+        .toArray();
         values = dates.map(year => (dataForType[year] ? dataForType[year].flaggedCount : 0));
       } else {
-        dates = Array.from(commonYears).sort();
+        dates = Array.from(commonYears)
+        .sort();
         values = dates.map(year => dataForType[year] ? dataForType[year].flaggedCount : 0);
       }
-
+      
       if (dates.length === 1) {
         dates.unshift('');
         dates.push(' ');
         values.unshift(0);
         values.push(0);
       }
-
+      
       return {
         x: dates,
         y: values,
@@ -83,7 +88,7 @@ class CorruptionType extends CustomPopupChart {
       };
     });
   }
-
+  
   getLayout() {
     return {
       hovermode: 'closest',
@@ -100,7 +105,7 @@ class CorruptionType extends CustomPopupChart {
       },
     };
   }
-
+  
   getPopup() {
     const { popup } = this.state;
     const { year, traceIndex } = popup;
@@ -111,12 +116,13 @@ class CorruptionType extends CustomPopupChart {
     const dataForPoint = data[corruptionType][year];
     if (!dataForPoint) return null;
     const indicatorCount =
-      Object.keys(indicatorTypesMapping).filter(indicatorId =>
+      Object.keys(indicatorTypesMapping)
+      .filter(indicatorId =>
         indicatorTypesMapping[indicatorId].types.indexOf(dataForPoint.type) > -1
       ).length;
-
+    
     const percentFlaggedLabel = this.t('crd:overview:overTimeChart:percentFlagged');
-
+    
     let height = POPUP_HEIGHT;
     let { top } = popup;
     if (percentFlaggedLabel.length > 30) {
@@ -127,7 +133,7 @@ class CorruptionType extends CustomPopupChart {
       }
       top -= delta;
     }
-
+    
     return (
       <div className="crd-popup" style={{ top, left: popup.left, height }}>
         <div className="row">
@@ -135,18 +141,21 @@ class CorruptionType extends CustomPopupChart {
             {year}
           </div>
           <div className="col-sm-12">
-            <hr />
+            <hr/>
           </div>
-          <div className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:indicators')}</div>
+          <div
+            className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:indicators')}</div>
           <div className="col-sm-5 text-left info">{indicatorCount}</div>
-          <div className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:totalFlags')}</div>
+          <div
+            className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:totalFlags')}</div>
           <div className="col-sm-5 text-left info">{dataForPoint.flaggedCount}</div>
-          <div className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:totalProcurementsFlagged')}</div>
+          <div
+            className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:totalProcurementsFlagged')}</div>
           <div className="col-sm-5 text-left info">{dataForPoint.flaggedProjectCount}</div>
           <div className="col-sm-7 text-right title">{percentFlaggedLabel}</div>
           <div className="col-sm-5 text-left info">{dataForPoint.percent.toFixed(2)}%</div>
         </div>
-        <div className="arrow" />
+        <div className="arrow"/>
       </div>
     );
   }
@@ -161,7 +170,7 @@ class OverviewPage extends CRDPage {
       topFlaggedContracts: null,
     };
   }
-
+  
   render() {
     const { indicatorTypesMapping, styling, width, navigate } = this.props;
     return (

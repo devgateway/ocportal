@@ -8,11 +8,14 @@ export const PEIds = CRD.input({
 export const PEsFilters = CRD.mapping({
   name: 'PEsFilters',
   deps: [datefulFilters, PEIds],
-  mapper: (filters, PEId) => filters.update(
-    'procuringEntityId',
-    Set(),
-    PEIds => PEIds.add(PEId)
-  )
+  mapper: (filters, PEId) => {
+    
+    filters.update(
+      'procuringEntityId',
+      Set(),
+      PEIds => PEIds.add(PEId)
+    );
+  }
 });
 
 const TendersCountEP = CRD.input({
@@ -37,7 +40,7 @@ export const TendersCount = CRD.mapping({
   mapper: raw => {
     const result = {};
     raw.forEach(({ _id, tenderCount }) => {
-      result[_id] = tenderCount
+      result[_id] = tenderCount;
     });
     return result;
   },
@@ -55,8 +58,8 @@ export const AwardsCount = CRD.mapping({
   mapper: raw => {
     const result = {};
     raw.forEach(({ _id, awardCount }) => {
-      result[_id] = awardCount
+      result[_id] = awardCount;
     });
     return result;
   },
-})
+});

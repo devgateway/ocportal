@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit;
 
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -8,6 +9,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.ocds.web.db.ImportPostgresToMongoJob;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
@@ -46,7 +48,11 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
     private CacheManager cacheManager;
 
     @SpringBean
+    private ImportPostgresToMongoJob importPostgresToMongoJob;
+
+    @SpringBean
     private AdminSettingsService adminSettingsService;
+
     private TextFieldBootstrapFormComponent<Object> autosaveTime;
 
     public EditAdminSettingsPage(final PageParameters parameters) {
@@ -101,6 +107,7 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
         autosaveTime.getField().add(RangeValidator.range(1, 60));
         editForm.add(autosaveTime);
 
+        addImportToMongoLink();
     }
 
     private void addCacheClearLink() {
@@ -109,6 +116,18 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
             @Override
             public void onClick(Optional optional) {
                 cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
+            }
+
+        };
+        editForm.add(link);
+    }
+
+    private void addImportToMongoLink() {
+        final IndicatingAjaxFallbackLink link = new IndicatingAjaxFallbackLink<Void>("importToMongo") {
+
+            @Override
+            public void onClick(final Optional<AjaxRequestTarget> target) {
+                importPostgresToMongoJob.importOcdsMakueniToMongo();
             }
 
         };

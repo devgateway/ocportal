@@ -1,13 +1,16 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
@@ -22,35 +25,31 @@ import java.math.BigDecimal;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "parent_id")})
+@Table(indexes = {@Index(columnList = "parent_id"),
+        @Index(columnList = "purchase_item_id"),
+        @Index(columnList = "description")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
-    @ExcelExport(justExport = true, useTranslation = true)
+    @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PurchaseItem purchaseItem;
 
-    @ExcelExport(useTranslation = true)
-    private String unitOfIssue;
+    @ExcelExport(useTranslation = true, name = "Description")
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
+    private String description;
 
-    @ExcelExport(useTranslation = true)
-    private Integer quantity;
+    @ExcelExport(useTranslation = true, name = "Quantity")
+    private BigDecimal quantity;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal unitPrice;
 
-    public String getUnitOfIssue() {
-        return unitOfIssue;
-    }
-
-    public void setUnitOfIssue(final String unitOfIssue) {
-        this.unitOfIssue = unitOfIssue;
-    }
-
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(final Integer quantity) {
+    public void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
     }
 
@@ -70,11 +69,22 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
         this.purchaseItem = purchaseItem;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -85,6 +95,8 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }

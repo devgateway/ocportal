@@ -2,40 +2,99 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author idobre
  * @since 2019-04-17
  */
 public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchaseRequisition> {
+    private GenericSleepFormComponent unit;
+
     private GenericSleepFormComponent totalCost;
 
     public PurchaseItemPanel(final String id) {
         super(id);
     }
 
+    protected class ListItemsValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            final Set<PlanItem> planItems = new HashSet<>();
+            final List<PurchaseItem> purchaseItems = PurchaseItemPanel.this.getModelObject();
+            for (final PurchaseItem purchaseItem : purchaseItems) {
+                if (purchaseItem.getPlanItem() != null) {
+                    planItems.add(purchaseItem.getPlanItem());
+                }
+            }
+
+            if (purchaseItems.size() != 0 && purchaseItems.size() != planItems.size()) {
+                final ListView<PurchaseItem> list = (ListView<PurchaseItem>) PurchaseItemPanel.this
+                        .get("listWrapper").get("list");
+                if (list != null) {
+                    for (int i = 0; i < list.size(); i++) {
+                        final TransparentWebMarkupContainer accordion =
+                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
+
+                        final GenericBootstrapFormComponent planItem =
+                                (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
+                                        .get("headerField").get("planItem");
+
+                        if (planItem != null) {
+                            planItem.getField().error(getString("uniqueItem"));
+
+                            final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
+                            if (target.isPresent()) {
+                                target.get().add(planItem.getBorder());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        final Form form = (Form) getParent();
+        if (form != null) {
+            form.add(new ListItemsValidator());
+        }
     }
 
     @Override
@@ -50,21 +109,28 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
 
     @Override
     public void populateCompoundListItem(final ListItem<PurchaseItem> item) {
-        final TextFieldBootstrapFormComponent<Integer> quantity =
-                new TextFieldBootstrapFormComponent<Integer>("quantity") {
+        final TextFieldBootstrapFormComponent<BigDecimal> quantity =
+                new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
                         target.add(totalCost);
                     }
                 };
-        quantity.integer();
-        quantity.getField().add(RangeValidator.minimum(0));
+        quantity.decimal();
+        quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         quantity.required();
         item.add(quantity);
 
-        ComponentUtil.addTextField(item, "unit").required()
-                .getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-
+        unit = new GenericSleepFormComponent<>("unit",
+                (IModel<Unit>) () -> {
+                    if (item.getModelObject().getPlanItem() != null
+                            && item.getModelObject().getPlanItem().getUnitOfIssue() != null) {
+                        return item.getModelObject().getPlanItem().getUnitOfIssue();
+                    }
+                    return null;
+                });
+        unit.setOutputMarkupId(true);
+        item.add(unit);
 
         final TextFieldBootstrapFormComponent<BigDecimal> amount =
                 new TextFieldBootstrapFormComponent<BigDecimal>("amount") {
@@ -79,9 +145,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         item.add(amount);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<Double>) () -> {
+                (IModel<BigDecimal>) () -> {
                     if (quantity.getModelObject() != null && amount.getModelObject() != null) {
-                        return amount.getModelObject().doubleValue() * quantity.getModelObject();
+                        return amount.getModelObject().multiply(quantity.getModelObject());
                     }
                     return null;
                 });
@@ -113,10 +179,19 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     (PurchaseRequisition) PurchaseItemPanel.this.getParent().getDefaultModelObject();
             final List<PlanItem> planItems = parentObject.getProject().getProcurementPlan().getPlanItems();
 
-            final Select2ChoiceBootstrapFormComponent<PlanItem> planItem = new Select2ChoiceBootstrapFormComponent<>(
-                    "planItem", new GenericChoiceProvider<>(planItems));
+            final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
+                    new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",
+                            new GenericChoiceProvider<>(planItems)) {
+                        @Override
+                        protected void onUpdate(final AjaxRequestTarget target) {
+                            target.add(unit);
+                        }
+                    };
             planItem.required();
             planItem.add(new StopEventPropagationBehavior());
+
+            final Component description = ComponentUtil.addTextField(this, "description");
+            description.add(new StopEventPropagationBehavior());
 
             add(planItem);
         }

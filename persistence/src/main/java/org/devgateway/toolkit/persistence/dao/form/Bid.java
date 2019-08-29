@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -24,22 +25,23 @@ import java.math.BigDecimal;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation> implements ListViewItem {
     @ExcelExport(name = "Supplier")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier supplier;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Supplier Responsiveness")
     private String supplierResponsiveness;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Supplier Score")
     private Integer supplierScore;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Supplier Ranking")
     private Integer supplierRanking;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Quoted Price")
     private BigDecimal quotedAmount;
 
     public Supplier getSupplier() {
@@ -84,9 +86,12 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
 
     @Transient
     @JsonIgnore
+    @org.springframework.data.annotation.Transient
     private Boolean expanded = false;
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
         return null;
     }
@@ -97,6 +102,8 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public Boolean getExpanded() {
         return expanded;
     }

@@ -25,13 +25,17 @@ class Chart extends Visualization {
     if (xAxisRange) layout.xaxis.range = xAxisRange;
     if (yAxisRange) layout.yaxis.range = yAxisRange;
     if (styling) {
-      layout.xaxis.titlefont = {
-        color: styling.charts.axisLabelColor,
-      };
+      if(layout.xaxis) {
+        layout.xaxis.titlefont = {
+          color: styling.charts.axisLabelColor,
+        };
+      }
 
-      layout.yaxis.titlefont = {
-        color: styling.charts.axisLabelColor,
-      };
+      if(layout.yaxis) {
+        layout.yaxis.titlefont = {
+          color: styling.charts.axisLabelColor,
+        };
+      }
     }
     if (legend === 'h') {
       layout.legend = layout.legend || {};
@@ -75,11 +79,13 @@ class Chart extends Visualization {
     return (<div className="chart-container">
       {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
       {loading && <div className="message">
-        {this.t('general:loading')}<br />
-        <img src="assets/loading-bubbles.svg" alt="" />
+        {this.t('general:loading')}<br/>
+        <img src="assets/loading-bubbles.svg" alt=""/>
       </div>}
       <ReactIgnore>
-        <div ref={(c) => { this.chartContainer = c; }} />
+        <div ref={(c) => {
+          this.chartContainer = c;
+        }}/>
       </ReactIgnore>
     </div>);
   }
@@ -87,7 +93,9 @@ class Chart extends Visualization {
 
 Chart.getFillerDatum = seed => Map(seed);
 
-Chart.getMaxField = data => data.flatten().filter((value, key) => value && key !== 'year' && key !== 'month').reduce(max, 0);
+Chart.getMaxField = data => data.flatten()
+.filter((value, key) => value && key !== 'year' && key !== 'month')
+.reduce(max, 0);
 
 Chart.UPDATABLE_FIELDS = ['data'];
 

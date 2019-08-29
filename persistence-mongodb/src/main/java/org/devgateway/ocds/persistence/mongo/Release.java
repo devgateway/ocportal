@@ -165,7 +165,7 @@ public class Release implements Identifiable {
             + "fields may be filled in a planning release, in the appropriate fields in other schema sections, these "
             + "would likely be estimates at this stage e.g. totalValue in tender")
     @ExcelExport
-    private Planning planning;
+    private Planning planning = new Planning();
     /**
      * Tender
      * <p>
@@ -177,7 +177,7 @@ public class Release implements Identifiable {
             + "bids for evaluation and selecting a winner or winners.")
     @ExcelExport
     @ExcelExportSepareteSheet
-    private Tender tender;
+    private Tender tender = new Tender();
     /**
      * Awards
      * <p>

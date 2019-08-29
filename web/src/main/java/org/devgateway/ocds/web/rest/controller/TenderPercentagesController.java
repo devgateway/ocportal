@@ -63,14 +63,16 @@ public class TenderPercentagesController extends GenericOCDSController {
     }
 
     @ApiOperation("Returns the percent of tenders that were cancelled, grouped by year."
-            + " The year is taken from tender.tenderPeriod.startDate. The response also contains the"
+            + " The year is taken from tender.tenderPeriod.endDate. The response also contains the"
             + " total number of tenders and total number of cancelled tenders for each year.")
     @RequestMapping(value = "/api/percentTendersCancelled",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> percentTendersCancelled(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
+        clearTenderStatus(filter); //this endpoint is about tender status, so we clear any previously set tender status
+
         DBObject project1 = new BasicDBObject();
-        addYearlyMonthlyProjection(filter, project1, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
+        addYearlyMonthlyProjection(filter, project1, ref(getTenderDateField()));
         project1.put(MongoConstants.FieldNames.TENDER_STATUS, 1);
 
         DBObject group = new BasicDBObject();
@@ -91,10 +93,9 @@ public class TenderPercentagesController extends GenericOCDSController {
         ));
 
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                match(where(getTenderDateField()).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                                filter, getTenderDateField()
                         ))),
                 new CustomProjectionOperation(project1), new CustomGroupingOperation(group),
                 new CustomProjectionOperation(project2),

@@ -1,8 +1,8 @@
-import frontendDateFilterable from "../frontend-date-filterable";
-import Chart from "./index.jsx";
+import frontendDateFilterable from '../frontend-date-filterable';
+import Chart from './index.jsx';
 
-class FrontendYearFilterableChart extends frontendDateFilterable(Chart){
-  hasNoData(){
+class FrontendYearFilterableChart extends frontendDateFilterable(Chart) {
+  hasNoData() {
     let data = super.getData();
     return data && data.isEmpty();
   }

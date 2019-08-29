@@ -53,10 +53,11 @@ public class ReleaseFlagI077Processor extends AbstractFlaggedReleaseFlagProcesso
     @Override
     protected Boolean calculateFlag(FlaggedRelease flaggable, StringBuffer rationale) {
         return flaggable.getAwards().stream().filter(award -> award.getSuppliers().stream().anyMatch(supplier ->
-                flaggable.getTender() != null && flaggable.getTender().getProcuringEntity() != null
+                flaggable.getTender() != null && flaggable.getBuyer() != null
                         && supplier != null
                         && frequentSuppliersMap.containsKey(FrequentSuppliersTimeIntervalController.
-                        getFrequentSuppliersResponseKey(flaggable.getTender().getProcuringEntity().getId(),
+                        getFrequentSuppliersResponseKey(
+                                flaggable.getBuyer().getId(),
                                 supplier.getId(), getInterval(award.getDate()))
                 ))
         ).map(award -> rationale
@@ -74,13 +75,18 @@ public class ReleaseFlagI077Processor extends AbstractFlaggedReleaseFlagProcesso
         nowDouble = new Double(now.getTime());
         List<FrequentSuppliersTimeIntervalController.FrequentSuppliersResponse> frequentSuppliersTimeInterval
                 = frequentSuppliersTimeIntervalController.frequentSuppliersTimeInterval(getIntervalDays(),
-                getMaxAwards(), now);
+                getMaxAwards(), now, getProcurementMethod()
+        );
 
         frequentSuppliersMap = new ConcurrentHashMap<>();
 
         frequentSuppliersTimeInterval.
                 forEach(response -> frequentSuppliersMap.put(
                         FrequentSuppliersTimeIntervalController.getFrequentSuppliersResponseKey(response), response));
+    }
+
+    protected String getProcurementMethod() {
+        return null;
     }
 
     protected Integer getMaxAwards() {
@@ -95,9 +101,7 @@ public class ReleaseFlagI077Processor extends AbstractFlaggedReleaseFlagProcesso
     @Override
     protected void setPredicates() {
         preconditionsPredicates = Collections.synchronizedList(
-                Arrays.asList(FlaggedReleasePredicates.ACTIVE_AWARD_WITH_DATE,
-                        FlaggedReleasePredicates.OPEN_PROCUREMENT_METHOD
-                                .or(FlaggedReleasePredicates.SELECTIVE_PROCUREMENT_METHOD)));
+                Arrays.asList(FlaggedReleasePredicates.BUYER, FlaggedReleasePredicates.ACTIVE_AWARD_WITH_DATE));
     }
 
 

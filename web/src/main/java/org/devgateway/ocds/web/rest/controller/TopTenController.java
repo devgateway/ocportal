@@ -60,8 +60,8 @@ public class TopTenController extends GenericOCDSController {
         public static final String PROCURING_ENTITY = "procuringEntity";
         public static final String TOTAL_AWARD_AMOUNT = "totalAwardAmount";
         public static final String TOTAL_CONTRACTS = "totalContracts";
-        public static final String PROCURING_ENTITY_IDS = "procuringEntityIds";
-        public static final String PROCURING_ENTITY_IDS_COUNT = "procuringEntityIdsCount";
+        public static final String BUYER_IDS = "buyerIds";
+        public static final String BUYER_IDS_COUNT = "buyerIdsCount";
         public static final String SUPPLIER_ID = "supplierId";
     }
 
@@ -87,8 +87,8 @@ public class TopTenController extends GenericOCDSController {
 
         BasicDBObject project = new BasicDBObject();
         project.put(Fields.UNDERSCORE_ID, 0);
-        project.put(MongoConstants.FieldNames.AWARDS_DATE, 1);
-        project.put("awards.suppliers.name", 1);
+        project.put(awardDateField(), 1);
+        project.put(MongoConstants.FieldNames.AWARDS_SUPPLIERS_NAME, 1);
         project.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
         project.put("planning.budget", 1);
 
@@ -98,8 +98,8 @@ public class TopTenController extends GenericOCDSController {
                         .is(Award.Status.active.toString())
                         .andOperator(getDefaultFilterCriteria(filter))),
                 unwind("awards"),
-                match(getYearFilterCriteria(filter.awardFiltering(), MongoConstants.FieldNames.AWARDS_DATE)),
-                new CustomOperation(new Document("$project", project)),
+                match(getYearFilterCriteria(filter.awardFiltering(), awardDateField())),
+                new CustomProjectionOperation(project),
                 sort(Direction.DESC, MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT), limit(10)
         );
 
@@ -116,8 +116,8 @@ public class TopTenController extends GenericOCDSController {
      */
     @ApiOperation(value = "Returns the top ten largest active tenders."
             + " The amount is taken from the tender.value.amount field." + " The returned data will contain"
-            + "the following fields: " + "tender.date, tender.value.amount, tender.tenderPeriod, "
-            + "tender.procuringEntity.name")
+            + "the following fields: " + "tender.tenderPeriod.endDate, tender.value.amount, "
+            + "buyer.name")
     @RequestMapping(value = "/api/topTenLargestTenders", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     public List<Document> topTenLargestTenders(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
@@ -125,15 +125,14 @@ public class TopTenController extends GenericOCDSController {
         BasicDBObject project = new BasicDBObject();
         project.put(Fields.UNDERSCORE_ID, 0);
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
-        project.put("tender.tenderPeriod", 1);
-        project.put("tender.procuringEntity.name", 1);
+        project.put(getTenderDateField(), 1);
+        project.put(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE, 1);
+        project.put(MongoConstants.FieldNames.BUYER_NAME, 1);
+        project.put(MongoConstants.FieldNames.TENDER_TITLE, 1);
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
-                        ))),
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 new CustomOperation(new Document("$project", project)),
                 sort(Direction.DESC, MongoConstants.FieldNames.TENDER_VALUE_AMOUNT), limit(10)
         );
@@ -155,7 +154,7 @@ public class TopTenController extends GenericOCDSController {
         project.put(Fields.UNDERSCORE_ID, 0);
         project.put(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID, 1);
         project.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
-        project.put(MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID, 1);
+        project.put(MongoConstants.FieldNames.BUYER_ID, 1);
 
         BasicDBObject group = new BasicDBObject();
         group.put(Fields.UNDERSCORE_ID, ref(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID));
@@ -163,8 +162,8 @@ public class TopTenController extends GenericOCDSController {
                 Keys.TOTAL_AWARD_AMOUNT, new BasicDBObject("$sum", ref(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT)));
         group.put(Keys.TOTAL_CONTRACTS, new BasicDBObject("$sum", 1));
         group.put(
-                Keys.PROCURING_ENTITY_IDS,
-                new BasicDBObject("$addToSet", ref(MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID))
+                Keys.BUYER_IDS,
+                new BasicDBObject("$addToSet", ref(MongoConstants.FieldNames.BUYER_ID))
         );
 
 
@@ -183,9 +182,9 @@ public class TopTenController extends GenericOCDSController {
                 limit(10),
                 project().and(Fields.UNDERSCORE_ID).
                         as(Keys.SUPPLIER_ID).
-                        andInclude(Keys.TOTAL_AWARD_AMOUNT, Keys.TOTAL_CONTRACTS, Keys.PROCURING_ENTITY_IDS)
+                        andInclude(Keys.TOTAL_AWARD_AMOUNT, Keys.TOTAL_CONTRACTS, Keys.BUYER_IDS)
                         .andExclude(Fields.UNDERSCORE_ID)
-                        .and(Keys.PROCURING_ENTITY_IDS).size().as(Keys.PROCURING_ENTITY_IDS_COUNT)
+                        .and(Keys.BUYER_IDS).size().as(Keys.BUYER_IDS_COUNT)
         );
 
         return releaseAgg(agg);

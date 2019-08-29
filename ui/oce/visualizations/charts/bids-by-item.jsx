@@ -7,7 +7,9 @@ class BidsByItem extends CatChart{
     return {
       xaxis: {
         title: this.t('charts:bidsByItem:xAxisTitle'),
-        type: "category"
+        type: "category",
+        tickangle: 15,
+        automargin: true
       },
       yaxis: {
         title: this.t('charts:bidsByItem:yAxisTitle'),
@@ -20,6 +22,6 @@ class BidsByItem extends CatChart{
 BidsByItem.endpoint = 'tendersByItemClassification';
 BidsByItem.excelEP = 'tendersByItemExcelChart';
 BidsByItem.CAT_NAME_FIELD = "description";
-BidsByItem.CAT_VALUE_FIELD = "totalTenders";
+BidsByItem.CAT_VALUE_FIELD = "tenderCount";
 
 export default BidsByItem;

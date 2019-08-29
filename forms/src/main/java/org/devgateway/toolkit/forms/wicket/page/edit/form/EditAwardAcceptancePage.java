@@ -51,7 +51,7 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     protected void onInitialize() {
         super.onInitialize();
 
-        ComponentUtil.addBigDecimalField(editForm, "acceptedAwardValue")
+        ComponentUtil.addBigDecimalField(editForm, "acceptedAwardValue").required()
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
         ComponentUtil.addDateField(editForm, "acceptanceDate").required();
 

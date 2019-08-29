@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -24,8 +26,9 @@ import java.util.Date;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "purchase_requisition_id")})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Date")
     private Date acceptanceDate;
 
     @ExcelExport(name = "Supplier")
@@ -33,7 +36,7 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     @ManyToOne
     private Supplier awardee;
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(useTranslation = true, name = "Accepted Award Value")
     private BigDecimal acceptedAwardValue;
 
     public Date getAcceptanceDate() {
@@ -65,6 +68,8 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     }
 
     @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
     public String getLabel() {
         return null;
     }

@@ -31,6 +31,8 @@ public final class DBConstants {
 
         public static final String[] ALL = {DRAFT, SUBMITTED, APPROVED, TERMINATED};
         public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
+
+        public static final List<String> EXPORTABLE = Collections.unmodifiableList(Arrays.asList(APPROVED, TERMINATED));
     }
     
     public static final class SupplierResponsiveness {
