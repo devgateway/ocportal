@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.bson.Document;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
@@ -18,7 +20,8 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -94,6 +97,13 @@ public class AlertsManagerImpl implements AlertsManager {
             }
 
             alertsStatisticsService.saveAndFlush(globalStats);
+
+            // clear "servicesCache" cache;
+            final CacheManager cm = CacheManager.getInstance();
+            final Cache servicesCache = cm.getCache("servicesCache");
+            if (servicesCache != null) {
+                servicesCache.removeAll();
+            }
         } catch (InterruptedException e) {
             logger.error("Couldn't join all threads", e);
         }
@@ -106,8 +116,13 @@ public class AlertsManagerImpl implements AlertsManager {
             final AlertsStatistics stats = new AlertsStatistics(1);
             final LocalDateTime now = LocalDateTime.now();
 
+            final List<Document> documents;
             // get the Tenders for the email alert
-            final List<Document> documents = getTendersForAlert(alert, stats);
+            if (alert.getPurchaseReq() != null) {
+                documents = getTenderUpdate(alert, stats);
+            } else {
+                documents = getTendersForAlert(alert, stats);
+            }
 
             if (documents.isEmpty()) {
                 alert.setLastChecked(now);
@@ -141,14 +156,13 @@ public class AlertsManagerImpl implements AlertsManager {
             throws MailException {
         stats.startSendingStage();
 
-        final SimpleMailMessage message = createMailMessage(alert, documents);
+        final MimeMessagePreparator message = createMailMessage(alert, documents);
         alertsEmailService.sendEmailAlert(alert, message);
 
         stats.endSendingStage();
     }
 
-    private SimpleMailMessage createMailMessage(final Alert alert, final List<Document> documents) {
-        final SimpleMailMessage msg = new SimpleMailMessage();
+    private MimeMessagePreparator createMailMessage(final Alert alert, final List<Document> documents) {
 
         final StringBuilder tenderLinks = new StringBuilder();
         for (final Document document : documents) {
@@ -162,20 +176,48 @@ public class AlertsManagerImpl implements AlertsManager {
 
         final String unsubscribeURL = String.format("%s/unsubscribeEmail/%s", serverURL, alert.getSecret());
 
-        msg.setTo(alert.getEmail());
-        msg.setFrom("noreply@dgstg.org");
-        msg.setSubject("Makueni OC Portal - Notifications");
+        final MimeMessagePreparator messagePreparator = mimeMessage -> {
+            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
-        msg.setText("Hello,\n\n"
-                + "You have subscribed to receive alerts from Makueni OC Portal."
-                + " Please use the links bellow to check the latest updates \n\n"
-                + tenderLinks.toString() + "\n\n"
-                + "Thanks,\n"
-                + "Makueni Portal Team \n\n\n"
-                + "If you do not want to receive our email alerts anymore please click on the following link: "
-                + "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
+            msg.setTo(alert.getEmail());
+            msg.setFrom("noreply@dgstg.org");
+            msg.setSubject("Makueni OC Portal - Notifications");
 
-        return msg;
+            msg.setText("Hello,\n\n"
+                    + "You have subscribed to receive alerts from Makueni OC Portal."
+                    + " Please use the links bellow to check the latest updates \n\n"
+                    + tenderLinks.toString() + "\n\n"
+                    + "Thanks,\n"
+                    + "Makueni Portal Team \n\n\n"
+                    + "If you do not want to receive our email alerts anymore please click on the following link: "
+                    + "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
+
+        };
+
+        return messagePreparator;
+    }
+
+    private List<Document> getTenderUpdate(final Alert alert, AlertsStatistics stats) {
+        stats.startDbAccess();
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Aggregation aggregation = newAggregation(
+                project("_id", "department", "fiscalYear", "projects"),
+                unwind("projects"),
+                unwind("projects.purchaseRequisitions"),
+                match(where("projects.purchaseRequisitions._id").is(alert.getPurchaseReq().getId())),
+                unwind("projects.purchaseRequisitions.tender"),
+                match(where("projects.purchaseRequisitions.tender.closingDate").gte(new Date())),
+                match(where("projects.purchaseRequisitions.lastModifiedDate")
+                        .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))));
+
+        final List<Document> documents = mongoTemplate.aggregate(
+                aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
+
+        stats.endDbAccess();
+
+        return documents;
     }
 
     private List<Document> getTendersForAlert(final Alert alert, AlertsStatistics stats) {
@@ -200,8 +242,8 @@ public class AlertsManagerImpl implements AlertsManager {
                 unwind("projects.purchaseRequisitions"),
                 unwind("projects.purchaseRequisitions.tender"),
                 match(where("projects.purchaseRequisitions.tender.closingDate").gte(new Date())),
-                match(where("projects.purchaseRequisitions.lastModifiedDate")    // TODO change to "gte"
-                        .lte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))),
+                match(where("projects.purchaseRequisitions.lastModifiedDate")    // change to "lte" for local testing
+                        .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))),
                 match(criteria));
 
         final List<Document> documents = mongoTemplate.aggregate(

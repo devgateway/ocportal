@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.user;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -63,6 +65,13 @@ public class VerifyEmailAddressPage extends BasePage {
                 alert.setAlertable(true);
                 alert.setEmailVerified(true);
                 alertService.saveAndFlush(alert);
+
+                // clear "servicesCache" cache;
+                final CacheManager cm = CacheManager.getInstance();
+                final Cache servicesCache = cm.getCache("servicesCache");
+                if (servicesCache != null) {
+                    servicesCache.removeAll();
+                }
             }
         }
 
