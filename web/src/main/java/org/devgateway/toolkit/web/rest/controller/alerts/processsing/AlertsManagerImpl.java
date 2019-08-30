@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -117,8 +116,13 @@ public class AlertsManagerImpl implements AlertsManager {
             final AlertsStatistics stats = new AlertsStatistics(1);
             final LocalDateTime now = LocalDateTime.now();
 
+            final List<Document> documents;
             // get the Tenders for the email alert
-            final List<Document> documents = getTendersForAlert(alert, stats);
+            if (alert.getPurchaseReq() != null) {
+                documents = getTenderUpdate(alert, stats);
+            } else {
+                documents = getTendersForAlert(alert, stats);
+            }
 
             if (documents.isEmpty()) {
                 alert.setLastChecked(now);
@@ -191,6 +195,29 @@ public class AlertsManagerImpl implements AlertsManager {
         };
 
         return messagePreparator;
+    }
+
+    private List<Document> getTenderUpdate(final Alert alert, AlertsStatistics stats) {
+        stats.startDbAccess();
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Aggregation aggregation = newAggregation(
+                project("_id", "department", "fiscalYear", "projects"),
+                unwind("projects"),
+                unwind("projects.purchaseRequisitions"),
+                match(where("projects.purchaseRequisitions._id").is(alert.getPurchaseReq().getId())),
+                unwind("projects.purchaseRequisitions.tender"),
+                match(where("projects.purchaseRequisitions.tender.closingDate").gte(new Date())),
+                match(where("projects.purchaseRequisitions.lastModifiedDate")
+                        .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))));
+
+        final List<Document> documents = mongoTemplate.aggregate(
+                aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
+
+        stats.endDbAccess();
+
+        return documents;
     }
 
     private List<Document> getTendersForAlert(final Alert alert, AlertsStatistics stats) {
