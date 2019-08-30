@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.user;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -49,6 +51,13 @@ public class UnsubscribeEmailPage extends BasePage {
                 error = false;
 
                 alertService.unsubscribeAlert(alert);
+
+                // clear "servicesCache" cache;
+                final CacheManager cm = CacheManager.getInstance();
+                final Cache servicesCache = cm.getCache("servicesCache");
+                if (servicesCache != null) {
+                    servicesCache.removeAll();
+                }
             }
         }
 
