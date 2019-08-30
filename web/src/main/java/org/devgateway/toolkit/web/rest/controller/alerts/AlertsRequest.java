@@ -16,6 +16,9 @@ public class AlertsRequest {
     @NotNull
     private String email;
 
+    @ApiModelProperty(value = "Purchase Requisition identifier")
+    private Long purchaseReqId;
+
     @ApiModelProperty(value = "Departments identifiers")
     private Set<Long> departments;
 
@@ -28,6 +31,14 @@ public class AlertsRequest {
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public Long getPurchaseReqId() {
+        return purchaseReqId;
+    }
+
+    public void setPurchaseReqId(final Long purchaseReqId) {
+        this.purchaseReqId = purchaseReqId;
     }
 
     public Set<Long> getDepartments() {

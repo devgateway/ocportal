@@ -6,9 +6,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.alerts.AlertService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -41,6 +44,9 @@ public class AlertsController {
     private DepartmentService departmentService;
 
     @Autowired
+    private PurchaseRequisitionService purchaseRequisitionService;
+
+    @Autowired
     private ItemService itemService;
 
     @Autowired
@@ -54,13 +60,29 @@ public class AlertsController {
     public Map subscribeAlert(@ModelAttribute @Valid final AlertsRequest alertsRequest) {
         final Map<String, Object> response = new HashMap();
         try {
-            // we should subscribe to at least 1 Department or 1 Item
-            if (CollectionUtils.isEmpty(alertsRequest.getDepartments())
-                    && CollectionUtils.isEmpty(alertsRequest.getItems())) {
+            final PurchaseRequisition purchaseReq;
+            if (alertsRequest.getPurchaseReqId() != null) {
+                final Optional<PurchaseRequisition> purchaseReqOptional = purchaseRequisitionService
+                        .findById(alertsRequest.getPurchaseReqId());
 
-                response.put("status", false);
-                response.put("message", "Please subscribe to at least 1 Department or 1 Item");
-                return response;
+                if (purchaseReqOptional.isPresent()) {
+                    purchaseReq = purchaseReqOptional.get();
+                } else {
+                    response.put("status", false);
+                    response.put("message", "You are trying to subscribe to a non existing Tender");
+                    return response;
+                }
+            } else {
+                // we should subscribe to at least 1 Department or 1 Item
+                if (CollectionUtils.isEmpty(alertsRequest.getDepartments())
+                        && CollectionUtils.isEmpty(alertsRequest.getItems())) {
+
+                    response.put("status", false);
+                    response.put("message", "Please subscribe to at least 1 Department or 1 Item");
+                    return response;
+                }
+
+                purchaseReq = null;
             }
 
             final Set<Department> departments;
@@ -89,10 +111,17 @@ public class AlertsController {
                         response.put("message", alertsRequest.getEmail() + " is already subscribed to a similar Alert");
                         return response;
                     }
+
+                    if (purchaseReq != null && item.getPurchaseReq() != null
+                            && purchaseReq.equals(item.getPurchaseReq())) {
+                        response.put("status", false);
+                        response.put("message", alertsRequest.getEmail() + " is already subscribed to a similar Alert");
+                        return response;
+                    }
                 }
             }
 
-            final Alert alert = new Alert(alertsRequest.getEmail(), departments, items);
+            final Alert alert = new Alert(alertsRequest.getEmail(), departments, items, purchaseReq);
             final String secret = RandomStringUtils.randomAlphanumeric(32);
             alert.setSecret(secret);
             alert.setSecretValidUntil(LocalDateTime.now().plusDays(1));

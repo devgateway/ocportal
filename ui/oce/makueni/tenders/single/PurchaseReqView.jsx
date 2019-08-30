@@ -74,7 +74,8 @@ class PurchaseReqView extends CRDPage {
         this.setState({
           data: data.purchaseRequisitions,
           department: data.department,
-          fiscalYear: data.fiscalYear});
+          fiscalYear: data.fiscalYear
+        });
       });
     });
   }
@@ -101,22 +102,27 @@ class PurchaseReqView extends CRDPage {
     
     switch (selected) {
       case 1:
-        return <Tender data={data.tender} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <Tender data={data.tender} department={department} fiscalYear={fiscalYear}
+                       styling={this.props.styling}/>;
       
       case 2:
-        return <PurchaseReq data={data} department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        return <PurchaseReq data={data} department={department} fiscalYear={fiscalYear}
+                            styling={this.props.styling}/>;
       
       case 3:
         return <TenderQuotation data={data.tenderQuotationEvaluation} tenderTitle={tenderTitle}
-                                department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+                                department={department} fiscalYear={fiscalYear}
+                                styling={this.props.styling}/>;
       
       case 4:
         return <ProfessionalOpinion data={data.professionalOpinion} tenderTitle={tenderTitle}
-                                    department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+                                    department={department} fiscalYear={fiscalYear}
+                                    styling={this.props.styling}/>;
       
       case 5:
         return <Notification data={data.awardNotification} tenderTitle={tenderTitle}
-                             department={department} fiscalYear={fiscalYear} styling={this.props.styling}/>;
+                             department={department} fiscalYear={fiscalYear}
+                             styling={this.props.styling}/>;
       
       case 6:
         return <Award data={data.awardAcceptance} department={department} tenderTitle={tenderTitle}
@@ -135,7 +141,7 @@ class PurchaseReqView extends CRDPage {
   render() {
     const { navigate } = this.props;
     const { data } = this.state;
-    
+  
     return (<div className="tender makueni-form">
       <div className="row">
         <div className="col-md-12 navigation-view">
@@ -164,6 +170,13 @@ class PurchaseReqView extends CRDPage {
           Go Back
         </span>
         </a>
+  
+          <div className="col-md-offset-5 col-md-4">
+            <button className="btn btn-info pull-right" type="submit"
+                    onClick={() => this.props.onSwitch('alerts', data._id, data.tender[0].tenderTitle)}>
+              Receive Alerts For This Tender
+            </button>
+          </div>
       </div>
       
       {

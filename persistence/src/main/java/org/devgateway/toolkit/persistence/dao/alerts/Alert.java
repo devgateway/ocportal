@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -13,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -63,14 +65,21 @@ public class Alert extends AbstractAuditableEntity {
     @ManyToMany
     private Set<Item> items = new HashSet<>();
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private PurchaseRequisition purchaseReq;
+
     public Alert() {
 
     }
 
-    public Alert(final String email, final Set<Department> departments, final Set<Item> items) {
+    public Alert(final String email,
+                 final Set<Department> departments, final Set<Item> items,
+                 final PurchaseRequisition purchaseReq) {
         this.email = email;
         this.departments = new HashSet<>(departments);
         this.items = new HashSet<>(items);
+        this.purchaseReq = purchaseReq;
         this.lastChecked = LocalDateTime.now();
     }
 
@@ -165,5 +174,13 @@ public class Alert extends AbstractAuditableEntity {
 
     public void setItems(final Set<Item> items) {
         this.items = items;
+    }
+
+    public PurchaseRequisition getPurchaseReq() {
+        return purchaseReq;
+    }
+
+    public void setPurchaseReq(final PurchaseRequisition purchaseReq) {
+        this.purchaseReq = purchaseReq;
     }
 }
