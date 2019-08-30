@@ -52,6 +52,8 @@ import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatisticsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccountPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentTypePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
@@ -479,6 +481,14 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<Void>(EditAdminSettingsPage.class,
                         new StringResourceModel("navbar.adminSettings", BasePage.this, null))
                         .setIconType(FontAwesomeIconType.briefcase));
+
+                list.add(new MenuBookmarkablePageLink<ListAlertPage>(ListAlertPage.class,
+                        new StringResourceModel("navbar.alerts", BasePage.this, null))
+                        .setIconType(FontAwesomeIconType.envelope));
+
+                list.add(new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
+                        new StringResourceModel("navbar.alertsStatistics", BasePage.this, null))
+                        .setIconType(FontAwesomeIconType.mail_reply_all));
 
                 return list;
             }

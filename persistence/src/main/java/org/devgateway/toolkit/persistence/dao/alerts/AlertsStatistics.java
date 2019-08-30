@@ -7,6 +7,8 @@ import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.Transient;
 
 import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 /**
  * @author idobre
@@ -17,7 +19,7 @@ import javax.persistence.Entity;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-// @Table(indexes = {@Index(columnList = "email")})
+@Table(indexes = {@Index(columnList = "numberSentAlerts"), @Index(columnList = "numberErrors")})
 public class AlertsStatistics extends AbstractAuditableEntity {
     private Integer numberSentAlerts = 0;
 
