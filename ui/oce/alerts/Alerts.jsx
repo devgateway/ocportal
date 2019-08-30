@@ -291,7 +291,11 @@ class Alerts extends CRDPage {
                   <div className="col-md-12">
                     <Alert bsStyle="danger">
                       <i className="glyphicon glyphicon-exclamation-sign"></i>&nbsp;
-                      Please enter a valid email addres and select at least 1 Department or 1 Item
+                      {
+                        purchaseReqId === undefined
+                          ? <span>Please enter a valid email address and select at least 1 Department or 1 Item</span>
+                          : <span>Please enter a valid email address</span>
+                      }
                     </Alert>
                   </div>
                 </div>

@@ -21,6 +21,8 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -150,14 +152,13 @@ public class AlertsManagerImpl implements AlertsManager {
             throws MailException {
         stats.startSendingStage();
 
-        final SimpleMailMessage message = createMailMessage(alert, documents);
+        final MimeMessagePreparator message = createMailMessage(alert, documents);
         alertsEmailService.sendEmailAlert(alert, message);
 
         stats.endSendingStage();
     }
 
-    private SimpleMailMessage createMailMessage(final Alert alert, final List<Document> documents) {
-        final SimpleMailMessage msg = new SimpleMailMessage();
+    private MimeMessagePreparator createMailMessage(final Alert alert, final List<Document> documents) {
 
         final StringBuilder tenderLinks = new StringBuilder();
         for (final Document document : documents) {
@@ -171,20 +172,25 @@ public class AlertsManagerImpl implements AlertsManager {
 
         final String unsubscribeURL = String.format("%s/unsubscribeEmail/%s", serverURL, alert.getSecret());
 
-        msg.setTo(alert.getEmail());
-        msg.setFrom("noreply@dgstg.org");
-        msg.setSubject("Makueni OC Portal - Notifications");
+        final MimeMessagePreparator messagePreparator = mimeMessage -> {
+            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
-        msg.setText("Hello,\n\n"
-                + "You have subscribed to receive alerts from Makueni OC Portal."
-                + " Please use the links bellow to check the latest updates \n\n"
-                + tenderLinks.toString() + "\n\n"
-                + "Thanks,\n"
-                + "Makueni Portal Team \n\n\n"
-                + "If you do not want to receive our email alerts anymore please click on the following link: "
-                + "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
+            msg.setTo(alert.getEmail());
+            msg.setFrom("noreply@dgstg.org");
+            msg.setSubject("Makueni OC Portal - Notifications");
 
-        return msg;
+            msg.setText("Hello,\n\n"
+                    + "You have subscribed to receive alerts from Makueni OC Portal."
+                    + " Please use the links bellow to check the latest updates \n\n"
+                    + tenderLinks.toString() + "\n\n"
+                    + "Thanks,\n"
+                    + "Makueni Portal Team \n\n\n"
+                    + "If you do not want to receive our email alerts anymore please click on the following link: "
+                    + "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
+
+        };
+
+        return messagePreparator;
     }
 
     private List<Document> getTendersForAlert(final Alert alert, AlertsStatistics stats) {
