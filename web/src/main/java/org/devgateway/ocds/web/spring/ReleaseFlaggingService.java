@@ -79,6 +79,9 @@ public class ReleaseFlaggingService {
     @Autowired
     private ReleaseFlagI083Processor releaseFlagI083Processor;
 
+    @Autowired
+    private ReleaseFlagNotificationService releaseFlagNotificationService;
+
 
     @Autowired
     private CacheManager cacheManager;
@@ -104,6 +107,8 @@ public class ReleaseFlaggingService {
         mongoTemplate.updateFirst(Query.query(where("_id").is(release.getId())),
                 Update.update("flags", release.getFlags()),
                 FlaggedRelease.class);
+
+        releaseFlagNotificationService.addFlaggedReleaseToNotificationTree(release);
     }
 
     /**
@@ -130,6 +135,7 @@ public class ReleaseFlaggingService {
 
         stopWatch.stop();
         logMessage.accept("<b>CORRUPTION FLAGGING COMPLETE.</b>. Elapsed " + stopWatch.getTime() + "ms");
+
     }
 
     /**
