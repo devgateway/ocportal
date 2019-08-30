@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="row" wicket:id="messageContainer">
+        <div class="col-md-12 text-center verify-email-message">
+            <h1 wicket:id="verifyEmailMsg">[[msg]]</h1>
+        </div>
+
+        <div class="col-md-12 text-center">
+            <i class="fa fa-envelope fa-5x verify-email-icon" aria-hidden="true"></i>
+        </div>
+
+        <div class="col-md-12 text-center">
+            <h3 class="verify-email-submessage" wicket:id="verifyEmailTime">
+                [[You will be redirected to Makueni OC Portal in 10 seconds]]
+            </h3>
+
+            <h4>
+                <a href="/ui/index.html" class="verify-email-link"><span wicket:id="linkMsg">[[link]]</span></a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="row" wicket:id="errorContainer">
+        <div class="col-md-12 alert alert-danger alert-dismissible verify-error">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <h3>
+                <i class="glyphicon glyphicon-info-sign"></i>
+                The URL introduced is not correct. Please make sure that you are using the exact same URL that was
+                received in the confirmation email.
+            </h3>
+            <br/>
+            <h3>
+                Additionally you can try to subscribe again by clicking <a class="verify-error-link"
+                                                                           href="/ui/index.html#!/alerts">here</a>.
+            </h3>
+        </div>
+    </div>
+</wicket:extend>
+
+</body>
+</html>

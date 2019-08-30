@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.exceptions;
+package org.devgateway.toolkit.web.rest.controller.alerts.exception;
 
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 
@@ -11,7 +11,7 @@ import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 public class AlertsProcessingException extends Exception {
     private Alert alert;
 
-    public AlertsProcessingException(Alert alert, Throwable cause) {
+    public AlertsProcessingException(final Alert alert, final Throwable cause) {
         super("Couldn't process alerts for: " + alert.getEmail(), cause);
         this.alert = alert;
     }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+
+<wicket:extend>
+    <div class="row" wicket:id="messageContainer">
+        <div class="col-md-12 text-center verify-email-message">
+            <h1> We have received your request to unsubscribe from our email alerts and you won't get any more. We are sorry to see you go!</h1>
+        </div>
+
+        <div class="col-md-12 text-center">
+            <i class="fa fa-frown-o fa-5x unsubscribe" aria-hidden="true"></i>
+        </div>
+
+        <div class="col-md-12 text-center">
+            <h3>
+                <a href="/ui/index.html" class="verify-email-link"><span>Additionally you can visit Makueni OC Portal by clicking this link</span></a>
+            </h3>
+        </div>
+    </div>
+
+    <div class="row" wicket:id="errorContainer">
+        <div class="col-md-12 alert alert-danger alert-dismissible verify-error">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <h3>
+                <i class="glyphicon glyphicon-info-sign"></i>
+                The URL introduced is not correct. Please make sure that you are using the exact same URL that was
+                received in the email alert.
+            </h3>
+        </div>
+    </div>
+</wicket:extend>
+
+
+</body>
+</html>

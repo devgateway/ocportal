@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 well">
+            <div class="row">
+                <div wicket:id="email" class="col-md-4"></div>
+                <div wicket:id="departments" class="col-md-4"></div>
+                <div wicket:id="items" class="col-md-4"></div>
+            </div>
+
+            <div class="row">
+                <div wicket:id="failCount" class="col-md-4"></div>
+                <div wicket:id="lastChecked" class="col-md-4"></div>
+                <div wicket:id="lastSendDate" class="col-md-4"></div>
+            </div>
+
+            <div class="row">
+                <div wicket:id="lastErrorMessage" class="col-md-12"></div>
+            </div>
+
+            <div class="row">
+                <div wicket:id="emailVerified" class="col-md-6"></div>
+                <div wicket:id="alertable" class="col-md-6"></div>
+            </div>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>
