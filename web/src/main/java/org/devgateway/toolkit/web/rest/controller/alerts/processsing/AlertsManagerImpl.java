@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.bson.Document;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
@@ -94,6 +96,13 @@ public class AlertsManagerImpl implements AlertsManager {
             }
 
             alertsStatisticsService.saveAndFlush(globalStats);
+
+            // clear "servicesCache" cache;
+            final CacheManager cm = CacheManager.getInstance();
+            final Cache servicesCache = cm.getCache("servicesCache");
+            if (servicesCache != null) {
+                servicesCache.removeAll();
+            }
         } catch (InterruptedException e) {
             logger.error("Couldn't join all threads", e);
         }

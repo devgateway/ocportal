@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
 import io.swagger.annotations.ApiOperation;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
@@ -129,6 +131,13 @@ public class AlertsController {
             // save alert and send email verification message.
             alertService.saveAndFlush(alert);
             alertsEmailService.sendVerifyEmail(alert);
+
+            // clear "servicesCache" cache;
+            final CacheManager cm = CacheManager.getInstance();
+            final Cache servicesCache = cm.getCache("servicesCache");
+            if (servicesCache != null) {
+                servicesCache.removeAll();
+            }
 
             response.put("status", true);
             return response;
