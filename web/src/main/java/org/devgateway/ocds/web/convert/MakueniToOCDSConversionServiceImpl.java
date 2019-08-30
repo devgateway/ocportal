@@ -773,6 +773,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Override
     public Release createRelease(PurchaseRequisition purchaseRequisition) {
         Release release = new Release();
+        safeSet(release::setId, purchaseRequisition::getId, this::longIdToString);
+        safeSet(release::setDepartmentId, purchaseRequisition.getProcurementPlan().getDepartment()::getId);
         safeSet(release::setOcid, () -> purchaseRequisition, this::getOcid);
         safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
         safeSet(release::setBids, purchaseRequisition::getSingleTenderQuotationEvaluation, this::createBids);
