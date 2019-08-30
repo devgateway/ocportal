@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.alerts;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.edit.alerts.EditAlertPage;
@@ -30,7 +32,17 @@ public class ListAlertPage extends AbstractListPage<Alert> {
 
     @Override
     protected void onInitialize() {
+        columns.add(new PropertyColumn<>(new Model<>("Email"), "email", "email"));
 
+        columns.add(new PropertyColumn<>(new Model<>("Verified?"), "emailVerified", "emailVerified"));
+
+        columns.add(new PropertyColumn<>(new Model<>("Alertable?"), "alertable", "alertable"));
+
+        columns.add(new PropertyColumn<>(new Model<>("Fail Count"), "failCount", "failCount"));
+
+        columns.add(new PropertyColumn<>(new Model<>("Last Checked"), "lastChecked", "lastChecked"));
+
+        columns.add(new PropertyColumn<>(new Model<>("Last Send Date"), "lastSendDate", "lastSendDate"));
 
         super.onInitialize();
     }
