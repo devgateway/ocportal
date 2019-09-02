@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -11,10 +12,14 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -25,9 +30,10 @@ import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderItem;
+import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +47,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
     private GenericSleepFormComponent unit;
 
     private GenericSleepFormComponent totalCost;
+
+    @SpringBean
+    private TenderItemService tenderItemService;
 
     public PurchaseItemPanel(final String id) {
         super(id);
@@ -106,6 +115,33 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         child.setEditable(true);
 
         return child;
+    }
+
+    @Override
+    protected BootstrapDeleteButton getRemoveChildButton(final PurchaseItem item,
+                                                         final NotificationPanel removeButtonNotificationPanel) {
+        final BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove",
+                new ResourceModel("removeButton")) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                final List<TenderItem> tenderItems = tenderItemService.findByPurchaseItem(item);
+
+                if (tenderItems.size() > 0) {
+                    final ValidationError error = new ValidationError();
+                    error.addKey("purchaseItemError");
+                    error(error);
+                } else {
+                    PurchaseItemPanel.this.getModelObject().remove(item);
+                    listView.removeAll();
+                    target.add(listWrapper);
+                }
+
+                target.add(removeButtonNotificationPanel);
+            }
+        };
+
+        removeButton.setOutputMarkupPlaceholderTag(true);
+        return removeButton;
     }
 
     @Override

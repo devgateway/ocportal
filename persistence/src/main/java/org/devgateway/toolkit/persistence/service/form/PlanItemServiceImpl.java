@@ -18,16 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlanItemServiceImpl extends BaseJpaServiceImpl<PlanItem> implements PlanItemService {
 
     @Autowired
-    private PlanItemRepository cabinetPaperRepository;
+    private PlanItemRepository planItemRepository;
 
     @Override
     protected BaseJpaRepository<PlanItem, Long> repository() {
-        return cabinetPaperRepository;
+        return planItemRepository;
     }
 
     @Override
     public TextSearchableRepository<PlanItem, Long> textRepository() {
-        return cabinetPaperRepository;
+        return planItemRepository;
     }
 
     @Override
