@@ -10,6 +10,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -20,7 +21,7 @@ public class ReleaseFlagHistory extends GenericPersistable implements Serializab
     protected String releaseId;
 
     @ElementCollection
-    protected Set<String> flagged;
+    protected Set<String> flagged = new HashSet<>();
 
     protected ZonedDateTime flaggedDate;
 

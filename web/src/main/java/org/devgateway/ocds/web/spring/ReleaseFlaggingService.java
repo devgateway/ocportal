@@ -21,7 +21,9 @@ import org.devgateway.ocds.web.flags.release.ReleaseFlagI171Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI180Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI182Processor;
 import org.devgateway.ocds.web.flags.release.ReleaseFlagI184Processor;
+import org.devgateway.toolkit.persistence.dao.flags.ReleaseFlagHistory;
 import org.devgateway.toolkit.persistence.mongo.spring.MongoUtil;
+import org.devgateway.toolkit.persistence.service.ReleaseFlagHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +34,14 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import static org.devgateway.ocds.persistence.mongo.flags.FlagsConstants.FLAGS_LIST;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 
@@ -78,10 +83,10 @@ public class ReleaseFlaggingService {
     private ReleaseFlagI182Processor releaseFlagI182Processor;
     @Autowired
     private ReleaseFlagI083Processor releaseFlagI083Processor;
-
+    @Autowired
+    private ReleaseFlagHistoryService releaseFlagHistoryService;
     @Autowired
     private ReleaseFlagNotificationService releaseFlagNotificationService;
-
 
     @Autowired
     private CacheManager cacheManager;
@@ -97,7 +102,7 @@ public class ReleaseFlaggingService {
      * Trigger {@link AbstractFlaggedReleaseFlagProcessor#reInitialize()} for all processors
      */
     private void reinitialize() {
-        releaseFlagProcessors.forEach(processor -> processor.reInitialize());
+        releaseFlagProcessors.forEach(AbstractFlaggedReleaseFlagProcessor::reInitialize);
     }
 
     private void processAndSaveFlagsForRelease(FlaggedRelease release) {
@@ -109,6 +114,17 @@ public class ReleaseFlaggingService {
                 FlaggedRelease.class);
 
         releaseFlagNotificationService.addFlaggedReleaseToNotificationTree(release);
+        createReleaseHistoryFromRelease(release);
+
+    }
+
+    private void createReleaseHistoryFromRelease(FlaggedRelease flaggedRelease) {
+        ReleaseFlagHistory rfh = new ReleaseFlagHistory();
+        FLAGS_LIST.stream().filter(f -> flaggedRelease.getFlags().getFlagSet(f)).
+                collect(Collectors.toCollection(rfh::getFlagged));
+        rfh.setReleaseId(flaggedRelease.getId());
+        rfh.setFlaggedDate(ZonedDateTime.now());
+        releaseFlagHistoryService.save(rfh);
     }
 
     /**
