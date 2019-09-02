@@ -171,7 +171,8 @@ public class AlertsManagerImpl implements AlertsManager {
             final Long purchaseReqId = (Long) purchaseReq.get("_id");
 
             final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, purchaseReqId);
-            tenderLinks.append("* <a target=\"_blank\" href=\"" + tenderUrl + "\">" + tenderUrl + "</a>\n");
+            tenderLinks.append("* <a style=\"color: #3060ED; text-decoration: none;\" href=\""
+                    + tenderUrl + "\">" + tenderUrl + "</a>\n");
         }
 
         final String unsubscribeURL = String.format("%s/unsubscribeEmail/%s", serverURL, alert.getSecret());
@@ -179,18 +180,21 @@ public class AlertsManagerImpl implements AlertsManager {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
-            msg.setTo(alert.getEmail());
-            msg.setFrom("noreply@dgstg.org");
-            msg.setSubject("Makueni OC Portal - Notifications");
-
-            msg.setText("Hello,\n\n"
+            final String content = "Hello,\n\n"
                     + "You have subscribed to receive alerts from Makueni OC Portal."
                     + " Please use the links bellow to check the latest updates \n\n"
                     + tenderLinks.toString() + "\n\n"
                     + "Thanks,\n"
                     + "Makueni Portal Team \n\n\n"
                     + "If you do not want to receive our email alerts anymore please click on the following link: "
-                    + "<a target=\"_blank\" href=\"" + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n");
+                    + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
+                    + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
+
+            msg.setTo(alert.getEmail());
+            msg.setFrom("noreply@dgstg.org");
+            msg.setSubject("Makueni OC Portal - Notifications");
+
+            msg.setText(content.replaceAll("\n", "<br />"), true);
 
         };
 

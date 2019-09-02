@@ -16,7 +16,7 @@ import java.net.URI;
 /**
  * @author idobre
  * @since 23/08/2019
- *
+ * <p>
  * Service used to send user email alerts.
  */
 @Service
@@ -39,16 +39,19 @@ public class AlertsEmailService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
+            final String content = "Hello,\n\n"
+                    + "Before you can receive Makueni Alerts we need to validate your email address.\n"
+                    + "You can do this by simply clicking on the link below: \n\n"
+                    + "Verify email url: <a style=\"color: #3060ED; text-decoration: none;\" href=\""
+                    + url + "\">" + url + "</a>\n\n"
+                    + "If you have problems, please paste the above URL into your browser.\n\n"
+                    + "Thanks,\n"
+                    + "Makueni Portal Team";
+
             msg.setTo(alert.getEmail());
             msg.setFrom("noreply@dgstg.org");
             msg.setSubject("Makueni OC Portal - Please Verify Email Address");
-            msg.setText("Hello,\n\n"
-                    + "Before you can receive Makueni Alerts we need to validate your email address.\n"
-                    + "You can do this by simply clicking on the link below: \n\n"
-                    + "Verify email url: <a target=\"_blank\" href=\"" + url + "\">" + url + "</a>\n\n"
-                    + "If you have problems, please paste the above URL into your browser.\n\n"
-                    + "Thanks,\n"
-                    + "Makueni Portal Team");
+            msg.setText(content.replaceAll("\n", "<br />"), true);
         };
         try {
             javaMailSender.send(messagePreparator);
