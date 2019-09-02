@@ -41,7 +41,7 @@ import java.util.Date;
  * @since 2019-03-04
  */
 public final class ComponentUtil {
-    private static final DecimalFormat df = new DecimalFormat("#,###.###");
+    private static final DecimalFormat DF = new DecimalFormat("#,###.###");
 
     private ComponentUtil() {
 
@@ -263,6 +263,6 @@ public final class ComponentUtil {
     }
 
     public static String formatNumber(final BigDecimal number) {
-        return df.format(number);
+        return DF.format(number);
     }
 }
