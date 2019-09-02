@@ -3,6 +3,7 @@ import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import { mtFilters, page, pageSize, tendersCountRemote, tendersData } from './state';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Map } from 'immutable';
 
 import '../makueni.less';
 import Project from './single/Project';
@@ -30,6 +31,9 @@ class MakueniTenders extends CRDPage {
   }
   
   componentWillUnmount() {
+    // reset all filters when we unmount this component
+    mtFilters.assign('NAME', Map());
+    
     tendersData.removeListener(NAME);
     page.removeListener(NAME);
     pageSize.removeListener(NAME);
