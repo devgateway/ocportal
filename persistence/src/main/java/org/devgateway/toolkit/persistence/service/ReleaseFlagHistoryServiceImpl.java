@@ -6,6 +6,8 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * @author mpostelnicu
  */
@@ -25,5 +27,10 @@ public class ReleaseFlagHistoryServiceImpl extends BaseJpaServiceImpl<ReleaseFla
     @Override
     public ReleaseFlagHistory newInstance() {
         return new ReleaseFlagHistory();
+    }
+
+    @Override
+    public Optional<ReleaseFlagHistory> findLatestReleaseFlagHistory(String releaseId) {
+        return releaseFlagHistoryRepository.findFirstByReleaseIdOrderByFlaggedDateDesc(releaseId);
     }
 }

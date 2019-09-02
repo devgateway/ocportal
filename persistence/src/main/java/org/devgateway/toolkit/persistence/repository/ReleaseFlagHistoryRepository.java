@@ -15,10 +15,13 @@ import org.devgateway.toolkit.persistence.dao.flags.ReleaseFlagHistory;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * @author mpostelnicu
  */
 @Transactional
 public interface ReleaseFlagHistoryRepository extends BaseJpaRepository<ReleaseFlagHistory, Long> {
 
+    Optional<ReleaseFlagHistory> findFirstByReleaseIdOrderByFlaggedDateDesc(String releaseId);
 }

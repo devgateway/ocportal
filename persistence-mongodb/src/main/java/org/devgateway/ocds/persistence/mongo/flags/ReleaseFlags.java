@@ -248,19 +248,24 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     }
 
     /**
-     * Return the flag's name as upper case, from flag path, this can be used to access the flag property directly from
+     * Returns the flag prefix plus name as beanutils prop accessor
      * {@link ReleaseFlags} object
      *
-     * @param fullFlagPath
+     * @param flagName
      * @return
      */
-    private static String getShortFlagPropUpper(String fullFlagPath) {
-        return fullFlagPath.replaceAll("flags.", "");
+    private static String getShortFlagProp(String flagName) {
+        return flagName + ".value";
     }
+
+    public static String getShortFlagName(String fullFlagPath) {
+        return fullFlagPath.replaceAll("flags.", "").replaceAll(".value", "");
+    }
+
 
     public boolean getFlagSet(String fullFlagPath) {
         try {
-            return "true".equals(BeanUtils.getProperty(this, getShortFlagPropUpper(fullFlagPath)));
+            return "true".equals(BeanUtils.getProperty(this, getShortFlagProp(fullFlagPath)));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

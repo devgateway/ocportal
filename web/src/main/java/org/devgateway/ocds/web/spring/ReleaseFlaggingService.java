@@ -120,7 +120,9 @@ public class ReleaseFlaggingService {
 
     private void createReleaseHistoryFromRelease(FlaggedRelease flaggedRelease) {
         ReleaseFlagHistory rfh = new ReleaseFlagHistory();
-        FLAGS_LIST.stream().filter(f -> flaggedRelease.getFlags().getFlagSet(f)).
+        FLAGS_LIST.stream().
+                map(ReleaseFlags::getShortFlagName).
+                filter(f -> flaggedRelease.getFlags().getFlagSet(f)).
                 collect(Collectors.toCollection(rfh::getFlagged));
         rfh.setReleaseId(flaggedRelease.getId());
         rfh.setFlaggedDate(ZonedDateTime.now());
@@ -152,6 +154,7 @@ public class ReleaseFlaggingService {
         stopWatch.stop();
         logMessage.accept("<b>CORRUPTION FLAGGING COMPLETE.</b>. Elapsed " + stopWatch.getTime() + "ms");
 
+        releaseFlagNotificationService.sendNotifications();
     }
 
     /**
