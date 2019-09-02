@@ -115,9 +115,10 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             item.add(estimatedCost);
 
             totalCost = new GenericSleepFormComponent<>("totalCost",
-                    (IModel<BigDecimal>) () -> {
+                    (IModel<String>) () -> {
                         if (quantity.getModelObject() != null && estimatedCost.getModelObject() != null) {
-                            return estimatedCost.getModelObject().multiply(quantity.getModelObject());
+                            return ComponentUtil.formatNumber(
+                                    estimatedCost.getModelObject().multiply(quantity.getModelObject()));
                         }
                         return null;
                     });
@@ -146,9 +147,9 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             item.add(new GenericSleepFormComponent<>("estimatedCost"));
             item.add(new GenericSleepFormComponent<>("unitOfIssue"));
             item.add(new GenericSleepFormComponent<>("quantity"));
-            item.add(new GenericSleepFormComponent<>("totalCost", (IModel<BigDecimal>) () -> {
+            item.add(new GenericSleepFormComponent<>("totalCost", (IModel<String>) () -> {
                 if (planItem.getQuantity() != null && planItem.getEstimatedCost() != null) {
-                    return planItem.getEstimatedCost().multiply(planItem.getQuantity());
+                    return ComponentUtil.formatNumber(planItem.getEstimatedCost().multiply(planItem.getQuantity()));
                 }
                 return null;
             }));

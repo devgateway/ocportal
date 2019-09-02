@@ -140,6 +140,10 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.purchaseRequisitions.tender.closingDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.purchaseRequisitions.lastModifiedDate", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
+                new Index().on("projects.purchaseRequisitions.tender.lastModifiedDate", Sort.Direction.ASC));
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new TextIndexDefinition.TextIndexDefinitionBuilder()
                         .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)
                         .onField("projects.purchaseRequisitions.tender.tenderTitle")

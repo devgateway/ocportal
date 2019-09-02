@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface BaseJpaService<T extends GenericPersistable & Serializable> {
     List<T> findAll();
@@ -17,6 +18,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
     List<T> findAll(Sort sort);
 
     List<T> findAll(Specification<T> spec);
+
+    List<T> findAllNoCache(Specification<T> spec);
 
     Page<T> findAll(Specification<T> spec, Pageable pageable);
 
@@ -31,6 +34,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
     long count(Specification<T> spec);
 
     Optional<T> findById(Long id);
+
+    Set<T> findAllById(Iterable<Long> ids);
 
     long count();
 

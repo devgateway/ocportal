@@ -183,7 +183,7 @@ hr.edit-separator {
     line-height: 120%;
     margin-right: 10px;
     margin-top: 10px;
-    white-space:nowrap;
+    white-space: nowrap;
 }
 @media (max-width: 1024px) {
     .accordion-toggle .show-all{
@@ -252,13 +252,16 @@ hr.edit-separator {
     box-shadow: none;
     padding-left: 10px;
 }
+
 .form-wrapper textarea[disabled],
-.form-wrapper textarea.form-control[disabled]{
-  padding: 10px;
+.form-wrapper textarea.form-control[disabled] {
+    padding: 10px;
 }
-.form-group textarea.form-control{
-  border:1px solid #eeeeee;
+
+.form-group textarea.form-control {
+    border: 1px solid #eeeeee;
 }
+
 .form-wrapper .input-group .form-control,
 .form-wrapper .input-group .form-control:first-child {
     border: 1px solid #eeeeee;
@@ -307,13 +310,13 @@ hr.edit-separator {
 }
 
 
-
 .label-term {
-  background-color: #8a0f13;
+    background-color: #8a0f13;
 }
+
 .label-term[href]:hover,
 .label-term[href]:focus {
-  background-color: #730d10;
+    background-color: #730d10;
 }
 
 .label.label-success,
@@ -438,26 +441,32 @@ hr.edit-separator {
     border: 1px solid #333333;
     color: #ffffff;
 }
-.status-section{
-  margin-bottom: 35px;
+
+.status-section {
+    margin-bottom: 35px;
 }
-.status-section .status{
-  padding-top:25px;
+
+.status-section .status {
+    padding-top: 25px;
 }
-.status-section .checkbox{
-  display:inline;
-  overflow:hidden;
+
+.status-section .checkbox {
+    display: inline;
+    overflow: hidden;
 }
-.status-section label{
-  float: left;
-  margin-right: 10px;
-  display:inline;
+
+.status-section label {
+    float: left;
+    margin-right: 10px;
+    display: inline;
 }
-.status-section .checkbox label{
-  margin-top: -3px;
+
+.status-section .checkbox label {
+    margin-top: -3px;
 }
-.status-section .toggle-group label{
-  margin-top: 0;
+
+.status-section .toggle-group label {
+    margin-top: 0;
 }
 @media (max-width: 1024px){
   table.table.table-hover.list-table{
@@ -467,3 +476,40 @@ hr.edit-separator {
     font-size: 11px;
   }
 }
+
+/* Submitted Page styles
+-------------------------------------------------- */
+
+.verify-email-message {
+    padding-top: 60px;
+    padding-bottom: 20px;
+}
+
+.verify-email-submessage {
+    padding-top: 20px;
+}
+
+.fa.fa-envelope.verify-email-icon {
+    font-size: 7em;
+    color: #21ad59;
+}
+
+.verify-email-link {
+    color: #5dbca7;
+}
+
+.verify-error {
+    margin-top: 60px !important;
+}
+
+.verify-error-link {
+    color: #21ad59 !important;
+}
+
+.fa.fa-frown-o.unsubscribe {
+    font-size: 7em;
+    color: #333;
+}
+
+/*
+-------------------------------------------------- */

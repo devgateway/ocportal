@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -19,6 +20,13 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     protected PurchaseRequisition purchaseRequisition;
+
+    @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public AbstractAuditableEntity getParent() {
+        return purchaseRequisition;
+    }
 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
