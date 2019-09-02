@@ -298,8 +298,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
      * @param item
      * @return
      */
-    protected BootstrapDeleteButton getRemoveChildButton(final T item
-            , final NotificationPanel removeButtonNotificationPanel) {
+    protected BootstrapDeleteButton getRemoveChildButton(final T item,
+                                                         final NotificationPanel removeButtonNotificationPanel) {
         final BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove",
                 new ResourceModel("removeButton")) {
             @Override

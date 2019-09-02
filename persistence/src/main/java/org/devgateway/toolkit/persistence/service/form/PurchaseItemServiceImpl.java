@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseItemRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -9,6 +10,8 @@ import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author gmutuhu
@@ -24,6 +27,10 @@ public class PurchaseItemServiceImpl extends BaseJpaServiceImpl<PurchaseItem> im
     @Override
     protected BaseJpaRepository<PurchaseItem, Long> repository() {
         return purchaseItemRepository;
+    }
+
+    public List<PurchaseItem> findByPlanItem(PlanItem planItem) {
+        return purchaseItemRepository.findByPlanItem(planItem);
     }
 
     @Override

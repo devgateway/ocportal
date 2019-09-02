@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -19,6 +20,7 @@ import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -27,13 +29,16 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.category.UnitService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseItemService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author idobre
@@ -51,6 +56,9 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @SpringBean
     private TargetGroupService targetGroupService;
+
+    @SpringBean
+    private PurchaseItemService purchaseItemService;
 
     private final PlanItemFilterBean listFilterBean;
 
@@ -221,6 +229,33 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         };
 
         return addNewChildButton;
+    }
+
+    @Override
+    protected BootstrapDeleteButton getRemoveChildButton(final PlanItem item,
+                                                         final NotificationPanel removeButtonNotificationPanel) {
+        final BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove",
+                new ResourceModel("removeButton")) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
+
+                if (purchaseItems.size() > 0) {
+                    final ValidationError error = new ValidationError();
+                    error.addKey("planItemError");
+                    error(error);
+                } else {
+                    PlanItemPanel.this.getModelObject().remove(item);
+                    listView.removeAll();
+                    target.add(listWrapper);
+                }
+
+                target.add(removeButtonNotificationPanel);
+            }
+        };
+
+        removeButton.setOutputMarkupPlaceholderTag(true);
+        return removeButton;
     }
 
 
