@@ -1,6 +1,7 @@
 import translatable from '../../translatable';
 import RCRange from 'rc-slider/lib/Range';
 import { FormattedNumberInput } from '../../filters/inputs/range';
+import { Alert } from 'react-bootstrap';
 import { max } from '../../tools';
 import { delayUserInput } from '../tenders/state';
 
@@ -94,6 +95,19 @@ class FilterRange extends translatable(React.Component) {
             />
           </div>
         </div>
+        
+        {
+          min > max
+            ? <div className="row">
+              <div className="col-md-12">
+                <Alert bsStyle="danger">
+                  <i className="glyphicon glyphicon-exclamation-sign"></i>&nbsp;
+                  Min value is bigger than Max value!
+                </Alert>
+              </div>
+            </div>
+            : null
+        }
       </section>
     );
   }

@@ -58,11 +58,11 @@ class TenderQuotation extends FeedbackPage {
                 <div className="row">
                   <div className="col-md-3">
                     <div className="item-label">Supplier Score</div>
-                    <div className="item-value">{currencyFormatter(bids.supplierScore)}</div>
+                    <div className="item-value">{bids.supplierScore}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Supplier Ranking</div>
-                    <div className="item-value">{currencyFormatter(bids.supplierRanking)}</div>
+                    <div className="item-value">{bids.supplierRanking}</div>
                   </div>
                   <div className="col-md-3">
                     <div className="item-label">Quoted Price</div>

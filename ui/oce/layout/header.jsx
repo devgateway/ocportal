@@ -4,7 +4,7 @@ import cn from 'classnames';
 import URI from 'urijs';
 
 import './header.less';
-import { API_ROOT, OCE } from '../state/oce-state';
+import { statsInfo } from './state';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
@@ -34,23 +34,11 @@ export default class Header extends translatable(React.Component) {
 
     this.changeOption = this.changeOption.bind(this);
     this.isActive = this.isActive.bind(this);
-
-    this.headerState = OCE.substate({ name: 'headerState' });
-
-    this.statsUrl = this.headerState.input({
-      name: 'makueniPPCountEP',
-      initial: `${API_ROOT}/makueni/contractStats`,
-    });
-
-    this.statsInfo = this.headerState.remote({
-      name: 'statsInfo',
-      url: this.statsUrl,
-    });
   }
 
   componentDidMount() {
-    this.statsInfo.addListener('Header', () => {
-      this.statsInfo.getState()
+    statsInfo.addListener('Header', () => {
+      statsInfo.getState()
       .then(data => {
         this.setState({ data: data });
       });
@@ -58,7 +46,7 @@ export default class Header extends translatable(React.Component) {
   }
 
   componentWillUnmount() {
-    this.statsInfo.removeListener('Header');
+    statsInfo.removeListener('Header');
   }
 
   changeOption(option) {
