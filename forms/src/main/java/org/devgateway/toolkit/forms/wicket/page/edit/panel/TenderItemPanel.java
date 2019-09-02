@@ -28,6 +28,7 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -144,9 +145,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<BigDecimal>) () -> {
+                (IModel<String>) () -> {
                     if (quantity.getModelObject() != null && price.getModelObject() != null) {
-                        return price.getModelObject().multiply(quantity.getModelObject());
+                        return ComponentUtil.formatNumber(price.getModelObject().multiply(quantity.getModelObject()));
                     }
                     return null;
                 });

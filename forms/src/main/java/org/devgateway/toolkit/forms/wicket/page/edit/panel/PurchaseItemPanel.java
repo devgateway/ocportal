@@ -27,6 +27,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -145,9 +146,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
         item.add(amount);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<BigDecimal>) () -> {
+                (IModel<String>) () -> {
                     if (quantity.getModelObject() != null && amount.getModelObject() != null) {
-                        return amount.getModelObject().multiply(quantity.getModelObject());
+                        return ComponentUtil.formatNumber(amount.getModelObject().multiply(quantity.getModelObject()));
                     }
                     return null;
                 });

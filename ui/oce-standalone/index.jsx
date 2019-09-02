@@ -18,7 +18,7 @@ const translations = {
 const BILLION = 1000000000;
 const MILLION = 1000000;
 const THOUSAND = 1000;
-const formatNumber = number => number === undefined ? number : number.toLocaleString(undefined, { maximumFractionDigits: 2 });
+const formatNumber = number => number === undefined ? number : number.toLocaleString(undefined, { maximumFractionDigits: 3 });
 
 const formatDate = stringDate => {
   if (stringDate === undefined) {

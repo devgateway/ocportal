@@ -31,6 +31,7 @@ import org.devgateway.toolkit.web.WebSecurityUtil;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -40,6 +41,8 @@ import java.util.Date;
  * @since 2019-03-04
  */
 public final class ComponentUtil {
+    private static final DecimalFormat df = new DecimalFormat("#,###.###");
+
     private ComponentUtil() {
 
     }
@@ -257,5 +260,9 @@ public final class ComponentUtil {
             final WebMarkupContainer parent,
             final GenericBootstrapFormComponent<?, ?> child) {
         return parent.add(requiredFlag ? child.required() : child);
+    }
+
+    public static String formatNumber(final BigDecimal number) {
+        return df.format(number);
     }
 }
