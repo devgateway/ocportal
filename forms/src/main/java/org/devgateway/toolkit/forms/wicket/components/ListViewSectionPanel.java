@@ -195,9 +195,15 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         accordionToggle.add(showDetailsLink);
         accordion.add(hideableContainer);
 
+        final NotificationPanel removeButtonNotificationPanel = new NotificationPanel("removeButtonNotificationPanel");
+        removeButtonNotificationPanel.setOutputMarkupId(true);
+        hideableContainer.add(removeButtonNotificationPanel);
+
         // we add the remove button
-        final BootstrapDeleteButton removeButton = getRemoveChildButton(item.getModelObject());
+        final BootstrapDeleteButton removeButton = getRemoveChildButton(item.getModelObject(),
+                removeButtonNotificationPanel);
         hideableContainer.add(removeButton);
+        removeButtonNotificationPanel.setFilter(new ComponentFeedbackMessageFilter(removeButton));
 
         // we add the edit button
         final LaddaAjaxButton editButton = getEditChildButton(item);
@@ -292,7 +298,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
      * @param item
      * @return
      */
-    private BootstrapDeleteButton getRemoveChildButton(final T item) {
+    protected BootstrapDeleteButton getRemoveChildButton(final T item
+            , final NotificationPanel removeButtonNotificationPanel) {
         final BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove",
                 new ResourceModel("removeButton")) {
             @Override
