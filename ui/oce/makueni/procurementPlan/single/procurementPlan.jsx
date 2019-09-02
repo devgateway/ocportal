@@ -153,8 +153,9 @@ class ProcurementPlan extends FeedbackPage {
                             className="item-value">{currencyFormatter(planItem.targetGroupValue)}</div>
                         </div>
                       </div>
-                      
+  
                       <div className="row padding-top-10">
+                        <h4 className="col-md-12">Timing of activities (quarterly basis)</h4>
                         <div className="col-md-3">
                           <div className="item-label">1st Quarter</div>
                           <div className="item-value">{currencyFormatter(planItem.quarter1st)}</div>
