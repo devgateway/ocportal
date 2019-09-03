@@ -65,6 +65,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
@@ -485,6 +486,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListAlertPage>(ListAlertPage.class,
                         new StringResourceModel("navbar.alerts", BasePage.this, null))
                         .setIconType(FontAwesomeIconType.envelope));
+
+                list.add(new MenuBookmarkablePageLink<ListFlagHistoryPage>(ListFlagHistoryPage.class,
+                        new StringResourceModel("navbar.redFlagHistory", BasePage.this, null))
+                        .setIconType(FontAwesomeIconType.flag));
+
 
                 list.add(new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
                         new StringResourceModel("navbar.alertsStatistics", BasePage.this, null))
