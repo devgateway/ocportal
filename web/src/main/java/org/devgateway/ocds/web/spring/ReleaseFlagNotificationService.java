@@ -1,6 +1,7 @@
 package org.devgateway.ocds.web.spring;
 
 import com.google.common.collect.Sets;
+import org.apache.logging.log4j.util.Strings;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.flags.ReleaseFlags;
 import org.devgateway.ocds.persistence.mongo.repository.main.FlaggedReleaseRepository;
@@ -11,16 +12,24 @@ import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.ReleaseFlagHistoryService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,14 +40,15 @@ import static org.devgateway.ocds.persistence.mongo.flags.FlagsConstants.FLAGS_L
 @Service
 public class ReleaseFlagNotificationService {
 
+    protected static Logger logger = LoggerFactory.getLogger(ReleaseFlagNotificationService.class);
+
     @Autowired
     private DepartmentService departmentService;
 
     @Autowired
     private PersonService personService;
 
-    private Map<String, Map<String, Set<String>>> departmentFlagRelease;
-
+    private Map<Long, Map<String, Set<String>>> departmentFlagRelease;
 
     @Autowired
     private ReleaseFlagHistoryService releaseFlagHistoryService;
@@ -49,8 +59,8 @@ public class ReleaseFlagNotificationService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Autowired
-    private HttpServletRequest request;
+    @Value("${serverURL}")
+    private String serverURL;
 
     @Autowired
     private TranslationService translationService;
@@ -60,8 +70,7 @@ public class ReleaseFlagNotificationService {
         departmentFlagRelease = new ConcurrentHashMap<>();
     }
 
-
-    private void addDepartmentFlagReleaseId(String department, String flag, String releaseId) {
+    private void addDepartmentFlagReleaseId(Long department, String flag, String releaseId) {
         departmentFlagRelease.putIfAbsent(department, new ConcurrentHashMap<>());
         Map<String, Set<String>> stringSetMap = departmentFlagRelease.get(department);
         stringSetMap.putIfAbsent(flag, new HashSet<>());
@@ -70,29 +79,22 @@ public class ReleaseFlagNotificationService {
     }
 
 
-    @Transactional
-    private String getDepartmentNameFromRelease(FlaggedRelease flaggedRelease) {
-        Optional<Department> department = departmentService.findById(flaggedRelease.getDepartmentId());
-        if (!department.isPresent()) {
-            return "Unknown";
-        }
-        return department.get().getLabel();
+    private Long getDepartmentIdFromRelease(FlaggedRelease flaggedRelease) {
+        return flaggedRelease.getDepartmentId();
     }
 
-    private Set<String> getUsersValidatorsEmailsFromRelease(FlaggedRelease flaggedRelease) {
-        Optional<Department> department = departmentService.findById(flaggedRelease.getDepartmentId());
-        if (!department.isPresent()) {
-            return Sets.newHashSet();
-        }
-
-        return personService.findByDepartmentWithRoles(department.get(), SecurityConstants.Roles.ROLE_USER,
+    @Transactional
+    private Set<String> getUsersValidatorsEmailsFromRelease(Long departmentId) {
+        Optional<Department> department = departmentService.findById(departmentId);
+        return department.map(value -> personService.findByDepartmentWithRoles(value, SecurityConstants.Roles.ROLE_USER,
                 SecurityConstants.Roles.ROLE_VALIDATOR
-        ).stream().map(Person::getEmail).collect(Collectors.toSet());
+        ).stream().map(Person::getEmail).map(Strings::trimToNull).filter(Objects::nonNull).collect(Collectors.toSet()))
+                .orElseGet(Sets::newHashSet);
     }
 
     private Set<String> getAdminsEmails() {
         return personService.findByRoleIn(SecurityConstants.Roles.ROLE_ADMIN).stream().map(Person::getEmail)
-                .collect(Collectors.toSet());
+                .map(Strings::trimToNull).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
     @Transactional
@@ -105,7 +107,7 @@ public class ReleaseFlagNotificationService {
                     if (flag && (!latestReleaseFlagHistory.isPresent()
                             || !latestReleaseFlagHistory.get().getFlagged().contains(f))) {
                         addDepartmentFlagReleaseId(
-                                getDepartmentNameFromRelease(flaggedRelease),
+                                getDepartmentIdFromRelease(flaggedRelease),
                                 f, flaggedRelease.getId()
                         );
 
@@ -114,39 +116,108 @@ public class ReleaseFlagNotificationService {
         );
     }
 
-    public String createAdminContent() {
+    private long countAdminContent() {
+        return departmentFlagRelease.values().stream().flatMap(s -> s.values().stream()).flatMap(Collection::stream)
+                .count();
+    }
+
+    private long countDepartmentContent(Long departmentId) {
+        return departmentFlagRelease.get(departmentId).values().stream().flatMap(Collection::stream).count();
+    }
+
+    @Transactional
+    private String getDepartmentNameFromId(Long departmentId) {
+        return departmentService.findById(departmentId).get().getLabel();
+    }
+
+    private String getReleaseURL(String releaseId) {
+        return URI.create(serverURL + "/purchaseRequisition?id=" + releaseId).toASCIIString();
+    }
+
+    private String createAdminContent() {
         StringBuffer sb = new StringBuffer();
+        sb.append("<ul>");
         departmentFlagRelease.forEach((department, flagReleaseId) -> {
-            sb.append(department).append("<br/>");
+            sb.append("<li>").append(getDepartmentNameFromId(department));
+            sb.append("<ul>");
             flagReleaseId.forEach((flag, releaseId) -> {
-                sb.append(getFlagNameFromId(flag)).append("<br/>");
-                releaseId.forEach(r -> sb.append(getReleaseTitle(r)).append("<br/>"));
+                createFlagContent(sb, flag, releaseId);
             });
+            sb.append("</ul>");
+            sb.append("</li>");
         });
+        sb.append("</ul>");
         return sb.toString();
     }
 
-    public String getFlagNameFromId(String flagName) {
+    private void createFlagContent(StringBuffer sb, String flag, Set<String> releaseId) {
+        sb.append("<li><b>").append(getFlagNameFromId(flag)).append("</b><br/>");
+        releaseId.forEach(r -> sb.append(getLinkedReleaseTitle(r)).append("<br/>"));
+        sb.append("</li>");
+    }
+
+    private String createDepartmentContent(Long department) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("<ul>");
+        departmentFlagRelease.get(department).forEach((flag, releaseId) -> {
+            createFlagContent(sb, flag, releaseId);
+        });
+        sb.append("</ul>");
+        return sb.toString();
+    }
+
+    private String getFlagNameFromId(String flagName) {
         return translationService.getValue("en_US", "crd:indicators:" + flagName + ":name");
     }
 
-//    public void createAdminEmail() {
-//
-//        final MimeMessagePreparator messagePreparator = mimeMessage -> {
-//            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
-//
-//            msg.setTo(getAdminsEmails().toArray(new String[0]));
-//            msg.setFrom("noreply@dgstg.org");
-//            msg.setSubject("# of new Corruption Risk Flags");
-//            msg.setText(content.replaceAll("\n", "<br />"), true);
-//        };
-//        try {
-//            javaMailSender.send(messagePreparator);
-//        } catch (MailException e) {
-//            logger.error("Failed to send verification email for: " + alert.getEmail(), e);
-//            throw e;
-//        }
-//    }
+    private void sendDepartmentEmails(Long department) {
+        String[] strings = getUsersValidatorsEmailsFromRelease(department).toArray(new String[0]);
+        if (strings.length == 0) {
+            return;
+        }
+        final MimeMessagePreparator messagePreparator = mimeMessage -> {
+            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
+            msg.setTo(strings);
+            msg.setFrom("noreply@dgstg.org");
+            msg.setSubject(countDepartmentContent(department) + " new Corruption Risk Flags for "
+                    + getDepartmentNameFromId(department));
+            msg.setText(createDepartmentContent(department), true);
+        };
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            logger.error("Failed to send red flag notification email for: " + strings, e);
+            throw e;
+        }
+    }
+
+    private void sendAdminEmails() {
+        String[] strings = getAdminsEmails().toArray(new String[0]);
+        if (strings.length == 0) {
+            return;
+        }
+        final MimeMessagePreparator messagePreparator = mimeMessage -> {
+            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
+            msg.setTo(strings);
+            msg.setFrom("noreply@dgstg.org");
+            msg.setSubject(countAdminContent() + " new Corruption Risk Flags");
+            msg.setText(createAdminContent(), true);
+
+        };
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            logger.error("Failed to send red flag notification email for: " + strings, e);
+            throw e;
+        }
+    }
+
+    private String getLinkedReleaseTitle(String releaseId) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("<a href=\"").append(getReleaseURL(releaseId)).append("\">").append(getReleaseTitle(releaseId))
+                .append("</a>");
+        return sb.toString();
+    }
 
     public String getReleaseTitle(String releaseId) {
         Optional<FlaggedRelease> optRelease = flaggedReleaseRepository.findById(releaseId);
@@ -158,10 +229,10 @@ public class ReleaseFlagNotificationService {
     }
 
 
-    public void sendNotifications() {
-        System.out.println("Sending Red Flag Notifications " + departmentFlagRelease);
-        System.out.println(createAdminContent());
-
+    void sendNotifications() {
+        logger.info("Sending Red Flag Notifications " + departmentFlagRelease);
+        sendAdminEmails();
+        departmentFlagRelease.keySet().forEach(this::sendDepartmentEmails);
         departmentFlagRelease.clear();
     }
 }
