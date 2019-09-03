@@ -7,6 +7,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -55,7 +56,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
 
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addBigDecimalField(editForm, "contractValue").required()
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "contractDate").required();
         ComponentUtil.addDateField(editForm, "expiryDate");

@@ -17,6 +17,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -154,7 +155,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     }
                 };
         quantity.decimal();
-        quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+        quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         quantity.required();
         item.add(quantity);
 
@@ -177,7 +178,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     }
                 };
         amount.decimal();
-        amount.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+        amount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         amount.required();
         item.add(amount);
 

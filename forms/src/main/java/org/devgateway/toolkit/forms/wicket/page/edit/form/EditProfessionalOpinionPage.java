@@ -5,6 +5,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
@@ -61,7 +62,7 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
         final TextFieldBootstrapFormComponent<BigDecimal> recommendedAwardAmount =
                 ComponentUtil.addBigDecimalField(editForm, "recommendedAwardAmount");
         recommendedAwardAmount.required();
-        recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+        recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
