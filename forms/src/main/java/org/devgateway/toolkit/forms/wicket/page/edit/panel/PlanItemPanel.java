@@ -16,6 +16,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
@@ -106,7 +107,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                         }
                     };
             quantity.decimal();
-            quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             quantity.required();
             item.add(quantity);
 
@@ -118,7 +119,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                         }
                     };
             estimatedCost.decimal();
-            estimatedCost.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+            estimatedCost.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             estimatedCost.required();
             item.add(estimatedCost);
 
@@ -141,16 +142,16 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
             ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
             ComponentUtil.addBigDecimalField(item, "targetGroupValue")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
             ComponentUtil.addBigDecimalField(item, "quarter1st")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             ComponentUtil.addBigDecimalField(item, "quarter2nd")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             ComponentUtil.addBigDecimalField(item, "quarter3rd")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             ComponentUtil.addBigDecimalField(item, "quarter4th")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         } else {
             item.add(new GenericSleepFormComponent<>("estimatedCost"));
             item.add(new GenericSleepFormComponent<>("unitOfIssue"));

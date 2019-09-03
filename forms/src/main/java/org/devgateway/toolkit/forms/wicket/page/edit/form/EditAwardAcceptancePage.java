@@ -8,6 +8,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -52,7 +53,7 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
         super.onInitialize();
 
         ComponentUtil.addBigDecimalField(editForm, "acceptedAwardValue").required()
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         ComponentUtil.addDateField(editForm, "acceptanceDate").required();
 
         addSupplierInfo();
