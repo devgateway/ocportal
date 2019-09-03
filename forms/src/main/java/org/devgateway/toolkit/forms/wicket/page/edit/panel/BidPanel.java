@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -64,7 +65,7 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         ComponentUtil.addIntegerTextField(item, "supplierRanking").required()
                 .getField().add(RangeValidator.minimum(0));
         ComponentUtil.addBigDecimalField(item, "quotedAmount")
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         Select2ChoiceBootstrapFormComponent<String> responsiveness = new Select2ChoiceBootstrapFormComponent<>(
                 "supplierResponsiveness",

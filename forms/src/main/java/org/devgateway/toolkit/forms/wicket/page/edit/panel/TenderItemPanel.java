@@ -13,6 +13,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
@@ -28,7 +29,6 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -115,7 +115,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                 };
         quantity.decimal();
-        quantity.getField().add(RangeValidator.minimum(BigDecimal.ONE));
+        quantity.getField().add(RangeValidator.minimum(BigDecimal.ONE), new BigDecimalValidator());
         quantity.required();
         item.add(quantity);
 
@@ -141,7 +141,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 };
         price.decimal();
         price.required();
-        price.getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+        price.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         item.add(price);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",

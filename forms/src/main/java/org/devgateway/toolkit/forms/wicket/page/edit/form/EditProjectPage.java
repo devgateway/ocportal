@@ -13,6 +13,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
@@ -102,9 +103,9 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
         editForm.add(cabinetPaper);
 
         ComponentUtil.addBigDecimalField(editForm, "amountBudgeted")
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         ComponentUtil.addBigDecimalField(editForm, "amountRequested")
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         final IndicatingAjaxFallbackLink allSubcounties = new IndicatingAjaxFallbackLink<Void>("allSubcounties") {
             @Override
