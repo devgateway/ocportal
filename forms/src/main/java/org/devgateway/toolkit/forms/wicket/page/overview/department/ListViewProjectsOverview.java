@@ -30,6 +30,7 @@ import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionServic
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -116,9 +117,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         addPurchaseRequisition.setVisibilityAllowed(
                 ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
 
+        // sort the purchase requisition list
+        final List<PurchaseRequisition> purchaseReqs = purchaseRequisitions.get(project);
+        purchaseReqs.sort(Comparator.comparing(PurchaseRequisition::getId));
+
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
                 new ListViewPurchaseRequisitionOverview("purchaseReqOverview",
-                        new ListModel<>(purchaseRequisitions.get(project)), sessionPurchaseRequisition);
+                        new ListModel<>(purchaseReqs), sessionPurchaseRequisition);
         containerFragment.add(listViewPurchaseRequisitionOverview);
 
         hideableContainer.add(containerFragment);
