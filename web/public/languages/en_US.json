@@ -140,7 +140,7 @@
   "tables:top10tenders:startDate": "Invitation to Tender Date",
   "tables:top10tenders:endDate": "Closing Date",
   "tables:top10tenders:buyer": "Buyer",
-  "tables:top10tenders:estimatedValue": "Tender Value",
+  "tables:top10tenders:estimatedValue": "Tender Price",
   "tables:top10tenders:tenderTitle": "Tender Title",
   "tables:top10tenders:title": "Top 10 largest tenders",
   "charts:percentWithTenders:title": "Percentage of plans with invitation to bid",
