@@ -240,6 +240,11 @@ public class EditUserPage extends AbstractEditPage<Person> {
                 Person saved = jpaService.save(person);
                 updateCurrentAuthenticatedUserData(saved);
 
+                // Is this a new user? Send a notification email.
+                if (entityId == null) {
+                    sendEmailService.sendNewAccountNotification(person, plainPassword.getField().getModelObject());
+                }
+
 
                 if (!WebSecurityUtil.isCurrentUserAdmin()) {
                     setResponsePage(Homepage.class);

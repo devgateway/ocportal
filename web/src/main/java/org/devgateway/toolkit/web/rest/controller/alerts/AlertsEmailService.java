@@ -71,7 +71,7 @@ public class AlertsEmailService {
     }
 
 
-    private static String createURL(final HttpServletRequest request, final String resourcePath) {
+    public static String createURL(final HttpServletRequest request, final String resourcePath) {
         final int port = request.getServerPort();
         final StringBuilder result = new StringBuilder();
 
