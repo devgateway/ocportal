@@ -72,15 +72,6 @@ public class Homepage extends BasePage {
         };
         add(dataExport);
 
-
-//        Release release = ocdsConversionService.createRelease(purchaseRequisitionService.findById(73044L).get());
-//        Release byOcid = releaseRepository.findByOcid(release.getOcid());
-//        if (byOcid != null) {
-//            releaseRepository.delete(byOcid);
-//        }
-//
-//        releaseRepository.save(release);
-
     }
 
     @Override
