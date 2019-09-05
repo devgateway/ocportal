@@ -30,8 +30,9 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
+import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -118,31 +119,31 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 purchaseRequisition, EditTenderPage.class, purchaseRequisition);
         containerFragment.add(tenderPanel);
 
-        final Panel evaluationPanel = new TenderDetailPanel("evaluationPanel", tenderQuotationEvaluation,
+        final Panel evaluationPanel = new TenderDetailPanel<>("evaluationPanel", tenderQuotationEvaluation,
                 "Quotation and Evaluation", tenderQuotationEvaluation != null ? new ArrayList<>(Arrays.asList(
                 tender.getTenderTitle(), tender.getTenderNumber())) : null,
                 purchaseRequisition, EditTenderQuotationEvaluationPage.class, tender);
         containerFragment.add(evaluationPanel);
 
-        final Panel professionalOpinionPanel = new TenderDetailPanel("professionalOpinionPanel", professionalOpinion,
+        final Panel professionalOpinionPanel = new TenderDetailPanel<>("professionalOpinionPanel", professionalOpinion,
                 "Professional Opinion", professionalOpinion != null ? new ArrayList<>(Arrays.asList(
                 professionalOpinion.getAwardee(), professionalOpinion.getRecommendedAwardAmount())) : null,
                 purchaseRequisition, EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
         containerFragment.add(professionalOpinionPanel);
 
-        final Panel awardNotificationPanel = new TenderDetailPanel("awardNotificationPanel", awardNotification,
+        final Panel awardNotificationPanel = new TenderDetailPanel<>("awardNotificationPanel", awardNotification,
                 "Notification", awardNotification != null ? new ArrayList<>(Arrays.asList(
                 awardNotification.getAwardee(), awardNotification.getAwardValue())) : null,
                 purchaseRequisition, EditAwardNotificationPage.class, professionalOpinion);
         containerFragment.add(awardNotificationPanel);
 
-        final Panel awardAcceptancePanel = new TenderDetailPanel("awardAcceptancePanel", awardAcceptance,
+        final Panel awardAcceptancePanel = new TenderDetailPanel<>("awardAcceptancePanel", awardAcceptance,
                 "Acceptance", awardAcceptance != null ? new ArrayList<>(Arrays.asList(
                 awardAcceptance.getAwardee(), awardAcceptance.getAcceptedAwardValue())) : null,
                 purchaseRequisition, EditAwardAcceptancePage.class, awardNotification);
         containerFragment.add(awardAcceptancePanel);
 
-        final Panel contractPanel = new TenderDetailPanel("contractPanel", contract,
+        final Panel contractPanel = new TenderDetailPanel<>("contractPanel", contract,
                 "Contracts", contract != null ? new ArrayList<>(Arrays.asList(
                 contract.getAwardee(), contract.getContractValue())) : null,
                 purchaseRequisition, EditContractPage.class, awardAcceptance);
@@ -157,9 +158,15 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
     }
 
     private boolean canEdit(final PurchaseRequisition purchaseRequisition,
-                            final GenericPersistable persistable,
+                            final AbstractStatusAuditableEntity persistable,
                             final Statusable previousStep) {
 
+        //terminated can always edit
+        if (persistable != null && persistable.getStatus().equals(DBConstants.Status.TERMINATED)) {
+            return true;
+        }
+
+        //the rest of the steps of a terminated chain, can never be edited
         if (persistable == null && purchaseRequisition.isTerminated()) {
             return false;
         }
@@ -168,7 +175,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
-    private class TenderDetailPanel<T extends GenericPersistable & Statusable> extends GenericPanel<T> {
+    private class TenderDetailPanel<T extends AbstractMakueniEntity> extends GenericPanel<T> {
         private final T entity;
 
         private final String tenderLabel;
@@ -231,7 +238,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
             add(editTender);
 
 
-            add(new ListView<Object>("tenderInfo", new ListModel(tenderInfo)) {
+            add(new ListView<Object>("tenderInfo", new ListModel<>(tenderInfo)) {
                 @Override
                 protected void populateItem(final ListItem<Object> item) {
                     final Object object = item.getModelObject();
