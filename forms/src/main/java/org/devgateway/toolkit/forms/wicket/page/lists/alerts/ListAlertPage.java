@@ -45,5 +45,7 @@ public class ListAlertPage extends AbstractListPage<Alert> {
         columns.add(new PropertyColumn<>(new Model<>("Last Send Date"), "lastSendDate", "lastSendDate"));
 
         super.onInitialize();
+
+        editPageLink.setVisibilityAllowed(false);
     }
 }
