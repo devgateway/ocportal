@@ -130,7 +130,8 @@ public abstract class AbstractMongoDatabaseConfiguration {
                 .onFields("tender.title", "tender.description",
                         "tender.procuringEntity.name", "tender._id", "tender.procuringEntity.description",
                         "awards._id", "awards.description", "awards.suppliers.name", "awards.suppliers.description",
-                        "ocid", "buyer.name", "buyer._id", "awards.suppliers._id", "awards.suppliers.name"
+                        "ocid", "buyer.name", "buyer._id", "awards.suppliers._id", "awards.suppliers.name",
+                        "tender.procuringEntity._id", "tender.procuringEntity.additionalIdentifiers._id"
                 ).build());
 
         getLogger().info("Added extra Mongo indexes");
