@@ -10,11 +10,11 @@ class MultipleSelect extends translatable(Component) {
       options: fromJS([]),
     };
   }
-  
+
   getOptions() {
     return this.state.options;
   }
-  
+
   getSelectedCount() {
     return this.getOptions()
     .filter(
@@ -22,11 +22,11 @@ class MultipleSelect extends translatable(Component) {
     )
     .count();
   }
-  
+
   transform(datum) {
     return datum;
   }
-  
+
   componentDidMount() {
     const { ENDPOINT } = this.constructor;
     if (ENDPOINT) {
@@ -34,7 +34,7 @@ class MultipleSelect extends translatable(Component) {
       .then(data => this.setState({ options: fromJS(this.transform(data)) }));
     }
   }
-  
+
   selectAll() {
     this.props.onUpdateAll(
       Set(
@@ -44,11 +44,11 @@ class MultipleSelect extends translatable(Component) {
       ),
     );
   }
-  
+
   selectNone() {
     this.props.onUpdateAll(Set());
   }
-  
+
   render() {
     const options = this.getOptions();
     const { selected, onToggle } = this.props;
@@ -56,8 +56,8 @@ class MultipleSelect extends translatable(Component) {
     return (
       <section className="field">
         <header>
-          {this.getTitle()} <span
-          className="count">({this.getSelectedCount()}/{totalOptions})</span>
+          {/*{this.getTitle()} */}Selected
+          <span className="count">({this.getSelectedCount()}/{totalOptions})</span>
           <div className="pull-right select-all-none">
             <a href="javascript:void(0)" onClick={e => this.selectAll()}>
               {this.t('filters:multipleSelect:selectAll')}
