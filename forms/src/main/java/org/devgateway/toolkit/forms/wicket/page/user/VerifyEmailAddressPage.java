@@ -52,25 +52,33 @@ public class VerifyEmailAddressPage extends BasePage {
 
         // check if we have any errors
         final Boolean error;
+        final Boolean success;
         if (secret == null) {
             error = true;
+            success = false;
         } else {
             final Alert alert = alertService.findBySecret(secret);
 
             if (alert == null) {
                 error = true;
+                success = false;
             } else {
                 error = false;
 
-                alert.setAlertable(true);
-                alert.setEmailVerified(true);
-                alertService.saveAndFlush(alert);
+                if (alert.getEmailVerified()) {
+                    success = true;
+                } else {
+                    success = false;
+                    alert.setAlertable(true);
+                    alert.setEmailVerified(true);
+                    alertService.saveAndFlush(alert);
 
-                // clear "servicesCache" cache;
-                final CacheManager cm = CacheManager.getInstance();
-                final Cache servicesCache = cm.getCache("servicesCache");
-                if (servicesCache != null) {
-                    servicesCache.removeAll();
+                    // clear "servicesCache" cache;
+                    final CacheManager cm = CacheManager.getInstance();
+                    final Cache servicesCache = cm.getCache("servicesCache");
+                    if (servicesCache != null) {
+                        servicesCache.removeAll();
+                    }
                 }
             }
         }
@@ -79,9 +87,12 @@ public class VerifyEmailAddressPage extends BasePage {
         add(messageContainer);
         final TransparentWebMarkupContainer errorContainer = new TransparentWebMarkupContainer("errorContainer");
         add(errorContainer);
+        final TransparentWebMarkupContainer successContainer = new TransparentWebMarkupContainer("successContainer");
+        add(successContainer);
 
         errorContainer.setVisibilityAllowed(error);
-        messageContainer.setVisibilityAllowed(!error);
+        messageContainer.setVisibilityAllowed(!error && !success);
+        successContainer.setVisibilityAllowed(success);
 
         final Label verifyEmailMsg = new Label("verifyEmailMsg",
                 new StringResourceModel("verifyEmailMsg", VerifyEmailAddressPage.this));

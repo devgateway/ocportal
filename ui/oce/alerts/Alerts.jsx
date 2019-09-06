@@ -16,7 +16,7 @@ class Alerts extends CRDPage {
       fetchedDepartments: [],
       items: [],
       fetchedItems: [],
-      emailPatter: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
+      emailPattern: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
       email: '',
       emailValid: true,
       error: false
@@ -73,7 +73,7 @@ class Alerts extends CRDPage {
       return undefined;
     }
     
-    const emailValid = this.state.email.match(this.state.emailPatter);
+    const emailValid = this.state.email.match(this.state.emailPattern);
     
     if (emailValid) {
       return 'success';
@@ -93,13 +93,13 @@ class Alerts extends CRDPage {
     
     if (name === 'email') {
       this.setState({
-        emailValid: this.state.email.match(this.state.emailPatter)
+        emailValid: this.state.email.match(this.state.emailPattern)
       });
     }
   }
   
   submit() {
-    const { departments, items, email, emailPatter } = this.state;
+    const { departments, items, email, emailPattern } = this.state;
     let error = false;
     const [purchaseReqId, tenderTitle] = this.props.route;
     
@@ -110,11 +110,11 @@ class Alerts extends CRDPage {
         error = true;
       }
     }
-    if (!email.match(emailPatter)) {
+    if (!email.match(emailPattern)) {
       error = true;
       
       this.setState({
-        emailValid: email.match(emailPatter)
+        emailValid: email.match(emailPattern)
       });
     }
     
@@ -123,9 +123,6 @@ class Alerts extends CRDPage {
       
       return 0;
     } else {
-      console.log('>>> SENDING!');
-      
-      
       this.subscribeAlertEP = this.alertsState.input({
         name: 'subscribeAlertEP',
         initial: `${API_ROOT}` + '/makueni/alerts/subscribeAlert',

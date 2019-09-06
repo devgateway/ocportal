@@ -180,19 +180,37 @@ public class AlertsManagerImpl implements AlertsManager {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
-            final String content = "Hello,\n\n"
-                    + "You have subscribed to receive alerts from Makueni OC Portal."
-                    + " Please use the links bellow to check the latest updates \n\n"
-                    + tenderLinks.toString() + "\n\n"
-                    + "Thanks,\n"
-                    + "Makueni Portal Team \n\n\n"
-                    + "If you do not want to receive our email alerts anymore please click on the following link: "
-                    + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
-                    + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
-
             msg.setTo(alert.getEmail());
             msg.setFrom("noreply@dgstg.org");
-            msg.setSubject("Makueni OC Portal - Notifications");
+
+            final String content;
+            if (alert.getPurchaseReq() != null) {
+                content = "Hello,\n\n"
+                        + "There has been an update to \""
+                        + alert.getPurchaseReq().getSingleTender().getTenderTitle()
+                        + "\" please visit the website to see the update: \n\n"
+                        + tenderLinks.toString() + "\n"
+                        + "Thanks,\n"
+                        + "Makueni Portal Team \n\n\n"
+                        + "If you do not want to receive our email alerts anymore please click on the following link: "
+                        + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
+                        + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
+
+                msg.setSubject("Tender \""
+                        + alert.getPurchaseReq().getSingleTender().getTenderTitle()
+                        + "\" has been updated");
+            } else {
+                content = "Hello,\n\n"
+                        + "The following tender(s) have been published: \n\n"
+                        + tenderLinks.toString() + "\n"
+                        + "Thanks,\n"
+                        + "Makueni Portal Team \n\n\n"
+                        + "If you do not want to receive our email alerts anymore please click on the following link: "
+                        + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
+                        + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
+
+                msg.setSubject("New tender(s) released");
+            }
 
             msg.setText(content.replaceAll("\n", "<br />"), true);
 
