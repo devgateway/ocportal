@@ -8,12 +8,12 @@ export class FormattedNumberInput extends React.Component {
     const { value } = this.props;
     return value && value.toLocaleString();
   }
-  
+
   sendUnformattedValue(e) {
     const value = parseFloat(e.target.value.replace(/,/g, ''));
     this.props.onChange(value);
   }
-  
+
   render() {
     const { value, onChange } = this.props;
     return (
@@ -51,9 +51,9 @@ class Range extends translatable(Component) {
             })}
           />
         </section>
-        
+
         <div className="range-inputs row">
-          <div className="col-md-6">
+          <div className="col-md-4">
             {this.t('general:range:min')}
             &nbsp;
             <FormattedNumberInput
@@ -62,7 +62,7 @@ class Range extends translatable(Component) {
               onChange={value => onUpdate({ min: value, max: maxValue }, { min, max })}
             />
           </div>
-          <div className="col-md-6">
+          <div className="col-md-4">
             {this.t('general:range:max')}
             &nbsp;
             <FormattedNumberInput
