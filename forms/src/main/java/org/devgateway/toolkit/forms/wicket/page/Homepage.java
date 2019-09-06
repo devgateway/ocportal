@@ -15,6 +15,7 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.link.Link;
@@ -53,6 +54,12 @@ public class Homepage extends BasePage {
             public void onClick() {
                 setResponsePage(PublicPortalPage.class);
             }
+
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.put("target", "_blank");
+            }
         };
         add(publicPortalLink);
         
@@ -60,6 +67,12 @@ public class Homepage extends BasePage {
             @Override
             public void onClick() {
                 setResponsePage(CorruptionRiskDashboardPage.class);
+            }
+
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.put("target", "_blank");
             }
         };
         add(corruptionRiskDashboard); 
@@ -71,15 +84,6 @@ public class Homepage extends BasePage {
             }
         };
         add(dataExport);
-
-
-//        Release release = ocdsConversionService.createRelease(purchaseRequisitionService.findById(73044L).get());
-//        Release byOcid = releaseRepository.findByOcid(release.getOcid());
-//        if (byOcid != null) {
-//            releaseRepository.delete(byOcid);
-//        }
-//
-//        releaseRepository.save(release);
 
     }
 

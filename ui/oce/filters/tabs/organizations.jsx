@@ -14,9 +14,9 @@ class Organizations extends Tab {
 Organizations.getName = t => t('filters:tabs:organizations:title');
 
 Organizations.FILTERS = [
+  ['buyerId', Buyer],
   ['procuringEntityId', ProcuringEntity],
-  ['supplierId', Supplier],
-  ['buyerId', Buyer]
+  ['supplierId', Supplier]
 ];
 
 export default Organizations;

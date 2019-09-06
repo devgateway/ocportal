@@ -23,9 +23,9 @@ class Organizations extends FilterBox{
   getBox(){
     return (
       <div className="box-content">
+        {this.renderChild(Buyer, 'buyerId')}
         {this.renderChild(ProcuringEntity, 'procuringEntityId')}
         {this.renderChild(Supplier, 'supplierId')}
-        {this.renderChild(Buyer, 'buyerId')}
       </div>
     )
   }
