@@ -27,7 +27,7 @@ class PEList extends PaginatedTable {
     const { searchQuery } = this.props;
     const eps = super.getCustomEP();
     return searchQuery ?
-      eps.map(ep => ep.addSearch('text', searchQuery)) :
+      eps.map(ep => ep.addSearch('text', decodeURIComponent(searchQuery))) :
       eps;
   }
 
