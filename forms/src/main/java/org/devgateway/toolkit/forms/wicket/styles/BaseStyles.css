@@ -86,11 +86,26 @@ body {
     color: #eeeeee;
 }
 
-.navbar-brand img {
-    width: 200px;
-    margin-left: 10px;
-    margin-top: -20px;
+.navbar-header .navbar-brand {
+    /*height: auto;*/
+    padding: 0;
 }
+
+.navbar-header .navbar-brand img {
+    display: inline-block;
+
+    width: 60px;
+    margin-left: 20px;
+    margin-top: -8px;
+}
+
+.navbar-header .navbar-brand span {
+    display: inline-block;
+    /*border-left: 2px solid #fff;*/
+    padding-left: 10px;
+    color: #fff;
+}
+
 
 h1.pageTitle {
     border-bottom: 1px solid #eeeeee;
