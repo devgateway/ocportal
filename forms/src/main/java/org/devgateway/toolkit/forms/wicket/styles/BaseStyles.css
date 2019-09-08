@@ -491,6 +491,10 @@ hr.edit-separator {
   }
 }
 
+.toggle-group{
+  width: 215%;
+}
+
 /* Submitted Page styles
 -------------------------------------------------- */
 
