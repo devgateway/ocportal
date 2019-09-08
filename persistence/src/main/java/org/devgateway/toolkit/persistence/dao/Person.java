@@ -28,6 +28,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -67,13 +68,13 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
 
     private Boolean changePasswordNextSignIn;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private List<Department> departments;
+    private Set<Department> departments = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     private UserDashboard defaultDashboard;
@@ -225,11 +226,11 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
         return null;
     }
 
-    public List<Department> getDepartments() {
+    public Set<Department> getDepartments() {
         return departments;
     }
 
-    public void setDepartments(final List<Department> departments) {
+    public void setDepartments(final Set<Department> departments) {
         this.departments = departments;
     }
 

@@ -50,7 +50,7 @@ public class PermissionEntityRenderableService {
                 if (procurementPlan == null || procurementPlan.getDepartment() == null) {
                     return SecurityConstants.Action.VIEW;
                 } else {
-                    final List<Department> departments =
+                    final Set<Department> departments =
                             WebSecurityUtil.getCurrentAuthenticatedPerson().getDepartments();
                     final Department formDepartment = procurementPlan.getDepartment();
 

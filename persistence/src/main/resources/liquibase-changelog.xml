@@ -397,4 +397,13 @@
         <sql>alter table purchase_item alter column quantity type double precision</sql>
         <sql>alter table purchase_item_aud alter column quantity type double precision</sql>
     </changeSet>
+
+    <changeSet id="OCMAKU-333" author="idobre">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="person_departments"/>
+        </preConditions>
+        <sql>
+            insert into person_departments (select id, department_id from person where department_id is not null);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

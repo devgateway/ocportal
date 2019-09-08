@@ -119,7 +119,9 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
         // sort the purchase requisition list
         final List<PurchaseRequisition> purchaseReqs = purchaseRequisitions.get(project);
-        purchaseReqs.sort(Comparator.comparing(PurchaseRequisition::getId));
+        if (purchaseReqs != null && !purchaseReqs.isEmpty()) {
+            purchaseReqs.sort(Comparator.comparing(PurchaseRequisition::getId));
+        }
 
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
                 new ListViewPurchaseRequisitionOverview("purchaseReqOverview",
