@@ -8,12 +8,13 @@ class Organizations extends FilterBox{
   isActive(){
     const {appliedFilters} = this.props;
     return appliedFilters.get('procuringEntityId', Set()).count() > 0 ||
+           appliedFilters.get('buyerId', Set()).count() > 0 ||
            appliedFilters.get('supplierId', Set()).count() > 0;
   }
 
   reset(){
     const {onApply, state} = this.props;
-    onApply(state.delete('procuringEntityId').delete('supplierId'));
+    onApply(state.delete('procuringEntityId').delete('supplierId').delete('buyerId'));
   }
 
   getTitle(){
