@@ -66,7 +66,7 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
     @JsonIgnore
     private String plainPasswordCheck;
 
-    private Boolean changePasswordNextSignIn;
+    private Boolean changePasswordNextSignIn = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
