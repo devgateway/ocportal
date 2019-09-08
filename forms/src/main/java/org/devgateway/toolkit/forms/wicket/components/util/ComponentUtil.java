@@ -56,9 +56,8 @@ public final class ComponentUtil {
             return true;
         } else {
             return sessionMetadataService.getSessionDepartment() != null
-                    && sessionMetadataService.getSessionDepartment().
-                    equals(WebSecurityUtil.getCurrentAuthenticatedPerson()
-                            .getDepartment());
+                    && WebSecurityUtil.getCurrentAuthenticatedPerson()
+                    .getDepartments().contains(sessionMetadataService.getSessionDepartment());
         }
     }
 

@@ -8,12 +8,10 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
-import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -32,16 +30,8 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
 
         this.jpaService = procurementPlanService;
 
-        final Department department;
-        final FiscalYear fiscalYear;
-        // non-admin users should create a Procurement Plan only with their department
-        if (!WebSecurityUtil.isCurrentUserAdmin()) {
-            final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
-            department = person.getDepartment();
-        } else {
-            department = sessionMetadataService.getSessionDepartment();
-        }
-        fiscalYear = sessionMetadataService.getSessionFiscalYear();
+        final Department department = sessionMetadataService.getSessionDepartment();
+        final FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && (department == null || fiscalYear == null)) {

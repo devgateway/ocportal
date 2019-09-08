@@ -36,7 +36,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "username"), @Index(columnList = "department_id")})
+@Table(indexes = {@Index(columnList = "username")})
 public class Person extends AbstractAuditableEntity implements UserDetails, Labelable {
     private static final long serialVersionUID = 109780377848343674L;
 
@@ -67,9 +67,9 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
 
     private Boolean changePasswordNextSignIn;
 
+    @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Department department;
+    private List<Department> departments;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -78,10 +78,8 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
     @ManyToOne(fetch = FetchType.EAGER)
     private UserDashboard defaultDashboard;
 
-
     @ManyToMany(fetch = FetchType.EAGER,  mappedBy = "users")
     private Set<UserDashboard> dashboards = new HashSet<>();
-
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
@@ -92,7 +90,6 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
     private boolean changeProfilePassword;
 
     private Boolean enabled = true;
-
 
     @Override
     public String getUsername() {
@@ -228,14 +225,13 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
         return null;
     }
 
-    public Department getDepartment() {
-        return department;
+    public List<Department> getDepartments() {
+        return departments;
     }
 
-    public void setDepartment(final Department department) {
-        this.department = department;
+    public void setDepartments(final List<Department> departments) {
+        this.departments = departments;
     }
-
 
     @Override
     public void setLabel(String label) {
