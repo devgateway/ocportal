@@ -9,6 +9,7 @@ import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,11 +50,12 @@ public class PermissionEntityRenderableService {
                 if (procurementPlan == null || procurementPlan.getDepartment() == null) {
                     return SecurityConstants.Action.VIEW;
                 } else {
-                    final Department department = WebSecurityUtil.getCurrentAuthenticatedPerson().getDepartment();
+                    final Set<Department> departments =
+                            WebSecurityUtil.getCurrentAuthenticatedPerson().getDepartments();
                     final Department formDepartment = procurementPlan.getDepartment();
 
                     // users with different department should be redirected to view mode.
-                    if (department.equals(formDepartment)) {
+                    if (departments.contains(formDepartment)) {
                         return SecurityConstants.Action.EDIT;
                     } else {
                         return SecurityConstants.Action.VIEW;
