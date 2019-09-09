@@ -93,7 +93,6 @@ body {
 
 .navbar-header .navbar-brand img {
     display: inline-block;
-
     width: 60px;
     margin-left: 20px;
     margin-top: -8px;
@@ -101,9 +100,18 @@ body {
 
 .navbar-header .navbar-brand span {
     display: inline-block;
-    /*border-left: 2px solid #fff;*/
     padding-left: 10px;
     color: #fff;
+}
+
+@media (max-width: 768px){
+  .navbar-header .navbar-brand img{
+    margin-top: -75px;
+  }
+  .navbar-header .navbar-brand span{
+    margin-top: -5px;
+    margin-left: 10px;
+  }
 }
 
 h1.pageTitle {
