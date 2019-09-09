@@ -59,12 +59,12 @@ class Info extends translatable(Visualization) {
       <section className="info">
         <div className="row">
           <dl className="col-md-4">
-            <dt>{this.t('crd:procurementsTable:contractID')}</dt>
-            <dd>{data.get('ocid')}</dd>
+            <dt><span className="contract-label">{this.t('crd:procurementsTable:contractID')}</span></dt>
+            <dd><span className="contract-value">{data.get('ocid')}</span></dd>
           </dl>
           <dl className="col-md-4">
-            <dt>{this.t('crd:contracts:baseInfo:status')}</dt>
-            <dd>{data.get('tag', []).join(', ')}</dd>
+            <dt><span className="contract-label">{this.t('crd:contracts:baseInfo:status')}</span></dt>
+            <dd><span className="contract-value">{data.get('tag', []).join(', ')}</span></dd>
           </dl>
           <div className="col-md-4 flags">
             <img src="assets/icons/flag.svg" alt="Flag icon" className="flag-icon" />
@@ -89,7 +89,7 @@ class Info extends translatable(Visualization) {
             <tr>
               <td>
                 {PE && <dl>
-                  <dt>{this.t('crd:contracts:baseInfo:procuringEntityName')}</dt>
+                  <dt><span className="contract-label">{this.t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
                   <dd>
                     <a
                       href={`#!/crd/procuring-entity/${PE.get('id')}`}
@@ -101,15 +101,15 @@ class Info extends translatable(Visualization) {
               </td>
               <td>
                 <dl>
-                  <dt>{this.t('crd:contracts:baseInfo:buyer')}</dt>
-                  <dd>{data.getIn(['buyer', 'name'], this.t('general:undefined'))}</dd>
+                  <dt><span className="contract-label">{this.t('crd:contracts:baseInfo:buyer')}</span></dt>
+                  <dd><span className="contract-value">{data.getIn(['buyer', 'name'], this.t('general:undefined'))}</span></dd>
                 </dl>
               </td>
               <td>
                 <dl>
-                  <dt>{this.t('crd:contracts:baseInfo:suppliers')}</dt>
+                  <dt><span className="contract-label">{this.t('crd:contracts:baseInfo:suppliers')}</span></dt>
                   <dd>
-                    {supplier ?
+                    <span className="contract-value">{supplier ?
                       <a
                         href={`#!/crd/supplier/${supplier.get('id')}`}
                         onClick={gotoSupplier}
@@ -118,6 +118,7 @@ class Info extends translatable(Visualization) {
                       </a> :
                       this.t('general:undefined')
                     }
+                    </span>
                   </dd>
                 </dl>
               </td>
@@ -128,18 +129,18 @@ class Info extends translatable(Visualization) {
           <tbody>
             <tr>
               <td>
-                {this.t('crd:contracts:baseInfo:tenderAmount')}
+                <span className="contract-label">{this.t('crd:contracts:baseInfo:tenderAmount')}</span>
                 &nbsp;
-                <strong>
+                <span className="contract-value">
                   {data.getIn(['tender', 'value', 'amount'], this.t('general:undefined'))}
                   &nbsp;
                   {data.getIn(['tender', 'value', 'currency'])}
-                </strong>
+                </span>
               </td>
               <td>
-                {this.t('crd:contracts:baseInfo:tenderDates')}
+                <span className="contract-label">{this.t('crd:contracts:baseInfo:tenderDates')}</span>
                 &nbsp;
-                <strong>
+                <span className="contract-value">
                   {startDate ?
                     <span>
                       {new Date(startDate).toLocaleDateString()}
@@ -148,32 +149,32 @@ class Info extends translatable(Visualization) {
                     this.t('general:undefined')}
 
                   {endDate && new Date(endDate).toLocaleDateString()}
-                </strong>
+                </span>
               </td>
             </tr>
             <tr>
               <td>
-                {this.t('crd:contracts:list:awardAmount')}
+                <span className="contract-label">{this.t('crd:contracts:list:awardAmount')}</span>
                 &nbsp;
-                <strong>
+                <span className="contract-value">
                   {award.getIn(['value', 'amount'], this.t('general:undefined'))}
                   &nbsp;
                   {award.getIn(['value', 'currency'])}
-                </strong>
+                </span>
               </td>
               <td>
-                {this.t('crd:contracts:baseInfo:awardDate')}
+                <span className="contract-label">{this.t('crd:contracts:baseInfo:awardDate')} </span>
                 &nbsp;
-                <strong>
+                <span className="contract-value">
                   {award.has('date') ?
                     new Date(award.get('date')).toLocaleDateString() :
                     this.t('general:undefined')}
-                </strong>
+                </span>
               </td>
             </tr>
             <tr>
-              <td>{this.t('crd:contracts:baseInfo:contractAmount')}</td>
-              <td>{this.t('crd:contracts:baseInfo:contractDates')}</td>
+              <td><span className="contract-label">{this.t('crd:contracts:baseInfo:contractAmount')}</span></td>
+              <td><span className="contract-label">{this.t('crd:contracts:baseInfo:contractDates')}</span></td>
             </tr>
           </tbody>
         </table>
@@ -352,4 +353,3 @@ export default class Contract extends CRDPage {
     );
   }
 }
-
