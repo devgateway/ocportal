@@ -172,7 +172,7 @@ class PurchaseReqView extends CRDPage {
         </a>
 
           <div className="col-md-offset-5 col-md-4">
-            <button className="btn btn-info btn-subscribe pull-right" type="submit"
+            <button className="btn btn-subscribe pull-right" type="submit"
                     onClick={() => this.props.onSwitch('alerts', data._id, data.tender[0].tenderTitle)}>
               Receive Alerts For This Tender
             </button>
