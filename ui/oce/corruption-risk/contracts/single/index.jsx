@@ -129,7 +129,7 @@ class Info extends translatable(Visualization) {
           <tbody>
             <tr>
               <td>
-                <span className="contract-label">{this.t('crd:contracts:baseInfo:tenderAmount')}:</span>
+                <span className="contract-label">{this.t('crd:contracts:baseInfo:tenderAmount')}</span>
                 &nbsp;
                 <span className="contract-value">
                   {data.getIn(['tender', 'value', 'amount'], this.t('general:undefined'))}
@@ -138,7 +138,7 @@ class Info extends translatable(Visualization) {
                 </span>
               </td>
               <td>
-                <span className="contract-label">{this.t('crd:contracts:baseInfo:tenderDates')}:</span>
+                <span className="contract-label">{this.t('crd:contracts:baseInfo:tenderDates')}</span>
                 &nbsp;
                 <span className="contract-value">
                   {startDate ?
@@ -154,7 +154,7 @@ class Info extends translatable(Visualization) {
             </tr>
             <tr>
               <td>
-                <span className="contract-label">{this.t('crd:contracts:list:awardAmount')}:</span>
+                <span className="contract-label">{this.t('crd:contracts:list:awardAmount')}</span>
                 &nbsp;
                 <span className="contract-value">
                   {award.getIn(['value', 'amount'], this.t('general:undefined'))}
@@ -163,7 +163,7 @@ class Info extends translatable(Visualization) {
                 </span>
               </td>
               <td>
-                <span className="contract-label">{this.t('crd:contracts:baseInfo:awardDate')}: </span>
+                <span className="contract-label">{this.t('crd:contracts:baseInfo:awardDate')} </span>
                 &nbsp;
                 <span className="contract-value">
                   {award.has('date') ?
