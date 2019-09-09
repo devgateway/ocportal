@@ -43,7 +43,7 @@ const formatDate = stringDate => {
 
 const styling = {
   charts: {
-    axisLabelColor: '#cc3c3b',
+    axisLabelColor: '#000000',
     traceColors: ['#324d6e', '#ecac00', '#4b6f33'],
     hoverFormat: ',.2f',
     hoverFormatter: (number) => {
