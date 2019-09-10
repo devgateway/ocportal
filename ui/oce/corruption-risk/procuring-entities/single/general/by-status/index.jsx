@@ -81,6 +81,16 @@ class ProcurementsByStatus extends translatable(React.PureComponent) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+        {(data === undefined || data.length === 0)
+          ? <did className="row">
+            <br/>
+            <did className="col-md-12">
+              <div className="message">No data</div>
+            </did>
+            <br/>
+          </did>
+          : null
+        }
       </div>
     );
   }

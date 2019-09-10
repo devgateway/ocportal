@@ -270,6 +270,7 @@ class CorruptionRiskDashboard extends React.Component {
         searchQuery={searchQuery}
         doSearch={query => navigate(slug, query)}
         navigate={navigate}
+        styling={this.props.styling}
       />
     );
   }

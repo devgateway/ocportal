@@ -50,7 +50,7 @@ class ProcuringEntity extends CRDPage {
   render() {
     const { translations, doSearch, width, navigate } = this.props;
     const { PEName } = this.state;
-
+    
     return (
       <div className="pe-page single-page">
         <TopSearch
