@@ -5,11 +5,11 @@ class FilterBox extends FilterTab {
   isActive() {
     console.warn(`Implement an "isActive" method for ${this.getTitle()}`);
   }
-
+  
   reset() {
     console.warn(`Implement an "reset" method for ${this.getTitle()}`);
   }
-
+  
   render() {
     const { open, onClick, onApply, state } = this.props;
     return (
@@ -22,11 +22,11 @@ class FilterBox extends FilterTab {
         <div className="dropdown" onClick={e => e.stopPropagation()}>
           {this.getBox()}
           <div className="controls">
-            <button className="btn btn-apply"
-                    onClick={e => onApply(state)}>{this.t('filters:apply')}</button>
-            &nbsp;
             <button className="btn btn-reset"
                     onClick={this.reset.bind(this)}>{this.t('filters:reset')}</button>
+            &nbsp;
+            <button className="btn btn-apply"
+                    onClick={e => onApply(state)}>{this.t('filters:apply')}</button>
           </div>
         </div>
         }
