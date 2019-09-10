@@ -1,10 +1,10 @@
-import Plotly from "plotly.js/lib/core";
-import Chart from "../visualizations/charts/index.jsx";
-import {pluckImm, debounce} from "../tools";
-import backendYearFilterable from "../backend-year-filterable";
-import Visualization from "../visualization";
-import { fromJS, Set } from "immutable";
-import translatable from "../translatable";
+import Plotly from 'plotly.js/lib/core';
+import Chart from '../visualizations/charts/index.jsx';
+import { pluckImm, debounce } from '../tools';
+import backendYearFilterable from '../backend-year-filterable';
+import Visualization from '../visualization';
+import { fromJS, Set } from 'immutable';
+import translatable from '../translatable';
 
 Plotly.register([
   require('plotly.js/lib/pie')
@@ -12,13 +12,15 @@ Plotly.register([
 
 const EMPTY_SET = Set();
 
-class TotalFlagsChart extends backendYearFilterable(Chart){
-  getData(){
+class TotalFlagsChart extends backendYearFilterable(Chart) {
+  getData() {
     const data = super.getData();
-    if(!data || !data.count()) return [];
-    const labels = data.map(datum => this.t(`crd:corruptionType:${datum.get('type')}:name`)).toJS();
+    if (!data || !data.count()) return [];
+    const labels = data.map(datum => this.t(`crd:corruptionType:${datum.get('type')}:name`))
+    .toJS();
     return [{
-      values: data.map(pluckImm('indicatorCount')).toJS(),
+      values: data.map(pluckImm('indicatorCount'))
+      .toJS(),
       labels: labels,
       textinfo: 'value',
       hole: .8,
@@ -39,13 +41,13 @@ class TotalFlagsChart extends backendYearFilterable(Chart){
       },
     }];
   }
-
-  getLayout(){
-    const {width} = this.props;
+  
+  getLayout() {
+    const { width } = this.props;
     return {
       showlegend: false,
       paper_bgcolor: 'rgba(0,0,0,0)'
-    }
+    };
   }
 }
 
@@ -53,12 +55,13 @@ TotalFlagsChart.endpoint = 'totalFlaggedIndicatorsByIndicatorType';
 
 class Counter extends backendYearFilterable(Visualization) {
   render() {
-    const {data} = this.props;
-    if(!data) return null;
+    const { data } = this.props;
+    if (!data) return null;
     return (
       <div className="counter">
         <div className="count text-right">
-          {this.getCount().toLocaleString()}
+          {this.getCount()
+          .toLocaleString()}
         </div>
         <div className="text text-left">
           {this.getTitle()}
@@ -72,53 +75,54 @@ class FlagsCounter extends Counter {
   getTitle() {
     return this.t('crd:charts:totalFlags:title');
   }
-
+  
   getCount() {
     const { data } = this.props;
     return data.getIn([0, 'flaggedCount'], 0);
   }
 }
-
 FlagsCounter.endpoint = 'totalFlags';
 
 class ContractCounter extends Counter {
   getTitle() {
     return this.t('crd:sidebar:totalContracts:title');
   }
-
+  
   getCount() {
     return this.props.data;
   }
 }
-
+ContractCounter.propTypes = {
+  data: React.PropTypes.number,
+};
 ContractCounter.endpoint = 'ocds/release/count';
 
-class TotalFlags extends translatable(React.Component){
-  constructor(...args){
+class TotalFlags extends translatable(React.Component) {
+  constructor(...args) {
     super(...args);
-    this.state = {
-    }
-
+    this.state = {};
+    
     this.updateSidebarWidth = debounce(() =>
       this.setState({
         width: document.getElementById('crd-sidebar').offsetWidth
       })
     );
   }
-
-  componentDidMount(){
+  
+  componentDidMount() {
     this.updateSidebarWidth();
-    window.addEventListener("resize", this.updateSidebarWidth);
+    window.addEventListener('resize', this.updateSidebarWidth);
   }
-
-  componentWillUnmount(){
-    window.removeEventListener("resize", this.updateSidebarWidth)
+  
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateSidebarWidth);
   }
-
+  
   render() {
     const { data, requestNewData, translations, filters, years, months, monthly, allYears } = this.props;
     const { width } = this.state;
-    if(!width) return null;
+    
+    if (!width) return null;
     return (
       <div className="total-flags">
         <ContractCounter
@@ -126,9 +130,11 @@ class TotalFlags extends translatable(React.Component){
           requestNewData={(_, data) => requestNewData(['contractCounter'], data)}
           translations={translations}
           filters={filters}
-          years={Set(allYears).equals(years) ? EMPTY_SET : years}
+          years={Set(allYears)
+          .equals(years) ? EMPTY_SET : years}
           months={months}
           monthly={monthly}
+          styling={this.props.styling}
         />
         <FlagsCounter
           data={data.get('flagsCounter')}
@@ -138,6 +144,7 @@ class TotalFlags extends translatable(React.Component){
           years={years}
           months={months}
           monthly={monthly}
+          styling={this.props.styling}
         />
         <TotalFlagsChart
           data={data.get('chart')}
@@ -145,19 +152,20 @@ class TotalFlags extends translatable(React.Component){
           translations={translations}
           width={width}
           height={200}
-          margin={{l:0, r:0, t: 40, b: 20, pad:0}}
+          margin={{ l: 0, r: 0, t: 40, b: 20, pad: 0 }}
           filters={filters}
           years={years}
           months={months}
           monthly={monthly}
+          styling={this.props.styling}
         />
         <div className="crd-legend">
-          <div className="fraud">{this.t("crd:corruptionType:FRAUD:name")}</div>
-          <div className="rigging">{this.t("crd:corruptionType:RIGGING:name")}</div>
-          <div className="collusion">{this.t("crd:corruptionType:COLLUSION:name")}</div>
+          <div className="fraud">{this.t('crd:corruptionType:FRAUD:name')}</div>
+          <div className="rigging">{this.t('crd:corruptionType:RIGGING:name')}</div>
+          <div className="collusion">{this.t('crd:corruptionType:COLLUSION:name')}</div>
         </div>
       </div>
-    )
+    );
   }
 }
 

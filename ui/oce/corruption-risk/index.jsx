@@ -270,6 +270,7 @@ class CorruptionRiskDashboard extends React.Component {
         searchQuery={searchQuery}
         doSearch={query => navigate(slug, query)}
         navigate={navigate}
+        styling={this.props.styling}
       />
     );
   }
@@ -316,12 +317,12 @@ class CorruptionRiskDashboard extends React.Component {
         }
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
-            <a className="portal-logo-wrapper" href="#!/">
+            <a className="portal-logo-wrapper" href="#!/crd/">
               <img src="assets/makueni-logo.png" alt="Makueni"/>
               <span>Corruption Risk Dashboard</span>
             </a>
           </div>
-  
+          
           <div className="col-sm-2 header-right">
             <span className="login-wrapper">
               {!disabledApiSecurity && this.loginBox()}
@@ -358,6 +359,7 @@ class CorruptionRiskDashboard extends React.Component {
           requestNewData={(path, newData) =>
             this.setState({ data: this.state.data.setIn(path, newData) })}
           allYears={allYears}
+          styling={this.props.styling}
         />
         <div className="col-sm-offset-3 col-md-9 col-sm-10 content">
           {this.getPage()}

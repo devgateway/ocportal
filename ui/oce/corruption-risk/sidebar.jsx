@@ -11,7 +11,7 @@ class Sidebar extends translatable(React.PureComponent) {
     const el = ReactDOM.findDOMNode(this);
     const scrollTarget = el.querySelector('div');
     const offsetTop = el.getBoundingClientRect().top;
-
+    
     window.addEventListener('wheel', e => {
       let margin = parseInt(scrollTarget.style.marginTop);
       if (isNaN(margin)) margin = 0;
@@ -20,7 +20,7 @@ class Sidebar extends translatable(React.PureComponent) {
       } else if (window.scrollY === 0) {
         margin += 40;
       }
-
+      
       const newMargin = Math.min(
         0,
         Math.max(
@@ -31,11 +31,13 @@ class Sidebar extends translatable(React.PureComponent) {
       scrollTarget.style.marginTop = `${newMargin}px`;
     });
   }
-
+  
   render() {
-    const { page, indicatorTypesMapping, filters, years, monthly, months, navigate, translations,
-      data, requestNewData, route, allYears } = this.props;
-
+    const {
+      page, indicatorTypesMapping, filters, years, monthly, months, navigate, translations,
+      data, requestNewData, route, allYears
+    } = this.props;
+    
     return (
       <aside className="col-sm-3" id="crd-sidebar">
         <div>
@@ -43,39 +45,39 @@ class Sidebar extends translatable(React.PureComponent) {
             <a
               href="javascript:void(0);"
               onClick={() => navigate()}
-              className={cn('crd-description-link', { active: !page })}
-            >
-              <img className="blue" src="assets/icons/blue/overview.svg" alt="Overview icon" />
-              <img className="white" src="assets/icons/white/overview.svg" alt="Overview icon" />
+              className={cn('crd-description-link', { active: !page })}>
+              <img className="blue" src="assets/icons/blue/overview.svg" alt="Overview icon"/>
+              <img className="white" src="assets/icons/white/overview.svg" alt="Overview icon"/>
               {this.t('tabs:overview:title')}
             </a>
-
+            
             <p className="crd-description">
               {this.t('crd:description')}
             </p>
-
+            
             {CORRUPTION_TYPES.map((slug) => {
-               const count = Object.keys(indicatorTypesMapping)
-                 .filter(key => indicatorTypesMapping[key].types.indexOf(slug) > -1)
-                 .length;
-
-               let corruptionType;
-               if (page === 'type' || page === 'indicator') {
-                 [, corruptionType] = route;
-               }
-
-               return (
-                 <a
-                   href="javascript:void(0);"
-                   onClick={() => navigate('type', slug)}
-                   className={cn({ active: slug === corruptionType })}
-                   key={slug}
-                   >
-                   <img className="blue" src={`assets/icons/blue/${slug}.svg`} alt="Tab icon" />
-                   <img className="white" src={`assets/icons/white/${slug}.svg`} alt="Tab icon" />
-                   {this.t(`crd:corruptionType:${slug}:name`)} <span className="count">({count})</span>
-                 </a>
-               );
+              const count = Object.keys(indicatorTypesMapping)
+              .filter(key => indicatorTypesMapping[key].types.indexOf(slug) > -1)
+                .length;
+              
+              let corruptionType;
+              if (page === 'type' || page === 'indicator') {
+                [, corruptionType] = route;
+              }
+              
+              return (
+                <a
+                  href="javascript:void(0);"
+                  onClick={() => navigate('type', slug)}
+                  className={cn({ active: slug === corruptionType })}
+                  key={slug}
+                >
+                  <img className="blue" src={`assets/icons/blue/${slug}.svg`} alt="Tab icon"/>
+                  <img className="white" src={`assets/icons/white/${slug}.svg`} alt="Tab icon"/>
+                  {this.t(`crd:corruptionType:${slug}:name`)} <span
+                  className="count">({count})</span>
+                </a>
+              );
             })}
             <a
               href="javascript:void(0);"
@@ -83,8 +85,8 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'suppliers' || page === 'supplier' })}
               key="suppliers"
             >
-              <img className="blue" src={`assets/icons/blue/suppliers.svg`} alt="Suppliers icon" />
-              <img className="white" src={`assets/icons/white/suppliers.svg`} alt="Suppliers icon" />
+              <img className="blue" src={`assets/icons/blue/suppliers.svg`} alt="Suppliers icon"/>
+              <img className="white" src={`assets/icons/white/suppliers.svg`} alt="Suppliers icon"/>
               {this.t('crd:contracts:baseInfo:suppliers')}
             </a>
             <a
@@ -93,8 +95,10 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'procuring-entities' || page === 'procuring-entity' })}
               key="procuring-entities"
             >
-              <img className="blue" src={`assets/icons/blue/procuring-entities.svg`} alt="Procuring entities icon" />
-              <img className="white" src={`assets/icons/white/procuring-entities.svg`} alt="Procuring entities icon" />
+              <img className="blue" src={`assets/icons/blue/procuring-entities.svg`}
+                   alt="Procuring entities icon"/>
+              <img className="white" src={`assets/icons/white/procuring-entities.svg`}
+                   alt="Procuring entities icon"/>
               {this.t('crd:contracts:menu:procuringEntities')}
             </a>
             <a
@@ -103,8 +107,8 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', 'contracts-link', { active: page === 'contracts' || page === 'contract' })}
               key="contracts"
             >
-              <img className="blue" src={`assets/icons/blue/contracts.svg`} alt="Contracts icon" />
-              <img className="white" src={`assets/icons/white/contracts.svg`} alt="Contracts icon" />
+              <img className="blue" src={`assets/icons/blue/contracts.svg`} alt="Contracts icon"/>
+              <img className="white" src={`assets/icons/white/contracts.svg`} alt="Contracts icon"/>
               {this.t('crd:general:contracts')}
             </a>
           </section>
@@ -117,6 +121,7 @@ class Sidebar extends translatable(React.PureComponent) {
             allYears={allYears}
             months={months}
             monthly={monthly}
+            styling={this.props.styling}
           />
         </div>
       </aside>
