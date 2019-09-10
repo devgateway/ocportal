@@ -317,7 +317,7 @@
   "crd:individualIndicatorChart:eligibleProcurements": "Eligible Procurements",
   "crd:general:contracts": "Contracts",
   "crd:general:contract:title": "Contract title",
-  "general:undefined": "Undefined",
+  "general:undefined": "No data",
   "crd:contracts:baseInfo:procuringEntityName": "Procuring Entity Name",
   "crd:contracts:baseInfo:flag:sg": "Flag",
   "crd:contracts:baseInfo:flag:pl": "Flags",
