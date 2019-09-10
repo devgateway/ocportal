@@ -238,7 +238,8 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
             }
             editTender.add(AttributeAppender.append("class", "no-text btn-" + buttonType));
 
-            editTender.add(new TooltipBehavior(Model.of((entity == null ? "Add " : "Edit/View ")
+            editTender.add(new TooltipBehavior(Model.of((entity == null
+                    ? "Add " : (canAccessAddNewButtonInDeptOverview ? "Edit " : "View "))
                     + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
                     editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
 

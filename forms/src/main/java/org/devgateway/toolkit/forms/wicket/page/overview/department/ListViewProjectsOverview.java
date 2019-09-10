@@ -105,7 +105,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 }
             }
         };
-        button.add(new TooltipBehavior(Model.of("Edit/View Project")));
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
+                + " Project")));
         headerFragment.add(button);
 
         header.add(headerFragment);

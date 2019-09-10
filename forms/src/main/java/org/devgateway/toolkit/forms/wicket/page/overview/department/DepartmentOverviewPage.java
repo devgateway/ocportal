@@ -269,7 +269,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         button.setEnabled(getProcurementPlan() != null);
-        button.add(new TooltipBehavior(Model.of("Edit/View Procurement Plan")));
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
+                + " Procurement Plan")));
 
         add(button);
 
