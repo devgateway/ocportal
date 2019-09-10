@@ -46,7 +46,7 @@ const PEFlagsCountRaw = PEState.remote({
 export const PEFlagsCount = PEState.mapping({
   name: 'PEFlagsCount',
   deps: [PEFlagsCountRaw],
-  mapper: data => data[0].flaggedCount,
+  mapper: data => data.length === 0 ? 0 : data[0].flaggedCount
 });
 
 const contractsUrl = PEState.input({

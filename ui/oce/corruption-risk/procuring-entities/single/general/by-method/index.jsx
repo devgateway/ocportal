@@ -1,4 +1,13 @@
-import { BarChart, Bar, XAxis, YAxis, LabelList, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  LabelList,
+  ResponsiveContainer,
+  Legend,
+  Tooltip
+} from 'recharts';
 import translatable from '../../../../../translatable';
 import Popup from './popup';
 import { renderTopLeftLabel } from '../../../../archive/tools';
@@ -11,33 +20,35 @@ class ProcurementsByMethod extends translatable(React.PureComponent) {
     this.state.data = [];
     this.state.length = 5;
   }
-
+  
   componentDidMount() {
     const { zoomed, data } = this.props;
     const name = zoomed ? 'ZoomedProcurementsByMethodChart' : 'ProcurementsByMethodChart';
     data.addListener(name, () => {
-      data.getState(name).then(data => {
+      data.getState(name)
+      .then(data => {
         this.setState({
           data
-        })
-      })
+        });
+      });
     });
     maxCommonDataLength.addListener(name, () => {
-      maxCommonDataLength.getState(name).then(length => this.setState({ length }))
+      maxCommonDataLength.getState(name)
+      .then(length => this.setState({ length }));
     });
   }
-
+  
   componentWillUnmount() {
     const { zoomed, data } = this.props;
     const name = zoomed ? 'ZoomedProcurementsByMethodChart' : 'ProcurementsByMethodChart';
     data.removeListener(name);
     maxCommonDataLength.removeListener(name);
   }
-
+  
   render() {
     const { translations, zoomed } = this.props;
     let { data, length } = this.state;
-
+    
     let height = 350;
     if (zoomed) {
       height = Math.max(height, data.length * 50);
@@ -50,7 +61,7 @@ class ProcurementsByMethod extends translatable(React.PureComponent) {
       }
       height = length * 70;
     }
-
+    
     return (
       <div className="oce-chart">
         <ResponsiveContainer width="100%" height={height}>
@@ -61,9 +72,9 @@ class ProcurementsByMethod extends translatable(React.PureComponent) {
             barGap={0}
             barCategoryGap={15}
           >
-            <XAxis type="number" />
-            <YAxis type="category" hide dataKey="status" />
-            <Tooltip content={<Popup />} translations={translations} cursor={false} />
+            <XAxis type="number"/>
+            <YAxis type="category" hide dataKey="status"/>
+            <Tooltip content={<Popup/>} translations={translations} cursor={false}/>
             <Bar
               name={this.t('crd:procuringEntities:byMethod:title')}
               dataKey="count"
@@ -80,7 +91,7 @@ class ProcurementsByMethod extends translatable(React.PureComponent) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-    )
+    );
   }
 }
 
