@@ -64,32 +64,39 @@ class ProcurementsByMethod extends translatable(React.PureComponent) {
     
     return (
       <div className="oce-chart">
-        <ResponsiveContainer width="100%" height={height}>
-          <BarChart
-            layout="vertical"
-            data={data}
-            barSize={zoomed ? 10 : 20}
-            barGap={0}
-            barCategoryGap={15}
-          >
-            <XAxis type="number"/>
-            <YAxis type="category" hide dataKey="status"/>
-            <Tooltip content={<Popup/>} translations={translations} cursor={false}/>
-            <Bar
-              name={this.t('crd:procuringEntities:byMethod:title')}
-              dataKey="count"
-              fill="#289df4"
-              minPointSize={3}
-              isAnimationActive={false}
-            >
-              <LabelList
-                dataKey="status"
-                position="insideTopLeft"
-                content={renderTopLeftLabel}
-              />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        {(data === undefined || data.length === 0)
+          ? <did className="row">
+            <br/>
+            <did className="col-md-12">
+              <div className="message">No data</div>
+            </did>
+            <br/>
+          </did>
+          : <ResponsiveContainer width="100%" height={height}>
+            <BarChart
+              layout="vertical"
+              data={data}
+              barSize={zoomed ? 10 : 20}
+              barGap={0}
+              barCategoryGap={15}>
+              <XAxis type="number"/>
+              <YAxis type="category" hide dataKey="status"/>
+              <Tooltip content={<Popup/>} translations={translations} cursor={false}/>
+              <Bar
+                name={this.t('crd:procuringEntities:byMethod:title')}
+                dataKey="count"
+                fill="#289df4"
+                minPointSize={3}
+                isAnimationActive={false}>
+                <LabelList
+                  dataKey="status"
+                  position="insideTopLeft"
+                  content={renderTopLeftLabel}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        }
       </div>
     );
   }
