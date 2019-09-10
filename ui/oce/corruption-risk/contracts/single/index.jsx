@@ -173,8 +173,20 @@ class Info extends translatable(Visualization) {
               </td>
             </tr>
             <tr>
-              <td><span className="contract-label">{this.t('crd:contracts:baseInfo:contractAmount')}</span></td>
-              <td><span className="contract-label">{this.t('crd:contracts:baseInfo:contractDates')}</span></td>
+              <td><span
+                className="contract-label">{this.t('crd:contracts:baseInfo:contractAmount')}
+              </span>
+                <span className="contract-value">
+                {data.get('contracts', []).length === 0 || data.get('contracts', [])
+                .toJS()[0].value === undefined ? this.t('general:undefined') : (data.get('contracts', [])
+                .toJS()[0].value.amount+' '+data.get('contracts', []).toJS()[0].value.currency)}</span></td>
+
+              <td><span className="contract-label">{this.t('crd:contracts:baseInfo:contractDateSigned')}</span>
+                <span className="contract-value">
+                {data.get('contracts', []).length === 0 || data.get('contracts', [])
+                  .toJS()[0].dateSigned === undefined ? this.t('general:undefined') : new Date(data.get('contracts', []).toJS()[0].dateSigned).toLocaleDateString()}</span>
+
+              </td>
             </tr>
           </tbody>
         </table>
