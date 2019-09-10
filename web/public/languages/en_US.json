@@ -333,6 +333,7 @@
   "crd:contracts:top-search:nothingFound": "Nothing found",
   "crd:contracts:baseInfo:tenderAmount": "Tender Amount",
   "crd:contracts:baseInfo:tenderDates": "Tender Open/Close Dates",
+  "crd:contracts:baseInfo:contractDateSigned": "Date Signed",
   "crd:contracts:baseInfo:awardDate": "Award Date",
   "crd:contracts:baseInfo:contractAmount": "Contract Amount",
   "crd:contracts:baseInfo:contractDates": "Contract Open/Close Dates",
