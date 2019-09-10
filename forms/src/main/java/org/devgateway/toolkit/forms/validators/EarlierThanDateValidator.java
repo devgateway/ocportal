@@ -19,14 +19,11 @@ import org.apache.wicket.validation.ValidationError;
 
 /**
  * Validator to test if the date is earlier than provided high date
- * 
+ *
  * @author idobre
  * @since 5/18/15
  */
 public class EarlierThanDateValidator implements IValidator<Date> {
-
-    private static final long serialVersionUID = 1L;
-
     private Date highDate;
 
     public EarlierThanDateValidator(final Date highDate) {

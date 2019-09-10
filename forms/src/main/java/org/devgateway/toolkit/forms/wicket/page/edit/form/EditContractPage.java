@@ -7,13 +7,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
+import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
@@ -57,8 +60,16 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addBigDecimalField(editForm, "contractValue").required()
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+
+        final DateFieldBootstrapFormComponent contractDate = ComponentUtil.addDateField(editForm, "contractDate");
+        contractDate.required();
+        final AwardNotification awardNotification =
+                editForm.getModelObject().getPurchaseRequisition().getSingleAwardNotification();
+        if (awardNotification != null && awardNotification.getAwardDate() != null) {
+            contractDate.getField().add(new AfterThanDateValidator(awardNotification.getAwardDate()));
+        }
+
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
-        ComponentUtil.addDateField(editForm, "contractDate").required();
         ComponentUtil.addDateField(editForm, "expiryDate");
         ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
 
