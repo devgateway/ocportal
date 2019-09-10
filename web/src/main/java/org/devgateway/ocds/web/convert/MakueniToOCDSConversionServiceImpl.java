@@ -75,6 +75,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.APPROVED;
+
 @Service
 @Transactional(readOnly = true)
 public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversionService {
@@ -165,7 +167,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Tender.Status createTenderStatus(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
-        if (tender.isTerminated()) {
+        if (tender.getPurchaseRequisition().isTerminated()) {
             return Tender.Status.cancelled;
         }
         //TODO: finish this !!
@@ -445,7 +447,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         stopWatch.start();
         releaseRepository.deleteAll();
         organizationRepository.deleteAll();
-        purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
+        purchaseRequisitionService.findAll().stream().filter(pr -> {
+                    return pr.isTerminated() || pr.getStatus().equals(APPROVED);
+                }
+        ).forEach(this::createAndPersistRelease);
         postProcess();
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
@@ -681,7 +686,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Contract.Status createContractStatus(String contractStatus) {
-        if (DBConstants.Status.APPROVED.equals(contractStatus)) {
+        if (APPROVED.equals(contractStatus)) {
             return Contract.Status.active;
         }
         if (DBConstants.Status.TERMINATED.equals(contractStatus)) {
@@ -710,7 +715,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         }
 
         //Active: When Acceptance of award has been approved
-        if (DBConstants.Status.APPROVED.equals(
+        if (APPROVED.equals(
                 Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
                         .map(Statusable::getStatus).orElse(null))) {
             return Award.Status.active;
