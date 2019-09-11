@@ -57,7 +57,7 @@ class Table extends translatable(React.PureComponent) {
   render() {
     const { data, count } = this.state;
     const { navigate } = this.props;
-
+  
     return (
       <BootstrapTableWrapper
         bordered

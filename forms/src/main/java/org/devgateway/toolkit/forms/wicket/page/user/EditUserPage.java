@@ -32,7 +32,6 @@ import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.PasswordFieldBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -86,7 +85,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     protected TextFieldBootstrapFormComponent<String> title;
 
-    protected Select2ChoiceBootstrapFormComponent<Department> department;
+    protected Select2MultiChoiceBootstrapFormComponent<Department> department;
 
     protected Select2MultiChoiceBootstrapFormComponent<Role> roles;
 
@@ -152,7 +151,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         title = ComponentUtil.addTextField(editForm, "title");
 
-        department = ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService);
+        department = ComponentUtil.addSelect2MultiChoiceField(editForm, "departments", departmentService);
         department.required();
         MetaDataRoleAuthorizationStrategy.authorize(department, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 

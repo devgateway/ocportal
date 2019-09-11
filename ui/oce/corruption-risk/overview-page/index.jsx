@@ -192,6 +192,7 @@ class OverviewPage extends CRDPage {
             dataEP="corruptionRiskOverviewTable"
             countEP="corruptionRiskOverviewTable/count"
             navigate={navigate}
+            styling={styling}
           />
         </section>
       </div>

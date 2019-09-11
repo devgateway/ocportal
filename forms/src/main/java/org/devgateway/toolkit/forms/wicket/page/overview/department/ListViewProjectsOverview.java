@@ -4,9 +4,11 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
+import de.agilecoders.wicket.core.util.Attributes;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -50,6 +52,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
     private final PurchaseRequisition sessionPurchaseRequisition;
 
+    private final Boolean canAccessAddNewButtonInDeptOverview;
+
     public ListViewProjectsOverview(final String id, final IModel<List<Project>> model,
                                     final IModel<ProcurementPlan> procurementPlanModel) {
         super(id, model);
@@ -65,6 +69,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 .parallelStream()
                 .collect(Collectors.groupingBy(PurchaseRequisition::getProject,
                         Collectors.mapping(Function.identity(), Collectors.toList())));
+
+        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
     }
 
     @Override
@@ -87,9 +93,20 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
         final PageParameters pageParameters = new PageParameters();
         pageParameters.set(WebConstants.PARAM_ID, project.getId());
-        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>("editProject",
-                EditProjectPage.class, pageParameters, Buttons.Type.Success);
-        button.add(new TooltipBehavior(Model.of("Edit/View Project")));
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>("editProject",
+                EditProjectPage.class, pageParameters, Buttons.Type.Success) {
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+
+                if (!canAccessAddNewButtonInDeptOverview) {
+                    Attributes.removeClass(tag, "btn-edit");
+                    Attributes.addClass(tag, "btn-view");
+                }
+            }
+        };
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
+                + " Project")));
         headerFragment.add(button);
 
         header.add(headerFragment);
@@ -114,12 +131,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         addPurchaseRequisition.setLabel(
                 new StringResourceModel("addPurchaseRequisition", ListViewProjectsOverview.this, null));
         containerFragment.add(addPurchaseRequisition);
-        addPurchaseRequisition.setVisibilityAllowed(
-                ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
+        addPurchaseRequisition.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
 
         // sort the purchase requisition list
         final List<PurchaseRequisition> purchaseReqs = purchaseRequisitions.get(project);
-        purchaseReqs.sort(Comparator.comparing(PurchaseRequisition::getId));
+        if (purchaseReqs != null && !purchaseReqs.isEmpty()) {
+            purchaseReqs.sort(Comparator.comparing(PurchaseRequisition::getId));
+        }
 
         final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
                 new ListViewPurchaseRequisitionOverview("purchaseReqOverview",

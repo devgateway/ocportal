@@ -526,6 +526,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         // add brand image
         navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
                 new StringResourceModel("brandImageAltText", this, null));
+        navbar.setBrandName(new StringResourceModel("brandName", this, null));
 
         navbar.addComponents(
                 NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newFormMenu(),

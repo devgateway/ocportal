@@ -89,8 +89,9 @@ export default class Header extends translatable(React.Component) {
     return (<div>
       <header className="branding row">
         <div className="col-md-8 col-sm-6 col-xs-12">
-          <a className="logo-wrapper" href="#!/">
+          <a className="portal-logo-wrapper" href="#!/">
               <img src="assets/makueni-logo.png" alt="Makueni"/>
+              <span>Government of Makueni County Open Contracting Portal</span>
           </a>
         </div>
 

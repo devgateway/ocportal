@@ -16,7 +16,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectMultiFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPageElevated;
@@ -60,8 +59,8 @@ public class ListUserPage extends AbstractListPage<Person> {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(new Model<>("Name"), "username", "username"));
 
         final List<Department> departments = departmentService.findAll();
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "department", "department", new ListModel(departments), dataTable));
+        columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Departments"),
+                "departments", new ListModel(departments), dataTable));
 
         final List<Role> roles = roleService.findAll();
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),

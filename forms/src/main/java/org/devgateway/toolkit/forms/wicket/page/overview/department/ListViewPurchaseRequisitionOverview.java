@@ -56,6 +56,8 @@ import java.util.List;
 public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<PurchaseRequisition> {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
 
+    private final Boolean canAccessAddNewButtonInDeptOverview;
+
     public ListViewPurchaseRequisitionOverview(final String id,
                                                final IModel<List<PurchaseRequisition>> model,
                                                final PurchaseRequisition sessionPurchaseRequisition) {
@@ -65,6 +67,8 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         if (sessionPurchaseRequisition != null) {
             expandedContainerIds.add(sessionPurchaseRequisition.getId());
         }
+
+        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
     }
 
     @Override
@@ -222,15 +226,25 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 }
             };
 
-            editTender.add(AttributeAppender.append("class", "no-text btn-" + (entity == null ? "add" : "edit")));
+            final String buttonType;
+            if (canAccessAddNewButtonInDeptOverview) {
+                if (entity == null) {
+                    buttonType = "add";
+                } else {
+                    buttonType = "edit";
+                }
+            } else {
+                buttonType = "view";
+            }
+            editTender.add(AttributeAppender.append("class", "no-text btn-" + buttonType));
 
-            editTender.add(new TooltipBehavior(Model.of((entity == null ? "Add " : "Edit/View ")
+            editTender.add(new TooltipBehavior(Model.of((entity == null
+                    ? "Add " : (canAccessAddNewButtonInDeptOverview ? "Edit " : "View "))
                     + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
                     editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
 
             if (entity == null) {
-                editTender.setVisibilityAllowed(
-                        ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
+                editTender.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
             }
             if (!(entity instanceof PurchaseRequisition) && !(entity instanceof Tender)) {
                 editTender.setEnabled(canEdit(purchaseRequisition, entity, previousStep));

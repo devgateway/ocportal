@@ -594,9 +594,26 @@ a.more-details-link:hover::before {
         margin-left: 5px;
 
         .btn {
-            background-color: #234e6c;
-            border-color: #234e6c;
-            margin-top: 30px;
+            background-color: @active-tab-color;
+            border-color: @active-tab-color;
+            margin-top: 40px;
+            &:hover{
+              background-color: @active-text-color;
+              border-color: @active-text-color;
+            }
         }
     }
+}
+
+.btn{
+  &.btn-subscribe{
+    background-color: @active-tab-color;
+    border-color: @active-tab-color;
+    color: #ffffff;
+    margin-top: 10px;
+    &:hover{
+      background-color: @active-text-color;
+      border-color: @active-text-color;
+    }
+  }
 }

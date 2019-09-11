@@ -3,7 +3,7 @@ import translatable from '../../../../../translatable';
 class Popup extends translatable(React.PureComponent) {
   render() {
     const { coordinate, active, viewBox, payload } = this.props;
-    if (!active || !payload[0]) return null;
+    if (!active || payload == null || !payload[0]) return null;
 
     const { status, count } = payload[0].payload;
 
@@ -27,7 +27,7 @@ class Popup extends translatable(React.PureComponent) {
         </div>
       </div>
     );
-  } 
+  }
 }
 
 export default Popup;

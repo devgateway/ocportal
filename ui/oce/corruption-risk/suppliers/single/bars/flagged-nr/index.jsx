@@ -1,4 +1,13 @@
-import { ResponsiveContainer, BarChart, XAxis, YAxis, Legend, Bar, LabelList, Tooltip } from 'recharts';
+import {
+  ResponsiveContainer,
+  BarChart,
+  XAxis,
+  YAxis,
+  Legend,
+  Bar,
+  LabelList,
+  Tooltip
+} from 'recharts';
 import translatable from '../../../../../translatable';
 import { renderTopLeftLabel } from '../../../../archive/tools';
 import Popup from './popup';
@@ -7,7 +16,7 @@ const corruptionTypeColors = {
   FRAUD: '#299df4',
   RIGGING: '#3372b2',
   COLLUSION: '#fbc42c'
-}
+};
 
 function mkGradient(id, colors) {
   const stops = [];
@@ -22,12 +31,12 @@ function mkGradient(id, colors) {
       offset: step * (index + 1) - 1,
     });
   });
-
+  
   return (
     <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
-      {stops.map(({color, offset}) =>
+      {stops.map(({ color, offset }) =>
         <stop
-          offset={offset+'%'}
+          offset={offset + '%'}
           style={{
             stopColor: color,
             stopOpacity: 1,
@@ -35,7 +44,7 @@ function mkGradient(id, colors) {
         />
       )}
     </linearGradient>
-  )
+  );
 }
 
 class TaggedBar extends translatable(Bar) {
@@ -43,33 +52,33 @@ class TaggedBar extends translatable(Bar) {
     return mkGradient(
       this.getGradientId(types),
       types.map(type => corruptionTypeColors[type])
-    )
+    );
   }
-
+  
   getGradientId(types) {
-    return `gradient_${types.join('_')}`
+    return `gradient_${types.join('_')}`;
   }
-
+  
   getFill(types) {
     if (types.length === 1) {
       const [type] = types;
       return corruptionTypeColors[type];
     } else {
-      return `url(#${this.getGradientId(types)})`
+      return `url(#${this.getGradientId(types)})`;
     }
   }
-
+  
   renderRectangle(option, props) {
     const types = props.types;
     return (
       <g>
         {this.maybeGetGradients(types)}
         {super.renderRectangle(option, {
-           ...props,
-           fill: this.getFill(types),
+          ...props,
+          fill: this.getFill(types),
         })}
       </g>
-    )
+    );
   }
 }
 
@@ -80,29 +89,31 @@ export default class FlaggedNr extends translatable(React.PureComponent) {
     this.state.data = [];
     this.state.length = 5;
   }
-
+  
   componentDidMount() {
     const { zoomed, data, length } = this.props;
     const name = zoomed ? 'ZoomedFlaggedNrChart' : 'FlaggedNrChart';
     data.addListener(name, () => {
-      data.getState(name).then(data => {
+      data.getState(name)
+      .then(data => {
         this.setState({
           data
-        })
-      })
+        });
+      });
     });
     length.addListener(name, () => {
-      length.getState(name).then(length => this.setState({ length }))
+      length.getState(name)
+      .then(length => this.setState({ length }));
     });
   }
-
+  
   componentWillUnmount() {
     const { zoomed, data, length } = this.props;
     const name = zoomed ? 'ZoomedFlaggedNrChart' : 'FlaggedNrChart';
     data.removeListener(name);
     length.removeListener(name);
   }
-
+  
   render() {
     const { zoomed, translations } = this.props;
     let { data, length } = this.state;
@@ -112,21 +123,21 @@ export default class FlaggedNr extends translatable(React.PureComponent) {
     } else {
       data = data.slice(0, length);
       if (data.length < length) {
-        for(let counter = data.length; counter < length; counter++) {
+        for (let counter = data.length; counter < length; counter++) {
           data.unshift({ types: [] });
         }
       }
-
+      
       height = Math.max(length * 70, 200);
     }
-
+    
     const corruptionTypes = new Set();
     data.forEach(
       datum => datum.types.forEach(
         type => corruptionTypes.add(type)
       )
     );
-
+    
     const legendPayload = [...corruptionTypes].map(
       corruptionType => ({
         value: this.t(`crd:corruptionType:${corruptionType}:name`),
@@ -134,41 +145,48 @@ export default class FlaggedNr extends translatable(React.PureComponent) {
         color: corruptionTypeColors[corruptionType],
       })
     );
+    
     return (
       <div className="oce-chart">
-        <ResponsiveContainer width="100%" height={height}>
-          <BarChart
-            layout="vertical"
-            data={data}
-            barSize={zoomed ? 10 : 20}
-            barGap={0}
-            barCategoryGap={15}
-          >
-            <XAxis type="number" />
-            <YAxis type="category" dataKey="indicatorId" hide />
-            <Tooltip content={<Popup />} translations={translations} cursor={false} />
-            <Legend
-              align="left"
-              verticalAlign="top"
-              payload={legendPayload}
-              height={30}
-            />
-            <TaggedBar
-              dataKey="count"
-              minPointSize={3}
-              isAnimationActive={false}
-            >
-              <LabelList
-                formatter={indicatorId => this.t(`crd:indicators:${indicatorId}:name`)}
-                dataKey="indicatorId"
-                position="insideTopLeft"
-                content={renderTopLeftLabel}
-              />
-            </TaggedBar>
-          </BarChart>
-        </ResponsiveContainer>
+        {(data === undefined || data.length === 0)
+          ? <did className="row">
+            <br/>
+            <did className="col-md-12">
+              <div className="message">No data</div>
+            </did>
+            <br/>
+          </did>
+          : <ResponsiveContainer width="100%" height={height}>
+            <BarChart
+              layout="vertical"
+              data={data}
+              barSize={zoomed ? 10 : 20}
+              barGap={0}
+              barCategoryGap={15}>
+              <XAxis type="number"/>
+              <YAxis type="category" dataKey="indicatorId" hide/>
+              <Tooltip content={<Popup/>} translations={translations} cursor={false}/>
+              <Legend
+                align="left"
+                verticalAlign="top"
+                payload={legendPayload}
+                height={30}/>
+              <TaggedBar
+                dataKey="count"
+                minPointSize={3}
+                isAnimationActive={false}>
+                <LabelList
+                  formatter={indicatorId => this.t(`crd:indicators:${indicatorId}:name`)}
+                  dataKey="indicatorId"
+                  position="insideTopLeft"
+                  content={renderTopLeftLabel}
+                />
+              </TaggedBar>
+            </BarChart>
+          </ResponsiveContainer>
+        }
       </div>
-    )
+    );
   }
 }
 
