@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
+import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class AlertsEmailService {
      * Send a secret url that allows user to verify their email address.
      */
     public void sendVerifyEmail(final Alert alert) throws MailException {
-        final String url = URI.create(createURL(request, "/verifyEmail/"))
+        final String url = URI.create(WebSecurityUtil.createURL(request, "/verifyEmail/"))
                 .resolve(alert.getSecret()).toASCIIString();
 
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
