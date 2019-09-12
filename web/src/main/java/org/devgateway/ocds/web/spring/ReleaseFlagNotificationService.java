@@ -86,8 +86,8 @@ public class ReleaseFlagNotificationService {
     @Transactional
     private Set<String> getUsersValidatorsEmailsFromRelease(Long departmentId) {
         Optional<Department> department = departmentService.findById(departmentId);
-        return department.map(value -> personService.findByDepartmentWithRoles(value, SecurityConstants.Roles.ROLE_USER,
-                SecurityConstants.Roles.ROLE_VALIDATOR
+        return department.map(value -> personService.findByDepartmentWithRoles(value,
+                SecurityConstants.Roles.ROLE_USER, SecurityConstants.Roles.ROLE_VALIDATOR
         ).stream().map(Person::getEmail).map(Strings::trimToNull).filter(Objects::nonNull).collect(Collectors.toSet()))
                 .orElseGet(Sets::newHashSet);
     }

@@ -13,6 +13,4 @@ public interface PersonService extends BaseJpaService<Person>, TextSearchableSer
     List<Person> findByDepartmentWithRoles(Department department, String... roles);
 
     List<Person> findByRoleIn(String... roles);
-
-
 }
