@@ -37,7 +37,7 @@ public interface PersonRepository extends BaseJpaRepository<Person, Long>, TextS
 
     Person findByEmail(String email);
 
-    @Query("select p from #{#entityName} p JOIN p.roles as r WHERE p.department=(?1) and r.authority IN (?2)")
+    @Query("select p from #{#entityName} p JOIN p.roles as r WHERE p.departments=(?1) and r.authority IN (?2)")
     List<Person> findByDepartmentAndRoleIn(Department department, Collection<String> roles);
 
     @Query("select p from #{#entityName} p JOIN p.roles as r WHERE r.authority IN (?1)")
