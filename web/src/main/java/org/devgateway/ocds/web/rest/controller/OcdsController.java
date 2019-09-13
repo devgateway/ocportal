@@ -95,8 +95,8 @@ public class OcdsController extends GenericOCDSController {
     public ReleasePackage createReleasePackage(final Release release) {
         ReleasePackage releasePackage = new ReleasePackage();
         try {
-            releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by/2.0/"));
-            releasePackage.setPublicationPolicy(new URI("https://github.com/open-contracting/sample-data/"));
+            releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
+            releasePackage.setPublicationPolicy(new URI(SERVER_DOMAIN + "/publication-policy.txt"));
             releasePackage.setUri(new URI(SERVER_DOMAIN + "/api/ocds/package/ocid/" + release.getOcid()));
             releasePackage.setVersion("1.1");
         } catch (URISyntaxException e) {
@@ -107,7 +107,7 @@ public class OcdsController extends GenericOCDSController {
 
         Publisher publisher = new Publisher();
 
-        publisher.setName("Government of Vietnam: Public Procurement Agency");
+        publisher.setName("Kenya County Government of Makueni");
         publisher.setScheme("VN-PPA");
         publisher.setUid(release.getOcid());
         publisher.setUri(SERVER_DOMAIN);
