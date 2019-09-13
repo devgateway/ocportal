@@ -173,6 +173,14 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     }
 
     @Override
+    protected void afterSaveEntity(final Project saveable) {
+        super.afterSaveEntity(saveable);
+
+        // add current Purchase Requisition in session
+        sessionMetadataService.setSessionProject(editForm.getModelObject());
+    }
+
+    @Override
     protected void beforeSaveEntity(final Project project) {
         super.beforeSaveEntity(project);
 
