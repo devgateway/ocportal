@@ -45,6 +45,8 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.Fie
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.AWARDS_SUPPLIERS_NAME;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.BIDS_DETAILS_TENDERERS_ID;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.BIDS_DETAILS_VALUE_AMOUNT;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.BUYER_ID;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.BUYER_NAME;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.FLAGS_TOTAL_FLAGGED;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.TENDER_PERIOD_START_DATE;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID;
@@ -101,6 +103,19 @@ public class AwardsWonLostController extends GenericOCDSController {
         return part;
     }
 
+    protected List<AggregationOperation> buyersByFlagsGroupPart(final YearFilterPagingRequest filter) {
+        List<AggregationOperation> part = new ArrayList<>();
+        part.add(match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)
+                .and(FLAGS_TOTAL_FLAGGED).gt(0)));
+        part.add(group(Fields.from(
+                field("buyerId", BUYER_ID),
+                field("buyerName", BUYER_NAME)
+                )).sum(FLAGS_TOTAL_FLAGGED)
+                        .as("countFlags")
+        );
+        return part;
+    }
+
 
     @ApiOperation(value = "Suppliers ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/suppliersByFlags",
@@ -126,6 +141,19 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(newAggregation(part));
     }
 
+    @ApiOperation(value = "Buyers ordered by countFlags>0, descending")
+    @RequestMapping(value = "/api/buyersByFlags",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> buyersByFlags(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        List<AggregationOperation> part = buyersByFlagsGroupPart(filter);
+        part.add(sort(Sort.Direction.DESC, "countFlags"));
+        part.add(skip(filter.getSkip()));
+        part.add(limit(filter.getPageSize()));
+        return releaseAgg(newAggregation(part));
+    }
+
+
     @ApiOperation(value = "Counts Suppliers ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/suppliersByFlags/count",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -148,6 +176,16 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(newAggregation(part));
     }
 
+    @ApiOperation(value = "Counts buyers ordered by countFlags>0, descending")
+    @RequestMapping(value = "/api/buyersByFlags/count",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> buyersByFlagsCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        List<AggregationOperation> part = buyersByFlagsGroupPart(filter);
+        part.add(group().count().as("count"));
+        part.add(project("count").andExclude(Fields.UNDERSCORE_ID));
+        return releaseAgg(newAggregation(part));
+    }
 
     @ApiOperation(value = "Number of tenders grouped by procuring entities. All filters apply. "
             + "procuringEntityId filter is mandatory.")
@@ -159,6 +197,22 @@ public class AwardsWonLostController extends GenericOCDSController {
         Aggregation agg = newAggregation(
                 match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)),
                 group(TENDER_PROCURING_ENTITY_ID).count().as("tenderCount")
+        );
+
+        return releaseAgg(agg);
+    }
+
+
+    @ApiOperation(value = "Number of tenders grouped by buyers. All filters apply. "
+            + "buyerId filter is mandatory.")
+    @RequestMapping(value = "/api/buyersTendersCount",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> buyersTendersCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        Assert.notEmpty(filter.getBuyerId(), "buyerId must not be empty!");
+        Aggregation agg = newAggregation(
+                match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)),
+                group(BUYER_ID).count().as("tenderCount")
         );
 
         return releaseAgg(agg);
@@ -176,6 +230,23 @@ public class AwardsWonLostController extends GenericOCDSController {
                 unwind("awards"),
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 group(TENDER_PROCURING_ENTITY_ID).count().as("awardCount")
+        );
+
+        return releaseAgg(agg);
+    }
+
+    @ApiOperation(value = "Number of awards grouped by buyers. All filters apply. "
+            + "buyerId filter is mandatory.")
+    @RequestMapping(value = "/api/buyersAwardsCount",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> buyersAwardsCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        Assert.notEmpty(filter.getBuyerId(), "buyerId must not be empty!");
+        Aggregation agg = newAggregation(
+                match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)),
+                unwind("awards"),
+                match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
+                group(BUYER_ID).count().as("awardCount")
         );
 
         return releaseAgg(agg);
@@ -342,6 +413,77 @@ public class AwardsWonLostController extends GenericOCDSController {
 
         return releaseAgg(agg);
     }
+
+    @ApiOperation(value = "List of procuring entities with releases for the given buyers."
+            + "buyerId is mandatory")
+    @RequestMapping(value = "/api/procuringEntitiesForBuyers",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> procuringEntitiesForBuyers(@ModelAttribute @Valid final YearFilterPagingRequest
+                                                             filter) {
+        Assert.notEmpty(filter.getBuyerId(), "buyerId must not be empty!");
+
+        Aggregation agg = newAggregation(
+                match(where(TENDER_PROCURING_ENTITY_ID).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(
+                                filter,
+                                TENDER_PERIOD_START_DATE
+                        ))),
+                group(Fields.from(
+                        Fields.field("procuringEntityId", TENDER_PROCURING_ENTITY_ID),
+                        Fields.field("procuringEntityName", TENDER_PROCURING_ENTITY_NAME),
+                        Fields.field("buyerId", BUYER_ID)
+                ))
+        );
+
+        return releaseAgg(agg);
+    }
+
+
+    @ApiOperation(value = "Counts the number of wins per supplierId per buyerId, plus shows the flags"
+            + " and the awarded total. You must provide supplierId parameter. Any other filter can be used as well.")
+    @RequestMapping(value = "/api/supplierWinsPerBuyer",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> procurementsWonLostPerBuyer(@ModelAttribute @Valid final YearFilterPagingRequest
+                                                              filter) {
+
+        Assert.isTrue(
+                !ObjectUtils.isEmpty(filter.getSupplierId())
+                        || !ObjectUtils.isEmpty(filter.getBuyerId()),
+                "Either supplierId or buyerId must not be empty!"
+        );
+
+        Aggregation agg = newAggregation(
+                match(where(AWARDS_STATUS).is(Award.Status.active.toString())
+                        .andOperator(getYearDefaultFilterCriteria(
+                                filter,
+                                TENDER_PERIOD_START_DATE
+                        )).and(BUYER_ID).exists(true)
+                        .and(BUYER_NAME).exists(true)),
+                unwind("awards"),
+                unwind("awards.suppliers"),
+                match(where(AWARDS_STATUS).is(Award.Status.active.toString())
+                        .andOperator(getYearDefaultFilterCriteria(
+                                filter.awardFiltering(),
+                                TENDER_PERIOD_START_DATE
+                        ))),
+                group(Fields.from(
+                        field("supplierId", MongoConstants
+                                .FieldNames.AWARDS_SUPPLIERS_ID),
+                        field("supplierName", MongoConstants
+                                .FieldNames.AWARDS_SUPPLIERS_NAME),
+                        field("buyerName", BUYER_NAME),
+                        field("buyerId", BUYER_ID)
+                ))
+                        .count().as("count")
+                        .sum(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT).as("totalAmountAwarded")
+                        .sum(FLAGS_TOTAL_FLAGGED).as("countFlags"),
+                sort(Sort.Direction.DESC, "count")
+        );
+        return releaseAgg(agg);
+    }
+
 
     @ApiOperation(value = "Counts the number of wins per supplierId per procuringEntityId, plus shows the flags"
             + " and the awarded total. You must provide supplierId parameter. Any other filter can be used as well.")

@@ -11,7 +11,9 @@ import ContractPage from './contracts/single';
 import SuppliersPage from './suppliers';
 import SupplierPage from './suppliers/single';
 import ProcuringEntitiesPage from './procuring-entities';
+import BuyersPage from './buyers';
 import ProcuringEntityPage from './procuring-entities/single';
+import BuyerPage from './buyers/single';
 import Filters from './filters';
 import LandingPopup from './landing-popup';
 import { LOGIN_URL } from './constants';
@@ -45,9 +47,9 @@ class CorruptionRiskDashboard extends React.Component {
     } else {
       this.state.locale = 'en_US';
     }
-    
+
     localStorage.alreadyVisited = true;
-    
+
     this.destructFilters = cacheFn(filters => ({
       filters: filters.delete('years')
       .delete('months'),
@@ -55,44 +57,44 @@ class CorruptionRiskDashboard extends React.Component {
       months: filters.get('months', Set()),
     }));
   }
-  
+
   componentDidMount() {
     this.fetchUserInfo();
     this.fetchIndicatorTypesMapping();
     this.fetchYears();
-    
+
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
       width: document.querySelector('.content').offsetWidth - 30,
     });
-    
+
     window.addEventListener('resize', debounce(() => {
       this.setState({
         width: document.querySelector('.content').offsetWidth - 30,
       });
     }));
   }
-  
+
   setLocale(locale) {
     this.setState({ locale });
     localStorage.oceLocale = locale;
   }
-  
+
   getPage() {
     const { route, navigate } = this.props;
     const styling = this.constructor.STYLING || this.props.styling;
     const [page] = route;
-    
+
     const { indicatorTypesMapping, width } = this.state;
-    
+
     if (page === 'type') {
       const [, corruptionType] = route;
-      
+
       const indicators =
         Object.keys(indicatorTypesMapping)
         .filter(key =>
           indicatorTypesMapping[key].types.indexOf(corruptionType) > -1);
-      
+
       return (
         <CorruptionTypePage
           {...this.wireProps(['corruptionType', corruptionType])}
@@ -136,11 +138,19 @@ class CorruptionRiskDashboard extends React.Component {
       });
     } else if (page === 'procuring-entities') {
       return this.renderArchive(ProcuringEntitiesPage, 'procuring-entities');
+    } else if (page === 'buyers') {
+      return this.renderArchive(BuyersPage, 'buyers');
     } else if (page === 'procuring-entity') {
       return this.renderSingle({
         Component: ProcuringEntityPage,
         sgSlug: 'procuring-entity',
         plSlug: 'procuring-entities',
+      });
+    } else if (page === 'buyer') {
+      return this.renderSingle({
+        Component: BuyerPage,
+        sgSlug: 'buyer',
+        plSlug: 'buyers',
       });
     }
     return (
@@ -153,13 +163,13 @@ class CorruptionRiskDashboard extends React.Component {
       />
     );
   }
-  
+
   getTranslations() {
     const { TRANSLATIONS } = this.constructor;
     const { locale } = this.state;
     return TRANSLATIONS[locale];
   }
-  
+
   wireProps(_slug) {
     const slug = Array.isArray(_slug) ? _slug : [_slug];
     const translations = this.getTranslations();
@@ -169,7 +179,7 @@ class CorruptionRiskDashboard extends React.Component {
     .equals(selectedYears) ?
       Set() :
       selectedYears;
-    
+
     return {
       translations,
       data: this.state.data.getIn(slug, Map()),
@@ -182,13 +192,13 @@ class CorruptionRiskDashboard extends React.Component {
       width,
     };
   }
-  
+
   t(str) {
     const { locale } = this.state;
     const { TRANSLATIONS } = this.constructor;
     return TRANSLATIONS[locale][str] || TRANSLATIONS.en_US[str] || str;
   }
-  
+
   fetchUserInfo() {
     const noCacheUrl = new URI('/isAuthenticated').addSearch('time', Date.now());
     fetchJson(noCacheUrl)
@@ -202,12 +212,12 @@ class CorruptionRiskDashboard extends React.Component {
       });
     });
   }
-  
+
   fetchIndicatorTypesMapping() {
     fetchJson('/api/indicatorTypesMapping')
     .then(data => this.setState({ indicatorTypesMapping: data }));
   }
-  
+
   fetchYears() {
     fetchJson('/api/tendersAwardsYears')
     .then((data) => {
@@ -224,7 +234,7 @@ class CorruptionRiskDashboard extends React.Component {
       });
     });
   }
-  
+
   loginBox() {
     if (this.state.user.loggedIn) {
       return (
@@ -244,7 +254,7 @@ class CorruptionRiskDashboard extends React.Component {
       </a>
     );
   }
-  
+
   languageSwitcher() {
     const { TRANSLATIONS } = this.constructor;
     const { locale: selectedLocale } = this.state;
@@ -260,7 +270,7 @@ class CorruptionRiskDashboard extends React.Component {
       </a>
     ));
   }
-  
+
   renderArchive(Component, slug) {
     const { navigate, route } = this.props;
     const [, searchQuery] = route;
@@ -274,7 +284,7 @@ class CorruptionRiskDashboard extends React.Component {
       />
     );
   }
-  
+
   renderSingle({ Component, sgSlug, plSlug, additionalProps }) {
     const { route, navigate, styling } = this.props;
     const { indicatorTypesMapping } = this.state;
@@ -291,18 +301,18 @@ class CorruptionRiskDashboard extends React.Component {
       />
     );
   }
-  
+
   render() {
     const {
       filterBoxIndex, currentFiltersState, appliedFilters, data,
       indicatorTypesMapping, allYears, allMonths, showLandingPopup,
       disabledApiSecurity
     } = this.state;
-    
+
     const { onSwitch, route, navigate } = this.props;
     const translations = this.getTranslations();
     const [page] = route;
-    
+
     return (
       <div
         className="container-fluid dashboard-corruption-risk"
@@ -322,14 +332,14 @@ class CorruptionRiskDashboard extends React.Component {
               <span>Corruption Risk Dashboard</span>
             </a>
           </div>
-          
+
           <div className="col-sm-2 header-right">
             <span className="login-wrapper">
               {!disabledApiSecurity && this.loginBox()}
             </span>
           </div>
         </header>
-        
+
         <Filters
           onUpdate={newState => this.setState({ currentFiltersState: newState })}
           onApply={filtersToApply => {
@@ -348,7 +358,7 @@ class CorruptionRiskDashboard extends React.Component {
           allYears={allYears}
           allMonths={allMonths}
         />
-        
+
         <Sidebar
           {...this.wireProps('sidebar')}
           page={page}
