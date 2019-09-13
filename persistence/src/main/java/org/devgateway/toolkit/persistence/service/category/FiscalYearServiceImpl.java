@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.service.category;
 
-import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -43,6 +42,12 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
 
     public List<FiscalYear> getAll() {
         return self.findAll();
+    }
+
+    @Override
+    @Cacheable
+    public FiscalYear findByName(final String name) {
+        return fiscalYearRepository.findByName(name);
     }
 
     @Override

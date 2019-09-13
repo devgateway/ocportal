@@ -12,4 +12,6 @@ public interface FiscalYearService extends BaseJpaService<FiscalYear>, TextSearc
     List<FiscalYear> getYearsWithData();
 
     List<FiscalYear> getAll();
+
+    FiscalYear findByName(String name);
 }

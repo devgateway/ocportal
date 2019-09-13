@@ -8,7 +8,7 @@ public final class FlagsConstants {
 
     public static final String I038_VALUE = "flags.i038.value";
     public static final String I007_VALUE = "flags.i007.value";
-    public static final String I004_VALUE = "flags.i004.value";
+    public static final String I004_VALUE = "flags.i004.value"; //this is not used
     public static final String I019_VALUE = "flags.i019.value";
     public static final String I077_VALUE = "flags.i077.value";
     public static final String I180_VALUE = "flags.i180.value";
@@ -21,8 +21,9 @@ public final class FlagsConstants {
     public static final String I182_VALUE = "flags.i182.value";
     public static final String I083_VALUE = "flags.i083.value";
 
+
     public static final List<String> FLAGS_LIST = Collections.unmodifiableList(
-            Arrays.asList(new String[]{I038_VALUE, I004_VALUE, I007_VALUE, I019_VALUE, I182_VALUE, I045_VALUE,
+            Arrays.asList(new String[]{I038_VALUE, I007_VALUE, I019_VALUE, I182_VALUE, I045_VALUE,
                     I077_VALUE, I180_VALUE, I002_VALUE, I085_VALUE, I171_VALUE, I184_VALUE, I016_VALUE, I083_VALUE}));
 
     private FlagsConstants() {

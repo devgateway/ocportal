@@ -82,6 +82,9 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     protected BaseJpaService<T> jpaService;
 
+    protected boolean hasEditPage = true;
+    protected boolean hasNewPage = true;
+
     private final SortableJpaServiceDataProvider<T> dataProvider;
 
     protected BootstrapBookmarkablePageLink<T> editPageLink;
@@ -128,7 +131,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         if (jpaService == null) {
             throw new NullJpaServiceException();
         }
-        if (editPageClass == null) {
+        if (hasEditPage && editPageClass == null) {
             throw new NullEditPageClassException();
         }
 
@@ -142,15 +145,17 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         add(excelForm);
 
         // add the 'Edit' button
-        columns.add(new AbstractColumn<T, String>(new StringResourceModel("actionsColumn", this, null)) {
-            private static final long serialVersionUID = -7447601118569862123L;
+        if (hasEditPage) {
+            columns.add(new AbstractColumn<T, String>(new StringResourceModel("actionsColumn", this, null)) {
+                private static final long serialVersionUID = -7447601118569862123L;
 
-            @Override
-            public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
-                                     final IModel<T> model) {
-                cellItem.add(getActionPanel(componentId, model));
-            }
-        });
+                @Override
+                public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
+                                         final IModel<T> model) {
+                    cellItem.add(getActionPanel(componentId, model));
+                }
+            });
+        }
 
         final ResettingFilterForm<JpaFilterState<T>> filterForm =
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
@@ -178,10 +183,14 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             dataTable.addTopToolbar(new FilterToolbar(dataTable, filterForm));
         }
 
-        editPageLink = new BootstrapBookmarkablePageLink<>("new", editPageClass, Buttons.Type.Success);
-        editPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
-                .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
-
+        if (hasNewPage) {
+            editPageLink = new BootstrapBookmarkablePageLink<>("new", editPageClass, Buttons.Type.Success);
+            editPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
+                    .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
+        } else {
+            editPageLink = new BootstrapBookmarkablePageLink<T>("new", BasePage.class, Buttons.Type.Success);
+            editPageLink.setVisibilityAllowed(false);
+        }
         add(editPageLink);
     }
 

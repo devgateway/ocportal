@@ -3,9 +3,11 @@
  */
 package org.devgateway.ocds.persistence.mongo.flags;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.annotation.Transient;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -244,5 +246,30 @@ public class ReleaseFlags implements FlagsWrappable, Serializable {
     public void setI083(Flag i083) {
         this.i083 = i083;
     }
+
+    /**
+     * Returns the flag prefix plus name as beanutils prop accessor
+     * {@link ReleaseFlags} object
+     *
+     * @param flagName
+     * @return
+     */
+    private static String getShortFlagProp(String flagName) {
+        return flagName + ".value";
+    }
+
+    public static String getShortFlagName(String fullFlagPath) {
+        return fullFlagPath.replaceAll("flags.", "").replaceAll(".value", "");
+    }
+
+
+    public boolean getFlagSet(String fullFlagPath) {
+        try {
+            return "true".equals(BeanUtils.getProperty(this, getShortFlagProp(fullFlagPath)));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
 
