@@ -33,4 +33,6 @@ public interface FiscalYearRepository extends TextSearchableRepository<FiscalYea
 
     @Query("select distinct p.fiscalYear from ProcurementPlan p order by p.fiscalYear.startDate desc")
     List<FiscalYear> getYearsWithData();
+
+    FiscalYear findByName(String name);
 }
