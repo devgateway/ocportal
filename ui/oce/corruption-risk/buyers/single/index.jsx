@@ -14,15 +14,15 @@ import Zoomable from '../../zoomable';
 import TitleBelow from '../../archive/title-below';
 import WinsAndFlags from '../../suppliers/single/bars/wins-and-flags';
 import FlaggedNr from '../../suppliers/single/bars/flagged-nr';
-import ProcurementsByStatus from '../../procuring-entities/single/general/by-status';
-import ProcurementsByMethod from '../../procuring-entities/single/general/by-method';
-import ProcurementsTable from '../../procuring-entities/single/table';
+import ProcurementsByStatus from './general/by-status';
+import ProcurementsByMethod from './general/by-method';
+import ProcurementsTable from './table';
 import style from './style.less';
 import CRDPage from '../../page';
 
-const NAME = 'ProcuringEntitySingle';
+const NAME = 'BuyerSingle';
 
-class ProcuringEntity extends CRDPage {
+class Buyer extends CRDPage {
   constructor(...args){
     super(...args);
     this.state = this.state || {};
@@ -56,7 +56,7 @@ class ProcuringEntity extends CRDPage {
         <TopSearch
           translations={translations}
           doSearch={doSearch}
-          placeholder={this.t('crd:procuringEntities:top-search')}
+          placeholder={this.t('crd:buyers:top-search')}
         />
         <Info translations={translations} />
         <section className="pe-general-statistics">
@@ -109,4 +109,4 @@ class ProcuringEntity extends CRDPage {
   }
 }
 
-export default ProcuringEntity;
+export default Buyer;

@@ -7,12 +7,7 @@ import { wireProps } from '../tools';
 import { BuyersIds, BuyersTendersCount, BuyersAwardsCount } from './state';
 
 const mkLink = navigate => (content, { id }) => (
-  <a
-    href={`#!/crd/buyer/${id}`}
-    onClick={() => navigate('buyer', id)}
-  >
-    {content}
-  </a>
+  <a href={`#!/crd/buyer/${id}`} onClick={() => navigate('buyer', id)}>{content}</a>
 );
 
 class BuyerList extends PaginatedTable {

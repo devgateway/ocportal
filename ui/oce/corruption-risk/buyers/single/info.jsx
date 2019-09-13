@@ -36,14 +36,14 @@ class Info extends translatable(boundComponent({
     const { info, flagsCount, buyers, contractsCount, unflaggedContractsCount } = this.state;
     if (!info) return null;
     const { address, contactPoint } = info;
-    
+
     return (
       <div className="pe-page">
         <section className="info">
           <table className="table join-bottom table-bordered info-table">
             <tbody>
             <tr>
-              <Cell title={this.t('crd:contracts:baseInfo:procuringEntityName')}>
+              <Cell title={this.t('crd:contracts:baseInfo:buyerName')}>
                 {info.name}
               </Cell>
               <Cell title={this.t('crd:suppliers:ID')}>{info.id}</Cell>
@@ -76,6 +76,7 @@ class Info extends translatable(boundComponent({
           <table className="table table-bordered info-table">
             <tbody>
             <tr>
+              {address &&
               <Cell title="Address" dlClassName="smaller">
                 {address.streetAddress} <br/>
                 {address.locality} /
@@ -83,12 +84,14 @@ class Info extends translatable(boundComponent({
                 {address.postalCode} /
                 &nbsp;
                 {address.countryName}
-              </Cell>
+              </Cell> }
+              {contactPoint &&
               <Cell title="Contacts" colSpan="2" dlClassName="smaller">
                 {contactPoint.name}<br/>
                 {contactPoint.email}<br/>
                 {contactPoint.telephone}
               </Cell>
+              }
             </tr>
             </tbody>
           </table>

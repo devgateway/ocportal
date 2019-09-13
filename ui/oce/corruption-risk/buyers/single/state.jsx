@@ -52,7 +52,7 @@ export const PEFlagsCount = PEState.mapping({
 const contractsUrl = PEState.input({
   name: 'contractsUrl',
   initial: `${API_ROOT}/flaggedRelease/all`
-})
+});
 
 const associatedContracts = PEState.remote({
   name: 'associatedContracts',
@@ -96,7 +96,7 @@ export const associatedUnflaggedContractsCount = PEState.remote({
 const associatedSuppliers = PEState.mapping({
   name: 'associatedSuppliers',
   deps: ['associatedContracts'],
-})
+});
 
 export const PEFlaggedNrData = new FlaggedNrMapping({
   name: 'PEFlaggedNrData',
@@ -129,7 +129,7 @@ export const winsAndFlagsData = PEState.mapping({
 
 const procurementsByMethodUrl = PEState.input({
   name: 'procurementsByMethodUrl',
-  initial: `${API_ROOT}/procurementsByProcurementMethod`,
+  initial: `${API_ROOT}/procurementsByProcurementMethodBuyer`,
 });
 
 const procurementsByMethodRaw = PEState.remote({
@@ -151,7 +151,7 @@ export const procurementsByMethodData = PEState.mapping({
 
 const procurementsByStatusUrl = PEState.input({
   name: 'procurementsByStatusUrl',
-  initial: `${API_ROOT}/procurementsByTenderStatus`,
+  initial: `${API_ROOT}/procurementsByTenderStatusBuyer`,
 });
 
 const procurementsByStatusRaw = PEState.remote({

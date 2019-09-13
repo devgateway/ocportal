@@ -340,6 +340,28 @@ public class AwardsWonLostController extends GenericOCDSController {
 
     }
 
+    @ApiOperation(value = "Number of procurements by tender status for a list of procuring entities by buyer")
+    @RequestMapping(value = "/api/procurementsByTenderStatusBuyer",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> procurementsByTenderStatusBuyer(@ModelAttribute @Valid final YearFilterPagingRequest
+                                                                  filter) {
+        Assert.notEmpty(filter.getBuyerId(), "buyerId must not be empty!");
+
+        Aggregation agg = newAggregation(
+                match(where(MongoConstants.FieldNames.TENDER_STATUS).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE))),
+                group(Fields.from(
+                        Fields.field("buyerId", BUYER_ID),
+                        Fields.field("buyerName", BUYER_NAME),
+                        Fields.field("tenderStatus", MongoConstants.FieldNames.TENDER_STATUS)
+                )).count().as("count")
+        );
+
+        return releaseAgg(agg);
+    }
+
+
     @ApiOperation(value = "Number of procurements by tender status for a list of procuring entities")
     @RequestMapping(value = "/api/procurementsByTenderStatus",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -364,7 +386,8 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Number of procurements by procurement method for a list of procuring entities")
+    @ApiOperation(value = "Number of procurements by procurement method for a list of procuring entities by "
+            + "procuring entity")
     @RequestMapping(value = "/api/procurementsByProcurementMethod",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -387,6 +410,29 @@ public class AwardsWonLostController extends GenericOCDSController {
 
         return releaseAgg(agg);
     }
+
+
+    @ApiOperation(value = "Number of procurements by procurement method for a list of procuring entities by buyer")
+    @RequestMapping(value = "/api/procurementsByProcurementMethodBuyer",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    public List<Document> procurementsByProcurementMethodBuyer(@ModelAttribute @Valid final YearFilterPagingRequest
+                                                                       filter) {
+        Assert.notEmpty(filter.getBuyerId(), "buyerId must not be empty!");
+
+        Aggregation agg = newAggregation(
+                match(where(MongoConstants.FieldNames.TENDER_PROC_METHOD).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE))),
+                group(Fields.from(
+                        Fields.field("buyerId", BUYER_ID),
+                        Fields.field("buyerName", BUYER_NAME),
+                        Fields.field("tenderStatus", MongoConstants.FieldNames.TENDER_PROC_METHOD)
+                )).count().as("count")
+        );
+
+        return releaseAgg(agg);
+    }
+
 
     @ApiOperation(value = "List of buyers with releases for the given procuring entities."
             + "procuringEntityId is mandatory")
