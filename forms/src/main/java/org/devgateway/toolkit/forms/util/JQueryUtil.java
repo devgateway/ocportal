@@ -19,4 +19,9 @@ public final class JQueryUtil {
     public static String animateScrollTop(final String selector, final int duration) {
         return "$('html, body').animate({ scrollTop: $(\"" + selector + "\").offset().top - 50 }, " + duration + ");";
     }
+
+    public static String animateScrollTop(final String selector, final int offset, final int duration) {
+        return "$('html, body').animate({ scrollTop: $(\""
+                + selector + "\").offset().top - " + offset + " }, " + duration + ");";
+    }
 }

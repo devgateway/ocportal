@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.util.Attributes;
@@ -9,6 +8,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -20,6 +21,7 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
@@ -50,6 +52,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
     private final Map<Project, List<PurchaseRequisition>> purchaseRequisitions;
 
+    private final Project sessionProject;
+
     private final PurchaseRequisition sessionPurchaseRequisition;
 
     private final Boolean canAccessAddNewButtonInDeptOverview;
@@ -59,8 +63,9 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         super(id, model);
 
         // check if we need to expand a Project
-        if (sessionMetadataService.getSessionProject() != null) {
-            expandedContainerIds.add(sessionMetadataService.getSessionProject().getId());
+        sessionProject = sessionMetadataService.getSessionProject();
+        if (sessionProject != null) {
+            expandedContainerIds.add(sessionProject.getId());
         }
 
         sessionPurchaseRequisition = sessionMetadataService.getSessionPurchaseRequisition();
@@ -71,6 +76,19 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                         Collectors.mapping(Function.identity(), Collectors.toList())));
 
         canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
+    }
+
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+
+        // scroll to the last edited item (see: OCMAKU-135)
+        if (this.getModelObject() != null && sessionProject != null && sessionPurchaseRequisition == null) {
+            if (this.getModelObject().contains(sessionProject)) {
+                response.render(OnDomReadyHeaderItem.forScript(
+                        JQueryUtil.animateScrollTop("#" + "project-header-" + sessionProject.getId(), 100, 500)));
+            }
+        }
     }
 
     @Override
@@ -85,6 +103,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         header.add(AttributeAppender.append("class", "project"));   // add specific class to project overview header
 
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
+        headerFragment.setMarkupId("project-header-" + item.getModelObject().getId());
+
         final Project project = item.getModelObject();
 
         headerFragment.add(new DeptOverviewStatusLabel("projectStatus", project));
@@ -93,8 +113,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
         final PageParameters pageParameters = new PageParameters();
         pageParameters.set(WebConstants.PARAM_ID, project.getId());
-        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>("editProject",
-                EditProjectPage.class, pageParameters, Buttons.Type.Success) {
+        final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>("editProject",
+                Buttons.Type.Success) {
             @Override
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
@@ -103,6 +123,15 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                     Attributes.removeClass(tag, "btn-edit");
                     Attributes.addClass(tag, "btn-view");
                 }
+            }
+
+            @Override
+            public void onClick(final AjaxRequestTarget target) {
+                sessionMetadataService.setSessionProject(project);
+
+                final PageParameters pageParameters = new PageParameters();
+                pageParameters.set(WebConstants.PARAM_ID, project.getId());
+                setResponsePage(EditProjectPage.class, pageParameters);
             }
         };
         button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")

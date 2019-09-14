@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -19,6 +21,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
@@ -58,10 +61,14 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
 
     private final Boolean canAccessAddNewButtonInDeptOverview;
 
+    private final PurchaseRequisition sessionPurchaseRequisition;
+
     public ListViewPurchaseRequisitionOverview(final String id,
                                                final IModel<List<PurchaseRequisition>> model,
                                                final PurchaseRequisition sessionPurchaseRequisition) {
         super(id, model);
+
+        this.sessionPurchaseRequisition = sessionPurchaseRequisition;
 
         // check if we need to expand a Purchase Requisition
         if (sessionPurchaseRequisition != null) {
@@ -79,6 +86,19 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
     }
 
     @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+
+        // scroll to the last edited item (see: OCMAKU-135)
+        if (this.getModelObject() != null && sessionPurchaseRequisition != null) {
+            if (this.getModelObject().contains(sessionPurchaseRequisition)) {
+                response.render(OnDomReadyHeaderItem.forScript(JQueryUtil.animateScrollTop("#" + "purchasereq-header-"
+                        + sessionPurchaseRequisition.getId(), 100, 500)));
+            }
+        }
+    }
+
+    @Override
     protected void populateCompoundListItem(final ListItem<PurchaseRequisition> item) {
     }
 
@@ -88,6 +108,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                                   final ListItem<PurchaseRequisition> item) {
         header.add(AttributeAppender.append("class", "tender"));   // add specific class to tender overview header
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
+        headerFragment.setMarkupId("purchasereq-header-" + item.getModelObject().getId());
 
         headerFragment.add(new Label("title", "Purchase Requisition " + (item.getIndex() + 1)));
 
