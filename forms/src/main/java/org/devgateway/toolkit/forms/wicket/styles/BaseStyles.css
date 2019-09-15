@@ -69,10 +69,15 @@ body {
 }
 @media (max-width: 1024px){
   .mainContainer{
-    margin-top: 20%;
+    margin-top: 10%;
   }
 }
 @media (max-width: 768px){
+  .mainContainer{
+    margin-top: 15%;
+  }
+}
+@media (max-width:412px){
   .mainContainer{
     margin-top: 25%;
   }
@@ -116,11 +121,17 @@ body {
 
 @media (max-width: 768px){
   .navbar-header .navbar-brand img{
-    margin-top: -75px;
+    margin-top: 0;
   }
   .navbar-header .navbar-brand span{
     margin-top: -5px;
     margin-left: 10px;
+  }
+}
+
+@media (max-width: 412px){
+  .navbar-header .navbar-brand img{
+    margin-top: -75px;
   }
 }
 
