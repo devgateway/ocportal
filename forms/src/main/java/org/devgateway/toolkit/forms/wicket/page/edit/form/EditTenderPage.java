@@ -13,6 +13,7 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.apache.wicket.validation.validator.UrlValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.validators.EarlierThanDateFieldValidator;
@@ -115,6 +116,7 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
         final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");
         tenderLink.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXTAREA);
         tenderLink.getField().add(tenderDocOrTenderLinkRequiredValidator());
+        tenderLink.getField().add(new UrlValidator());
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
