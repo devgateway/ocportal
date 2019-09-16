@@ -23,6 +23,7 @@ import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.ocds.persistence.mongo.spring.json.Views;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +51,8 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
 public class OcdsController extends GenericOCDSController {
 
-    private static final String SERVER_DOMAIN = "http://ocexplorer.dgstg.org";
+    @Value("${serverURL}")
+    private String serverURL;
 
     @Autowired
     private ReleaseRepository releaseRepository;
@@ -96,8 +98,8 @@ public class OcdsController extends GenericOCDSController {
         ReleasePackage releasePackage = new ReleasePackage();
         try {
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
-            releasePackage.setPublicationPolicy(new URI(SERVER_DOMAIN + "/publication-policy.txt"));
-            releasePackage.setUri(new URI(SERVER_DOMAIN + "/api/ocds/package/ocid/" + release.getOcid()));
+            releasePackage.setPublicationPolicy(new URI(serverURL + "/publication-policy.txt"));
+            releasePackage.setUri(new URI(serverURL + "/api/ocds/package/ocid/" + release.getOcid()));
             releasePackage.setVersion("1.1");
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -108,9 +110,8 @@ public class OcdsController extends GenericOCDSController {
         Publisher publisher = new Publisher();
 
         publisher.setName("Kenya County Government of Makueni");
-        publisher.setScheme("VN-PPA");
-        publisher.setUid(release.getOcid());
-        publisher.setUri(SERVER_DOMAIN);
+        publisher.setScheme("Kenya County Government of Makueni");
+        publisher.setUri(serverURL);
         releasePackage.setPublisher(publisher);
         return releasePackage;
     }

@@ -51,7 +51,8 @@ public class ReleaseFlagI045Processor extends ReleaseFlagI016Processor {
         preconditionsPredicates = Collections.synchronizedList(
                 Arrays.asList(
                         FlaggedReleasePredicates.ACTIVE_AWARD,
-                        FlaggedReleasePredicates.TENDER_ITEMS_CLASSIFICATION
+                        FlaggedReleasePredicates.TENDER_ITEMS_CLASSIFICATION,
+                        FlaggedReleasePredicates.BUYER
                 ));
     }
 }

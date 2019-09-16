@@ -85,7 +85,8 @@ public class ReleaseFlagI016Processor extends AbstractFlaggedReleaseFlagProcesso
                 Arrays.asList(
                         FlaggedReleasePredicates.ACTIVE_AWARD,
                         FlaggedReleasePredicates.SELECTIVE_PROCUREMENT_METHOD,
-                        FlaggedReleasePredicates.TENDER_ITEMS_CLASSIFICATION
+                        FlaggedReleasePredicates.TENDER_ITEMS_CLASSIFICATION,
+                        FlaggedReleasePredicates.BUYER
                 ));
     }
 }
