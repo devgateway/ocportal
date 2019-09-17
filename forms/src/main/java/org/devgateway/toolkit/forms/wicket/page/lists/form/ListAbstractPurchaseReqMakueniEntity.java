@@ -13,6 +13,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 
 import java.time.ZonedDateTime;
@@ -82,9 +83,21 @@ public abstract class ListAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     }
 
     protected void addTenderTitleColumn() {
-        columns.add(new PropertyColumn<>(
+        columns.add(new PropertyColumn<T, String>(
                 new Model<>((new StringResourceModel("title", ListAbstractPurchaseReqMakueniEntity.this)).getString()),
-                null,
-                "purchaseRequisition.tender.iterator.next.tenderTitle"));
+                null, "purchaseRequisition.tender.iterator.next.tenderTitle") {
+            @Override
+            public void populateItem(final Item<ICellPopulator<T>> item,
+                                     final String componentId,
+                                     final IModel<T> rowModel) {
+                final Tender tender = rowModel.getObject().getPurchaseRequisition().getSingleTender();
+                if (tender != null) {
+                    item.add(new Label(componentId, tender.getTenderTitle()));
+                } else {
+                    item.add(new Label(componentId, "[[No Tender]]"));
+                }
+
+            }
+        });
     }
 }
