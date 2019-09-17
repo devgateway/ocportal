@@ -107,9 +107,9 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'buyers' || page === 'buyer' })}
               key="buyers"
             >
-              <img className="blue" src={`assets/icons/blue/procuring-entities.svg`}
+              <img className="blue" src={`assets/icons/blue/buyers.svg`}
                    alt="Procuring entities icon"/>
-              <img className="white" src={`assets/icons/white/procuring-entities.svg`}
+              <img className="white" src={`assets/icons/white/buyers.svg`}
                    alt="Procuring entities icon"/>
               {this.t('crd:contracts:menu:buyers')}
             </a>
