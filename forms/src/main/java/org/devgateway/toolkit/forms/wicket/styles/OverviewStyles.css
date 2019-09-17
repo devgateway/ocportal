@@ -873,3 +873,9 @@
         left: -85%;
     }
 }
+
+@supports (-ms-ime-align: auto) {
+  .btn.btn-default.project-year {
+      padding-left: 40px;
+  }
+}
