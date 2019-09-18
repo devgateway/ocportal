@@ -53,6 +53,11 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     }
 
     @Override
+    public Page<T> findAllNoCache(final Specification<T> spec, final Pageable pageable) {
+        return repository().findAll(spec, pageable);
+    }
+
+    @Override
     @Cacheable
     public Optional<T> findOne(final Specification<T> spec) {
         return repository().findOne(spec);
@@ -73,6 +78,11 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     @Override
     @Cacheable
     public long count(final Specification<T> spec) {
+        return repository().count(spec);
+    }
+
+    @Override
+    public long countNoCache(final Specification<T> spec) {
         return repository().count(spec);
     }
 
