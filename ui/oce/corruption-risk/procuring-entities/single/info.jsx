@@ -36,7 +36,7 @@ class Info extends translatable(boundComponent({
     const { info, flagsCount, buyers, contractsCount, unflaggedContractsCount } = this.state;
     if (!info) return null;
     const { address, contactPoint } = info;
-    
+
     return (
       <div className="pe-page">
         <section className="info">
@@ -66,7 +66,7 @@ class Info extends translatable(boundComponent({
             </tr>
             {buyers && buyers.length &&
             <tr>
-              <Cell title={this.t('crd:contracts:baseInfo:buyer')} colSpan="3">
+              <Cell title={this.t('crd:contracts:baseInfo:buyerName')} colSpan="3">
                 {buyers.map(buyer => <p key={buyer.buyerId}>{buyer.buyerName}</p>)}
               </Cell>
             </tr>
