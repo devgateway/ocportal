@@ -23,6 +23,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
 
     Page<T> findAll(Specification<T> spec, Pageable pageable);
 
+    Page<T> findAllNoCache(Specification<T> spec, Pageable pageable);
+
     Page<T> findAll(Pageable pageable);
 
     List<T> findAll(Specification<T> spec, Sort sort);
@@ -32,6 +34,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
     Optional<T> findByIdCached(Long id);
 
     long count(Specification<T> spec);
+
+    long countNoCache(Specification<T> spec);
 
     Optional<T> findById(Long id);
 
