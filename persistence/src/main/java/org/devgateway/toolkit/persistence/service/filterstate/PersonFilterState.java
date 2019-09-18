@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.dao.Person_;
 import org.devgateway.toolkit.persistence.dao.Role;
 import org.devgateway.toolkit.persistence.dao.Role_;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.Department_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.JoinType;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class PersonFilterState extends JpaFilterState<Person> {
     private String username;
 
-    private Department department;
+    private List<Department> departments;
 
     private List<Role> roles;
 
@@ -34,8 +35,10 @@ public class PersonFilterState extends JpaFilterState<Person> {
                 predicates.add(cb.like(root.get(Person_.username), "%" + username + "%"));
             }
 
-            if (department != null) {
-                predicates.add(cb.equal(root.get(Person_.department), department));
+            if (departments != null && !departments.isEmpty()) {
+                predicates.add(root.join(Person_.departments, JoinType.LEFT).get(Department_.id)
+                        .in(departments.stream().map(dep -> dep.getId()).collect(Collectors.toList())));
+                query.distinct(true);
             }
 
             if (roles != null && !roles.isEmpty()) {
@@ -57,12 +60,12 @@ public class PersonFilterState extends JpaFilterState<Person> {
         this.username = username;
     }
 
-    public Department getDepartment() {
-        return department;
+    public List<Department> getDepartments() {
+        return departments;
     }
 
-    public void setDepartment(final Department department) {
-        this.department = department;
+    public void setDepartments(final List<Department> departments) {
+        this.departments = departments;
     }
 
     public List<Role> getRoles() {

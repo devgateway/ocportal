@@ -18,10 +18,12 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
+import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -93,6 +95,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private DataExportService dataExportService;
 
+    private final Boolean canAccessAddNewButtonInDeptOverview;
+
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
     }
@@ -140,6 +144,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 return procurementPlanService.findByDepartmentAndFiscalYear(getDepartment(), getFiscalYear());
             }
         };
+
+        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
     }
 
     @Override
@@ -238,8 +244,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
         newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
-        newProcurementPlanButton.setVisibilityAllowed(
-                ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
+        newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
 
         newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
         newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
@@ -251,10 +256,21 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         if (getProcurementPlan() != null) {
             pp.set(WebConstants.PARAM_ID, getProcurementPlan().getId());
         }
-        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
-                "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Info);
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>(
+                "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Info) {
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+
+                if (!canAccessAddNewButtonInDeptOverview) {
+                    Attributes.removeClass(tag, "btn-edit");
+                    Attributes.addClass(tag, "btn-view");
+                }
+            }
+        };
         button.setEnabled(getProcurementPlan() != null);
-        button.add(new TooltipBehavior(Model.of("Edit/View Procurement Plan")));
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
+                + " Procurement Plan")));
 
         add(button);
 
@@ -275,8 +291,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(Model.of("Add New Cabinet Paper")));
         add(editCabinetPaper);
-        editCabinetPaper.setVisibilityAllowed(
-                ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
+        editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
     }
 
     private void listCabinetPaperButton() {
@@ -286,6 +301,16 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             public void onClick(AjaxRequestTarget target) {
                 sessionMetadataService.setSessionPP(getProcurementPlan());
                 setResponsePage(ListCabinetPaperPage.class);
+            }
+
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+
+                if (!canAccessAddNewButtonInDeptOverview) {
+                    Attributes.removeClass(tag, "btn-edit");
+                    Attributes.addClass(tag, "btn-view");
+                }
             }
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
@@ -299,7 +324,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewPage.this, null));
         addNewProject.setEnabled(getProcurementPlan() != null);
-        addNewProject.setVisibilityAllowed(ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
+        addNewProject.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
         add(addNewProject);
     }
 

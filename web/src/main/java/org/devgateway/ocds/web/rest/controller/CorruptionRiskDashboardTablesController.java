@@ -62,6 +62,7 @@ public class CorruptionRiskDashboardTablesController extends GenericOCDSControll
                                 MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
                 unwind("flags.flaggedStats"),
                 project("ocid", "tender.procuringEntity.name", "tender.tenderPeriod", "flags",
+                        MongoConstants.FieldNames.TENDER_STATUS,
                         "tender.title", "tag")
                         .and("tender.value").as("tender.value").and("awards.value").as("awards.value")
                         .and(MongoConstants.FieldNames.AWARDS_STATUS).as(MongoConstants.FieldNames.AWARDS_STATUS)

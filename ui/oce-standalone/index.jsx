@@ -18,7 +18,7 @@ const translations = {
 const BILLION = 1000000000;
 const MILLION = 1000000;
 const THOUSAND = 1000;
-const formatNumber = number => number === undefined ? number : number.toLocaleString(undefined, { maximumFractionDigits: 2 });
+const formatNumber = number => number === undefined ? number : number.toLocaleString(undefined, { maximumFractionDigits: 3 });
 
 const formatDate = stringDate => {
   if (stringDate === undefined) {
@@ -43,7 +43,7 @@ const formatDate = stringDate => {
 
 const styling = {
   charts: {
-    axisLabelColor: '#cc3c3b',
+    axisLabelColor: '#000000',
     traceColors: ['#324d6e', '#ecac00', '#4b6f33'],
     hoverFormat: ',.2f',
     hoverFormatter: (number) => {

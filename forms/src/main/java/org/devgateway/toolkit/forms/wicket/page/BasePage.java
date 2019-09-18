@@ -52,6 +52,8 @@ import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatisticsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccountPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentTypePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
@@ -63,6 +65,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
@@ -480,6 +483,19 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         new StringResourceModel("navbar.adminSettings", BasePage.this, null))
                         .setIconType(FontAwesomeIconType.briefcase));
 
+                list.add(new MenuBookmarkablePageLink<ListAlertPage>(ListAlertPage.class,
+                        new StringResourceModel("navbar.alerts", BasePage.this, null))
+                        .setIconType(FontAwesomeIconType.envelope));
+
+                list.add(new MenuBookmarkablePageLink<ListFlagHistoryPage>(ListFlagHistoryPage.class,
+                        new StringResourceModel("navbar.redFlagHistory", BasePage.this, null))
+                        .setIconType(FontAwesomeIconType.flag));
+
+
+                list.add(new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
+                        new StringResourceModel("navbar.alertsStatistics", BasePage.this, null))
+                        .setIconType(FontAwesomeIconType.mail_reply_all));
+
                 return list;
             }
         };
@@ -510,6 +526,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         // add brand image
         navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
                 new StringResourceModel("brandImageAltText", this, null));
+        navbar.setBrandName(new StringResourceModel("brandName", this, null));
 
         navbar.addComponents(
                 NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newFormMenu(),

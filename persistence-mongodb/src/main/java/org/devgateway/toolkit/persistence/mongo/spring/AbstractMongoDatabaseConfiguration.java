@@ -122,15 +122,16 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Organization.class).ensureIndex(new TextIndexDefinitionBuilder()
                 .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)
                 .onField("name")
-                .onField("id").onField("additionalIdentifiers._id").build());
+                .onField("_id").onField("additionalIdentifiers._id").build());
 
         getTemplate().indexOps(Release.class).ensureIndex(new TextIndexDefinitionBuilder()
                 .named("text_search")
                 .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)
                 .onFields("tender.title", "tender.description",
-                        "tender.procuringEntity.name", "tender.id", "tender.procuringEntity.description",
-                        "awards.id", "awards.description", "awards.suppliers.name", "awards.suppliers.description",
-                        "ocid", "buyer.name", "buyer.id"
+                        "tender.procuringEntity.name", "tender._id", "tender.procuringEntity.description",
+                        "awards._id", "awards.description", "awards.suppliers.name", "awards.suppliers.description",
+                        "ocid", "buyer.name", "buyer._id", "awards.suppliers._id", "awards.suppliers.name",
+                        "tender.procuringEntity._id", "tender.procuringEntity.additionalIdentifiers._id"
                 ).build());
 
         getLogger().info("Added extra Mongo indexes");

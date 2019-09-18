@@ -32,7 +32,6 @@ import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.PasswordFieldBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -53,6 +52,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,7 +86,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     protected TextFieldBootstrapFormComponent<String> title;
 
-    protected Select2ChoiceBootstrapFormComponent<Department> department;
+    protected Select2MultiChoiceBootstrapFormComponent<Department> departments;
 
     protected Select2MultiChoiceBootstrapFormComponent<Role> roles;
 
@@ -152,9 +152,9 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         title = ComponentUtil.addTextField(editForm, "title");
 
-        department = ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService);
-        department.required();
-        MetaDataRoleAuthorizationStrategy.authorize(department, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        departments = ComponentUtil.addSelect2MultiChoiceField(editForm, "departments", departmentService);
+        departments.required();
+        MetaDataRoleAuthorizationStrategy.authorize(departments, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
         roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService);
         roles.getField().add(new RoleAjaxFormComponentUpdatingBehavior("change"));
@@ -165,7 +165,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
                     .collect(Collectors.toList());
 
             if (authority.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
-                department.setVisibilityAllowed(false);
+                departments.setVisibilityAllowed(false);
             }
         }
         MetaDataRoleAuthorizationStrategy.authorize(roles, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
@@ -240,6 +240,11 @@ public class EditUserPage extends AbstractEditPage<Person> {
                 Person saved = jpaService.save(person);
                 updateCurrentAuthenticatedUserData(saved);
 
+                // Is this a new user? Send a notification email.
+                if (entityId == null) {
+                    sendEmailService.sendNewAccountNotification(person, plainPassword.getField().getModelObject());
+                }
+
 
                 if (!WebSecurityUtil.isCurrentUserAdmin()) {
                     setResponsePage(Homepage.class);
@@ -291,13 +296,13 @@ public class EditUserPage extends AbstractEditPage<Person> {
                     .collect(Collectors.toList());
 
             if (authority.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
-                department.setVisibilityAllowed(false);
-                department.setModelObject(null);
+                departments.setVisibilityAllowed(false);
+                departments.setModelObject(new HashSet<>());
             } else {
-                department.setVisibilityAllowed(true);
+                departments.setVisibilityAllowed(true);
             }
 
-            target.add(department);
+            target.add(departments);
         }
     }
 

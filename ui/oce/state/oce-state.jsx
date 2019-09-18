@@ -11,7 +11,7 @@ export const filters = CRD.input({
   initial: Map(),
 });
 
-const datelessFilters = CRD.mapping({
+export const datelessFilters = CRD.mapping({
   name: 'datelessFilters',
   deps: [filters],
   mapper: filters => filters.delete('years')
@@ -21,11 +21,8 @@ const datelessFilters = CRD.mapping({
 export const datefulFilters = CRD.mapping({
   name: 'datefulFilters',
   deps: [datelessFilters, filters],
-  mapper: (datelessFilters, filters) => {
-    datelessFilters.set('year', filters.get('years'))
-    .set('month', filters.get('months'))
-  }
-  
+  mapper: (datelessFilters, filters) =>
+    datelessFilters.set('year', filters.get('years')).set('month', filters.get('months'))
 });
 
 const indicatorTypesMappingURL = CRD.input({

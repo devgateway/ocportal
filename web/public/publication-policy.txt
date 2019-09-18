@@ -1,0 +1,13 @@
+
+About the data:
+The data in this portal covers the Government of Makueni County procurement and contracting data. Publication of this data is aimed to help the Government of Makueni County and citizens to monitor procurement efficiency, market competitiveness, and corruption risk, among other use cases. The portal also seeks to foster collaboration that strengthens the capacity of the county government and Makueni citizens to engage with procurement data, and creates an enabling environment for procurement to deliver more effectively for citizens. The data is modelled according to the Open Contracting Data Standard (OCDS) (http://standard.open-contracting.org/latest/en/).
+
+
+Licensing:
+The data is made available to the public under a Creative Commons Attribution Share-Alike 4.0 (CC-BY-SA-4.0) license (https://opendefinition.org/licenses/cc-by-sa/). This grants any user the freedom to explore, download, monitor and re-use the data for any purposes, including contract monitoring, analytics and research. The Creative Commons Attribution Share-Alike license allows re-distribution and re-use of a licensed work on the conditions that the creator is appropriately credited and that any derivative work is made available under "the same, similar or a compatible license".
+
+Future development plans:
+The Government of Makueni County encourages users from all sectors of society (government, private sector, civil society) to visit the website regularly, subscribe to updates on tender opportunities, and put this data into use. The county government is committed to improving the quality of the disclosed data over time, and welcomes any feedback from users on data quality. The Government of Makueni County is working to introduce implementation data that will include the monitoring of project quality.
+
+Publisher contact information:
+If you have questions, comments or ideas, please get in touch with us. General inquiries can be submitted to  or through the online form. You can subscribe to updates on tender opportunities and information on specific tenders.

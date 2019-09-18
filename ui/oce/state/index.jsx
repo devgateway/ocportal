@@ -11,9 +11,9 @@ const isNothing = a => typeof a === 'undefined' ||
   a === NOTHING;
 
 function schedule(cb) {
-  requestIdleCallback ?
-    requestIdleCallback(cb) :
-    setTimeout(cb);
+  typeof requestIdleCallback !== 'undefined'
+    ? requestIdleCallback(cb)
+    : setTimeout(cb);
 }
 
 class Node {

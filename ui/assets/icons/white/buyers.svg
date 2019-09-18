@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#29722A;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<polyline class="st0" points="36.1,36.9 28.1,36.9 28.1,60.9 76.1,60.9 76.1,36.9 68.1,36.9 "/>
+<line class="st0" x1="23.1" y1="27.9" x2="28.1" y2="27.9"/>
+<line class="st0" x1="28.1" y1="27.9" x2="28.1" y2="36.9"/>
+<line class="st0" x1="28.1" y1="60.9" x2="28.1" y2="67.9"/>
+<circle class="st0" cx="38.1" cy="72.9" r="4"/>
+<circle class="st0" cx="62.1" cy="72.9" r="4"/>
+<line class="st0" x1="28.1" y1="67.9" x2="71.1" y2="67.9"/>
+<circle class="st0" cx="22.1" cy="27.9" r="3"/>
+<circle class="st0" cx="52.1" cy="36.9" r="13"/>
+<line class="st0" x1="52.1" y1="28.9" x2="52.1" y2="44.9"/>
+<line class="st0" x1="52.1" y1="44.9" x2="59.1" y2="37.9"/>
+<line class="st0" x1="52.1" y1="44.9" x2="45.1" y2="37.9"/>
+</svg>

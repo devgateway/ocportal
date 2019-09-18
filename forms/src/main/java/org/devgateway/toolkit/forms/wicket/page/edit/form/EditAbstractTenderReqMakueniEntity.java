@@ -39,14 +39,13 @@ public abstract class EditAbstractTenderReqMakueniEntity<T extends AbstractPurch
 
     private void addTenderInfo() {
         tenderTitle = new GenericSleepFormComponent<>("tenderNumber", (IModel<String>) () ->
-                PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition().getTender()).getTenderTitle()
-        );
+                PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition().getTender())
+                        .getTenderNumber());
         editForm.add(tenderTitle);
 
         tenderNumber = new GenericSleepFormComponent<>("tenderTitle", (IModel<String>) () ->
                 PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition().getTender())
-                        .getTenderNumber()
-        );
+                        .getTenderTitle());
         editForm.add(tenderNumber);
     }
 

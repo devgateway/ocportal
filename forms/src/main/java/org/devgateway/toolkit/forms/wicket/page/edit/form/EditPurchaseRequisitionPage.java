@@ -111,6 +111,9 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
 
             jpaService.saveAndFlush(saveable);
         }
+
+        // add current Purchase Requisition in session
+        sessionMetadataService.setSessionPurchaseRequisition(editForm.getModelObject());
     }
 
     @Override

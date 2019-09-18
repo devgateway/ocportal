@@ -2,7 +2,6 @@ package org.devgateway.ocds.web.convert;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.Address;
 import org.devgateway.ocds.persistence.mongo.Amount;
@@ -43,6 +42,9 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
@@ -74,6 +76,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.APPROVED;
 
 @Service
 @Transactional(readOnly = true)
@@ -165,7 +169,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Tender.Status createTenderStatus(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
-        if (tender.isTerminated()) {
+        if (tender.getPurchaseRequisition().isTerminated()) {
             return Tender.Status.cancelled;
         }
         //TODO: finish this !!
@@ -246,7 +250,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Unit createTenderItemUnit(TenderItem tenderItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
-        safeSet(unit::setName, () -> tenderItem.getPurchaseItem().getPlanItem().getUnitOfIssue().getLabel());
+        safeSet(
+                unit::setName, tenderItem::getPurchaseItem, PurchaseItem::getPlanItem, PlanItem::getUnitOfIssue,
+                Category::getLabel
+        );
         safeSet(unit::setId, tenderItem::getId, this::longIdToString);
         safeSet(unit::setValue, tenderItem::getUnitPrice, this::convertAmount);
         return unit;
@@ -254,8 +261,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Classification createPurchaseItemClassification(PurchaseItem purchaseItem) {
         Classification classification = new Classification();
-        safeSet(classification::setId, purchaseItem.getPlanItem().getItem()::getCode);
-        safeSet(classification::setDescription, purchaseItem.getPlanItem().getItem()::getLabel);
+        safeSet(classification::setId, purchaseItem::getPlanItem, PlanItem::getItem, Category::getCode
+        );
+        safeSet(classification::setDescription, purchaseItem::getPlanItem, PlanItem::getItem, Category::getLabel);
         return classification;
     }
 
@@ -353,6 +361,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private Document createDocumentFromUrl(String url, Document.DocumentType documentType) {
         Document document = new Document();
+        safeSet(document::setId, () -> url);
         safeSet(document::setUrl, () -> url, URI::create);
         safeSet(document::setDocumentType, documentType::toString);
         return document;
@@ -445,7 +454,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         stopWatch.start();
         releaseRepository.deleteAll();
         organizationRepository.deleteAll();
-        purchaseRequisitionService.findByStatusApproved().forEach(this::createAndPersistRelease);
+        purchaseRequisitionService.findAll().stream().filter(pr -> {
+                    return pr.isTerminated() || pr.getStatus().equals(APPROVED);
+                }
+        ).forEach(this::createAndPersistRelease);
         postProcess();
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
@@ -501,16 +513,46 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         if (supplier == null || consumer == null || converter == null) {
             return;
         }
+
+        Optional<C> c = safeConvert(supplier, converter);
+
+        c.ifPresent(consumer);
+    }
+
+    public <S, C> Optional<C> safeConvert(Supplier<S> supplier, Function<S, C> converter) {
+        if (supplier == null || converter == null) {
+            return Optional.empty();
+        }
         S o = supplier.get();
-        if (o instanceof Statusable && !((Statusable) o).isExportable()) {
-            return;
+        if (o instanceof Statusable && !((Statusable) o).isExportable() && !((Statusable) o).isTerminated()) {
+            return Optional.empty();
         }
         if (!ObjectUtils.isEmpty(o)) {
             C converted = converter.apply(o);
             if (!ObjectUtils.isEmpty(converted)) {
-                consumer.accept(converted);
+                return Optional.ofNullable(converted);
             }
         }
+        return Optional.empty();
+    }
+
+    public <S, C, X> void safeSet(Consumer<C> consumer, Supplier<S> supplier,
+                                  Function<S, X> converter1, Function<X, C> converter2) {
+        if (supplier == null || consumer == null || converter1 == null || converter2 == null) {
+            return;
+        }
+        Optional<X> x = safeConvert(supplier, converter1);
+        safeConvert(() -> x.orElse(null), converter2).ifPresent(consumer);
+    }
+
+    public <S, C, X, Y> void safeSet(Consumer<C> consumer, Supplier<S> supplier,
+                                     Function<S, X> converter1, Function<X, Y> converter2, Function<Y, C> converter3) {
+        if (supplier == null || consumer == null || converter1 == null || converter2 == null || converter3 == null) {
+            return;
+        }
+        Optional<X> x = safeConvert(supplier, converter1);
+        Optional<Y> y = safeConvert(() -> x.orElse(null), converter2);
+        safeConvert(() -> y.orElse(null), converter3).ifPresent(consumer);
     }
 
     public <S, C> void safeSetEach(Consumer<C> consumer, Supplier<Collection<S>> supplier, Function<S, C> converter) {
@@ -557,11 +599,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Unit createPlanningItemUnit(PurchaseItem purchaseItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> "scheme");
-        safeSet(unit::setName, purchaseItem.getPlanItem().getUnitOfIssue()::getLabel);
+        safeSet(unit::setName, purchaseItem::getPlanItem, PlanItem::getUnitOfIssue, this::categoryLabel);
         safeSet(unit::setId, purchaseItem::getId, this::longIdToString);
         safeSet(unit::setValue, purchaseItem::getAmount, this::convertAmount);
         return unit;
     }
+
 
     public Amount convertAmount(BigDecimal sourceAmount) {
         Amount amount = new Amount();
@@ -577,8 +620,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, BigDecimal::doubleValue);
         safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPurchaseItemClassification);
-        safeSet(ocdsItem::setTargetGroup, purchaseItem.getPlanItem()::getTargetGroup, this::categoryLabel);
-        safeSet(ocdsItem::setTargetGroupValue, purchaseItem.getPlanItem()::getTargetGroupValue, this::convertAmount);
+        safeSet(ocdsItem::setTargetGroup, purchaseItem::getPlanItem, PlanItem::getTargetGroup,
+                this::categoryLabel
+        );
+        safeSet(
+                ocdsItem::setTargetGroupValue, purchaseItem::getPlanItem, PlanItem::getTargetGroupValue,
+                this::convertAmount
+        );
         return ocdsItem;
     }
 
@@ -622,8 +670,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public MakueniAward createAward(AwardNotification awardNotification) {
         MakueniAward ocdsAward = new MakueniAward();
-        safeSet(ocdsAward::setTitle, awardNotification.getPurchaseRequisition().getSingleTender()::getTenderTitle);
-        safeSet(ocdsAward::setId, awardNotification.getPurchaseRequisition().getSingleTender()::getTenderNumber);
+        safeSet(ocdsAward::setTitle, awardNotification::getPurchaseRequisition, PurchaseRequisition::getSingleTender,
+                org.devgateway.toolkit.persistence.dao.form.Tender::getTenderTitle
+        );
+        safeSet(ocdsAward::setId, awardNotification::getPurchaseRequisition, PurchaseRequisition::getSingleTender,
+                org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
+        );
         safeSet(ocdsAward::setDate, awardNotification::getAwardDate);
         safeSet(ocdsAward::setValue, awardNotification::getAwardValue, this::convertAmount);
         safeSet(ocdsAward.getSuppliers()::add, awardNotification::getAwardee, this::convertSupplier);
@@ -668,20 +720,24 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Contract createContract(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
         Contract ocdsContract = new Contract();
         safeSet(ocdsContract::setId, contract::getReferenceNumber);
-        safeSet(ocdsContract::setTitle, contract.getPurchaseRequisition().getSingleTender()::getTenderTitle);
+        safeSet(ocdsContract::setTitle, contract::getPurchaseRequisition, PurchaseRequisition::getSingleTender,
+                org.devgateway.toolkit.persistence.dao.form.Tender::getTenderTitle
+        );
         safeSet(ocdsContract::setDateSigned, contract::getContractDate);
         safeSet(ocdsContract::setPeriod, contract::getExpiryDate, this::convertContractEndDateToPeriod);
         safeSet(ocdsContract::setValue, contract::getContractValue, this::convertAmount);
         safeSet(ocdsContract::setDateSigned, contract::getApprovedDate);
         safeSetEach(ocdsContract.getDocuments()::add, contract::getContractDocs, this::storeAsDocumentContractNotice);
-        safeSet(ocdsContract::setAwardID, contract.getPurchaseRequisition().getSingleTender()::getTenderNumber);
+        safeSet(ocdsContract::setAwardID, contract::getPurchaseRequisition, PurchaseRequisition::getSingleTender,
+                org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
+        );
         safeSet(ocdsContract::setStatus, contract::getStatus, this::createContractStatus);
 
         return ocdsContract;
     }
 
     public Contract.Status createContractStatus(String contractStatus) {
-        if (DBConstants.Status.APPROVED.equals(contractStatus)) {
+        if (APPROVED.equals(contractStatus)) {
             return Contract.Status.active;
         }
         if (DBConstants.Status.TERMINATED.equals(contractStatus)) {
@@ -710,7 +766,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         }
 
         //Active: When Acceptance of award has been approved
-        if (DBConstants.Status.APPROVED.equals(
+        if (APPROVED.equals(
                 Optional.ofNullable(awardNotification.getPurchaseRequisition().getSingleAwardAcceptance())
                         .map(Statusable::getStatus).orElse(null))) {
             return Award.Status.active;
@@ -734,11 +790,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
     public String getOcid(PurchaseRequisition purchaseRequisition) {
-        Validate.notNull(
-                purchaseRequisition.getPurchaseRequestNumber(),
-                "purchaseRequestNumber must not be null!"
-        );
-        return OCID_PREFIX + purchaseRequisition.getPurchaseRequestNumber();
+        return OCID_PREFIX + purchaseRequisition.getId();
     }
 
 
@@ -773,13 +825,18 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Override
     public Release createRelease(PurchaseRequisition purchaseRequisition) {
         Release release = new Release();
+        safeSet(release::setId, purchaseRequisition::getId, this::longIdToString);
+        safeSet(release::setDepartmentId, purchaseRequisition::getProcurementPlan, ProcurementPlan::getDepartment,
+                Category::getId
+        );
         safeSet(release::setOcid, () -> purchaseRequisition, this::getOcid);
         safeSet(release::setPlanning, () -> purchaseRequisition, this::createPlanning);
         safeSet(release::setBids, purchaseRequisition::getSingleTenderQuotationEvaluation, this::createBids);
         safeSet(release::setTender, purchaseRequisition::getSingleTender, this::createTender);
-        safeSet(release::setBuyer, purchaseRequisition.getProject().getProcurementPlan()::getDepartment,
-                this::convertBuyer
+        safeSet(release::setBuyer, purchaseRequisition::getProject, Project::getProcurementPlan,
+                ProcurementPlan::getDepartment, this::convertBuyer
         );
+
 
         safeSet(release.getTender()::setTenderers, release::getBids, this::createTenderersFromBids);
         safeSet(release.getTender()::setNumberOfTenderers, release::getTender, this::getTenderersFromTender);

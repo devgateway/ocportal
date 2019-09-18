@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -19,6 +21,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
@@ -30,8 +33,9 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
+import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -55,15 +59,23 @@ import java.util.List;
 public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<PurchaseRequisition> {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
 
+    private final Boolean canAccessAddNewButtonInDeptOverview;
+
+    private final PurchaseRequisition sessionPurchaseRequisition;
+
     public ListViewPurchaseRequisitionOverview(final String id,
                                                final IModel<List<PurchaseRequisition>> model,
                                                final PurchaseRequisition sessionPurchaseRequisition) {
         super(id, model);
 
+        this.sessionPurchaseRequisition = sessionPurchaseRequisition;
+
         // check if we need to expand a Purchase Requisition
         if (sessionPurchaseRequisition != null) {
             expandedContainerIds.add(sessionPurchaseRequisition.getId());
         }
+
+        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
     }
 
     @Override
@@ -71,6 +83,19 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         super.onInitialize();
 
         listWrapper.add(AttributeAppender.replace("class", "tender-list-wrapper"));
+    }
+
+    @Override
+    public void renderHead(final IHeaderResponse response) {
+        super.renderHead(response);
+
+        // scroll to the last edited item (see: OCMAKU-135)
+        if (this.getModelObject() != null && sessionPurchaseRequisition != null) {
+            if (this.getModelObject().contains(sessionPurchaseRequisition)) {
+                response.render(OnDomReadyHeaderItem.forScript(JQueryUtil.animateScrollTop("#" + "purchasereq-header-"
+                        + sessionPurchaseRequisition.getId(), 100, 500)));
+            }
+        }
     }
 
     @Override
@@ -83,6 +108,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                                   final ListItem<PurchaseRequisition> item) {
         header.add(AttributeAppender.append("class", "tender"));   // add specific class to tender overview header
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
+        headerFragment.setMarkupId("purchasereq-header-" + item.getModelObject().getId());
 
         headerFragment.add(new Label("title", "Purchase Requisition " + (item.getIndex() + 1)));
 
@@ -124,25 +150,25 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 purchaseRequisition, EditTenderQuotationEvaluationPage.class, tender);
         containerFragment.add(evaluationPanel);
 
-        final Panel professionalOpinionPanel = new TenderDetailPanel("professionalOpinionPanel", professionalOpinion,
+        final Panel professionalOpinionPanel = new TenderDetailPanel<>("professionalOpinionPanel", professionalOpinion,
                 "Professional Opinion", professionalOpinion != null ? new ArrayList<>(Arrays.asList(
                 professionalOpinion.getAwardee(), professionalOpinion.getRecommendedAwardAmount())) : null,
                 purchaseRequisition, EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
         containerFragment.add(professionalOpinionPanel);
 
-        final Panel awardNotificationPanel = new TenderDetailPanel("awardNotificationPanel", awardNotification,
+        final Panel awardNotificationPanel = new TenderDetailPanel<>("awardNotificationPanel", awardNotification,
                 "Notification", awardNotification != null ? new ArrayList<>(Arrays.asList(
                 awardNotification.getAwardee(), awardNotification.getAwardValue())) : null,
                 purchaseRequisition, EditAwardNotificationPage.class, professionalOpinion);
         containerFragment.add(awardNotificationPanel);
 
-        final Panel awardAcceptancePanel = new TenderDetailPanel("awardAcceptancePanel", awardAcceptance,
+        final Panel awardAcceptancePanel = new TenderDetailPanel<>("awardAcceptancePanel", awardAcceptance,
                 "Acceptance", awardAcceptance != null ? new ArrayList<>(Arrays.asList(
                 awardAcceptance.getAwardee(), awardAcceptance.getAcceptedAwardValue())) : null,
                 purchaseRequisition, EditAwardAcceptancePage.class, awardNotification);
         containerFragment.add(awardAcceptancePanel);
 
-        final Panel contractPanel = new TenderDetailPanel("contractPanel", contract,
+        final Panel contractPanel = new TenderDetailPanel<>("contractPanel", contract,
                 "Contracts", contract != null ? new ArrayList<>(Arrays.asList(
                 contract.getAwardee(), contract.getContractValue())) : null,
                 purchaseRequisition, EditContractPage.class, awardAcceptance);
@@ -157,9 +183,15 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
     }
 
     private boolean canEdit(final PurchaseRequisition purchaseRequisition,
-                            final GenericPersistable persistable,
+                            final AbstractStatusAuditableEntity persistable,
                             final Statusable previousStep) {
 
+        //terminated can always edit
+        if (persistable != null && persistable.getStatus().equals(DBConstants.Status.TERMINATED)) {
+            return true;
+        }
+
+        //the rest of the steps of a terminated chain, can never be edited
         if (persistable == null && purchaseRequisition.isTerminated()) {
             return false;
         }
@@ -168,7 +200,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
     }
 
-    private class TenderDetailPanel<T extends GenericPersistable & Statusable> extends GenericPanel<T> {
+    private class TenderDetailPanel<T extends AbstractMakueniEntity> extends GenericPanel<T> {
         private final T entity;
 
         private final String tenderLabel;
@@ -215,15 +247,25 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
                 }
             };
 
-            editTender.add(AttributeAppender.append("class", "no-text btn-" + (entity == null ? "add" : "edit")));
+            final String buttonType;
+            if (canAccessAddNewButtonInDeptOverview) {
+                if (entity == null) {
+                    buttonType = "add";
+                } else {
+                    buttonType = "edit";
+                }
+            } else {
+                buttonType = "view";
+            }
+            editTender.add(AttributeAppender.append("class", "no-text btn-" + buttonType));
 
-            editTender.add(new TooltipBehavior(Model.of((entity == null ? "Add " : "Edit/View ")
+            editTender.add(new TooltipBehavior(Model.of((entity == null
+                    ? "Add " : (canAccessAddNewButtonInDeptOverview ? "Edit " : "View "))
                     + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
                     editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
 
             if (entity == null) {
-                editTender.setVisibilityAllowed(
-                        ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService));
+                editTender.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
             }
             if (!(entity instanceof PurchaseRequisition) && !(entity instanceof Tender)) {
                 editTender.setEnabled(canEdit(purchaseRequisition, entity, previousStep));
@@ -231,7 +273,7 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
             add(editTender);
 
 
-            add(new ListView<Object>("tenderInfo", new ListModel(tenderInfo)) {
+            add(new ListView<Object>("tenderInfo", new ListModel<>(tenderInfo)) {
                 @Override
                 protected void populateItem(final ListItem<Object> item) {
                     final Object object = item.getModelObject();

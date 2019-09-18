@@ -61,6 +61,9 @@ public class Release implements Identifiable {
     @ExcelExport
     private String id;
 
+    //internal department id
+    private Long departmentId;
+
     /**
      * Open Contracting ID
      * <p>
@@ -669,7 +672,14 @@ public class Release implements Identifiable {
                 return constant;
             }
         }
+    }
 
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 
 }

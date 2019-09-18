@@ -16,7 +16,7 @@ class Alerts extends CRDPage {
       fetchedDepartments: [],
       items: [],
       fetchedItems: [],
-      emailPatter: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
+      emailPattern: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
       email: '',
       emailValid: true,
       error: false
@@ -73,7 +73,7 @@ class Alerts extends CRDPage {
       return undefined;
     }
     
-    const emailValid = this.state.email.match(this.state.emailPatter);
+    const emailValid = this.state.email.match(this.state.emailPattern);
     
     if (emailValid) {
       return 'success';
@@ -93,25 +93,28 @@ class Alerts extends CRDPage {
     
     if (name === 'email') {
       this.setState({
-        emailValid: this.state.email.match(this.state.emailPatter)
+        emailValid: this.state.email.match(this.state.emailPattern)
       });
     }
   }
   
   submit() {
-    const { departments, items, email, emailPatter } = this.state;
+    const { departments, items, email, emailPattern } = this.state;
     let error = false;
+    const [purchaseReqId, tenderTitle] = this.props.route;
     
-    // more validations
-    if ((departments === undefined || departments.length === 0)
-      && (items === undefined || items.length === 0)) {
-      error = true;
+    if (purchaseReqId === undefined && tenderTitle === undefined) {
+      // more validations
+      if ((departments === undefined || departments.length === 0)
+        && (items === undefined || items.length === 0)) {
+        error = true;
+      }
     }
-    if (!email.match(emailPatter)) {
+    if (!email.match(emailPattern)) {
       error = true;
       
       this.setState({
-        emailValid: email.match(emailPatter)
+        emailValid: email.match(emailPattern)
       });
     }
     
@@ -120,13 +123,44 @@ class Alerts extends CRDPage {
       
       return 0;
     } else {
-      console.log('>>> SENDING!');
+      this.subscribeAlertEP = this.alertsState.input({
+        name: 'subscribeAlertEP',
+        initial: `${API_ROOT}` + '/makueni/alerts/subscribeAlert',
+      });
+      
+      this.subscribeAlertData = this.alertsState.input({
+        name: 'subscribeAlertData',
+        initial: {
+          email: this.state.email,
+          departments: this.state.departments.map(item => item.id),
+          items: this.state.items.map(item => item.id),
+          purchaseReqId: purchaseReqId
+        }
+      });
+      
+      this.subscribeAlertURL = this.alertsState.remote({
+        name: 'subscribeAlertURL',
+        url: this.subscribeAlertEP,
+        params: this.subscribeAlertData,
+      });
+      
+      this.subscribeAlertResponse = this.alertsState.mapping({
+        name: 'subscribeAlertResponse',
+        deps: [this.subscribeAlertURL],
+        mapper: data => {
+          this.setState({ serverResponse: data });
+        }
+      });
+      
+      this.subscribeAlertResponse.getState('SubscribeAlerts');
     }
   }
   
   
   render() {
-    const { departments, fetchedDepartments, items, fetchedItems, error } = this.state;
+    const { departments, fetchedDepartments, items, fetchedItems, error, serverResponse } = this.state;
+    
+    const [purchaseReqId, tenderTitle] = this.props.route;
     
     return (<div className="container-fluid dashboard-default">
         
@@ -166,59 +200,79 @@ class Alerts extends CRDPage {
               </div>
             </div>
             
-            <div className="row">
-              <div className="col-md-12">
-                <h4 className="sub-title">Alert Preferences</h4>
-              </div>
-              <div className="col-md-2"></div>
-              <div className="col-md-5">
-                <ControlLabel>Receive alerts for all Tenders from this Department</ControlLabel>
-              </div>
-              <div className="col-md-5">
-                <ControlLabel>Receive alerts for these Items from all Departments</ControlLabel>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-2">
-                When a New Tender is released
-              </div>
-              <div className="col-md-5">
-                <Typeahead id='departments'
-                           onChange={(selected) => this.handleChange({
-                             target: {
-                               name: 'departments',
-                               value: selected
-                             }
-                           })}
-                           options={fetchedDepartments === undefined ? [] : fetchedDepartments}
-                           clearButton={true}
-                           placeholder={'For this Department(s)'}
-                           selected={departments}
-                           multiple={true}
-                           isLoading={fetchedDepartments === undefined}
-                           bsSize={'large'}
-                           highlightOnlyResult={true}
-                />
-              </div>
-              <div className="col-md-5">
-                <Typeahead id='items'
-                           onChange={(selected) => this.handleChange({
-                             target: {
-                               name: 'items',
-                               value: selected
-                             }
-                           })}
-                           options={fetchedItems === undefined ? [] : fetchedItems}
-                           clearButton={true}
-                           placeholder={'For this Item(s)'}
-                           selected={items}
-                           multiple={true}
-                           isLoading={fetchedItems === undefined}
-                           bsSize={'large'}
-                           highlightOnlyResult={true}
-                />
-              </div>
-            </div>
+            {
+              purchaseReqId !== undefined && tenderTitle !== undefined
+                ? <div>
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h4 className="sub-title">Alert Preferences</h4>
+                    </div>
+                  </div>
+                  
+                  <div className="row">
+                    <div className="col-md-12">
+                      You will receive Email Updates for the following
+                      Tender: <b>{unescape(tenderTitle)}</b>
+                    </div>
+                  </div>
+                </div>
+                
+                : <div>
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h4 className="sub-title">Alert Preferences</h4>
+                    </div>
+                    <div className="col-md-2"></div>
+                    <div className="col-md-5">
+                      <ControlLabel>Receive alerts for all Tenders from this Department</ControlLabel>
+                    </div>
+                    <div className="col-md-5">
+                      <ControlLabel>Receive alerts for these Items from all Departments</ControlLabel>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-2">
+                      When a New Tender is released
+                    </div>
+                    <div className="col-md-5">
+                      <Typeahead id='departments'
+                                 onChange={(selected) => this.handleChange({
+                                   target: {
+                                     name: 'departments',
+                                     value: selected
+                                   }
+                                 })}
+                                 options={fetchedDepartments === undefined ? [] : fetchedDepartments}
+                                 clearButton={true}
+                                 placeholder={'For this Department(s)'}
+                                 selected={departments}
+                                 multiple={true}
+                                 isLoading={fetchedDepartments === undefined}
+                                 bsSize={'large'}
+                                 highlightOnlyResult={true}
+                      />
+                    </div>
+                    <div className="col-md-5">
+                      <Typeahead id='items'
+                                 onChange={(selected) => this.handleChange({
+                                   target: {
+                                     name: 'items',
+                                     value: selected
+                                   }
+                                 })}
+                                 options={fetchedItems === undefined ? [] : fetchedItems}
+                                 clearButton={true}
+                                 placeholder={'For this Item(s)'}
+                                 selected={items}
+                                 multiple={true}
+                                 isLoading={fetchedItems === undefined}
+                                 bsSize={'large'}
+                                 highlightOnlyResult={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+            }
             
             <div className="row apply-button">
               <div className="col-md-6">
@@ -234,8 +288,44 @@ class Alerts extends CRDPage {
                   <div className="col-md-12">
                     <Alert bsStyle="danger">
                       <i className="glyphicon glyphicon-exclamation-sign"></i>&nbsp;
-                      Please enter a valid email addres and select at least 1 Department or 1 Item
+                      {
+                        purchaseReqId === undefined
+                          ? <span>Please enter a valid email address and select at least 1 Department or 1 Item</span>
+                          : <span>Please enter a valid email address</span>
+                      }
                     </Alert>
+                  </div>
+                </div>
+                : null
+            }
+            
+            {
+              (serverResponse !== undefined && serverResponse.status === true)
+                ? <div className="row validation-message">
+                  <div className="col-md-12">
+                    <h4>
+                      <Alert bsStyle="info">
+                        A confirmation email was send to {this.state.email} address.
+                        <br/>
+                        Please check your email and click on provided URL in order to validate your
+                        email address.
+                      </Alert>
+                    </h4>
+                  </div>
+                </div>
+                : null
+            }
+            {
+              (serverResponse !== undefined && serverResponse.status === false)
+                ? <div className="row validation-message">
+                  <div className="col-md-12">
+                    <h4>
+                      <Alert bsStyle="danger">
+                        Error subscribing!
+                        <br/>
+                        {serverResponse.message}
+                      </Alert>
+                    </h4>
                   </div>
                 </div>
                 : null

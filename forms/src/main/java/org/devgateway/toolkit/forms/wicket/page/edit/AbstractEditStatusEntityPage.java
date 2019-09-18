@@ -704,9 +704,10 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             button.setVisibilityAllowed(false);
         } else
 
-            //admins can revert anything, including terminated!
+            //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
             if (WebSecurityUtil.isCurrentUserAdmin()
-                    && (DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()) || isTerminated())) {
+                    && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
+                    || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
                 button.setVisibilityAllowed(true);
             }
     }

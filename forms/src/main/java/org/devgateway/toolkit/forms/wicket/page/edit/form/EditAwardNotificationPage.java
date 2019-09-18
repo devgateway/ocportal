@@ -8,6 +8,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
+import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -16,8 +19,8 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -55,9 +58,15 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
         super.onInitialize();
 
         ComponentUtil.addBigDecimalField(editForm, "awardValue").required()
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO));
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
-        ComponentUtil.addDateField(editForm, "awardDate").required();
+        final DateFieldBootstrapFormComponent awardDate = ComponentUtil.addDateField(editForm, "awardDate");
+        awardDate.required();
+        final Tender tender = editForm.getModelObject().getPurchaseRequisition().getSingleTender();
+        if (tender != null && tender.getInvitationDate() != null) {
+            awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
+        }
+
         ComponentUtil.addIntegerTextField(editForm, "acknowledgementDays")
                 .getField().add(RangeValidator.minimum(0));
 

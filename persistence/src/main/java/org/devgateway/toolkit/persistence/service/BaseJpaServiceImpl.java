@@ -11,8 +11,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author idobre
@@ -40,8 +42,18 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     }
 
     @Override
+    public List<T> findAllNoCache(final Specification<T> spec) {
+        return repository().findAll(spec);
+    }
+
+    @Override
     @Cacheable
     public Page<T> findAll(final Specification<T> spec, final Pageable pageable) {
+        return repository().findAll(spec, pageable);
+    }
+
+    @Override
+    public Page<T> findAllNoCache(final Specification<T> spec, final Pageable pageable) {
         return repository().findAll(spec, pageable);
     }
 
@@ -70,10 +82,21 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     }
 
     @Override
+    public long countNoCache(final Specification<T> spec) {
+        return repository().count(spec);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     // we don't need cache here!
     public Optional<T> findById(final Long id) {
         return repository().findById(id);
+    }
+
+    @Override
+    @Cacheable
+    public Set<T> findAllById(Iterable<Long> ids) {
+        return new HashSet<>(repository().findAllById(ids));
     }
 
     @Cacheable
