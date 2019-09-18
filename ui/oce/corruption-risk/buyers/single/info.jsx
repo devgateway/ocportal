@@ -1,7 +1,7 @@
 import {
   PEInfo,
   PEFlagsCount,
-  associatedBuyers,
+  associatedPrs,
   associatedContractsCount,
   associatedUnflaggedContractsCount,
 } from './state';
@@ -27,13 +27,13 @@ class Info extends translatable(boundComponent({
   deps: {
     info: PEInfo,
     flagsCount: PEFlagsCount,
-    buyers: associatedBuyers,
+    prs: associatedPrs,
     contractsCount: associatedContractsCount,
     unflaggedContractsCount: associatedUnflaggedContractsCount,
   }
 })) {
   render() {
-    const { info, flagsCount, buyers, contractsCount, unflaggedContractsCount } = this.state;
+    const { info, flagsCount, prs, contractsCount, unflaggedContractsCount } = this.state;
     if (!info) return null;
     const { address, contactPoint } = info;
 
@@ -64,10 +64,10 @@ class Info extends translatable(boundComponent({
                 </small>
               </td>
             </tr>
-            {buyers && buyers.length &&
+            {prs && prs.length &&
             <tr>
-              <Cell title={this.t('crd:contracts:baseInfo:buyer')} colSpan="3">
-                {buyers.map(buyer => <p key={buyer.buyerId}>{buyer.buyerName}</p>)}
+              <Cell title={this.t('crd:contracts:baseInfo:procuringEntityName')} colSpan="3">
+                {prs.map(pr => <p key={pr.procuringEntityId}>{pr.procuringEntityName}</p>)}
               </Cell>
             </tr>
             }

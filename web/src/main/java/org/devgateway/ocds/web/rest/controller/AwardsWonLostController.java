@@ -106,6 +106,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     protected List<AggregationOperation> buyersByFlagsGroupPart(final YearFilterPagingRequest filter) {
         List<AggregationOperation> part = new ArrayList<>();
         part.add(match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)
+                .and(BUYER_ID).exists(true)
                 .and(FLAGS_TOTAL_FLAGGED).gt(0)));
         part.add(group(Fields.from(
                 field("buyerId", BUYER_ID),

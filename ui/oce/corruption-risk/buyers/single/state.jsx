@@ -60,14 +60,14 @@ const associatedContracts = PEState.remote({
   params: PEFilters,
 });
 
-const associatedBuyersURL = PEState.input({
-  name: 'associatedBuyersURL',
+const associatedPrsURL = PEState.input({
+  name: 'associatedPrsURL',
   initial: `${API_ROOT}/procuringEntitiesForBuyers`
 });
 
-export const associatedBuyers = PEState.remote({
-  name: 'associatedBuyers',
-  url: associatedBuyersURL,
+export const associatedPrs = PEState.remote({
+  name: 'associatedPrs',
+  url: associatedPrsURL,
   params: PEFilters,
 });
 
