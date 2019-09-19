@@ -1,7 +1,7 @@
 import Tab from './index';
 import ProcuringEntity from '../procuring-entity';
 import Supplier from '../supplier.jsx';
-import Buyer from '../buyer';
+import BuyerSelect from '../buyerSelect';
 
 class Organizations extends Tab {
   render() {
@@ -14,7 +14,7 @@ class Organizations extends Tab {
 Organizations.getName = t => t('filters:tabs:organizations:title');
 
 Organizations.FILTERS = [
-  ['buyerId', Buyer],
+  ['buyerId', BuyerSelect],
   ['procuringEntityId', ProcuringEntity],
   ['supplierId', Supplier]
 ];
