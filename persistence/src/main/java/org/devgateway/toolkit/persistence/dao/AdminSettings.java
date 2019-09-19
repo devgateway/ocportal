@@ -20,6 +20,8 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     private Boolean rebootServer = false;
 
+    private Boolean disableEmailAlerts = false;
+
     private String adminEmail = null;
 
     private Boolean enableDailyAutomatedImport = false;
@@ -103,5 +105,13 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     public void setImportFilesPath(String importFilesPath) {
         this.importFilesPath = importFilesPath;
+    }
+
+    public Boolean getDisableEmailAlerts() {
+        return disableEmailAlerts;
+    }
+
+    public void setDisableEmailAlerts(Boolean disableEmailAlerts) {
+        this.disableEmailAlerts = disableEmailAlerts;
     }
 }
