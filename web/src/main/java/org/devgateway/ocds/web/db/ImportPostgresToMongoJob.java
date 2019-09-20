@@ -2,7 +2,9 @@ package org.devgateway.ocds.web.db;
 
 import org.devgateway.ocds.web.convert.MakueniToOCDSConversionService;
 import org.devgateway.ocds.web.spring.ReleaseFlaggingService;
+import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.web.rest.controller.alerts.processsing.AlertsManager;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Async;
@@ -31,6 +33,9 @@ public class ImportPostgresToMongoJob {
     @Autowired
     private AlertsManager alertsManager;
 
+    @Autowired
+    private AdminSettingsRepository adminSettingsRepository;
+
     /**
      * Invoke the import of all makueni data into mongo db.
      */
@@ -42,6 +47,8 @@ public class ImportPostgresToMongoJob {
         releaseFlaggingService.processAndSaveFlagsForAllReleases(releaseFlaggingService::logMessage);
         cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
 
-        alertsManager.sendAlerts();
+        if (!SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
+            alertsManager.sendAlerts();
+        }
     }
 }

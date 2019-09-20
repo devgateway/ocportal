@@ -42,6 +42,8 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
     private CheckBoxToggleBootstrapFormComponent enableDailyAutomatedImport;
 
+    private CheckBoxToggleBootstrapFormComponent disableEmailAlerts;
+
     private TextFieldBootstrapFormComponent<String> importFilesPath;
 
     @SpringBean
@@ -93,6 +95,8 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
         enableDailyAutomatedImport = new CheckBoxToggleBootstrapFormComponent("enableDailyAutomatedImport");
         editForm.add(enableDailyAutomatedImport);
 
+        disableEmailAlerts = new CheckBoxToggleBootstrapFormComponent("disableEmailAlerts");
+        editForm.add(disableEmailAlerts);
 
         adminEmail = new TextFieldBootstrapFormComponent<>("adminEmail");
         editForm.add(adminEmail);
