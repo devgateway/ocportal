@@ -33,6 +33,7 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.service.form.TenderItemService;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -125,9 +126,12 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                 new ResourceModel("removeButton")) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
-                final List<TenderItem> tenderItems = tenderItemService.findByPurchaseItem(item);
+                List<TenderItem> tenderItems = null;
+                if (!item.isNew()) {
+                    tenderItems = tenderItemService.findByPurchaseItem(item);
+                }
 
-                if (tenderItems.size() > 0) {
+                if (!ObjectUtils.isEmpty(tenderItems)) {
                     final ValidationError error = new ValidationError();
                     error.addKey("purchaseItemError");
                     error(error);
@@ -136,7 +140,6 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
                     listView.removeAll();
                     target.add(listWrapper);
                 }
-
                 target.add(removeButtonNotificationPanel);
             }
         };
