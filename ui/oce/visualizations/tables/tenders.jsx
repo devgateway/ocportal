@@ -17,9 +17,9 @@ class Tenders extends Table {
        {/*<td>{bidNo}</td>*/}
         <td>{getDate(tender, 'startDate')}</td>
         <td>{getDate(tender, 'endDate')}</td>
-        <td className="procuring-entity-title">{buyer.getIn(['name'])}</td>
-        <td className="procuring-entity-title">{tender.getIn(['title'])}</td>
-        <td>{this.maybeFormat(value.get('amount'))} {value.get('currency')}</td>
+        <td className="procuring-entity-title">{buyer && buyer.getIn(['name'])}</td>
+        <td className="procuring-entity-title">{tender && tender.getIn(['title'])}</td>
+        <td>{this.maybeFormat(value && value.get('amount'))} {value && value.get('currency')}</td>
       </tr>
     );
   }
