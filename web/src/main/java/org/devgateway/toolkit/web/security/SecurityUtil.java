@@ -49,6 +49,22 @@ public final class SecurityUtil {
         return null;
     }
 
+    public static Boolean getDisableEmailAlerts(AdminSettingsRepository adminSettingsRepository) {
+        List<AdminSettings> all = adminSettingsRepository.findAll();
+        if (all == null || all.size() == 0) {
+            return false;
+        }
+        if (all.size() > 1) {
+            throw new RuntimeException("Multiple admin settings found! Only one or zero allowed!");
+        }
+
+        if (all.get(0).getDisableEmailAlerts() == null) {
+            return false;
+        }
+
+        return all.get(0).getDisableEmailAlerts();
+    }
+
 
     public static Boolean getDisabledApiSecurity(AdminSettingsRepository adminSettingsRepository) {
         List<AdminSettings> all = adminSettingsRepository.findAll();

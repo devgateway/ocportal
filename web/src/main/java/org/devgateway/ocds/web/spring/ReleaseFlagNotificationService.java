@@ -8,10 +8,12 @@ import org.devgateway.ocds.persistence.mongo.repository.main.FlaggedReleaseRepos
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.flags.ReleaseFlagHistory;
+import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.ReleaseFlagHistoryService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,9 @@ public class ReleaseFlagNotificationService {
 
     @Autowired
     private TranslationService translationService;
+
+    @Autowired
+    private AdminSettingsRepository adminSettingsRepository;
 
     @PostConstruct
     public void init() {
@@ -230,6 +235,9 @@ public class ReleaseFlagNotificationService {
 
 
     void sendNotifications() {
+        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
+            return;
+        }
         logger.info("Sending Red Flag Notifications " + departmentFlagRelease);
         sendAdminEmails();
         departmentFlagRelease.keySet().forEach(this::sendDepartmentEmails);

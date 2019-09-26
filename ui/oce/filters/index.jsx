@@ -18,7 +18,7 @@ class Filters extends translatable(Component) {
       state: Map(),
     };
   }
-  
+
   toggleTab(index) {
     const expanded = new Set(this.state.expanded);
     if (expanded.has(index)) {
@@ -26,17 +26,17 @@ class Filters extends translatable(Component) {
     } else {
       expanded.add(index);
     }
-    
+
     this.setState({ expanded: expanded });
   }
-  
+
   reset() {
     this.setState({
       state: Map()
     });
     this.props.onUpdate(Map());
   }
-  
+
   listTabs() {
     const { expanded } = this.state;
     return this.constructor.TABS.map((Tab, index) => <div
@@ -47,7 +47,7 @@ class Filters extends translatable(Component) {
           <div className="pull-left title">{Tab.getName(this.t.bind(this))}</div>
           <div className={'pull-right toggler ' + (expanded.has(index) ? 'up' : 'down')}></div>
         </div>
-        
+
         {expanded.has(index)
           ? <div className="col-md-12">{this.content(index)}</div>
           : null
@@ -55,7 +55,7 @@ class Filters extends translatable(Component) {
       </div>
     );
   }
-  
+
   content(tabIndex) {
     let { state } = this.state;
     let { onUpdate, bidTypes, translations } = this.props;
@@ -76,7 +76,7 @@ class Filters extends translatable(Component) {
       </section>
     </div>);
   }
-  
+
   render() {
     return <div className={cn('filters', 'col-md-12')}>
       {this.listTabs()}
