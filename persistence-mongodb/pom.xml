@@ -32,14 +32,14 @@
     <parent>
         <groupId>org.devgateway.toolkit</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
