@@ -22,7 +22,8 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
         extends BaseJpaServiceImpl<T> implements AbstractMakueniEntityService<T> {
 
 
-    protected AbstractMakueniEntityRepository<T> makueniRepository() {
+    @Transactional
+    public AbstractMakueniEntityRepository<T> makueniRepository() {
         return (AbstractMakueniEntityRepository<T>) repository();
     }
 
@@ -42,10 +43,8 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
                 .collect(Collectors.toSet());
     }
 
-    @Transactional
     @Override
     public Stream<? extends AbstractMakueniEntity> getAllSubmitted() {
         return makueniRepository().findByStatus(DBConstants.Status.SUBMITTED);
     }
-
 }

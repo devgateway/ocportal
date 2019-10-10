@@ -71,7 +71,7 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return null;
+        return "Award acceptance for purchase requisition " + getPurchaseRequisitionNotNull().getLabel();
     }
 
     @Override

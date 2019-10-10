@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,6 +22,5 @@ public interface AbstractMakueniEntityRepository<T extends AbstractMakueniEntity
     @Query("select c from  #{#entityName} c")
     Page<T> searchText(@Param("name") String name, Pageable page);
 
-    @Transactional
     Stream<T> findByStatus(String status);
 }

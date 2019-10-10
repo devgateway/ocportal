@@ -13,6 +13,8 @@ import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionServic
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +29,7 @@ import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
-public class SubmittedAlertService {
+public class SubmittedAlertService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     private SendEmailService sendEmailService;
@@ -79,8 +81,6 @@ public class SubmittedAlertService {
                 purchaseRequisitionService, //not pr
                 tenderService,
                 tenderQuotationEvaluationService));
-
-        collectDepartmentTypeIdTitle();
     }
 
     @PreDestroy
@@ -89,16 +89,19 @@ public class SubmittedAlertService {
         services = null;
     }
 
-    @Transactional
-    private void collectDepartmentTypeIdTitle() {
 
-        try (Stream<? extends AbstractMakueniEntity> stream = projectService.getAllSubmitted()) {
-            stream.forEach(
+    @Transactional(readOnly = true)
+    public void collectDepartmentTypeIdTitle() {
+        try (Stream<? extends AbstractMakueniEntity> allSubmitted = services.stream()
+                .flatMap(AbstractMakueniEntityService::getAllSubmitted)) {
+            allSubmitted.forEach(
                     o -> {
                         AbstractMakueniEntity e = (AbstractMakueniEntity) o;
                         Department department = e.getDepartment();
                         departmentTypeIdTitle.putIfAbsent(department.getId(), new ConcurrentHashMap<>());
-                        Map<Class<? extends AbstractMakueniEntity>, Map<Long, String>> departmentMap = departmentTypeIdTitle.get(department.getId());
+                        Map<Class<? extends AbstractMakueniEntity>, Map<Long, String>> departmentMap =
+                                departmentTypeIdTitle
+                                        .get(department.getId());
                         departmentMap.putIfAbsent(e.getClass(), new ConcurrentHashMap<>());
                         Map<Long, String> typeMap = departmentMap.get(e.getClass());
                         typeMap.put(e.getId(), e.getLabel());
@@ -108,5 +111,9 @@ public class SubmittedAlertService {
         }
     }
 
-
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        collectDepartmentTypeIdTitle();
+    }
 }
+

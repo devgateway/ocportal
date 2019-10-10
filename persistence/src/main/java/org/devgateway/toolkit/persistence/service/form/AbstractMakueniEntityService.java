@@ -3,7 +3,6 @@ package org.devgateway.toolkit.persistence.service.form;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +23,5 @@ public interface AbstractMakueniEntityService<T extends AbstractMakueniEntity> e
      */
     Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity);
 
-    @Transactional
     Stream<? extends AbstractMakueniEntity> getAllSubmitted();
 }
