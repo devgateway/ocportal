@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
@@ -185,5 +186,13 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Override
     public Consumer<String> titleSetter() {
         return this::setProjectTitle;
+    }
+
+    @Override
+    @JsonIgnore
+    @Transactional
+    @org.springframework.data.annotation.Transient
+    public Department getDepartment() {
+        return getProcurementPlan().getDepartment();
     }
 }

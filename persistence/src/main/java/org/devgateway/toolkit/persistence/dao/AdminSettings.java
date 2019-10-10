@@ -28,6 +28,8 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     private String importFilesPath = null;
 
+    private Integer daysSubmittedReminder = 14;
+
     /**
      * This disables the security of /api/ endpoints, should be used for demo purposes only
      */
@@ -113,5 +115,13 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     public void setDisableEmailAlerts(Boolean disableEmailAlerts) {
         this.disableEmailAlerts = disableEmailAlerts;
+    }
+
+    public Integer getDaysSubmittedReminder() {
+        return daysSubmittedReminder;
+    }
+
+    public void setDaysSubmittedReminder(Integer daysSubmittedReminder) {
+        this.daysSubmittedReminder = daysSubmittedReminder;
     }
 }

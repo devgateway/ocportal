@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Labelable;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -71,4 +72,8 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     public void setFormDocs(final Set<FileMetadata> formDocs) {
         this.formDocs = formDocs;
     }
+
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public abstract Department getDepartment();
 }

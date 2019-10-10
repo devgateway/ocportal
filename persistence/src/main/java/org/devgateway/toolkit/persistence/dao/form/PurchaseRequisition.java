@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -371,6 +372,14 @@ public class PurchaseRequisition extends AbstractMakueniEntity implements Projec
     @org.springframework.data.annotation.Transient
     public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(tender));
+    }
+
+    @Override
+    @Transactional
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Department getDepartment() {
+        return getProcurementPlan().getDepartment();
     }
 
 }
