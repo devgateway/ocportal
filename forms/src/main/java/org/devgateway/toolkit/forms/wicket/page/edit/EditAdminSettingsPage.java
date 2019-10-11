@@ -10,6 +10,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.ocds.web.db.ImportPostgresToMongoJob;
+import org.devgateway.ocds.web.spring.SubmittedAlertService;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
@@ -50,6 +51,9 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
     @SpringBean
     private CacheManager cacheManager;
+
+    @SpringBean
+    private SubmittedAlertService submittedAlertService;
 
     @SpringBean
     private ImportPostgresToMongoJob importPostgresToMongoJob;
@@ -121,6 +125,8 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
         editForm.add(autosaveTime);
 
         addImportToMongoLink();
+
+        sendValidatorNotifications();
     }
 
     private void addCacheClearLink() {
@@ -141,6 +147,18 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
             @Override
             public void onClick(final Optional<AjaxRequestTarget> target) {
                 importPostgresToMongoJob.importOcdsMakueniToMongo();
+            }
+
+        };
+        editForm.add(link);
+    }
+
+    private void sendValidatorNotifications() {
+        final IndicatingAjaxFallbackLink link = new IndicatingAjaxFallbackLink<Void>("sendValidatorNotifications") {
+
+            @Override
+            public void onClick(final Optional<AjaxRequestTarget> target) {
+                submittedAlertService.sendNotificationEmails();
             }
 
         };

@@ -2,6 +2,7 @@ package org.devgateway.ocds.web.spring;
 
 import com.google.common.collect.Sets;
 import org.apache.logging.log4j.util.Strings;
+import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -23,19 +24,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.net.URI;
-import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Arrays;
@@ -51,18 +53,18 @@ import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
-public class SubmittedAlertService implements ApplicationListener<ContextRefreshedEvent> {
+public class SubmittedAlertService {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmittedAlertService.class);
-
-
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
     private SendEmailService sendEmailService;
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private SettingsUtils settingsUtils;
 
     @Autowired
     private AwardAcceptanceService awardAcceptanceService;
@@ -141,7 +143,6 @@ public class SubmittedAlertService implements ApplicationListener<ContextRefresh
             });
             sb.append("</ul></li>");
         });
-
         sb.append("</ul>");
         return sb.toString();
     }
@@ -150,7 +151,7 @@ public class SubmittedAlertService implements ApplicationListener<ContextRefresh
                                       Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>> notifyMap) {
         String departmentName = departmentService.findById(department).get().getLabel();
         String[] strings = getValidatorEmailsForDepartment(department).toArray(new String[0]);
-        if (strings.length == 0) {
+        if (strings.length == 0 || notifyMap.isEmpty()) {
             return;
         }
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -173,9 +174,14 @@ public class SubmittedAlertService implements ApplicationListener<ContextRefresh
         Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>> departmentTypeIdTitle =
                 new ConcurrentHashMap<>();
 
+        Integer daysSubmittedReminder = settingsUtils.getDaysSubmittedReminder();
+
         try (Stream<? extends AbstractMakueniEntity> allSubmitted = services.stream()
                 .flatMap(AbstractMakueniEntityService::getAllSubmitted)) {
-            allSubmitted.forEach(
+            allSubmitted
+                    .filter(e -> Duration.between(e.getLastModifiedDate().get().toLocalDate().atStartOfDay(),
+                            LocalDate.now().atStartOfDay()).toDays() >= daysSubmittedReminder)
+                    .forEach(
                     o -> {
                         AbstractMakueniEntity e = (AbstractMakueniEntity) o;
                         Department department = e.getDepartment();
@@ -187,7 +193,7 @@ public class SubmittedAlertService implements ApplicationListener<ContextRefresh
                         departmentMap.putIfAbsent(clazz, new ConcurrentHashMap<>());
                         Map<Long, String[]> typeMap = departmentMap.get(clazz);
                         typeMap.put(e.getId(), new String[]{e.getLabel(),
-                                e.getLastModifiedDate().orElse(e.getCreatedDate().get()).format(
+                                e.getLastModifiedDate().get().format(
                                         DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
                                 )});
                     }
@@ -196,11 +202,12 @@ public class SubmittedAlertService implements ApplicationListener<ContextRefresh
         }
     }
 
+    @Scheduled(cron = "0 0 23 * * SUN")
+    @Async
     public void sendNotificationEmails() {
         Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>> notifyMap =
                 collectDepartmentTypeIdTitle();
         notifyMap.forEach(this::sendDepartmentEmails);
-
     }
 
     private String getLinkedEntityWithTitle(Class clazz, String title, String date, Long id) {
@@ -214,9 +221,6 @@ public class SubmittedAlertService implements ApplicationListener<ContextRefresh
         return URI.create(serverURL + "/Edit" + clazz.getSimpleName() + "Page/?id=" + id).toASCIIString();
     }
 
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        sendNotificationEmails();
-    }
+
 }
 
