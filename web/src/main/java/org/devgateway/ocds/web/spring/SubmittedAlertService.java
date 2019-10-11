@@ -134,7 +134,7 @@ public class SubmittedAlertService {
     private String createDepartmentContent(Long department, Map<Class<? extends AbstractMakueniEntity>,
             Map<Long, String[]>> notifyMap) {
         StringBuffer sb = new StringBuffer();
-        sb.append("The following forms are pending your approval:<br/>");
+        sb.append("The following forms are pending your approval:<br>");
         sb.append("<ul>");
         notifyMap.forEach((aClass, longStringMap) -> {
             sb.append("<li>").append(aClass.getSimpleName()).append("<ul>");
@@ -143,7 +143,9 @@ public class SubmittedAlertService {
             });
             sb.append("</ul></li>");
         });
-        sb.append("</ul>");
+        sb.append("</ul><br>");
+        sb.append("Please review these forms as soon as possible.<br>").append("Thank you");
+
         return sb.toString();
     }
 
