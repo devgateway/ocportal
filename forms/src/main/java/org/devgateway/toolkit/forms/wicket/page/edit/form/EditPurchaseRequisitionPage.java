@@ -1,12 +1,14 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
@@ -40,6 +42,13 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
     @SpringBean
     protected ChargeAccountService chargeAccountService;
 
+    @Override
+    protected void checkAndSendEventForDisableEditing() {
+        super.checkAndSendEventForDisableEditing();
+        if (isTerminated()) {
+            send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
+        }
+    }
 
     public EditPurchaseRequisitionPage(final PageParameters parameters) {
         super(parameters);
@@ -59,6 +68,10 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
 
         editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.department"));
         editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.fiscalYear"));
+
+        if (isTerminated()) {
+            alertTerminated.setVisibilityAllowed(true);
+        }
 
         final GenericSleepFormComponent purchaseRequestNumber =
                 new GenericSleepFormComponent<>("purchaseRequestNumber");
@@ -89,6 +102,12 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         purchaseRequisition.setProject(sessionMetadataService.getSessionProject());
 
         return purchaseRequisition;
+    }
+
+    @Override
+    public boolean isTerminated() {
+        final PurchaseRequisition purchaseRequisition = editForm.getModelObject();
+        return purchaseRequisition.isTerminated();
     }
 
     @Override

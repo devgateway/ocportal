@@ -879,3 +879,9 @@
       padding-left: 40px;
   }
 }
+
+.tender-status-wrapper .status.terminated{
+  margin-top: -3px;
+  margin-left: 10px;
+  padding-bottom: 0;
+}
