@@ -34,6 +34,8 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
     private TextFieldBootstrapFormComponent<Integer> excelBatchSize;
 
+    private TextFieldBootstrapFormComponent<Integer> daysSubmittedReminder;
+
     private CheckBoxToggleBootstrapFormComponent rebootServer;
 
     private CheckBoxToggleBootstrapFormComponent disableApiSecurity;
@@ -77,6 +79,13 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
         super.onInitialize();
 
         editForm.add(new Label("excelTitle", new StringResourceModel("excelTitle", this, null)));
+
+
+        daysSubmittedReminder = new TextFieldBootstrapFormComponent<>("daysSubmittedReminder");
+        daysSubmittedReminder.integer();
+        daysSubmittedReminder.getField().add(new RangeValidator(1, 365));
+        daysSubmittedReminder.required();
+        editForm.add(daysSubmittedReminder);
 
         excelBatchSize = new TextFieldBootstrapFormComponent<>("excelBatchSize");
         excelBatchSize.integer();

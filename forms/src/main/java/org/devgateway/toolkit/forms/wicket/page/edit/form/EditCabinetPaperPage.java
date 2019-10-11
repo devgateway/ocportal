@@ -29,7 +29,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author gmutuhu
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/cabinetPaper")
+@MountPath
 public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
     @SpringBean

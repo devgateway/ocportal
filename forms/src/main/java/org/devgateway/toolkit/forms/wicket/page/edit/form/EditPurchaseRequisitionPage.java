@@ -26,7 +26,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @since 2019-04-17
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/purchaseRequisition")
+@MountPath
 public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<PurchaseRequisition> {
     @SpringBean
     private PurchaseRequisitionService purchaseRequisitionService;
