@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -97,6 +98,13 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Department getDepartment() {
+        throw new RuntimeException("Department not defined for this entity type!");
     }
 
     @Override

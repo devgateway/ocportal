@@ -141,7 +141,7 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return null;
+        return "Contract for purchase requisition " + getPurchaseRequisitionNotNull().getLabel();
     }
 
     @Override

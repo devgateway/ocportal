@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.service.BaseJpaService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -21,4 +22,6 @@ public interface AbstractMakueniEntityService<T extends AbstractMakueniEntity> e
      * @return
      */
     Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity);
+
+    Stream<? extends AbstractMakueniEntity> getAllSubmitted();
 }

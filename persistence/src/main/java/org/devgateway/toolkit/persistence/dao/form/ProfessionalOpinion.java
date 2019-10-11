@@ -73,7 +73,7 @@ public class ProfessionalOpinion extends AbstractPurchaseReqMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return null;
+        return "Professional Opinion for purchase requisition " + getPurchaseRequisitionNotNull().getLabel();
     }
 
     @Override

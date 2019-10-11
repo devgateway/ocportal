@@ -48,7 +48,7 @@ import java.util.Set;
  * @author gmutuhu
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/tender")
+@MountPath
 public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender> {
 
     @SpringBean
