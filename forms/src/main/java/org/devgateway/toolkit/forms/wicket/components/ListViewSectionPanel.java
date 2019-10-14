@@ -6,9 +6,12 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -24,6 +27,8 @@ import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.slf4j.Logger;
@@ -59,6 +64,14 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
     public ListViewSectionPanel(final String id) {
         super(id);
+    }
+
+    protected void checkAndSendEventForDisableEditing(IEventSink sink) {
+        Page page = getPage();
+        if (page instanceof AbstractEditStatusEntityPage && ((AbstractEditStatusEntityPage) page)
+                .isDisableEditingEvent()) {
+            send(sink, Broadcast.BREADTH, new EditingDisabledEvent());
+        }
     }
 
     @Override
@@ -145,6 +158,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 populateCompoundListItem(item);
 
                 addAcordion(item);
+
+                checkAndSendEventForDisableEditing(item);
             }
         };
 
