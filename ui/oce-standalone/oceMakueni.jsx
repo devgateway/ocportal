@@ -5,7 +5,6 @@ import OverviewTab from '../oce/tabs/overview';
 import LocationTab from '../oce/tabs/location';
 import CompetitivenessTab from '../oce/tabs/competitiveness';
 import EfficiencyTab from '../oce/tabs/efficiency';
-import EProcurementTab from '../oce/tabs/e-procurement';
 import { fetchJson } from '../oce/tools';
 import Header from '../oce/layout/header';
 
@@ -16,7 +15,7 @@ class OCEMakueni extends OCApp {
     // this.registerTab(OCEDemoLocation);
     this.registerTab(CompetitivenessTab);
     this.registerTab(EfficiencyTab);
-    this.registerTab(EProcurementTab);
+    //this.registerTab(EProcurementTab);
   }
 
   fetchBidTypes() {
