@@ -277,9 +277,13 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     protected void checkAndSendEventForDisableEditing() {
-        if (!Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode()) {
+        if (isDisableEditingEvent()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
+    }
+
+    public boolean isDisableEditingEvent() {
+        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
     }
 
     private void addAutosaveLabel() {
