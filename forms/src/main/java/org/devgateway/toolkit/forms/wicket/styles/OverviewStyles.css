@@ -886,3 +886,8 @@
   margin-left: 10px;
   padding-bottom: 0;
 }
+
+.btn[disabled]{
+  opacity: .45;
+  filter: grayscale(1);
+}
