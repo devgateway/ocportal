@@ -9,7 +9,9 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,25 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
         super.checkAndSendEventForDisableEditing();
         if (isTerminated()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
+        }
+    }
+
+    @Override
+    protected void afterSaveEntity(T saveable) {
+        super.afterSaveEntity(saveable);
+
+        PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
+        if (purchaseRequisition != null) {
+            sessionMetadataService.setSessionPurchaseRequisition(purchaseRequisition);
+        }
+        Department department = editForm.getModelObject().getDepartment();
+        if (department != null) {
+            sessionMetadataService.setSessionDepartment(department);
+        }
+
+        Project project = editForm.getModelObject().getProject();
+        if (project != null) {
+            sessionMetadataService.setSessionProject(project);
         }
     }
 
