@@ -73,7 +73,5 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
         this.formDocs = formDocs;
     }
 
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
     public abstract Department getDepartment();
 }

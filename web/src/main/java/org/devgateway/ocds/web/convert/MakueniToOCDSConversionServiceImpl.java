@@ -437,15 +437,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Override
     public Release createAndPersistRelease(PurchaseRequisition purchaseRequisition) {
-        Release release = createRelease(purchaseRequisition);
-        Release byOcid = releaseRepository.findByOcid(release.getOcid());
-        if (byOcid != null) {
-            releaseRepository.delete(byOcid);
+        try {
+            Release release = createRelease(purchaseRequisition);
+            Release byOcid = releaseRepository.findByOcid(release.getOcid());
+            if (byOcid != null) {
+                releaseRepository.delete(byOcid);
+            }
+            Release save = releaseRepository.save(release);
+            logger.info("Saved " + save.getOcid());
+            return save;
+        } catch (Exception e) {
+            logger.info("Exception processing purchase requisition with id " + purchaseRequisition.getId());
+            throw e;
         }
-
-        Release save = releaseRepository.save(release);
-        logger.info("Saved " + save.getOcid());
-        return save;
     }
 
     @Override
@@ -454,10 +458,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         stopWatch.start();
         releaseRepository.deleteAll();
         organizationRepository.deleteAll();
-        purchaseRequisitionService.findAll().stream().filter(pr -> {
-                    return pr.isTerminated() || pr.getStatus().equals(APPROVED);
-                }
-        ).forEach(this::createAndPersistRelease);
+        purchaseRequisitionService.findAll().stream().filter(Statusable::isExportable)
+                .forEach(this::createAndPersistRelease);
         postProcess();
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
@@ -524,7 +526,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             return Optional.empty();
         }
         S o = supplier.get();
-        if (o instanceof Statusable && !((Statusable) o).isExportable() && !((Statusable) o).isTerminated()) {
+        if (o instanceof Statusable && !((Statusable) o).isExportable()) {
             return Optional.empty();
         }
         if (!ObjectUtils.isEmpty(o)) {

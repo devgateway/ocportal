@@ -124,7 +124,7 @@
   "charts:cancelledAmounts:xAxisName": "Year",
   "charts:cancelledAmounts:yAxisName": "Amount",
   "charts:cancelledPercents:title": "Cancelled funding (%)",
-  "charts:cancelledAmounts:title": "Cancelled funding",
+  "charts:cancelledAmounts:title": "Cancelled Tender Amount",
   "charts:cancelledPercents:xAxisName": "Year",
   "charts:cancelledPercents:yAxisName": "Percent",
   "maps:tenderLocations:title": "Tender locations",
