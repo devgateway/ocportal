@@ -108,17 +108,17 @@ public class MakueniDataController extends GenericOCDSController {
         final Criteria criteriaTender = new Criteria().andOperator(
                 createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
                 createFilterCriteria("projects.wards._id", filter.getWard()),
-                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                createFilterCriteria("projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
                         filter.getItem()),
-                createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
+                createRangeFilterCriteria("projects.tenderProcesses.tender.tenderValue",
                         filter.getMin(), filter.getMax()),
                 createTextCriteria(filter.getText()),
-                getYearFilterCriteria(filter, "projects.purchaseRequisitions.tender.closingDate"));
+                getYearFilterCriteria(filter, "projects.tenderProcesses.tender.closingDate"));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
-                unwind("projects.purchaseRequisitions"),
+                unwind("projects.tenderProcesses"),
                 match(criteriaTender),
                 skip(filter.getSkip()),
                 limit(filter.getPageSize()));
@@ -142,17 +142,17 @@ public class MakueniDataController extends GenericOCDSController {
         final Criteria criteriaTender = new Criteria().andOperator(
                 createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
                 createFilterCriteria("projects.wards._id", filter.getWard()),
-                createFilterCriteria("projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                createFilterCriteria("projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
                         filter.getItem()),
-                createRangeFilterCriteria("projects.purchaseRequisitions.tender.tenderValue",
+                createRangeFilterCriteria("projects.tenderProcesses.tender.tenderValue",
                         filter.getMin(), filter.getMax()),
                 createTextCriteria(filter.getText()),
-                getYearFilterCriteria(filter, "projects.purchaseRequisitions.tender.closingDate"));
+                getYearFilterCriteria(filter, "projects.tenderProcesses.tender.closingDate"));
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
-                unwind("projects.purchaseRequisitions"),
+                unwind("projects.tenderProcesses"),
                 match(criteriaTender),
                 group().count().as("count"));
 
@@ -246,16 +246,16 @@ public class MakueniDataController extends GenericOCDSController {
 
     @RequestMapping(value = "/api/makueni/purchaseReq/id/{id:^[0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Finds a Purchase Requisition by the given id")
+    @ApiOperation(value = "Finds a Tender Process by the given id")
     @Cacheable
     public Document purchaseReqById(@PathVariable final Long id) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
         final Aggregation aggregation = newAggregation(project("department", "fiscalYear", "projects"),
                 unwind("projects"),
-                unwind("projects.purchaseRequisitions"),
-                project("department", "fiscalYear", "projects.purchaseRequisitions"),
-                match(Criteria.where("purchaseRequisitions._id").is(id)));
+                unwind("projects.tenderProcesses"),
+                project("department", "fiscalYear", "projects.tenderProcesses"),
+                match(Criteria.where("tenderProcesses._id").is(id)));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getUniqueMappedResult();
@@ -270,9 +270,9 @@ public class MakueniDataController extends GenericOCDSController {
 
         final Aggregation aggregation = newAggregation(
                 unwind("projects"),
-                unwind("projects.purchaseRequisitions"),
-                unwind("projects.purchaseRequisitions.contract"),
-                group().count().as("count").sum("projects.purchaseRequisitions.contract.contractValue").as("value"));
+                unwind("projects.tenderProcesses"),
+                unwind("projects.tenderProcesses.contract"),
+                group().count().as("count").sum("projects.tenderProcesses.contract.contractValue").as("value"));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getUniqueMappedResult();
@@ -449,7 +449,7 @@ public class MakueniDataController extends GenericOCDSController {
         }
 
         Criteria criteria = new Criteria();
-        criteria.orOperator(where("projects.purchaseRequisitions.tender.tenderTitle")
+        criteria.orOperator(where("projects.tenderProcesses.tender.tenderTitle")
                         .regex(Pattern.compile(text, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)),
                 where("projects.projectTitle")
                         .regex(Pattern.compile(text, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)));

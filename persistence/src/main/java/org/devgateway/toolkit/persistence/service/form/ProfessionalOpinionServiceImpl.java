@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.ProfessionalOpinionRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ProfessionalOpinionServiceImpl extends AbstractMakueniEntityService
 
     @Override
     @Cacheable
-    public ProfessionalOpinion findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        return professionalOpinionRepository.findByPurchaseRequisition(purchaseRequisition);
+    public ProfessionalOpinion findByTenderProcess(final TenderProcess tenderProcess) {
+        return professionalOpinionRepository.findByTenderProcess(tenderProcess);
     }
 }

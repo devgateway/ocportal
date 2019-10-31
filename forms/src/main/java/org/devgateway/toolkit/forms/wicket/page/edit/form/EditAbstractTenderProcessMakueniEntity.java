@@ -9,25 +9,25 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author mihai
  */
-public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPurchaseReqMakueniEntity>
+public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractTenderProcessMakueniEntity>
         extends EditAbstractMakueniEntityPage<T> {
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractPurchaseReqMakueniEntity.class);
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessMakueniEntity.class);
 
-    public EditAbstractPurchaseReqMakueniEntity(final PageParameters parameters) {
+    public EditAbstractTenderProcessMakueniEntity(final PageParameters parameters) {
         super(parameters);
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && sessionMetadataService.getSessionPurchaseRequisition() == null) {
+        if (entityId == null && sessionMetadataService.getSessionTenderProcess() == null) {
             logger.warn("Something wrong happened since we are trying to add a new AbstractPurchaseReqMakueni Entity "
-                    + "without having a PurchaseRequisition!");
+                    + "without having a TenderProcess!");
             setResponsePage(StatusOverviewPage.class);
         }
     }
@@ -36,8 +36,8 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     protected void onInitialize() {
         super.onInitialize();
 
-        editForm.add(new GenericSleepFormComponent<>("purchaseRequisition.project.procurementPlan.department"));
-        editForm.add(new GenericSleepFormComponent<>("purchaseRequisition.project.procurementPlan.fiscalYear"));
+        editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.department"));
+        editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.fiscalYear"));
 
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);
@@ -76,7 +76,7 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
 
     @Override
     public boolean isTerminated() {
-        final PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
-        return super.isTerminated() || (purchaseRequisition != null && purchaseRequisition.isTerminated());
+        final TenderProcess tenderProcess = editForm.getModelObject().getTenderProcess();
+        return super.isTerminated() || (tenderProcess != null && tenderProcess.isTerminated());
     }
 }

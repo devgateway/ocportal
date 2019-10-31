@@ -24,13 +24,13 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +48,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
 
     @SpringBean
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
-    private final Map<Project, List<PurchaseRequisition>> purchaseRequisitions;
+    private final Map<Project, List<TenderProcess>> tenderProcesses;
 
     private final Project sessionProject;
 
-    private final PurchaseRequisition sessionPurchaseRequisition;
+    private final TenderProcess sessionTenderProcess;
 
     private final Boolean canAccessAddNewButtonInDeptOverview;
 
@@ -68,11 +68,11 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
             expandedContainerIds.add(sessionProject.getId());
         }
 
-        sessionPurchaseRequisition = sessionMetadataService.getSessionPurchaseRequisition();
+        sessionTenderProcess = sessionMetadataService.getSessionTenderProcess();
 
-        purchaseRequisitions = purchaseRequisitionService.findByProjectProcurementPlan(procurementPlanModel.getObject())
+        tenderProcesses = tenderProcessService.findByProjectProcurementPlan(procurementPlanModel.getObject())
                 .parallelStream()
-                .collect(Collectors.groupingBy(PurchaseRequisition::getProject,
+                .collect(Collectors.groupingBy(TenderProcess::getProject,
                         Collectors.mapping(Function.identity(), Collectors.toList())));
 
         canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
@@ -83,7 +83,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         super.renderHead(response);
 
         // scroll to the last edited item (see: OCMAKU-135)
-        if (this.getModelObject() != null && sessionProject != null && sessionPurchaseRequisition == null) {
+        if (this.getModelObject() != null && sessionProject != null && sessionTenderProcess == null) {
             if (this.getModelObject().contains(sessionProject)) {
                 response.render(OnDomReadyHeaderItem.forScript(
                         JQueryUtil.animateScrollTop("#" + "project-header-" + sessionProject.getId(), 100, 500)));
@@ -149,29 +149,29 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
         final Project project = item.getModelObject();
 
-        final BootstrapAjaxLink<Void> addPurchaseRequisition = new BootstrapAjaxLink<Void>("addPurchaseRequisition",
+        final BootstrapAjaxLink<Void> addTenderProcess = new BootstrapAjaxLink<Void>("addTenderProcess",
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 sessionMetadataService.setSessionProject(project);
-                setResponsePage(EditPurchaseRequisitionPage.class);
+                setResponsePage(EditTenderProcessPage.class);
             }
         };
-        addPurchaseRequisition.setLabel(
-                new StringResourceModel("addPurchaseRequisition", ListViewProjectsOverview.this, null));
-        containerFragment.add(addPurchaseRequisition);
-        addPurchaseRequisition.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        addTenderProcess.setLabel(
+                new StringResourceModel("addTenderProcess", ListViewProjectsOverview.this, null));
+        containerFragment.add(addTenderProcess);
+        addTenderProcess.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
 
         // sort the purchase requisition list
-        final List<PurchaseRequisition> purchaseReqs = purchaseRequisitions.get(project);
+        final List<TenderProcess> purchaseReqs = tenderProcesses.get(project);
         if (purchaseReqs != null && !purchaseReqs.isEmpty()) {
-            purchaseReqs.sort(Comparator.comparing(PurchaseRequisition::getId));
+            purchaseReqs.sort(Comparator.comparing(TenderProcess::getId));
         }
 
-        final ListViewPurchaseRequisitionOverview listViewPurchaseRequisitionOverview =
-                new ListViewPurchaseRequisitionOverview("purchaseReqOverview",
-                        new ListModel<>(purchaseReqs), sessionPurchaseRequisition);
-        containerFragment.add(listViewPurchaseRequisitionOverview);
+        final ListViewTenderProcessOverview listViewTenderProcessOverview =
+                new ListViewTenderProcessOverview("purchaseReqOverview",
+                        new ListModel<>(purchaseReqs), sessionTenderProcess);
+        containerFragment.add(listViewTenderProcessOverview);
 
         hideableContainer.add(containerFragment);
     }

@@ -15,7 +15,7 @@ import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private ProjectService projectService;
 
     @Autowired
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @Autowired
     private TenderService tenderService;
@@ -74,14 +74,14 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
 
         final Map<Project, List<String>> tenderStatusMap = addStatus(
-                fiscalYear, purchaseRequisitionService, tenderService,
+                fiscalYear, tenderProcessService, tenderService,
                 tenderQuotationEvaluationService, professionalOpinionService);
         final Map<Project, List<String>> awardStatusMap = addStatus(
                 fiscalYear, awardNotificationService, awardAcceptanceService, contractService);
 
         // get list of statuses of PurchaseRequisition forms grouped by Project
         final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
-                purchaseRequisitionService.findByFiscalYear(fiscalYear));
+                tenderProcessService.findByFiscalYear(fiscalYear));
 
         final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
         for (final Project project : projects) {

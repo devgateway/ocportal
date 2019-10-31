@@ -76,8 +76,8 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
@@ -379,9 +379,9 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         new StringResourceModel("navbar.project", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
 
-                list.add(new MenuBookmarkablePageLink<ListPurchaseRequisitionPage>(
-                        ListPurchaseRequisitionPage.class, null,
-                        new StringResourceModel("navbar.purchaseRequisition", this, null))
+                list.add(new MenuBookmarkablePageLink<ListTenderProcessPage>(
+                        ListTenderProcessPage.class, null,
+                        new StringResourceModel("navbar.tenderProcess", this, null))
                         .setIconType(FontAwesomeIconType.file_text_o));
 
                 list.add(new MenuBookmarkablePageLink<ListTenderPage>(ListTenderPage.class, null,

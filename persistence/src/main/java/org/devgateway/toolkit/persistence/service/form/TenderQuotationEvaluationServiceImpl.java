@@ -1,6 +1,6 @@
 package org.devgateway.toolkit.persistence.service.form;
 
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluationRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -40,7 +40,7 @@ public class TenderQuotationEvaluationServiceImpl extends AbstractMakueniEntityS
 
     @Override
     @Cacheable
-    public TenderQuotationEvaluation findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-       return repository.findByPurchaseRequisition(purchaseRequisition);
+    public TenderQuotationEvaluation findByTenderProcess(final TenderProcess tenderProcess) {
+        return repository.findByTenderProcess(tenderProcess);
     }
 }

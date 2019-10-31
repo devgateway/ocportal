@@ -4,8 +4,8 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.Project_;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition_;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -17,11 +17,11 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-17
  */
-public class PurchaseRequisitionFilterState extends StatusAuditableEntityFilterState<PurchaseRequisition> {
+public class TenderProcessFilterState extends StatusAuditableEntityFilterState<TenderProcess> {
     private Project project;
 
     @Override
-    public Specification<PurchaseRequisition> getSpecification() {
+    public Specification<TenderProcess> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
@@ -30,12 +30,12 @@ public class PurchaseRequisitionFilterState extends StatusAuditableEntityFilterS
 
                 if (procurementPlan != null) {
                     if (procurementPlan.getDepartment() != null) {
-                        predicates.add(cb.equal(root.get(PurchaseRequisition_.project).get(Project_.procurementPlan)
+                        predicates.add(cb.equal(root.get(TenderProcess_.project).get(Project_.procurementPlan)
                                 .get(ProcurementPlan_.department), procurementPlan.getDepartment()));
                     }
 
                     if (procurementPlan.getFiscalYear() != null) {
-                        predicates.add(cb.equal(root.get(PurchaseRequisition_.project).get(Project_.procurementPlan)
+                        predicates.add(cb.equal(root.get(TenderProcess_.project).get(Project_.procurementPlan)
                                 .get(ProcurementPlan_.fiscalYear), procurementPlan.getFiscalYear()));
                     }
                 }

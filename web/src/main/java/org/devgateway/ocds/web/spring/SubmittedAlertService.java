@@ -15,7 +15,7 @@ import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -82,7 +82,7 @@ public class SubmittedAlertService {
     private ProfessionalOpinionService professionalOpinionService;
 
     @Autowired
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @Autowired
     private TenderService tenderService;
@@ -114,7 +114,7 @@ public class SubmittedAlertService {
                 contractService,
                 procurementPlanService, //not pr
                 professionalOpinionService,
-                purchaseRequisitionService, //not pr
+                tenderProcessService, //not pr
                 tenderService,
                 tenderQuotationEvaluationService));
     }

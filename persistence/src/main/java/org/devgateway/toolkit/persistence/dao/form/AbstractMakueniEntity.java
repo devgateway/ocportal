@@ -26,11 +26,11 @@ import java.util.Set;
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity
         implements Labelable, SingleFileMetadatable {
     @ExcelExport(useTranslation = true, name = "Approved Date",
-            onlyForClass = {ProcurementPlan.class, Project.class, PurchaseRequisition.class, ProfessionalOpinion.class})
+            onlyForClass = {ProcurementPlan.class, Project.class, TenderProcess.class, ProfessionalOpinion.class})
     private Date approvedDate;
 
     @ExcelExport(justExport = true, useTranslation = true, onlyForClass = {ProcurementPlan.class, CabinetPaper.class,
-            PurchaseRequisition.class, Tender.class, TenderQuotationEvaluation.class, ProfessionalOpinion.class,
+            TenderProcess.class, Tender.class, TenderQuotationEvaluation.class, ProfessionalOpinion.class,
             AwardNotification.class, AwardAcceptance.class}, name = "Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -39,7 +39,7 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     /**
      * Gets direct children of current entity, that is the next form(s) that have to be filled in after this one is done
      * Most of the time this returns just one element, with the exception of {@link Project} where it will return
-     * the {@link Project#getPurchaseRequisitions()}
+     * the {@link Project#getTenderProcesses()}
      * This is used to revert downstream forms when upstream forms are reverted. So if u do not need this functionality
      * just return {@link Collections#emptyList()}
      *

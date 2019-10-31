@@ -5,19 +5,18 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
-import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -29,9 +28,9 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<PurchaseRequisition> {
+public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderProcess> {
     @SpringBean
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @SpringBean
     private ProjectService projectService;
@@ -50,13 +49,13 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         }
     }
 
-    public EditPurchaseRequisitionPage(final PageParameters parameters) {
+    public EditTenderProcessPage(final PageParameters parameters) {
         super(parameters);
-        this.jpaService = purchaseRequisitionService;
+        this.jpaService = tenderProcessService;
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionProject() == null) {
-            logger.warn("Something wrong happened since we are trying to add a new PurchaseRequisition Entity "
+            logger.warn("Something wrong happened since we are trying to add a new TenderProcess Entity "
                     + "without having a Project!");
             setResponsePage(StatusOverviewPage.class);
         }
@@ -82,45 +81,44 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
             purchaseRequestNumber.setVisibilityAllowed(true);
         }
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "requestedBy", staffService).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "chargeAccount", chargeAccountService).required();
-        ComponentUtil.addDateField(editForm, "requestApprovalDate").required();
+//        ComponentUtil.addSelect2ChoiceField(editForm, "requestedBy", staffService).required();
+//        ComponentUtil.addSelect2ChoiceField(editForm, "chargeAccount", chargeAccountService).required();
+//        ComponentUtil.addDateField(editForm, "requestApprovalDate").required();
 
-        editForm.add(new PurchaseItemPanel("purchaseItems"));
+//        editForm.add(new PurchaseItemPanel("purchaseItems"));
+
+        editForm.add(new PurchRequisitionPanel("purchRequisitions"));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
-        final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
-        editForm.add(formDocs);
         saveTerminateButton.setVisibilityAllowed(false);
     }
 
     @Override
-    protected PurchaseRequisition newInstance() {
-        final PurchaseRequisition purchaseRequisition = super.newInstance();
-        purchaseRequisition.setProject(sessionMetadataService.getSessionProject());
+    protected TenderProcess newInstance() {
+        final TenderProcess tenderProcess = super.newInstance();
+        tenderProcess.setProject(sessionMetadataService.getSessionProject());
 
-        return purchaseRequisition;
+        return tenderProcess;
     }
 
     @Override
     public boolean isTerminated() {
-        final PurchaseRequisition purchaseRequisition = editForm.getModelObject();
-        return purchaseRequisition.isTerminated();
+        final TenderProcess tenderProcess = editForm.getModelObject();
+        return tenderProcess.isTerminated();
     }
 
     @Override
-    protected void beforeSaveEntity(final PurchaseRequisition purchaseRequisition) {
-        super.beforeSaveEntity(purchaseRequisition);
+    protected void beforeSaveEntity(final TenderProcess tenderProcess) {
+        super.beforeSaveEntity(tenderProcess);
 
-        final Project project = purchaseRequisition.getProject();
-        project.addPurchaseRequisition(purchaseRequisition);
+        final Project project = tenderProcess.getProject();
+        project.addTenderProcess(tenderProcess);
         projectService.save(project);
     }
 
     @Override
-    protected void afterSaveEntity(final PurchaseRequisition saveable) {
+    protected void afterSaveEntity(final TenderProcess saveable) {
         super.afterSaveEntity(saveable);
 
         // autogenerate the number
@@ -132,15 +130,15 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
         }
 
         // add current Purchase Requisition in session
-        sessionMetadataService.setSessionPurchaseRequisition(editForm.getModelObject());
+        sessionMetadataService.setSessionTenderProcess(editForm.getModelObject());
     }
 
     @Override
-    protected void beforeDeleteEntity(final PurchaseRequisition purchaseRequisition) {
-        super.beforeDeleteEntity(purchaseRequisition);
+    protected void beforeDeleteEntity(final TenderProcess tenderProcess) {
+        super.beforeDeleteEntity(tenderProcess);
 
-        final Project project = purchaseRequisition.getProject();
-        project.removePurchaseRequisition(purchaseRequisition);
+        final Project project = tenderProcess.getProject();
+        project.remoteTenderProcess(tenderProcess);
         projectService.save(project);
     }
 
@@ -156,7 +154,7 @@ public class EditPurchaseRequisitionPage extends EditAbstractMakueniEntityPage<P
             pp.set(WebConstants.PARAM_ID, PersistenceUtil.getNext(editForm.getModelObject().getTender()).getId());
         }
         // add current Purchase Requisition in session
-        sessionMetadataService.setSessionPurchaseRequisition(editForm.getModelObject());
+        sessionMetadataService.setSessionTenderProcess(editForm.getModelObject());
 
         return pp;
     }

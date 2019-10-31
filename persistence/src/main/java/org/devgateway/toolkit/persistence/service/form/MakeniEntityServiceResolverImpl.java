@@ -10,8 +10,8 @@ import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
     private ProjectService projectService;
 
     @Autowired
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @Autowired
     private TenderQuotationEvaluationService tenderQuotationEvaluationService;
@@ -63,7 +63,7 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
                 AbstractMakueniEntityService<? extends AbstractMakueniEntity>>builder()
                 .put(Tender.class, tenderService)
                 .put(TenderQuotationEvaluation.class, tenderQuotationEvaluationService)
-                .put(PurchaseRequisition.class, purchaseRequisitionService)
+                .put(TenderProcess.class, tenderProcessService)
                 .put(Project.class, projectService)
                 .put(ProfessionalOpinion.class, professionalOpinionService)
                 .put(ProcurementPlan.class, procurementPlanService)

@@ -7,13 +7,13 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class SessionMetadataService {
     private ProjectService projectService;
 
     @Autowired
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @Autowired
     private DepartmentService departmentService;
@@ -97,12 +97,12 @@ public class SessionMetadataService {
         return getSessionPersistable(PROJECT, projectService);
     }
 
-    public void setSessionPurchaseRequisition(final PurchaseRequisition object) {
+    public void setSessionTenderProcess(final TenderProcess object) {
         setSessionKey(PURCHASE_REQUISITION, object);
     }
 
-    public PurchaseRequisition getSessionPurchaseRequisition() {
-        return getSessionPersistable(PURCHASE_REQUISITION, purchaseRequisitionService);
+    public TenderProcess getSessionTenderProcess() {
+        return getSessionPersistable(PURCHASE_REQUISITION, tenderProcessService);
     }
 
     public void setSessionDepartment(final Department object) {

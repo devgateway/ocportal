@@ -1,6 +1,6 @@
 package org.devgateway.toolkit.persistence.service.form;
 
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 
@@ -10,5 +10,5 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
  */
 public interface TenderQuotationEvaluationService extends AbstractMakueniEntityService<TenderQuotationEvaluation>,
         TextSearchableService<TenderQuotationEvaluation> {
-    TenderQuotationEvaluation findByPurchaseRequisition(PurchaseRequisition purchaseRequisition);
+    TenderQuotationEvaluation findByTenderProcess(TenderProcess tenderProcess);
 }

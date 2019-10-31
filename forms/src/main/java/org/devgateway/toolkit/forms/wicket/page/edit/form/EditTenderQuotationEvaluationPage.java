@@ -8,9 +8,9 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -22,13 +22,13 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMakueniEntity<TenderQuotationEvaluation> {
+public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcessMakueniEntity<TenderQuotationEvaluation> {
 
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     @SpringBean
-    protected PurchaseRequisitionService purchaseRequisitionService;
+    protected TenderProcessService tenderProcessService;
 
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
@@ -50,7 +50,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     @Override
     protected TenderQuotationEvaluation newInstance() {
         final TenderQuotationEvaluation tenderQuotationEvaluation = super.newInstance();
-        tenderQuotationEvaluation.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
+        tenderQuotationEvaluation.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return tenderQuotationEvaluation;
     }
@@ -59,18 +59,18 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     protected void beforeSaveEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
         super.beforeSaveEntity(tenderQuotationEvaluation);
 
-        final PurchaseRequisition purchaseRequisition = tenderQuotationEvaluation.getPurchaseRequisition();
-        purchaseRequisition.addTenderQuotationEvaluation(tenderQuotationEvaluation);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = tenderQuotationEvaluation.getTenderProcess();
+        tenderProcess.addTenderQuotationEvaluation(tenderQuotationEvaluation);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
     protected void beforeDeleteEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
         super.beforeDeleteEntity(tenderQuotationEvaluation);
 
-        final PurchaseRequisition purchaseRequisition = tenderQuotationEvaluation.getPurchaseRequisition();
-        purchaseRequisition.removeTenderQuotationEvaluation(tenderQuotationEvaluation);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = tenderQuotationEvaluation.getTenderProcess();
+        tenderProcess.removeTenderQuotationEvaluation(tenderQuotationEvaluation);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
@@ -81,9 +81,9 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getProfessionalOpinion())) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getProfessionalOpinion())) {
             pp.set(WebConstants.PARAM_ID,
-                    PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition()
+                    PersistenceUtil.getNext(editForm.getModelObject().getTenderProcess()
                             .getProfessionalOpinion()).getId());
         }
 

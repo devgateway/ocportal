@@ -23,8 +23,8 @@ import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
@@ -38,7 +38,7 @@ import org.devgateway.toolkit.persistence.service.form.PlanItemService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.rest.entity.Dummy;
@@ -68,7 +68,7 @@ public class DummyController {
     private ProjectService projectService;
 
     @Autowired
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @Autowired
     private TenderService tenderService;
@@ -178,7 +178,7 @@ public class DummyController {
 
             final List<ProcurementPlan> procurementPlans = new ArrayList<>();
             final List<Project> projects = new ArrayList<>();
-            final List<PurchaseRequisition> prs = new ArrayList<>();
+            final List<TenderProcess> prs = new ArrayList<>();
             final List<Tender> tenders = new ArrayList<>();
             final List<TenderQuotationEvaluation> tenderQuotationEvaluations = new ArrayList<>();
             final List<ProfessionalOpinion> professionalOpinions = new ArrayList<>();
@@ -204,35 +204,35 @@ public class DummyController {
                     projects.add(project);
 
                     for (int j = 0; j < 3; j++) {
-                        final PurchaseRequisition purchaseRequisition = new PurchaseRequisition();
-                        purchaseRequisition.setProject(project);
-                        purchaseRequisition.setPurchaseRequestNumber("# " + i + j + "-" + random.nextInt(50000));
+                        final TenderProcess tenderProcess = new TenderProcess();
+                        tenderProcess.setProject(project);
+                        tenderProcess.setPurchaseRequestNumber("# " + i + j + "-" + random.nextInt(50000));
 
-                        prs.add(purchaseRequisition);
+                        prs.add(tenderProcess);
 
                         final Tender tender = new Tender();
-                        tender.setPurchaseRequisition(purchaseRequisition);
+                        tender.setTenderProcess(tenderProcess);
                         tender.setTenderTitle("Tender " + i + j + "-" + random.nextInt(50000));
                         tenders.add(tender);
 
                         final TenderQuotationEvaluation tenderQuotationEvaluation = new TenderQuotationEvaluation();
-                        tenderQuotationEvaluation.setPurchaseRequisition(purchaseRequisition);
+                        tenderQuotationEvaluation.setTenderProcess(tenderProcess);
                         tenderQuotationEvaluations.add(tenderQuotationEvaluation);
 
                         final ProfessionalOpinion professionalOpinion = new ProfessionalOpinion();
-                        professionalOpinion.setPurchaseRequisition(purchaseRequisition);
+                        professionalOpinion.setTenderProcess(tenderProcess);
                         professionalOpinions.add(professionalOpinion);
 
                         final AwardNotification awardNotification = new AwardNotification();
-                        awardNotification.setPurchaseRequisition(purchaseRequisition);
+                        awardNotification.setTenderProcess(tenderProcess);
                         awardNotifications.add(awardNotification);
 
                         final AwardAcceptance awardAcceptance = new AwardAcceptance();
-                        awardAcceptance.setPurchaseRequisition(purchaseRequisition);
+                        awardAcceptance.setTenderProcess(tenderProcess);
                         awardAcceptances.add(awardAcceptance);
 
                         final Contract contract = new Contract();
-                        contract.setPurchaseRequisition(purchaseRequisition);
+                        contract.setTenderProcess(tenderProcess);
                         contracts.add(contract);
                     }
                 }
@@ -240,7 +240,7 @@ public class DummyController {
 
             procurementPlanService.saveAll(procurementPlans);
             projectService.saveAll(projects);
-            purchaseRequisitionService.saveAll(prs);
+            tenderProcessService.saveAll(prs);
             tenderService.saveAll(tenders);
             tenderQuotationEvaluationService.saveAll(tenderQuotationEvaluations);
             professionalOpinionService.saveAll(professionalOpinions);

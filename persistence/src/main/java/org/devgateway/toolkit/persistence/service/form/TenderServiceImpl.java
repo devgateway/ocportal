@@ -1,8 +1,8 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
@@ -39,7 +39,7 @@ public class TenderServiceImpl extends AbstractMakueniEntityServiceImpl<Tender> 
 
     @Override
     @Cacheable
-    public Tender findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        return tenderRepository.findByPurchaseRequisition(purchaseRequisition);
+    public Tender findByTenderProcess(final TenderProcess tenderProcess) {
+        return tenderRepository.findByTenderProcess(tenderProcess);
     }
 }

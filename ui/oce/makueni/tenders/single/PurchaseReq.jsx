@@ -11,7 +11,7 @@ class PurchaseReq extends FeedbackPage {
         + " - " + department.label
         + " - " + fiscalYear.name;
     }
-    return escape("Purchase Requisition" + metadata);
+    return escape("Tender Process" + metadata);
   }
   
   render() {

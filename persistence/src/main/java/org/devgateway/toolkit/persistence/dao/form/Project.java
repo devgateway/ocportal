@@ -51,10 +51,10 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
-    @ExcelExport(separateSheet = true, name = "Purchase Requisitions")
+    @ExcelExport(separateSheet = true, name = "Tender Processes")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "project")
-    private Set<PurchaseRequisition> purchaseRequisitions = new HashSet<>();
+    private Set<TenderProcess> tenderProcesses = new HashSet<>();
 
     @ExcelExport(useTranslation = true, name = "Project Title")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
@@ -150,21 +150,21 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
         this.procurementPlan = procurementPlan;
     }
 
-    public Set<PurchaseRequisition> getPurchaseRequisitions() {
-        return purchaseRequisitions;
+    public Set<TenderProcess> getTenderProcesses() {
+        return tenderProcesses;
     }
 
-    public void setPurchaseRequisitions(Set<PurchaseRequisition> purchaseRequisitions) {
-        this.purchaseRequisitions = purchaseRequisitions;
+    public void setTenderProcesses(Set<TenderProcess> tenderProcesses) {
+        this.tenderProcesses = tenderProcesses;
     }
 
-    public void addPurchaseRequisition(final PurchaseRequisition pr) {
-        purchaseRequisitions.add(pr);
+    public void addTenderProcess(final TenderProcess pr) {
+        tenderProcesses.add(pr);
         pr.setProject(this);
     }
 
-    public void removePurchaseRequisition(final PurchaseRequisition pr) {
-        purchaseRequisitions.remove(pr);
+    public void remoteTenderProcess(final TenderProcess pr) {
+        tenderProcesses.remove(pr);
         pr.setProject(null);
     }
 
@@ -173,7 +173,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return purchaseRequisitions;
+        return tenderProcesses;
     }
 
     @Override

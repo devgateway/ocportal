@@ -13,12 +13,13 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class TranslateField {
                     .put("ProcurementPlan", EditProcurementPlanPage.class)
                     .put("Project", EditProjectPage.class)
                     .put("CabinetPaper", EditCabinetPaperPage.class)
-                    .put("PurchaseRequisition", EditPurchaseRequisitionPage.class)
+                    .put("TenderProcess", EditTenderProcessPage.class)
                     .put("Tender", EditTenderPage.class)
                     .put("TenderQuotationEvaluation", EditTenderQuotationEvaluationPage.class)
                     .put("ProfessionalOpinion", EditProfessionalOpinionPage.class)
@@ -65,6 +66,7 @@ public class TranslateField {
                     .put("PlanItem", PlanItemPanel.class)
                     .put("PurchaseItem", PurchaseItemPanel.class)
                     .put("TenderItem", TenderItemPanel.class)
+                    .put("PurchRequisition", PurchRequisitionPanel.class)
                     .build();
 
     public TranslateField(final Class entity) {

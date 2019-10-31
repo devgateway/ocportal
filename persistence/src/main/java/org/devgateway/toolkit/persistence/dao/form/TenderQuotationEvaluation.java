@@ -29,9 +29,9 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "purchase_requisition_id")})
+@Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity {
+public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
 
@@ -66,7 +66,7 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return "Tender Quotation Evaluation for purchase requisition " + getPurchaseRequisitionNotNull().getLabel();
+        return "Tender Quotation Evaluation for tender process " + getTenderProcessNotNull().getLabel();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+        return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getProfessionalOpinion()));
     }
 }

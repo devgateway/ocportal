@@ -23,12 +23,12 @@ import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.web.convert.MakueniToOCDSConversionService;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.form.PurchaseRequisitionFilterState;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.filterstate.form.TenderProcessFilterState;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -43,23 +43,23 @@ import java.util.Optional;
  * @since 2019-04-17
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/purchaseRequisitions")
-public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<PurchaseRequisition> {
+@MountPath("/tenderProcesses")
+public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderProcess> {
 
     @SpringBean
     private MakueniToOCDSConversionService ocdsConversionService;
 
     @SpringBean
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @SpringBean
     private ObjectMapper objectMapper;
 
-    public ListPurchaseRequisitionPage(final PageParameters parameters) {
+    public ListTenderProcessPage(final PageParameters parameters) {
         super(parameters);
 
-        this.jpaService = purchaseRequisitionService;
-        this.editPageClass = EditPurchaseRequisitionPage.class;
+        this.jpaService = tenderProcessService;
+        this.editPageClass = EditTenderProcessPage.class;
     }
 
     public class OcdsPanel extends Panel {
@@ -72,7 +72,7 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
                     final AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
                         @Override
                         public void write(final OutputStream output) throws IOException {
-                            Optional<PurchaseRequisition> byId = purchaseRequisitionService.findById(model.getObject());
+                            Optional<TenderProcess> byId = tenderProcessService.findById(model.getObject());
 
                             Release release = ocdsConversionService.createAndPersistRelease(byId.get());
                             output.write(objectMapper.writeValueAsBytes(release));
@@ -93,7 +93,7 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
 
             downloadLink.add(new Label("ocdsText", "ocds-purchase-requisition-" + model.getObject()));
             downloadLink.add(new TooltipBehavior(
-                    new StringResourceModel("downloadOcdsTooltip", ListPurchaseRequisitionPage.this, null)));
+                    new StringResourceModel("downloadOcdsTooltip", ListTenderProcessPage.this, null)));
             add(downloadLink);
         }
     }
@@ -101,13 +101,13 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
 
     protected void addOcdsDownloadColumn() {
         Component trn = this;
-        columns.add(new AbstractColumn<PurchaseRequisition, String>(
+        columns.add(new AbstractColumn<TenderProcess, String>(
                 new StringResourceModel("downloadOcds", trn)) {
             @Override
-            public void populateItem(final Item<ICellPopulator<PurchaseRequisition>> cellItem, final String componentId,
-                                     final IModel<PurchaseRequisition> model) {
+            public void populateItem(final Item<ICellPopulator<TenderProcess>> cellItem, final String componentId,
+                                     final IModel<TenderProcess> model) {
                 if (DBConstants.Status.EXPORTABLE.contains(model.getObject().getStatus())) {
-                    cellItem.add(new ListPurchaseRequisitionPage.OcdsPanel(componentId,
+                    cellItem.add(new ListTenderProcessPage.OcdsPanel(componentId,
                             new Model<>(model.getObject().getId())));
                 } else {
                     cellItem.add(new Label(componentId));
@@ -120,23 +120,23 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
     @Override
     protected void onInitialize() {
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(
-                new Model<>((new StringResourceModel("department", ListPurchaseRequisitionPage.this)).getString()),
+                new Model<>((new StringResourceModel("department", ListTenderProcessPage.this)).getString()),
                 "project.procurementPlan.department", "project.procurementPlan.department",
                 new ListModel(departments), dataTable));
 
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(
-                new Model<>((new StringResourceModel("fiscalYear", ListPurchaseRequisitionPage.this)).getString()),
+                new Model<>((new StringResourceModel("fiscalYear", ListTenderProcessPage.this)).getString()),
                 "project.procurementPlan.fiscalYear", "project.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));
 
-        columns.add(new PropertyColumn<PurchaseRequisition, String>(
+        columns.add(new PropertyColumn<TenderProcess, String>(
                 new Model<>((new StringResourceModel("lastModifiedDate",
-                        ListPurchaseRequisitionPage.this)).getString()),
+                        ListTenderProcessPage.this)).getString()),
                 "lastModifiedDate", "lastModifiedDate") {
             @Override
-            public void populateItem(final Item<ICellPopulator<PurchaseRequisition>> item,
+            public void populateItem(final Item<ICellPopulator<TenderProcess>> item,
                                      final String componentId,
-                                     final IModel<PurchaseRequisition> rowModel) {
+                                     final IModel<TenderProcess> rowModel) {
                 final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
                 final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
 
@@ -158,7 +158,7 @@ public class ListPurchaseRequisitionPage extends ListAbstractMakueniEntityPage<P
 
 
     @Override
-    public JpaFilterState<PurchaseRequisition> newFilterState() {
-        return new PurchaseRequisitionFilterState();
+    public JpaFilterState<TenderProcess> newFilterState() {
+        return new TenderProcessFilterState();
     }
 }

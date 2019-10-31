@@ -15,10 +15,10 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -34,12 +34,12 @@ import java.util.List;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniEntity<ProfessionalOpinion> {
+public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakueniEntity<ProfessionalOpinion> {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
 
     @SpringBean
-    protected PurchaseRequisitionService purchaseRequisitionService;
+    protected TenderProcessService tenderProcessService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -74,7 +74,7 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     @Override
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
-        professionalOpinion.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
+        professionalOpinion.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return professionalOpinion;
     }
@@ -83,18 +83,18 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     protected void beforeSaveEntity(final ProfessionalOpinion professionalOpinion) {
         super.beforeSaveEntity(professionalOpinion);
 
-        final PurchaseRequisition purchaseRequisition = professionalOpinion.getPurchaseRequisition();
-        purchaseRequisition.addProfessionalOpinion(professionalOpinion);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = professionalOpinion.getTenderProcess();
+        tenderProcess.addProfessionalOpinion(professionalOpinion);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
     protected void beforeDeleteEntity(final ProfessionalOpinion professionalOpinion) {
         super.beforeDeleteEntity(professionalOpinion);
 
-        final PurchaseRequisition purchaseRequisition = professionalOpinion.getPurchaseRequisition();
-        purchaseRequisition.removeProfessionalOpinion(professionalOpinion);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = professionalOpinion.getTenderProcess();
+        tenderProcess.removeProfessionalOpinion(professionalOpinion);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
@@ -105,19 +105,19 @@ public class EditProfessionalOpinionPage extends EditAbstractPurchaseReqMakueniE
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getAwardNotification())) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getAwardNotification())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(
-                            editForm.getModelObject().getPurchaseRequisition().getAwardNotification()).getId());
+                            editForm.getModelObject().getTenderProcess().getAwardNotification()).getId());
         }
 
         return pp;
     }
 
     private List<Supplier> getSuppliersInTenderQuotation() {
-        final PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
+        final TenderProcess tenderProcess = editForm.getModelObject().getTenderProcess();
         final TenderQuotationEvaluation tenderQuotationEvaluation =
-                PersistenceUtil.getNext(purchaseRequisition.getTenderQuotationEvaluation());
+                PersistenceUtil.getNext(tenderProcess.getTenderQuotationEvaluation());
         final List<Supplier> suppliers = new ArrayList<>();
         if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
             for (Bid bid : tenderQuotationEvaluation.getBids()) {

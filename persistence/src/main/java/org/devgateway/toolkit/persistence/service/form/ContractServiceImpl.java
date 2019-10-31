@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.Contract;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.ContractRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,8 @@ public class ContractServiceImpl extends AbstractMakueniEntityServiceImpl<Contra
 
     @Override
     @Cacheable
-    public Contract findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        return contractRepository.findByPurchaseRequisition(purchaseRequisition);
+    public Contract findByTenderProcess(final TenderProcess tenderProcess) {
+        return contractRepository.findByTenderProcess(tenderProcess);
     }
 
 }

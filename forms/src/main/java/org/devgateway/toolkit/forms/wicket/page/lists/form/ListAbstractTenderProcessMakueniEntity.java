@@ -12,7 +12,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 
@@ -25,7 +25,7 @@ import java.util.Optional;
  * @author idobre
  * @since 2019-05-23
  */
-public abstract class ListAbstractPurchaseReqMakueniEntity<T extends AbstractPurchaseReqMakueniEntity>
+public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractTenderProcessMakueniEntity>
         extends ListAbstractMakueniEntityPage<T> {
 
     protected final List<Supplier> awardees;
@@ -33,7 +33,7 @@ public abstract class ListAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     @SpringBean
     private SupplierService supplierService;
 
-    public ListAbstractPurchaseReqMakueniEntity(final PageParameters parameters) {
+    public ListAbstractTenderProcessMakueniEntity(final PageParameters parameters) {
         super(parameters);
 
         this.awardees = supplierService.findAll();
@@ -42,13 +42,13 @@ public abstract class ListAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     @Override
     protected void onInitialize() {
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "purchaseRequisition.project.procurementPlan.department",
-                "purchaseRequisition.project.procurementPlan.department",
+                "tenderProcess.project.procurementPlan.department",
+                "tenderProcess.project.procurementPlan.department",
                 new ListModel(departments), dataTable));
 
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
-                "purchaseRequisition.project.procurementPlan.fiscalYear",
-                "purchaseRequisition.project.procurementPlan.fiscalYear",
+                "tenderProcess.project.procurementPlan.fiscalYear",
+                "tenderProcess.project.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));
 
         columns.add(new PropertyColumn<T, String>(new Model<>("Last Updated Date"),
@@ -75,7 +75,7 @@ public abstract class ListAbstractPurchaseReqMakueniEntity<T extends AbstractPur
     protected void addAwardeeColumn() {
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>(
-                        (new StringResourceModel("awardee", ListAbstractPurchaseReqMakueniEntity.this)).getString()),
+                        (new StringResourceModel("awardee", ListAbstractTenderProcessMakueniEntity.this)).getString()),
                 "awardee",
                 "awardee",
                 new ListModel(awardees), dataTable, false
@@ -84,13 +84,13 @@ public abstract class ListAbstractPurchaseReqMakueniEntity<T extends AbstractPur
 
     protected void addTenderTitleColumn() {
         columns.add(new PropertyColumn<T, String>(
-                new Model<>((new StringResourceModel("title", ListAbstractPurchaseReqMakueniEntity.this)).getString()),
-                null, "purchaseRequisition.tender.iterator.next.tenderTitle") {
+                new Model<>((new StringResourceModel("title", ListAbstractTenderProcessMakueniEntity.this)).getString()),
+                null, "tenderProcess.tender.iterator.next.tenderTitle") {
             @Override
             public void populateItem(final Item<ICellPopulator<T>> item,
                                      final String componentId,
                                      final IModel<T> rowModel) {
-                final Tender tender = rowModel.getObject().getPurchaseRequisition().getSingleTender();
+                final Tender tender = rowModel.getObject().getTenderProcess().getSingleTender();
                 if (tender != null) {
                     item.add(new Label(componentId, tender.getTenderTitle()));
                 } else {

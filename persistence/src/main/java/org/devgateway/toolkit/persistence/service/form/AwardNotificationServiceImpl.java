@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,8 @@ public class AwardNotificationServiceImpl extends AbstractMakueniEntityServiceIm
 
     @Override
     @Cacheable
-    public AwardNotification findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        return awardNotificationRepository.findByPurchaseRequisition(purchaseRequisition);
+    public AwardNotification findByTenderProcess(final TenderProcess tenderProcess) {
+        return awardNotificationRepository.findByTenderProcess(tenderProcess);
     }
 
 }

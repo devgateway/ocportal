@@ -72,7 +72,7 @@ class PurchaseReqView extends CRDPage {
       this.prInfo.getState()
       .then(data => {
         this.setState({
-          data: data.purchaseRequisitions,
+          data: data.tenderProcesses,
           department: data.department,
           fiscalYear: data.fiscalYear
         });

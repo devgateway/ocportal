@@ -28,13 +28,13 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -49,13 +49,13 @@ import java.util.Set;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender> {
+public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tender> {
 
     @SpringBean
     protected TenderService tenderService;
 
     @SpringBean
-    protected PurchaseRequisitionService purchaseRequisitionService;
+    protected TenderProcessService tenderProcessService;
 
     @SpringBean
     protected ProcurementMethodService procurementMethodService;
@@ -156,9 +156,9 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getTenderQuotationEvaluation())) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getTenderQuotationEvaluation())) {
             pp.set(WebConstants.PARAM_ID,
-                    PersistenceUtil.getNext(editForm.getModelObject().getPurchaseRequisition()
+                    PersistenceUtil.getNext(editForm.getModelObject().getTenderProcess()
                             .getTenderQuotationEvaluation()).getId());
         }
 
@@ -205,7 +205,7 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     @Override
     protected Tender newInstance() {
         final Tender tender = super.newInstance();
-        tender.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
+        tender.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return tender;
     }
@@ -214,17 +214,17 @@ public class EditTenderPage extends EditAbstractPurchaseReqMakueniEntity<Tender>
     protected void beforeSaveEntity(final Tender tender) {
         super.beforeSaveEntity(tender);
 
-        final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
-        purchaseRequisition.addTender(tender);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = tender.getTenderProcess();
+        tenderProcess.addTender(tender);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
     protected void beforeDeleteEntity(final Tender tender) {
         super.beforeDeleteEntity(tender);
 
-        final PurchaseRequisition purchaseRequisition = tender.getPurchaseRequisition();
-        purchaseRequisition.removeTender(tender);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = tender.getTenderProcess();
+        tenderProcess.removeTender(tender);
+        tenderProcessService.save(tenderProcess);
     }
 }

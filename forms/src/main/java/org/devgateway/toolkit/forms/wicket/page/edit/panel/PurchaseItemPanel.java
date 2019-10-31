@@ -29,9 +29,10 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
+import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 import org.springframework.util.ObjectUtils;
 
@@ -45,7 +46,7 @@ import java.util.Set;
  * @author idobre
  * @since 2019-04-17
  */
-public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchaseRequisition> {
+public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchRequisition> {
     private GenericSleepFormComponent unit;
 
     private GenericSleepFormComponent totalCost;
@@ -103,14 +104,14 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
     protected void onInitialize() {
         super.onInitialize();
 
-        final Form form = (Form) getParent();
+        final Form form = (Form) getParent().getParent().getParent().getParent().getParent();
         if (form != null) {
             form.add(new ListItemsValidator());
         }
     }
 
     @Override
-    public PurchaseItem createNewChild(final IModel<PurchaseRequisition> parentModel) {
+    public PurchaseItem createNewChild(final IModel<PurchRequisition> parentModel) {
         final PurchaseItem child = new PurchaseItem();
         child.setParent(parentModel.getObject());
         child.setExpanded(true);
@@ -216,8 +217,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, Purcha
             super.onInitialize();
 
             // filtered the list based on form Procurement Plan
-            final PurchaseRequisition parentObject =
-                    (PurchaseRequisition) PurchaseItemPanel.this.getParent().getDefaultModelObject();
+            final TenderProcess parentObject =
+                    (TenderProcess) PurchaseItemPanel.this.getParent().getParent().getParent()
+                            .getParent().getParent().getDefaultModelObject();
             final List<PlanItem> planItems = parentObject.getProject().getProcurementPlan().getPlanItems();
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
