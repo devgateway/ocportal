@@ -26,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -242,6 +243,7 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         return amount;
     }
 
+    @Transient
     public List<PurchaseItem> getPurchaseItems() {
         return purchRequisitions.stream().flatMap(pr -> pr.getPurchaseItems().stream()).collect(Collectors.toList());
     }
