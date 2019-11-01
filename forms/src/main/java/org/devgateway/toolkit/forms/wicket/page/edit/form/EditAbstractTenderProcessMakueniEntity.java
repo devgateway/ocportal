@@ -60,9 +60,9 @@ public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractT
     protected void afterSaveEntity(T saveable) {
         super.afterSaveEntity(saveable);
 
-        PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
-        if (purchaseRequisition != null) {
-            sessionMetadataService.setSessionPurchaseRequisition(purchaseRequisition);
+        TenderProcess tp = editForm.getModelObject().getTenderProcess();
+        if (tp != null) {
+            sessionMetadataService.setSessionTenderProcess(tp);
         }
         Department department = editForm.getModelObject().getDepartment();
         if (department != null) {
