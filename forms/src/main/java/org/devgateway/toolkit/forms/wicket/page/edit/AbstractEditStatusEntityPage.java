@@ -47,6 +47,7 @@ import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.OptionallyRequiredTextAreaFieldComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
@@ -91,7 +92,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private ListView<StatusChangedComment> statusComments;
 
-    private TextAreaFieldBootstrapFormComponent<String> newStatusComment;
+    protected TextAreaFieldBootstrapFormComponent<String> newStatusComment;
 
     private Label statusLabel;
 
@@ -163,6 +164,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             this.modal = modal;
         }
 
+
         @Override
         protected String getOnClickScript() {
             return WebConstants.DISABLE_FORM_LEAVING_JS;
@@ -206,13 +208,13 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         comments = new TransparentWebMarkupContainer("comments");
         comments.setOutputMarkupId(true);
         comments.setOutputMarkupPlaceholderTag(true);
-        comments.setVisibilityAllowed(false);
+        comments.setVisibilityAllowed(true);
         editForm.add(comments);
 
         statusComments = getStatusCommentsListView();
         newStatusComment = getNewStatusCommentField();
         comments.add(statusComments);
-        comments.add(newStatusComment);
+        editForm.add(newStatusComment);
 
         entityButtonsFragment = new Fragment("extraButtons", "entityButtons", this);
         editForm.replace(entityButtonsFragment);
@@ -277,9 +279,13 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     protected void checkAndSendEventForDisableEditing() {
-        if (!Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode()) {
+        if (isDisableEditingEvent()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
+    }
+
+    public boolean isDisableEditingEvent() {
+        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
     }
 
     private void addAutosaveLabel() {
@@ -305,7 +311,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         terminateModal = createTerminateModal();
         final ModalSaveEditPageButton saveEditPageButton = new ModalSaveEditPageButton("terminate",
                 new StringResourceModel("terminate", this, null), terminateModal) {
-
             @Override
             public void continueSubmit(AjaxRequestTarget target) {
                 setStatusAppendComment(DBConstants.Status.TERMINATED);
@@ -313,7 +318,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.archive);
-        saveEditPageButton.setDefaultFormProcessing(false);
+        saveEditPageButton.setDefaultFormProcessing(true);
         terminateModal.modalSavePageButton(saveEditPageButton);
         return saveEditPageButton;
     }
@@ -414,7 +419,12 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private TextAreaFieldBootstrapFormComponent<String> getNewStatusCommentField() {
         final TextAreaFieldBootstrapFormComponent<String> comment =
-                new TextAreaFieldBootstrapFormComponent<String>("newStatusComment") {
+                new OptionallyRequiredTextAreaFieldComponent<String>("newStatusComment") {
+                    @Override
+                    public boolean isRequired() {
+                        return editForm.getRootForm().findSubmittingButton() == saveTerminateButton;
+                    }
+
                     @Override
                     public void onEvent(final IEvent<?> event) {
                         // do nothing - keep this field enabled

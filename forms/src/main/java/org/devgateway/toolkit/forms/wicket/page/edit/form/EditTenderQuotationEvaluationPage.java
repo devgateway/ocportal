@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author gmutuhu
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/tenderQuotationEvaluation")
+@MountPath
 public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMakueniEntity<TenderQuotationEvaluation> {
 
     @SpringBean

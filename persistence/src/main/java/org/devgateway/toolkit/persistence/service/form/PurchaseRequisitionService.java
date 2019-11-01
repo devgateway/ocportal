@@ -6,7 +6,6 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -17,7 +16,5 @@ public interface PurchaseRequisitionService extends AbstractMakueniEntityService
     List<PurchaseRequisition> findByProject(Project project);
 
     List<PurchaseRequisition> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
-
-    Stream<PurchaseRequisition> findByStatusApproved();
 }
 

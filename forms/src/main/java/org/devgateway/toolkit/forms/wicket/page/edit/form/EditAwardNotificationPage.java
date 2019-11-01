@@ -34,7 +34,7 @@ import java.math.BigDecimal;
  * @author gmutuhu
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/awardNotification")
+@MountPath
 public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntity<AwardNotification> {
     @SpringBean
     protected AwardNotificationService awardNotificationService;

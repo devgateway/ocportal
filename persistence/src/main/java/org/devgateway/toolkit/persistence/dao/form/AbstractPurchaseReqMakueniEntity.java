@@ -2,8 +2,10 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -60,5 +62,13 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
             return purchaseRequisition.getProject().getProcurementPlan();
         }
         return null;
+    }
+
+    @Override
+    @JsonIgnore
+    @Transactional
+    @org.springframework.data.annotation.Transient
+    public Department getDepartment() {
+        return getPurchaseRequisitionNotNull().getDepartment();
     }
 }

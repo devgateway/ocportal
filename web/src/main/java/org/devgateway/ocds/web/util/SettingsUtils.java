@@ -1,6 +1,5 @@
 package org.devgateway.ocds.web.util;
 
-import java.util.List;
 import org.devgateway.toolkit.persistence.dao.AdminSettings;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.AdminSettingsService;
@@ -10,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import java.util.List;
 
 /**
  * @author idobre
@@ -68,6 +69,8 @@ public class SettingsUtils {
 
     private static final Integer EXCELBATCHSIZEDEFAULT = 5000;
 
+    private static final Integer DAYS_SUBMITTED_REMINDER_DEFAULT = 14;
+
     @Autowired
     private AdminSettingsRepository adminSettingsRepository;
 
@@ -88,5 +91,12 @@ public class SettingsUtils {
         return adminSettings.getExcelBatchSize();
     }
 
+    public Integer getDaysSubmittedReminder() {
+        AdminSettings adminSettings = getSettings();
+        if (adminSettings.getDaysSubmittedReminder() == null) {
+            return DAYS_SUBMITTED_REMINDER_DEFAULT;
+        }
+        return adminSettings.getDaysSubmittedReminder();
+    }
 
 }

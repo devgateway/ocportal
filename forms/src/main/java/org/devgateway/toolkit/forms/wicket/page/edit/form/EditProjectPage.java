@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * @since 2019-04-02
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/project")
+@MountPath
 public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
     @SpringBean
     protected ProjectService projectService;

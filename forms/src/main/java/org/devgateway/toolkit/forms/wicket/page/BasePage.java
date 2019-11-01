@@ -12,10 +12,12 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuDivider;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
@@ -49,6 +51,7 @@ import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
@@ -276,6 +279,30 @@ public abstract class BasePage extends GenericWebPage<Void> {
     }
 
 
+    private <L extends AbstractListPage> BootstrapBookmarkablePageLink<L>
+    createListMenu(Class<L> clazz, String resourceKey, IconType iconType) {
+        return new MenuBookmarkablePageLink<L>(clazz, null,
+                new StringResourceModel(resourceKey, this, null))
+                .setIconType(iconType);
+    }
+
+    private <L extends AbstractListPage> BootstrapBookmarkablePageLink<L>
+    createAddListMenu(List<AbstractLink> list, Class<L> clazz, String resourceKey, IconType iconType) {
+        BootstrapBookmarkablePageLink<L> menu = new MenuBookmarkablePageLink<L>(clazz, null,
+                new StringResourceModel(resourceKey, this, null))
+                .setIconType(iconType);
+        list.add(menu);
+        return menu;
+    }
+
+    private <L extends AbstractListPage> void
+    createAddListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
+                              IconType iconType) {
+        BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
+        MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+    }
+
+
     private NavbarDropDownButton newMetadataMenu() {
         // metadata menu
         final NavbarDropDownButton metadataMenu = new NavbarDropDownButton(
@@ -285,71 +312,48 @@ public abstract class BasePage extends GenericWebPage<Void> {
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
 
-                list.add(new MenuBookmarkablePageLink<ListDepartmentPage>(ListDepartmentPage.class, null,
-                        new StringResourceModel("navbar.departments", this, null))
-                        .setIconType(FontAwesomeIconType.bank));
 
-                list.add(new MenuBookmarkablePageLink<ListFiscalYearPage>(
-                        ListFiscalYearPage.class, null,
-                        new StringResourceModel("navbar.fiscalyear", this, null))
-                        .setIconType(FontAwesomeIconType.calendar_times_o));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListDepartmentPage.class,
+                        "navbar.departments", FontAwesomeIconType.bank);
 
-                list.add(new MenuBookmarkablePageLink<ListTargetGroupPage>(
-                        ListTargetGroupPage.class, null,
-                        new StringResourceModel("navbar.targetgroup", this, null))
-                        .setIconType(FontAwesomeIconType.object_group));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListFiscalYearPage.class,
+                        "navbar.fiscalyear", FontAwesomeIconType.calendar_times_o);
 
-                list.add(new MenuBookmarkablePageLink<ListContractDocumentTypePage>(
-                        ListContractDocumentTypePage.class, null,
-                        new StringResourceModel("navbar.ContractDocumentType", this, null))
-                        .setIconType(FontAwesomeIconType.file));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListTargetGroupPage.class,
+                        "navbar.targetgroup", FontAwesomeIconType.object_group);
 
-                list.add(new MenuBookmarkablePageLink<ListItemPage>(
-                        ListItemPage.class, null,
-                        new StringResourceModel("navbar.items", this, null))
-                        .setIconType(FontAwesomeIconType.list));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListContractDocumentTypePage.class,
+                        "navbar.ContractDocumentType", FontAwesomeIconType.file);
 
-                list.add(new MenuBookmarkablePageLink<ListChargeAccountPage>(
-                        ListChargeAccountPage.class, null,
-                        new StringResourceModel("navbar.chargeaccounts", this, null))
-                        .setIconType(FontAwesomeIconType.money));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListItemPage.class,
+                        "navbar.items", FontAwesomeIconType.list);
 
-                list.add(new MenuBookmarkablePageLink<ListSupplierPage>(
-                        ListSupplierPage.class, null,
-                        new StringResourceModel("navbar.suppliers", this, null))
-                        .setIconType(FontAwesomeIconType.list));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListChargeAccountPage.class,
+                        "navbar.chargeaccounts", FontAwesomeIconType.money);
 
-                list.add(new MenuBookmarkablePageLink<ListStaffPage>(
-                        ListStaffPage.class, null,
-                        new StringResourceModel("navbar.stafflist", this, null))
-                        .setIconType(FontAwesomeIconType.list));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_USER, ListSupplierPage.class,
+                        "navbar.suppliers", FontAwesomeIconType.list);
 
-                list.add(new MenuBookmarkablePageLink<ListProcuringEntityPage>(
-                        ListProcuringEntityPage.class, null,
-                        new StringResourceModel("navbar.procuringentitylist", this, null))
-                        .setIconType(FontAwesomeIconType.list));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListStaffPage.class,
+                        "navbar.stafflist", FontAwesomeIconType.user_times);
 
-                list.add(new MenuBookmarkablePageLink<ListSubcountyPage>(
-                        ListSubcountyPage.class, null,
-                        new StringResourceModel("navbar.subcountylist", this, null))
-                        .setIconType(FontAwesomeIconType.flag));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListProcuringEntityPage.class,
+                        "navbar.procuringentitylist", FontAwesomeIconType.list);
 
-                list.add(new MenuBookmarkablePageLink<ListWardPage>(
-                        ListWardPage.class, null,
-                        new StringResourceModel("navbar.wardlist", this, null))
-                        .setIconType(FontAwesomeIconType.flag));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListSubcountyPage.class,
+                        "navbar.subcountylist", FontAwesomeIconType.flag);
 
-                list.add(new MenuBookmarkablePageLink<ListUnitPage>(
-                        ListUnitPage.class, null,
-                        new StringResourceModel("navbar.unitlist", this, null))
-                        .setIconType(FontAwesomeIconType.list));
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListWardPage.class,
+                        "navbar.wardlist", FontAwesomeIconType.flag);
+
+                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListUnitPage.class,
+                        "navbar.unitlist", FontAwesomeIconType.list);
 
                 return list;
             }
         };
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
 
         return metadataMenu;
     }

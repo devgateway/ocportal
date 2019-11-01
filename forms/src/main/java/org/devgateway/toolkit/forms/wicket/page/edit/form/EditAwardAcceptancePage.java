@@ -31,7 +31,7 @@ import java.math.BigDecimal;
  * @author gmutuhu
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/awardAcceptance")
+@MountPath
 public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<AwardAcceptance> {
     @SpringBean
     protected AwardAcceptanceService awardAcceptanceService;

@@ -13,7 +13,8 @@ class TotalAmountsByItem extends CatChart{
       },
       yaxis: {
         title: this.t('charts:amountsByItem:yAxisTitle'),
-        tickprefix: "   "
+        tickprefix: "   ",
+        tickformat: "s"
       }
     }
   }
