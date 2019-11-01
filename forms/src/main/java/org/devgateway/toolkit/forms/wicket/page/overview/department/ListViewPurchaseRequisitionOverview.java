@@ -10,6 +10,7 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -111,6 +112,10 @@ public class ListViewPurchaseRequisitionOverview extends AbstractListViewStatus<
         headerFragment.setMarkupId("purchasereq-header-" + item.getModelObject().getId());
 
         headerFragment.add(new Label("title", "Purchase Requisition " + (item.getIndex() + 1)));
+
+        WebMarkupContainer terminatedRequisition = new WebMarkupContainer("terminatedRequisition");
+        terminatedRequisition.setVisibilityAllowed(item.getModelObject().isTerminated());
+        headerFragment.add(terminatedRequisition);
 
         header.add(headerFragment);
     }

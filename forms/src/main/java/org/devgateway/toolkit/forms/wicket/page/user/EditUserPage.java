@@ -154,7 +154,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         departments = ComponentUtil.addSelect2MultiChoiceField(editForm, "departments", departmentService);
         departments.required();
-        MetaDataRoleAuthorizationStrategy.authorize(departments, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(departments, Component.ENABLE, SecurityConstants.Roles.ROLE_ADMIN);
 
         roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService);
         roles.getField().add(new RoleAjaxFormComponentUpdatingBehavior("change"));

@@ -66,7 +66,7 @@ public class TenderQuotationEvaluation extends AbstractPurchaseReqMakueniEntity 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return null;
+        return "Tender Quotation Evaluation for purchase requisition " + getPurchaseRequisitionNotNull().getLabel();
     }
 
     @Override

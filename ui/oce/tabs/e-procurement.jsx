@@ -1,6 +1,4 @@
 import Tab from './index';
-import PercentEBid from '../visualizations/charts/percent-e-bid';
-import NrEbid from '../visualizations/charts/nr-e-bid';
 import PercentWithTenders from '../visualizations/charts/percent-with-tenders.jsx';
 
 class EProcurement extends Tab {
@@ -10,6 +8,7 @@ class EProcurement extends Tab {
 }
 
 EProcurement.icon = 'eprocurement';
-EProcurement.visualizations = [PercentEBid, NrEbid, PercentWithTenders];
+//EProcurement.visualizations = [PercentEBid, NrEbid, PercentWithTenders];
+EProcurement.visualizations = [];
 
 export default EProcurement;

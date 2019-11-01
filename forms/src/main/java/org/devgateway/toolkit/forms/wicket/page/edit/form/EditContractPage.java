@@ -31,7 +31,7 @@ import java.math.BigDecimal;
  * @author gmutuhu
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/contract")
+@MountPath
 public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> {
     @SpringBean
     protected ContractService contractService;

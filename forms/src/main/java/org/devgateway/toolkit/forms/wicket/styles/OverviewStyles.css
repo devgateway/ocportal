@@ -282,19 +282,20 @@
 }
 
 .btn.btn-edit {
-    background-color: #ffb500;
+    background-color: #E79768;
     background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIzLjAuMywgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6I0ZGRkZGRjt9Cjwvc3R5bGU+CjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00NCwzNzUuM1Y0NjJoODYuN0wzODYsMjA2LjZMMjk5LjQsMTIwTDQ0LDM3NS4zeiBNNDUzLjEsMTM5LjZjOS4yLTkuMiw5LjItMjMuMSwwLTMyLjRsLTU0LjMtNTQuMwoJYy05LjItOS4yLTIzLjEtOS4yLTMyLjQsMGwtNDIuOCw0Mi44bDg2LjcsODYuN0w0NTMuMSwxMzkuNnoiLz4KPC9zdmc+Cg==");
     background-repeat: no-repeat;
     background-size: 10px 10px;
     background-position: center center;
-    border: 1px solid #ffb500;
+    border: 1px solid #E79768;
     height: 30px;
     padding-left: 0;
     width: 30px;
 }
 
 .btn.btn-edit:hover {
-    background-color: #df9e00;
+    background-color: #c98055;
+    border: 1px solid #c98055;
 }
 
 .project-status .btn.btn-edit {
@@ -878,4 +879,15 @@
   .btn.btn-default.project-year {
       padding-left: 40px;
   }
+}
+
+.tender-status-wrapper .status.terminated{
+  margin-top: -3px;
+  margin-left: 10px;
+  padding-bottom: 0;
+}
+
+.btn[disabled]{
+  opacity: .45;
+  filter: grayscale(1);
 }
