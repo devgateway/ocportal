@@ -1,15 +1,19 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +54,37 @@ public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractT
         if (isTerminated()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
+    }
+
+    @Override
+    protected void afterSaveEntity(T saveable) {
+        super.afterSaveEntity(saveable);
+
+        PurchaseRequisition purchaseRequisition = editForm.getModelObject().getPurchaseRequisition();
+        if (purchaseRequisition != null) {
+            sessionMetadataService.setSessionPurchaseRequisition(purchaseRequisition);
+        }
+        Department department = editForm.getModelObject().getDepartment();
+        if (department != null) {
+            sessionMetadataService.setSessionDepartment(department);
+        }
+
+        Project project = editForm.getModelObject().getProject();
+        if (project != null) {
+            sessionMetadataService.setSessionProject(project);
+        }
+    }
+
+    @Override
+    protected BootstrapCancelButton getCancelButton() {
+        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                final T saveable = editForm.getModelObject();
+                afterSaveEntity(saveable);
+                setResponsePage(listPageClass);
+            }
+        };
     }
 
     @Override

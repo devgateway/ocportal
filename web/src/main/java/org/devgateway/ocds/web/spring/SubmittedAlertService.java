@@ -6,6 +6,7 @@ import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -181,11 +182,17 @@ public class SubmittedAlertService {
         try (Stream<? extends AbstractMakueniEntity> allSubmitted = services.stream()
                 .flatMap(AbstractMakueniEntityService::getAllSubmitted)) {
             allSubmitted
+                    .filter(e -> {
+                        if (e instanceof AbstractPurchaseReqMakueniEntity) {
+                            return !((AbstractPurchaseReqMakueniEntity) e).getPurchaseRequisition().isTerminated();
+                        }
+                        return !e.isTerminated();
+                    })
                     .filter(e -> Duration.between(e.getLastModifiedDate().get().toLocalDate().atStartOfDay(),
                             LocalDate.now().atStartOfDay()).toDays() >= daysSubmittedReminder)
                     .forEach(
                     o -> {
-                        AbstractMakueniEntity e = (AbstractMakueniEntity) o;
+                        AbstractMakueniEntity e = o;
                         Department department = e.getDepartment();
                         departmentTypeIdTitle.putIfAbsent(department.getId(), new ConcurrentHashMap<>());
                         Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>> departmentMap =
