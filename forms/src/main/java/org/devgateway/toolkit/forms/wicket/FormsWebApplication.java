@@ -28,6 +28,7 @@ import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
 import de.agilecoders.wicket.webjars.WicketWebjars;
+import liquibase.integration.spring.SpringLiquibase;
 import nl.dries.wicket.hibernate.dozer.DozerRequestCycleListener;
 import nl.dries.wicket.hibernate.dozer.SessionFinderHolder;
 import org.apache.wicket.Application;
@@ -81,12 +82,16 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.spring.SpringLiquibaseRunner;
 import org.nustaq.serialization.FSTConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -94,6 +99,7 @@ import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.pageserializer.fast2.Fast2WicketSerializer;
 import org.wicketstuff.select2.ApplicationSettings;
 
+import javax.persistence.EntityManagerFactory;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -125,6 +131,16 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
     @Autowired
     private SummernoteJpaStorageService summernoteJpaStorageService;
+
+    private static final Logger logger = LoggerFactory.getLogger(FormsWebApplication.class);
+
+    @Bean
+    public SpringLiquibaseRunner liquibaseAfterJPA(final SpringLiquibase springLiquibase,
+                                                   final EntityManagerFactory entityManagerFactory) {
+        logger.info("Instantiating SpringLiquibaseRunner after initialization of entityManager using factory "
+                + entityManagerFactory);
+        return new SpringLiquibaseRunner(springLiquibase);
+    }
 
     public static void main(final String[] args) {
         SpringApplication.run(FormsWebApplication.class, args);
