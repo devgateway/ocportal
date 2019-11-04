@@ -26,7 +26,7 @@ public interface TenderProcessRepository extends AbstractMakueniEntityRepository
     List<TenderProcess> findByProject(Project project);
 
     @EntityGraph(attributePaths = {"project", "tender", "tenderQuotationEvaluation", "professionalOpinion",
-            "awardNotification", "awardAcceptance", "contract", "purchaseItems"})
+            "awardNotification", "awardAcceptance", "contract", "purchRequisitions"})
     List<TenderProcess> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
 
     @Override
