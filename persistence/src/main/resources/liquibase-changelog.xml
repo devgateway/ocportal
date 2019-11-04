@@ -406,4 +406,54 @@
             insert into person_departments (select id, department_id from person where department_id is not null);
         </sql>
     </changeSet>
+
+    <changeSet id="OCMAKU-382-1" author="mpostelnicu">
+        <sql>
+            ALTER TABLE public.purchase_requisition RENAME TO tender_process;
+            ALTER TABLE public.purchase_requisition_aud RENAME TO tender_process_aud;
+            ALTER TABLE public.purchase_requisition_form_docs RENAME TO tender_process_form_docs;
+            ALTER TABLE public.purchase_requisition_status_comments RENAME TO tender_process_status_comments;
+            ALTER TABLE public.purchase_requisition_purchase_item_aud RENAME TO tender_process_purchase_item_aud;
+            ALTER TABLE public.tender RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.tender_quotation_evaluation RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.professional_opinion RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.award_notification RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.award_acceptance RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.contract RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.tender_process_status_comments RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.tender_process_form_docs RENAME purchase_requisition_id TO tender_process_id;
+            ALTER TABLE public.purchase_item RENAME TO old_purchase_item;
+            ALTER TABLE public.purchase_item_aud RENAME TO old_purchase_item_aud;
+            DROP INDEX "idx4crx1on2q7qknriounxm5p330";
+            DROP INDEX "idxjv3kypsec7o8b1juvyk2dj9mn";
+            DROP INDEX "idxsfo7avbdcooxih398oabhbdau";
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-382-2" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="purch_requisition"/>
+        </preConditions>
+        <sql>
+            insert into purch_requisition (id, "index", charge_account_id, created_by, created_date, last_modified_by,
+            last_modified_date,
+            parent_id, request_approval_date, requested_by_id)
+            (select nextval('hibernate_sequence'),0, t.charge_account_id, t.created_by, t.created_date,
+            t.last_modified_by,
+            t.last_modified_date, t.id, t.request_approval_date, t.requested_by_id from tender_process t);
+            insert into purch_requisition_form_docs (purch_requisition_id, form_docs_id)
+            (select pr.id, tp.form_docs_id from tender_process_form_docs tp, purch_requisition pr where pr.parent_id =
+            tp.tender_process_id);
+            drop table tender_process_form_docs;
+            insert into purchase_item (id, created_by, created_date, last_modified_by, last_modified_date, amount,
+            description, quantity,
+            parent_id, plan_item_id, index)
+            (select o.id, o.created_by, o.created_date, o.last_modified_by, o.last_modified_date,
+            o.amount, o.description, o.quantity, pr.id , o.plan_item_id, o."index"
+            from old_purchase_item o, tender_process p, purch_requisition pr where o.parent_id=p.id
+            and pr.parent_id = p.id);
+            alter table tender_item DROP CONSTRAINT "fkl61vasyq7qrwegdguaqqrt97v";
+            drop table old_purchase_item;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
