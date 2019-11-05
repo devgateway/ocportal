@@ -165,7 +165,6 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     public void removePurchaseRequisition(final PurchaseRequisition pr) {
         purchaseRequisitions.remove(pr);
-        pr.setProject(null);
     }
 
     @Override
