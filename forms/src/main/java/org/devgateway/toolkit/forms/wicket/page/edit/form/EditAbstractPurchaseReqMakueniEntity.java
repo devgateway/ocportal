@@ -17,6 +17,7 @@ import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author mihai
@@ -45,6 +46,10 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
 
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);
+        }
+
+        if (!ObjectUtils.isEmpty(getNextForm())) {
+            deleteButton.setVisibilityAllowed(false);
         }
     }
 
@@ -86,6 +91,8 @@ public abstract class EditAbstractPurchaseReqMakueniEntity<T extends AbstractPur
             }
         };
     }
+
+    protected abstract AbstractPurchaseReqMakueniEntity getNextForm();
 
     @Override
     protected ModalSaveEditPageButton getRevertToDraftPageButton() {

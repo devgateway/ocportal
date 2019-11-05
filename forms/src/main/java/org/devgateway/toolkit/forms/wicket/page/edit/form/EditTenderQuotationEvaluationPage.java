@@ -8,6 +8,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
+import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
@@ -45,6 +46,11 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractPurchaseReqMa
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
         editForm.add(formDocs);
+    }
+
+    @Override
+    protected AbstractPurchaseReqMakueniEntity getNextForm() {
+        return editForm.getModelObject().getPurchaseRequisition().getSingleProfessionalOpinion();
     }
 
     @Override
