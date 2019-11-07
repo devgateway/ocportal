@@ -212,10 +212,15 @@ hr.edit-separator {
 }
 .panel-body .btn.btn-info{
   margin-left: 20px;
+  margin-bottom: 5px;
   margin-top: -5px;
 }
-.panel-body .file-caption-main{
-  padding-top: 10px;
+.panel-body input.form-control,
+.panel-body input[type=text]{
+  font-size: 14px;
+}
+.panel-body .panel.panel-info{
+  margin-bottom: 10px;
 }
 .panel-body .pane .show-all{
   margin-right: 20px;
