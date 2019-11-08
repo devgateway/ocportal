@@ -176,10 +176,14 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
             super.onInitialize();
 
             GenericBootstrapFormComponent<Staff, Select2Choice<Staff>> requestedBy =
-                    ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "requestedBy", staffService).required();
+                    ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "requestedBy",
+                            staffService
+                    ).required();
             requestedBy.add(new StopEventPropagationBehavior());
             GenericBootstrapFormComponent<ChargeAccount, Select2Choice<ChargeAccount>> chargeAccount =
-                    ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "chargeAccount", chargeAccountService).required();
+                    ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "chargeAccount",
+                            chargeAccountService
+                    ).required();
             chargeAccount.add(new StopEventPropagationBehavior());
         }
     }

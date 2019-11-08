@@ -84,7 +84,8 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
 
     protected void addTenderTitleColumn() {
         columns.add(new PropertyColumn<T, String>(
-                new Model<>((new StringResourceModel("title", ListAbstractTenderProcessMakueniEntity.this)).getString()),
+                new Model<>((new StringResourceModel("title",
+                        ListAbstractTenderProcessMakueniEntity.this)).getString()),
                 null, "tenderProcess.tender.iterator.next.tenderTitle") {
             @Override
             public void populateItem(final Item<ICellPopulator<T>> item,
