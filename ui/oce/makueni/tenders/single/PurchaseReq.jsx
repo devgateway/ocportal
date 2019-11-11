@@ -90,7 +90,7 @@ class PurchaseReq extends FeedbackPage {
       
       <div className="row padding-top-10">
         <div className="col-md-6">
-          <div className="item-label">Procurement Plan Documents</div>
+          <div className="item-label">Purchase Requisition Documents</div>
           
           {
             data.formDocs.map(doc => <div key={doc._id}>
