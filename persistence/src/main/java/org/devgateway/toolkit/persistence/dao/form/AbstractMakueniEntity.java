@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -34,7 +35,7 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
             AwardNotification.class, AwardAcceptance.class}, name = "Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FileMetadata> formDocs;
+    private Set<FileMetadata> formDocs = new HashSet<>();
 
     /**
      * Gets direct children of current entity, that is the next form(s) that have to be filled in after this one is done
