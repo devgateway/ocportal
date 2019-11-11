@@ -165,7 +165,6 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
 
     public void remoteTenderProcess(final TenderProcess pr) {
         tenderProcesses.remove(pr);
-        pr.setProject(null);
     }
 
     @Override

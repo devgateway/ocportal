@@ -28,6 +28,8 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
@@ -121,6 +123,11 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
 
+    }
+
+    @Override
+    protected AbstractPurchaseReqMakueniEntity getNextForm() {
+        return editForm.getModelObject().getPurchaseRequisition().getSingleTenderQuotationEvaluation();
     }
 
     private void addProcuringEntitySection() {
