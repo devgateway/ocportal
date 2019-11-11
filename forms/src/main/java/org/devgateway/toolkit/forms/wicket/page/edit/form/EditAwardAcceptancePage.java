@@ -16,7 +16,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
@@ -65,8 +65,8 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     }
 
     @Override
-    protected AbstractPurchaseReqMakueniEntity getNextForm() {
-        return editForm.getModelObject().getPurchaseRequisition().getSingleContract();
+    protected AbstractTenderProcessMakueniEntity getNextForm() {
+        return editForm.getModelObject().getTenderProcess().getSingleContract();
     }
 
     @Override

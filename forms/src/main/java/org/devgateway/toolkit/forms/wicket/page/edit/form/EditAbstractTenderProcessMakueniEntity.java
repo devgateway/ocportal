@@ -92,7 +92,7 @@ public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractT
         };
     }
 
-    protected abstract AbstractPurchaseReqMakueniEntity getNextForm();
+    protected abstract AbstractTenderProcessMakueniEntity getNextForm();
 
     @Override
     protected ModalSaveEditPageButton getRevertToDraftPageButton() {

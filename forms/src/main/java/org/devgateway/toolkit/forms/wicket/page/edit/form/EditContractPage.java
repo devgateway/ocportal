@@ -16,7 +16,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -80,7 +80,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     }
 
     @Override
-    protected AbstractPurchaseReqMakueniEntity getNextForm() {
+    protected AbstractTenderProcessMakueniEntity getNextForm() {
         return null;
     }
 

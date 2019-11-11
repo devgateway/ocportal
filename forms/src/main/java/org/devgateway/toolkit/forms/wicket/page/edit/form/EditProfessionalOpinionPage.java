@@ -13,7 +13,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -73,8 +73,8 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
     }
 
     @Override
-    protected AbstractPurchaseReqMakueniEntity getNextForm() {
-        return editForm.getModelObject().getPurchaseRequisition().getSingleAwardNotification();
+    protected AbstractTenderProcessMakueniEntity getNextForm() {
+        return editForm.getModelObject().getTenderProcess().getSingleAwardNotification();
     }
 
     @Override
