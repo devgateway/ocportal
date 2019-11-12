@@ -37,7 +37,7 @@ class PurchaseReqView extends CRDPage {
       name: 'Tender',
       tab: 1
     }, {
-      name: 'Purchase Req',
+      name: 'Purchase Requisitions',
       tab: 2
     }, {
       name: 'Tender Quotation',

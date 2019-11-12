@@ -41,6 +41,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -52,6 +53,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author idobre
@@ -139,7 +141,10 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
         final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel", tenderProcess,
                 tenderProcess.getPurchaseRequestNumber(), new ArrayList<>(Arrays.asList(
-                tenderProcess.getRequestApprovalDate(), tenderProcess.getAmount())),
+                tenderProcess.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
+                        .collect(Collectors.toList()),
+                tenderProcess.getAmount()
+        )),
                 tenderProcess, EditTenderProcessPage.class, null);
         containerFragment.add(requisitionPanel);
 

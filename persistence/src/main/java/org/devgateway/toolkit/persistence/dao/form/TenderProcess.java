@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
@@ -31,7 +29,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,19 +54,6 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @ExcelExport(useTranslation = true, name = "Purchase Request Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String purchaseRequestNumber;
-
-    @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Staff requestedBy;
-
-    @ExcelExport(justExport = true, useTranslation = true, name = "Charge Account")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private ChargeAccount chargeAccount;
-
-    @ExcelExport(useTranslation = true, name = "Request Approval Date")
-    private Date requestApprovalDate;
 
     @ExcelExport(name = "Purchase Requisitions", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -187,30 +171,6 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         this.purchaseRequestNumber = purchaseRequestNumber;
     }
 
-    public Staff getRequestedBy() {
-        return requestedBy;
-    }
-
-    public void setRequestedBy(final Staff requestedBy) {
-        this.requestedBy = requestedBy;
-    }
-
-    public ChargeAccount getChargeAccount() {
-        return chargeAccount;
-    }
-
-    public void setChargeAccount(final ChargeAccount chargeAccount) {
-        this.chargeAccount = chargeAccount;
-    }
-
-    public Date getRequestApprovalDate() {
-        return requestApprovalDate;
-    }
-
-    public void setRequestApprovalDate(final Date requestApprovalDate) {
-        this.requestApprovalDate = requestApprovalDate;
-    }
-
     @Override
     public void setLabel(final String label) {
 
@@ -235,7 +195,7 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         for (PurchRequisition pr : purchRequisitions) {
             for (PurchaseItem item : pr.getPurchaseItems()) {
                 if (item.getAmount() != null && item.getQuantity() != null) {
-                    amount.add(item.getAmount().multiply(item.getQuantity()));
+                    amount = amount.add(item.getAmount().multiply(item.getQuantity()));
                 }
             }
         }

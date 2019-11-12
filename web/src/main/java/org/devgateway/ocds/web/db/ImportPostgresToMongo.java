@@ -107,7 +107,8 @@ public class ImportPostgresToMongo {
                             .forEach(item -> item.getContractDocs().stream()
                                     .forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs())));
 
-                    self.storeMakueniFormFiles(pr.getFormDocs());
+                    pr.getPurchRequisitions().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
+                    //self.storeMakueniFormFiles(pr.getFormDocs());
                 });
 
                 self.storeMakueniFormFiles(project.getCabinetPaper().getFormDocs());
