@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.persistence.service.filterstate.form;
 
 import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.persistence.dao.Person_;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,7 +13,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class TenderFilterState extends AbstractPurchaseReqMakueniFilterState<Tender> {
+public class TenderFilterState extends AbstractTenderProcessMakueniFilterState<Tender> {
 
     private String tenderTitle;
 

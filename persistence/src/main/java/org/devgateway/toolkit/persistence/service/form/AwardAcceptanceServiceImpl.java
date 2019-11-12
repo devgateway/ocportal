@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.AwardAcceptanceRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,8 @@ public class AwardAcceptanceServiceImpl extends AbstractMakueniEntityServiceImpl
 
     @Override
     @Cacheable
-    public AwardAcceptance findByPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        return awardAcceptanceRepository.findByPurchaseRequisition(purchaseRequisition);
+    public AwardAcceptance findByTenderProcess(final TenderProcess tenderProcess) {
+        return awardAcceptanceRepository.findByTenderProcess(tenderProcess);
     }
 
 }

@@ -14,52 +14,52 @@ import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 
 @MappedSuperclass
-public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable,
+public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable,
         ProcurementPlanAttachable {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_requisition_id")
+    @JoinColumn(name = "tender_process_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected PurchaseRequisition purchaseRequisition;
+    protected TenderProcess tenderProcess;
 
     @Override
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public AbstractAuditableEntity getParent() {
-        return purchaseRequisition;
+        return tenderProcess;
     }
 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public PurchaseRequisition getPurchaseRequisition() {
-        return purchaseRequisition;
+    public TenderProcess getTenderProcess() {
+        return tenderProcess;
     }
 
-    public void setPurchaseRequisition(final PurchaseRequisition purchaseRequisition) {
-        this.purchaseRequisition = purchaseRequisition;
+    public void setTenderProcess(final TenderProcess tenderProcess) {
+        this.tenderProcess = tenderProcess;
     }
 
     @Override
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public Project getProject() {
-        return getPurchaseRequisition().getProject();
+        return getTenderProcess().getProject();
     }
 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public PurchaseRequisition getPurchaseRequisitionNotNull() {
-        Objects.requireNonNull(purchaseRequisition, "Purchase requisition must not be null at this stage!");
-        return purchaseRequisition;
+    public TenderProcess getTenderProcessNotNull() {
+        Objects.requireNonNull(tenderProcess, "Tender process must not be null at this stage!");
+        return tenderProcess;
     }
 
     @Override
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
-        if (purchaseRequisition != null && purchaseRequisition.getProject() != null) {
-            return purchaseRequisition.getProject().getProcurementPlan();
+        if (tenderProcess != null && tenderProcess.getProject() != null) {
+            return tenderProcess.getProject().getProcurementPlan();
         }
         return null;
     }
@@ -69,6 +69,6 @@ public abstract class AbstractPurchaseReqMakueniEntity extends AbstractMakueniEn
     @Transactional
     @org.springframework.data.annotation.Transient
     public Department getDepartment() {
-        return getPurchaseRequisitionNotNull().getDepartment();
+        return getTenderProcessNotNull().getDepartment();
     }
 }

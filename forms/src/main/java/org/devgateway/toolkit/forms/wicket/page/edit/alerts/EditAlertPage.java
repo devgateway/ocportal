@@ -11,8 +11,8 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.alerts.AlertService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
@@ -51,7 +51,7 @@ public class EditAlertPage extends AbstractEditPage<Alert> {
                 .getField().add(RfcCompliantEmailAddressValidator.getInstance());
 
         if (editForm.getModelObject().getPurchaseReq() != null) {
-            final PurchaseRequisition purchaseReq = editForm.getModelObject().getPurchaseReq();
+            final TenderProcess purchaseReq = editForm.getModelObject().getPurchaseReq();
             final Tender tender = purchaseReq.getTender().stream().findFirst().get();
 
             editForm.add(new GenericSleepFormComponent("purchaseReq", new Model(tender.getTenderTitle())));

@@ -25,9 +25,9 @@ import java.util.Date;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "purchase_requisition_id")})
+@Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
+public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Date")
     private Date acceptanceDate;
 
@@ -71,12 +71,12 @@ public class AwardAcceptance extends AbstractPurchaseReqMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return "Award acceptance for purchase requisition " + getPurchaseRequisitionNotNull().getLabel();
+        return "Award acceptance for tender process " + getTenderProcessNotNull().getLabel();
     }
 
     @Override
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull().getContract()));
+        return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull().getContract()));
     }
 }
