@@ -4,6 +4,7 @@ import Cancelled from '../visualizations/charts/cancelled';
 import NrCancelled from '../visualizations/charts/nr-cancelled';
 import TotalAmountsByItem from '../visualizations/charts/total-amounts-by-item';
 import BidsByItem from '../visualizations/charts/bids-by-item';
+import PercentWithTenders from '../visualizations/charts/percent-with-tenders';
 
 class Efficiency extends Tab {
   static getName(t) {
@@ -12,6 +13,6 @@ class Efficiency extends Tab {
 }
 
 Efficiency.icon = 'efficiency';
-Efficiency.visualizations = [BidPeriod, TotalAmountsByItem, BidsByItem, Cancelled, NrCancelled];
+Efficiency.visualizations = [BidPeriod, TotalAmountsByItem, BidsByItem, Cancelled, NrCancelled, PercentWithTenders];
 
 export default Efficiency;

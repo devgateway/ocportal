@@ -33,9 +33,9 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "purchase_requisition_id")})
+@Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Contract extends AbstractPurchaseReqMakueniEntity {
+public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
 
@@ -141,7 +141,7 @@ public class Contract extends AbstractPurchaseReqMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return "Contract for purchase requisition " + getPurchaseRequisitionNotNull().getLabel();
+        return "Contract for tender process " + getTenderProcessNotNull().getLabel();
     }
 
     @Override

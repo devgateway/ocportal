@@ -64,7 +64,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
     private TooltipConfig.OpenTrigger configWithTrigger = TooltipConfig.OpenTrigger.hover;
 
     // use a flag if we need to display a Tooltip since StringResourceModel it's expensive
-    private Boolean showTooltip = false;
+    private Boolean showTooltip = true;
 
     private final IModel<String> labelModel;
 

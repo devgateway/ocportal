@@ -106,15 +106,18 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
         editForm.add(disableApiSecurity);
 
         enableDailyAutomatedImport = new CheckBoxToggleBootstrapFormComponent("enableDailyAutomatedImport");
+        enableDailyAutomatedImport.setVisibilityAllowed(false);
         editForm.add(enableDailyAutomatedImport);
 
         disableEmailAlerts = new CheckBoxToggleBootstrapFormComponent("disableEmailAlerts");
         editForm.add(disableEmailAlerts);
 
         adminEmail = new TextFieldBootstrapFormComponent<>("adminEmail");
+        adminEmail.setVisibilityAllowed(false);
         editForm.add(adminEmail);
 
         importFilesPath = new TextFieldBootstrapFormComponent<>("importFilesPath");
+        importFilesPath.setVisibilityAllowed(false);
         editForm.add(importFilesPath);
 
         addCacheClearLink();

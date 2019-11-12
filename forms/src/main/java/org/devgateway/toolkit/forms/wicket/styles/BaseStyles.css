@@ -207,6 +207,28 @@ hr.edit-separator {
     color: #00589e;
     float: left;
 }
+.panel-body .pane.title h4{
+  margin-left: 20px;
+}
+.panel-body .btn.btn-info{
+  margin-left: 20px;
+  margin-bottom: 5px;
+  margin-top: -5px;
+}
+.panel-body input.form-control,
+.panel-body input[type=text]{
+  font-size: 14px;
+}
+.panel-body .panel.panel-info{
+  margin-bottom: 10px;
+}
+.panel-body .pane .show-all{
+  margin-right: 20px;
+}
+.panel-body .panel-group{
+  margin-left: 2%;
+  width: 96%;
+}
 
 .pane .count {
     font-weight: bold;

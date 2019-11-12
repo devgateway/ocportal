@@ -41,7 +41,7 @@ public class EditStaffPage extends AbstractCategoryEditPage<Staff> {
 
         final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "title");
         title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        
-        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService).required();
+
+        ComponentUtil.addSelect2ChoiceField(editForm, "department", departmentService);
     }
 }

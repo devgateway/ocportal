@@ -59,8 +59,8 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
 
         columns.add(new PropertyColumn<>(new Model<>("# Alerts Send"), "numberSentAlerts", "numberSentAlerts"));
         columns.add(new PropertyColumn<>(new Model<>("# Errors"), "numberErrors", "numberErrors"));
-        columns.add(new PropertyColumn<>(new Model<>("DB Time"), "dbTime", "dbTime"));
-        columns.add(new PropertyColumn<>(new Model<>("Sending Time"), "sendingTime", "sendingTime"));
+        columns.add(new PropertyColumn<>(new Model<>("DB Time in Sec"), "dbTime", "dbTime"));
+        columns.add(new PropertyColumn<>(new Model<>("Sending Time in Sec"), "sendingTime", "sendingTime"));
 
         super.onInitialize();
 

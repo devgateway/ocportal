@@ -193,7 +193,7 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
         final Row row = sheet.createRow(rowNumber);
 
         if (rowNumber < 1) {
-            row.setHeight((short) 2000);             // 100px (2000 / 10 / 2)
+            row.setHeight((short) 800);             // 100px (2000 / 10 / 2)
         } else {
             row.setHeight((short) 600);              // 30px  (600 / 10 / 2)
         }

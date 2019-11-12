@@ -277,15 +277,19 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 deleteButton.setVisibilityAllowed(false);
             }
 
-            add(new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
-                private static final long serialVersionUID = -249084359200507749L;
-
-                @Override
-                protected void onSubmit(final AjaxRequestTarget target) {
-                    setResponsePage(listPageClass);
-                }
-            });
+            add(getCancelButton());
         }
+    }
+
+    protected BootstrapCancelButton getCancelButton() {
+        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
+            private static final long serialVersionUID = -249084359200507749L;
+
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                setResponsePage(listPageClass);
+            }
+        };
     }
 
 

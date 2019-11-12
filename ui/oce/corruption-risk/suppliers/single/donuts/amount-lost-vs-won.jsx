@@ -17,9 +17,9 @@ class CenterText extends translatable(React.PureComponent) {
     return (
       <div className="center-text two-rows">
         <div>
-          ${this.format(fst)}
+          {this.format(fst)}
           <div className="secondary">
-            ${this.format(snd)} {this.t('crd:supplier:amountLostVsWon:Lost')}
+            {this.format(snd)} {this.t('crd:supplier:amountLostVsWon:Lost')}
           </div>
         </div>
       </div>

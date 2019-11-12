@@ -4,6 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -27,6 +28,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -306,10 +308,18 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         protected void onInitialize() {
             super.onInitialize();
 
-            final Select2ChoiceBootstrapFormComponent<Item> filterItem =
-                    ComponentUtil.addSelect2ChoiceField(this, "filterItem", itemService);
+            final GenericPersistableJpaTextChoiceProvider<Item> choiceProvider
+                    = new GenericPersistableJpaTextChoiceProvider<>(itemService);
+
+            final Select2ChoiceBootstrapFormComponent<Item> filterItem = new Select2ChoiceBootstrapFormComponent<Item>(
+                    "filterItem", choiceProvider) {
+                @Override
+                public void onEvent(IEvent event) {
+                }
+            };
 
             filterItem.getField().add(new AjaxComponentUpdatingBehavior("change"));
+            this.add(filterItem);
         }
 
         private class AjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {

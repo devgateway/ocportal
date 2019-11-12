@@ -11,7 +11,7 @@ class ProcurementsByStatus extends translatable(React.PureComponent) {
     this.state.data = [];
     this.state.length = 5;
   }
-  
+
   componentDidMount() {
     const { zoomed, data } = this.props;
     const name = zoomed ? 'ZoomedProcurementsByStatusChart' : 'ProcurementsByStatusChart';
@@ -28,18 +28,18 @@ class ProcurementsByStatus extends translatable(React.PureComponent) {
       .then(length => this.setState({ length }));
     });
   }
-  
+
   componentWillUnmount() {
     const { zoomed, data } = this.props;
     const name = zoomed ? 'ZoomedProcurementsByStatusChart' : 'ProcurementsByStatusChart';
     data.removeListener(name);
     maxCommonDataLength.removeListener(name);
   }
-  
+
   render() {
     const { translations, zoomed } = this.props;
     let { data, length } = this.state;
-    
+
     let height = 350;
     if (zoomed) {
       height = Math.max(height, data.length * 50);
@@ -50,9 +50,9 @@ class ProcurementsByStatus extends translatable(React.PureComponent) {
           data.unshift({});
         }
       }
-      height = length * 70;
+      height = length * 80;
     }
-    
+
     return (
       <div className="oce-chart">
         {(data === undefined || data.length === 0)

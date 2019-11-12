@@ -37,7 +37,7 @@ public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEnt
     @Transient
     @org.springframework.data.annotation.Transient
     @JsonIgnore
-    private Boolean visibleStatusComments = false;
+    private Boolean visibleStatusComments = true;
 
     @Transient
     @org.springframework.data.annotation.Transient

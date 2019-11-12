@@ -35,12 +35,6 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
     @ExcelExport(useTranslation = true, name = "Supplier Responsiveness")
     private String supplierResponsiveness;
 
-    @ExcelExport(useTranslation = true, name = "Supplier Score")
-    private Integer supplierScore;
-
-    @ExcelExport(useTranslation = true, name = "Supplier Ranking")
-    private Integer supplierRanking;
-
     @ExcelExport(useTranslation = true, name = "Quoted Price")
     private BigDecimal quotedAmount;
 
@@ -50,14 +44,6 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
 
     public String getSupplierResponsiveness() {
         return supplierResponsiveness;
-    }
-
-    public Integer getSupplierScore() {
-        return supplierScore;
-    }
-
-    public Integer getSupplierRanking() {
-        return supplierRanking;
     }
 
     public BigDecimal getQuotedAmount() {
@@ -74,14 +60,6 @@ public class Bid extends AbstractChildAuditableEntity<TenderQuotationEvaluation>
 
     public void setSupplierResponsiveness(final String supplierResponsiveness) {
         this.supplierResponsiveness = supplierResponsiveness;
-    }
-
-    public void setSupplierScore(final Integer supplierScore) {
-        this.supplierScore = supplierScore;
-    }
-
-    public void setSupplierRanking(final Integer supplierRanking) {
-        this.supplierRanking = supplierRanking;
     }
 
     @Transient

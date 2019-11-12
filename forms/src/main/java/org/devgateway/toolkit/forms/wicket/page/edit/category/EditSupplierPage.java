@@ -20,7 +20,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author gmutuhu
  *
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/supplier")
 public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
     @SpringBean

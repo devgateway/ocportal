@@ -6,6 +6,7 @@ import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -15,7 +16,7 @@ import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -82,7 +83,7 @@ public class SubmittedAlertService {
     private ProfessionalOpinionService professionalOpinionService;
 
     @Autowired
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @Autowired
     private TenderService tenderService;
@@ -114,7 +115,7 @@ public class SubmittedAlertService {
                 contractService,
                 procurementPlanService, //not pr
                 professionalOpinionService,
-                purchaseRequisitionService, //not pr
+                tenderProcessService, //not pr
                 tenderService,
                 tenderQuotationEvaluationService));
     }
@@ -181,11 +182,17 @@ public class SubmittedAlertService {
         try (Stream<? extends AbstractMakueniEntity> allSubmitted = services.stream()
                 .flatMap(AbstractMakueniEntityService::getAllSubmitted)) {
             allSubmitted
+                    .filter(e -> {
+                        if (e instanceof AbstractTenderProcessMakueniEntity) {
+                            return !((AbstractTenderProcessMakueniEntity) e).getTenderProcess().isTerminated();
+                        }
+                        return !e.isTerminated();
+                    })
                     .filter(e -> Duration.between(e.getLastModifiedDate().get().toLocalDate().atStartOfDay(),
                             LocalDate.now().atStartOfDay()).toDays() >= daysSubmittedReminder)
                     .forEach(
                     o -> {
-                        AbstractMakueniEntity e = (AbstractMakueniEntity) o;
+                        AbstractMakueniEntity e = o;
                         Department department = e.getDepartment();
                         departmentTypeIdTitle.putIfAbsent(department.getId(), new ConcurrentHashMap<>());
                         Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>> departmentMap =
