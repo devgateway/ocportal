@@ -16,11 +16,11 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -38,7 +38,7 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     protected AwardAcceptanceService awardAcceptanceService;
 
     @SpringBean
-    protected PurchaseRequisitionService purchaseRequisitionService;
+    protected TenderProcessService tenderProcessService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -65,14 +65,14 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     }
 
     @Override
-    protected AbstractPurchaseReqMakueniEntity getNextForm() {
-        return editForm.getModelObject().getPurchaseRequisition().getSingleContract();
+    protected AbstractTenderProcessMakueniEntity getNextForm() {
+        return editForm.getModelObject().getTenderProcess().getSingleContract();
     }
 
     @Override
     protected AwardAcceptance newInstance() {
         final AwardAcceptance awardAcceptance = super.newInstance();
-        awardAcceptance.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
+        awardAcceptance.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return awardAcceptance;
     }
@@ -81,18 +81,18 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     protected void beforeSaveEntity(final AwardAcceptance awardAcceptance) {
         super.beforeSaveEntity(awardAcceptance);
 
-        final PurchaseRequisition purchaseRequisition = awardAcceptance.getPurchaseRequisition();
-        purchaseRequisition.addAwardAcceptance(awardAcceptance);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = awardAcceptance.getTenderProcess();
+        tenderProcess.addAwardAcceptance(awardAcceptance);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
     protected void beforeDeleteEntity(final AwardAcceptance awardAcceptance) {
         super.beforeDeleteEntity(awardAcceptance);
 
-        final PurchaseRequisition purchaseRequisition = awardAcceptance.getPurchaseRequisition();
-        purchaseRequisition.removeAwardAcceptance(awardAcceptance);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = awardAcceptance.getTenderProcess();
+        tenderProcess.removeAwardAcceptance(awardAcceptance);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
@@ -103,10 +103,10 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getContract())) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getContract())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(
-                            editForm.getModelObject().getPurchaseRequisition().getContract()).getId());
+                            editForm.getModelObject().getTenderProcess().getContract()).getId());
         }
 
         return pp;

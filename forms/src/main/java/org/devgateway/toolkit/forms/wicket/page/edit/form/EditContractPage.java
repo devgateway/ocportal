@@ -16,13 +16,13 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -38,7 +38,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected ContractService contractService;
 
     @SpringBean
-    protected PurchaseRequisitionService purchaseRequisitionService;
+    protected TenderProcessService tenderProcessService;
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
@@ -65,7 +65,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         final DateFieldBootstrapFormComponent contractDate = ComponentUtil.addDateField(editForm, "contractDate");
         contractDate.required();
         final AwardNotification awardNotification =
-                editForm.getModelObject().getPurchaseRequisition().getSingleAwardNotification();
+                editForm.getModelObject().getTenderProcess().getSingleAwardNotification();
         if (awardNotification != null && awardNotification.getAwardDate() != null) {
             contractDate.getField().add(new AfterThanDateValidator(awardNotification.getAwardDate()));
         }
@@ -80,14 +80,14 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     }
 
     @Override
-    protected AbstractPurchaseReqMakueniEntity getNextForm() {
+    protected AbstractTenderProcessMakueniEntity getNextForm() {
         return null;
     }
 
     @Override
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
-        contract.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
+        contract.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return contract;
     }
@@ -96,18 +96,18 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     protected void beforeSaveEntity(final Contract contract) {
         super.beforeSaveEntity(contract);
 
-        final PurchaseRequisition purchaseRequisition = contract.getPurchaseRequisition();
-        purchaseRequisition.addContract(contract);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = contract.getTenderProcess();
+        tenderProcess.addContract(contract);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
     protected void beforeDeleteEntity(final Contract contract) {
         super.beforeDeleteEntity(contract);
 
-        final PurchaseRequisition purchaseRequisition = contract.getPurchaseRequisition();
-        purchaseRequisition.removeContract(contract);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = contract.getTenderProcess();
+        tenderProcess.removeContract(contract);
+        tenderProcessService.save(tenderProcess);
     }
 
     private void addSupplierInfo() {

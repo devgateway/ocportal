@@ -8,11 +8,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.alerts.AlertService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class AlertsController {
     private DepartmentService departmentService;
 
     @Autowired
-    private PurchaseRequisitionService purchaseRequisitionService;
+    private TenderProcessService tenderProcessService;
 
     @Autowired
     private ItemService itemService;
@@ -62,9 +62,9 @@ public class AlertsController {
     public Map subscribeAlert(@ModelAttribute @Valid final AlertsRequest alertsRequest) {
         final Map<String, Object> response = new HashMap();
         try {
-            final PurchaseRequisition purchaseReq;
+            final TenderProcess purchaseReq;
             if (alertsRequest.getPurchaseReqId() != null) {
-                final Optional<PurchaseRequisition> purchaseReqOptional = purchaseRequisitionService
+                final Optional<TenderProcess> purchaseReqOptional = tenderProcessService
                         .findById(alertsRequest.getPurchaseReqId());
 
                 if (purchaseReqOptional.isPresent()) {

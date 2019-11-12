@@ -38,7 +38,7 @@ import java.util.zip.ZipOutputStream;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/contracts")
-public class ListContractPage extends ListAbstractPurchaseReqMakueniEntity<Contract> {
+public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Contract> {
     @SpringBean
     protected ContractService contractService;
 

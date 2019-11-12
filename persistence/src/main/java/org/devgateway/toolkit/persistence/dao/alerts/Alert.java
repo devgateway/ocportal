@@ -5,7 +5,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -67,7 +67,7 @@ public class Alert extends AbstractAuditableEntity {
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
-    private PurchaseRequisition purchaseReq;
+    private TenderProcess purchaseReq;
 
     public Alert() {
 
@@ -75,7 +75,7 @@ public class Alert extends AbstractAuditableEntity {
 
     public Alert(final String email,
                  final Set<Department> departments, final Set<Item> items,
-                 final PurchaseRequisition purchaseReq) {
+                 final TenderProcess purchaseReq) {
         this.email = email;
         this.departments = new HashSet<>(departments);
         this.items = new HashSet<>(items);
@@ -176,11 +176,11 @@ public class Alert extends AbstractAuditableEntity {
         this.items = items;
     }
 
-    public PurchaseRequisition getPurchaseReq() {
+    public TenderProcess getPurchaseReq() {
         return purchaseReq;
     }
 
-    public void setPurchaseReq(final PurchaseRequisition purchaseReq) {
+    public void setPurchaseReq(final TenderProcess purchaseReq) {
         this.purchaseReq = purchaseReq;
     }
 }
