@@ -3,31 +3,20 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
-import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author idobre
@@ -53,19 +42,6 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
     protected void onInitialize() {
         super.onInitialize();
 
-        awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
-                new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
-        awardeeSelector.required();
-        editForm.add(awardeeSelector);
-
-        ComponentUtil.addDateField(editForm, "professionalOpinionDate").required();
-
-        final TextFieldBootstrapFormComponent<BigDecimal> recommendedAwardAmount =
-                ComponentUtil.addBigDecimalField(editForm, "recommendedAwardAmount");
-        recommendedAwardAmount.required();
-        recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
@@ -120,19 +96,5 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
         return pp;
     }
 
-    private List<Supplier> getSuppliersInTenderQuotation() {
-        final TenderProcess tenderProcess = editForm.getModelObject().getTenderProcess();
-        final TenderQuotationEvaluation tenderQuotationEvaluation =
-                PersistenceUtil.getNext(tenderProcess.getTenderQuotationEvaluation());
-        final List<Supplier> suppliers = new ArrayList<>();
-        if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
-            for (Bid bid : tenderQuotationEvaluation.getBids()) {
-                if (bid.getSupplier() != null) {
-                    suppliers.add(bid.getSupplier());
-                }
-            }
-        }
 
-        return suppliers;
-    }
 }

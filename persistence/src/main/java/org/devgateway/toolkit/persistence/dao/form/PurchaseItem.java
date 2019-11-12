@@ -2,7 +2,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
@@ -16,7 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 /**
@@ -30,7 +29,8 @@ import java.math.BigDecimal;
         @Index(columnList = "plan_item_id"),
         @Index(columnList = "description")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PurchaseItem extends AbstractChildAuditableEntity<PurchRequisition> implements ListViewItem, Labelable {
+public class PurchaseItem extends AbstractChildExpandableAuditEntity<PurchRequisition> implements ListViewItem,
+        Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -45,11 +45,6 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchRequisition>
 
     @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal amount;
-
-    @Transient
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    private Boolean expanded = false;
 
     public PlanItem getPlanItem() {
         return planItem;
@@ -81,30 +76,6 @@ public class PurchaseItem extends AbstractChildAuditableEntity<PurchRequisition>
 
     public void setDescription(final String description) {
         this.description = description;
-    }
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getEditable() {
-        return null;
-    }
-
-    @Override
-    public void setEditable(final Boolean editable) {
-
-    }
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getExpanded() {
-        return expanded;
-    }
-
-    @Override
-    public void setExpanded(final Boolean expanded) {
-        this.expanded = expanded;
     }
 
     @Override
