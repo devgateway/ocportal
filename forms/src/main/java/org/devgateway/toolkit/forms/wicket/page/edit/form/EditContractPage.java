@@ -7,7 +7,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
@@ -66,9 +65,10 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         contractDate.required();
         final AwardNotification awardNotification =
                 editForm.getModelObject().getTenderProcess().getSingleAwardNotification();
-        if (awardNotification != null && awardNotification.getAwardDate() != null) {
-            contractDate.getField().add(new AfterThanDateValidator(awardNotification.getAwardDate()));
-        }
+        //TODO: fix award notification
+//        if (awardNotification != null && awardNotification.getAwardDate() != null) {
+//            contractDate.getField().add(new AfterThanDateValidator(awardNotification.getAwardDate()));
+//        }
 
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "expiryDate");
@@ -112,7 +112,10 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
-                new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
+                new GenericChoiceProvider<>(
+                        ComponentUtil.getSuppliersInTenderQuotation(
+                                editForm.getModelObject().getTenderProcess(), true))
+        );
         awardeeSelector.required();
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         editForm.add(awardeeSelector);

@@ -29,9 +29,6 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class PurchRequisition extends AbstractDocsChildExpAuditEntity<TenderProcess> implements ListViewItem {
 
-    @ExcelExport(useTranslation = true, name = "Approved Date")
-    private Date approvedDate;
-
     @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -88,13 +85,5 @@ public class PurchRequisition extends AbstractDocsChildExpAuditEntity<TenderProc
 
     public void setPurchaseItems(List<PurchaseItem> purchaseItems) {
         this.purchaseItems = purchaseItems;
-    }
-
-    public Date getApprovedDate() {
-        return approvedDate;
-    }
-
-    public void setApprovedDate(Date approvedDate) {
-        this.approvedDate = approvedDate;
     }
 }

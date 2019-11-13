@@ -10,14 +10,18 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author gmutuhu
@@ -28,50 +32,17 @@ import java.util.Date;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AwardNotification extends AbstractTenderProcessMakueniEntity {
-    @ExcelExport(useTranslation = true, name = "Date")
-    private Date awardDate;
 
-    @ExcelExport(useTranslation = true, name = "Award Value")
-    private BigDecimal awardValue;
-
-    @ExcelExport(name = "Supplier")
+    @ExcelExport(name = "Award Notifications", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Supplier awardee;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @OrderColumn(name = "index")
+    private List<AwardNotificationItem> items = new ArrayList<>();
 
-    @ExcelExport(useTranslation = true, name = "Acknowledge Receipt of Award Timeline")
-    private Integer acknowledgementDays;
 
-    public BigDecimal getAwardValue() {
-        return awardValue;
-    }
-
-    public void setAwardValue(final BigDecimal awardValue) {
-        this.awardValue = awardValue;
-    }
-
-    public Integer getAcknowledgementDays() {
-        return acknowledgementDays;
-    }
-
-    public void setAcknowledgementDays(final Integer acknowledgementDays) {
-        this.acknowledgementDays = acknowledgementDays;
-    }
-
-    public Date getAwardDate() {
-        return awardDate;
-    }
-
-    public void setAwardDate(final Date awardDate) {
-        this.awardDate = awardDate;
-    }
-
-    public Supplier getAwardee() {
-        return awardee;
-    }
-
-    public void setAwardee(final Supplier awardee) {
-        this.awardee = awardee;
+    public List<Supplier> getAwardee() {
+        return items.stream().map(AwardNotificationItem::getAwardee).collect(Collectors.toList());
     }
 
     @Override
@@ -82,12 +53,20 @@ public class AwardNotification extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return "Award notification for tender process " + getTenderProcessNotNull().getLabel();
+        return "Award notifications for tender process " + getTenderProcessNotNull().getLabel();
     }
 
     @Override
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull().getAwardAcceptance()));
+    }
+
+    public List<AwardNotificationItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<AwardNotificationItem> items) {
+        this.items = items;
     }
 }

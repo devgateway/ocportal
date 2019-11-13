@@ -4,10 +4,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
-import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.ProfessionalOpinionItemPanel;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -31,8 +29,6 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
     @SpringBean
     protected TenderProcessService tenderProcessService;
 
-    private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
-
     public EditProfessionalOpinionPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = professionalOpinionService;
@@ -42,10 +38,8 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
     protected void onInitialize() {
         super.onInitialize();
 
-
-        final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
-        editForm.add(formDocs);
+        ProfessionalOpinionItemPanel items = new ProfessionalOpinionItemPanel("items");
+        editForm.add(items);
     }
 
     @Override

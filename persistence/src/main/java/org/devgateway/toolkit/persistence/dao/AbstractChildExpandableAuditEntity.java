@@ -36,7 +36,7 @@ public abstract class AbstractChildExpandableAuditEntity<P extends AbstractAudit
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public Boolean getEditable() {
-        return editable;
+        return null;
     }
 
     @Override

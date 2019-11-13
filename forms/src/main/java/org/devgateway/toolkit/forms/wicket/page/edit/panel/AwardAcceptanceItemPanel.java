@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -11,23 +13,26 @@ import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
-import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinionItem;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 
 import java.math.BigDecimal;
 
 /**
- * @author idobre
- * @since 2019-04-17
+ * @author mpostelnicu
  */
-public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<ProfessionalOpinionItem, ProfessionalOpinion> {
+public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptanceItem, AwardAcceptance> {
 
-    public ProfessionalOpinionItemPanel(final String id) {
+    private GenericSleepFormComponent<String> supplierID;
+    private GenericSleepFormComponent<String> supplierAddress;
+    private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
+
+    public AwardAcceptanceItemPanel(final String id) {
         super(id);
     }
 
@@ -75,7 +80,7 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Professional Opinion"));
+        return new AddNewChildButton("newButton", Model.of("New Award Acceptance"));
     }
 
 
@@ -90,41 +95,62 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
     }
 
     @Override
-    public ProfessionalOpinionItem createNewChild(final IModel<ProfessionalOpinion> parentModel) {
-        final ProfessionalOpinionItem child = new ProfessionalOpinionItem();
+    public AwardAcceptanceItem createNewChild(final IModel<AwardAcceptance> parentModel) {
+        final AwardAcceptanceItem child = new AwardAcceptanceItem();
         child.setParent(parentModel.getObject());
         child.setExpanded(true);
         child.setEditable(true);
         return child;
     }
 
+    class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
+        AwardeeAjaxComponentUpdatingBehavior(final String event) {
+            super(event);
+        }
+
+        @Override
+        protected void onUpdate(final AjaxRequestTarget target) {
+            target.add(supplierID);
+        }
+    }
+
     @Override
-    public void populateCompoundListItem(final ListItem<ProfessionalOpinionItem> item) {
-        Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector =
-                new Select2ChoiceBootstrapFormComponent<>(
-                "awardee",
-                        new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
-                                item.getModelObject().getParent().getTenderProcess(), false))
-        );
-        awardeeSelector.required();
-        item.add(awardeeSelector);
+    public void populateCompoundListItem(final ListItem<AwardAcceptanceItem> item) {
+        ComponentUtil.addBigDecimalField(item, "acceptedAwardValue").required()
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        ComponentUtil.addDateField(item, "acceptanceDate").required();
 
-        ComponentUtil.addDateField(item, "professionalOpinionDate").required();
-
-        final TextFieldBootstrapFormComponent<BigDecimal> recommendedAwardAmount =
-                ComponentUtil.addBigDecimalField(item, "recommendedAwardAmount");
-        recommendedAwardAmount.required();
-        recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-
-        ComponentUtil.addDateField(item, "approvedDate").required();
+        addSupplierInfo(item);
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
         item.add(formDocs);
     }
 
+    private void addSupplierInfo(ListItem<AwardAcceptanceItem> item) {
+        awardeeSelector = new Select2ChoiceBootstrapFormComponent<>(
+                "awardee",
+                new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
+                        item.getModelObject().getParent().getTenderProcess(), true))
+        );
+        awardeeSelector.required();
+        awardeeSelector.getField().add(new AwardAcceptanceItemPanel.AwardeeAjaxComponentUpdatingBehavior("change"));
+        item.add(awardeeSelector);
+
+        supplierID = new GenericSleepFormComponent<>("supplierID", (IModel<String>) () -> {
+            if (awardeeSelector.getModelObject() != null) {
+                return awardeeSelector.getModelObject().getCode();
+            }
+            return null;
+        });
+        supplierID.setOutputMarkupId(true);
+        item.add(supplierID);
+
+    }
+
+
     @Override
-    protected boolean filterListItem(final ProfessionalOpinionItem purchaseItem) {
+    protected boolean filterListItem(final AwardAcceptanceItem purchaseItem) {
         return true;
     }
 

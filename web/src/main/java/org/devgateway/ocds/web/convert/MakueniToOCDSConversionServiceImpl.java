@@ -679,10 +679,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsAward::setId, awardNotification::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
         );
-        safeSet(ocdsAward::setDate, awardNotification::getAwardDate);
-        safeSet(ocdsAward::setValue, awardNotification::getAwardValue, this::convertAmount);
-        safeSet(ocdsAward.getSuppliers()::add, awardNotification::getAwardee, this::convertSupplier);
-        safeSet(ocdsAward::setContractPeriod, awardNotification::getAcknowledgementDays, this::convertDaysToPeriod);
+        //TODO: set award properly
+//        safeSet(ocdsAward::setDate, awardNotification::getAwardDate);
+//        safeSet(ocdsAward::setValue, awardNotification::getAwardValue, this::convertAmount);
+//        safeSet(ocdsAward.getSuppliers()::add, awardNotification::getAwardee, this::convertSupplier);
+//        safeSet(ocdsAward::setContractPeriod, awardNotification::getAcknowledgementDays, this::convertDaysToPeriod);
         safeSet(ocdsAward.getDocuments()::add, awardNotification::getFormDoc, this::storeAsDocumentAwardNotice);
         safeSet(
                 ocdsAward.getDocuments()::add,
@@ -700,19 +701,21 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         //this will overwrite the award value taken from award notification with a possible different award value
         //from award acceptance (if any)
-        safeSet(
-                ocdsAward::setValue,
-                () -> Optional.ofNullable(awardNotification.getTenderProcess().getSingleAwardAcceptance())
-                        .filter(Statusable::isExportable)
-                        .map(AwardAcceptance::getAcceptedAwardValue).orElse(null),
-                this::convertAmount
-        );
+        //TODO: fix award value
+//        safeSet(
+//                ocdsAward::setValue,
+//                () -> Optional.ofNullable(awardNotification.getTenderProcess().getSingleAwardAcceptance())
+//                        .filter(Statusable::isExportable)
+//                        .map(AwardAcceptance::getAcceptedAwardValue).orElse(null),
+//                this::convertAmount
+//        );
 
         //same as above, but awardee
-        safeSet(ocdsAward.getSuppliers()::add, () -> Optional.ofNullable(awardNotification.getTenderProcess().
-                getSingleAwardAcceptance())
-                .filter(Statusable::isExportable)
-                .map(AwardAcceptance::getAwardee).orElse(null), this::convertSupplier);
+        //TODO: fix award value
+//        safeSet(ocdsAward.getSuppliers()::add, () -> Optional.ofNullable(awardNotification.getTenderProcess().
+//                getSingleAwardAcceptance())
+//                .filter(Statusable::isExportable)
+//                .map(AwardAcceptance::getAwardee).orElse(null), this::convertSupplier);
 
         safeSet(ocdsAward::setStatus, () -> awardNotification, this::createAwardStatus);
 
