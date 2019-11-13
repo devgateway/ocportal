@@ -437,14 +437,15 @@
         <sql>
             insert into purch_requisition (id, "index", charge_account_id, created_by, created_date, last_modified_by,
             last_modified_date,
-            parent_id, request_approval_date, requested_by_id)
+            parent_id, request_approval_date, requested_by_id, approved_date)
             (select nextval('hibernate_sequence'),0, t.charge_account_id, t.created_by, t.created_date,
             t.last_modified_by,
-            t.last_modified_date, t.id, t.request_approval_date, t.requested_by_id from tender_process t);
+            t.last_modified_date, t.id, t.request_approval_date, t.requested_by_id, t.approved_date from tender_process
+            t);
             insert into purch_requisition_form_docs (purch_requisition_id, form_docs_id)
             (select pr.id, tp.form_docs_id from tender_process_form_docs tp, purch_requisition pr where pr.parent_id =
             tp.tender_process_id);
-            drop table tender_process_form_docs;
+            delete from tender_process_form_docs;
             insert into purchase_item (id, created_by, created_date, last_modified_by, last_modified_date, amount,
             description, quantity,
             parent_id, plan_item_id, index)

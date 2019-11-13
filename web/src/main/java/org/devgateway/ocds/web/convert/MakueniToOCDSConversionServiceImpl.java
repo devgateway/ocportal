@@ -45,6 +45,7 @@ import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
@@ -382,7 +383,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::storeAsDocumentProjectPlan
         );
 
-        safeSet(planning.getMilestones()::add, () -> tenderProcess, this::createPlanningMilestone);
+        safeSetEach(planning.getMilestones()::add, tenderProcess::getPurchRequisitions, this::createPlanningMilestone);
 
         return planning;
     }
@@ -425,13 +426,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public Milestone createPlanningMilestone(TenderProcess tenderProcess) {
+    public Milestone createPlanningMilestone(PurchRequisition pr) {
         Milestone milestone = new Milestone();
         safeSet(milestone::setType, () -> Milestone.MilestoneType.PRE_PROCUREMENT, Milestone.MilestoneType::toValue);
         safeSet(milestone::setCode, () -> "approvedDate");
-        safeSet(milestone::setId, tenderProcess::getId, this::longIdToString);
-        safeSet(milestone::setDateMet, tenderProcess::getApprovedDate);
-        safeSet(milestone::setStatus, () -> tenderProcess, this::createPlanningMilestoneStatus);
+        safeSet(milestone::setId, pr::getId, this::longIdToString);
+        safeSet(milestone::setDateMet, pr::getApprovedDate);
+        safeSet(milestone::setStatus, () -> pr, this::createPlanningMilestoneStatus);
         return milestone;
     }
 
@@ -487,7 +488,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         });
     }
 
-    public Milestone.Status createPlanningMilestoneStatus(TenderProcess tenderProcess) {
+    public Milestone.Status createPlanningMilestoneStatus(PurchRequisition pr) {
         //TODO: implement more statuses
         return Milestone.Status.SCHEDULED;
     }
