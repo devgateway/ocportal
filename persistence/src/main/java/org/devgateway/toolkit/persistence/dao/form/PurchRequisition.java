@@ -33,6 +33,9 @@ import java.util.Set;
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class PurchRequisition extends AbstractChildAuditableEntity<TenderProcess> implements ListViewItem {
 
+    @ExcelExport(useTranslation = true, name = "Approved Date")
+    private Date approvedDate;
+
     @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -125,5 +128,13 @@ public class PurchRequisition extends AbstractChildAuditableEntity<TenderProcess
 
     public void setFormDocs(Set<FileMetadata> formDocs) {
         this.formDocs = formDocs;
+    }
+
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
     }
 }
