@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractDocsChildExpAuditEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.SupplierResponse;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -32,6 +33,11 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
     @ManyToOne
     private Supplier awardee;
 
+    @ExcelExport(name = "Supplier Response")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private SupplierResponse supplierResponse;
+
     @ExcelExport(useTranslation = true, name = "Accepted Award Value")
     private BigDecimal acceptedAwardValue;
 
@@ -57,5 +63,13 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
 
     public void setAcceptedAwardValue(BigDecimal acceptedAwardValue) {
         this.acceptedAwardValue = acceptedAwardValue;
+    }
+
+    public SupplierResponse getSupplierResponse() {
+        return supplierResponse;
+    }
+
+    public void setSupplierResponse(SupplierResponse supplierResponse) {
+        this.supplierResponse = supplierResponse;
     }
 }

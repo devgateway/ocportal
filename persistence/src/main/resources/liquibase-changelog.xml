@@ -515,4 +515,32 @@
             delete from award_acceptance_form_docs;
         </sql>
     </changeSet>
+
+    <changeSet id="OCMAKU-387-4" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Accepted"/>
+            <column name="DTYPE" value="SupplierResponse"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Rejected"/>
+            <column name="DTYPE" value="SupplierResponse"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-387-5" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+            <tableExists tableName="award_acceptance_item"/>
+        </preConditions>
+        <sql>
+            update award_acceptance_item set supplier_response_id =
+            (select id from category where dtype='SupplierResponse' and label='Accepted');
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
