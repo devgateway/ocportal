@@ -18,12 +18,12 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractPurchaseReqMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisition;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
-import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
@@ -41,7 +41,7 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     protected AwardNotificationService awardNotificationService;
 
     @SpringBean
-    protected PurchaseRequisitionService purchaseRequisitionService;
+    protected TenderProcessService tenderProcessService;
 
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
@@ -63,7 +63,7 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
 
         final DateFieldBootstrapFormComponent awardDate = ComponentUtil.addDateField(editForm, "awardDate");
         awardDate.required();
-        final Tender tender = editForm.getModelObject().getPurchaseRequisition().getSingleTender();
+        final Tender tender = editForm.getModelObject().getTenderProcess().getSingleTender();
         if (tender != null && tender.getInvitationDate() != null) {
             awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
         }
@@ -79,14 +79,14 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     }
 
     @Override
-    protected AbstractPurchaseReqMakueniEntity getNextForm() {
-        return editForm.getModelObject().getPurchaseRequisition().getSingleAwardAcceptance();
+    protected AbstractTenderProcessMakueniEntity getNextForm() {
+        return editForm.getModelObject().getTenderProcess().getSingleAwardAcceptance();
     }
 
     @Override
     protected AwardNotification newInstance() {
         final AwardNotification awardNotification = super.newInstance();
-        awardNotification.setPurchaseRequisition(sessionMetadataService.getSessionPurchaseRequisition());
+        awardNotification.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return awardNotification;
     }
@@ -95,18 +95,18 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     protected void beforeSaveEntity(final AwardNotification awardNotification) {
         super.beforeSaveEntity(awardNotification);
 
-        final PurchaseRequisition purchaseRequisition = awardNotification.getPurchaseRequisition();
-        purchaseRequisition.addAwardNotification(awardNotification);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = awardNotification.getTenderProcess();
+        tenderProcess.addAwardNotification(awardNotification);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
     protected void beforeDeleteEntity(final AwardNotification awardNotification) {
         super.beforeDeleteEntity(awardNotification);
 
-        final PurchaseRequisition purchaseRequisition = awardNotification.getPurchaseRequisition();
-        purchaseRequisition.removeAwardNotification(awardNotification);
-        purchaseRequisitionService.save(purchaseRequisition);
+        final TenderProcess tenderProcess = awardNotification.getTenderProcess();
+        tenderProcess.removeAwardNotification(awardNotification);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
@@ -117,10 +117,10 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance())) {
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getAwardAcceptance())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(
-                            editForm.getModelObject().getPurchaseRequisition().getAwardAcceptance()).getId());
+                            editForm.getModelObject().getTenderProcess().getAwardAcceptance()).getId());
         }
 
         return pp;

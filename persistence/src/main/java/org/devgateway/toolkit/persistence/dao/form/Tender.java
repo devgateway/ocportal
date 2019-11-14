@@ -36,11 +36,11 @@ import java.util.function.Consumer;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "purchase_requisition_id"),
+@Table(indexes = {@Index(columnList = "tender_process_id"),
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAutogeneratable {
+public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable {
     @ExcelExport(useTranslation = true, name = "Tender ID")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
@@ -209,7 +209,7 @@ public class Tender extends AbstractPurchaseReqMakueniEntity implements TitleAut
     @Override
     @Transactional
     public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(PersistenceUtil.getNext(getPurchaseRequisitionNotNull()
+        return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getTenderQuotationEvaluation()));
     }
 

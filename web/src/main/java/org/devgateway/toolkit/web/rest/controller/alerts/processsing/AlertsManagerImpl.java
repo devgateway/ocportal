@@ -167,7 +167,7 @@ public class AlertsManagerImpl implements AlertsManager {
         final StringBuilder tenderLinks = new StringBuilder();
         for (final Document document : documents) {
             final Document project = (Document) document.get("projects");
-            final Document purchaseReq = (Document) project.get("purchaseRequisitions");
+            final Document purchaseReq = (Document) project.get("tenderProcesses");
             final Long purchaseReqId = (Long) purchaseReq.get("_id");
 
             final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, purchaseReqId);
@@ -226,11 +226,11 @@ public class AlertsManagerImpl implements AlertsManager {
         final Aggregation aggregation = newAggregation(
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
-                unwind("projects.purchaseRequisitions"),
-                match(where("projects.purchaseRequisitions._id").is(alert.getPurchaseReq().getId())),
-                unwind("projects.purchaseRequisitions.tender"),
-                match(where("projects.purchaseRequisitions.tender.closingDate").gte(new Date())),
-                match(where("projects.purchaseRequisitions.lastModifiedDate")
+                unwind("projects.tenderProcesses"),
+                match(where("projects.tenderProcesses._id").is(alert.getPurchaseReq().getId())),
+                unwind("projects.tenderProcesses.tender"),
+                match(where("projects.tenderProcesses.tender.closingDate").gte(new Date())),
+                match(where("projects.tenderProcesses.lastModifiedDate")
                         .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))));
 
         final List<Document> documents = mongoTemplate.aggregate(
@@ -252,7 +252,7 @@ public class AlertsManagerImpl implements AlertsManager {
         }
         if (!alert.getItems().isEmpty()) {
             criteriaList.add(createFilterCriteria(
-                    "projects.purchaseRequisitions.tender.tenderItems.purchaseItem.planItem.item._id",
+                    "projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
                     alert.getItems()));
         }
 
@@ -261,10 +261,10 @@ public class AlertsManagerImpl implements AlertsManager {
         final Aggregation aggregation = newAggregation(
                 project("_id", "department", "fiscalYear", "projects"),
                 unwind("projects"),
-                unwind("projects.purchaseRequisitions"),
-                unwind("projects.purchaseRequisitions.tender"),
-                match(where("projects.purchaseRequisitions.tender.closingDate").gte(new Date())),
-                match(where("projects.purchaseRequisitions.lastModifiedDate")    // change to "lte" for local testing
+                unwind("projects.tenderProcesses"),
+                unwind("projects.tenderProcesses.tender"),
+                match(where("projects.tenderProcesses.tender.closingDate").gte(new Date())),
+                match(where("projects.tenderProcesses.lastModifiedDate")    // change to "lte" for local testing
                         .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))),
                 match(criteria));
 
