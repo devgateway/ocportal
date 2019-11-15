@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractDocsChildExpAuditEntity;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.SupplierResponse;
@@ -59,6 +60,10 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
 
     public BigDecimal getAcceptedAwardValue() {
         return acceptedAwardValue;
+    }
+
+    public boolean isAccepted() {
+        return supplierResponse != null && supplierResponse.getLabel().equals(DBConstants.SupplierResponse.ACCEPTED);
     }
 
     public void setAcceptedAwardValue(BigDecimal acceptedAwardValue) {

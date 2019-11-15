@@ -19,7 +19,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.SupplierResponse;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
@@ -29,7 +28,6 @@ import org.devgateway.toolkit.persistence.service.category.SupplierResponseServi
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author mpostelnicu
@@ -49,10 +47,10 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
 
 
     protected boolean getWrongAcceptedCount() {
-        return AwardAcceptanceItemPanel.this.getModelObject().stream()
-                .map(AwardAcceptanceItem::getSupplierResponse)
-                .filter(Objects::nonNull).map(SupplierResponse::getLabel)
-                .filter(s -> s.equals(DBConstants.SupplierResponse.ACCEPTED)).count() > 1;
+        return AwardAcceptanceItemPanel.this.getModelObject()
+                .stream()
+                .filter(AwardAcceptanceItem::isAccepted)
+                .count() > 1;
     }
 
     protected List<GenericBootstrapFormComponent<?, ?>> getAwardeeComponents() {
