@@ -15,6 +15,7 @@ import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -22,9 +23,11 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
+import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author mpostelnicu
@@ -39,45 +42,32 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         super(id);
     }
 
+    protected List<GenericBootstrapFormComponent<?, ?>> getAwardeeComponents() {
+        return getChildComponentsByName("awardee");
+    }
+
+    protected boolean getWrongSupplierCount() {
+        AwardNotification awardNotification = (AwardNotification) Form.findForm(AwardNotificationItemPanel.this)
+                .getModelObject();
+        ProfessionalOpinion professionalOpinion = awardNotification.getTenderProcess()
+                .getSingleProfessionalOpinion();
+
+        return professionalOpinion.getItems().size() != AwardNotificationItemPanel.this.getModelObject().size();
+    }
+
+
     protected class ListItemsValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
-            return new FormComponent[0];
+            return getFormComponentsFromBootstrapComponents(getAwardeeComponents());
         }
 
         @Override
         public void validate(Form<?> form) {
-//            final Set<PlanItem> planItems = new HashSet<>();
-//            final List<PurchaseItem> purchaseItems = PRequisitionPanel.this.getModelObject();
-//            for (final PurchaseItem purchaseItem : purchaseItems) {
-//                if (purchaseItem.getPlanItem() != null) {
-//                    planItems.add(purchaseItem.getPlanItem());
-//                }
-//            }
-//
-//            if (purchaseItems.size() != 0 && purchaseItems.size() != planItems.size()) {
-//                final ListView<PurchaseItem> list = (ListView<PurchaseItem>) PRequisitionPanel.this
-//                        .get("listWrapper").get("list");
-//                if (list != null) {
-//                    for (int i = 0; i < list.size(); i++) {
-//                        final TransparentWebMarkupContainer accordion =
-//                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
-//
-//                        final GenericBootstrapFormComponent planItem =
-//                                (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
-//                                        .get("headerField").get("planItem");
-//
-//                        if (planItem != null) {
-//                            planItem.getField().error(getString("uniqueItem"));
-//
-//                          final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
-//                            if (target.isPresent()) {
-//                                target.get().add(planItem.getBorder());
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            if (getWrongSupplierCount()) {
+                form.error(getString("wrongSupplierCount"));
+                addErrorAndRefreshComponents(getAwardeeComponents(), "wrongSupplierCount");
+            }
         }
     }
 

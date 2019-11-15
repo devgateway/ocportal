@@ -8,9 +8,7 @@ import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
@@ -26,10 +24,10 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.SupplierResponse;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.service.category.SupplierResponseService;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,20 +43,10 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
     protected SupplierResponseService supplierResponseService;
 
 
-    protected List<GenericBootstrapFormComponent<?, ?>> getChildComponentsByName(String name) {
-        ArrayList<GenericBootstrapFormComponent<?, ?>> ret = new ArrayList<>();
-        listView.forEach(c -> ret.add((GenericBootstrapFormComponent<?, ?>) c.get(name)));
-        return ret;
-    }
-
     protected List<GenericBootstrapFormComponent<?, ?>> getSupplierResponseComponents() {
         return getChildComponentsByName("supplierResponse");
     }
 
-    protected FormComponent<?>[] getFormComponentsFromBootstrapComponents(List<GenericBootstrapFormComponent<?, ?>>
-                                                                                  bc) {
-        return bc.stream().map(GenericBootstrapFormComponent::getField).toArray(FormComponent[]::new);
-    }
 
     protected boolean getWrongAcceptedCount() {
         return AwardAcceptanceItemPanel.this.getModelObject().stream()
@@ -67,15 +55,19 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
                 .filter(s -> s.equals(DBConstants.SupplierResponse.ACCEPTED)).count() > 1;
     }
 
-    public AwardAcceptanceItemPanel(final String id) {
-        super(id);
+    protected List<GenericBootstrapFormComponent<?, ?>> getAwardeeComponents() {
+        return getChildComponentsByName("awardee");
     }
 
-    protected void addErrorAndRefreshComponents(List<GenericBootstrapFormComponent<?, ?>> components, String key) {
-        components.stream().map(GenericBootstrapFormComponent::getField)
-                .forEach(f -> f.error(new ValidationError(getString(key))));
-        RequestCycle.get().find(AjaxRequestTarget.class).ifPresent(
-                ajaxRequestTarget -> components.forEach(ajaxRequestTarget::add));
+    protected boolean getWrongSupplierCount() {
+        AwardAcceptance awardAcceptance = (AwardAcceptance) Form.findForm(AwardAcceptanceItemPanel.this)
+                .getModelObject();
+        AwardNotification awardNotification = awardAcceptance.getTenderProcess().getSingleAwardNotification();
+        return awardNotification.getItems().size() != (long) AwardAcceptanceItemPanel.this.getModelObject().size();
+    }
+
+    public AwardAcceptanceItemPanel(final String id) {
+        super(id);
     }
 
     protected class ListItemsValidator implements IFormValidator {
@@ -89,6 +81,11 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
             if (getWrongAcceptedCount()) {
                 form.error(getString("oneAwardAccepted"));
                 addErrorAndRefreshComponents(getSupplierResponseComponents(), "oneAwardAccepted");
+            }
+
+            if (getWrongSupplierCount()) {
+                form.error(getString("wrongSupplierCount"));
+                addErrorAndRefreshComponents(getSupplierResponseComponents(), "wrongSupplierCount");
             }
         }
     }
