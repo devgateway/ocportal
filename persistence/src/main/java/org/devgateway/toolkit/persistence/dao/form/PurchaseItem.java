@@ -30,7 +30,7 @@ import java.math.BigDecimal;
         @Index(columnList = "plan_item_id"),
         @Index(columnList = "description")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PurchaseItem extends AbstractChildAuditableEntity<PurchaseRequisition> implements ListViewItem, Labelable {
+public class PurchaseItem extends AbstractChildAuditableEntity<PurchRequisition> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne

@@ -37,7 +37,7 @@ class PurchaseReqView extends CRDPage {
       name: 'Tender',
       tab: 1
     }, {
-      name: 'Purchase Req',
+      name: 'Purchase Requisitions',
       tab: 2
     }, {
       name: 'Tender Quotation',
@@ -72,7 +72,7 @@ class PurchaseReqView extends CRDPage {
       this.prInfo.getState()
       .then(data => {
         this.setState({
-          data: data.purchaseRequisitions,
+          data: data.tenderProcesses,
           department: data.department,
           fiscalYear: data.fiscalYear
         });

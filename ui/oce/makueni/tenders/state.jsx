@@ -49,9 +49,9 @@ export const tendersData = mtState.mapping({
     raw.map(datum => {
       let project,
         tender;
-      if (datum.projects !== undefined && datum.projects.purchaseRequisitions !== undefined
-        && datum.projects.purchaseRequisitions.tender !== undefined) {
-        tender = { purchaseReqId: datum.projects.purchaseRequisitions._id, ...datum.projects.purchaseRequisitions.tender[0] };
+      if (datum.projects !== undefined && datum.projects.tenderProcesses !== undefined
+        && datum.projects.tenderProcesses.tender !== undefined) {
+        tender = { purchaseReqId: datum.projects.tenderProcesses._id, ...datum.projects.tenderProcesses.tender[0] };
       }
       if (datum.projects !== undefined) {
         project = {
