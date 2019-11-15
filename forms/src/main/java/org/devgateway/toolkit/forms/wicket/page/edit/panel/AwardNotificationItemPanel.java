@@ -46,17 +46,28 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         return getChildComponentsByName("awardee");
     }
 
-    protected boolean getWrongSupplierCount() {
+    protected boolean getWrongProfessionalOpinionCount() {
         AwardNotification awardNotification = (AwardNotification) Form.findForm(AwardNotificationItemPanel.this)
                 .getModelObject();
         ProfessionalOpinion professionalOpinion = awardNotification.getTenderProcess()
                 .getSingleProfessionalOpinion();
 
+
         return professionalOpinion.getItems().size() != AwardNotificationItemPanel.this.getModelObject().size();
     }
 
+    protected boolean getWrongDistinctCount() {
+        long distinctCount = AwardNotificationItemPanel.this.getModelObject()
+                .stream()
+                .map(AwardNotificationItem::getAwardee)
+                .distinct()
+                .count();
 
-    protected class ListItemsValidator implements IFormValidator {
+        return distinctCount != AwardNotificationItemPanel.this.getModelObject().size();
+    }
+
+
+    protected class WrongDistinctCountValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
             return getFormComponentsFromBootstrapComponents(getAwardeeComponents());
@@ -64,9 +75,23 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
 
         @Override
         public void validate(Form<?> form) {
-            if (getWrongSupplierCount()) {
-                form.error(getString("wrongSupplierCount"));
-                addErrorAndRefreshComponents(getAwardeeComponents(), "wrongSupplierCount");
+            if (getWrongDistinctCount()) {
+                form.error(getString("wrongDistinctCount"));
+                addErrorAndRefreshComponents(getAwardeeComponents(), "wrongDistinctCount");
+            }
+        }
+    }
+
+    protected class ProfessionalOpinionCountValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            if (getWrongProfessionalOpinionCount()) {
+                form.error(getString("wrongProfessionalOpinionCount"));
             }
         }
     }
@@ -83,7 +108,8 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
 
         final Form form = (Form) getParent();
         if (form != null) {
-            form.add(new ListItemsValidator());
+            form.add(new ProfessionalOpinionCountValidator());
+            form.add(new WrongDistinctCountValidator());
         }
     }
 

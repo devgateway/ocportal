@@ -1,8 +1,5 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -31,62 +28,10 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
         super(id);
     }
 
-    protected class ListItemsValidator implements IFormValidator {
-        @Override
-        public FormComponent<?>[] getDependentFormComponents() {
-            return new FormComponent[0];
-        }
-
-        @Override
-        public void validate(Form<?> form) {
-//            final Set<PlanItem> planItems = new HashSet<>();
-//            final List<PurchaseItem> purchaseItems = PRequisitionPanel.this.getModelObject();
-//            for (final PurchaseItem purchaseItem : purchaseItems) {
-//                if (purchaseItem.getPlanItem() != null) {
-//                    planItems.add(purchaseItem.getPlanItem());
-//                }
-//            }
-//
-//            if (purchaseItems.size() != 0 && purchaseItems.size() != planItems.size()) {
-//                final ListView<PurchaseItem> list = (ListView<PurchaseItem>) PRequisitionPanel.this
-//                        .get("listWrapper").get("list");
-//                if (list != null) {
-//                    for (int i = 0; i < list.size(); i++) {
-//                        final TransparentWebMarkupContainer accordion =
-//                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
-//
-//                        final GenericBootstrapFormComponent planItem =
-//                                (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
-//                                        .get("headerField").get("planItem");
-//
-//                        if (planItem != null) {
-//                            planItem.getField().error(getString("uniqueItem"));
-//
-//                          final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
-//                            if (target.isPresent()) {
-//                                target.get().add(planItem.getBorder());
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-        }
-    }
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
         return new AddNewChildButton("newButton", Model.of("New Professional Opinion"));
-    }
-
-
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new ListItemsValidator());
-        }
     }
 
     @Override

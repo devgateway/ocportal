@@ -59,21 +59,47 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
         return getChildComponentsByName("awardee");
     }
 
-    protected boolean getWrongSupplierCount() {
+    protected boolean getWrongDistinctCount() {
+        long distinctCount = AwardAcceptanceItemPanel.this.getModelObject()
+                .stream()
+                .map(AwardAcceptanceItem::getAwardee)
+                .distinct()
+                .count();
+
+        return distinctCount != AwardAcceptanceItemPanel.this.getModelObject().size();
+    }
+
+    protected class WrongDistinctCountValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return getFormComponentsFromBootstrapComponents(getAwardeeComponents());
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            if (getWrongDistinctCount()) {
+                form.error(getString("wrongDistinctCount"));
+                addErrorAndRefreshComponents(getAwardeeComponents(), "wrongDistinctCount");
+            }
+        }
+    }
+
+    protected boolean getWrongAwardNotificationCount() {
         AwardAcceptance awardAcceptance = (AwardAcceptance) Form.findForm(AwardAcceptanceItemPanel.this)
                 .getModelObject();
         AwardNotification awardNotification = awardAcceptance.getTenderProcess().getSingleAwardNotification();
         return awardNotification.getItems().size() != (long) AwardAcceptanceItemPanel.this.getModelObject().size();
     }
 
+
     public AwardAcceptanceItemPanel(final String id) {
         super(id);
     }
 
-    protected class ListItemsValidator implements IFormValidator {
+    protected class OneAwardAcceptedValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
-            return getFormComponentsFromBootstrapComponents(getSupplierResponseComponents());
+            return getFormComponentsFromBootstrapComponents(getAwardeeComponents());
         }
 
         @Override
@@ -82,10 +108,19 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
                 form.error(getString("oneAwardAccepted"));
                 addErrorAndRefreshComponents(getSupplierResponseComponents(), "oneAwardAccepted");
             }
+        }
+    }
 
-            if (getWrongSupplierCount()) {
-                form.error(getString("wrongSupplierCount"));
-                addErrorAndRefreshComponents(getSupplierResponseComponents(), "wrongSupplierCount");
+    protected class AwardNotificationCountValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            if (getWrongAwardNotificationCount()) {
+                form.error(getString("wrongAwardNotificationCount"));
             }
         }
     }
@@ -102,7 +137,9 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
 
         final Form form = (Form) getParent();
         if (form != null) {
-            form.add(new ListItemsValidator());
+            form.add(new OneAwardAcceptedValidator());
+            form.add(new WrongDistinctCountValidator());
+            form.add(new AwardNotificationCountValidator());
         }
     }
 
