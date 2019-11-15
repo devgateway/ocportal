@@ -48,6 +48,11 @@ class PurchaseReq extends FeedbackPage {
                 <div
                   className="item-value">{formatDate(preq.requestApprovalDate)}</div>
               </div>
+              <div className="col-md-3">
+                <div className="item-label">Approved Date</div>
+                <div
+                  className="item-value">{formatDate(preq.approvedDate)}</div>
+              </div>
             </div>
             {
               preq.purchaseItems !== undefined
