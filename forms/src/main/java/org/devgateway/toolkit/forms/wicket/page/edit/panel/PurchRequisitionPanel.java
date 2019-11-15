@@ -151,6 +151,8 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
         ComponentUtil.addDateField(item, "requestApprovalDate").required();
         item.add(new PurchaseItemPanel("purchaseItems"));
 
+        ComponentUtil.addDateField(item, "approvedDate").required();
+
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.required();
         item.add(formDocs);

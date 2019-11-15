@@ -6,7 +6,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
@@ -88,8 +87,6 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
 //        editForm.add(new PurchaseItemPanel("purchaseItems"));
 
         editForm.add(new PurchRequisitionPanel("purchRequisitions"));
-
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         saveTerminateButton.setVisibilityAllowed(false);
     }
