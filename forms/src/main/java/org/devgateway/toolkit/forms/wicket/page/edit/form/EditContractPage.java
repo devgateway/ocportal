@@ -115,11 +115,11 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     }
 
     public static List<Supplier> getAcceptedSupplier(TenderProcess tenderProcess) {
-        return Arrays.asList(tenderProcess.getSingleAwardAcceptance().getItems()
+        return tenderProcess.getSingleAwardAcceptance().getItems()
                 .stream()
                 .filter(s -> s.getSupplierResponse().getLabel().equals(DBConstants.SupplierResponse.ACCEPTED))
                 .map(AwardAcceptanceItem::getAwardee)
-                .findFirst().get());
+                .findFirst().map(Arrays::asList).orElseGet(Arrays::asList);
     }
 
 
