@@ -14,8 +14,10 @@ import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -26,6 +28,8 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author gmutuhu
@@ -110,11 +114,18 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         tenderProcessService.save(tenderProcess);
     }
 
+    public static List<Supplier> getAcceptedSupplier(TenderProcess tenderProcess) {
+        return Arrays.asList(tenderProcess.getSingleAwardAcceptance().getItems()
+                .stream()
+                .filter(s -> s.getSupplierResponse().getLabel().equals(DBConstants.SupplierResponse.ACCEPTED))
+                .map(AwardAcceptanceItem::getAwardee)
+                .findFirst().get());
+    }
+
+
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
-                new GenericChoiceProvider<>(
-                        ComponentUtil.getSuppliersInTenderQuotation(
-                                editForm.getModelObject().getTenderProcess(), true))
+                new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
         );
         awardeeSelector.required();
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
