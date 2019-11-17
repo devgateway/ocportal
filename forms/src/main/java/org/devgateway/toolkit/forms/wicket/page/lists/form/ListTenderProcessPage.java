@@ -21,7 +21,9 @@ import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.devgateway.ocds.persistence.mongo.Release;
+import org.devgateway.ocds.persistence.mongo.ReleasePackage;
 import org.devgateway.ocds.web.convert.MakueniToOCDSConversionService;
+import org.devgateway.ocds.web.rest.controller.OcdsController;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -55,6 +57,9 @@ public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderP
     @SpringBean
     private ObjectMapper objectMapper;
 
+    @SpringBean
+    private OcdsController ocdsController;
+
     public ListTenderProcessPage(final PageParameters parameters) {
         super(parameters);
 
@@ -75,7 +80,8 @@ public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderP
                             Optional<TenderProcess> byId = tenderProcessService.findById(model.getObject());
 
                             Release release = ocdsConversionService.createAndPersistRelease(byId.get());
-                            output.write(objectMapper.writeValueAsBytes(release));
+                            ReleasePackage releasePackage = ocdsController.createReleasePackage(release);
+                            output.write(objectMapper.writeValueAsBytes(releasePackage));
                         }
 
                         @Override

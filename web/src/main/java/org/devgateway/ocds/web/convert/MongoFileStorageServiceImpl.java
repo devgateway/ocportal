@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 
 @Service
 public class MongoFileStorageServiceImpl implements MongoFileStorageService {
@@ -86,10 +87,10 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
 
         Document doc = new Document();
         if (fileMetadata.getCreatedDate().isPresent()) {
-            doc.setDatePublished(java.sql.Date.valueOf(fileMetadata.getCreatedDate().get().toLocalDate()));
+            doc.setDatePublished(Date.from(fileMetadata.getCreatedDate().get().toInstant()));
         }
         if (fileMetadata.getLastModifiedDate().isPresent()) {
-            doc.setDateModified(java.sql.Date.valueOf(fileMetadata.getLastModifiedDate().get().toLocalDate()));
+            doc.setDateModified(Date.from(fileMetadata.getLastModifiedDate().get().toInstant()));
         }
         doc.setTitle(fileMetadata.getName());
         doc.setFormat(fileMetadata.getContentType());
