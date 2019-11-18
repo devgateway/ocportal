@@ -50,9 +50,11 @@ import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -65,6 +67,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     private final Boolean canAccessAddNewButtonInDeptOverview;
 
     private final TenderProcess sessionTenderProcess;
+
+    private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
 
     public ListViewTenderProcessOverview(final String id,
                                          final IModel<List<TenderProcess>> model,
@@ -142,7 +146,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel", tenderProcess,
                 tenderProcess.getPurchaseRequestNumber(), new ArrayList<>(Arrays.asList(
                 tenderProcess.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
-                        .collect(Collectors.toList()),
+                        .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
                 tenderProcess.getAmount()
         )),
                 tenderProcess, EditTenderProcessPage.class, null);
