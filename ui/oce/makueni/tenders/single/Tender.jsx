@@ -140,7 +140,7 @@ class Tender extends FeedbackPage {
       
       <div className="row padding-top-10">
         <div className="col-md-6">
-          <div className="item-label">Upload Tender</div>
+          <div className="item-label">Download Tender</div>
           {
             tender.formDocs.map(doc => <div key={doc._id}>
               <OverlayTrigger

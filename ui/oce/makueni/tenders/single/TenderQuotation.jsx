@@ -37,7 +37,7 @@ class TenderQuotation extends FeedbackPage {
         tenderQuotationEvaluation.bids !== undefined
           ? <div>
             <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">Purchase Requisition Items
+              <div className="col-md-12 sub-title">Bids
                 ({tenderQuotationEvaluation.bids.length})
               </div>
             </div>

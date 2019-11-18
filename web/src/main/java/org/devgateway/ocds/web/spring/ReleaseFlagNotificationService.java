@@ -136,7 +136,7 @@ public class ReleaseFlagNotificationService {
     }
 
     private String getReleaseURL(String releaseId) {
-        return URI.create(serverURL + "/purchaseRequisition?id=" + releaseId).toASCIIString();
+        return URI.create(serverURL + "/tenderProcess?id=" + releaseId).toASCIIString();
     }
 
     private String createAdminContent() {

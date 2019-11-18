@@ -178,7 +178,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
 
         // add current Purchase Requisition in session
         sessionMetadataService.setSessionProject(editForm.getModelObject());
-        sessionMetadataService.setSessionPurchaseRequisition(null);
+        sessionMetadataService.setSessionTenderProcess(null);
     }
 
     @Override

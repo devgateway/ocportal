@@ -20,7 +20,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenders")
-public class ListTenderPage extends ListAbstractPurchaseReqMakueniEntity<Tender> {
+public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tender> {
     
     @SpringBean
     protected TenderService tenderService;
