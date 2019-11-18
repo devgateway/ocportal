@@ -44,7 +44,7 @@ class Award extends FeedbackPage {
                     className="item-value">{currencyFormatter(i.acceptedAwardValue)}</div>
                 </div>
                 <div className="col-md-3">
-                  <div className="item-label">Date</div>
+                  <div className="item-label">Response Date</div>
                   <div className="item-value">{formatDate(i.acceptanceDate)}</div>
                 </div>
                 <div className="col-md-3">
