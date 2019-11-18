@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -98,7 +99,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
         final PlanItem planItem = item.getModelObject();
-        if (planItem.getEditable()) {
+        if (BooleanUtils.isTrue(planItem.getEditable())) {
             ComponentUtil.addSelect2ChoiceField(item, "unitOfIssue", unitService).required();
 
             final TextFieldBootstrapFormComponent<BigDecimal> quantity =
@@ -290,7 +291,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             super.onInitialize();
 
             final PlanItem planItem = getModelObject();
-            if (planItem.getEditable()) {
+            if (BooleanUtils.isTrue(planItem.getEditable())) {
                 final Component item = ComponentUtil.addSelect2ChoiceField(this, "item", itemService).required();
                 item.add(new StopEventPropagationBehavior());
             } else {
