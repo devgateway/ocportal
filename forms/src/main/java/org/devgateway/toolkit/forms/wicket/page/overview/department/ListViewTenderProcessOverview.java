@@ -166,25 +166,19 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
         final Panel professionalOpinionPanel = new TenderDetailPanel<>("professionalOpinionPanel", professionalOpinion,
                 "Professional Opinion",
-                //professionalOpinion != null ? new ArrayList<>(Arrays.asList(
-                //professionalOpinion.getAwardee(), professionalOpinion.getRecommendedAwardAmount())) :
-                null,
+                professionalOpinion.getItems().stream().map(Objects::toString).collect(Collectors.toList()),
                 tenderProcess, EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
         containerFragment.add(professionalOpinionPanel);
 
         final Panel awardNotificationPanel = new TenderDetailPanel<>("awardNotificationPanel", awardNotification,
                 "Notification",
-                //awardNotification != null ? new ArrayList<>(Arrays.asList(
-                //awardNotification.getAwardee(), awardNotification.getAwardValue())) :
-                null,
+                awardNotification.getItems().stream().map(Objects::toString).collect(Collectors.toList()),
                 tenderProcess, EditAwardNotificationPage.class, professionalOpinion);
         containerFragment.add(awardNotificationPanel);
 
         final Panel awardAcceptancePanel = new TenderDetailPanel<>("awardAcceptancePanel", awardAcceptance,
                 "Acceptance",
-                //awardAcceptance != null ? new ArrayList<>(Arrays.asList(
-                //awardAcceptance.getAwardee(), awardAcceptance.getAcceptedAwardValue())) :
-                null,
+                awardNotification.getItems().stream().map(Objects::toString).collect(Collectors.toList()),
                 tenderProcess, EditAwardAcceptancePage.class, awardNotification);
         containerFragment.add(awardAcceptancePanel);
 

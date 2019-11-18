@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author mpostelnicu
@@ -76,5 +77,10 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
 
     public void setSupplierResponse(SupplierResponse supplierResponse) {
         this.supplierResponse = supplierResponse;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toString(awardee, "") + " " + Objects.toString(acceptedAwardValue, "");
     }
 }

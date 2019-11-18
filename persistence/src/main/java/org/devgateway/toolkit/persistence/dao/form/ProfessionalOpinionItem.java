@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author mpostelnicu
@@ -59,4 +60,8 @@ public class ProfessionalOpinionItem extends AbstractDocsChildExpAuditEntity<Pro
         this.recommendedAwardAmount = recommendedAwardAmount;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toString(awardee, "") + " " + Objects.toString(recommendedAwardAmount, "");
+    }
 }
