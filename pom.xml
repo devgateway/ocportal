@@ -77,9 +77,9 @@
 
     <distributionManagement>
         <repository>
-            <id>oc-explorer-releases</id>
-            <name>OC Explorer releases</name>
-            <url>http://artifactory.ampdev.net/artifactory/oc-explorer-releases/</url>
+            <id>bintray-devgateway-oc-makueni</id>
+            <name>devgateway-oc-makueni</name>
+            <url>https://api.bintray.com/maven/devgateway/oc-makueni/oc-makueni/;publish=1</url>
         </repository>
     </distributionManagement>
 
