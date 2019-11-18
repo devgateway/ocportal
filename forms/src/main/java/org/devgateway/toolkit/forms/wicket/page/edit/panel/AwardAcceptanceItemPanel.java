@@ -17,8 +17,10 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.SupplierResponse;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
@@ -164,13 +166,29 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
 
     @Override
     public void populateCompoundListItem(final ListItem<AwardAcceptanceItem> item) {
-        ComponentUtil.addBigDecimalField(item, "acceptedAwardValue").required()
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        TextFieldBootstrapFormComponent<BigDecimal> acceptedValue = ComponentUtil.addBigDecimalField(
+                item, "acceptedAwardValue");
+        acceptedValue.required().getField()
+                .add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        acceptedValue.setOutputMarkupPlaceholderTag(true);
+
         ComponentUtil.addDateField(item, "acceptanceDate").required();
 
-        Select2ChoiceBootstrapFormComponent<SupplierResponse> supplierResponse = ComponentUtil.addSelect2ChoiceField(
-                item, "supplierResponse", supplierResponseService);
+        final Select2ChoiceBootstrapFormComponent<SupplierResponse> supplierResponse =
+                new Select2ChoiceBootstrapFormComponent<SupplierResponse>(
+                        "supplierResponse",
+                        new GenericPersistableJpaTextChoiceProvider<>(supplierResponseService)
+                ) {
+                    @Override
+                    protected void onUpdate(AjaxRequestTarget target) {
+                        acceptedValue.setVisibilityAllowed(item.getModelObject().isAccepted());
+                        target.add(acceptedValue);
+                    }
+                };
         supplierResponse.required();
+        item.add(supplierResponse);
+
+        acceptedValue.setVisibilityAllowed(item.getModelObject().isAccepted());
 
         addSupplierInfo(item);
 
