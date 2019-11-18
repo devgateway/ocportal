@@ -32,6 +32,13 @@ class Award extends FeedbackPage {
             ? awardAcceptance.items.map(i => <div key={i._id} className="box">
               <div className="row padding-top-10">
                 <div className="col-md-3">
+                  <div className="item-label">Supplier Response</div>
+                <div
+                  className="item-value">{i.supplierResponse.label}</div>
+                </div>
+              </div>
+              <div className="row padding-top-10">
+                <div className="col-md-3">
                   <div className="item-label">Accepted Award Value</div>
                   <div
                     className="item-value">{currencyFormatter(i.acceptedAwardValue)}</div>
