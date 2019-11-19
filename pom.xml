@@ -67,8 +67,8 @@
 
     <scm>
         <url>git@github.com:devgateway/forms-makueni.git</url>
-        <developerConnection>scm:git@github.com:devgateway/forms-makueni.git</developerConnection>
-        <connection>git@github.com:devgateway/forms-makueni.git</connection>
+        <developerConnection>scm:git:git@github.com:devgateway/forms-makueni.git</developerConnection>
+        <connection>git@github.com:devgateway/oc-makueni.git</connection>
         <tag>HEAD</tag>
     </scm>
 
