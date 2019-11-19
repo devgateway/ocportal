@@ -66,13 +66,10 @@
     </ciManagement>
 
     <scm>
-        <url>git@github.com:devgateway/oc-makueni.git</url>
-        <developerConnection>
-            scm:git:git@github.com:devgateway/oc-makueni.git
-        </developerConnection>
-        <connection>git@github.com:devgateway/oc-makueni.git
-        </connection>
-        <tag>0.0.3-SNAPSHOT</tag>
+        <url>git@github.com:devgateway/forms-makueni.git</url>
+        <developerConnection>scm:git@github.com:devgateway/forms-makueni.git</developerConnection>
+        <connection>git@github.com:devgateway/forms-makueni.git</connection>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
