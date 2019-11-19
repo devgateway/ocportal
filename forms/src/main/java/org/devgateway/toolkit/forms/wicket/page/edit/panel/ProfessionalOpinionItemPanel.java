@@ -49,7 +49,7 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
                 new Select2ChoiceBootstrapFormComponent<>(
                 "awardee",
                         new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
-                                item.getModelObject().getParent().getTenderProcess(), false))
+                                item.getModelObject().getParent().getTenderProcess(), true))
         );
         awardeeSelector.required();
         item.add(awardeeSelector);

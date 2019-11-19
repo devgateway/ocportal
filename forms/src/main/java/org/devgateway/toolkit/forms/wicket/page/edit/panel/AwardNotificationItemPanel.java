@@ -161,7 +161,7 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
                 "awardee",
                 new GenericChoiceProvider<>(
                         ComponentUtil.getSuppliersInTenderQuotation(
-                                item.getModelObject().getParent().getTenderProcess(), false))
+                                item.getModelObject().getParent().getTenderProcess(), true))
         );
         awardeeSelector.required();
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
