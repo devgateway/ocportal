@@ -1,8 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
@@ -17,7 +16,6 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.Set;
 
 /**
@@ -28,7 +26,7 @@ import java.util.Set;
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ContractDocument extends AbstractChildAuditableEntity<Contract> implements ListViewItem,
+public class ContractDocument extends AbstractChildExpandableAuditEntity<Contract> implements ListViewItem,
         SingleFileMetadatable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Contract Document Type")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -39,11 +37,6 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs;
-
-    @Transient
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    private Boolean expanded = false;
 
     public ContractDocumentType getContractDocumentType() {
         return contractDocumentType;
@@ -62,27 +55,4 @@ public class ContractDocument extends AbstractChildAuditableEntity<Contract> imp
         this.formDocs = formDocs;
     }
 
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getEditable() {
-        return null;
-    }
-
-    @Override
-    public void setEditable(final Boolean editable) {
-
-    }
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getExpanded() {
-        return expanded;
-    }
-
-    @Override
-    public void setExpanded(final Boolean expanded) {
-        this.expanded = expanded;
-    }
 }

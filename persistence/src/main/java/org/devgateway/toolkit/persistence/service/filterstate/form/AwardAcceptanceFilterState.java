@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.service.filterstate.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem_;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance_;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -21,7 +22,7 @@ public class AwardAcceptanceFilterState extends AbstractTenderProcessMakueniFilt
             final List<Predicate> predicates = new ArrayList<>();
 
             if (awardee != null) {
-                predicates.add(cb.equal(root.get(AwardAcceptance_.awardee), awardee));
+                cb.equal(root.join(AwardAcceptance_.items).get(AwardAcceptanceItem_.awardee), awardee);
             }
 
             predicates.add(super.getSpecification().toPredicate(root, query, cb));

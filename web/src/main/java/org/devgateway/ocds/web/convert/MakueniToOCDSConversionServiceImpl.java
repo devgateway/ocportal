@@ -39,7 +39,9 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -679,10 +681,21 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsAward::setId, awardNotification::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
         );
-        safeSet(ocdsAward::setDate, awardNotification::getAwardDate);
-        safeSet(ocdsAward::setValue, awardNotification::getAwardValue, this::convertAmount);
-        safeSet(ocdsAward.getSuppliers()::add, awardNotification::getAwardee, this::convertSupplier);
-        safeSet(ocdsAward::setContractPeriod, awardNotification::getAcknowledgementDays, this::convertDaysToPeriod);
+
+        safeSet(ocdsAward::setDate, awardNotification::getAcceptedNotification, AwardNotificationItem::getAwardDate);
+        safeSet(ocdsAward::setValue, awardNotification::getAcceptedNotification, AwardNotificationItem::getAwardValue,
+                this::convertAmount
+        );
+
+        safeSet(
+                ocdsAward.getSuppliers()::add, awardNotification::getAcceptedNotification,
+                AwardNotificationItem::getAwardee, this::convertSupplier
+        );
+
+        safeSet(ocdsAward::setContractPeriod, awardNotification::getAcceptedNotification,
+                AwardNotificationItem::getAcknowledgementDays, this::convertDaysToPeriod
+        );
+
         safeSet(ocdsAward.getDocuments()::add, awardNotification::getFormDoc, this::storeAsDocumentAwardNotice);
         safeSet(
                 ocdsAward.getDocuments()::add,
@@ -704,15 +717,18 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 ocdsAward::setValue,
                 () -> Optional.ofNullable(awardNotification.getTenderProcess().getSingleAwardAcceptance())
                         .filter(Statusable::isExportable)
-                        .map(AwardAcceptance::getAcceptedAwardValue).orElse(null),
+                        .map(AwardAcceptance::getAcceptedAcceptance)
+                        .map(AwardAcceptanceItem::getAcceptedAwardValue).orElse(null),
                 this::convertAmount
         );
 
         //same as above, but awardee
+
         safeSet(ocdsAward.getSuppliers()::add, () -> Optional.ofNullable(awardNotification.getTenderProcess().
                 getSingleAwardAcceptance())
                 .filter(Statusable::isExportable)
-                .map(AwardAcceptance::getAwardee).orElse(null), this::convertSupplier);
+                .map(AwardAcceptance::getAcceptedAcceptance)
+                .map(AwardAcceptanceItem::getAwardee).orElse(null), this::convertSupplier);
 
         safeSet(ocdsAward::setStatus, () -> awardNotification, this::createAwardStatus);
 
