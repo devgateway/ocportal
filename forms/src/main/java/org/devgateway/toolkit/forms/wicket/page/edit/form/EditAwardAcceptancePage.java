@@ -81,12 +81,15 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
 
     @Override
     protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return EditContractPage.class;
+        return editForm.getModelObject().hasAccepted() ? EditContractPage.class : EditProfessionalOpinionPage.class;
     }
 
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
+        if (!editForm.getModelObject().hasAccepted()) {
+            return pp;
+        }
         if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getContract())) {
             pp.set(WebConstants.PARAM_ID,
                     PersistenceUtil.getNext(

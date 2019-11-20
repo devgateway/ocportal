@@ -44,6 +44,10 @@ public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
     public void setLabel(final String label) {
     }
 
+    public boolean hasAccepted() {
+        return items.stream().map(AwardAcceptanceItem::isAccepted).filter(a -> a).findFirst().orElse(false);
+    }
+
     public AwardAcceptanceItem getAcceptedAcceptance() {
         return getItems().stream().filter(AwardAcceptanceItem::isAccepted).findFirst().orElse(null);
     }
