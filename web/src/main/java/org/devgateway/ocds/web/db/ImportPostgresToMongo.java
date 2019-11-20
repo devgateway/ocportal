@@ -1,6 +1,5 @@
 package org.devgateway.ocds.web.db;
 
-import com.mongodb.client.gridfs.model.GridFSFile;
 import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
@@ -17,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +70,7 @@ public class ImportPostgresToMongo {
 
         // first clean the procurement plan collection and delete all saved files
         mongoTemplate.dropCollection(ProcurementPlan.class);
-        gridFsOperations.delete(MongoFileStorageService.MAKUENI_FILES_QUERY);
+        gridFsOperations.delete(new Query());
 
         final List<ProcurementPlan> procurementPlans = filterNotExportable(procurementPlanService.findAll());
         // check which forms are exportable
@@ -91,15 +91,15 @@ public class ImportPostgresToMongo {
                             .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
 
                     pr.setProfessionalOpinion(new HashSet<>(filterNotExportable(pr.getProfessionalOpinion())));
-                    pr.getProfessionalOpinion().stream()
+                    pr.getProfessionalOpinion().stream().flatMap(i -> i.getItems().stream())
                             .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
 
                     pr.setAwardNotification(new HashSet<>(filterNotExportable(pr.getAwardNotification())));
-                    pr.getAwardNotification().stream()
+                    pr.getAwardNotification().stream().flatMap(i -> i.getItems().stream())
                             .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
 
                     pr.setAwardAcceptance(new HashSet<>(filterNotExportable(pr.getAwardAcceptance())));
-                    pr.getAwardAcceptance().stream()
+                    pr.getAwardAcceptance().stream().flatMap(i -> i.getItems().stream())
                             .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
 
                     pr.setContract(new HashSet<>(filterNotExportable(pr.getContract())));
@@ -116,10 +116,6 @@ public class ImportPostgresToMongo {
 
             self.storeMakueniFormFiles(pp.getFormDocs());
         });
-
-
-        final List<GridFSFile> gridFSFiles = new ArrayList<>();
-        gridFsOperations.find(MongoFileStorageService.MAKUENI_FILES_QUERY).into(gridFSFiles);
 
         procurementPlanMongoRepository.saveAll(procurementPlans);
 

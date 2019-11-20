@@ -2,7 +2,6 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
@@ -10,14 +9,17 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.util.List;
 
 /**
  * @author idobre
@@ -29,40 +31,13 @@ import java.util.Date;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfessionalOpinion extends AbstractTenderProcessMakueniEntity {
-    @ExcelExport(useTranslation = true, name = "Professional Opinion Date")
-    private Date professionalOpinionDate;
 
-    @ExcelExport(useTranslation = true, name = "Awardee")
+    @ExcelExport(name = "Professional Opinions", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Supplier awardee;
-
-    @ExcelExport(useTranslation = true, name = "Recommended Award Amount")
-    private BigDecimal recommendedAwardAmount;
-
-    public Date getProfessionalOpinionDate() {
-        return professionalOpinionDate;
-    }
-
-    public void setProfessionalOpinionDate(final Date professionalOpinionDate) {
-        this.professionalOpinionDate = professionalOpinionDate;
-    }
-
-    public Supplier getAwardee() {
-        return awardee;
-    }
-
-    public void setAwardee(final Supplier awardee) {
-        this.awardee = awardee;
-    }
-
-    public BigDecimal getRecommendedAwardAmount() {
-        return recommendedAwardAmount;
-    }
-
-    public void setRecommendedAwardAmount(final BigDecimal recommendedAwardAmount) {
-        this.recommendedAwardAmount = recommendedAwardAmount;
-    }
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @OrderColumn(name = "index")
+    private List<ProfessionalOpinionItem> items = new ArrayList<>();
 
     @Override
     public void setLabel(final String label) {
@@ -73,7 +48,7 @@ public class ProfessionalOpinion extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return "Professional Opinion for tender process " + getTenderProcessNotNull().getLabel();
+        return "Professional Opinions for tender process " + getTenderProcessNotNull().getLabel();
     }
 
     @Override
@@ -88,5 +63,13 @@ public class ProfessionalOpinion extends AbstractTenderProcessMakueniEntity {
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getAwardNotification()));
+    }
+
+    public List<ProfessionalOpinionItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ProfessionalOpinionItem> items) {
+        this.items = items;
     }
 }

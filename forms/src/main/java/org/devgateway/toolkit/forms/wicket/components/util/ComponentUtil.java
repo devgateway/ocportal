@@ -24,9 +24,15 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.events.EditingEnabledEvent;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.Labelable;
+import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 
 import java.io.Serializable;
@@ -34,7 +40,9 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author idobre
@@ -45,6 +53,24 @@ public final class ComponentUtil {
 
     private ComponentUtil() {
 
+    }
+
+    public static List<Supplier> getSuppliersInTenderQuotation(TenderProcess tenderProcess, boolean filterPass) {
+        final TenderQuotationEvaluation tenderQuotationEvaluation =
+                PersistenceUtil.getNext(tenderProcess.getTenderQuotationEvaluation());
+        final List<Supplier> suppliers = new ArrayList<>();
+        if (tenderQuotationEvaluation != null && !tenderQuotationEvaluation.getBids().isEmpty()) {
+            for (Bid bid : tenderQuotationEvaluation.getBids()) {
+                if (bid.getSupplier() != null) {
+                    if (filterPass && !DBConstants.SupplierResponsiveness.PASS.equalsIgnoreCase(
+                            bid.getSupplierResponsiveness())) {
+                        continue;
+                    }
+                    suppliers.add(bid.getSupplier());
+                }
+            }
+        }
+        return suppliers;
     }
 
     public static Date getDateFromLocalDate(final LocalDate localDate) {

@@ -1,9 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
-import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.AbstractDocsChildExpAuditEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
@@ -20,21 +18,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(indexes = {@Index(columnList = "parent_id")})
-public class PurchRequisition extends AbstractChildAuditableEntity<TenderProcess> implements ListViewItem {
-
-    @ExcelExport(useTranslation = true, name = "Approved Date")
-    private Date approvedDate;
+public class PurchRequisition extends AbstractDocsChildExpAuditEntity<TenderProcess> implements ListViewItem {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -56,34 +49,6 @@ public class PurchRequisition extends AbstractChildAuditableEntity<TenderProcess
     @OrderColumn(name = "index")
     private List<PurchaseItem> purchaseItems = new ArrayList<>();
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Documents")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FileMetadata> formDocs;
-
-    @Transient
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    private Boolean expanded = false;
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getEditable() {
-        return null;
-    }
-
-    @Override
-    public void setEditable(final Boolean editable) {
-
-    }
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getExpanded() {
-        return expanded;
-    }
 
     @Override
     public void setExpanded(final Boolean expanded) {
@@ -120,21 +85,5 @@ public class PurchRequisition extends AbstractChildAuditableEntity<TenderProcess
 
     public void setPurchaseItems(List<PurchaseItem> purchaseItems) {
         this.purchaseItems = purchaseItems;
-    }
-
-    public Set<FileMetadata> getFormDocs() {
-        return formDocs;
-    }
-
-    public void setFormDocs(Set<FileMetadata> formDocs) {
-        this.formDocs = formDocs;
-    }
-
-    public Date getApprovedDate() {
-        return approvedDate;
-    }
-
-    public void setApprovedDate(Date approvedDate) {
-        this.approvedDate = approvedDate;
     }
 }

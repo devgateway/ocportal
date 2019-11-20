@@ -10,14 +10,18 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author gmutuhu
@@ -28,43 +32,28 @@ import java.util.Date;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
-    @ExcelExport(useTranslation = true, name = "Date")
-    private Date acceptanceDate;
 
-    @ExcelExport(name = "Supplier")
+    @ExcelExport(name = "Award Acceptances", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private Supplier awardee;
-
-    @ExcelExport(useTranslation = true, name = "Accepted Award Value")
-    private BigDecimal acceptedAwardValue;
-
-    public Date getAcceptanceDate() {
-        return acceptanceDate;
-    }
-
-    public void setAcceptanceDate(final Date acceptanceDate) {
-        this.acceptanceDate = acceptanceDate;
-    }
-
-    public Supplier getAwardee() {
-        return awardee;
-    }
-
-    public void setAwardee(final Supplier awardee) {
-        this.awardee = awardee;
-    }
-
-    public BigDecimal getAcceptedAwardValue() {
-        return acceptedAwardValue;
-    }
-
-    public void setAcceptedAwardValue(final BigDecimal acceptedAwardValue) {
-        this.acceptedAwardValue = acceptedAwardValue;
-    }
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @OrderColumn(name = "index")
+    private List<AwardAcceptanceItem> items = new ArrayList<>();
 
     @Override
     public void setLabel(final String label) {
+    }
+
+    public boolean hasAccepted() {
+        return items.stream().map(AwardAcceptanceItem::isAccepted).filter(a -> a).findFirst().orElse(false);
+    }
+
+    public AwardAcceptanceItem getAcceptedAcceptance() {
+        return getItems().stream().filter(AwardAcceptanceItem::isAccepted).findFirst().orElse(null);
+    }
+
+    public List<Supplier> getAwardee() {
+        return items.stream().map(AwardAcceptanceItem::getAwardee).collect(Collectors.toList());
     }
 
     @Override
@@ -78,5 +67,13 @@ public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
     @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull().getContract()));
+    }
+
+    public List<AwardAcceptanceItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<AwardAcceptanceItem> items) {
+        this.items = items;
     }
 }

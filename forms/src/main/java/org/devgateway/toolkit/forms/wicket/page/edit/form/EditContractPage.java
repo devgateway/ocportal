@@ -17,7 +17,8 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
@@ -27,6 +28,8 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author gmutuhu
@@ -64,10 +67,12 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
 
         final DateFieldBootstrapFormComponent contractDate = ComponentUtil.addDateField(editForm, "contractDate");
         contractDate.required();
-        final AwardNotification awardNotification =
-                editForm.getModelObject().getTenderProcess().getSingleAwardNotification();
-        if (awardNotification != null && awardNotification.getAwardDate() != null) {
-            contractDate.getField().add(new AfterThanDateValidator(awardNotification.getAwardDate()));
+
+        AwardNotificationItem acceptedNotification = editForm.getModelObject().getTenderProcess()
+                .getSingleAwardNotification().getAcceptedNotification();
+
+        if (acceptedNotification != null && acceptedNotification.getAwardDate() != null) {
+            contractDate.getField().add(new AfterThanDateValidator(acceptedNotification.getAwardDate()));
         }
 
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
@@ -110,9 +115,19 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
         tenderProcessService.save(tenderProcess);
     }
 
+    public static List<Supplier> getAcceptedSupplier(TenderProcess tenderProcess) {
+        return tenderProcess.getSingleAwardAcceptance().getItems()
+                .stream()
+                .filter(AwardAcceptanceItem::isAccepted)
+                .map(AwardAcceptanceItem::getAwardee)
+                .findFirst().map(Arrays::asList).orElseGet(Arrays::asList);
+    }
+
+
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
-                new GenericChoiceProvider<>(getSuppliersInTenderQuotation()));
+                new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
+        );
         awardeeSelector.required();
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         editForm.add(awardeeSelector);
