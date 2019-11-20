@@ -87,7 +87,13 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (!editForm.getModelObject().hasAccepted()) {
+        if (!editForm.getModelObject().hasAccepted()
+                && !ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getSingleProfessionalOpinion())) {
+            pp.set(
+                    WebConstants.PARAM_ID,
+                    PersistenceUtil.getNext(
+                            editForm.getModelObject().getTenderProcess().getProfessionalOpinion()).getId()
+            );
             return pp;
         }
         if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getContract())) {
