@@ -81,6 +81,8 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
 
     @Override
     public String toString() {
-        return Objects.toString(awardee, "") + " " + Objects.toString(acceptedAwardValue, "");
+        return Objects.toString(awardee, "") + " " + Objects.toString(acceptedAwardValue, "") + " "
+                + Objects.toString(supplierResponse != null ? "(" + supplierResponse.getLabel() + ")" : "", "");
+
     }
 }
