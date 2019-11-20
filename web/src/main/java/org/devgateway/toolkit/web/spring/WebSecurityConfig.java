@@ -107,6 +107,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .expressionHandler(webExpressionHandler()) // inject role hierarchy
+                .antMatchers("/monitoring/**")
+                .access("hasRole('ROLE_ADMIN')")
                 .anyRequest().authenticated().and().formLogin().
                 loginPage("/login").
                 permitAll().and().requestCache().and()
