@@ -1,8 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
@@ -15,7 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 /**
@@ -29,7 +27,7 @@ import java.math.BigDecimal;
         @Index(columnList = "purchase_item_id"),
         @Index(columnList = "description")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TenderItem extends AbstractChildAuditableEntity<Tender> implements ListViewItem {
+public class TenderItem extends AbstractChildExpandableAuditEntity<Tender> implements ListViewItem {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -75,35 +73,6 @@ public class TenderItem extends AbstractChildAuditableEntity<Tender> implements 
 
     public void setDescription(final String description) {
         this.description = description;
-    }
-
-    @Transient
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    private Boolean expanded = false;
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getEditable() {
-        return null;
-    }
-
-    @Override
-    public void setEditable(final Boolean editable) {
-
-    }
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getExpanded() {
-        return expanded;
-    }
-
-    @Override
-    public void setExpanded(final Boolean expanded) {
-        this.expanded = expanded;
     }
 
 }

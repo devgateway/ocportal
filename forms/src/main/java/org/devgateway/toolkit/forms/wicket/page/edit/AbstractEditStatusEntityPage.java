@@ -208,7 +208,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         comments = new TransparentWebMarkupContainer("comments");
         comments.setOutputMarkupId(true);
         comments.setOutputMarkupPlaceholderTag(true);
-        comments.setVisibilityAllowed(true);
+        comments.setVisibilityAllowed(false);
         editForm.add(comments);
 
         statusComments = getStatusCommentsListView();

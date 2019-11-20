@@ -158,27 +158,35 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                 tenderProcess, EditTenderPage.class, tenderProcess);
         containerFragment.add(tenderPanel);
 
-        final Panel evaluationPanel = new TenderDetailPanel("evaluationPanel", tenderQuotationEvaluation,
+        final Panel evaluationPanel = new TenderDetailPanel<>("evaluationPanel", tenderQuotationEvaluation,
                 "Quotation and Evaluation", (tenderQuotationEvaluation != null && tender != null)
                 ? new ArrayList<>(Arrays.asList(tender.getTenderTitle(), tender.getTenderNumber())) : null,
                 tenderProcess, EditTenderQuotationEvaluationPage.class, tender);
         containerFragment.add(evaluationPanel);
 
         final Panel professionalOpinionPanel = new TenderDetailPanel<>("professionalOpinionPanel", professionalOpinion,
-                "Professional Opinion", professionalOpinion != null ? new ArrayList<>(Arrays.asList(
-                professionalOpinion.getAwardee(), professionalOpinion.getRecommendedAwardAmount())) : null,
+                "Professional Opinion",
+                professionalOpinion != null ? professionalOpinion.getItems()
+                        .stream()
+                        .map(Objects::toString)
+                        .collect(Collectors.toList())
+                        : null,
                 tenderProcess, EditProfessionalOpinionPage.class, tenderQuotationEvaluation);
         containerFragment.add(professionalOpinionPanel);
 
         final Panel awardNotificationPanel = new TenderDetailPanel<>("awardNotificationPanel", awardNotification,
-                "Notification", awardNotification != null ? new ArrayList<>(Arrays.asList(
-                awardNotification.getAwardee(), awardNotification.getAwardValue())) : null,
+                "Notification",
+                awardNotification != null ? awardNotification.getItems()
+                        .stream()
+                        .map(Objects::toString)
+                        .collect(Collectors.toList()) : null,
                 tenderProcess, EditAwardNotificationPage.class, professionalOpinion);
         containerFragment.add(awardNotificationPanel);
 
         final Panel awardAcceptancePanel = new TenderDetailPanel<>("awardAcceptancePanel", awardAcceptance,
-                "Acceptance", awardAcceptance != null ? new ArrayList<>(Arrays.asList(
-                awardAcceptance.getAwardee(), awardAcceptance.getAcceptedAwardValue())) : null,
+                "Acceptance",
+                awardAcceptance != null ? awardAcceptance.getItems().stream().map(Objects::toString)
+                        .collect(Collectors.toList()) : null,
                 tenderProcess, EditAwardAcceptancePage.class, awardNotification);
         containerFragment.add(awardAcceptancePanel);
 

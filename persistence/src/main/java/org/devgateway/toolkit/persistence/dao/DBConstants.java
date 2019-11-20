@@ -42,6 +42,13 @@ public final class DBConstants {
         public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
     }
 
+    public static final class SupplierResponse {
+        public static final String ACCEPTED = "Accepted";
+        public static final String REJECTED = "Rejected";
+        public static final String[] ALL = {ACCEPTED, REJECTED};
+        public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
+    }
+
     public static final int MAX_DEFAULT_TEXT_LENGTH = 32000;
     public static final int STD_DEFAULT_TEXT_LENGTH = 255;
     public static final int MAX_DEFAULT_TEXT_LENGTH_ONE_LINE = 3000;

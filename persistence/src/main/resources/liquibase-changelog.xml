@@ -88,7 +88,8 @@
 
         <insert tableName="CATEGORY">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="LABEL" value="Devolution, County Administration, Participatory Development and Public Service"/>
+            <column name="LABEL"
+                    value="Devolution, County Administration, Participatory Development and Public Service"/>
             <column name="CODE" value="D4"/>
             <column name="DTYPE" value="Department"/>
         </insert>
@@ -457,4 +458,89 @@
             drop table old_purchase_item;
         </sql>
     </changeSet>
+
+
+    <changeSet id="OCMAKU-387-1" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="professional_opinion_item"/>
+            <tableExists tableName="professional_opinion_item_form_docs"/>
+        </preConditions>
+        <sql>
+            insert into professional_opinion_item (id, "index", approved_date, awardee_id, created_by, created_date,
+            last_modified_by, last_modified_date, parent_id, professional_opinion_date, recommended_award_amount)
+            (select nextval('hibernate_sequence'), 0, approved_date, awardee_id, created_by, created_date,
+            last_modified_by, last_modified_date, id, professional_opinion_date, recommended_award_amount from
+            professional_opinion);
+            insert into professional_opinion_item_form_docs (form_docs_id, professional_opinion_item_id)
+            (select d.form_docs_id, pi.id from professional_opinion_form_docs d, professional_opinion_item pi
+            where pi.parent_id=d.professional_opinion_id);
+            delete from professional_opinion_form_docs;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-387-2" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="award_notification_item"/>
+            <tableExists tableName="award_notification_item_form_docs"/>
+        </preConditions>
+        <sql>
+            INSERT INTO award_notification_item(
+            id, created_by, created_date, last_modified_by, last_modified_date, approved_date, acknowledgement_days,
+            award_date, award_value, parent_id, awardee_id, "index")
+            (select nextval('hibernate_sequence'), created_by, created_date,
+            last_modified_by, last_modified_date, approved_date, acknowledgement_days, award_date, award_value, id,
+            awardee_id, 0 from award_notification);
+            INSERT INTO award_notification_item_form_docs(award_notification_item_id, form_docs_id)
+            (select pi.id, d.form_docs_id from award_notification_form_docs d, award_notification_item pi where
+            pi.parent_id=d.award_notification_id);
+            delete from award_notification_form_docs;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-387-3" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="award_acceptance_item"/>
+            <tableExists tableName="award_acceptance_item_form_docs"/>
+        </preConditions>
+        <sql>
+            insert into award_acceptance_item (id, "index", acceptance_date, accepted_award_value, approved_date,
+            awardee_id, created_by, created_date,
+            last_modified_by, last_modified_date, parent_id)
+            (select nextval('hibernate_sequence'), 0, acceptance_date, accepted_award_value, approved_date, awardee_id,
+            created_by, created_date, last_modified_by,last_modified_date, id
+            from award_acceptance);
+            INSERT INTO award_acceptance_item_form_docs (award_acceptance_item_id, form_docs_id)
+            (select pi.id, d.form_docs_id from award_acceptance_form_docs d, award_acceptance_item pi where
+            pi.parent_id=d.award_acceptance_id);
+            delete from award_acceptance_form_docs;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-387-4" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Accepted"/>
+            <column name="DTYPE" value="SupplierResponse"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Rejected"/>
+            <column name="DTYPE" value="SupplierResponse"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-387-5" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+            <tableExists tableName="award_acceptance_item"/>
+        </preConditions>
+        <sql>
+            update award_acceptance_item set supplier_response_id =
+            (select id from category where dtype='SupplierResponse' and label='Accepted');
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
