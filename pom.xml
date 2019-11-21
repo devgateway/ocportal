@@ -101,14 +101,6 @@
             <name>jcenter</name>
             <url>http://jcenter.bintray.com</url>
         </pluginRepository>
-        <pluginRepository>
-            <id>OCVN</id>
-            <name>OCVN</name>
-            <url>http://artifactory.ampdev.net/artifactory/ocvn/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
     </pluginRepositories>
 
     <dependencyManagement>
