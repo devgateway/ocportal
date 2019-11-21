@@ -85,14 +85,6 @@
             <url>http://jcenter.bintray.com/</url>
         </repository>
         <repository>
-            <id>OCVN</id>
-            <name>OCVN</name>
-            <url>http://artifactory.ampdev.net/artifactory/ocvn/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
