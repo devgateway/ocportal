@@ -55,7 +55,8 @@ public class AwardNotification extends AbstractTenderProcessMakueniEntity {
                 .findFirst();
 
         if (accepted.isPresent()) {
-            return this.getItems().stream().filter(i -> i.getAwardee().equals(accepted.get().getAwardee()))
+            return this.getItems().stream().filter(i -> i.getAwardee() != null && i.getAwardee()
+                    .equals(accepted.get().getAwardee()))
                     .findFirst().orElse(null);
         }
         return null;
