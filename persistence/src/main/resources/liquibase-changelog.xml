@@ -543,4 +543,14 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-411" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender"/>
+        </preConditions>
+        <sql>
+            update tender set tender_link = 'https://tenders.go.ke' where id in (16897, 19365, 16881);
+            update tender set tender_link = 'https://makueni.go.ke' where id in (16884, 16908);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
