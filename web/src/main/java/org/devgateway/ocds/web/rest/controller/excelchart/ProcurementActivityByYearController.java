@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.CountPlansTendersAwardsController;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
+import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.excelcharts.ChartType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -72,7 +73,7 @@ public class ProcurementActivityByYearController extends ExcelChartOCDSControlle
             seriesTitle = new ArrayList<>();
         }
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setContentType(Constants.ContentType.XLSX);
         response.setHeader("Content-Disposition", "attachment; filename=" + chartTitle + ".xlsx");
         response.getOutputStream().write(
                 excelChartGenerator.getExcelChart(

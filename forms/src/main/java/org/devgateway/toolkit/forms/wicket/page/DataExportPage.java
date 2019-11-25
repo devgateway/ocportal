@@ -24,6 +24,7 @@ import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.excel.DataExportService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -128,7 +129,7 @@ public class DataExportPage extends BasePage {
                                                 .getId());
 
                                 response.setContentType(
-                                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                                        Constants.ContentType.XLSX);
                                 response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
                                 response.getOutputStream().write(bytes);
                             } catch (IOException e) {
