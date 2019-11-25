@@ -10,4 +10,6 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
  */
 public interface ProcurementMethodService extends BaseJpaService<ProcurementMethod>,
         TextSearchableService<ProcurementMethod> {
+
+    ProcurementMethod findByLabel(String label);
 }

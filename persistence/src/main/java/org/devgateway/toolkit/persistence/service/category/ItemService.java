@@ -13,4 +13,6 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
  */
 public interface ItemService extends BaseJpaService<Item>, TextSearchableService<Item> {
 
+
+    Item findByCode(String code);
 }
