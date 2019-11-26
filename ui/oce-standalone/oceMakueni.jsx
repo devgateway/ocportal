@@ -125,7 +125,9 @@ class OCEMakueni extends OCApp {
           </div>
           <div className="col-md-9 col-sm-9 col-main-content">
             <div className="row">
-              <div className="navigation subnav">
+              <div className="navigation subnav" data-step="3" data-intro="<p><b>Chart categories</b></p>
+      Navigate between the different types of charts, including an overview, competitiveness,
+      and efficiency.">
                 {this.navigation()}
               </div>
             </div>

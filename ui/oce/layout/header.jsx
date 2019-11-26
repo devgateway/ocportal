@@ -5,6 +5,8 @@ import URI from 'urijs';
 
 import './header.less';
 import { statsInfo } from './state';
+import * as introJs from 'intro.js/intro.js';
+import 'intro.js/introjs.css';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
@@ -23,11 +25,19 @@ export default class Header extends translatable(React.Component) {
       {
         name: 'procurement-plan',
         title: 'Procurement Plan',
+        step: 4,
+        intro: "<p><b>Procurement Plan</b></p><p><i>Procurement Plan Tab</i></p>" +
+          "Click to view all the procurement plans for each financial year for each department in" +
+          " the County Government of Makueni.",
         icon: 'assets/icons/compare.svg'
       },
       {
         name: 'm-and-e',
         title: 'Charts',
+        step: 2,
+        intro: "<p><b>Charts</b></p>" +
+          "Click the charts button to view charts that provide an overview of the procurement " +
+          "process, and highlight the competitiveness, and efficiency of the procurement process.",
         icon: 'assets/icons/eprocurement.svg'
       }
     ];
@@ -68,6 +78,9 @@ export default class Header extends translatable(React.Component) {
 
     return (<div>
         <span className="export-title">
+          <a onClick={()=>introJs.introJs().setOption("overlayOpacity", 0).start()}>HELP</a>
+        </span>
+        <span className="export-title">
           Download the Data
         </span>
         <div className="export-btn">
@@ -91,7 +104,10 @@ export default class Header extends translatable(React.Component) {
         <div className="col-md-8 col-sm-6 col-xs-12">
           <a className="portal-logo-wrapper" href="#!/">
               <img src="assets/makueni-logo.png" alt="Makueni"/>
-              <span>Government of Makueni County Open Contracting Portal</span>
+              <span data-step="1" data-intro="<p><b>Public Portal</b></p>
+              Welcome to the Government of Makueni County Open Contracting Portal.
+              The procurement data has been provided and validated by the Government of Makueni county.">
+                Government of Makueni County Open Contracting Portal</span>
           </a>
         </div>
 
@@ -101,6 +117,7 @@ export default class Header extends translatable(React.Component) {
               {
                 this.tabs.map(tab => {
                   return (<a
+                      data-step={tab.step} data-intro={tab.intro}
                       key={tab.name}
                       href="javascript:void(0);"
                       className={cn('', { active: this.isActive(tab.name) })}
