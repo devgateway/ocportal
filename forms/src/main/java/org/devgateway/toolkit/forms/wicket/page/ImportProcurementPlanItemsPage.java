@@ -237,7 +237,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Exception processing row " + (rn + 1) + " " + e.toString());
+            throw new RuntimeException("Exception processing row " + (rn + 2) + " " + e.toString());
         }
 
         return pp;
