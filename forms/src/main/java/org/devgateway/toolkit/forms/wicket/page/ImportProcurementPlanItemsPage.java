@@ -130,6 +130,11 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             if (checked != null && !checked) {
                 form.error(getString("ExcelFormatValidator"));
             }
+            try {
+                createProcurementPlan();
+            } catch (Exception e) {
+                form.error(getString("ExcelImportErrorValidator") + e.getMessage());
+            }
         }
     }
 
@@ -197,10 +202,10 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         pp.setDepartment(department);
 
         FileMetadata file = form.getModelObject().getFiles().iterator().next();
+        int rn = 0;
         try {
             Workbook wb = WorkbookFactory.create(new ByteArrayInputStream(file.getContent().getBytes()));
             Sheet sh = wb.getSheetAt(0);
-            int rn = 0;
             for (Row r : sh) {
                 if (rn++ < 7) {
                     continue;
@@ -231,8 +236,8 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 pi.setQuarter4th(BigDecimal.valueOf(r.getCell(16).getNumericCellValue()));
             }
 
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException("Exception processing row " + (rn + 1) + " " + e.toString());
         }
 
         return pp;
