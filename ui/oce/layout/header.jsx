@@ -20,23 +20,24 @@ export default class Header extends translatable(React.Component) {
       {
         name: 'tender',
         title: 'Tenders',
+        step:2,
+        intro: "The portal opens by default on the Tender page. It shows all the tenders for each " +
+          "financial year for each department in the County Government of Makueni.",
         icon: 'assets/icons/efficiency.svg'
       },
       {
         name: 'procurement-plan',
         title: 'Procurement Plan',
-        step: 4,
-        intro: "<p><b>Procurement Plan</b></p><p><i>Procurement Plan Tab</i></p>" +
-          "Click to view all the procurement plans for each financial year for each department in" +
+        step:3,
+        intro: "Click to view all the procurement plans for each financial year for each department in" +
           " the County Government of Makueni.",
         icon: 'assets/icons/compare.svg'
       },
       {
         name: 'm-and-e',
         title: 'Charts',
-        step: 2,
-        intro: "<p><b>Charts</b></p>" +
-          "Click the charts button to view charts that provide an overview of the procurement " +
+        step:4,
+        intro: "Click the charts button to view charts that provide an overview of the procurement " +
           "process, and highlight the competitiveness, and efficiency of the procurement process.",
         icon: 'assets/icons/eprocurement.svg'
       }
@@ -80,7 +81,9 @@ export default class Header extends translatable(React.Component) {
         <span className="export-title">
           <a onClick={()=>introJs.introJs().setOption("overlayOpacity", 0).start()}>HELP</a>
         </span>
-        <span className="export-title">
+        <span className="export-title" data-step="7" data-intro="Download the data in either XLS,
+        which uses the standard government terminology, or in JSON which uses the Open Contracting
+         Data Standard.">
           Download the Data
         </span>
         <div className="export-btn">
@@ -104,8 +107,7 @@ export default class Header extends translatable(React.Component) {
         <div className="col-md-8 col-sm-6 col-xs-12">
           <a className="portal-logo-wrapper" href="#!/">
               <img src="assets/makueni-logo.png" alt="Makueni"/>
-              <span data-step="1" data-intro="<p><b>Public Portal</b></p>
-              Welcome to the Government of Makueni County Open Contracting Portal.
+              <span data-step="1" data-intro="Welcome to the Government of Makueni County Open Contracting Portal.
               The procurement data has been provided and validated by the Government of Makueni county.">
                 Government of Makueni County Open Contracting Portal</span>
           </a>
@@ -117,13 +119,13 @@ export default class Header extends translatable(React.Component) {
               {
                 this.tabs.map(tab => {
                   return (<a
-                      data-step={tab.step} data-intro={tab.intro}
                       key={tab.name}
                       href="javascript:void(0);"
                       className={cn('', { active: this.isActive(tab.name) })}
                       onClick={() => this.changeOption(tab.name)}
-                    >
+                    ><span data-intro={tab.intro} data-step={tab.step}>
                       {tab.title}
+                    </span>
                     </a>
                   );
                 })
@@ -137,11 +139,15 @@ export default class Header extends translatable(React.Component) {
         {
           data !== undefined
             ? <div>
-              <div className="col-lg-3 col-md-3 col-sm-6 total-item">
+              <div className="col-lg-3 col-md-3 col-sm-6 total-item" data-step="5" data-intro="This
+              shows the total number of tenders that have been contracted that are published on the
+               portal." data-position="right">
                 <span className="total-label">Total Contracts</span>
                 <span className="total-number">{data.count}</span>
               </div>
-              <div className="col-lg-4 col-md-5 col-sm-6 total-item">
+              <div className="col-lg-4 col-md-5 col-sm-6 total-item" data-step="6"
+                   data-intro="This shows the total contracted amount."
+                   data-position="right">
                 <span className="total-label">Total Contract Amount</span>
                 <span className="total-number">{currencyFormatter(data.value)}</span>
               </div>

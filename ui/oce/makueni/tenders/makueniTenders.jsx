@@ -14,32 +14,32 @@ import FiltersTendersWrapper from '../filters/FiltersTendersWrapper';
 const NAME = 'MakueniTenders';
 
 class MakueniTenders extends CRDPage {
-  
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
       data: []
     };
   }
-  
+
   componentDidMount() {
     tendersData.addListener(NAME, () => this.updateBindings());
     page.addListener(NAME, () => this.updateBindings());
     pageSize.addListener(NAME, () => this.updateBindings());
     tendersCountRemote.addListener(NAME, () => this.updateBindings());
   }
-  
+
   componentWillUnmount() {
     // reset all filters when we unmount this component
     mtFilters.assign('NAME', Map());
-    
+
     tendersData.removeListener(NAME);
     page.removeListener(NAME);
     pageSize.removeListener(NAME);
     tendersCountRemote.removeListener(NAME);
   }
-  
+
   updateBindings() {
     Promise.all([
       tendersData.getState(NAME),
@@ -56,18 +56,20 @@ class MakueniTenders extends CRDPage {
       });
     });
   }
-  
+
   shouldComponentUpdate(nextProps, nextState) {
     return JSON.stringify(this.state) !== JSON.stringify(nextState)
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
-  
+
   filters() {
     return <FiltersTendersWrapper filters={mtFilters} translations={this.props.translations}/>;
   }
-  
+
   tenderLink(navigate) {
-    return (tender) => (<div className="tender-title">
+    return (tender) => (<div className="tender-title" data-step="9"
+    data-intro="Click on the Tender Title to view the tender details, purchase requisition, tender
+    quotation, professional opinion, notification, award and contract for each tender process.">
       {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
@@ -78,9 +80,10 @@ class MakueniTenders extends CRDPage {
       }
     </div>);
   }
-  
+
   projectLink(navigate) {
-    return (project) => (<div>
+    return (project) => (<div data-step="10" data-intro="Click the Project Title to view project details outlined
+        in the approved cabinet paper.">
       {
         project !== undefined
           ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('p', project._id)}
@@ -91,9 +94,9 @@ class MakueniTenders extends CRDPage {
       }
     </div>);
   }
-  
+
   downloadFiles() {
-    return (tender) => (<div>
+    return (tender) => (<div data-step="11" data-intro="Click to download the tender document hardcopy.">
         {
           tender && tender.formDocs && tender.formDocs.map(doc => <div key={doc}>
             <OverlayTrigger
@@ -103,7 +106,7 @@ class MakueniTenders extends CRDPage {
                   Click to download the file
                 </Tooltip>
               }>
-              
+
               <a className="download-file" href={doc.url} target="_blank">
                 <i className="glyphicon glyphicon-download"/>
                 <span>{doc.name}</span>
@@ -114,33 +117,35 @@ class MakueniTenders extends CRDPage {
       </div>
     );
   }
-  
+
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
     const [navigationPage, id] = route;
-    
+
     return (<div className="container-fluid dashboard-default">
-      
+
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
               styling={this.props.styling} selected="tender"/>
-      
-      <div className="makueni-tenders content row">
+
+      <div className="makueni-tenders content row" >
         <div className="col-md-3 col-sm-3 filters">
-          <div className="row">
+          <div className="row" data-intro="On each page there is a set of filters that allows you to
+           limit what information is shown on the page by selected metrics, such as a specific
+           location or department." data-step="8">
             <div className="filters-hint col-md-12">
               {this.t('filters:hint')}
             </div>
             {this.filters()}
           </div>
         </div>
-        
+
         <div className="col-md-9 col-sm-9 col-main-content">
           {
             navigationPage === undefined
               ? <div>
                 <h1>Makueni Tenders</h1>
-                
+
                 <BootstrapTableWrapper
                   bordered
                   data={data}
@@ -188,7 +193,7 @@ class MakueniTenders extends CRDPage {
           }
         </div>
       </div>
-      
+
       <div className="alerts-container">
         <div className="row alerts-button">
           <div className="col-md-12">
