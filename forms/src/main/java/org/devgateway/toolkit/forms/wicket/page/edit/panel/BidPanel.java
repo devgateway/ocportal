@@ -2,6 +2,9 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -19,6 +22,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluation> {
     @SpringBean
@@ -30,9 +34,31 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         super(id);
     }
 
+    protected class ListItemsValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            List<Bid> bids = BidPanel.this.getModelObject();
+            if (bids.size() == 0) {
+                form.error(getString("atLeastOneBid"));
+            }
+
+        }
+    }
+
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        final Form form = (Form) getParent();
+        if (form != null) {
+            form.add(new BidPanel.ListItemsValidator());
+        }
     }
 
     @Override
