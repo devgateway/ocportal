@@ -84,6 +84,11 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
         title.required();
         title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
+        title.getField().add(new UniquePropertyEntryValidator<>(getString("uniqueTitle"), tenderService::findOne,
+                (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Tender_.tenderTitle)), v.toLowerCase()),
+                editForm.getModel()
+        ));
+
         final TextFieldBootstrapFormComponent<String> tenderNumber = ComponentUtil.addTextField(editForm,
                 "tenderNumber");
         tenderNumber.required();

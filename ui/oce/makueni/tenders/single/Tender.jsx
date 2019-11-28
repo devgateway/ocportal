@@ -71,7 +71,8 @@ class Tender extends FeedbackPage {
         </div>
         <div className="col-md-4">
           <div className="item-label">Procuring Entity Email</div>
-          <div className="item-value">{tender.issuedBy.emailAddress}</div>
+          <div className="item-value download">
+            <a href={"mailto:"+tender.issuedBy.emailAddress}>{tender.issuedBy.emailAddress}</a></div>
         </div>
       </div>
 
@@ -144,7 +145,7 @@ class Tender extends FeedbackPage {
              where the document can be downloaded.">
           <div className="item-label">Download Tender</div>
           {
-            tender.formDocs.map(doc => <div key={doc._id}>
+            tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>
               <OverlayTrigger
                 placement="bottom"
                 overlay={
@@ -163,7 +164,12 @@ class Tender extends FeedbackPage {
         </div>
         <div className="col-md-6">
           <div className="item-label">Tender Link</div>
-          <div className="item-value">{tender.tenderLink}</div>
+          <div className="item-value">
+            <a className="item-value download" href={tender.tenderLink} target="_blank">
+              {tender.tenderLink}
+            </a>
+
+          </div>
         </div>
       </div>
 

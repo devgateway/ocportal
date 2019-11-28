@@ -12,5 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface ItemRepository extends CategoryRepository<Item> {
+
+    Item findByCode(String code);
 }
 

@@ -9,5 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface ProcurementMethodRepository extends CategoryRepository<ProcurementMethod> {
-
+    ProcurementMethod findByLabel(String code);
 }

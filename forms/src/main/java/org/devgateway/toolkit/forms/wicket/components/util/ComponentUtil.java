@@ -1,15 +1,19 @@
 package org.devgateway.toolkit.forms.wicket.components.util;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
+import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
@@ -34,7 +38,12 @@ import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.WebSecurityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -51,8 +60,40 @@ import java.util.List;
 public final class ComponentUtil {
     private static final DecimalFormat DF = new DecimalFormat("#,###.###");
 
+    protected static final Logger logger = LoggerFactory.getLogger(ComponentUtil.class);
+
     private ComponentUtil() {
 
+    }
+
+    public static AJAXDownload createAJAXDownload(String filePath, String contentType, Class<?> caller) {
+        return new AJAXDownload() {
+            @Override
+            protected IRequestHandler getHandler() {
+                return new IRequestHandler() {
+                    @Override
+                    public void respond(final IRequestCycle requestCycle) {
+                        final HttpServletResponse response = (HttpServletResponse) requestCycle
+                                .getResponse().getContainerResponse();
+                        try {
+                            InputStream in = caller.getClassLoader().getResourceAsStream(filePath);
+                            response.setContentType(contentType);
+                            response.setHeader("Content-Disposition", "attachment; filename=" + filePath);
+                            IOUtils.copy(in, response.getOutputStream());
+                            in.close();
+                        } catch (IOException e) {
+                            logger.error("Download error", e);
+                        }
+                        RequestCycle.get().scheduleRequestHandlerAfterCurrent(null);
+                    }
+
+                    @Override
+                    public void detach(final IRequestCycle requestCycle) {
+                        // do nothing;
+                    }
+                };
+            }
+        };
     }
 
     public static List<Supplier> getSuppliersInTenderQuotation(TenderProcess tenderProcess, boolean filterPass) {
@@ -250,8 +291,10 @@ public final class ComponentUtil {
             final TextSearchableService<E> searchService) {
         final GenericPersistableJpaTextChoiceProvider<E> choiceProvider
                 = new GenericPersistableJpaTextChoiceProvider<>(searchService);
-        final Select2ChoiceBootstrapFormComponent<E> component = new Select2ChoiceBootstrapFormComponent<>(id,
-                choiceProvider);
+        final Select2ChoiceBootstrapFormComponent<E> component = new Select2ChoiceBootstrapFormComponent<>(
+                id,
+                choiceProvider
+        );
         parent.add(component);
 
         return component;

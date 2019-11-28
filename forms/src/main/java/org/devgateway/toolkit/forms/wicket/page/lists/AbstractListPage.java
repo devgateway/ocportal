@@ -55,6 +55,7 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
+import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -307,7 +308,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                                             pageRequest);
 
                                     response.setContentType(
-                                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                                            Constants.ContentType.XLSX);
                                     response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
                                     response.getOutputStream().write(bytes);
                                 } else {

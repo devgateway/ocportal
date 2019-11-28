@@ -95,10 +95,10 @@ class MakueniTenders extends CRDPage {
     </div>);
   }
 
-  downloadFiles() {
-    return (tender) => (<div data-step="11" data-intro="Click to download the tender document hardcopy.">
+  downloadFiles(tender) {
+    return (<div data-step="11" data-intro="Click to download the tender document hardcopy.">
         {
-          tender && tender.formDocs && tender.formDocs.map(doc => <div key={doc}>
+          tender && tender.formDocs && tender.formDocs.map(doc => <div key={tender._id+'-'+doc._id}>
             <OverlayTrigger
               placement="bottom"
               overlay={
@@ -117,7 +117,19 @@ class MakueniTenders extends CRDPage {
       </div>
     );
   }
+linksOrFiles() {
+    return (tender) => tender && tender.formDocs ? this.downloadFiles(tender) : this.downloadLinks(tender);
+   }
 
+  downloadLinks(tender) {
+    return (<div>
+        {
+          tender && tender.tenderLink && (<a className="download-file" href={tender.tenderLink} target="_blank">
+            {tender.tenderLink}</a>)
+        }
+      </div>
+    );
+  }
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
@@ -179,7 +191,7 @@ class MakueniTenders extends CRDPage {
                   }, {
                     title: 'Tender Documents',
                     dataField: 'tender',
-                    dataFormat: this.downloadFiles(),
+                    dataFormat: this.linksOrFiles(),
                   }]}
                 />
               </div>
