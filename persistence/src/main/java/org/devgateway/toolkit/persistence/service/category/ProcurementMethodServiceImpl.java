@@ -34,4 +34,9 @@ public class ProcurementMethodServiceImpl extends BaseJpaServiceImpl<Procurement
     public ProcurementMethod newInstance() {
         return new ProcurementMethod();
     }
+
+    @Override
+    public ProcurementMethod findByLabel(String label) {
+        return repository.findByLabel(label);
+    }
 }

@@ -44,6 +44,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
@@ -58,6 +59,7 @@ import org.devgateway.toolkit.persistence.service.excel.DataExportService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -199,7 +201,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                                         getProcurementPlan().getId());
 
                                 response.setContentType(
-                                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                                        Constants.ContentType.XLSX);
                                 response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
                                 response.getOutputStream().write(bytes);
                             } catch (IOException e) {
@@ -241,7 +243,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private void addNewProcurementPlanButton() {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
-                "newProcurementPlan", EditProcurementPlanPage.class, Buttons.Type.Success);
+                "newProcurementPlan", ProcurementPlanInputSelectPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
         newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
         newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);

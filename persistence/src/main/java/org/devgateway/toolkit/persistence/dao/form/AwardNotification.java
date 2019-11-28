@@ -47,6 +47,7 @@ public class AwardNotification extends AbstractTenderProcessMakueniEntity {
     }
 
 
+    @JsonIgnore
     public AwardNotificationItem getAcceptedNotification() {
         final AwardAcceptance awardAcceptance = getTenderProcess().getSingleAwardAcceptance();
         Optional<AwardAcceptanceItem> accepted = awardAcceptance.getItems()

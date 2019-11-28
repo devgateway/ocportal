@@ -37,4 +37,9 @@ public class ItemServiceImpl  extends BaseJpaServiceImpl<Item> implements ItemSe
     public Item newInstance() {
         return new Item();
     }
+
+    @Override
+    public Item findByCode(String code) {
+        return repository.findByCode(code);
+    }
 }

@@ -20,7 +20,6 @@ public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueni
     @JoinColumn(name = "tender_process_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
-    @org.springframework.data.annotation.Transient
     protected TenderProcess tenderProcess;
 
     @Override
