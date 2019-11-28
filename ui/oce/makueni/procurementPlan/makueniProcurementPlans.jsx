@@ -69,7 +69,7 @@ class MakueniProcurementPlans extends CRDPage {
 
   ppLink(navigate) {
     return (ppId) => (
-      <a data-intro="Click to view the procurement plan item details"
+      <a data-intro="Click to view the procurement plan item details" data-step="9"
          href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
          className="more-details-link">
         More Details
@@ -89,7 +89,7 @@ class MakueniProcurementPlans extends CRDPage {
                 </Tooltip>
               }>
 
-              <a data-intro="Click to download a hardcopy of the original procurement
+              <a data-step="10" data-intro="Click to download a hardcopy of the original procurement
               plan." className="download-file" href={doc.url} target="_blank">
                 <i className="glyphicon glyphicon-download"/>
                 <span>{doc.name}</span>

@@ -145,7 +145,7 @@ class PurchaseReqView extends CRDPage {
 
     return (<div className="tender makueni-form">
       <div className="row">
-        <div className="col-md-12 navigation-view" data-intro="Click to view and
+        <div className="col-md-12 navigation-view" data-step="9" data-intro="Click to view and
         download the details and documents related to this tender process.">
           {
             this.tabs.map(tab => {
@@ -175,6 +175,7 @@ class PurchaseReqView extends CRDPage {
 
           <div className="col-md-offset-5 col-md-4">
             <button className="btn btn-subscribe pull-right" type="submit"
+                    data-step="11"
                     data-intro="Click this button to receive email alerts on any data updates
                     to this tender."
                     onClick={() => this.props.onSwitch('alerts', data._id, data.tender[0].tenderTitle)}>

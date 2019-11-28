@@ -3,10 +3,10 @@ import translatable from '../translatable';
 import cn from 'classnames';
 import URI from 'urijs';
 
-import './header.less';
-import { statsInfo } from './state';
 import * as introJs from 'intro.js/intro.js';
 import 'intro.js/introjs.css';
+import './header.less';
+import { statsInfo } from './state';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
@@ -79,7 +79,14 @@ export default class Header extends translatable(React.Component) {
 
     return (<div>
         <span className="export-title">
-          <a onClick={()=>introJs.introJs().setOption("overlayOpacity", 0).start()}>HELP</a>
+          <a onClick={()=> {
+            window.scrollTo(0, 0);
+            introJs.introJs()
+              .setOption('overlayOpacity', 0.7)
+              .setOption('showProgress', true)
+              .start();
+          }
+          }>HELP</a>
         </span>
         <span className="export-title" data-step="7" data-intro="Download the data in either XLS,
         which uses the standard government terminology, or in JSON which uses the Open Contracting
