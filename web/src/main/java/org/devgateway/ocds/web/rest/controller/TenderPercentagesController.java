@@ -294,7 +294,7 @@ public class TenderPercentagesController extends GenericOCDSController {
                                                                   @Valid final YearFilterPagingRequest filter) {
 
         DBObject project1 = new BasicDBObject();
-        addYearlyMonthlyProjection(filter, project1, "$tender.tenderPeriod.startDate");
+        addYearlyMonthlyProjection(filter, project1, ref(getTenderDateField()));
         project1.put("tender._id", 1);
         project1.put("planning.budget.amount", 1);
 
@@ -326,8 +326,8 @@ public class TenderPercentagesController extends GenericOCDSController {
         );
 
         Aggregation agg = newAggregation(
-                match(where("tender.tenderPeriod.startDate").exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter, "tender.tenderPeriod.startDate"))),
+                match(where(getTenderDateField()).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 new CustomProjectionOperation(project1), new CustomGroupingOperation(group),
                 transformYearlyGrouping(filter).andInclude(Keys.TOTAL_TENDERS,
                         Keys.TOTAL_TENDERS_WITH_LINKED_PROCUREMENT_PLAN, Keys.PERCENT_TENDERS

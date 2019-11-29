@@ -95,7 +95,7 @@ public abstract class GenericOCDSController {
      * @return
      */
     protected String getTenderDateField() {
-        return MongoConstants.FieldNames.TENDER_PERIOD_END_DATE;
+        return MongoConstants.FieldNames.TENDER_PERIOD_START_DATE;
     }
 
     /**

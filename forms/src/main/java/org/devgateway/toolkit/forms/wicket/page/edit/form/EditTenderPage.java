@@ -105,12 +105,12 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
 
         DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
         FiscalYear fiscalYear = editForm.getModelObject().getProcurementPlan().getFiscalYear();
-        closingDate.getField().add(RangeValidator.range(fiscalYear.getStartDate(), fiscalYear.getEndDate()));
 
         closingDate.required();
 
         final DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
         invitationDate.required();
+        invitationDate.getField().add(RangeValidator.range(fiscalYear.getStartDate(), fiscalYear.getEndDate()));
         invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
