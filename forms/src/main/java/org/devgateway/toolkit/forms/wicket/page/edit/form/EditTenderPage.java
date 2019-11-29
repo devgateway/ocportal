@@ -27,6 +27,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
@@ -89,16 +90,23 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
                 editForm.getModel()
         ));
 
-        final TextFieldBootstrapFormComponent<String> tenderNumber = ComponentUtil.addTextField(editForm,
-                "tenderNumber");
+        final TextFieldBootstrapFormComponent<String> tenderNumber = ComponentUtil.addTextField(
+                editForm,
+                "tenderNumber"
+        );
         tenderNumber.required();
         tenderNumber.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        tenderNumber.getField().add(new UniquePropertyEntryValidator<>(getString("uniqueNumber"),
+        tenderNumber.getField().add(new UniquePropertyEntryValidator<>(
+                getString("uniqueNumber"),
                 tenderService::findOne,
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Tender_.tenderNumber)), v.toLowerCase()),
-                editForm.getModel()));
+                editForm.getModel()
+        ));
 
         DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
+        FiscalYear fiscalYear = editForm.getModelObject().getProcurementPlan().getFiscalYear();
+        closingDate.getField().add(RangeValidator.range(fiscalYear.getStartDate(), fiscalYear.getEndDate()));
+
         closingDate.required();
 
         final DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
