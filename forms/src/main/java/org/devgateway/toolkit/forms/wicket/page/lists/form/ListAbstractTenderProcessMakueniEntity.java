@@ -76,7 +76,7 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>(
                         (new StringResourceModel("awardee", ListAbstractTenderProcessMakueniEntity.this)).getString()),
-                "awardee",
+                "items.awardee",
                 "awardee",
                 new ListModel(awardees), dataTable, false
         ));
