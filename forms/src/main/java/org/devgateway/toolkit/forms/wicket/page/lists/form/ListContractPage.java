@@ -10,12 +10,15 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
+import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -55,6 +58,17 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
         addFileDownloadColumn();
         addAwardeeColumn();
         super.onInitialize();
+    }
+
+    @Override
+    protected void addAwardeeColumn() {
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(
+                new Model<>(
+                        (new StringResourceModel("awardee", ListContractPage.this)).getString()),
+                "awardee",
+                "awardee",
+                new ListModel(awardees), dataTable, false
+        ));
     }
 
 

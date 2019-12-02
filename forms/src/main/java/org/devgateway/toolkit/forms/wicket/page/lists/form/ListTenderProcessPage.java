@@ -155,8 +155,6 @@ public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderP
             }
         });
 
-
-        addFileDownloadColumn();
         addOcdsDownloadColumn();
 
         super.onInitialize();

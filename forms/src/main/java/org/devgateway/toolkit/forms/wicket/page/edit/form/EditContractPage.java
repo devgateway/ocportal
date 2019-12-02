@@ -30,6 +30,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author gmutuhu
@@ -120,6 +121,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
                 .stream()
                 .filter(AwardAcceptanceItem::isAccepted)
                 .map(AwardAcceptanceItem::getAwardee)
+                .filter(Objects::nonNull)
                 .findFirst().map(Arrays::asList).orElseGet(Arrays::asList);
     }
 

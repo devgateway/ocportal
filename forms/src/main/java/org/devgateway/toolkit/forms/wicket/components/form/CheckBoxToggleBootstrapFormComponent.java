@@ -55,8 +55,6 @@ public class CheckBoxToggleBootstrapFormComponent
     protected BootstrapToggle inputField(final String id, final IModel<Boolean> model) {
 
         final BootstrapToggleConfig config = new BootstrapToggleConfig();
-        config.withOnStyle(BootstrapToggleConfig.Style.info).withOffStyle(BootstrapToggleConfig.Style.warning)
-                .withStyle("customCssClass");
 
         final BootstrapToggle checkBoxToggle = new BootstrapToggle("field", initFieldModel(), config) {
 
