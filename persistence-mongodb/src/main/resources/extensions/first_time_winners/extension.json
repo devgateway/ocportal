@@ -6,7 +6,7 @@
     "en": "Award flagged as first time winner, should any of the suppliers be first time winners. In case of Makueni we only have one supplier"
   },
   "documentationUrl": {
-    "en": "https://extensions.open-contracting.org/en/extensions/bids/"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/first_time_winners"
   },
   "compatibility": [
     "1.1"
