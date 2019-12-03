@@ -6,7 +6,7 @@
     "en": "Procurement Plan, Tender and Organization Target Groups"
   },
   "documentationUrl": {
-    "en": "https://extensions.open-contracting.org/en/extensions/bids/"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/target_groups"
   },
   "compatibility": [
     "1.1"
