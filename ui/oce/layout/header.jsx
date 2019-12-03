@@ -2,6 +2,7 @@ import React from 'react';
 import translatable from '../translatable';
 import cn from 'classnames';
 import URI from 'urijs';
+import Cookies from 'universal-cookie';
 
 import * as introJs from 'intro.js/intro.js';
 import 'intro.js/introjs.css';
@@ -48,6 +49,11 @@ export default class Header extends translatable(React.Component) {
   }
 
   componentDidMount() {
+    const cookies = new Cookies();
+    if (cookies.get("introjs") === undefined ) {
+      cookies.set("introjs","introjs", {path:'/'});
+      this.showIntroJs();
+    }
     statsInfo.addListener('Header', () => {
       statsInfo.getState()
       .then(data => {
@@ -73,6 +79,14 @@ export default class Header extends translatable(React.Component) {
     return selected === option;
   }
 
+  showIntroJs() {
+    window.scrollTo(0, 0);
+    introJs.introJs()
+      .setOption('overlayOpacity', 0.7)
+      .setOption('showProgress', true)
+      .start();
+  }
+
   exportBtn() {
     const excelURL = new URI('/api/makueni/excelExport');
     const jsonURL = new URI('/api/ocds/package/all');
@@ -80,11 +94,7 @@ export default class Header extends translatable(React.Component) {
     return (<div>
         <span className="export-title">
           <a onClick={()=> {
-            window.scrollTo(0, 0);
-            introJs.introJs()
-              .setOption('overlayOpacity', 0.7)
-              .setOption('showProgress', true)
-              .start();
+            this.showIntroJs();
           }
           }>HELP</a>
         </span>
