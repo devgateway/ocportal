@@ -40,7 +40,7 @@ class PurchaseReqView extends CRDPage {
       name: 'Purchase Requisitions',
       tab: 2
     }, {
-      name: 'Tender Quotation',
+      name: 'Tender Evaluation',
       tab: 3
     }, {
       name: 'Professional Opinion',
