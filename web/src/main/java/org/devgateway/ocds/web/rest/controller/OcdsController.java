@@ -94,9 +94,29 @@ public class OcdsController extends GenericOCDSController {
         return createReleasePackage(release);
     }
 
+
     public ReleasePackage createReleasePackage(final Release release) {
         ReleasePackage releasePackage = new ReleasePackage();
         try {
+            releasePackage.getExtensions()
+                    .add(new URI(
+                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                                    + "/src/main/resources/extensions/first_time_winners/extension.json"));
+            releasePackage.getExtensions()
+                    .add(new URI(
+                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                                    + "/src/main/resources/extensions/planning_items/extension.json"));
+
+            releasePackage.getExtensions()
+                    .add(new URI(
+                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                                    + "/src/main/resources/extensions/target_groups/extension.json"));
+
+            releasePackage.getExtensions()
+                    .add(new URI(
+                            "https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.3/extension"
+                                    + ".json"));
+
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
             releasePackage.setPublicationPolicy(new URI(serverURL + "/publication-policy.txt"));
             releasePackage.setUri(new URI(serverURL + "/api/ocds/package/ocid/" + release.getOcid()));

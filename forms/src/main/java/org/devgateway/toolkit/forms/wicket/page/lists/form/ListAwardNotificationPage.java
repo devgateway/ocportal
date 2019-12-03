@@ -30,7 +30,6 @@ public class ListAwardNotificationPage extends ListAbstractTenderProcessMakueniE
     @Override
     protected void onInitialize() {
         addTenderTitleColumn();
-        addFileDownloadColumn();
         addAwardeeColumn();
         super.onInitialize();
     }

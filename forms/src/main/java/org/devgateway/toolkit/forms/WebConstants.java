@@ -26,6 +26,7 @@ public final class WebConstants {
 
     }
 
+
     public static final String DISABLE_FORM_LEAVING_JS
             = "if(typeof disableFormLeavingConfirmation === 'function') disableFormLeavingConfirmation();";
 

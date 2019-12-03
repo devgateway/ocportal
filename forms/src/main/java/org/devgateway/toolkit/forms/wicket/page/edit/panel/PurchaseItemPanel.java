@@ -66,6 +66,9 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
 
         @Override
         public void validate(Form<?> form) {
+            if (PurchaseItemPanel.this.getParent().getParent() == null) {
+                return;
+            }
             final Set<PlanItem> planItems = new HashSet<>();
             final List<PurchaseItem> purchaseItems = PurchaseItemPanel.this.getModelObject();
             for (final PurchaseItem purchaseItem : purchaseItems) {

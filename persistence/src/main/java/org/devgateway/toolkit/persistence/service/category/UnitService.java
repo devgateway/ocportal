@@ -10,4 +10,6 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
  */
 public interface UnitService extends BaseJpaService<Unit>, TextSearchableService<Unit> {
 
+
+    Unit findByLabel(String label);
 }

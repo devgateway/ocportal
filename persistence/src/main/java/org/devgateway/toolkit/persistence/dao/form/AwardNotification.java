@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,10 +45,12 @@ public class AwardNotification extends AbstractTenderProcessMakueniEntity {
 
 
     public List<Supplier> getAwardee() {
-        return items.stream().map(AwardNotificationItem::getAwardee).collect(Collectors.toList());
+        return items.stream().map(AwardNotificationItem::getAwardee).filter(Objects::nonNull).
+                collect(Collectors.toList());
     }
 
 
+    @JsonIgnore
     public AwardNotificationItem getAcceptedNotification() {
         final AwardAcceptance awardAcceptance = getTenderProcess().getSingleAwardAcceptance();
         if (ObjectUtils.isEmpty(awardAcceptance) || ObjectUtils.isEmpty(awardAcceptance.getItems())) {

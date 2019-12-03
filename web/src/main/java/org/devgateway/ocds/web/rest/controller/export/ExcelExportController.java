@@ -11,6 +11,7 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,6 @@ import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -78,7 +78,7 @@ public class ExcelExportController extends GenericOCDSController {
 
         // if we need to export just one file then we don't create an archive
         if (numberOfReleases <= settingsUtils.getExcelBatchSize()) {
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setContentType(Constants.ContentType.XLSX);
             response.setHeader("Content-Disposition", "attachment; filename=" + "excel-export.xlsx");
             response.getOutputStream().write(excelGenerator.getExcelDownload(filter));
         } else {
