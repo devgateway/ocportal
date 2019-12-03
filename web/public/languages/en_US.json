@@ -100,7 +100,7 @@
   "charts:costEffectiveness:traces:difference": "Difference",
   "charts:costEffectiveness:xAxisTitle": "Year",
   "charts:costEffectiveness:yAxisTitle": "Amount",
-  "charts:costEffectiveness:title": "Cost effectiveness (estimated amount - award amount)",
+  "charts:costEffectiveness:title": "Tender amount vs Award amount",
   "charts:general:noData": "No data",
   "charts:nrCancelled:title": "Number of cancelled invitations to bid",
   "charts:nrCancelled:xAxisTitle": "Year",
