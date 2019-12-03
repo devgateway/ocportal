@@ -51,7 +51,10 @@ export default class Header extends translatable(React.Component) {
   componentDidMount() {
     const cookies = new Cookies();
     if (cookies.get("introjs") === undefined ) {
-      cookies.set("introjs","introjs", {path:'/'});
+      const current = new Date();
+      const nextYear = new Date();
+      nextYear.setFullYear(current.getFullYear() + 1);
+      cookies.set("introjs","introjs", {path:'/', expires: nextYear});
       this.showIntroJs();
     }
     statsInfo.addListener('Header', () => {
