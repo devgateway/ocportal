@@ -49,18 +49,18 @@ export default class Header extends translatable(React.Component) {
   }
 
   componentDidMount() {
-    const cookies = new Cookies();
-    if (cookies.get("introjs") === undefined ) {
-      const current = new Date();
-      const nextYear = new Date();
-      nextYear.setFullYear(current.getFullYear() + 1);
-      cookies.set("introjs","introjs", {path:'/', expires: nextYear});
-      this.showIntroJs();
-    }
     statsInfo.addListener('Header', () => {
       statsInfo.getState()
       .then(data => {
         this.setState({ data: data });
+        const cookies = new Cookies();
+        if (cookies.get("introjs") === undefined ) {
+          const current = new Date();
+          const nextYear = new Date();
+          nextYear.setFullYear(current.getFullYear() + 1);
+          cookies.set("introjs","introjs", {path:'/', expires: nextYear});
+          this.showIntroJs();
+        }
       });
     });
   }
@@ -87,6 +87,7 @@ export default class Header extends translatable(React.Component) {
     introJs.introJs()
       .setOption('overlayOpacity', 0.7)
       .setOption('showProgress', true)
+      .setOption("scrollToElement", true)
       .start();
   }
 
