@@ -9,6 +9,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -52,6 +53,9 @@ public class AwardNotification extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     public AwardNotificationItem getAcceptedNotification() {
         final AwardAcceptance awardAcceptance = getTenderProcess().getSingleAwardAcceptance();
+        if (ObjectUtils.isEmpty(awardAcceptance) || ObjectUtils.isEmpty(awardAcceptance.getItems())) {
+            return null;
+        }
         Optional<AwardAcceptanceItem> accepted = awardAcceptance.getItems()
                 .stream()
                 .filter(AwardAcceptanceItem::isAccepted)
