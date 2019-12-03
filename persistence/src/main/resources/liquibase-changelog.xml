@@ -553,4 +553,31 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-430" author="mpostelnicu">
+        <sql>
+            CREATE TEMPORARY TABLE draft_tender_process_ids as (
+            select tp.id from fiscal_year fy, procurement_plan pp, project p, tender_process tp, tender t
+            where fy.id = pp.fiscal_year_id and p.procurement_plan_id=pp.id and tp.project_id=p.id and
+            t.tender_process_id=tp.id
+            and (t.invitation_date &gt; fy.end_date OR t.invitation_date &lt; fy.start_date)
+            UNION
+            select t.tender_process_id from tender t, tender tt where t.id!=tt.id and t.tender_title=tt.tender_title
+            UNION
+            select t.tender_process_id from tender t where t.id not in (select parent_id from tender_item)
+            UNION
+            select tender_process_id from tender_quotation_evaluation where id not in(select parent_id from bid));
+            update tender_process set status='DRAFT' where id in (select id from draft_tender_process_ids);
+            update tender set status='DRAFT' where tender_process_id in (select id from draft_tender_process_ids);
+            update tender_quotation_evaluation set status='DRAFT' where tender_process_id in (select id from
+            draft_tender_process_ids);
+            update professional_opinion set status='DRAFT' where tender_process_id in (select id from
+            draft_tender_process_ids);
+            update award_notification set status='DRAFT' where tender_process_id in (select id from
+            draft_tender_process_ids);
+            update award_acceptance set status='DRAFT' where tender_process_id in (select id from
+            draft_tender_process_ids);
+            update contract set status='DRAFT' where tender_process_id in (select id from draft_tender_process_ids);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
