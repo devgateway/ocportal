@@ -127,6 +127,7 @@ public class TopTenController extends GenericOCDSController {
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
         project.put(getTenderDateField(), 1);
         project.put(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE, 1);
+        project.put(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE, 1);
         project.put(MongoConstants.FieldNames.BUYER_NAME, 1);
         project.put(MongoConstants.FieldNames.TENDER_TITLE, 1);
 
