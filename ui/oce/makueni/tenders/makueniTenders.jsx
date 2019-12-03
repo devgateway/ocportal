@@ -67,7 +67,9 @@ class MakueniTenders extends CRDPage {
   }
 
   tenderLink(navigate) {
-    return (tender) => (<div className="tender-title">
+    return (tender) => (<div className="tender-title" data-step="9"
+    data-intro="Click on the Tender Title to view the tender details, purchase requisition, tender
+    quotation, professional opinion, notification, award and contract for each tender process.">
       {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
@@ -80,7 +82,8 @@ class MakueniTenders extends CRDPage {
   }
 
   projectLink(navigate) {
-    return (project) => (<div>
+    return (project) => (<div data-step="10" data-intro="Click the Project Title to view project details outlined
+        in the approved cabinet paper.">
       {
         project !== undefined
           ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('p', project._id)}
@@ -93,7 +96,7 @@ class MakueniTenders extends CRDPage {
   }
 
   downloadFiles(tender) {
-    return (<div>
+    return (<div data-step="11" data-intro="Click to download the tender document hardcopy.">
         {
           tender && tender.formDocs && tender.formDocs.map(doc => <div key={tender._id+'-'+doc._id}>
             <OverlayTrigger
@@ -114,8 +117,7 @@ class MakueniTenders extends CRDPage {
       </div>
     );
   }
-
-  linksOrFiles() {
+linksOrFiles() {
     return (tender) => tender && tender.formDocs ? this.downloadFiles(tender) : this.downloadLinks(tender);
    }
 
@@ -128,7 +130,6 @@ class MakueniTenders extends CRDPage {
       </div>
     );
   }
-
   render() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
@@ -139,9 +140,11 @@ class MakueniTenders extends CRDPage {
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
               styling={this.props.styling} selected="tender"/>
 
-      <div className="makueni-tenders content row">
+      <div className="makueni-tenders content row" >
         <div className="col-md-3 col-sm-3 filters">
-          <div className="row">
+          <div className="row" data-intro="On each page there is a set of filters that allows you to
+           limit what information is shown on the page by selected metrics, such as a specific
+           location or department." data-step="8">
             <div className="filters-hint col-md-12">
               {this.t('filters:hint')}
             </div>
