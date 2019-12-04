@@ -35,6 +35,7 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -284,6 +285,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 .put("Restricted tender", Tender.ProcurementMethod.limited)
                 .put("Special permitted", Tender.ProcurementMethod.limited)
                 .put("Low value procurement", Tender.ProcurementMethod.direct)
+                .put("Framework Agreement", Tender.ProcurementMethod.direct)
+                .put("Two-stage Tendering", Tender.ProcurementMethod.selective)
+                .put("Design Competition", Tender.ProcurementMethod.selective)
+                .put("Force Account", Tender.ProcurementMethod.direct)
+                .put("Electronic Reverse Auction", Tender.ProcurementMethod.selective)
                 .put("Open tender International", Tender.ProcurementMethod.open).build();
     }
 
@@ -374,6 +380,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         MakueniPlanning planning = new MakueniPlanning();
 
         safeSet(planning::setBudget, () -> tenderProcess, this::createPlanningBudget);
+        safeSet(planning::setFiscalYear, tenderProcess::getProcurementPlan, ProcurementPlan::getFiscalYear,
+                FiscalYear::getLabel
+        );
 
         safeSetEach(planning.getItems()::add, tenderProcess::getPurchaseItems, this::createPlanningItem);
 

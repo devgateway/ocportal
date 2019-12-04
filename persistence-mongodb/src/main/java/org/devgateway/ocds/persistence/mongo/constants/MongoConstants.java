@@ -27,6 +27,7 @@ public final class MongoConstants {
         public static final String BUYER_ID = "buyer._id";
         public static final String BUYER_NAME = "buyer.name";
         public static final String AWARDS_DATE = "awards.date";
+        public static final String PLANNING_FISCAL_YEAR = "planning.fiscalYear";
         public static final String AWARDS_FIRST_TIME_WINNER = "awards.firstTimeWinner";
         public static final String AWARDS_STATUS = "awards.status";
         public static final String AWARDS_SUPPLIERS_ID = "awards.suppliers._id";
@@ -64,6 +65,8 @@ public final class MongoConstants {
         public static final String TEXT = "text";
 
         public static final String AWARD_STATUS = "awardStatus";
+
+        public static final String FISCAL_YEAR = "fiscalYear";
 
         public static final String TENDER_STATUS = "tenderStatus";
 
