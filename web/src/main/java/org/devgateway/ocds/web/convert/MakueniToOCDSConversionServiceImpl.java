@@ -285,6 +285,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 .put("Restricted tender", Tender.ProcurementMethod.limited)
                 .put("Special permitted", Tender.ProcurementMethod.limited)
                 .put("Low value procurement", Tender.ProcurementMethod.direct)
+                .put("Framework Agreement", Tender.ProcurementMethod.direct)
+                .put("Two-stage Tendering", Tender.ProcurementMethod.selective)
+                .put("Design Competition", Tender.ProcurementMethod.selective)
+                .put("Force Account", Tender.ProcurementMethod.direct)
+                .put("Electronic Reverse Auction", Tender.ProcurementMethod.selective)
                 .put("Open tender International", Tender.ProcurementMethod.open).build();
     }
 
