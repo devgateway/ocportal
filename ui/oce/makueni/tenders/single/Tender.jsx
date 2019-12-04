@@ -140,7 +140,9 @@ class Tender extends FeedbackPage {
       }
 
       <div className="row padding-top-10">
-        <div className="col-md-6">
+        <div className="col-md-6"
+             data-intro="Download the original hardcopy of the tender document or link to a site
+             where the document can be downloaded.">
           <div className="item-label">Download Tender</div>
           {
             tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>

@@ -115,7 +115,9 @@ class OCEMakueni extends OCApp {
                 styling={this.props.styling} selected="m-and-e"/>
         <div className="row content charts-content">
           <div className="col-md-3 col-sm-3 menu">
-            <div className="row">
+            <div className="row" data-intro="On each page there is a set of filters that allows you
+            to limit what information is shown on the page by selected metrics, such as a specific
+            location or department." data-step="8">
               <div className="filters-hint col-md-12">
                 {this.t('filters:hint')}
               </div>
@@ -125,7 +127,8 @@ class OCEMakueni extends OCApp {
           </div>
           <div className="col-md-9 col-sm-9 col-main-content">
             <div className="row">
-              <div className="navigation subnav">
+              <div className="navigation subnav" data-intro="Navigate between the
+              different types of charts, including an overview, competitiveness, and efficiency.">
                 {this.navigation()}
               </div>
             </div>

@@ -12,22 +12,29 @@ module.exports = {
       {
         test: /\.(jsx|es6)$/,
         loaders: [
-          'react-hot',
+          'react-hot-loader/webpack',
           'babel-loader?babelrc=true,cacheDirectory'
         ],
         exclude: /node_modules/
       },
-      { test: /\.json$/, loader: 'json' },
-      { test: /\.css$/, exclude: /\.useable\.css$/, loader: "style!css" },
-      { test: /\.less$/, loader: "style!css!less" }
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.css$/, exclude: /\.useable\.css$/, loader: "style-loader!css-loader" },
+      { test: /\.less$/, loader: "style-loader!css-loader!less-loader" }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.es6', '.jsx']
+    extensions: ['.js', '.es6', '.jsx']
   },
   // devtool: 'source-map',
   devtool: 'cheap-module-eval-source-map',
   plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        eslint: {
+          configFile: "./.eslintrc"
+        }
+      }
+    }),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("development")
@@ -40,11 +47,8 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.ProvidePlugin({
-      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch',
+      fetch: 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch',
       React: "react",
     })
-  ],
-  eslint:{
-    configFile: "./.eslintrc"
-  }
+  ]
 };
