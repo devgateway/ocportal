@@ -35,6 +35,7 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -374,6 +375,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         MakueniPlanning planning = new MakueniPlanning();
 
         safeSet(planning::setBudget, () -> tenderProcess, this::createPlanningBudget);
+        safeSet(planning::setFiscalYear, tenderProcess::getProcurementPlan, ProcurementPlan::getFiscalYear,
+                FiscalYear::getLabel
+        );
 
         safeSetEach(planning.getItems()::add, tenderProcess::getPurchaseItems, this::createPlanningItem);
 
