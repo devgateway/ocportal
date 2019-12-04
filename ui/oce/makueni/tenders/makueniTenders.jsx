@@ -62,8 +62,12 @@ class MakueniTenders extends CRDPage {
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
+  resetPage() {
+    page.assign(NAME, 1);
+  }
+
   filters() {
-    return <FiltersTendersWrapper filters={mtFilters} translations={this.props.translations}/>;
+    return <FiltersTendersWrapper filters={mtFilters} resetPage={this.resetPage.bind(this)} translations={this.props.translations}/>;
   }
 
   tenderLink(navigate) {

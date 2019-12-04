@@ -5,7 +5,6 @@ import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
 import FiltersWrapper from '../filters/FiltersWrapper';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Map } from 'immutable';
-
 import '../makueni.less';
 import ProcurementPlan from './single/procurementPlan';
 import React from 'react';
@@ -63,8 +62,12 @@ class MakueniProcurementPlans extends CRDPage {
       || JSON.stringify(this.props) !== JSON.stringify(nextProps);
   }
 
+  resetPage() {
+    page.assign(NAME, 1);
+  }
+
   filters() {
-    return <FiltersWrapper filters={ppFilters} translations={this.props.translations}/>;
+    return <FiltersWrapper filters={ppFilters} resetPage={this.resetPage.bind(this)} translations={this.props.translations}/>;
   }
 
   ppLink(navigate) {
