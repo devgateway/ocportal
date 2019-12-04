@@ -25,6 +25,9 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#award-status")
     private TreeSet<String> awardStatus;
 
+    @ApiModelProperty(value = "Fiscal Year")
+    private TreeSet<String> fiscalYear;
+
     @ApiModelProperty(value = "Filter by tender.status, possible values are available from the OCDS standard page"
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#tender-status")
     private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(Tender.Status.active.toString()));
@@ -274,5 +277,13 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setTenderStatus(TreeSet<String> tenderStatus) {
         this.tenderStatus = tenderStatus;
+    }
+
+    public TreeSet<String> getFiscalYear() {
+        return fiscalYear;
+    }
+
+    public void setFiscalYear(TreeSet<String> fiscalYear) {
+        this.fiscalYear = fiscalYear;
     }
 }
