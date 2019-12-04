@@ -111,6 +111,10 @@ public class OcdsController extends GenericOCDSController {
                     .add(new URI(
                             "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
                                     + "/src/main/resources/extensions/target_groups/extension.json"));
+            releasePackage.getExtensions()
+                    .add(new URI(
+                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                                    + "/src/main/resources/extensions/fiscal_year/extension.json"));
 
             releasePackage.getExtensions()
                     .add(new URI(

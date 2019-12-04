@@ -22,6 +22,20 @@ public class MakueniPlanning extends Planning {
             + " Items should not be duplicated, but a quantity of 2 specified instead.")
     private Set<Item> items = new LinkedHashSet<>();
 
+    @JsonProperty("fiscalYear")
+    @ExcelExport
+    @JsonPropertyDescription("Allowing Fiscal Year under Planning")
+    private String fiscalYear;
+
+
+    public String getFiscalYear() {
+        return fiscalYear;
+    }
+
+    public void setFiscalYear(String fiscalYear) {
+        this.fiscalYear = fiscalYear;
+    }
+
     public Set<Item> getItems() {
         return items;
     }
