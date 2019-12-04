@@ -86,6 +86,6 @@ class Filters extends translatable(Component) {
 }
 
 Filters.TABS = [Organizations, ProcurementRules, PlanningRules, Amounts, FilterChartsTab];
-Filters.CLASS = ['organizations', 'procurement-method', 'amounts', 'date'];
+Filters.CLASS = ['organizations', 'procurement-method', 'fiscal-year', 'amounts', 'date'];
 
 export default Filters;
