@@ -89,6 +89,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
     private final SortableJpaServiceDataProvider<T> dataProvider;
 
     protected BootstrapBookmarkablePageLink<T> editPageLink;
+    protected BootstrapBookmarkablePageLink<T> topEditPageLink;
 
     protected Form excelForm;
 
@@ -188,11 +189,19 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             editPageLink = new BootstrapBookmarkablePageLink<>("new", editPageClass, Buttons.Type.Success);
             editPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
                     .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
+
+            topEditPageLink = new BootstrapBookmarkablePageLink<>("newTop", editPageClass, Buttons.Type.Success);
+            topEditPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
+                    .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
         } else {
             editPageLink = new BootstrapBookmarkablePageLink<T>("new", BasePage.class, Buttons.Type.Success);
             editPageLink.setVisibilityAllowed(false);
+
+            topEditPageLink = new BootstrapBookmarkablePageLink<T>("newTop", BasePage.class, Buttons.Type.Success);
+            topEditPageLink.setVisibilityAllowed(false);
         }
         add(editPageLink);
+        add(topEditPageLink);
     }
 
     public class ActionPanel extends Panel {
