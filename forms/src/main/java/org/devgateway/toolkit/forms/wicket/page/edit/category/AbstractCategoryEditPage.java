@@ -58,7 +58,7 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
     private void addUniqueNameValidator() {
         label.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueLabel"),
-                jpaService::findOne,
+                jpaService::findAll,
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Category_.label)), v.toLowerCase()),
                 editForm.getModel()
         ));
@@ -71,7 +71,7 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
 
         code.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueCode"),
-                jpaService::findOne,
+                jpaService::findAll,
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Category_.code)), v.toLowerCase()),
                 editForm.getModel()
         ));
