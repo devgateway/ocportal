@@ -85,7 +85,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
         title.required();
         title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
-        title.getField().add(new UniquePropertyEntryValidator<>(getString("uniqueTitle"), tenderService::findOne,
+        title.getField().add(new UniquePropertyEntryValidator<>(getString("uniqueTitle"), tenderService::findAll,
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Tender_.tenderTitle)), v.toLowerCase()),
                 editForm.getModel()
         ));
@@ -98,7 +98,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
         tenderNumber.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         tenderNumber.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueNumber"),
-                tenderService::findOne,
+                tenderService::findAll,
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Tender_.tenderNumber)), v.toLowerCase()),
                 editForm.getModel()
         ));
