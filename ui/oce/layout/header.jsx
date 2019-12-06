@@ -176,7 +176,7 @@ export default class Header extends translatable(React.Component) {
             : null
         }
 
-        <div className="col-md-3 col-sm-12 col-xs-12 export">
+        <div className="col-md-4 col-sm-12 col-xs-12 export">
           {this.exportBtn()}
         </div>
       </div>
