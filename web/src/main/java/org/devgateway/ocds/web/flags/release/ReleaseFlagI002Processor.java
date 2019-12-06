@@ -49,6 +49,10 @@ public class ReleaseFlagI002Processor extends AbstractFlaggedReleaseFlagProcesso
                 .sorted(Comparator.comparing(o -> o.getValue().getAmount()))
                 .collect(Collectors.toList());
 
+        if (sortedList.size() < 2) {
+            return false;
+        }
+
         Detail highestBid = sortedList.get(sortedList.size() - 1);
         Detail secondHighestBid = sortedList.get(
                 sortedList.size() - 2); //this will not break because we have multiple bids per eligibility
