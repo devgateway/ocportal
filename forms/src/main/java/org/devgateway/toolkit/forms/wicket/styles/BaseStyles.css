@@ -104,7 +104,9 @@ body {
 .mainFooter a{
   color: #ffffff;
 }
-
+.mainFooter a:hover{
+  color: #eeeeee;
+}
 .mainFooter .text-muted {
     padding-top: 16px;
     color: #eeeeee;
