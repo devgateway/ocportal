@@ -17,7 +17,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/ward")
-public class EditWardPage extends AbstractCategoryEditPage<Ward> {
+public class EditWardPage extends AbstractLocationPointCategoryEditPage<Ward> {
     @SpringBean
     private WardService wardService;
 

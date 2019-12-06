@@ -13,7 +13,7 @@ class Suppliers extends orgnamesFetching(Table) {
   row(entry) {
     const id = entry.get('supplierId');
     return <tr key={id}>
-      <td>{this.getOrgName(id)}</td>
+      <td>{this.getOrgName(id) && this.getOrgName(id).toUpperCase()}</td>
       <td>{entry.get('totalContracts')}</td>
       <td>{entry.get('buyerIdsCount')}</td>
       <td>{this.maybeFormat(entry.get('totalAwardAmount'))}</td>

@@ -15,7 +15,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/subcounty")
-public class EditSubcountyPage extends AbstractCategoryEditPage<Subcounty> {
+public class EditSubcountyPage extends AbstractLocationPointCategoryEditPage<Subcounty> {
     @SpringBean
     private SubcountyService subcountyService;
 

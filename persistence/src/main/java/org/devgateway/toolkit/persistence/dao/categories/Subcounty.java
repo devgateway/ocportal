@@ -10,5 +10,5 @@ import javax.persistence.Entity;
  */
 @Entity
 @Audited
-public class Subcounty extends Category {
+public class Subcounty extends LocationPointCategory {
 }

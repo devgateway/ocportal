@@ -13,7 +13,7 @@ class Awards extends Table {
       <td>{new Date(awards.get('date')).toLocaleDateString(undefined, Table.DATE_FORMAT)}</td>
       <td className="supplier-name">
         {awards.get('suppliers')
-        .map(pluckImm('name'))
+        .map(pluckImm('name')).map(s=>s.toUpperCase())
         .join(', ')}
       </td>
       <td>{this.maybeFormat(value.get('amount'))} {value.get('currency')}</td>
