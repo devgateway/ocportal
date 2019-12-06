@@ -6,10 +6,12 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.io.Serializable;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Ensure the property value is unique across saved entities vs the entity being validated
@@ -20,14 +22,16 @@ import java.util.Optional;
 public class UniquePropertyEntryValidator<T extends AbstractAuditableEntity, P> implements IValidator<P>, Serializable {
     private final String message;
 
-    private final SerializableFunction<Specification<T>, Optional<T>> repositorySearcher;
+    private final SerializableFunction<Specification<T>, List<T>> repositorySearcher;
 
     private final IModel<T> formModel;
 
     private final SpecificationConversion<T, P> specificationConversion;
 
+    protected final Logger logger = LoggerFactory.getLogger(UniquePropertyEntryValidator.class);
+
     public UniquePropertyEntryValidator(final String message,
-                                        final SerializableFunction<Specification<T>, Optional<T>> repositorySearcher,
+                                        final SerializableFunction<Specification<T>, List<T>> repositorySearcher,
                                         final SpecificationConversion<T, P> specificationConversion,
                                         final IModel<T> formModel) {
         this.message = message;
@@ -38,11 +42,12 @@ public class UniquePropertyEntryValidator<T extends AbstractAuditableEntity, P> 
 
     @Override
     public void validate(final IValidatable<P> validatable) {
-        final Optional<T> other = repositorySearcher.apply(specificationConversion.toSpecification(
+        List<T> other = repositorySearcher.apply(specificationConversion.toSpecification(
                 formModel.getObject(),
-                validatable.getValue()));
+                validatable.getValue()
+        ));
 
-        if (other.isPresent() && !other.get().getId().equals(formModel.getObject().getId())) {
+        if (!other.isEmpty() && (other.size() > 1 || !other.get(0).getId().equals(formModel.getObject().getId()))) {
             final ValidationError error = new ValidationError(message);
             validatable.error(error);
         }
