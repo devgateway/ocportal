@@ -151,7 +151,7 @@ class OCEMakueni extends OCApp {
         {/*>*/}
         {/*  {this.yearsBar()}*/}
         {/*</div>*/}
-        <footer className="mainFooter">
+        <footer className="col-sm-12 main-footer text-center text-muted">
           Government of Makueni County Open Contracting Portal&nbsp;-&nbsp;
           <a href="https://github.com/devgateway/forms-makueni/blob/master/LICENSE" target="_blank">License</a>
           &nbsp;-&nbsp;
