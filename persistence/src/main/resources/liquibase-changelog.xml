@@ -614,6 +614,7 @@
     <changeSet id="OCMAKU-229-wards-coords" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="location_point"/>
         </preConditions>
         <update tableName="category">
             <column name="location_point" valueComputed="ST_Point(37.71667, -1.66667)"/>
@@ -836,6 +837,7 @@
     <changeSet id="OCMAKU-229-subcounties-coords" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="location_point"/>
         </preConditions>
         <update tableName="category">
             <column name="location_point" valueComputed="ST_Point(37.5, -1.66667)"/>
