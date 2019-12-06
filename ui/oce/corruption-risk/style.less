@@ -142,13 +142,14 @@
         }
 
         .crd-filter-title {
-            background-color: #ffffff;
             @media (max-width: 1024px) {
                 display: none;
             }
 
             .title {
-                color: #1088cb;
+                color: #ffffff;
+                float: right;
+                margin-right: -50px;
                 font-family: 'Source Sans Pro', sans-serif;
                 font-size: 15px;
                 font-weight: bold;
@@ -689,6 +690,11 @@
 
             thead thead tr th {
                 border-bottom-width: 1px;
+                &:nth-last-child,
+                &:nth-last-child(2),
+                &:nth-last-child(3){
+                  width: 20%;
+                }
             }
 
             td, th {
