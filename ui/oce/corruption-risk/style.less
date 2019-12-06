@@ -12,6 +12,9 @@
 @resetColor: #dca402;
 @borderColor: #eeeeee;
 
+body{
+  overflow-y: hidden;
+}
 .dashboard-corruption-risk {
     padding-left: 0;
 
@@ -541,6 +544,7 @@
         @arrowSize: 8px;
         margin-top: 89px;
         margin-bottom: 80px;
+        overflow-y: scroll;
         padding: 30px @gutterRight 0 50px;
         @media (max-width: 1200px) {
             padding: 30px @gutterRightMd 0 50px;
@@ -690,17 +694,19 @@
 
             thead thead tr th {
                 border-bottom-width: 1px;
-                &:nth-last-child,
-                &:nth-last-child(2),
-                &:nth-last-child(3){
-                  width: 20%;
-                }
             }
 
             td, th {
                 text-align: center;
             }
 
+            th{
+              &:nth-of-type(5),
+              &:nth-of-type(6),
+              &:nth-of-type(7){
+                width: 20%;
+              }
+            }
             td:first-child {
                 text-align: right;
             }
