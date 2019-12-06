@@ -13,7 +13,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.devgateway.toolkit</groupId>
     <artifactId>makueni</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Makueni</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
@@ -68,7 +68,7 @@
         <url>git@github.com:devgateway/forms-makueni.git</url>
         <developerConnection>scm:git:git@github.com:devgateway/forms-makueni.git</developerConnection>
         <connection>git@github.com:devgateway/oc-makueni.git</connection>
-        <tag>1.6.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
