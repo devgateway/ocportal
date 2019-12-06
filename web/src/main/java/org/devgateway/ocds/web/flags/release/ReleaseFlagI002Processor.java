@@ -57,6 +57,10 @@ public class ReleaseFlagI002Processor extends AbstractFlaggedReleaseFlagProcesso
         Detail secondHighestBid = sortedList.get(
                 sortedList.size() - 2); //this will not break because we have multiple bids per eligibility
 
+        if (BigDecimal.ZERO.equals(secondHighestBid.getValue().getAmount())) {
+            return false;
+        }
+
         BigDecimal fraction = highestBid.getValue().getAmount().divide(secondHighestBid.getValue().getAmount(), mc);
 
         Award award = flaggable.getAwards().iterator().next();
