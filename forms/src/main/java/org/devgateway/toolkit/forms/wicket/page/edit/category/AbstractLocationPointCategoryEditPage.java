@@ -40,7 +40,9 @@ public abstract class AbstractLocationPointCategoryEditPage<T extends LocationPo
         super.onInitialize();
 
         x = ComponentUtil.addDoubleField(editForm, "x");
+        x.required();
         y = ComponentUtil.addDoubleField(editForm, "y");
+        y.required();
     }
 
     @Override

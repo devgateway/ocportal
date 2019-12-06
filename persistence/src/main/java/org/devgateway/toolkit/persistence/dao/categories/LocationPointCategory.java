@@ -14,10 +14,10 @@ public class LocationPointCategory extends Category {
     protected Point locationPoint;
 
     @Transient
-    protected double x;
+    protected Double x;
 
     @Transient
-    protected double y;
+    protected Double y;
 
     public Point getLocationPoint() {
         return locationPoint;
@@ -27,19 +27,19 @@ public class LocationPointCategory extends Category {
         this.locationPoint = locationPoint;
     }
 
-    public double getX() {
+    public Double getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(Double x) {
         this.x = x;
     }
 
-    public double getY() {
+    public Double getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(Double y) {
         this.y = y;
     }
 }
