@@ -19,6 +19,7 @@
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <swagger.version>2.9.2</swagger.version>
         <jminix.version>1.2.0</jminix.version>
+        <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
     </properties>
 
     <parent>
@@ -82,6 +83,12 @@
             <version>${swagger.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.bedatadriven</groupId>
+            <artifactId>jackson-datatype-jts</artifactId>
+            <version>${jackson-datatype-jts.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
