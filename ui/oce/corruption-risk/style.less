@@ -12,9 +12,6 @@
 @resetColor: #dca402;
 @borderColor: #eeeeee;
 
-body{
-  overflow-y: hidden;
-}
 .dashboard-corruption-risk {
     padding-left: 0;
 
@@ -662,6 +659,7 @@ body{
                 border-radius: 5px;
                 padding: 20px;
                 cursor: pointer;
+                min-height: 500px;
 
                 &:hover {
                     border: 1px solid #1f77b4;
@@ -697,7 +695,8 @@ body{
             }
 
             td, th {
-                text-align: center;
+              text-align: center;
+              vertical-align: middle;
             }
 
             th{
