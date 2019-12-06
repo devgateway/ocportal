@@ -32,7 +32,7 @@ public class DefaultLocation extends Location<GeoJsonPoint> {
 
     @Override
     public GeoJsonPoint getGeometry() {
-        return (GeoJsonPoint) geometry;
+        return geometry;
     }
 
     @Override
