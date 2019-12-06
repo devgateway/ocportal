@@ -41,7 +41,7 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
       },
     }];
   }
-  
+
   getLayout() {
     const { width } = this.props;
     return {
@@ -75,7 +75,7 @@ class FlagsCounter extends Counter {
   getTitle() {
     return this.t('crd:charts:totalFlags:title');
   }
-  
+
   getCount() {
     const { data } = this.props;
     return data.getIn([0, 'flaggedCount'], 0);
@@ -87,7 +87,7 @@ class ContractCounter extends Counter {
   getTitle() {
     return this.t('crd:sidebar:totalContracts:title');
   }
-  
+
   getCount() {
     return this.props.data;
   }
@@ -101,27 +101,27 @@ class TotalFlags extends translatable(React.Component) {
   constructor(...args) {
     super(...args);
     this.state = {};
-    
+
     this.updateSidebarWidth = debounce(() =>
       this.setState({
         width: document.getElementById('crd-sidebar').offsetWidth
       })
     );
   }
-  
+
   componentDidMount() {
     this.updateSidebarWidth();
     window.addEventListener('resize', this.updateSidebarWidth);
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateSidebarWidth);
   }
-  
+
   render() {
     const { data, requestNewData, translations, filters, years, months, monthly, allYears } = this.props;
     const { width } = this.state;
-    
+
     if (!width) return null;
     return (
       <div className="total-flags">
@@ -160,9 +160,15 @@ class TotalFlags extends translatable(React.Component) {
           styling={this.props.styling}
         />
         <div className="crd-legend">
-          <div className="fraud">{this.t('crd:corruptionType:FRAUD:name')}</div>
-          <div className="rigging">{this.t('crd:corruptionType:RIGGING:name')}</div>
-          <div className="collusion">{this.t('crd:corruptionType:COLLUSION:name')}</div>
+          <div className="fraud">
+            <span className="frc-label">{this.t('crd:corruptionType:FRAUD:name')}</span>
+          </div>
+          <div className="rigging">
+            <span className="frc-label">{this.t('crd:corruptionType:RIGGING:name')}</span>
+          </div>
+          <div className="collusion">
+            <span className="frc-label">{this.t('crd:corruptionType:COLLUSION:name')}</span>
+          </div>
         </div>
       </div>
     );

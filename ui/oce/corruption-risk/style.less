@@ -411,18 +411,37 @@
 
                 .rigging {
                     width: @infoWidth / 2;
-
                     &:before {
-                        border-color: #3372b1;
+                      border-color: #3372b1;
+                      margin-left: auto;
+                      margin-right: auto;
+                      width: 11px;
+                    }
+                    .frc-label{
+                      display: block;
                     }
                 }
-
-                .fraud:before {
+                .fraud{
+                  &:before {
                     border-color: #289df5;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 11px;
+                  }
+                  .frc-label{
+                    display: block;
+                  }
                 }
-
-                .collusion:before {
+                .collusion{
+                  &:before {
                     border-color: #fac329;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 11px;
+                  }
+                  .frc-label{
+                    display: block;
+                  }
                 }
             }
         }

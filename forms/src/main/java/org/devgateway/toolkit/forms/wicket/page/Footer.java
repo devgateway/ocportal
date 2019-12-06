@@ -17,7 +17,6 @@ import org.apache.wicket.model.Model;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
 import java.util.Properties;
 
 public class Footer extends Panel {
@@ -46,6 +45,5 @@ public class Footer extends Panel {
 
         add(new Label("makueni-version", Model.of(prop.getProperty("makueni.version"))));
         add(new Label("makueni-branch", Model.of(prop.getProperty("makueni.branch"))));
-        add(new Label("makueni-year", Calendar.getInstance().get(Calendar.YEAR)));
     }
 }
