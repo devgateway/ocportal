@@ -60,7 +60,9 @@ public class ReleaseFlagI085Processor extends AbstractFlaggedReleaseFlagProcesso
     protected Boolean calculateFlag(FlaggedRelease flaggable, StringBuffer rationale) {
         List<BigDecimal> bids = new ArrayList<>();
         for (Detail bid : flaggable.getBids().getDetails()) {
-            bids.add(bid.getValue().getAmount());
+            if (bid.getValue() != null) {
+                bids.add(bid.getValue().getAmount());
+            }
         }
         for (int x = 0; x < bids.size(); x++) {
             for (int y = 0; y < bids.size(); y++) {
