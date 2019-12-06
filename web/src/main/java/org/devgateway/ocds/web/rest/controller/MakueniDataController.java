@@ -106,14 +106,19 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
         final Criteria criteriaTender = new Criteria().andOperator(
+                where("projects.tenderProcesses.tender.0").exists(true),
                 createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
                 createFilterCriteria("projects.wards._id", filter.getWard()),
-                createFilterCriteria("projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
-                        filter.getItem()),
+                createFilterCriteria(
+                        "projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                        filter.getItem()
+                ),
                 createRangeFilterCriteria("projects.tenderProcesses.tender.tenderValue",
-                        filter.getMin(), filter.getMax()),
+                        filter.getMin(), filter.getMax()
+                ),
                 createTextCriteria(filter.getText()),
-                getYearFilterCriteria(filter, "projects.tenderProcesses.tender.closingDate"));
+                getYearFilterCriteria(filter, "projects.tenderProcesses.tender.closingDate")
+        );
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
@@ -140,14 +145,19 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
         final Criteria criteriaTender = new Criteria().andOperator(
+                where("projects.tenderProcesses.tender.0").exists(true),
                 createFilterCriteria("projects.subcounties._id", filter.getSubcounty()),
                 createFilterCriteria("projects.wards._id", filter.getWard()),
-                createFilterCriteria("projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
-                        filter.getItem()),
+                createFilterCriteria(
+                        "projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                        filter.getItem()
+                ),
                 createRangeFilterCriteria("projects.tenderProcesses.tender.tenderValue",
-                        filter.getMin(), filter.getMax()),
+                        filter.getMin(), filter.getMax()
+                ),
                 createTextCriteria(filter.getText()),
-                getYearFilterCriteria(filter, "projects.tenderProcesses.tender.closingDate"));
+                getYearFilterCriteria(filter, "projects.tenderProcesses.tender.closingDate")
+        );
 
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("_id", "department", "fiscalYear", "projects"),
