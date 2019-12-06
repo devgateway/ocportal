@@ -24,12 +24,14 @@ import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.HomeStyles;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.wicketstuff.annotation.mount.MountPath;
 
 /**
  * @author mpostelnicu
  *
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@MountPath(value = "/home")
 public class Homepage extends BasePage {
     public Homepage(final PageParameters parameters) {
         super(parameters);

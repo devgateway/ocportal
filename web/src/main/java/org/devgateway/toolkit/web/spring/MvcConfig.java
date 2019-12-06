@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.web.spring;
 
+import com.bedatadriven.jackson.datatype.jts.JtsModule;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -61,6 +62,7 @@ public class MvcConfig implements WebMvcConfigurer {
         builder.serializationInclusion(Include.NON_EMPTY).dateFormat(dateFormatGmt);
         builder.serializerByType(GeoJsonPoint.class, new GeoJsonPointSerializer());
         builder.serializerByType(ObjectId.class, new ToStringSerializer());
+        builder.modulesToInstall(new JtsModule());
         builder.defaultViewInclusion(true);
         builder.featuresToDisable(WRITE_EMPTY_JSON_ARRAYS);
 

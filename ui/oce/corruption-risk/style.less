@@ -142,13 +142,14 @@
         }
 
         .crd-filter-title {
-            background-color: #ffffff;
             @media (max-width: 1024px) {
                 display: none;
             }
 
             .title {
-                color: #1088cb;
+                color: #ffffff;
+                float: right;
+                margin-right: -50px;
                 font-family: 'Source Sans Pro', sans-serif;
                 font-size: 15px;
                 font-weight: bold;
@@ -410,18 +411,37 @@
 
                 .rigging {
                     width: @infoWidth / 2;
-
                     &:before {
-                        border-color: #3372b1;
+                      border-color: #3372b1;
+                      margin-left: auto;
+                      margin-right: auto;
+                      width: 11px;
+                    }
+                    .frc-label{
+                      display: block;
                     }
                 }
-
-                .fraud:before {
+                .fraud{
+                  &:before {
                     border-color: #289df5;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 11px;
+                  }
+                  .frc-label{
+                    display: block;
+                  }
                 }
-
-                .collusion:before {
+                .collusion{
+                  &:before {
                     border-color: #fac329;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 11px;
+                  }
+                  .frc-label{
+                    display: block;
+                  }
                 }
             }
         }
@@ -540,6 +560,7 @@
         @arrowSize: 8px;
         margin-top: 89px;
         margin-bottom: 80px;
+        overflow-y: scroll;
         padding: 30px @gutterRight 0 50px;
         @media (max-width: 1200px) {
             padding: 30px @gutterRightMd 0 50px;
@@ -657,6 +678,7 @@
                 border-radius: 5px;
                 padding: 20px;
                 cursor: pointer;
+                min-height: 500px;
 
                 &:hover {
                     border: 1px solid #1f77b4;
@@ -692,9 +714,17 @@
             }
 
             td, th {
-                text-align: center;
+              text-align: center;
+              vertical-align: middle;
             }
 
+            th{
+              &:nth-of-type(5),
+              &:nth-of-type(6),
+              &:nth-of-type(7){
+                width: 20%;
+              }
+            }
             td:first-child {
                 text-align: right;
             }

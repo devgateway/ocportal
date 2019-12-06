@@ -7,7 +7,7 @@ class FeedbackPage extends React.Component {
 
   getFeedbackMessage() {
     return (<div className="row feedback-section" >
-      <a href={"mailto:someone@example.com?Subject=" + this.getFeedbackSubject()} target="_top">
+      <a href={"mailto:opencontracting@makueni.go.ke?Subject=" + this.getFeedbackSubject()} target="_top">
         <div className="col-md-offset-8 col-md-4" data-intro="Send questions or
         feedback on this project to the government.">
           <div className="pull-right">

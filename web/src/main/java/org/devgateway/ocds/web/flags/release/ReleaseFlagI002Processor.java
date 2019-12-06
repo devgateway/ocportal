@@ -45,6 +45,7 @@ public class ReleaseFlagI002Processor extends AbstractFlaggedReleaseFlagProcesso
         List<Detail> sortedList = flaggable.getBids()
                 .getDetails()
                 .stream()
+                .filter(d -> d.getValue() != null)
                 .sorted(Comparator.comparing(o -> o.getValue().getAmount()))
                 .collect(Collectors.toList());
 

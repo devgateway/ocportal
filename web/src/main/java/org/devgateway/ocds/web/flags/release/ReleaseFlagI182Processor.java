@@ -34,6 +34,7 @@ public class ReleaseFlagI182Processor extends AbstractFlaggedReleaseFlagProcesso
         Detail minBid = flaggable.getBids()
                 .getDetails()
                 .stream()
+                .filter(d -> d.getValue() != null)
                 .min(Comparator.comparing(d -> d.getValue().getAmount()))
                 .get();
         Boolean b = minBid.getStatus().equals("disqualified");

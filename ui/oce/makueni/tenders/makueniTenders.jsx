@@ -78,7 +78,7 @@ class MakueniTenders extends CRDPage {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
                onClick={() => navigate('t', tender.purchaseReqId)} className="more-details-link">
-            {tender.tenderTitle}
+            {tender.tenderTitle && tender.tenderTitle.toUpperCase()}
           </a>
           : 'No Tender'
       }
@@ -92,7 +92,7 @@ class MakueniTenders extends CRDPage {
         project !== undefined
           ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('p', project._id)}
                className="more-details-link">
-            {project.projectTitle}
+            {project.projectTitle && project.projectTitle.toUpperCase()}
           </a>
           : 'No Project'
       }
