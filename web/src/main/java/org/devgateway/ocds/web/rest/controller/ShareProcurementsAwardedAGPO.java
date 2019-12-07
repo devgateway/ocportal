@@ -42,10 +42,14 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
 
+    public static final String TARGET_GROUP_CITIZEN_CONTRACTOR = "Citizen Contractor";
+    public static final String NON_AGPO = "Non-AGPO";
+
     @ApiOperation(value = "Percent awarded for each target group by following the formula: (sum=(Awarded value for "
             + "procurements won by each target group))/sum(Total awarded value of all awards))*100")
     @RequestMapping(value = "/api/shareProcurementsAwardedAgpo",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
+
     public List<Document> shareProcurementsAwardedAgpo(@ModelAttribute
                                                        @Valid final YearFilterPagingRequest filter) {
         Aggregation agg = newAggregation(
@@ -55,11 +59,14 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
                 unwind("awards.suppliers"),
                 project(MongoConstants.FieldNames.AWARDS_SUPPLIERS_TARGET_GROUP)
                         .and(ConditionalOperators.ifNull(MongoConstants.FieldNames.AWARDS_SUPPLIERS_TARGET_GROUP)
-                                .then("Non-AGPO")).as("targetGroup")
+                                .then(NON_AGPO)).as("targetGroup")
                         .and(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT)
                         .as("value"),
-                group("targetGroup")
-                        .sum("value").as("value")
+                project("targetGroup", "value")
+                        .and(ConditionalOperators.when(where("targetGroup").is(TARGET_GROUP_CITIZEN_CONTRACTOR))
+                                .then(NON_AGPO).otherwiseValueOf("targetGroup"))
+                        .as("targetGroup"),
+                group("targetGroup").sum("value").as("value")
         );
         return releaseAgg(agg);
     }
