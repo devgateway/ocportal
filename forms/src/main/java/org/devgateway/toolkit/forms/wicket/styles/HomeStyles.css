@@ -30,7 +30,7 @@ ul.homepage-menu li {
     width: 23%;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
     ul.homepage-menu li {
         float: none;
         margin-bottom: 20px;
@@ -110,10 +110,14 @@ ul.homepage-menu li.corruption-dash a:hover {
 .btn.btn-text:hover {
     color: #3db04d;
 }
-
 .homepage-footer p {
     border-top: 1px solid #42b251;
     color: #1b455f;
     margin-top: 50px;
     padding-top: 20px;
+}
+@media (max-width: 767px){
+  .homepage-footer{
+    padding-bottom: 100px;
+  }
 }
