@@ -95,16 +95,16 @@ class IndividualIndicatorChart extends CustomPopupChart {
     const data = super.getData();
     if (!data) return null;
     let datum;
-    
+
     if (monthly) {
       datum = data.find((datum) => {
         const month = datum.get('month');
         return year == this.t(`general:months:${month}`);
       });
-    } else {       
+    } else {
       datum = data.find(datum => datum.get('year') == year);
     }
-   
+
     return (
       <div className="crd-popup" style={{
         top: popup.top,
@@ -187,7 +187,7 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
             margin={{ t: 0, b: 80, r: 100, pad: 40 }}
           />
         </section>
-        <section>
+        <section className="table-section">
           <h3 className="page-header">
             {this.t('crd:indicatorPage:projectTable:title').replace('$#$', this.t(`crd:indicators:${indicator}:name`))}
           </h3>
