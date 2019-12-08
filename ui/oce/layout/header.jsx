@@ -96,7 +96,7 @@ export default class Header extends translatable(React.Component) {
     const jsonURL = new URI('/api/ocds/package/all');
 
     return (<div>
-        <span className="export-title">
+        <span className="help-title">
           <a onClick={()=> {
             this.showIntroJs();
           }

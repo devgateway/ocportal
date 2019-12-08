@@ -81,7 +81,7 @@ class OCEMakueni extends OCApp {
       );
     }
     return (<div>
-        <span className="export-title">
+        <span className="download-title">
           Download the Data
         </span>
         <div className="export-btn">
