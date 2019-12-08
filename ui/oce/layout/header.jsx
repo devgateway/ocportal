@@ -102,7 +102,7 @@ export default class Header extends translatable(React.Component) {
           }
           }>HELP</a>
         </span>
-        <span className="export-title" data-step="7" data-intro="Download the data in either XLS,
+        <span className="download-title" data-step="7" data-intro="Download the data in either XLS,
         which uses the standard government terminology, or in JSON which uses the Open Contracting
          Data Standard.">
           Download the Data
