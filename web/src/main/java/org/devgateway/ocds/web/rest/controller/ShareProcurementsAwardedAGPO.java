@@ -43,6 +43,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
 
     public static final String TARGET_GROUP_CITIZEN_CONTRACTOR = "Citizen Contractor";
+    public static final String TARGET_GROUP_MARGIN_OF_PREFERENCE = "Margin of Preference for Local Contractor";
     public static final String NON_AGPO = "Non-AGPO";
 
     @ApiOperation(value = "Percent awarded for each target group by following the formula: (sum=(Awarded value for "
@@ -63,7 +64,8 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
                         .and(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT)
                         .as("value"),
                 project("targetGroup", "value")
-                        .and(ConditionalOperators.when(where("targetGroup").is(TARGET_GROUP_CITIZEN_CONTRACTOR))
+                        .and(ConditionalOperators.when(where("targetGroup").in(
+                                TARGET_GROUP_CITIZEN_CONTRACTOR, TARGET_GROUP_MARGIN_OF_PREFERENCE))
                                 .then(NON_AGPO).otherwiseValueOf("targetGroup"))
                         .as("targetGroup"),
                 group("targetGroup").sum("value").as("value")
