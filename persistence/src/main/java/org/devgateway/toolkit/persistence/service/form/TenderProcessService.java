@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -16,5 +17,7 @@ public interface TenderProcessService extends AbstractMakueniEntityService<Tende
     List<TenderProcess> findByProject(Project project);
 
     List<TenderProcess> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
+
+    Stream<TenderProcess> findAllStream();
 }
 

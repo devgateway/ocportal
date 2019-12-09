@@ -11,6 +11,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Stream;
+
 /**
  * @author idobre
  * @since 2019-04-02
@@ -26,6 +28,11 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     @Override
     public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.countByDepartmentAndFiscalYear(department, fiscalYear);
+    }
+
+    @Override
+    public Stream<ProcurementPlan> findAllStream() {
+        return procurementPlanRepository.findAllStream();
     }
 
     @Override

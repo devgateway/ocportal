@@ -505,8 +505,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         stopWatch.start();
         releaseRepository.deleteAll();
         organizationRepository.deleteAll();
-        tenderProcessService.findAll().stream().filter(Statusable::isExportable)
-                .forEach(this::createAndPersistRelease);
+        tenderProcessService.findAllStream().filter(Statusable::isExportable).forEach(this::createAndPersistRelease);
         postProcess();
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
