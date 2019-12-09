@@ -28,11 +28,11 @@ class Tender extends FeedbackPage {
 
     return (<div>
       <div className="row padding-top-10">
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="item-label">Tender Name</div>
           <div className="item-value">{tender.tenderTitle}</div>
         </div>
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="item-label">Tender ID</div>
           <div className="item-value">{tender.tenderNumber}</div>
         </div>
@@ -77,11 +77,11 @@ class Tender extends FeedbackPage {
       </div>
 
       <div className="row padding-top-10">
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="item-label">Tender Value</div>
           <div className="item-value">{currencyFormatter(tender.tenderValue)}</div>
         </div>
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className="item-label">Target Group</div>
           {
             tender.targetGroup !== undefined
