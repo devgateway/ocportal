@@ -75,8 +75,10 @@ public class FundingByLocationController extends GenericOCDSController {
 
         Aggregation agg = newAggregation(
                 match(where("tender").exists(true).and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
+                        .andOperator(getYearDefaultFilterCriteria(
+                                filter,
+                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                        ))),
                 new CustomProjectionOperation(project), unwind("$tender.items"),
                 unwind("$tender.items.deliveryLocation"),
                 project(getYearlyMonthlyGroupingFields(filter)).and(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
@@ -86,7 +88,40 @@ public class FundingByLocationController extends GenericOCDSController {
                 group(getYearlyMonthlyGroupingFields(filter, Keys.ITEMS_DELIVERY_LOCATION))
                         .sum("tenderAmount").as(Keys.TOTAL_TENDERS_AMOUNT).count().as(Keys.TENDERS_COUNT),
                 getSortByYearMonth(filter)
-        // ,skip(filter.getSkip()), limit(filter.getPageSize())
+                // ,skip(filter.getSkip()), limit(filter.getPageSize())
+        );
+
+        return releaseAgg(agg);
+    }
+
+    @ApiOperation(value = "Tenders by tender location at the tender level. The location can be at the ward or at "
+            + "the subcounty levels. This location is attached directly to tender, unlike the OCDS extension, which "
+            + "ties it to the items.")
+    @RequestMapping(value = "/api/fundingByTenderLocation", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> fundingByTenderLocation(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+
+        DBObject project = new BasicDBObject();
+        project.put(MongoConstants.FieldNames.TENDER_LOCATIONS, 1);
+        project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
+        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
+
+        Aggregation agg = newAggregation(
+                match(where("tender").exists(true).and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(
+                                filter,
+                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
+                        ))), unwind(ref(MongoConstants.FieldNames.TENDER_LOCATIONS)),
+                match(getYearDefaultFilterCriteria(filter, MongoConstants.FieldNames.TENDER_PERIOD_START_DATE)),
+                new CustomProjectionOperation(project),
+                project(getYearlyMonthlyGroupingFields(filter)).and(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
+                        .as("tenderAmount")
+                        .and(MongoConstants.FieldNames.TENDER_LOCATIONS).as("location"),
+                match(where("location.geometry.coordinates.0").exists(true)),
+                group(getYearlyMonthlyGroupingFields(filter, "location"))
+                        .sum("tenderAmount").as(Keys.TOTAL_TENDERS_AMOUNT).count().as(Keys.TENDERS_COUNT),
+                getSortByYearMonth(filter)
         );
 
         return releaseAgg(agg);
@@ -96,8 +131,8 @@ public class FundingByLocationController extends GenericOCDSController {
     @ApiOperation("Calculates percentage of releases with tender with at least one specified delivery location,"
             + " that is the array tender.items.deliveryLocation has to have items."
             + "Filters out stub tenders, therefore tender.tenderPeriod.startDate has to exist.")
-    @RequestMapping(value = "/api/qualityFundingByTenderDeliveryLocation", method = { RequestMethod.POST,
-            RequestMethod.GET }, produces = "application/json")
+    @RequestMapping(value = "/api/qualityFundingByTenderDeliveryLocation", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
     public List<Document> qualityFundingByTenderDeliveryLocation(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
