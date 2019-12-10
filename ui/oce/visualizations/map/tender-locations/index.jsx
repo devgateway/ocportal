@@ -6,14 +6,14 @@ class TenderLocations extends Map{
     let data = super.getData();
     if(!data) return [];
     return data
-        .groupBy(location => location.getIn(['deliveryLocation', '_id']))
+        .groupBy(location => location.getIn(['location', '_id']))
         .map(locations => locations.reduce((reducedLocation, location) => {
           return {
-            "_id": location.getIn(['deliveryLocation', '_id']),
-            "name": location.getIn(['deliveryLocation', 'description']),
+            "_id": location.getIn(['location', '_id']),
+            "name": location.getIn(['location', 'description']),
             "amount": reducedLocation.amount + location.get('totalTendersAmount'),
             "count": reducedLocation.count + location.get('tendersCount'),
-            "coords": location.getIn(['deliveryLocation', 'geometry', 'coordinates']).toJS()
+            "coords": location.getIn(['location', 'geometry', 'coordinates']).toJS()
           }
         }, {
           "amount": 0,
@@ -25,7 +25,7 @@ class TenderLocations extends Map{
   static getLayerName(t){return t('maps:tenderLocations:title')}
 }
 
-TenderLocations.endpoint = 'fundingByTenderDeliveryLocation';
+TenderLocations.endpoint = 'fundingByTenderLocation';
 TenderLocations.Location = Location;
 
 export default TenderLocations;
