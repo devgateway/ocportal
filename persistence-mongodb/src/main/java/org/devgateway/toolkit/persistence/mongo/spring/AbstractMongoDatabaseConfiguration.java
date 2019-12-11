@@ -111,10 +111,9 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on("tender.items.classification._id", Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().
-                on("tender.items.deliveryLocation._id", Direction.ASC));
+                on(MongoConstants.FieldNames.TENDER_LOCATIONS_ID, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().
-                on("tender.items.deliveryLocation.geometry.coordinates", Direction.ASC));
-
+                on(MongoConstants.FieldNames.TENDER_LOCATIONS_TYPE, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().
                 on(MongoConstants.FieldNames.BIDS_DETAILS_TENDERERS_ID, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().
