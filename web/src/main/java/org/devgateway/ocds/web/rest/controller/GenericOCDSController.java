@@ -382,7 +382,7 @@ public abstract class GenericOCDSController {
      * @return the {@link Criteria} for this filter
      */
     protected Criteria getByTenderDeliveryLocationIdentifier(final DefaultFilterPagingRequest filter) {
-        return createFilterCriteria("tender.items.deliveryLocation._id",
+        return createFilterCriteria("tender.locations._id",
                 filter.getTenderLoc(), filter
         );
     }

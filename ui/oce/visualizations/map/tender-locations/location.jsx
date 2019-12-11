@@ -175,8 +175,8 @@ export class OverviewChartTab extends ChartTab {
 const capitalizeAxisTitles = Class => class extends Class {
   getLayout() {
     const layout = super.getLayout();
-    layout.xaxis.title = layout.xaxis.title.toUpperCase();
-    layout.yaxis.title = layout.yaxis.title.toUpperCase();
+    layout.xaxis.title = layout.xaxis.title.toString().toUpperCase();
+    layout.yaxis.title = layout.yaxis.title.toString().toUpperCase();
     return layout;
   }
 };
