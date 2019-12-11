@@ -21,7 +21,7 @@ export class ChartTab extends Tab {
   constructor(props) {
     super(props);
     this.state = {
-      chartData: null,
+      chartData: null
     };
   }
 
@@ -125,7 +125,7 @@ class LocationWrapper extends translatable(Component) {
                     role="button"
                     tabIndex={0}
                   >
-                    <a href="#">{tab.getName(t)}</a>
+                    <span className="text-white">{tab.getName(t)}</span>
                   </div>
                 ))}
               </div>
@@ -172,28 +172,28 @@ export class OverviewChartTab extends ChartTab {
   static getChartClass() { return 'overview'; }
 }
 
-const capitalizeAxisTitles = Class => class extends Class {
-  getLayout() {
-    const layout = super.getLayout();
-    layout.xaxis.title = layout.xaxis.title.toString().toUpperCase();
-    layout.yaxis.title = layout.yaxis.title.toString().toUpperCase();
-    return layout;
-  }
-};
+// const capitalizeAxisTitles = Class => class extends Class {
+//   getLayout() {
+//     const layout = super.getLayout();
+//     //layout.xaxis.title = layout.xaxis.title;
+//     //layout.yaxis.title = layout.yaxis.title.text;
+//     return layout;
+//   }
+// };
 
-OverviewChartTab.Chart = capitalizeAxisTitles(OverviewChart);
+OverviewChartTab.Chart = OverviewChart;
 
 export class CostEffectivenessTab extends ChartTab {
   static getName(t) { return t('charts:costEffectiveness:title'); }
 }
 
-CostEffectivenessTab.Chart = capitalizeAxisTitles(CostEffectiveness);
+CostEffectivenessTab.Chart = CostEffectiveness;
 
 export class ProcurementMethodTab extends ChartTab {
   static getName(t) { return t('charts:procurementMethod:title'); }
 }
 
-ProcurementMethodTab.Chart = capitalizeAxisTitles(ProcurementMethodChart);
+ProcurementMethodTab.Chart = ProcurementMethodChart;
 
 LocationWrapper.TABS = [OverviewTab, OverviewChartTab, CostEffectivenessTab, ProcurementMethodTab];
 
