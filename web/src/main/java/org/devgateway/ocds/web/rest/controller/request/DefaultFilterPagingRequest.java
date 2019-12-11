@@ -66,7 +66,7 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     private TreeSet<String> bidderId;
 
     @ApiModelProperty(value = "This will filter after tender.locations._id")
-    private TreeSet<String> tenderLoc;
+    private TreeSet<String> tenderLoc = new TreeSet<>();
 
     @ApiModelProperty(value = "This will filter after tender.procurementMethod")
     private TreeSet<String> procurementMethod = new TreeSet<>();
