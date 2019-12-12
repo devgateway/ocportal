@@ -45,26 +45,26 @@ class OCApp extends React.Component {
       this.state.locale = 'en_US';
     }
   }
-  
+
   componentDidMount() {
     this.fetchBidTypes();
     // this.fetchYears();
     // this.fetchUserInfo();
-    
+
     // const calcYearsBarWidth = () => this.setState({
     //   width: document.querySelector('.years-bar').offsetWidth - 30,
     // });
-    
+
     // calcYearsBarWidth();
-    
+
     // window.addEventListener('resize', debounce(calcYearsBarWidth));
   }
-  
+
   setLocale(locale) {
     this.setState({ locale });
     localStorage.oceLocale = locale;
   }
-  
+
   monthsBar() {
     const { selectedMonths } = this.state;
     return range(1, 12)
@@ -81,13 +81,13 @@ class OCApp extends React.Component {
       <i className="glyphicon glyphicon-ok-circle"/> {this.t(`general:months:${month}`)}
     </a>));
   }
-  
+
   showMonths() {
     const { years, selectedYears } = this.state;
     return selectedYears.intersect(years)
     .count() === 1;
   }
-  
+
   yearsBar() {
     const { years, selectedYears } = this.state;
     const toggleYear = year => this.setState({
@@ -117,7 +117,7 @@ class OCApp extends React.Component {
     )
     .toArray();
   }
-  
+
   content() {
     const {
       filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width, locale
@@ -125,6 +125,7 @@ class OCApp extends React.Component {
     const Tab = this.tabs[currentTab];
     return (<Tab
       filters={filters}
+      onUpdate={filters => this.setState({ filters })}
       compareBy={compareBy}
       comparisonCriteriaValues={comparisonCriteriaValues}
       requestNewData={(path, data) => this.updateData([currentTab, ...path], data)}
@@ -142,19 +143,19 @@ class OCApp extends React.Component {
       styling={this.constructor.STYLING}
     />);
   }
-  
+
   updateComparisonData(path, data) {
     this.setState({ comparisonData: this.state.comparisonData.setIn(path, data) });
   }
-  
+
   updateData(path, data) {
     this.setState({ data: this.state.data.setIn(path, data) });
   }
-  
+
   navigation() {
     return this.tabs.map((tab, index) => this.navigationLink(tab, index));
   }
-  
+
   navigationLink({ getName, icon }, index) {
     return (<a
       href="javascript:void(0);"
@@ -165,10 +166,10 @@ class OCApp extends React.Component {
       {getName(this.t.bind(this))}
     </a>);
   }
-  
+
   comparison() {
     const { compareBy, compareOpen } = this.state;
-    
+
     return (<div className="filters col-md-12">
       <div className="row filter compare">
         <div className={cn('col-md-12 filter-header', { selected: compareOpen })}
@@ -177,7 +178,7 @@ class OCApp extends React.Component {
           <div className="pull-left title">{this.t('header:comparison:title')}</div>
           <div className={'pull-right toggler ' + (compareOpen ? 'up' : 'down')}></div>
         </div>
-        
+
         {compareOpen
           ? <div className="col-md-12 compare-content">
             <div className="row">
@@ -203,7 +204,7 @@ class OCApp extends React.Component {
       </div>
     </div>);
   }
-  
+
   filters() {
     const { bidTypes, locale } = this.state;
     return (<this.constructor.Filters
@@ -212,7 +213,7 @@ class OCApp extends React.Component {
       translations={this.constructor.TRANSLATIONS[locale]}
     />);
   }
-  
+
   fetchUserInfo() {
     const noCacheUrl = new URI('/rest/userDashboards/getCurrentAuthenticatedUserDetails').addSearch('time', new Date());
     fetchJson(noCacheUrl)
@@ -233,7 +234,7 @@ class OCApp extends React.Component {
       }),
     );
   }
-  
+
   fetchYears() {
     fetchJson('/api/tendersAwardsYears')
     .then((data) => {
@@ -244,7 +245,7 @@ class OCApp extends React.Component {
       });
     });
   }
-  
+
   fetchBidTypes() {
     fetchJson('/api/ocds/bidType/all')
     .then(data =>
@@ -253,7 +254,7 @@ class OCApp extends React.Component {
       }),
     );
   }
-  
+
   updateComparisonCriteria(criteria) {
     this.setState({
       compareBy: criteria,
@@ -269,16 +270,16 @@ class OCApp extends React.Component {
       comparisonCriteriaValues: data.map(datum => datum[0] || datum._id),
     }));
   }
-  
+
   t(text) {
     const { locale } = this.state;
     return this.constructor.TRANSLATIONS[locale][text];
   }
-  
+
   registerTab(tab) {
     this.tabs.push(tab);
   }
-  
+
   loginBox() {
     if (this.state.user.loggedIn) {
       return (<a href="/preLogout?referrer=/ui/index.html">
@@ -289,7 +290,7 @@ class OCApp extends React.Component {
       <i className="glyphicon glyphicon-user"/> {this.t('general:login')}
     </a>);
   }
-  
+
   languageSwitcher() {
     const { TRANSLATIONS } = this.constructor;
     if (Object.keys(TRANSLATIONS).length <= 1) return null;
@@ -304,7 +305,7 @@ class OCApp extends React.Component {
       />),
     );
   }
-  
+
   downloadExcel() {
     const { filters, selectedYears: years, selectedMonths: months } = this.state;
     const onDone = () => this.setState({ exporting: false });
@@ -319,19 +320,19 @@ class OCApp extends React.Component {
     .then(onDone)
     .catch(onDone);
   }
-  
+
   exportBtn() {
     const { filters, selectedYears, locale, selectedMonths } = this.state;
     let url = new URI('/api/ocds/excelExport')
     .addSearch(filters.toJS())
     .addSearch('year', selectedYears.toArray())
     .addSearch('language', locale);
-    
+
     if (selectedYears.count() === 1) {
       url = url.addSearch('month', selectedMonths && selectedMonths.toJS())
       .addSearch('monthly', true);
     }
-    
+
     return (
       <div className="filters">
         <a className="export-link" href={url} download="export.zip">
@@ -348,13 +349,13 @@ class OCApp extends React.Component {
       </div>
     );
   }
-  
+
   toggleDashboardSwitcher(e) {
     e.stopPropagation();
     const { dashboardSwitcherOpen } = this.state;
     this.setState({ dashboardSwitcherOpen: !dashboardSwitcherOpen });
   }
-  
+
   dashboardSwitcher() {
     const { dashboardSwitcherOpen } = this.state;
     const { onSwitch } = this.props;
