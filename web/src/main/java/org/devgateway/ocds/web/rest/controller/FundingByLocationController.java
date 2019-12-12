@@ -104,24 +104,40 @@ public class FundingByLocationController extends GenericOCDSController {
 
         DBObject project = new BasicDBObject();
         project.put(MongoConstants.FieldNames.TENDER_LOCATIONS, 1);
+        project.put(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID, 1);
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
         addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
 
         Aggregation agg = newAggregation(
-                match(where("tender").exists(true).and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                match(where("tender").exists(true)
+                        .and(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID).exists(true)
+                        .and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
                                 MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
                         ))), unwind(ref(MongoConstants.FieldNames.TENDER_LOCATIONS)),
                 match(getYearDefaultFilterCriteria(filter, MongoConstants.FieldNames.TENDER_PERIOD_START_DATE)),
                 new CustomProjectionOperation(project),
-                project(getYearlyMonthlyGroupingFields(filter)).and(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
+                project().and(
+                        MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
                         .as("tenderAmount")
                         .and(MongoConstants.FieldNames.TENDER_LOCATIONS).as("location"),
                 match(where("location.geometry.coordinates.0").exists(true)),
-                group(getYearlyMonthlyGroupingFields(filter, "location"))
-                        .sum("tenderAmount").as(Keys.TOTAL_TENDERS_AMOUNT).count().as(Keys.TENDERS_COUNT),
-                getSortByYearMonth(filter)
+                group("location")
+                        .sum("tenderAmount").as(Keys.TOTAL_TENDERS_AMOUNT).count().as(Keys.TENDERS_COUNT
+                )
+//                ).as("tenderFacet").and(
+//                        new CustomProjectionOperation(project),
+//                        project(getYearlyMonthlyGroupingFields(filter)).and(
+//                                MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
+//                                .as("tenderAmount")
+//                                .and(MongoConstants.FieldNames.TENDER_LOCATIONS).as("location"),
+//                        match(where("location.geometry.coordinates.0").exists(true)),
+//                        group("location")
+//                                .sum("tenderAmount").as(Keys.TOTAL_TENDERS_AMOUNT).count().as(Keys.TENDERS_COUNT
+//                        )
+//                ).as("projectFacet")
+                //,getSortByYearMonth(filter)
         );
 
         return releaseAgg(agg);

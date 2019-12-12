@@ -28,6 +28,7 @@ public final class MongoConstants {
         public static final String BUYER_NAME = "buyer.name";
         public static final String AWARDS_DATE = "awards.date";
         public static final String PLANNING_FISCAL_YEAR = "planning.fiscalYear";
+        public static final String PLANNING_BUDGET_PROJECT_ID = "planning.budget.projectID";
         public static final String AWARDS_FIRST_TIME_WINNER = "awards.firstTimeWinner";
         public static final String AWARDS_STATUS = "awards.status";
         public static final String AWARDS_SUPPLIERS_ID = "awards.suppliers._id";
