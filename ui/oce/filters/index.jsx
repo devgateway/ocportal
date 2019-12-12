@@ -8,7 +8,6 @@ import { Map } from 'immutable';
 import URI from 'urijs';
 import FilterChartsTab from './tabs/date';
 import PlanningRules from './tabs/planning-rules';
-import LocationTab from './tabs/location';
 
 const dashboardId = new URI(location).search(true).dashboardId;
 
@@ -86,7 +85,7 @@ class Filters extends translatable(Component) {
   }
 }
 
-Filters.TABS = [Organizations, ProcurementRules, LocationTab, PlanningRules, Amounts, FilterChartsTab];
-Filters.CLASS = ['organizations', 'procurement-method', 'location-tab', 'fiscal-year', 'amounts', 'date'];
+Filters.TABS = [Organizations, ProcurementRules, PlanningRules, Amounts, FilterChartsTab];
+Filters.CLASS = ['organizations', 'procurement-method', 'fiscal-year', 'amounts', 'date'];
 
 export default Filters;
