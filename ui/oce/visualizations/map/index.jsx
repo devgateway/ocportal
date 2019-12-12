@@ -6,6 +6,7 @@ import Location from './location';
 import Visualization from '../../visualization';
 // eslint-disable-next-line no-unused-vars
 import style from './style.less';
+import Control from 'react-leaflet-control';
 
 const swap = ([a, b]) => [b, a];
 
@@ -14,7 +15,7 @@ class MapVisual extends frontendDateFilterable(Visualization) {
     return Math.max(0, ...this.getData()
     .map(pluck('amount')));
   }
-  
+
   getTiles() {
     return (
       <TileLayer
@@ -23,7 +24,7 @@ class MapVisual extends frontendDateFilterable(Visualization) {
       />
     );
   }
-  
+
   render() {
     const { translations, filters, years, styling, monthly, months, zoom, data } = this.props;
     let center;
@@ -38,7 +39,7 @@ class MapVisual extends frontendDateFilterable(Visualization) {
       center = [0, 0];
       _zoom = 1;
     }
-    
+
     return (
       <Map center={center} zoom={_zoom}>
         {this.getTiles()}
@@ -59,6 +60,13 @@ class MapVisual extends frontendDateFilterable(Visualization) {
             />
           ))}
         </Cluster>
+        <Control position="topright" >
+          <button
+            onClick={ () => this.setState({bounds: [51.3, 0.7]}) }
+          >
+            Reset View
+          </button>
+        </Control>
       </Map>
     );
   }
