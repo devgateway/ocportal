@@ -154,13 +154,16 @@ export class OverviewTab extends Tab {
 
   render() {
     const { data } = this.props;
-    const { count, amount } = data;
+    const { count, totalProjectsAmount } = data;
     return (<div>
       <p>
         <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count}
       </p>
       <p>
-        <strong>{this.t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong> {amount.toLocaleString()}
+        <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong> {count}
+      </p>
+      <p>
+        <strong>{this.t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong> {totalProjectsAmount.toLocaleString()}
       </p>
     </div>);
   }

@@ -6,19 +6,17 @@ class TenderLocations extends Map{
     let data = super.getData();
     if(!data) return [];
     return data
-        .groupBy(location => location.getIn(['location', '_id']))
-        .map(locations => locations.reduce((reducedLocation, location) => {
+        .map(location => {
           return {
-            "_id": location.getIn(['location', '_id']),
-            "name": location.getIn(['location', 'description']),
-            "amount": reducedLocation.amount + location.get('totalTendersAmount'),
-            "count": reducedLocation.count + location.get('tendersCount'),
-            "coords": location.getIn(['location', 'geometry', 'coordinates']).toJS()
+            "_id": location.get('_id'),
+            "name": location.get('description'),
+            "amount": location.get('totalTendersAmount'),
+            "count":  location.get('tendersCount'),
+            "totalProjectsAmount":  location.get('totalProjectsAmount'),
+            "projectsCount":  location.get('projectsCount'),
+            "coords": location.getIn(['geometry', 'coordinates']).toJS()
           }
-        }, {
-          "amount": 0,
-          "count": 0
-        }))
+        })
         .toArray()
   }
 
