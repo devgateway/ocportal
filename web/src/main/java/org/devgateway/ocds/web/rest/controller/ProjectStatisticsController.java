@@ -48,7 +48,7 @@ public class ProjectStatisticsController extends GenericOCDSController {
     public List<Document> numberOfProjectsByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
         DBObject project = new BasicDBObject();
-        project.put(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID, 1);
+        project.put("projectID", ref(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID));
         addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
 
         Aggregation agg = newAggregation(
@@ -57,12 +57,39 @@ public class ProjectStatisticsController extends GenericOCDSController {
                         .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()
                         ))),
                 new CustomProjectionOperation(project),
+                group(getYearlyMonthlyGroupingFields(filter, "projectID")),
                 group(getYearlyMonthlyGroupingFields(filter)).count().as("count"),
-                getSortByYearMonth(filter)
+                transformYearlyGrouping(filter).andInclude("count")
         );
 
         return releaseAgg(agg);
     }
 
+
+    @ApiOperation(value = "Calculates amount of project budgeted by year")
+    @RequestMapping(value = "/api/amountBudgetedByYear", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> amountBudgetedByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+
+
+        DBObject project = new BasicDBObject();
+        project.put("projectID", ref(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID));
+        project.put("amount", ref(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT));
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
+
+        Aggregation agg = newAggregation(
+                match(where(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID).exists(true)
+                        .and(getTenderDateField()).exists(true).and(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT)
+                        .exists(true).andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()
+                        ))),
+                new CustomProjectionOperation(project),
+                group(getYearlyMonthlyGroupingFields(filter, "projectID"))
+                        .first("amount").as("amount"),
+                group(getYearlyMonthlyGroupingFields(filter)).sum("amount").as("amount"),
+                transformYearlyGrouping(filter).andInclude("amount")
+        );
+
+        return releaseAgg(agg);
+    }
 
 }

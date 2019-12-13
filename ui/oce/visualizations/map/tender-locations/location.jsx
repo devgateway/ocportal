@@ -10,6 +10,8 @@ import { cacheFn, download } from '../../../tools';
 import ProcurementMethodChart from '../../../visualizations/charts/procurement-method';
 // eslint-disable-next-line no-unused-vars
 import styles from './style.less';
+import ProjectCount from '../../charts/project-count';
+import AmountBudgeted from '../../charts/amount-budgeted';
 
 const addTenderDeliveryLocationId = cacheFn(
   (filters, id) => filters.set('tenderLoc', id),
@@ -192,12 +194,31 @@ export class CostEffectivenessTab extends ChartTab {
 
 CostEffectivenessTab.Chart = CostEffectiveness;
 
+export class ProjectCountChartTab extends ChartTab {
+  static getName(t) { return t('charts:projectCount:title'); }
+
+  static getChartClass() { return 'overview'; }
+}
+
+ProjectCountChartTab.Chart = ProjectCount;
+
+
+export class AmountBudgetedChartTab extends ChartTab {
+  static getName(t) { return t('charts:amountBudgeted:title'); }
+
+  static getChartClass() { return 'overview'; }
+}
+
+AmountBudgetedChartTab.Chart = AmountBudgeted;
+
+
 export class ProcurementMethodTab extends ChartTab {
   static getName(t) { return t('charts:procurementMethod:title'); }
 }
 
 ProcurementMethodTab.Chart = ProcurementMethodChart;
 
-LocationWrapper.TABS = [OverviewTab, OverviewChartTab, CostEffectivenessTab, ProcurementMethodTab];
+LocationWrapper.TABS = [OverviewTab, OverviewChartTab, ProjectCountChartTab,AmountBudgetedChartTab,
+  CostEffectivenessTab, ProcurementMethodTab];
 
 export default LocationWrapper;

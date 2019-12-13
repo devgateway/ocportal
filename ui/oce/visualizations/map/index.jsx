@@ -52,7 +52,7 @@ class MapVisual extends frontendDateFilterable(Visualization) {
   }
 
   render() {
-    const { translations, filters, years, styling, monthly, months, zoom, data } = this.props;
+    const { translations, filters, years, styling, months, zoom, data } = this.props;
     const { locationType } = this.state;
     let center;
     let _zoom;
@@ -81,7 +81,6 @@ class MapVisual extends frontendDateFilterable(Visualization) {
               translations={translations}
               filters={filters}
               years={years}
-              monthly={monthly}
               months={months}
               styling={styling}
             />

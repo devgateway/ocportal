@@ -109,6 +109,7 @@ public class FundingByLocationController extends GenericOCDSController {
         project.put(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID, 1);
         project.put(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT, 1);
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
 
         Aggregation agg = newAggregation(
                 match(where("tender").exists(true)
