@@ -13,7 +13,7 @@ const frontendDateFilterable = (Class) => {
 
     getData() {
       const data = super.getData();
-      const { years, months } = this.props;
+      const { years, monthly, months } = this.props;
       if (!data) return data;
       if (monthly) {
         return this.constructor.filterDataByMonth(data, months);

@@ -7,10 +7,11 @@ import Visualization from '../../visualization';
 // eslint-disable-next-line no-unused-vars
 import style from './style.less';
 import Control from 'react-leaflet-control';
+import backendFilterable from '../../backend-year-filterable';
 
 const swap = ([a, b]) => [b, a];
 
-class MapVisual extends frontendDateFilterable(Visualization) {
+class MapVisual extends backendFilterable(Visualization) {
   constructor(props) {
     super(props);
     this.state = {

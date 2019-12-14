@@ -1,7 +1,7 @@
 import Map from "../index.jsx";
 import Location from './location';
 
-class TenderLocations extends Map{
+class TenderLocations extends Map {
   getData(){
     let data = super.getData();
     if(!data) return [];

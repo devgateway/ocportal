@@ -39,7 +39,7 @@ class ProjectCount extends FrontendDateFilterableChart{
 }
 
 ProjectCount.endpoint = 'numberOfProjectsByYear';
-//ProjectCount.excelEP = 'numberTendersUsingEBidExcelChart';
+ProjectCount.excelEP = 'numberOfProjectsByYearExcelChart';
 ProjectCount.getName = t => t('charts:projectCount:title');
 //ProjectCount.getMaxField = pluckImm('totalTendersUsingEbid');
 

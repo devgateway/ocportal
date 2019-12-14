@@ -42,6 +42,14 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 public class ProjectStatisticsController extends GenericOCDSController {
 
+
+    public static final class Keys {
+        public static final String YEAR = "year";
+        public static final String COUNT = "count";
+        public static final String AMOUNT = "amount";
+    }
+
+
     @ApiOperation(value = "Calculates number of projects per year")
     @RequestMapping(value = "/api/numberOfProjectsByYear", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
@@ -58,8 +66,8 @@ public class ProjectStatisticsController extends GenericOCDSController {
                         ))),
                 new CustomProjectionOperation(project),
                 group(getYearlyMonthlyGroupingFields(filter, "projectID")),
-                group(getYearlyMonthlyGroupingFields(filter)).count().as("count"),
-                transformYearlyGrouping(filter).andInclude("count")
+                group(getYearlyMonthlyGroupingFields(filter)).count().as(Keys.COUNT),
+                transformYearlyGrouping(filter).andInclude(Keys.COUNT)
         );
 
         return releaseAgg(agg);
@@ -74,7 +82,7 @@ public class ProjectStatisticsController extends GenericOCDSController {
 
         DBObject project = new BasicDBObject();
         project.put("projectID", ref(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID));
-        project.put("amount", ref(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT));
+        project.put(Keys.AMOUNT, ref(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT));
         addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
 
         Aggregation agg = newAggregation(
@@ -84,9 +92,9 @@ public class ProjectStatisticsController extends GenericOCDSController {
                         ))),
                 new CustomProjectionOperation(project),
                 group(getYearlyMonthlyGroupingFields(filter, "projectID"))
-                        .first("amount").as("amount"),
-                group(getYearlyMonthlyGroupingFields(filter)).sum("amount").as("amount"),
-                transformYearlyGrouping(filter).andInclude("amount")
+                        .first(Keys.AMOUNT).as(Keys.AMOUNT),
+                group(getYearlyMonthlyGroupingFields(filter)).sum(Keys.AMOUNT).as(Keys.AMOUNT),
+                transformYearlyGrouping(filter).andInclude(Keys.AMOUNT)
         );
 
         return releaseAgg(agg);

@@ -39,7 +39,7 @@ class AmountBudgeted extends FrontendDateFilterableChart{
 }
 
 AmountBudgeted.endpoint = 'amountBudgetedByYear';
-//ProjectCount.excelEP = 'numberTendersUsingEBidExcelChart';
+AmountBudgeted.excelEP = 'amountBudgetedByYearExcelChart';
 AmountBudgeted.getName = t => t('charts:amountBudgeted:title');
 //ProjectCount.getMaxField = pluckImm('totalTendersUsingEbid');
 
