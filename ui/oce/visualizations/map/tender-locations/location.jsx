@@ -158,9 +158,9 @@ export class OverviewTab extends Tab {
     const { data } = this.props;
     const { count, totalProjectsAmount } = data;
     return (<div>
-      <p>
-        <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count}
-      </p>
+      {/*<p>*/}
+      {/*  <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count}*/}
+      {/*</p>*/}
       <p>
         <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong> {count}
       </p>
@@ -218,7 +218,6 @@ export class ProcurementMethodTab extends ChartTab {
 
 ProcurementMethodTab.Chart = ProcurementMethodChart;
 
-LocationWrapper.TABS = [OverviewTab, OverviewChartTab, ProjectCountChartTab,AmountBudgetedChartTab,
-  CostEffectivenessTab, ProcurementMethodTab];
+LocationWrapper.TABS = [OverviewTab, ProjectCountChartTab,AmountBudgetedChartTab];
 
 export default LocationWrapper;
