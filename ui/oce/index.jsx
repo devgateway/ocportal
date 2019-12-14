@@ -206,10 +206,11 @@ class OCApp extends React.Component {
   }
 
   filters() {
-    const { bidTypes, locale } = this.state;
+    const { bidTypes, locale, filters } = this.state;
     return (<this.constructor.Filters
       onUpdate={filters => this.setState({ filters })}
       bidTypes={bidTypes}
+      filters={filters}
       translations={this.constructor.TRANSLATIONS[locale]}
     />);
   }
