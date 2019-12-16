@@ -331,13 +331,20 @@
         height: @extend;
         margin-left: -5px;
         overflow-y: scroll;
+        padding-bottom: 200px;
         padding-right: 0;
         top: @filterHeight * 2;
+
         @media (max-width: 768px) {
             margin-left: 0;
             position: relative !important;
             top: auto;
             width: 102%;
+        }
+
+        >div {
+          height: 500px;
+          border: 2px solid pink;
         }
 
         .small {
