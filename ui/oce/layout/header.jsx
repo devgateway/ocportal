@@ -8,6 +8,7 @@ import * as introJs from 'intro.js/intro.js';
 import 'intro.js/introjs.css';
 import './header.less';
 import { statsInfo } from './state';
+import ReactGA from 'react-ga';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
@@ -51,7 +52,15 @@ export default class Header extends translatable(React.Component) {
     this.isActive = this.isActive.bind(this);
   }
 
+  initializeGoogleAnalytics() {
+    ReactGA.initialize('UA-154640611-1');
+    let prefix = window.location.protocol + '//' + window.location.host;
+    let href = window.location.href;
+    ReactGA.pageview(href.substring(prefix.length, href.length));
+  }
+
   componentDidMount() {
+    this.initializeGoogleAnalytics();
     statsInfo.addListener('Header', () => {
       statsInfo.getState()
       .then(data => {
