@@ -24,7 +24,6 @@ export default class Header extends translatable(React.Component) {
         step:2,
         intro: "The portal opens by default on the Tender page. It shows all the tenders for each " +
           "financial year for each department in the County Government of Makueni.",
-        icon: 'assets/icons/efficiency.svg'
       },
       {
         name: 'procurement-plan',
@@ -32,7 +31,6 @@ export default class Header extends translatable(React.Component) {
         step:3,
         intro: "Click to view all the procurement plans for each financial year for each department in" +
           " the County Government of Makueni.",
-        icon: 'assets/icons/compare.svg'
       },
       {
         name: 'm-and-e',
@@ -40,7 +38,12 @@ export default class Header extends translatable(React.Component) {
         step:4,
         intro: "Click the charts button to view charts that provide an overview of the procurement " +
           "process, and highlight the competitiveness, and efficiency of the procurement process.",
-        icon: 'assets/icons/eprocurement.svg'
+      },
+      {
+        name: 'docs',
+        title: 'Docs',
+        step:5,
+        intro: "API, source code and documentation"
       }
     ];
 
