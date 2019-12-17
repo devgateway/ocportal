@@ -1,3 +1,4 @@
+import React from 'react';
 
 class NoDataMessage extends React.Component {
 render() {
@@ -7,7 +8,7 @@ render() {
       </div>
     )
   }
-};
+}
 
 
 export default NoDataMessage;
