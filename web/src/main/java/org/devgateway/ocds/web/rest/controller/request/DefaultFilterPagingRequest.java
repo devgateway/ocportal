@@ -59,7 +59,7 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> buyerId;
 
-    @ApiModelProperty(value = "This is the new bidder format bids.details.tenderers._id")
+    @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
     private TreeSet<String> bidderId;
 
     @ApiModelProperty(value = "This will filter after tender.items.deliveryLocation._id")
