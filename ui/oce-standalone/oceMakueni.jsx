@@ -7,6 +7,7 @@ import CompetitivenessTab from '../oce/tabs/competitiveness';
 import EfficiencyTab from '../oce/tabs/efficiency';
 import { fetchJson } from '../oce/tools';
 import Header from '../oce/layout/header';
+import Footer from '../oce/layout/footer';
 
 class OCEMakueni extends OCApp {
   constructor(props) {
@@ -138,25 +139,7 @@ class OCEMakueni extends OCApp {
             </div>
           </div>
         </div>
-
-        {/*{this.showMonths() && <div*/}
-        {/*  className="col-xs-offset-4 col-md-offset-3 col-xs-8 col-md-9 months-bar"*/}
-        {/*  role="navigation"*/}
-        {/*>*/}
-        {/*  {this.monthsBar()}*/}
-        {/*</div>}*/}
-        {/*<div*/}
-        {/*  className="col-xs-offset-4 col-md-offset-3 col-xs-8 col-md-9 years-bar"*/}
-        {/*  role="navigation"*/}
-        {/*>*/}
-        {/*  {this.yearsBar()}*/}
-        {/*</div>*/}
-        <footer className="col-sm-12 main-footer text-center text-muted">
-          Government of Makueni County Open Contracting Portal&nbsp;-&nbsp;
-          <a href="https://github.com/devgateway/forms-makueni/blob/master/LICENSE" target="_blank">License</a>
-          &nbsp;-&nbsp;
-          <a href="/publication-policy.txt">Publication Policy</a>
-        </footer>
+        <Footer/>
       </div>
     );
   }

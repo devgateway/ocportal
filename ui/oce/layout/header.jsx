@@ -8,6 +8,7 @@ import * as introJs from 'intro.js/intro.js';
 import 'intro.js/introjs.css';
 import './header.less';
 import { statsInfo } from './state';
+import ReactGA from 'react-ga';
 
 export default class Header extends translatable(React.Component) {
   constructor(props) {
@@ -24,7 +25,6 @@ export default class Header extends translatable(React.Component) {
         step:2,
         intro: "The portal opens by default on the Tender page. It shows all the tenders for each " +
           "financial year for each department in the County Government of Makueni.",
-        icon: 'assets/icons/efficiency.svg'
       },
       {
         name: 'procurement-plan',
@@ -32,7 +32,6 @@ export default class Header extends translatable(React.Component) {
         step:3,
         intro: "Click to view all the procurement plans for each financial year for each department in" +
           " the County Government of Makueni.",
-        icon: 'assets/icons/compare.svg'
       },
       {
         name: 'm-and-e',
@@ -40,7 +39,12 @@ export default class Header extends translatable(React.Component) {
         step:4,
         intro: "Click the charts button to view charts that provide an overview of the procurement " +
           "process, and highlight the competitiveness, and efficiency of the procurement process.",
-        icon: 'assets/icons/eprocurement.svg'
+      },
+      {
+        name: 'docs',
+        title: 'Docs',
+        step:5,
+        intro: "API, source code and documentation"
       }
     ];
 
@@ -48,7 +52,15 @@ export default class Header extends translatable(React.Component) {
     this.isActive = this.isActive.bind(this);
   }
 
+  initializeGoogleAnalytics() {
+    ReactGA.initialize('UA-154640611-1');
+    let prefix = window.location.protocol + '//' + window.location.host;
+    let href = window.location.href;
+    ReactGA.pageview(href.substring(prefix.length, href.length));
+  }
+
   componentDidMount() {
+    this.initializeGoogleAnalytics();
     statsInfo.addListener('Header', () => {
       statsInfo.getState()
       .then(data => {

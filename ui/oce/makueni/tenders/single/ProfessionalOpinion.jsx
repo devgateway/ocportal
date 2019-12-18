@@ -1,5 +1,6 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import FeedbackPage from '../../FeedbackPage';
+import NoDataMessage from './NoData';
 
 class ProfessionalOpinion extends FeedbackPage {
   getFeedbackSubject() {
@@ -19,7 +20,7 @@ class ProfessionalOpinion extends FeedbackPage {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return null;
+      return (<NoDataMessage/>);
     }
 
     const professionalOpinion = data[0];

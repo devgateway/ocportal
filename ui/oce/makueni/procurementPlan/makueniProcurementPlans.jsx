@@ -8,6 +8,7 @@ import { Map } from 'immutable';
 import '../makueni.less';
 import ProcurementPlan from './single/procurementPlan';
 import React from 'react';
+import Footer from '../../layout/footer';
 
 const NAME = 'MakueniPP';
 
@@ -174,6 +175,7 @@ class MakueniProcurementPlans extends CRDPage {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>);
   }
 }
