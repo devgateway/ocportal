@@ -9,6 +9,8 @@ import '../makueni.less';
 import Project from './single/Project';
 import PurchaseReqView from './single/PurchaseReqView';
 import FiltersTendersWrapper from '../filters/FiltersTendersWrapper';
+import Footer from '../../layout/footer';
+import React from 'react';
 
 
 const NAME = 'MakueniTenders';
@@ -219,6 +221,7 @@ linksOrFiles() {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>);
   }
 }

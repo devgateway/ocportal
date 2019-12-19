@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.zip.Deflater;
@@ -58,12 +59,22 @@ public class PostgresqlDatabaseBackupService {
     public void backupDatabase() {
         final String databaseProductName;
 
+        Connection conn = null;
         try {
-            databaseProductName = datasource.getConnection().getMetaData().getDatabaseProductName();
+            conn = datasource.getConnection();
+            databaseProductName = conn.getMetaData().getDatabaseProductName();
         } catch (SQLException e) {
             logger.error("Cannot read databaseProductName from Connection!"
                     + PostgresqlDatabaseBackupService.class.getCanonicalName() + " cannot continue!" + e);
             return;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         if (DATABASE_PRODUCT_NAME_POSTGRESQL.equals(databaseProductName)) {
             backupPostgreSQLDatabase();
