@@ -1,6 +1,22 @@
 @headerHeight: 48px;
 @windowHeight: 300px;
 @borderRadius: 12px;
+@primary-green: #29722d;
+
+.content.map-content{
+  margin-top: 0;
+  margin-bottom: 0;
+  .leaflet-bar{
+    a{
+      color: #000000;
+    }
+  }
+  .leaflet-control-attribution{
+    a{
+      color: #000000;
+    }
+  }
+}
 
 .leaflet-popup-content{
   width: 550px!important;
@@ -21,7 +37,7 @@
     }
   }
   header{
-    background: #ca3d3f;
+    background: @primary-green;
     margin-top: -14px;
     margin-left: -20px;
     margin-right: -20px;
@@ -57,7 +73,7 @@
       }
       &.active{
         background: #0f0f0f;
-        border-right-color: #ca3d3f;
+        border-right-color: @primary-green;
         a{
           color: #d4d4d4;
         }
