@@ -42,7 +42,7 @@ export default class Header extends translatable(React.Component) {
       },
       {
         name: 'docs',
-        title: 'Docs',
+        title: 'Resources',
         step:5,
         intro: "API, source code and documentation"
       }
