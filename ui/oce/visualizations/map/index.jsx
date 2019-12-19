@@ -43,7 +43,7 @@ class MapVisual extends backendFilterable(Visualization) {
   }
 
   computeLocationButtonClass(locationType, buttonType) {
-    return 'btn ' + (locationType === buttonType ? 'btn-danger' : '');
+    return 'btn ' + (locationType === buttonType ? 'btn-primary' : '');
   }
 
   updateLocationButtonState(buttonType) {
