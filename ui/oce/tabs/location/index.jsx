@@ -115,6 +115,6 @@ LocationTab.icon = 'planning';
 LocationTab.computeComparisonYears = null;
 LocationTab.LAYERS = [TenderLocations];
 LocationTab.CENTER = [14.5, 105];
-LocationTab.ZOOM = 5;
+LocationTab.ZOOM = 8;
 
 export default LocationTab;
