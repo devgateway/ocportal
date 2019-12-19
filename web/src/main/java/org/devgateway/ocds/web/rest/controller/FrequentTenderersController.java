@@ -106,9 +106,9 @@ public class FrequentTenderersController extends GenericOCDSController {
                 unwind("awards.suppliers"),
                 project(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).and(
                         SetOperators.arrayAsSet("filterTenderers").intersects("tenderers._id"))
-                        .as("commonToBoth")
-//                match(where("commonToBoth").size(filter.getBidderId().size())),
-//                group().count().as("cnt")
+                        .as("commonToBoth"),
+                match(where("commonToBoth").size(filter.getBidderId().size())),
+                group().count().as("cnt")
         );
 
         return releaseAgg(agg);
