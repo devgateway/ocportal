@@ -9,9 +9,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -33,14 +33,23 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
         return makueniRepository().findByFiscalYear(fiscalYear);
     }
 
-
+    @Transactional
     public Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity) {
         T loadedEntity = findById(entity.getId()).orElseThrow(
                 () -> new RuntimeException("Cannot find entity with id " + entity.getId()));
-        return loadedEntity.getDirectChildrenEntities().stream().filter(Objects::nonNull)
-                .flatMap(s -> Stream.concat(Stream.of(s), s.getDirectChildrenEntities().stream()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        Set<AbstractMakueniEntity> ret = new HashSet<>();
+        collectChildrenEntities(loadedEntity, ret);
+        return ret;
+    }
+
+    @Transactional
+    private void collectChildrenEntities(AbstractMakueniEntity entity,
+                                         Collection<AbstractMakueniEntity> ret) {
+        Collection<? extends AbstractMakueniEntity> directChildrenEntities = entity.getDirectChildrenEntities();
+        if (!directChildrenEntities.isEmpty()) {
+            ret.addAll(directChildrenEntities);
+            directChildrenEntities.forEach(e -> collectChildrenEntities(e, ret));
+        }
     }
 
     @Override
