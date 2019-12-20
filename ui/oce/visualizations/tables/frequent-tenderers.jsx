@@ -11,9 +11,9 @@ class FrequentTenderers extends orgNamesFetching(Table) {
     super(...args);
     this.state = this.state || {};
     this.state.showAll = false;
-    this.state.winCounts = {};
+    this.state.newData = [];
   }
-  
+
   row(entry, index) {
     const { winCounts } = this.state;
     const id1 = entry.get('tendererId1');
@@ -22,11 +22,11 @@ class FrequentTenderers extends orgNamesFetching(Table) {
       <td>{this.getOrgName(id1)}</td>
       <td>{this.getOrgName(id2)}</td>
       <td>{entry.get('pairCount')}</td>
-      <td>{winCounts[id1]}</td>
+      <td>{entry.get('supplierCount')}</td>
       <td>{winCounts[id2]}</td>
     </tr>);
   }
-  
+
   getOrgsWithoutNamesIds() {
     const { data } = this.props;
     if (!data) return [];
@@ -35,45 +35,38 @@ class FrequentTenderers extends orgNamesFetching(Table) {
     .filter(id => !this.state.orgNames[id])
     .toJS();
   }
-  
-  getSuppliersWithoutWinCountIds() {
+
+  maybeGetSupplierWins() {
     const { data } = this.props;
     if (!data) return [];
-    return data.map(datum => List([datum.get('tendererId1'), datum.get('tendererId2')]))
-    .flatten()
-    .filter(id => !this.state.winCounts[id])
-    .toJS();
+    let newData = [];
+    Promise.all(
+    data.map(datum =>
+      send(new URI('/api/activeAwardsCount').addSearch('bidderId',
+        [datum.get('tendererId1'), datum.get('tendererId2')])
+        .addSearch('supplierId', datum.get('tendererId1'))
+      ).then(callFunc('json')).then(r=> newData.push(datum.set('supplierCount',r[0] === undefined ? 0 : r[0].cnt)))))
+      .then(
+        ()=> {
+          this.setState({ newData });
+        });
   }
-  
-  maybeFetchWinCounts() {
-    const idsWithoutWinCounts = this.getSuppliersWithoutWinCountIds();
-    if (!idsWithoutWinCounts.length) return;
-    send(new URI('/api/activeAwardsCount').addSearch('supplierId', idsWithoutWinCounts))
-    .then(callFunc('json'))
-    .then((counts) => {
-      const winCounts = {};
-      counts.forEach(({ supplierId, cnt }) => {
-        winCounts[supplierId] = cnt;
-      });
-      this.setState({ winCounts });
-    });
-  }
-  
+
   componentDidMount() {
     super.componentDidMount();
-    this.maybeFetchWinCounts();
+    this.maybeGetSupplierWins();
   }
-  
+
   componentDidUpdate(prevProps, ...args) {
     super.componentDidUpdate(prevProps, ...args);
     if (prevProps.data !== this.props.data) {
-      this.maybeFetchWinCounts();
+      this.maybeGetSupplierWins();
     }
   }
-  
+
   render() {
     if (!this.props.data) return null;
-    const { showAll } = this.state;
+    const { showAll, newData } = this.state;
     return (<table className="table table-stripped trable-hover frequent-supplier-bidder-table">
       <thead>
       <tr>
@@ -85,7 +78,7 @@ class FrequentTenderers extends orgNamesFetching(Table) {
       </tr>
       </thead>
       <tbody>
-      {maybeSlice(!showAll, this.props.data)
+      {maybeSlice(!showAll, newData)
       .map((entry, index) => this.row(entry, index))}
       {!showAll && this.props.data.count() > 10 && <tr>
         <td colSpan="5">
