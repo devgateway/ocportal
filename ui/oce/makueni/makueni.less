@@ -593,7 +593,6 @@ a.more-details-link:hover::before {
     .alerts-button {
         height: 100%;
         margin-left: 5px;
-
         .btn {
             background-color: @active-tab-color;
             border-color: @active-tab-color;
@@ -603,6 +602,11 @@ a.more-details-link:hover::before {
               border-color: @active-text-color;
             }
         }
+      &.subscribe{
+        @media screen and (max-width: 767px) {
+          display: none;
+        }
+      }
     }
 }
 

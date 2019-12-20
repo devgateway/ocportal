@@ -88,6 +88,12 @@ body {
   }
 }
 
+@media (max-width: 767px){
+  .navbar-inverse .navbar-collapse{
+    margin-top: 30px;
+  }
+}
+
 .mainFooter {
     /*
      * Add some spacing around the footer.
@@ -99,6 +105,16 @@ body {
     /* Set the fixed height of the footer here */
     height: 50px;
     background-color: #095a14;
+}
+@media (max-width: 1024px){
+  .mainFooter{
+    height: 60px;
+  }
+}
+@media (max-width: 767px){
+  .mainFooter{
+    height: 90px;
+  }
 }
 
 .mainFooter a{
