@@ -22,8 +22,8 @@ class FrequentTenderers extends orgNamesFetching(Table) {
       <td>{this.getOrgName(id1)}</td>
       <td>{this.getOrgName(id2)}</td>
       <td>{entry.get('pairCount')}</td>
-      <td>{entry.get('supplierCount')}</td>
-      <td>{winCounts[id2]}</td>
+      <td>{entry.get('supplierCount1')}</td>
+      <td>{entry.get('supplierCount2')}</td>
     </tr>);
   }
 
@@ -39,16 +39,26 @@ class FrequentTenderers extends orgNamesFetching(Table) {
   maybeGetSupplierWins() {
     const { data } = this.props;
     if (!data) return [];
-    let newData = [];
+    let newData1 = [];
     Promise.all(
     data.map(datum =>
       send(new URI('/api/activeAwardsCount').addSearch('bidderId',
         [datum.get('tendererId1'), datum.get('tendererId2')])
         .addSearch('supplierId', datum.get('tendererId1'))
-      ).then(callFunc('json')).then(r=> newData.push(datum.set('supplierCount',r[0] === undefined ? 0 : r[0].cnt)))))
+      ).then(callFunc('json')).then(r=> newData1.push(datum.set('supplierCount1',r[0] === undefined ? 0 : r[0].cnt)))))
       .then(
         ()=> {
-          this.setState({ newData });
+          let newData = [];
+          Promise.all(
+            newData1.map(datum =>
+              send(new URI('/api/activeAwardsCount').addSearch('bidderId',
+                [datum.get('tendererId1'), datum.get('tendererId2')])
+                .addSearch('supplierId', datum.get('tendererId1'))
+              ).then(callFunc('json')).then(r=> newData.push(datum.set('supplierCount2',r[0] === undefined ? 0 : r[0].cnt)))))
+            .then(
+              ()=> {
+                this.setState({ newData });
+              });
         });
   }
 
