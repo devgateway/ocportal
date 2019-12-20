@@ -35,7 +35,7 @@ export default class Header extends translatable(React.Component) {
       },
       {
         name: 'm-and-e',
-        title: 'Tender Map',
+        title: 'Charts',
         step:4,
         intro: "Click the charts button to view charts that provide an overview of the procurement " +
           "process, and highlight the competitiveness, and efficiency of the procurement process.",
