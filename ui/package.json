@@ -73,7 +73,7 @@
     "leaflet.markercluster": "https://github.com/Leaflet/Leaflet.markercluster.git#leaflet-0.7",
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
-    "plotly.js": "^1.28.3",
+    "plotly.js": "^1.51.3",
     "prop-types": "^15.5.10",
     "universal-cookie": "^4.0.2",
     "rc-slider": "^7.0.3",
