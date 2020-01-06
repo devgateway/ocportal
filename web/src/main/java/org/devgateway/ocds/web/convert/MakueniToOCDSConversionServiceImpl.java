@@ -267,7 +267,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Classification classification = new Classification();
         safeSet(classification::setId, purchaseItem::getPlanItem, PlanItem::getItem, Category::getCode
         );
-        safeSet(classification::setDescription, purchaseItem::getPlanItem, PlanItem::getItem, Category::getLabel);
+        safeSet(classification::setDescription, purchaseItem::getPlanItem, PlanItem::getItem, Category::getLabel,
+                String::toUpperCase
+        );
         return classification;
     }
 
