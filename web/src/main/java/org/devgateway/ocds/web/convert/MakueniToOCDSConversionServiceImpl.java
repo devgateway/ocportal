@@ -182,7 +182,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Organization convertBuyer(Department department) {
         Organization ocdsBuyer = new Organization();
-        safeSet(ocdsBuyer::setName, () -> department, this::categoryLabel);
+        safeSet(ocdsBuyer::setName, () -> department, this::categoryLabel, String::toUpperCase);
         safeSet(ocdsBuyer::setId, () -> department, this::entityIdToString);
         safeSet(ocdsBuyer::setIdentifier, () -> department, this::convertCategoryCodeToIdentifier);
         safeSet(ocdsBuyer.getAdditionalIdentifiers()::add, () -> department, this::convertCategoryToIdentifier);
@@ -210,7 +210,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 //                this::convertCategoryCodeToIdentifier
 //        );
         safeSet(ocdsProcuringEntity::setAddress, () -> procuringEntity, this::createProcuringEntityAddress);
-        safeSet(ocdsProcuringEntity::setName, procuringEntity::getLabel);
+        safeSet(ocdsProcuringEntity::setName, procuringEntity::getLabel, String::toUpperCase);
         safeSet(ocdsProcuringEntity::setContactPoint, () -> procuringEntity, this::createProcuringEntityContactPoint);
         safeSet(ocdsProcuringEntity.getRoles()::add, () -> Organization.OrganizationType.procuringEntity,
                 Organization.OrganizationType::toValue
@@ -402,7 +402,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public MakueniOrganization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
         MakueniOrganization ocdsOrg = new MakueniOrganization();
-        safeSet(ocdsOrg::setName, supplier::getLabel);
+        safeSet(ocdsOrg::setName, supplier::getLabel, String::toUpperCase);
         safeSet(ocdsOrg::setId, () -> supplier, this::entityIdToString);
         safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryCodeToIdentifier);
         safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryToIdentifier);
