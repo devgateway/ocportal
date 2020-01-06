@@ -14,7 +14,7 @@ class Docs extends CRDPage {
       <div className="makueni-procurement-plan content row">
 
         <div className="col-md-2 col-md-offset-5">
-          <h1>Documentation and API</h1>
+          <h1>Resources</h1>
         </div>
 
         <div className="col-md-6 col-md-offset-3">

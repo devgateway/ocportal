@@ -25,7 +25,7 @@
     }
     @media screen and (max-width: 600px) {
         background-color: #ffffff;
-        margin-top: 280px;
+        margin-top: 300px;
     }
 }
 
@@ -67,7 +67,7 @@ header.branding {
     height: @headerHeight;
     z-index: 1001;
     @media screen and (max-width: 600px) {
-        height: 100px;
+        height: 130px;
         padding-top: 5px;
         top: 120px;
     }
@@ -374,8 +374,9 @@ footer.main-footer {
     background: @footerColor;
     padding-top: 7px;
     z-index: 1;
-    @media screen and (max-width: 320px) {
-        display: none;
+    @media screen and (max-width: 767px) {
+      height: 60px;
+      position:relative;
     }
 }
 
@@ -510,7 +511,27 @@ footer.main-footer {
 .login-logout button {
     width: 130px;
 }
-
+.help-title{
+  display: inline-block;
+  font-size: 9px;
+  height:64px;
+  line-height: 64px;
+  padding: 0;
+  text-align: center;
+  width: 15%;
+}
+.download-title{
+    font-size: 9px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    color: #ffffff;
+    width: 45%;
+    border-left: 1px solid #3a843c;
+    height: 63px;
+    display: inline-block;
+    line-height: 64px;
+    text-align: center;
+}
 .export {
     background-color: @themeGreen;
     float: right;

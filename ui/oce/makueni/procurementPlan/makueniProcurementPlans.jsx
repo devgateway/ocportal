@@ -167,7 +167,7 @@ class MakueniProcurementPlans extends CRDPage {
       </div>
 
       <div className="alerts-container">
-        <div className="row alerts-button">
+        <div className="row alerts-button subscribe">
           <div className="col-md-12">
             <button className="btn btn-info btn-lg" type="submit"
                     onClick={() => this.props.onSwitch('alerts')}>Subscribe to Email Alerts

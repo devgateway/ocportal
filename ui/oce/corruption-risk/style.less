@@ -331,13 +331,19 @@
         height: @extend;
         margin-left: -5px;
         overflow-y: scroll;
+        padding-bottom: 200px;
         padding-right: 0;
         top: @filterHeight * 2;
+
         @media (max-width: 768px) {
             margin-left: 0;
             position: relative !important;
             top: auto;
             width: 102%;
+        }
+
+        >div {
+          height: 500px;
         }
 
         .small {
@@ -577,7 +583,11 @@
         .page-header {
             border-bottom: none;
         }
-
+        .table-section{
+          table{
+            margin-top: 20px;
+          }
+        }
         .page-corruption-type, .page-individual-indicator {
             h2 {
                 margin-top: 15px;

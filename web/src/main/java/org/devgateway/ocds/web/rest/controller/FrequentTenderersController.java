@@ -21,8 +21,11 @@ import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomProjectionOperation;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.Fields;
+import org.springframework.data.mongodb.core.aggregation.LiteralOperators;
+import org.springframework.data.mongodb.core.aggregation.SetOperators;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +39,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -68,43 +72,43 @@ public class FrequentTenderersController extends GenericOCDSController {
 
         Aggregation agg = newAggregation(
                 match(where("tender.tenderers.1").exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()
-                        ))),
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 new CustomProjectionOperation(project),
                 unwind("tendererId1"),
                 unwind("tendererId2"),
                 new CustomProjectionOperation(projectCmp),
                 match(where("cmp").is(1)), // keep only one pair, the one ordered tendererId1<tendererId2, drop the rest
                 group("tendererId1", "tendererId2").count().as("pairCount"),
-                match(where("pairCount").gt(1))
+                match(where("pairCount").gt(1)),
+                sort(Sort.Direction.DESC, "pairCount")
         );
 
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Counts the tenders/awards where the given supplier id is among the winners. "
-            + "This assumes there is only  one active award, which always seems to be the case, per tender. ")
+    @ApiOperation(value = "Counts awards awarded to a supplier that participated in a bidding process with a "
+            + "group of tenderers")
     @RequestMapping(value = "/api/activeAwardsCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     public List<Document> activeAwardsCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
-
+        Assert.notNull(filter.getBidderId(), "Bidder must not be null");
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
-                        ))),
-                unwind("awards"),
-                match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter.awardFiltering(),
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE
-                        ))),
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
+                project(
+                        MongoConstants.FieldNames.TENDER_TENDERERS_ID,
+                        MongoConstants.FieldNames.AWARDS_STATUS, MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID
+                ).and("awards").as("awards")
+                        .and(LiteralOperators.Literal.asLiteral(filter.getBidderId().toArray()))
+                        .as("filterTenderers"), unwind("awards"),
+                match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 unwind("awards.suppliers"),
-                group(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).count().as("cnt"),
-                project("cnt").and(Fields.UNDERSCORE_ID).as("supplierId")
-                        .andExclude(Fields.UNDERSCORE_ID)
+                project(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).and(
+                        SetOperators.arrayAsSet("filterTenderers").intersects("tenderers._id"))
+                        .as("commonToBoth"),
+                match(where("commonToBoth").size(filter.getBidderId().size())),
+                group().count().as("cnt")
         );
 
         return releaseAgg(agg);

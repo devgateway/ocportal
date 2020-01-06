@@ -550,7 +550,7 @@ public abstract class GenericOCDSController {
 
 
     protected Criteria getBidderIdCriteria(final DefaultFilterPagingRequest filter) {
-        return createFilterCriteria("bids.details.tenderers._id", filter.getBidderId(), filter);
+        return createFilterCriteria(MongoConstants.FieldNames.TENDER_TENDERERS_ID, filter.getBidderId(), filter);
     }
 
     /**
