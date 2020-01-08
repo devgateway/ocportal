@@ -2,6 +2,7 @@ package org.devgateway.ocds.web.convert;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.Address;
 import org.devgateway.ocds.persistence.mongo.Amount;
@@ -268,7 +269,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(classification::setId, purchaseItem::getPlanItem, PlanItem::getItem, Category::getCode
         );
         safeSet(classification::setDescription, purchaseItem::getPlanItem, PlanItem::getItem, Category::getLabel,
-                String::toUpperCase
+                WordUtils::capitalizeFully
         );
         return classification;
     }
