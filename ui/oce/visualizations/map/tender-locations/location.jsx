@@ -52,7 +52,8 @@ export class ChartTab extends Tab {
           translations={translations}
           data={this.state.chartData}
           requestNewData={(_, chartData) => this.setState({ chartData })}
-          style={{ width: "100%", height: "100%" }}
+          height={250}
+          style={{ width: "100%"}}
           layout={{
               autosize: true
             }}
