@@ -54,6 +54,9 @@ export class ChartTab extends Tab {
           requestNewData={(_, chartData) => this.setState({ chartData })}
           width={380}
           height={250}
+          layout={{
+              autosize: true
+            }}
           margin={this.constructor.getMargins()}
           legend="h"
         />
