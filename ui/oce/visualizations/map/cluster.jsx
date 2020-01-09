@@ -37,6 +37,7 @@ class Cluster extends LayerGroup {
     this.leafletElement = L.markerClusterGroup({
       showCoverageOnHover: false,
       singleMarkerMode: true,
+      maxClusterRadius: 10,
       iconCreateFunction: cluster => clusterIcon(cluster, this.props.maxAmount)
     });
   }
