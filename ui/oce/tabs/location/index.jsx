@@ -4,6 +4,7 @@ import { Set } from 'immutable';
 import Tab from '../index';
 import TenderLocations from '../../visualizations/map/tender-locations';
 import { debounce } from '../../tools.es6';
+import React from 'react';
 
 class LocationTab extends Tab {
   static getName(t) {
@@ -115,6 +116,6 @@ LocationTab.icon = 'planning';
 LocationTab.computeComparisonYears = null;
 LocationTab.LAYERS = [TenderLocations];
 LocationTab.CENTER = [14.5, 105];
-LocationTab.ZOOM = 8;
+LocationTab.ZOOM = 10;
 
 export default LocationTab;

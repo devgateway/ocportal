@@ -12,6 +12,7 @@ import ProcurementMethodChart from '../../../visualizations/charts/procurement-m
 import styles from './style.less';
 import ProjectCount from '../../charts/project-count';
 import AmountBudgeted from '../../charts/amount-budgeted';
+import React from 'react';
 
 const addTenderDeliveryLocationId = cacheFn(
   (filters, id) => filters.set('tenderLoc', id),
