@@ -7,8 +7,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.edit.feedback.EditFeedbackMessagePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
-import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
-import org.devgateway.toolkit.persistence.service.feedback.FeedbackMessageService;
+import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
+import org.devgateway.toolkit.persistence.service.feedback.ReplyableFeedbackMessageService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -18,15 +18,15 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath
-public class ListFeedbackMessagePage extends AbstractListPage<FeedbackMessage> {
+public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackMessage> {
 
     @SpringBean
-    private FeedbackMessageService alertService;
+    private ReplyableFeedbackMessageService repository;
 
     public ListFeedbackMessagePage(final PageParameters parameters) {
         super(parameters);
 
-        this.jpaService = alertService;
+        this.jpaService = repository;
         this.editPageClass = EditFeedbackMessagePage.class;
     }
 

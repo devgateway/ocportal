@@ -1,21 +1,13 @@
 package org.devgateway.toolkit.persistence.dao.feedback;
 
-import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author mpostelnicu
@@ -23,23 +15,16 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "url")})
-public class FeedbackMessage extends AbstractChildAuditableEntity<FeedbackMessage> {
+public class FeedbackMessage extends AbstractChildExpandableAuditEntity<ReplyableFeedbackMessage> {
 
     private String name;
 
     private String email;
 
-    private String url;
-
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String comment;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "parent_id")
-    @OrderColumn(name = "index")
-    private List<FeedbackMessage> replies = new ArrayList<>();
+    private boolean visible = true;
 
     public String getName() {
         return name;
@@ -65,19 +50,15 @@ public class FeedbackMessage extends AbstractChildAuditableEntity<FeedbackMessag
         this.comment = comment;
     }
 
-    public List<FeedbackMessage> getReplies() {
-        return replies;
+    public boolean getVisible() {
+        return visible;
     }
 
-    public void setReplies(List<FeedbackMessage> replies) {
-        this.replies = replies;
+    public boolean isVisible() {
+        return visible;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

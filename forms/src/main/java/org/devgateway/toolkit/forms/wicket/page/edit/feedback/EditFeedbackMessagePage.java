@@ -4,13 +4,15 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.FeedbackMessagePanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
-import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
-import org.devgateway.toolkit.persistence.service.feedback.FeedbackMessageService;
+import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
+import org.devgateway.toolkit.persistence.service.feedback.ReplyableFeedbackMessageService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -19,10 +21,10 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath
-public class EditFeedbackMessagePage extends AbstractEditPage<FeedbackMessage> {
+public class EditFeedbackMessagePage extends AbstractEditPage<ReplyableFeedbackMessage> {
 
     @SpringBean
-    private FeedbackMessageService feedbackMessageService;
+    private ReplyableFeedbackMessageService feedbackMessageService;
 
     public EditFeedbackMessagePage(final PageParameters parameters) {
         super(parameters);
@@ -42,6 +44,11 @@ public class EditFeedbackMessagePage extends AbstractEditPage<FeedbackMessage> {
         email.required().getField().add(RfcCompliantEmailAddressValidator.getInstance());
         TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comment");
         comment.required();
+
+        CheckBoxToggleBootstrapFormComponent visible = ComponentUtil.addCheckToggle(editForm, "visible");
+
+        FeedbackMessagePanel feedbackMessagePanel = new FeedbackMessagePanel("replies");
+        editForm.add(feedbackMessagePanel);
 
     }
 }
