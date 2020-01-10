@@ -113,7 +113,7 @@ class LocationWrapper extends translatable(Component) {
                     onClick={() => ReactDOM.findDOMNode(this.currentChart).querySelector('.modebar-btn:first-child').click()}
                   >
                     <img
-                      src="assets/icons/camerap-map.svg"
+                      src="assets/icons/camera-map.svg"
                       alt="Screenshot"
                     />
                   </a>
