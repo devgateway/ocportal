@@ -101,7 +101,7 @@ class LocationWrapper extends translatable(Component) {
                 <span className="chart-tools">
                   <a tabIndex={-1} role="button" onClick={() => this.doExcelExport()}>
                     <img
-                      src="assets/icons/export-very-black.svg"
+                      src="assets/icons/export-map.svg"
                       alt="Export"
                       width="16"
                       height="16"
@@ -113,7 +113,7 @@ class LocationWrapper extends translatable(Component) {
                     onClick={() => ReactDOM.findDOMNode(this.currentChart).querySelector('.modebar-btn:first-child').click()}
                   >
                     <img
-                      src="assets/icons/camera.svg"
+                      src="assets/icons/camerap-map.svg"
                       alt="Screenshot"
                     />
                   </a>
