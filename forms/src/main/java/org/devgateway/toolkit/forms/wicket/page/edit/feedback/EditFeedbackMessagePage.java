@@ -4,7 +4,6 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -34,21 +33,28 @@ public class EditFeedbackMessagePage extends AbstractEditPage<ReplyableFeedbackM
     }
 
     @Override
+    protected DeleteEditPageButton getDeleteEditPageButton() {
+        DeleteEditPageButton deleteEditPageButton = super.getDeleteEditPageButton();
+        deleteEditPageButton.setEnabled(false);
+        return deleteEditPageButton;
+    }
+
+    @Override
     protected void onInitialize() {
         super.onInitialize();
 
         TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
-        name.required();
+        name.required().setEnabled(false);
 
         TextFieldBootstrapFormComponent<String> email = ComponentUtil.addTextField(editForm, "email");
-        email.required().getField().add(RfcCompliantEmailAddressValidator.getInstance());
-        TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comment");
-        comment.required();
+        email.required().getField().add(RfcCompliantEmailAddressValidator.getInstance()).setEnabled(false);
 
-        CheckBoxToggleBootstrapFormComponent visible = ComponentUtil.addCheckToggle(editForm, "visible");
+        TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comment");
+        comment.required().setEnabled(false);
+
+        ComponentUtil.addCheckToggle(editForm, "visible");
 
         FeedbackMessagePanel feedbackMessagePanel = new FeedbackMessagePanel("replies");
         editForm.add(feedbackMessagePanel);
-
     }
 }

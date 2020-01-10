@@ -32,8 +32,13 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
 
     @Override
     protected void onInitialize() {
-        columns.add(new PropertyColumn<>(new Model<>("Email"), "email", "email"));
+        hasNewPage = false;
+        columns.add(new PropertyColumn<>(new Model<>("Page URL"), "url", "url"));
+        columns.add(new PropertyColumn<>(new Model<>("Visible"), "visible", "visible"));
         columns.add(new PropertyColumn<>(new Model<>("Name"), "name", "name"));
+        columns.add(new PropertyColumn<>(new Model<>("Date Created"), "createdDate", "createdDate.get"));
+        columns.add(new PropertyColumn<>(new Model<>("Date Modified"), "lastModifiedDate", "lastModifiedDate.get"));
+        columns.add(new PropertyColumn<>(new Model<>("Replies"), null, "replies.size"));
         super.onInitialize();
 
     }

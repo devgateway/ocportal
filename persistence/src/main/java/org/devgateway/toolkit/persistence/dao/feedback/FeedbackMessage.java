@@ -26,6 +26,8 @@ public class FeedbackMessage extends AbstractChildExpandableAuditEntity<Replyabl
 
     private boolean visible = true;
 
+    private boolean addedByPublic = false;
+
     public String getName() {
         return name;
     }
@@ -60,5 +62,17 @@ public class FeedbackMessage extends AbstractChildExpandableAuditEntity<Replyabl
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public boolean isAddedByPublic() {
+        return addedByPublic;
+    }
+
+    public boolean getAddedByPublic() {
+        return addedByPublic;
+    }
+
+    public void setAddedByPublic(boolean addedByPublic) {
+        this.addedByPublic = addedByPublic;
     }
 }
