@@ -11,6 +11,7 @@ class FeedbackMessages extends React.PureComponent {
       emailPattern: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
       email: '',
       name: '',
+      comment: '',
       emailValid: true,
       error: false
     };
@@ -46,6 +47,15 @@ class FeedbackMessages extends React.PureComponent {
     }
   }
 
+  submit() {
+    const {  email, name, comment } = this.state;
+    //const [purchaseReqId, tenderTitle] = this.props.route;
+
+    console.log(email);
+    console.log(name);
+
+  }
+
   render() {
     return(
     <div className="col-md-2">
@@ -55,7 +65,7 @@ class FeedbackMessages extends React.PureComponent {
           type="email"
           name="email"
           value={this.state.email}
-          placeholder="email address"
+          placeholder="Email address"
           onChange={this.handleChange.bind(this)}
         />
         <FormControl.Feedback/>
@@ -77,6 +87,29 @@ class FeedbackMessages extends React.PureComponent {
         />
         <FormControl.Feedback/>
       </FormGroup>
+
+      <FormGroup>
+        <ControlLabel>Comment</ControlLabel>
+        <FormControl
+          required
+          componentClass="textarea"
+          name="comment"
+          rows={5}
+          value={this.state.comment}
+          placeholder="Comment"
+          onChange={this.handleChange.bind(this)}
+        />
+        <FormControl.Feedback/>
+      </FormGroup>
+
+      <div className="row apply-button">
+        <div className="col-md-6">
+          <button className="btn btn-default" type="submit"
+                  onClick={this.submit.bind(this)}>Send Feedback
+          </button>
+        </div>
+      </div>
+
     </div>);
   }
 }
