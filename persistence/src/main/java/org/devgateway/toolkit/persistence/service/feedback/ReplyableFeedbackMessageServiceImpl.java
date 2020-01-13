@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.service.feedback;
 
-import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
 import org.devgateway.toolkit.persistence.repository.feedback.ReplyableFeedbackMessageRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -33,8 +32,16 @@ public class ReplyableFeedbackMessageServiceImpl extends BaseJpaServiceImpl<Repl
     }
 
     @Override
-    public List<FeedbackMessage> findByUrl(String url) {
+    public List<ReplyableFeedbackMessage> findByUrl(String url) {
         return repository.findByUrl(url);
     }
+
+    @Override
+    public List<ReplyableFeedbackMessage> findByUrlAndVisibleTrue(String url) {
+        List<ReplyableFeedbackMessage> byUrlAndVisibleTrue = repository.findByUrlAndVisibleTrue(url);
+        byUrlAndVisibleTrue.forEach(fm -> fm.getReplies().removeIf(f -> !f.getVisible()));
+        return byUrlAndVisibleTrue;
+    }
+
 }
 

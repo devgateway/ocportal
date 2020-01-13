@@ -44,13 +44,13 @@ public class EditFeedbackMessagePage extends AbstractEditPage<ReplyableFeedbackM
         super.onInitialize();
 
         TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
-        name.required().setEnabled(false);
+        name.required().setEnabled(true);
 
         TextFieldBootstrapFormComponent<String> email = ComponentUtil.addTextField(editForm, "email");
-        email.required().getField().add(RfcCompliantEmailAddressValidator.getInstance()).setEnabled(false);
+        email.required().getField().add(RfcCompliantEmailAddressValidator.getInstance()).setEnabled(true);
 
         TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comment");
-        comment.required().setEnabled(false);
+        comment.required().setEnabled(true);
 
         ComponentUtil.addCheckToggle(editForm, "visible");
 

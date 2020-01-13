@@ -10,7 +10,7 @@ import Notification from './Notification';
 import Award from './Award';
 import Contract from './Contract';
 import React from 'react';
-import FeedbackMessages from '../../../feedback/feedback';
+import FeedbackMessageList from '../../../feedback/feedbackList';
 
 class PurchaseReqView extends CRDPage {
   constructor(props) {
@@ -193,7 +193,7 @@ class PurchaseReqView extends CRDPage {
       }
 
       <div className="row">
-        <FeedbackMessages/>
+        <FeedbackMessageList/>
       </div>
     </div>);
   }
