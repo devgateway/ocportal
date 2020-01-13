@@ -79,7 +79,7 @@
     "rc-slider": "^7.0.3",
     "react": "^15.6.1",
     "react-addons-test-utils": "^15.1.0",
-    "react-bootstrap": "^0.30.6",
+    "react-bootstrap": "^0.32.4",
     "react-bootstrap-table": "^4.1.4",
     "react-dom": "^15.6.1",
     "react-ga": "^2.7.0",
