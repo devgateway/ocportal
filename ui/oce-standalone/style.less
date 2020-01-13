@@ -13,6 +13,7 @@
 @hover-blue: #3090bd;
 @color-regular-gray: #8d8d8d;
 @base-space: 20px;
+@extend: 100%;
 
 .text-white { color: #FFF; }
 
@@ -462,7 +463,10 @@ footer.main-footer {
     overflow: hidden;
 
     .leaflet-container {
-        height: 95vh;
+        bottom: @base-space / 4;
+        height: @extend !important;
+        position: absolute !important;
+        width: @extend;
     }
 }
 
