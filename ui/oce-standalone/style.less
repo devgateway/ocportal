@@ -26,6 +26,7 @@
     }
     @media screen and (max-width: 767px) {
         background-color: #ffffff;
+        margin-top:0;
     }
 }
 
@@ -71,6 +72,7 @@ header.branding {
         height: 130px;
         padding-top: 5px;
         position: relative;
+        top: 0;
     }
 }
 
@@ -461,6 +463,9 @@ footer.main-footer {
     margin-bottom: 66px;
     padding-right: 0;
     overflow: hidden;
+    @media screen and (max-width: 767px) {
+        height: @headerHeight + 60;
+    }
 
     .leaflet-container {
         bottom: @base-space / 4;
