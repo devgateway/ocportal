@@ -13,7 +13,9 @@
 @hover-blue: #3090bd;
 @color-regular-gray: #8d8d8d;
 @base-space: 20px;
+@extend: 100%;
 
+.text-white { color: #FFF; }
 
 .content {
     margin-top: @headerHeight * 2;
@@ -22,9 +24,9 @@
         background-color: #f9f9f9;
         margin-top: 175px;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         background-color: #ffffff;
-        margin-top: 300px;
+        margin-top: @base-space * 3;
     }
 }
 
@@ -41,9 +43,10 @@ header.branding {
     left: 0;
     height: @headerHeight;
     z-index: 1002;
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         display: block;
         height: 128px;
+        position: relative;
     }
 
     h1, small {
@@ -65,10 +68,11 @@ header.branding {
     top: @headerHeight;
     height: @headerHeight;
     z-index: 1001;
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         height: 130px;
         padding-top: 5px;
-        top: 120px;
+        position: relative;
+        top: 0;
     }
 }
 
@@ -372,7 +376,7 @@ footer.main-footer {
     bottom: 0;
     background: @footerColor;
     padding-top: 7px;
-    z-index: 1;
+    z-index: 1000;
     @media screen and (max-width: 767px) {
       height: 60px;
       position:relative;
@@ -461,12 +465,11 @@ footer.main-footer {
     overflow: hidden;
 
     .leaflet-container {
-        height: 95vh;
+        bottom: @base-space / 4;
+        height: @extend !important;
+        position: absolute !important;
+        width: @extend;
     }
-}
-
-.leaflet-control-zoom {
-    position: fixed;
 }
 
 .btn {

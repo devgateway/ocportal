@@ -13,7 +13,7 @@ class OCEMakueni extends OCApp {
   constructor(props) {
     super(props);
     this.registerTab(OverviewTab);
-    // this.registerTab(OCEDemoLocation);
+    this.registerTab(OCEDemoLocation);
     this.registerTab(CompetitivenessTab);
     this.registerTab(EfficiencyTab);
     //this.registerTab(EProcurementTab);

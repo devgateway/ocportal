@@ -124,7 +124,8 @@ Tab.propTypes = {
   requestNewComparisonData: React.PropTypes.func.isRequired,
   compareBy: React.PropTypes.string.isRequired,
   comparisonCriteriaValues: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-  width: React.PropTypes.number.isRequired
+  width: React.PropTypes.number.isRequired,
+  onUpdate: React.PropTypes.func
 };
 
 
