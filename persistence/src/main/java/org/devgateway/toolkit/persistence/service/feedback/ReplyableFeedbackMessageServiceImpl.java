@@ -18,6 +18,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ReplyableFeedbackMessageServiceImpl extends BaseJpaServiceImpl<ReplyableFeedbackMessage>
         implements ReplyableFeedbackMessageService {
+
     @Autowired
     private ReplyableFeedbackMessageRepository repository;
 
@@ -36,6 +37,7 @@ public class ReplyableFeedbackMessageServiceImpl extends BaseJpaServiceImpl<Repl
     public List<ReplyableFeedbackMessage> findByUrl(String url) {
         return repository.findByUrl(url);
     }
+
 
     @Override
     public List<ReplyableFeedbackMessage> findByUrlAndVisibleTrue(String url) {

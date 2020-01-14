@@ -12,6 +12,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.FeedbackMessagePanel;
 import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
 import org.devgateway.toolkit.persistence.service.feedback.ReplyableFeedbackMessageService;
+import org.devgateway.toolkit.web.rest.controller.alerts.AlertsEmailService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -24,6 +25,9 @@ public class EditFeedbackMessagePage extends AbstractEditPage<ReplyableFeedbackM
 
     @SpringBean
     private ReplyableFeedbackMessageService feedbackMessageService;
+
+    @SpringBean
+    private AlertsEmailService alertsEmailService;
 
     public EditFeedbackMessagePage(final PageParameters parameters) {
         super(parameters);
@@ -44,17 +48,22 @@ public class EditFeedbackMessagePage extends AbstractEditPage<ReplyableFeedbackM
         super.onInitialize();
 
         TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
-        name.required().setEnabled(true);
+        name.required().setEnabled(false);
 
         TextFieldBootstrapFormComponent<String> email = ComponentUtil.addTextField(editForm, "email");
-        email.required().getField().add(RfcCompliantEmailAddressValidator.getInstance()).setEnabled(true);
+        email.required().getField().add(RfcCompliantEmailAddressValidator.getInstance()).setEnabled(false);
 
         TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comment");
-        comment.required().setEnabled(true);
+        comment.required().setEnabled(false);
 
         ComponentUtil.addCheckToggle(editForm, "visible");
 
         FeedbackMessagePanel feedbackMessagePanel = new FeedbackMessagePanel("replies");
         editForm.add(feedbackMessagePanel);
+    }
+
+    @Override
+    protected void beforeSaveEntity(ReplyableFeedbackMessage saveable) {
+        alertsEmailService.sendFeedbackAlertsForReplyable(saveable);
     }
 }

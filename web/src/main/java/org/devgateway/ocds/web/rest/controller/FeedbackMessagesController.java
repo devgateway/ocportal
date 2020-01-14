@@ -6,6 +6,10 @@ import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.feedback.ReplyableFeedbackMessageService;
+import org.devgateway.toolkit.persistence.service.feedback.ReplyableFeedbackMessageServiceImpl;
+import org.devgateway.toolkit.web.rest.controller.alerts.AlertsEmailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,8 +34,14 @@ import java.util.Optional;
 @CacheConfig(cacheNames = "feedback")
 public class FeedbackMessagesController {
 
+    protected static final Logger logger = LoggerFactory.getLogger(ReplyableFeedbackMessageServiceImpl.class);
+
     @Autowired
     private ReplyableFeedbackMessageService feedbackMessageService;
+
+
+    @Autowired
+    private AlertsEmailService alertsEmailService;
 
     @Autowired
     private DepartmentService departmentService;
@@ -44,6 +54,7 @@ public class FeedbackMessagesController {
     public List<ReplyableFeedbackMessage> feedback(@RequestParam String page) {
         return feedbackMessageService.findByUrlAndVisibleTrue(page);
     }
+
 
     public static class FeedbackMessageSubmitWrapper implements Serializable {
 
@@ -122,6 +133,7 @@ public class FeedbackMessagesController {
             Optional<ReplyableFeedbackMessage> saveable = feedbackMessageService.findById(message.getReplyFor());
             if (saveable.isPresent()) {
                 saveable.get().getReplies().add(fm);
+                alertsEmailService.sendFeedbackAlertsForReplyable(saveable.get());
                 feedbackMessageService.save(saveable.get());
                 return ResponseEntity.ok().build();
             } else {

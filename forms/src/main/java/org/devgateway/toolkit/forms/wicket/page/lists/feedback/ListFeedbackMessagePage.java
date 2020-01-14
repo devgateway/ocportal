@@ -53,7 +53,7 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
             ReplyableFeedbackMessage entity = (ReplyableFeedbackMessage) this.getDefaultModelObject();
 
             BootstrapExternalLink viewLink = new BootstrapExternalLink("view",
-                    Model.of("ui/dev.html#!/" + entity.getUrl()), Buttons.Type.Warning
+                    Model.of("ui/index.html#!/" + entity.getUrl()), Buttons.Type.Warning
             ) {
             };
             viewLink.setLabel(new StringResourceModel("view", ListFeedbackMessagePage.this, null));
@@ -80,7 +80,7 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
                 "department", "department", new ListModel(departments), dataTable
         ));
         columns.add(new PropertyColumn<>(new Model<>("Visible"), "visible", "visible"));
-        columns.add(new PropertyColumn<>(new Model<>("Name"), "name", "name"));
+        columns.add(new PropertyColumn<>(new Model<>("Contributor Name"), "name", "name"));
         columns.add(new PropertyColumn<>(new Model<>("Date Created"), "createdDate", "createdDate.get"));
         columns.add(new PropertyColumn<>(new Model<>("Date Modified"), "lastModifiedDate", "lastModifiedDate.get"));
         columns.add(new PropertyColumn<>(new Model<>("Replies"), null, "replies.size"));
