@@ -110,9 +110,6 @@ class CatChartComparison extends Comparison{
             translations={translations}
             styling={styling}
             width={width / 2}
-            layout={{
-                autosize: true
-              }}
             {...rangeProp}
         />
         <div className="chart-toolbar">
