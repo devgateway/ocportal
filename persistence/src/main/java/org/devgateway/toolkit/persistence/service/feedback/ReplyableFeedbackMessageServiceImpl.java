@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.repository.feedback.ReplyableFeedbackM
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,5 +44,10 @@ public class ReplyableFeedbackMessageServiceImpl extends BaseJpaServiceImpl<Repl
         return byUrlAndVisibleTrue;
     }
 
+    @Override
+    @CacheEvict(allEntries = true, cacheNames = "feedback")
+    public <S extends ReplyableFeedbackMessage> S save(S entity) {
+        return super.save(entity);
+    }
 }
 

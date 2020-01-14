@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.feedback;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -8,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -24,6 +27,11 @@ import java.util.List;
 public class ReplyableFeedbackMessage extends FeedbackMessage {
 
     private String url;
+
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    @JsonIgnore
+    private Department department;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -45,5 +53,13 @@ public class ReplyableFeedbackMessage extends FeedbackMessage {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

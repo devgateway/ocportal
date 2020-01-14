@@ -1,6 +1,11 @@
 import React from 'react';
 import { API_ROOT } from '../state/oce-state';
 import FeedbackMessageForm from './feedback';
+import axios from 'axios';
+
+export const getFeedbackUrlPart  = () =>  {
+  return location.hash.substr(3);
+};
 
 class FeedbackMessageList extends React.PureComponent {
 
@@ -8,15 +13,28 @@ class FeedbackMessageList extends React.PureComponent {
     super(props);
 
     this.state = {
-      data: null,
+      data: null
     };
 
   }
 
-  componentDidMount() {
-    fetch( `${API_ROOT}` + '/feedback?page=tender/t/33921',)
+  feedbackPoster(data) {
+    let postData = {...data, department: this.props.department._id};
+    axios.post(`${API_ROOT}` + '/postFeedback', postData)
+      .then(res => {
+        this.fetchData();
+      });
+
+  }
+
+  fetchData() {
+    fetch( `${API_ROOT}` + '/feedback?page='+ getFeedbackUrlPart())
       .then(response => response.json())
       .then(data => this.setState({ data }));
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   render() {
@@ -29,10 +47,10 @@ class FeedbackMessageList extends React.PureComponent {
       {data && data.map(d =>
         <div className="row" key={d.id}>
         <li>
-          <h4><span>{d.name}</span>&nbsp;<span className="badge">{d.replies.length}</span><br/></h4>
+          <h4><span>{d.name}</span>&nbsp;<span className="badge">{d.replies ? d.replies.length:0}</span><br/></h4>
           <span>{d.comment}</span>
           <ul>
-          {d.replies.length>0 && d.replies.map(dd =>
+          {d.replies && d.replies.length>0 && d.replies.map(dd =>
             <li key={dd.id}>
               <h4><span>{dd.name}</span></h4>
               <span>{dd.comment}</span>
@@ -40,11 +58,12 @@ class FeedbackMessageList extends React.PureComponent {
           )}
           </ul>
         </li>
-        <FeedbackMessageForm replyOpen={false} replyFor={d.id}/>
+        <FeedbackMessageForm replyOpen={false} replyFor={d.id} feedbackPoster=
+          {this.feedbackPoster.bind(this)}/>
         </div>
       )}
     </ul>
-          <FeedbackMessageForm replyOpen={true}/>
+          <FeedbackMessageForm replyOpen={true} feedbackPoster={this.feedbackPoster.bind(this)}/>
         </div>
       </div>
     </div>);

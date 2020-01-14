@@ -27,6 +27,5 @@ public class FeedbackMessageServiceImpl extends BaseJpaServiceImpl<FeedbackMessa
     public FeedbackMessage newInstance() {
         return new FeedbackMessage();
     }
-
 }
 

@@ -1,6 +1,6 @@
 import { ControlLabel, Form, FormControl, FormGroup, HelpBlock, InputGroup } from 'react-bootstrap';
 import React from 'react';
-
+import { getFeedbackUrlPart } from './feedbackList';
 
 class FeedbackMessageForm extends React.PureComponent {
 
@@ -19,13 +19,14 @@ class FeedbackMessageForm extends React.PureComponent {
     };
   }
 
-  validateName() {
-    if (this.state.name === '') {
+  validateTxt(stateField) {
+    if (stateField === '') {
       return 'error';
     } else {
       return 'success';
     }
   }
+
 
   validateEmail() {
     if (this.state.emailValid === true) {
@@ -62,7 +63,7 @@ class FeedbackMessageForm extends React.PureComponent {
     let error = false;
     //const [purchaseReqId, tenderTitle] = this.props.route;
 
-    if (!email.match(emailPattern)) {
+    if (!email.match(emailPattern) || !name) {
       error = true;
 
       this.setState({
@@ -70,14 +71,24 @@ class FeedbackMessageForm extends React.PureComponent {
       });
     }
 
+
     if (error) {
       this.setState({ error });
       return 0;
     } else {
-      console.log(email);
-      console.log(name);
-      console.log(replyFor);
-      console.log(location.hash.substr(3));
+      this.setState({
+        replyOpen: false,
+        email: '',
+        name: '',
+        comment: '',
+      });
+      this.props.feedbackPoster({
+        email: email,
+        name: name,
+        url: getFeedbackUrlPart(),
+        comment: comment,
+        replyFor: replyFor
+      });
     }
   }
 
@@ -114,7 +125,7 @@ class FeedbackMessageForm extends React.PureComponent {
           }
         </FormGroup>
 
-        <FormGroup validationState={this.validateName()}>
+        <FormGroup validationState={this.validateTxt(this.state.name)}>
           <ControlLabel>Name</ControlLabel>
           <FormControl
             name="name"
@@ -123,9 +134,12 @@ class FeedbackMessageForm extends React.PureComponent {
             onChange={this.handleChange.bind(this)}
           />
           <FormControl.Feedback/>
+          {
+            this.state.name ? null : <HelpBlock>Please add a name</HelpBlock>
+          }
         </FormGroup>
 
-        <FormGroup>
+        <FormGroup validationState={this.validateTxt(this.state.comment)}>
           <ControlLabel>Comment</ControlLabel>
           <FormControl
             required
@@ -137,6 +151,9 @@ class FeedbackMessageForm extends React.PureComponent {
             onChange={this.handleChange.bind(this)}
           />
           <FormControl.Feedback/>
+          {
+            this.state.comment ? null : <HelpBlock>Please add a comment</HelpBlock>
+          }
         </FormGroup>
 
         <div className="row apply-button">
