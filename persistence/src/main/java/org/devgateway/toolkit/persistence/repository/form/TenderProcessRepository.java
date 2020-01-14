@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -32,5 +33,8 @@ public interface TenderProcessRepository extends AbstractMakueniEntityRepository
     @Override
     @Query("select c from  #{#entityName} c where c.project.procurementPlan.fiscalYear = :fiscalYear")
     List<TenderProcess> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
+
+    @Query("select p from TenderProcess p")
+    Stream<TenderProcess> findAllStream();
 }
 

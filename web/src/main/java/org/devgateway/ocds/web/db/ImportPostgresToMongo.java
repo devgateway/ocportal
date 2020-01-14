@@ -72,9 +72,7 @@ public class ImportPostgresToMongo {
         mongoTemplate.dropCollection(ProcurementPlan.class);
         gridFsOperations.delete(new Query());
 
-        final List<ProcurementPlan> procurementPlans = filterNotExportable(procurementPlanService.findAll());
-        // check which forms are exportable
-        procurementPlans.stream().forEach(pp -> {
+        procurementPlanService.findAllStream().filter(Statusable::isExportable).forEach(pp -> {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
 
             pp.getProjects().stream().forEach(project -> {
@@ -115,9 +113,9 @@ public class ImportPostgresToMongo {
             });
 
             self.storeMakueniFormFiles(pp.getFormDocs());
+            procurementPlanMongoRepository.save(pp);
+            logger.info("Procurement Plan " + pp.getId() + " " + pp.getLabel() + " saved to MongoDB.");
         });
-
-        procurementPlanMongoRepository.saveAll(procurementPlans);
 
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("status", Sort.Direction.ASC));

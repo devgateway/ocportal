@@ -57,14 +57,15 @@ public class PercentageAmountAwardedController extends GenericOCDSController {
                 getNotBidTypeIdFilterCriteria(filter),
                 getNotProcuringEntityIdCriteria(filter),
                 getProcurementMethodCriteria(filter),
-                getByTenderDeliveryLocationIdentifier(filter),
+                getByTenderLocationIdentifier(filter),
                 getByTenderAmountIntervalCriteria(filter),
                 getByAwardAmountIntervalCriteria(filter),
                 getElectronicSubmissionCriteria(filter),
                 getFlaggedCriteria(filter),
                 getFlagTypeFilterCriteria(filter),
                 getYearFilterCriteria(filter, dateProperty),
-                getAwardStatusFilterCriteria(filter));
+                getAwardStatusFilterCriteria(filter)
+        );
     }
 
     @ApiOperation("Calculate percentage of awards awarded to a list of suppliers vs total awards. Filters by all"

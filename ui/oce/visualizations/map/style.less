@@ -1,10 +1,51 @@
 @headerHeight: 48px;
 @windowHeight: 300px;
 @borderRadius: 12px;
+@primary-green: #29722d;
+
+.content.map-content{
+  height: @windowHeight * 2.5;
+  margin-top: 0;
+  margin-bottom: -95px;
+  position: relative;
+  @media screen and (max-width: 767px) {
+    height: @windowHeight + 50 !important;
+    margin-left: 2%;
+    width: 96%;
+  }
+
+
+  .leaflet-control{
+    .btn{
+      background-color: #f9f9f9;
+      border: 2px solid #f9f9f9;
+      outline: none;
+      &.btn-primary{
+        background-color: @primary-green;
+        border: 2px solid @primary-green;
+        border-color: @primary-green;
+      }
+    }
+  }
+
+  .leaflet-bar{
+    a{
+      color: #000000;
+    }
+  }
+  .leaflet-control-attribution{
+    a{
+      color: #000000;
+    }
+  }
+}
 
 .leaflet-popup-content{
   width: 550px!important;
   height: @windowHeight;
+  @media screen and (max-width: 600px) {
+    width: 300px !important;
+  }
 }
 
 @keyframes fade-in {
@@ -15,13 +56,16 @@
 .tender-locations-popup{
   font-size: 9pt;
   .map-chart{
+    .chart-container{
+      padding-top: 10px;
+    }
     .main-svg{
       animation: fade-in 1s;
       background: transparent!important;
     }
   }
   header{
-    background: #ca3d3f;
+    background: @primary-green;
     margin-top: -14px;
     margin-left: -20px;
     margin-right: -20px;
@@ -30,11 +74,12 @@
     padding: 12px;
     color: white;
     font-size: 12pt;
-    font-weight: bolder;
+    font-weight:600;
     height: @headerHeight;
   }
 
   a.leaflet-popup-close-button{
+    color: #ffffff;
     top: .75em;
     right: 15px;
   }
@@ -57,7 +102,7 @@
       }
       &.active{
         background: #0f0f0f;
-        border-right-color: #ca3d3f;
+        border-right-color: @primary-green;
         a{
           color: #d4d4d4;
         }
