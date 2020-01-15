@@ -15,7 +15,6 @@ class FeedbackMessageList extends React.PureComponent {
     this.state = {
       data: null
     };
-
   }
 
   feedbackPoster(data) {
@@ -23,8 +22,9 @@ class FeedbackMessageList extends React.PureComponent {
     axios.post(`${API_ROOT}` + '/postFeedback', postData)
       .then(res => {
         this.fetchData();
-      });
-
+      }).catch(error => {
+      this.fetchData();
+    });
   }
 
   fetchData() {

@@ -3,7 +3,9 @@ package org.devgateway.toolkit.web.rest.controller.alerts;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
+import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.web.WebSecurityUtil;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class AlertsEmailService {
     @Autowired
     private HttpServletRequest request;
 
+    @Autowired
+    private AdminSettingsRepository adminSettingsRepository;
+
     @Transactional
     private void sendFeedbackAlertEmails(ReplyableFeedbackMessage parent, FeedbackMessage message) {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -71,10 +76,12 @@ public class AlertsEmailService {
 
     @Transactional
     public void sendFeedbackAlertsForReplyable(ReplyableFeedbackMessage replyableFeedbackMessage) {
+        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
+            return;
+        }
         replyableFeedbackMessage.getReplies().stream().filter(AbstractPersistable::isNew).forEach(
                 m -> sendFeedbackAlertEmails(replyableFeedbackMessage, m));
     }
-
 
     /**
      * Send a secret url that allows user to verify their email address.
