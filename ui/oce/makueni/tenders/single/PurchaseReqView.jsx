@@ -193,6 +193,7 @@ class PurchaseReqView extends CRDPage {
       }
 
       <div className="row">
+        <p/>
         <FeedbackMessageList department={this.state.department}/>
       </div>
     </div>);
