@@ -3,14 +3,14 @@ import cn from 'classnames';
 import { Set } from 'immutable';
 import Tab from '../index';
 import TenderLocations from '../../visualizations/map/tender-locations';
-import style from './style.less';
 import { debounce } from '../../tools.es6';
+import React from 'react';
 
 class LocationTab extends Tab {
   static getName(t) {
     return t('tabs:location:title');
   }
-  
+
   static computeYears(data) {
     if (!data) return Set();
     return this.LAYERS.reduce((years, visualization, index) =>
@@ -19,7 +19,7 @@ class LocationTab extends Tab {
           years
       , Set());
   }
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,7 @@ class LocationTab extends Tab {
       }
     };
   }
-  
+
   maybeGetSwitcher() {
     let { LAYERS } = this.constructor;
     let { switcherPos } = this.state;
@@ -55,39 +55,40 @@ class LocationTab extends Tab {
       </div>;
     }
   }
-  
+
   componentDidMount() {
     super.componentDidMount();
     const zoom = document.querySelector('.leaflet-control-zoom');
     this.recalcHeight();
     this.windowResizeListener = debounce(this.recalcHeight.bind(this));
     window.addEventListener('resize', this.windowResizeListener);
-    
+
     this.setState({
       switcherPos: {
-        top: zoom.offsetTop,
-        left: zoom.offsetLeft + zoom.offsetWidth + 10
+         // top: zoom.offsetTop,
+         // left: zoom.offsetLeft + zoom.offsetWidth + 10
       }
     });
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.windowResizeListener);
   }
-  
+
   getHeight() {
     const TOP_OFFSET = 64;
     const BOTTOM_OFFSET = 66;
     return window.innerHeight - TOP_OFFSET - BOTTOM_OFFSET;
   }
-  
+
   recalcHeight() {
     ReactDOM.findDOMNode(this.refs.the_layer).style.height = this.getHeight() + 'px';
   }
-  
+
   render() {
     let { currentLayer } = this.state;
-    let { data, requestNewData, translations, filters, years, styling } = this.props;
+    let { data, requestNewData, translations, filters, years, styling, onUpdate} = this.props;
+
     const { LAYERS, CENTER, ZOOM } = this.constructor;
     let Map = LAYERS[currentLayer];
     return (
@@ -99,6 +100,7 @@ class LocationTab extends Tab {
           requestNewData={(_, data) => requestNewData([currentLayer], data)}
           translations={translations}
           filters={filters}
+          onUpdate={onUpdate}
           years={years}
           styling={styling}
           center={CENTER}
@@ -114,6 +116,6 @@ LocationTab.icon = 'planning';
 LocationTab.computeComparisonYears = null;
 LocationTab.LAYERS = [TenderLocations];
 LocationTab.CENTER = [14.5, 105];
-LocationTab.ZOOM = 5;
+LocationTab.ZOOM = 10;
 
 export default LocationTab;

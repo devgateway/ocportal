@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Stream;
+
 /**
  * @author idobre
  * @since 2019-04-02
@@ -24,4 +26,7 @@ public interface ProcurementPlanRepository extends AbstractMakueniEntityReposito
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
     ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
+
+    @Query("select p from ProcurementPlan p")
+    Stream<ProcurementPlan> findAllStream();
 }

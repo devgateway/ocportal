@@ -34,6 +34,9 @@
            diskExpiryThreadIntervalSeconds="120"
     />
 
+    <cache name="locationTypesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
+    />
+
     <cache name="fiscalYearsJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
            overflowToDisk="true"
            maxElementsOnDisk="10000000"

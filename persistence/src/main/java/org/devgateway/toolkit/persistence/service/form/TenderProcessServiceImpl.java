@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author idobre
@@ -52,5 +53,9 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
         return tenderProcessRepository.findByProjectProcurementPlan(procurementPlan);
     }
 
+    @Override
+    public Stream<TenderProcess> findAllStream() {
+        return tenderProcessRepository.findAllStream();
+    }
 }
 
