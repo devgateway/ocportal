@@ -1,12 +1,7 @@
-import Plotly from "plotly.js/lib/core";
 import backendYearFilterable from "../../backend-year-filterable";
 import Chart from './index';
 import { pluckImm } from '../../tools';
-
-Plotly.register([
-  require('plotly.js/lib/pie')
-]);
-
+import Plotly from 'plotly.js-basic-dist'
 
 class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
 
