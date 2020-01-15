@@ -47,7 +47,7 @@ class Chart extends Visualization {
 
   componentDidMount() {
     super.componentDidMount();
-    Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout());
+    Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout(), {responsive: true});
   }
 
   componentWillUnmount() {
