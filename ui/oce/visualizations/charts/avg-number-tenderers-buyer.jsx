@@ -1,27 +1,11 @@
-import CatChart from "./cat-chart";
+import PieChart from './pie-chart';
 
-class AvgTenderersByBuyer extends CatChart{
+class AvgTenderersByBuyer extends PieChart {
   static getName(t){return t('charts:avgTenderersByBuyer:title')}
-
-  getLayout(){
-    return {
-      xaxis: {
-        title: this.t('charts:avgTenderersByBuyer:xAxisTitle'),
-        type: "category",
-        tickangle: 15,
-        automargin: true,
-        tickfont: {"size": 9},
-      },
-      yaxis: {
-        title: this.t('charts:avgTenderersByBuyer:yAxisTitle'),
-        tickprefix: "   "
-      }
-    }
-  }
 }
 
 AvgTenderersByBuyer.endpoint = 'averageNumberOfTenderersPerBuyer';
-AvgTenderersByBuyer.CAT_NAME_FIELD = "_id";
-AvgTenderersByBuyer.CAT_VALUE_FIELD = "numberOfTenderers";
+AvgTenderersByBuyer.LABEL_FIELD = '_id';
+AvgTenderersByBuyer.VALUE_FIELD = 'numberOfTenderers';
 
 export default AvgTenderersByBuyer;
