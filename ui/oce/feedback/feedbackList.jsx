@@ -15,7 +15,6 @@ class FeedbackMessageList extends React.PureComponent {
     this.state = {
       data: null
     };
-
   }
 
   feedbackPoster(data) {
@@ -23,8 +22,9 @@ class FeedbackMessageList extends React.PureComponent {
     axios.post(`${API_ROOT}` + '/postFeedback', postData)
       .then(res => {
         this.fetchData();
-      });
-
+      }).catch(error => {
+      this.fetchData();
+    });
   }
 
   fetchData() {
@@ -41,7 +41,7 @@ class FeedbackMessageList extends React.PureComponent {
     const { data } = this.state;
     return(<div className="col-md-offset-1 col-md-10 row">
       <div className="panel panel-default">
-        <div className="panel-heading"><h4>Feedback</h4></div>
+        <div className="panel-heading"><h4>Questions or Feedback</h4></div>
         <div className="panel-body">
       <ul>
       {data && data.map(d =>

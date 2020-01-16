@@ -1,8 +1,8 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import FeedbackPage from '../../FeedbackPage';
 import NoDataMessage from './NoData';
+import React from 'react';
 
-class Contract extends FeedbackPage {
+class Contract extends React.Component {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -110,8 +110,6 @@ class Contract extends FeedbackPage {
           </div>
           : null
       }
-
-      {this.getFeedbackMessage()}
     </div>);
   }
 }

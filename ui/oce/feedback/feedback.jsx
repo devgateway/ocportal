@@ -1,13 +1,15 @@
 import { ControlLabel, Form, FormControl, FormGroup, HelpBlock, InputGroup } from 'react-bootstrap';
 import React from 'react';
 import { getFeedbackUrlPart } from './feedbackList';
+import ReCAPTCHA from 'react-google-recaptcha';
+
 
 class FeedbackMessageForm extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
     this.state = {
+      changeNeverFired: true,
       replyOpen: this.props.replyOpen,
       emailPattern: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
       email: '',
@@ -15,12 +17,14 @@ class FeedbackMessageForm extends React.PureComponent {
       comment: '',
       replyFor: this.props.replyFor,
       emailValid: true,
-      error: false
+      error: false,
+      recaptchaResponse: '',
+      sendFeedbackDisabled: true
     };
   }
 
   validateTxt(stateField) {
-    if (stateField === '') {
+    if (!this.state.changeNeverFired && stateField === '') {
       return 'error';
     } else {
       return 'success';
@@ -48,18 +52,19 @@ class FeedbackMessageForm extends React.PureComponent {
 
     this.setState({
       [name]: value,
-      error: false
+      error: false,
+      changeNeverFired: false
     });
 
     if (name === 'email') {
       this.setState({
-        emailValid: this.state.email.match(this.state.emailPattern)
+        emailValid: value && value.match(this.state.emailPattern)
       });
     }
   }
 
   submit() {
-    const { email, emailPattern, name, comment, replyFor } = this.state;
+    const { email, emailPattern, name, comment, replyFor, recaptchaResponse } = this.state;
     let error = false;
     //const [purchaseReqId, tenderTitle] = this.props.route;
 
@@ -81,13 +86,15 @@ class FeedbackMessageForm extends React.PureComponent {
         email: '',
         name: '',
         comment: '',
+        sendFeedbackDisabled: true,
       });
       this.props.feedbackPoster({
         email: email,
         name: name,
         url: getFeedbackUrlPart(),
         comment: comment,
-        replyFor: replyFor
+        replyFor: replyFor,
+        recaptchaResponse: recaptchaResponse
       });
     }
   }
@@ -102,7 +109,22 @@ class FeedbackMessageForm extends React.PureComponent {
     });
   }
 
+  onChange(value) {
+    this.setState({
+      sendFeedbackDisabled: false,
+      recaptchaResponse: value
+    });
+  }
+
+  disableFeedbackButton() {
+    this.setState({
+      sendFeedbackDisabled: true,
+    });
+  }
+
+
   renderForm() {
+
     return (
       <div className="col-md-6">
         <FormGroup validationState={this.validateEmail()}>
@@ -112,6 +134,7 @@ class FeedbackMessageForm extends React.PureComponent {
             <FormControl
               type="email"
               name="email"
+              maxLength={255}
               value={this.state.email}
               placeholder="Email address"
               onChange={this.handleChange.bind(this)}
@@ -129,13 +152,15 @@ class FeedbackMessageForm extends React.PureComponent {
           <ControlLabel>Name</ControlLabel>
           <FormControl
             name="name"
+            maxLength={255}
             value={this.state.name}
             placeholder="Name"
             onChange={this.handleChange.bind(this)}
           />
           <FormControl.Feedback/>
           {
-            this.state.name ? null : <HelpBlock>Please add a name</HelpBlock>
+            this.state.changeNeverFired || this.state.name ? null :
+              <HelpBlock>Please add a name</HelpBlock>
           }
         </FormGroup>
 
@@ -145,6 +170,7 @@ class FeedbackMessageForm extends React.PureComponent {
             required
             componentClass="textarea"
             name="comment"
+            maxLength={10000}
             rows={5}
             value={this.state.comment}
             placeholder="Comment"
@@ -152,13 +178,20 @@ class FeedbackMessageForm extends React.PureComponent {
           />
           <FormControl.Feedback/>
           {
-            this.state.comment ? null : <HelpBlock>Please add a comment</HelpBlock>
+            this.state.changeNeverFired || this.state.comment ? null :
+              <HelpBlock>Please add a comment</HelpBlock>
           }
         </FormGroup>
-
+        <ReCAPTCHA
+          ref="recaptcha"
+          sitekey="6LfRjM8UAAAAAABlMlrHAsC5Sgm0YjzlfRmppcVp"
+          onChange={this.onChange.bind(this)}
+          onExpired={this.disableFeedbackButton.bind(this)}
+        />
         <div className="row apply-button">
           <div className="col-md-6">
             <button className="btn btn-default" type="submit"
+                    disabled={this.state.sendFeedbackDisabled}
                     onClick={this.submit.bind(this)}>Send Feedback
             </button>
           </div>

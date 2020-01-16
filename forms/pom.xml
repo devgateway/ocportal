@@ -34,7 +34,7 @@
         <wicket.bootstrap.version>2.0.11</wicket.bootstrap.version>
         <zt.zip.version>1.13</zt.zip.version>
         <wicket.webjars.version>2.0.16</wicket.webjars.version>
-        <closure.compiler.version>v20190528</closure.compiler.version>
+        <closure.compiler.version>v20191111</closure.compiler.version>
         <cglib.version>3.1</cglib.version>
         <yuicompressor.version>2.4.8</yuicompressor.version>
         <javamelody.version>1.80.0</javamelody.version>

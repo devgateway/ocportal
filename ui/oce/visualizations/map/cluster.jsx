@@ -21,7 +21,7 @@ function clusterIcon(cluster, maxAmount){
   const shadow = 1 != cluster.getChildCount() ? `box-shadow: 0 0 5px 5px rgb(255, ${green}, 0)` : "";
   return L.divIcon({
     html: `
-      <div style="background-color: rgba(255, ${green}, 0, .8);${shadow}">
+      <div style="background-color: rgba(255, 128, 0, .8);${shadow}">
         <span>
           ${toK(count)}
         </span>
@@ -37,6 +37,7 @@ class Cluster extends LayerGroup {
     this.leafletElement = L.markerClusterGroup({
       showCoverageOnHover: false,
       singleMarkerMode: true,
+      maxClusterRadius: 10,
       iconCreateFunction: cluster => clusterIcon(cluster, this.props.maxAmount)
     });
   }

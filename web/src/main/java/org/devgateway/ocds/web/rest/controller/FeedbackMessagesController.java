@@ -1,6 +1,7 @@
 package org.devgateway.ocds.web.rest.controller;
 
 import io.swagger.annotations.ApiOperation;
+import org.devgateway.ocds.web.spring.CaptchaValidator;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
@@ -39,6 +40,8 @@ public class FeedbackMessagesController {
     @Autowired
     private ReplyableFeedbackMessageService feedbackMessageService;
 
+    @Autowired
+    private CaptchaValidator captchaValidator;
 
     @Autowired
     private AlertsEmailService alertsEmailService;
@@ -64,6 +67,7 @@ public class FeedbackMessagesController {
         private String url;
         private Long replyFor;
         private Long department;
+        private String recaptchaResponse;
 
         public String getName() {
             return name;
@@ -112,12 +116,26 @@ public class FeedbackMessagesController {
         public void setDepartment(Long department) {
             this.department = department;
         }
+
+        public String getRecaptchaResponse() {
+            return recaptchaResponse;
+        }
+
+        public void setRecaptchaResponse(String recaptchaResponse) {
+            this.recaptchaResponse = recaptchaResponse;
+        }
     }
 
     @PostMapping(value = "/api/postFeedback",
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> postFeedback(@RequestBody FeedbackMessageSubmitWrapper message) {
+
         FeedbackMessage fm;
+
+        if (!captchaValidator.validateCaptcha(message.getRecaptchaResponse())) {
+            return ResponseEntity.badRequest().build();
+        }
+
         if (message.getReplyFor() != null) {
             fm = new FeedbackMessage();
         } else {

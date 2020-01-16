@@ -31,6 +31,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.facet;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
@@ -51,7 +52,9 @@ public class FundingByLocationController extends GenericOCDSController {
     public static final class Keys {
         public static final String ITEMS_DELIVERY_LOCATION = "deliveryLocation";
         public static final String TOTAL_TENDERS_AMOUNT = "totalTendersAmount";
+        public static final String TOTAL_PROJECTS_AMOUNT = "totalProjectsAmount";
         public static final String TENDERS_COUNT = "tendersCount";
+        public static final String PROJECTS_COUNT = "projectsCount";
         public static final String TOTAL_TENDERS_WITH_START_DATE_AND_LOCATION = "totalTendersWithStartDateAndLocation";
         public static final String TOTAL_TENDERS_WITH_START_DATE = "totalTendersWithStartDate";
         public static final String PERCENT_TENDERS_WITH_START_DATE_AND_LOCATION =
@@ -71,12 +74,13 @@ public class FundingByLocationController extends GenericOCDSController {
         DBObject project = new BasicDBObject();
         project.put("tender.items.deliveryLocation", 1);
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
-        addYearlyMonthlyProjection(filter, project, ref(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE));
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
 
         Aggregation agg = newAggregation(
-                match(where("tender").exists(true).and(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
+                match(where("tender").exists(true).and(getTenderDateField()).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(
+                                filter, getTenderDateField()
+                        ))),
                 new CustomProjectionOperation(project), unwind("$tender.items"),
                 unwind("$tender.items.deliveryLocation"),
                 project(getYearlyMonthlyGroupingFields(filter)).and(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
@@ -86,7 +90,66 @@ public class FundingByLocationController extends GenericOCDSController {
                 group(getYearlyMonthlyGroupingFields(filter, Keys.ITEMS_DELIVERY_LOCATION))
                         .sum("tenderAmount").as(Keys.TOTAL_TENDERS_AMOUNT).count().as(Keys.TENDERS_COUNT),
                 getSortByYearMonth(filter)
-        // ,skip(filter.getSkip()), limit(filter.getPageSize())
+                // ,skip(filter.getSkip()), limit(filter.getPageSize())
+        );
+
+        return releaseAgg(agg);
+    }
+
+    @ApiOperation(value = "Tenders by tender location at the tender level. The location can be at the ward or at "
+            + "the subcounty levels. This location is attached directly to tender, unlike the OCDS extension, which "
+            + "ties it to the items.")
+    @RequestMapping(value = "/api/fundingByTenderLocation", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> fundingByTenderLocation(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+
+        DBObject project = new BasicDBObject();
+        project.put(MongoConstants.FieldNames.TENDER_LOCATIONS, 1);
+        project.put(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID, 1);
+        project.put(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT, 1);
+        project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
+
+        Aggregation agg = newAggregation(
+                match(where("tender").exists(true)
+                        .and(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID).exists(true)
+                        .and(getTenderDateField()).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(
+                                filter,
+                                getTenderDateField()
+                        ))), unwind(ref(MongoConstants.FieldNames.TENDER_LOCATIONS)),
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField())),
+                new CustomProjectionOperation(project),
+                facet(
+                        project().and(
+                                MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
+                                .as("tenderAmount")
+                                .and(MongoConstants.FieldNames.TENDER_LOCATIONS).as("location"),
+                        match(where("location.geometry.coordinates.0").exists(true)),
+                        group("location")
+                                .sum("tenderAmount").as(Keys.TOTAL_TENDERS_AMOUNT).count().as(Keys.TENDERS_COUNT)
+                ).as("tenderFacet").and(
+                        project().and(
+                                MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT)
+                                .as("projectAmount").and(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID)
+                                .as("projectID")
+                                .and(MongoConstants.FieldNames.TENDER_LOCATIONS).as("location"),
+                        match(where("location.geometry.coordinates.0").exists(true).and("projectID").exists(true)),
+                        group("location", "projectID").first("projectAmount")
+                                .as(Keys.TOTAL_PROJECTS_AMOUNT),
+                        group("location").sum(Keys.TOTAL_PROJECTS_AMOUNT).as(Keys.TOTAL_PROJECTS_AMOUNT)
+                                .count().as(Keys.PROJECTS_COUNT)
+
+                ).as("projectFacet"),
+                project().and("tenderFacet").concatArrays("projectFacet").as("res"),
+                unwind("res"),
+                group("res._id")
+                        .first("res.totalTendersAmount").as(Keys.TOTAL_TENDERS_AMOUNT)
+                        .first("res.tendersCount").as(Keys.TENDERS_COUNT)
+                        .last("res.totalProjectsAmount").as(Keys.TOTAL_PROJECTS_AMOUNT)
+                        .last("res.projectsCount").as(Keys.PROJECTS_COUNT)
+
         );
 
         return releaseAgg(agg);
@@ -96,8 +159,8 @@ public class FundingByLocationController extends GenericOCDSController {
     @ApiOperation("Calculates percentage of releases with tender with at least one specified delivery location,"
             + " that is the array tender.items.deliveryLocation has to have items."
             + "Filters out stub tenders, therefore tender.tenderPeriod.startDate has to exist.")
-    @RequestMapping(value = "/api/qualityFundingByTenderDeliveryLocation", method = { RequestMethod.POST,
-            RequestMethod.GET }, produces = "application/json")
+    @RequestMapping(value = "/api/qualityFundingByTenderDeliveryLocation", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
     public List<Document> qualityFundingByTenderDeliveryLocation(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
@@ -111,7 +174,7 @@ public class FundingByLocationController extends GenericOCDSController {
 
         DBObject project1 = new BasicDBObject();
         project1.put(Fields.UNDERSCORE_ID, 0);
-        project1.put(Keys.TOTAL_TENDERS_WITH_START_DATE, 1);
+        project1.put(getTenderDateField(), 1);
         project1.put(Keys.TOTAL_TENDERS_WITH_START_DATE_AND_LOCATION, 1);
         project1.put(Keys.PERCENT_TENDERS_WITH_START_DATE_AND_LOCATION,
                 new BasicDBObject("$multiply",
@@ -121,15 +184,14 @@ public class FundingByLocationController extends GenericOCDSController {
                                 100)));
 
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
+                match(where(getTenderDateField()).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 unwind("$tender.items"), new CustomProjectionOperation(project),
                 group(Fields.UNDERSCORE_ID_REF).max("tenderItemsDeliveryLocation").as("hasTenderItemsDeliverLocation"),
                 group().count().as("totalTendersWithStartDate").sum("hasTenderItemsDeliverLocation")
                         .as(Keys.TOTAL_TENDERS_WITH_START_DATE_AND_LOCATION),
                 new CustomProjectionOperation(project1)
-        // ,skip(filter.getSkip()),limit(filter.getPageSize())
+                // ,skip(filter.getSkip()),limit(filter.getPageSize())
         );
 
         return releaseAgg(agg);
