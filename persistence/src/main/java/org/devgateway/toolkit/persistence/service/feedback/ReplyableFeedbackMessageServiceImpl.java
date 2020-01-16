@@ -51,5 +51,11 @@ public class ReplyableFeedbackMessageServiceImpl extends BaseJpaServiceImpl<Repl
     public <S extends ReplyableFeedbackMessage> S save(S entity) {
         return super.save(entity);
     }
+
+    @Override
+    @CacheEvict(allEntries = true, cacheNames = "feedback")
+    public <S extends ReplyableFeedbackMessage> S saveAndFlush(S entity) {
+        return super.saveAndFlush(entity);
+    }
 }
 
