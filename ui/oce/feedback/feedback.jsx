@@ -9,6 +9,7 @@ class FeedbackMessageForm extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      changeNeverFired: true,
       replyOpen: this.props.replyOpen,
       emailPattern: /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i,
       email: '',
@@ -23,7 +24,7 @@ class FeedbackMessageForm extends React.PureComponent {
   }
 
   validateTxt(stateField) {
-    if (stateField === '') {
+    if (!this.state.changeNeverFired && stateField === '') {
       return 'error';
     } else {
       return 'success';
@@ -51,12 +52,13 @@ class FeedbackMessageForm extends React.PureComponent {
 
     this.setState({
       [name]: value,
-      error: false
+      error: false,
+      changeNeverFired: false
     });
 
     if (name === 'email') {
       this.setState({
-        emailValid: this.state.email.match(this.state.emailPattern)
+        emailValid: value && value.match(this.state.emailPattern)
       });
     }
   }
@@ -121,7 +123,6 @@ class FeedbackMessageForm extends React.PureComponent {
   }
 
 
-
   renderForm() {
 
     return (
@@ -158,7 +159,8 @@ class FeedbackMessageForm extends React.PureComponent {
           />
           <FormControl.Feedback/>
           {
-            this.state.name ? null : <HelpBlock>Please add a name</HelpBlock>
+            this.state.changeNeverFired || this.state.name ? null :
+              <HelpBlock>Please add a name</HelpBlock>
           }
         </FormGroup>
 
@@ -176,7 +178,8 @@ class FeedbackMessageForm extends React.PureComponent {
           />
           <FormControl.Feedback/>
           {
-            this.state.comment ? null : <HelpBlock>Please add a comment</HelpBlock>
+            this.state.changeNeverFired || this.state.comment ? null :
+              <HelpBlock>Please add a comment</HelpBlock>
           }
         </FormGroup>
         <ReCAPTCHA
