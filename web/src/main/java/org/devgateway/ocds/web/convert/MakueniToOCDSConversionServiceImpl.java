@@ -863,6 +863,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             return Award.Status.cancelled;
         }
 
+        if (ObjectUtils.isEmpty(awardNotification.getAcceptedNotification())) {
+            return Award.Status.unsuccessful;
+        }
+
         //Active: When Acceptance of award has been approved
         if (APPROVED.equals(
                 Optional.ofNullable(awardNotification.getTenderProcess().getSingleAwardAcceptance())
