@@ -1,8 +1,6 @@
 import Chart from "./index";
 import backendYearFilterable from "../../backend-year-filterable";
-import {Map, OrderedMap, Set} from "immutable";
-import Comparison from "../../comparison";
-import { download, pluckImm } from '../../tools';
+import { pluckImm } from '../../tools';
 
 class PieChart extends backendYearFilterable(Chart) {
 
