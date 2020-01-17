@@ -3,6 +3,8 @@ import { List, Set } from 'immutable';
 import DefaultComparison from '../comparison';
 import Chart from '../visualizations/charts/index';
 import { download } from '../tools';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class Tab extends Visualization {
   maybeWrap(Component, index, rendered) {
@@ -117,15 +119,15 @@ class Tab extends Visualization {
 Tab.visualizations = [];
 
 Tab.propTypes = {
-  filters: React.PropTypes.object.isRequired,
-  data: React.PropTypes.object,
-  comparisonData: React.PropTypes.object,
-  requestNewData: React.PropTypes.func.isRequired,
-  requestNewComparisonData: React.PropTypes.func.isRequired,
-  compareBy: React.PropTypes.string.isRequired,
-  comparisonCriteriaValues: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-  width: React.PropTypes.number.isRequired,
-  onUpdate: React.PropTypes.func
+  filters: PropTypes.object.isRequired,
+  data: PropTypes.object,
+  comparisonData: PropTypes.object,
+  requestNewData: PropTypes.func.isRequired,
+  requestNewComparisonData: PropTypes.func.isRequired,
+  compareBy: PropTypes.string.isRequired,
+  comparisonCriteriaValues: PropTypes.arrayOf(PropTypes.string).isRequired,
+  width: PropTypes.number.isRequired,
+  onUpdate: PropTypes.func
 };
 
 

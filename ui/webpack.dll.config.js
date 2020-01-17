@@ -8,7 +8,6 @@ module.exports = {
       'react-dom',
       'react-bootstrap',
       'react-bootstrap-table',
-      'react-addons-test-utils',
       'react-immutable-proptypes',
       'd3',
       'plotly.js',
