@@ -1,14 +1,10 @@
-import Plotly from 'plotly.js/lib/core';
 import Chart from '../visualizations/charts/index.jsx';
 import { pluckImm, debounce } from '../tools';
 import backendYearFilterable from '../backend-year-filterable';
 import Visualization from '../visualization';
 import { fromJS, Set } from 'immutable';
 import translatable from '../translatable';
-
-Plotly.register([
-  require('plotly.js/lib/pie')
-]);
+import Plotly from 'plotly.js-basic-dist'
 
 const EMPTY_SET = Set();
 
