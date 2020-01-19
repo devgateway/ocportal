@@ -32,6 +32,7 @@
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
         <commons.lang3.version>3.9</commons.lang3.version>
+        <commons.text.version>1.8</commons.text.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <poi.version>3.17</poi.version>

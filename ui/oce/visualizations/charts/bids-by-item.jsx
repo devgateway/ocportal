@@ -1,27 +1,11 @@
-import CatChart from "./cat-chart";
+import PieChart from './pie-chart';
 
-class BidsByItem extends CatChart{
+class BidsByItem extends PieChart{
   static getName(t){return t('charts:bidsByItem:title')}
-
-  getLayout(){
-    return {
-      xaxis: {
-        title: this.t('charts:bidsByItem:xAxisTitle'),
-        type: "category",
-        tickangle: 15,
-        automargin: true
-      },
-      yaxis: {
-        title: this.t('charts:bidsByItem:yAxisTitle'),
-        tickprefix: "   "
-      }
-    }
-  }
 }
 
 BidsByItem.endpoint = 'tendersByItemClassification';
-BidsByItem.excelEP = 'tendersByItemExcelChart';
-BidsByItem.CAT_NAME_FIELD = "description";
-BidsByItem.CAT_VALUE_FIELD = "tenderCount";
+BidsByItem.LABEL_FIELD = 'description';
+BidsByItem.VALUE_FIELD = 'tenderCount';
 
 export default BidsByItem;

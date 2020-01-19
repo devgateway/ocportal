@@ -11,11 +11,8 @@ module.exports = {
       'react-addons-test-utils',
       'react-immutable-proptypes',
       'd3',
-      'plotly.js',
+      'plotly.js-basic-dist',
       'react-leaflet',
-      'plotly.js/lib/core',
-      'plotly.js/lib/bar',
-      'plotly.js/lib/pie.js',
       'immutable'
     ]
   },
