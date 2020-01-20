@@ -1,14 +1,11 @@
 import { Map } from 'immutable';
-import Plotly from 'plotly.js/lib/core';
-import PlotlyBar from 'plotly.js/lib/bar';
 import PropTypes from 'prop-types';
 import Visualization from '../../visualization';
 import ReactIgnore from '../../react-ignore';
 import { max } from '../../tools';
 // eslint-disable-next-line no-unused-vars
 import styles from './index.less';
-
-Plotly.register([PlotlyBar]);
+import Plotly from 'plotly.js-basic-dist'
 
 class Chart extends Visualization {
   getData() {
@@ -50,7 +47,7 @@ class Chart extends Visualization {
 
   componentDidMount() {
     super.componentDidMount();
-    Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout());
+    Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout(), {responsive: true});
   }
 
   componentWillUnmount() {

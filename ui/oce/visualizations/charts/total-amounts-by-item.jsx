@@ -1,31 +1,11 @@
-import CatChart from './cat-chart';
+import PieChart from './pie-chart';
 
-class TotalAmountsByItem extends CatChart{
+class TotalAmountsByItem extends PieChart {
   static getName(t){return t('charts:amountsByItem:title')}
-
-  getLayout(){
-    return {
-      xaxis: {
-        title: this.t('charts:amountsByItem:xAxisTitle'),
-        type: "category",
-        tickangle: 15,
-        automargin: true
-      },
-      yaxis: {
-        title: this.t('charts:amountsByItem:yAxisTitle'),
-        tickprefix: "   ",
-        tickformat: "s"
-      }
-    }
-  }
 }
 
-TotalAmountsByItem.excelEP = '';
-TotalAmountsByItem.CAT_VALUE_FIELD = 'totalTenderAmount';
-
-
 TotalAmountsByItem.endpoint = 'totalAmountByItem';
-TotalAmountsByItem.CAT_NAME_FIELD = "description";
-TotalAmountsByItem.CAT_VALUE_FIELD = "totalAmount";
+TotalAmountsByItem.LABEL_FIELD = 'description';
+TotalAmountsByItem.VALUE_FIELD = 'totalAmount';
 
 export default TotalAmountsByItem;
