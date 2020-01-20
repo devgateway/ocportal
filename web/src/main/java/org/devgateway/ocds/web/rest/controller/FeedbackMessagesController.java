@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -128,6 +129,7 @@ public class FeedbackMessagesController {
 
     @PostMapping(value = "/api/postFeedback",
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
     public ResponseEntity<?> postFeedback(@RequestBody FeedbackMessageSubmitWrapper message) {
 
         FeedbackMessage fm;
@@ -151,7 +153,7 @@ public class FeedbackMessagesController {
             Optional<ReplyableFeedbackMessage> saveable = feedbackMessageService.findById(message.getReplyFor());
             if (saveable.isPresent()) {
                 saveable.get().getReplies().add(fm);
-                alertsEmailService.sendFeedbackAlertsForReplyable(saveable.get());
+                alertsEmailService.sendFeedbackAlertsForReplyableAndMessage(saveable.get(), fm);
                 feedbackMessageService.save(saveable.get());
                 return ResponseEntity.ok().build();
             } else {

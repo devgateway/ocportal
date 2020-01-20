@@ -75,6 +75,16 @@ public class AlertsEmailService {
                 m -> sendFeedbackAlertEmails(replyableFeedbackMessage, m));
     }
 
+    @Transactional
+    public void sendFeedbackAlertsForReplyableAndMessage(ReplyableFeedbackMessage replyableFeedbackMessage,
+                                                         FeedbackMessage fm) {
+        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
+            return;
+        }
+        sendFeedbackAlertEmails(replyableFeedbackMessage, fm);
+    }
+
+
     /**
      * Send a secret url that allows user to verify their email address.
      */
