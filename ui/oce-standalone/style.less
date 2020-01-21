@@ -322,7 +322,8 @@ aside {
 .date-filter {
     .years-bar, .months-bar {
         color: #333;
-        height: @yearsBarHeight;
+        margin-top: 5px;
+        overflow: hidden;
 
         a {
             background-color: #e6e6e6;
@@ -333,12 +334,19 @@ aside {
             line-height: 28px;
             margin-bottom: 3px;
 
+            @media screen and (max-width: 992px) {
+              display: block;
+              float: left;
+              width: 30%;
+            }
+
+
             &:hover {
                 background-color: #707070;
             }
 
             .glyphicon {
-                visibility: hidden;
+                display: none
             }
 
             &.active {
@@ -346,7 +354,8 @@ aside {
                 background-color: @active-tab-color;
 
                 .glyphicon {
-                    visibility: visible;
+                    display: inline-block;
+                    float: left;
                 }
             }
         }
@@ -358,10 +367,6 @@ aside {
         a:hover .ctrl-click-hint {
             display: block;
         }
-    }
-
-    .months-bar {
-        margin-bottom: 80px;
     }
 
     .hint {
