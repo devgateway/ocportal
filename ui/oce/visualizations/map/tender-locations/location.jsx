@@ -10,6 +10,9 @@ import { cacheFn, download } from '../../../tools';
 import ProcurementMethodChart from '../../../visualizations/charts/procurement-method';
 // eslint-disable-next-line no-unused-vars
 import styles from './style.less';
+import ProjectCount from '../../charts/project-count';
+import AmountBudgeted from '../../charts/amount-budgeted';
+import React from 'react';
 
 const addTenderDeliveryLocationId = cacheFn(
   (filters, id) => filters.set('tenderLoc', id),
@@ -21,7 +24,7 @@ export class ChartTab extends Tab {
   constructor(props) {
     super(props);
     this.state = {
-      chartData: null,
+      chartData: null
     };
   }
 
@@ -50,8 +53,11 @@ export class ChartTab extends Tab {
           translations={translations}
           data={this.state.chartData}
           requestNewData={(_, chartData) => this.setState({ chartData })}
-          width={380}
           height={250}
+          style={{ width: "100%"}}
+          layout={{
+              autosize: true
+            }}
           margin={this.constructor.getMargins()}
           legend="h"
         />
@@ -95,7 +101,7 @@ class LocationWrapper extends translatable(Component) {
                 <span className="chart-tools">
                   <a tabIndex={-1} role="button" onClick={() => this.doExcelExport()}>
                     <img
-                      src="assets/icons/export-very-black.svg"
+                      src="assets/icons/export-map.svg"
                       alt="Export"
                       width="16"
                       height="16"
@@ -107,7 +113,7 @@ class LocationWrapper extends translatable(Component) {
                     onClick={() => ReactDOM.findDOMNode(this.currentChart).querySelector('.modebar-btn:first-child').click()}
                   >
                     <img
-                      src="assets/icons/camera.svg"
+                      src="assets/icons/camera-map.svg"
                       alt="Screenshot"
                     />
                   </a>
@@ -125,7 +131,7 @@ class LocationWrapper extends translatable(Component) {
                     role="button"
                     tabIndex={0}
                   >
-                    <a href="#">{tab.getName(t)}</a>
+                    <span className="text-white">{tab.getName(t)}</span>
                   </div>
                 ))}
               </div>
@@ -154,13 +160,16 @@ export class OverviewTab extends Tab {
 
   render() {
     const { data } = this.props;
-    const { count, amount } = data;
+    const { count, totalProjectsAmount } = data;
     return (<div>
+      {/*<p>*/}
+      {/*  <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count}*/}
+      {/*</p>*/}
       <p>
-        <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count}
+        <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong> {count}
       </p>
       <p>
-        <strong>{this.t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong> {amount.toLocaleString()}
+        <strong>{this.t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong> {totalProjectsAmount.toLocaleString()}
       </p>
     </div>);
   }
@@ -172,29 +181,47 @@ export class OverviewChartTab extends ChartTab {
   static getChartClass() { return 'overview'; }
 }
 
-const capitalizeAxisTitles = Class => class extends Class {
-  getLayout() {
-    const layout = super.getLayout();
-    layout.xaxis.title = layout.xaxis.title.toUpperCase();
-    layout.yaxis.title = layout.yaxis.title.toUpperCase();
-    return layout;
-  }
-};
+// const capitalizeAxisTitles = Class => class extends Class {
+//   getLayout() {
+//     const layout = super.getLayout();
+//     //layout.xaxis.title = layout.xaxis.title;
+//     //layout.yaxis.title = layout.yaxis.title.text;
+//     return layout;
+//   }
+// };
 
-OverviewChartTab.Chart = capitalizeAxisTitles(OverviewChart);
+OverviewChartTab.Chart = OverviewChart;
 
 export class CostEffectivenessTab extends ChartTab {
   static getName(t) { return t('charts:costEffectiveness:title'); }
 }
 
-CostEffectivenessTab.Chart = capitalizeAxisTitles(CostEffectiveness);
+CostEffectivenessTab.Chart = CostEffectiveness;
+
+export class ProjectCountChartTab extends ChartTab {
+  static getName(t) { return t('charts:projectCount:title'); }
+
+  static getChartClass() { return 'overview'; }
+}
+
+ProjectCountChartTab.Chart = ProjectCount;
+
+
+export class AmountBudgetedChartTab extends ChartTab {
+  static getName(t) { return t('charts:amountBudgeted:title'); }
+
+  static getChartClass() { return 'overview'; }
+}
+
+AmountBudgetedChartTab.Chart = AmountBudgeted;
+
 
 export class ProcurementMethodTab extends ChartTab {
   static getName(t) { return t('charts:procurementMethod:title'); }
 }
 
-ProcurementMethodTab.Chart = capitalizeAxisTitles(ProcurementMethodChart);
+ProcurementMethodTab.Chart = ProcurementMethodChart;
 
-LocationWrapper.TABS = [OverviewTab, OverviewChartTab, CostEffectivenessTab, ProcurementMethodTab];
+LocationWrapper.TABS = [OverviewTab, ProjectCountChartTab,AmountBudgetedChartTab];
 
 export default LocationWrapper;

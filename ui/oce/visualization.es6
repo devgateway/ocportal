@@ -12,22 +12,22 @@ class Visualization extends translatable(Component) {
     this.state = this.state || {};
     this.state.loading = true;
   }
-  
+
   buildUrl(ep) {
     const { filters } = this.props;
     return new URI(`${API_ROOT}/${ep}`).addSearch(filters.toJS());
   }
-  
+
   fetch() {
     const { endpoint, endpoints } = this.constructor;
     const { requestNewData } = this.props;
     let promise = false;
     if (endpoint) {
-      console.warn('endpoint property is deprecated', endpoint);
+      //console.warn('endpoint property is deprecated', endpoint);
       promise = fetchEP(this.buildUrl(endpoint));
     }
     if (endpoints) {
-      console.warn('endpoints property is deprecated', endpoints);
+      //console.warn('endpoints property is deprecated', endpoints);
       promise = Promise.all(endpoints.map(this.buildUrl.bind(this))
       .map(fetchEP));
     }
@@ -48,19 +48,19 @@ class Visualization extends translatable(Component) {
     .then(data => requestNewData([], data))
     .then(() => this.setState({ loading: false }));
   }
-  
+
   transform(data) {
     return data;
   }
-  
+
   getData() {
     return this.props.data;
   }
-  
+
   componentDidMount() {
     this.fetch();
   }
-  
+
   componentDidUpdate(prevProps) {
     if (this.props.filters !== prevProps.filters) this.fetch();
   }

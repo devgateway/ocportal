@@ -8,6 +8,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -43,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -258,6 +260,10 @@ public abstract class GenericOCDSController {
         return createFilterCriteria(MongoConstants.FieldNames.PLANNING_FISCAL_YEAR, filter.getFiscalYear(), filter);
     }
 
+    protected Criteria getLocationTypeCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(MongoConstants.FieldNames.TENDER_LOCATIONS_TYPE, filter.getLocationType(), filter);
+    }
+
     protected Criteria getTenderStatusFilterCriteria(final DefaultFilterPagingRequest filter) {
         return createFilterCriteria(MongoConstants.FieldNames.TENDER_STATUS, filter.getTenderStatus(), filter);
     }
@@ -383,6 +389,10 @@ public abstract class GenericOCDSController {
         );
     }
 
+    protected Criteria getByTenderLocationIdentifier(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteriaObjectId("tender.locations._id", filter.getTenderLoc(), filter);
+    }
+
     /**
      * Creates a search criteria filter based on tender.value.amount and uses
      * {@link DefaultFilterPagingRequest#getMinTenderValue()} and
@@ -436,6 +446,14 @@ public abstract class GenericOCDSController {
             return new Criteria();
         }
         return where(filterName).in(filterValues.toArray());
+    }
+
+    private Criteria createFilterCriteriaObjectId(final String filterName, final Set<String> filterValues,
+                                                  final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(filterName, filterValues.stream().filter(Objects::nonNull)
+                        .map(ObjectId::new).collect(Collectors.toSet()),
+                filter
+        );
     }
 
     private <S> Criteria createNotFilterCriteria(final String filterName, final Set<S> filterValues,
@@ -619,7 +637,7 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.SUPPLIER_ID, getSupplierIdCriteria(filter));
         map.put(MongoConstants.Filters.BUYER_ID, getBuyerIdCriteria(filter));
         map.put(MongoConstants.Filters.PROCUREMENT_METHOD, getProcurementMethodCriteria(filter));
-        map.put(MongoConstants.Filters.TENDER_LOC, getByTenderDeliveryLocationIdentifier(filter));
+        map.put(MongoConstants.Filters.TENDER_LOC, getByTenderLocationIdentifier(filter));
         map.put(MongoConstants.Filters.TENDER_VALUE, getByTenderAmountIntervalCriteria(filter));
         map.put(MongoConstants.Filters.AWARD_VALUE, getByAwardAmountIntervalCriteria(filter));
         map.put(MongoConstants.Filters.FLAGGED, getFlaggedCriteria(filter));
@@ -627,6 +645,7 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.ELECTRONIC_SUBMISSION, getElectronicSubmissionCriteria(filter));
         map.put(MongoConstants.Filters.AWARD_STATUS, getAwardStatusFilterCriteria(filter));
         map.put(MongoConstants.Filters.FISCAL_YEAR, getFiscalYearFilterCriteria(filter));
+        map.put(MongoConstants.Filters.LOCATION_TYPE, getLocationTypeCriteria(filter));
         map.put(MongoConstants.Filters.TENDER_STATUS, getTenderStatusFilterCriteria(filter));
         map.put(MongoConstants.Filters.BIDDER_ID, getBidderIdCriteria(filter));
         map.put(MongoConstants.Filters.TOTAL_FLAGGED, getTotalFlaggedCriteria(filter));

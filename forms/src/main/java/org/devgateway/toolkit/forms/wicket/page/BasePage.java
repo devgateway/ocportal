@@ -69,6 +69,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
@@ -366,6 +367,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
 
         return metadataMenu;
     }
@@ -495,21 +497,34 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 */
                 list.add(new MenuDivider());
 
-                list.add(new MenuBookmarkablePageLink<Void>(EditAdminSettingsPage.class,
-                        new StringResourceModel("navbar.adminSettings", BasePage.this, null))
+                list.add(new MenuBookmarkablePageLink<Void>(
+                        EditAdminSettingsPage.class,
+                        new StringResourceModel("navbar.adminSettings", BasePage.this, null)
+                )
                         .setIconType(FontAwesomeIconType.briefcase));
 
-                list.add(new MenuBookmarkablePageLink<ListAlertPage>(ListAlertPage.class,
-                        new StringResourceModel("navbar.alerts", BasePage.this, null))
+                list.add(new MenuBookmarkablePageLink<ListAlertPage>(
+                        ListFeedbackMessagePage.class,
+                        new StringResourceModel("navbar.feedbackMessages", BasePage.this, null)
+                ).setIconType(FontAwesomeIconType.warning));
+
+                list.add(new MenuBookmarkablePageLink<ListAlertPage>(
+                        ListAlertPage.class,
+                        new StringResourceModel("navbar.alerts", BasePage.this, null)
+                )
                         .setIconType(FontAwesomeIconType.envelope));
 
-                list.add(new MenuBookmarkablePageLink<ListFlagHistoryPage>(ListFlagHistoryPage.class,
-                        new StringResourceModel("navbar.redFlagHistory", BasePage.this, null))
+                list.add(new MenuBookmarkablePageLink<ListFlagHistoryPage>(
+                        ListFlagHistoryPage.class,
+                        new StringResourceModel("navbar.redFlagHistory", BasePage.this, null)
+                )
                         .setIconType(FontAwesomeIconType.flag));
 
 
-                list.add(new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
-                        new StringResourceModel("navbar.alertsStatistics", BasePage.this, null))
+                list.add(new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(
+                        ListAlertsStatisticsPage.class,
+                        new StringResourceModel("navbar.alertsStatistics", BasePage.this, null)
+                )
                         .setIconType(FontAwesomeIconType.mail_reply_all));
 
                 return list;

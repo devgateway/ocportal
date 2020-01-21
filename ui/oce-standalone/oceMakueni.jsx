@@ -13,7 +13,7 @@ class OCEMakueni extends OCApp {
   constructor(props) {
     super(props);
     this.registerTab(OverviewTab);
-    // this.registerTab(OCEDemoLocation);
+    this.registerTab(OCEDemoLocation);
     this.registerTab(CompetitivenessTab);
     this.registerTab(EfficiencyTab);
     //this.registerTab(EProcurementTab);
@@ -115,7 +115,7 @@ class OCEMakueni extends OCApp {
         <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
                 styling={this.props.styling} selected="m-and-e"/>
         <div className="row content charts-content">
-          <div className="col-md-3 col-sm-3 menu">
+          <div className="col-md-3 col-sm-12 menu">
             <div className="row" data-intro="On each page there is a set of filters that allows you
             to limit what information is shown on the page by selected metrics, such as a specific
             location or department." data-step="8">
@@ -126,7 +126,7 @@ class OCEMakueni extends OCApp {
               {/*{this.comparison()}*/}
             </div>
           </div>
-          <div className="col-md-9 col-sm-9 col-main-content">
+          <div className="col-md-9 col-sm-12 col-main-content">
             <div className="row">
               <div className="navigation subnav" data-intro="Navigate between the
               different types of charts, including an overview, competitiveness, and efficiency.">

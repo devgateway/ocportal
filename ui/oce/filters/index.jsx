@@ -32,10 +32,15 @@ class Filters extends translatable(Component) {
   }
 
   reset() {
+    let { filters } = this.props;
+    //will always retain locationType property. This is not supposed to be reset because it is
+    //never selected by the filter panel, but by the map button.
+    let newState = Map().set('locationType',filters.get('locationType'));
     this.setState({
-      state: Map()
+      state: newState
     });
-    this.props.onUpdate(Map());
+
+    this.props.onUpdate(newState);
   }
 
   listTabs() {

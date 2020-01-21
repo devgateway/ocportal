@@ -13,7 +13,9 @@
 @hover-blue: #3090bd;
 @color-regular-gray: #8d8d8d;
 @base-space: 20px;
+@extend: 100%;
 
+.text-white { color: #FFF; }
 
 .content {
     margin-top: @headerHeight * 2;
@@ -22,9 +24,12 @@
         background-color: #f9f9f9;
         margin-top: 175px;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 992px) {
+        margin-top: 0;
+    }
+    @media screen and (max-width: 767px) {
         background-color: #ffffff;
-        margin-top: 300px;
+        margin-top: @base-space * 3;
     }
 }
 
@@ -41,9 +46,15 @@ header.branding {
     left: 0;
     height: @headerHeight;
     z-index: 1002;
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 992px) {
         display: block;
-        height: 128px;
+        position: relative;
+    }
+    @media screen and (max-width: 767px) {
+        height: 125px;
+    }
+    @media screen and (max-width: 414px) {
+        height: 150px;
     }
 
     h1, small {
@@ -65,10 +76,13 @@ header.branding {
     top: @headerHeight;
     height: @headerHeight;
     z-index: 1001;
-    @media screen and (max-width: 600px) {
-        height: 130px;
+    @media screen and (max-width: 992px) {
         padding-top: 5px;
-        top: 120px;
+        position: relative;
+        top: 0;
+    }
+    @media screen and (max-width: 767px) {
+        height: 130px;
     }
 }
 
@@ -372,7 +386,7 @@ footer.main-footer {
     bottom: 0;
     background: @footerColor;
     padding-top: 7px;
-    z-index: 1;
+    z-index: 1000;
     @media screen and (max-width: 767px) {
       height: 60px;
       position:relative;
@@ -461,12 +475,11 @@ footer.main-footer {
     overflow: hidden;
 
     .leaflet-container {
-        height: 95vh;
+        bottom: @base-space / 4;
+        height: @extend !important;
+        position: absolute !important;
+        width: @extend;
     }
-}
-
-.leaflet-control-zoom {
-    position: fixed;
 }
 
 .btn {
@@ -539,12 +552,14 @@ footer.main-footer {
     background-color: @themeGreen;
     float: right;
     height: 64px;
-    margin-right: 15px;
     padding: 0;
-    @media screen and (max-width: 600px) {
-        float: none;
+    @media screen and (max-width: 992px) {
+      float: none;
+      margin-top: 58px;
     }
-
+    @media screen and (max-width: 767px){
+      margin-top:0;
+    }
     .export-title {
         font-size: 9px;
         font-family: 'Montserrat', sans-serif;
@@ -611,7 +626,7 @@ a.portal-logo-wrapper {
     line-height: 20px;
     font-weight: lighter !important;
     @media screen and (max-width: 1024px) {
-      font-size: 12px;
+      font-size: 11px;
     }
 
     :visited {
@@ -629,6 +644,10 @@ a.portal-logo-wrapper {
     img {
         width: 55px;
         margin-left: 20px;
+        @media screen and (max-width: 767px) {
+          margin-left: 10px;
+        }
+
     }
 
     span {

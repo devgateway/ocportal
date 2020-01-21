@@ -4,13 +4,22 @@
     and is available at https://opensource.org/licenses/MIT
     Contributors: Development Gateway - initial API and implementation -->
 
-<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
 
     <diskStore path="ehcache-diskstore"/>
 
-    <defaultCache eternal="true" overflowToDisk="false" statistics="true" maxEntriesLocalHeap="100000" />
+    <defaultCache eternal="true" overflowToDisk="false" statistics="true" maxEntriesLocalHeap="100000"/>
 
     <cache name="classifications" eternal="true"
+           statistics="true" maxEntriesLocalHeap="1000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120"
+    />
+
+    <cache name="feedback" eternal="true"
            statistics="true" maxEntriesLocalHeap="1000"
            overflowToDisk="true"
            maxElementsOnDisk="10000000"
@@ -23,6 +32,9 @@
            maxElementsOnDisk="10000000"
            diskPersistent="true"
            diskExpiryThreadIntervalSeconds="120"
+    />
+
+    <cache name="locationTypesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
     />
 
     <cache name="fiscalYearsJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"

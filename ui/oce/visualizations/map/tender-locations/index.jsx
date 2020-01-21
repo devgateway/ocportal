@@ -1,31 +1,29 @@
 import Map from "../index.jsx";
 import Location from './location';
 
-class TenderLocations extends Map{
+class TenderLocations extends Map {
   getData(){
     let data = super.getData();
     if(!data) return [];
     return data
-        .groupBy(location => location.getIn(['deliveryLocation', '_id']))
-        .map(locations => locations.reduce((reducedLocation, location) => {
+        .map(location => {
           return {
-            "_id": location.getIn(['deliveryLocation', '_id']),
-            "name": location.getIn(['deliveryLocation', 'description']),
-            "amount": reducedLocation.amount + location.get('totalTendersAmount'),
-            "count": reducedLocation.count + location.get('tendersCount'),
-            "coords": location.getIn(['deliveryLocation', 'geometry', 'coordinates']).toJS()
+            "_id": location.get('_id'),
+            "name": location.get('description'),
+            "amount": location.get('totalTendersAmount'),
+            "count":  location.get('tendersCount'),
+            "totalProjectsAmount":  location.get('totalProjectsAmount'),
+            "projectsCount":  location.get('projectsCount'),
+            "coords": location.getIn(['geometry', 'coordinates']).toJS()
           }
-        }, {
-          "amount": 0,
-          "count": 0
-        }))
+        })
         .toArray()
   }
 
   static getLayerName(t){return t('maps:tenderLocations:title')}
 }
 
-TenderLocations.endpoint = 'fundingByTenderDeliveryLocation';
+TenderLocations.endpoint = 'fundingByTenderLocation';
 TenderLocations.Location = Location;
 
 export default TenderLocations;

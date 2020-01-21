@@ -49,6 +49,15 @@ class SingleSelect extends translatable(Component) {
     this.props.onUpdateAll(Set());
   }
 
+  getId(option) {
+    return option.get('id');
+  }
+
+  getLabel(option) {
+    return option.get('name');
+  }
+
+
   render() {
     const options = this.getOptions();
     const { selected, onToggle } = this.props;
@@ -62,8 +71,8 @@ class SingleSelect extends translatable(Component) {
                   onChange={e => this.selectElement(e)}>
             <option value="">All</option>
             {options.map((option, key) => (
-              <option key={option.get('id')} value={option.get('id')}>
-                {option.get('name')}
+              <option key={this.getId(option)} value={this.getId(option)}>
+                {this.getLabel(option)}
               </option>
             ))
               .toArray()}

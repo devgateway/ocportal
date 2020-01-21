@@ -28,6 +28,9 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "Fiscal Year")
     private TreeSet<String> fiscalYear;
 
+    @ApiModelProperty(value = "Location Type, can be ward or subcounty")
+    private TreeSet<String> locationType;
+
     @ApiModelProperty(value = "Filter by tender.status, possible values are available from the OCDS standard page"
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#tender-status")
     private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(Tender.Status.active.toString()));
@@ -62,8 +65,8 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
     private TreeSet<String> bidderId;
 
-    @ApiModelProperty(value = "This will filter after tender.items.deliveryLocation._id")
-    private TreeSet<String> tenderLoc;
+    @ApiModelProperty(value = "This will filter after tender.locations._id")
+    private TreeSet<String> tenderLoc = new TreeSet<>();
 
     @ApiModelProperty(value = "This will filter after tender.procurementMethod")
     private TreeSet<String> procurementMethod = new TreeSet<>();
@@ -108,6 +111,14 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     public DefaultFilterPagingRequest awardFiltering() {
         awardFiltering = true;
         return this;
+    }
+
+    public TreeSet<String> getLocationType() {
+        return locationType;
+    }
+
+    public void setLocationType(TreeSet<String> locationType) {
+        this.locationType = locationType;
     }
 
     public Boolean getAwardFiltering() {
