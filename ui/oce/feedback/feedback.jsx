@@ -100,7 +100,9 @@ class FeedbackMessageForm extends React.PureComponent {
   }
 
   renderReplyButton() {
-    return (<button className="btn" onClick={this.handleReplyClick.bind(this)}>Reply</button>);
+    return (<button className="btn" onClick={this.handleReplyClick.bind(this)}>
+      {this.state.replyFor ? 'Reply' : 'Add Comment'}
+    </button>);
   }
 
   handleReplyClick() {
