@@ -1,8 +1,8 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import FeedbackPage from '../../FeedbackPage';
 import NoDataMessage from './NoData';
+import React from 'react';
 
-class PurchaseReq extends FeedbackPage {
+class PurchaseReq extends React.Component {
   getFeedbackSubject() {
     const { data, department, fiscalYear } = this.props;
 
@@ -131,10 +131,6 @@ class PurchaseReq extends FeedbackPage {
           : null
       }
 
-
-
-
-      {this.getFeedbackMessage()}
     </div>);
   }
 }
