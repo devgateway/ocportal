@@ -48,7 +48,6 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.Fie
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.BUYER_ID;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.BUYER_NAME;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.FLAGS_TOTAL_FLAGGED;
-import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.TENDER_PERIOD_START_DATE;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_NAME;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -72,14 +71,14 @@ public class AwardsWonLostController extends GenericOCDSController {
 
     protected List<AggregationOperation> suppliersByFlagsGroupPart(final YearFilterPagingRequest filter) {
         List<AggregationOperation> part = new ArrayList<>();
-        part.add(match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)
+        part.add(match(getYearDefaultFilterCriteria(filter, getTenderDateField())
                 .and(FLAGS_TOTAL_FLAGGED).gt(0)));
         part.add(unwind("awards"));
         part.add(unwind("awards.suppliers"));
         part.add(match(where(AWARDS_STATUS).is(Award.Status.active.toString())
                 .andOperator(getYearDefaultFilterCriteria(
                         filter.awardFiltering(),
-                        TENDER_PERIOD_START_DATE
+                        getTenderDateField()
                 ))));
         part.add(group(Fields.from(
                 field("supplierId", AWARDS_SUPPLIERS_ID),
@@ -92,7 +91,7 @@ public class AwardsWonLostController extends GenericOCDSController {
 
     protected List<AggregationOperation> procuringEntitiesByFlagsGroupPart(final YearFilterPagingRequest filter) {
         List<AggregationOperation> part = new ArrayList<>();
-        part.add(match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)
+        part.add(match(getYearDefaultFilterCriteria(filter, getTenderDateField())
                 .and(FLAGS_TOTAL_FLAGGED).gt(0)));
         part.add(group(Fields.from(
                 field("procuringEntityId", TENDER_PROCURING_ENTITY_ID),
@@ -105,7 +104,7 @@ public class AwardsWonLostController extends GenericOCDSController {
 
     protected List<AggregationOperation> buyersByFlagsGroupPart(final YearFilterPagingRequest filter) {
         List<AggregationOperation> part = new ArrayList<>();
-        part.add(match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)
+        part.add(match(getYearDefaultFilterCriteria(filter, getTenderDateField())
                 .and(BUYER_ID).exists(true)
                 .and(FLAGS_TOTAL_FLAGGED).gt(0)));
         part.add(group(Fields.from(
@@ -196,7 +195,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     public List<Document> procuringEntitiesTendersCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
         Assert.notEmpty(filter.getProcuringEntityId(), "procuringEntityId must not be empty!");
         Aggregation agg = newAggregation(
-                match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)),
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField())),
                 group(TENDER_PROCURING_ENTITY_ID).count().as("tenderCount")
         );
 
@@ -212,7 +211,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     public List<Document> buyersTendersCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
         Assert.notEmpty(filter.getBuyerId(), "buyerId must not be empty!");
         Aggregation agg = newAggregation(
-                match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)),
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField())),
                 group(BUYER_ID).count().as("tenderCount")
         );
 
@@ -227,7 +226,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     public List<Document> procuringEntitiesAwardsCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
         Assert.notEmpty(filter.getProcuringEntityId(), "procuringEntityId must not be empty!");
         Aggregation agg = newAggregation(
-                match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)),
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField())),
                 unwind("awards"),
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 group(TENDER_PROCURING_ENTITY_ID).count().as("awardCount")
@@ -244,7 +243,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     public List<Document> buyersAwardsCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
         Assert.notEmpty(filter.getBuyerId(), "buyerId must not be empty!");
         Aggregation agg = newAggregation(
-                match(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE)),
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField())),
                 unwind("awards"),
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 group(BUYER_ID).count().as("awardCount")
@@ -275,19 +274,21 @@ public class AwardsWonLostController extends GenericOCDSController {
                 createDefaultFilterCriteriaMap(
                         filter);
         noSupplierCriteria.remove(MongoConstants.Filters.SUPPLIER_ID);
+        noSupplierCriteria.put(
+                MongoConstants.Filters.BIDS_DETAILS_TENDERER_ID, getBidsDetailsTenderersIdCriteria(filter));
 
         Aggregation agg1 = newAggregation(
                 match(getYearDefaultFilterCriteria(
                         filter,
                         noSupplierCriteria,
-                        TENDER_PERIOD_START_DATE
+                        getTenderDateField()
                 )),
                 unwind("bids.details"),
                 unwind("bids.details.tenderers"),
                 match(getYearDefaultFilterCriteria(
                         filter,
                         noSupplierCriteria,
-                        TENDER_PERIOD_START_DATE
+                        getTenderDateField()
                 )),
                 group(BIDS_DETAILS_TENDERERS_ID).count().as("count")
                         .sum(BIDS_DETAILS_VALUE_AMOUNT).as("totalAmount")
@@ -303,14 +304,14 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 unwind("awards"),
                 unwind("awards.suppliers"),
                 match(where(AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter.awardFiltering(),
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 group(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).count().as("count")
                         .sum(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT).as("totalAmount")
@@ -351,7 +352,7 @@ public class AwardsWonLostController extends GenericOCDSController {
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_STATUS).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE))),
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 group(Fields.from(
                         Fields.field("buyerId", BUYER_ID),
                         Fields.field("buyerName", BUYER_NAME),
@@ -375,7 +376,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(MongoConstants.FieldNames.TENDER_STATUS).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 group(Fields.from(
                         Fields.field("procuringEntityId", MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID),
@@ -400,7 +401,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(MongoConstants.FieldNames.TENDER_PROC_METHOD).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 group(Fields.from(
                         Fields.field("procuringEntityId", MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID),
@@ -423,7 +424,7 @@ public class AwardsWonLostController extends GenericOCDSController {
 
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_PROC_METHOD).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter, TENDER_PERIOD_START_DATE))),
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 group(Fields.from(
                         Fields.field("buyerId", BUYER_ID),
                         Fields.field("buyerName", BUYER_NAME),
@@ -448,7 +449,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(MongoConstants.FieldNames.BUYER_ID).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 group(Fields.from(
                         Fields.field("buyerId", MongoConstants
@@ -474,7 +475,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(TENDER_PROCURING_ENTITY_ID).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 group(Fields.from(
                         Fields.field("procuringEntityId", TENDER_PROCURING_ENTITY_ID),
@@ -505,7 +506,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         )).and(BUYER_ID).exists(true)
                         .and(BUYER_NAME).exists(true)),
                 unwind("awards"),
@@ -513,7 +514,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter.awardFiltering(),
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 group(Fields.from(
                         field("supplierId", MongoConstants
@@ -550,7 +551,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         )).and(MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID).exists(true)
                         .and(MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_NAME).exists(true)),
                 unwind("awards"),
@@ -558,7 +559,7 @@ public class AwardsWonLostController extends GenericOCDSController {
                 match(where(AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter.awardFiltering(),
-                                TENDER_PERIOD_START_DATE
+                                getTenderDateField()
                         ))),
                 group(Fields.from(
                         field("supplierId", MongoConstants

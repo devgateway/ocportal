@@ -87,6 +87,8 @@ public final class MongoConstants {
 
         public static final String SUPPLIER_ID = "supplierId";
 
+        public static final String BIDS_DETAILS_TENDERER_ID = "bidderDetailsTendererId";
+
         public static final String BUYER_ID = "buyerId";
 
         public static final String BIDDER_ID = "bidderId";
