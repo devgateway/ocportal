@@ -830,17 +830,22 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setAwardID, contract::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
         );
-        safeSet(ocdsContract::setStatus, contract::getStatus, this::createContractStatus);
+        safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
 
         return ocdsContract;
     }
 
-    public Contract.Status createContractStatus(String contractStatus) {
-        if (APPROVED.equals(contractStatus)) {
-            return Contract.Status.active;
+    public Contract.Status createContractStatus(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
+        if (DBConstants.Status.TERMINATED.equals(contract.getStatus())) {
+            return Contract.Status.terminated;
         }
-        if (DBConstants.Status.TERMINATED.equals(contractStatus)) {
+
+        if (contract.getTenderProcess().isTerminated()) {
             return Contract.Status.cancelled;
+        }
+
+        if (APPROVED.equals(contract.getStatus())) {
+            return Contract.Status.active;
         }
 
         return Contract.Status.pending;
@@ -853,7 +858,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
      * @return
      */
     public Award.Status createAwardStatus(AwardNotification awardNotification) {
-
         //Cancelled: if Terminated at Notification of award or later stage
         if (awardNotification.isTerminated()
                 || Optional.ofNullable(awardNotification.getTenderProcess().getSingleAwardAcceptance())
