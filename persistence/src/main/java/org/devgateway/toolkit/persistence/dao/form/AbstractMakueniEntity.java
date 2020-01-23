@@ -31,8 +31,8 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     private Date approvedDate;
 
     @ExcelExport(justExport = true, useTranslation = true, onlyForClass = {ProcurementPlan.class, CabinetPaper.class,
-            TenderProcess.class, Tender.class, TenderQuotationEvaluation.class, ProfessionalOpinion.class,
-            AwardNotification.class, AwardAcceptance.class}, name = "Documents")
+            TenderProcess.class, Tender.class, TenderQuotationEvaluation.class, ProfessionalOpinion.class},
+            name = "Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs = new HashSet<>();

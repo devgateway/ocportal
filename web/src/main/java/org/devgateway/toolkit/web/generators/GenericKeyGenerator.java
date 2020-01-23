@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -26,6 +27,7 @@ public class GenericKeyGenerator implements KeyGenerator {
     }
 
     @Override
+    @Transactional
     public Object generate(final Object target, final Method method, final Object... params) {
         final StringBuilder key = new StringBuilder(target.getClass().getSimpleName());
         key.append(method.getName());
@@ -42,6 +44,7 @@ public class GenericKeyGenerator implements KeyGenerator {
         return key.toString().hashCode();
     }
 
+    @Transactional
     private String createKey(final Object param) {
         if (param instanceof GenericPersistable) {
             final GenericPersistable persistable = (GenericPersistable) param;
