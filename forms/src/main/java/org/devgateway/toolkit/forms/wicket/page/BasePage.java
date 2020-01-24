@@ -458,6 +458,13 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         SecurityConstants.Roles.ROLE_ADMIN);
                 list.add(swagger);
 
+                final BootstrapBookmarkablePageLink javamelody = new MenuBookmarkablePageLink<Void>(
+                        JavamelodyPage.class, new StringResourceModel("navbar.javamelody",
+                        BasePage.this, null)).setIconType(FontAwesomeIconType.eye);
+                MetaDataRoleAuthorizationStrategy.authorize(javamelody, Component.RENDER,
+                        SecurityConstants.Roles.ROLE_ADMIN);
+                list.add(javamelody);
+
                 list.add(new MenuBookmarkablePageLink<SpringEndpointsPage>(SpringEndpointsPage.class, null,
                         new StringResourceModel("navbar.springendpoints", this, null))
                         .setIconType(FontAwesomeIconType.anchor));
