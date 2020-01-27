@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
+import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -88,12 +89,13 @@ public class SelectiveAwardsByBuyerItemSupplier extends GenericOCDSController {
         Aggregation agg = newAggregation(
                 match(
                         getProcMethodCriteria(method)
-                        .and(MongoConstants.FieldNames.AWARDS_VALUE).exists(true)
-                        .and(MongoConstants.FieldNames.BUYER_ID).exists(true)
-                        .and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION).exists(true)
+                                .and(MongoConstants.FieldNames.AWARDS_VALUE).exists(true)
+                                .and(MongoConstants.FieldNames.BUYER_ID).exists(true)
+                                .and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION).exists(true)
                                 .andOperator(getSinceDate(years))),
                 unwind(MongoConstants.FieldNames.TENDER_ITEMS),
                 unwind("awards"),
+                match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 unwind("awards.suppliers"),
                 project().and(MongoConstants.FieldNames.BUYER_ID).as("buyerId")
                         .and(MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID).as("supplierId")

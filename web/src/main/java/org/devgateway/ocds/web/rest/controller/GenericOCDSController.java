@@ -553,6 +553,10 @@ public abstract class GenericOCDSController {
         return createFilterCriteria(MongoConstants.FieldNames.TENDER_TENDERERS_ID, filter.getBidderId(), filter);
     }
 
+    protected Criteria getBidsDetailsTenderersIdCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(MongoConstants.FieldNames.BIDS_DETAILS_TENDERERS_ID, filter.getBidderId(), filter);
+    }
+
     /**
      * Appends the procurement method for this filter, this will fitler based
      * on tender.procurementMethod
