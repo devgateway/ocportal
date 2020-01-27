@@ -49,6 +49,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     public ListAbstractMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
 
+        filterGoReset = true;
         this.departments = departmentService.findAll();
         this.fiscalYears = fiscalYearService.findAll();
     }
