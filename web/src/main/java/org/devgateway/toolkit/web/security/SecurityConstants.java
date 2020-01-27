@@ -23,7 +23,8 @@ public final class SecurityConstants {
     public static final class Roles {
         public static final String ROLE_ADMIN = "ROLE_ADMIN";
         public static final String ROLE_USER = "ROLE_USER";
-        public static final String ROLE_VALIDATOR = "ROLE_VALIDATOR";
+        public static final String ROLE_PROCUREMENT_USER = "ROLE_PROCUREMENT_USER";
+        public static final String ROLE_PROCUREMENT_VALIDATOR = "ROLE_PROCUREMENT_VALIDATOR";
         public static final String ROLE_PROCURING_ENTITY = "ROLE_PROCURING_ENTITY";
     }
 

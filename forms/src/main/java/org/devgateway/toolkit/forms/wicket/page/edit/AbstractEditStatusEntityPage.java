@@ -677,7 +677,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private void addTerminateButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR);
         if (editForm.getModelObject().isNew()) {
             button.setVisibilityAllowed(false);
         }
@@ -689,22 +690,26 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, SecurityConstants.Roles.ROLE_PROCUREMENT_USER);
         button.setVisibilityAllowed(button.isVisibilityAllowed()
                 && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
     }
 
     private void addApproveButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR);
         button.setVisibilityAllowed(button.isVisibilityAllowed()
                 && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
     }
 
     private void addSaveRevertButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, SecurityConstants.Roles.ROLE_PROCUREMENT_USER);
         button.setVisibilityAllowed(button.isVisibilityAllowed()
                 && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
 
@@ -724,7 +729,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private void addDeleteButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, SecurityConstants.Roles.ROLE_PROCUREMENT_USER);
     }
 
     private void scrollToPreviousPosition(final IHeaderResponse response) {

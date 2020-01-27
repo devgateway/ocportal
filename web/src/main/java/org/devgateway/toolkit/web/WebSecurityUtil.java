@@ -86,31 +86,26 @@ public class WebSecurityUtil {
         return person.getRoles().stream().map(Role::getAuthority).collect(Collectors.toSet());
     }
 
-    /**
-     * Returns true if the user has ROLE_ADMIN
-     *
-     * @param p
-     * @return
-     */
-    public static boolean isUserAdmin(final Person p) {
+
+    public static boolean hasUserRole(String role) {
+        final Person p = getCurrentAuthenticatedPerson();
         if (p == null || p.getRoles() == null) {
             return false;
         }
-        for (final Role r : p.getRoles()) {
-            if (r.getAuthority().equalsIgnoreCase(SecurityConstants.Roles.ROLE_ADMIN)) {
-                return true;
-            }
-        }
-        return false;
+
+        return p.getRoles().stream().anyMatch(r -> r.getAuthority().equals(role));
     }
 
     public static boolean isCurrentUserAdmin() {
-        final Person p = getCurrentAuthenticatedPerson();
-        return isUserAdmin(p);
+        return hasUserRole(SecurityConstants.Roles.ROLE_ADMIN);
     }
 
-    public static boolean isCurrentRoleUser() {
+    public static boolean isCurrentRoleUser(String userRole) {
         final Person p = getCurrentAuthenticatedPerson();
+
+        p.getRoles().stream().filter(r ->
+                r.getAuthority().equals(SecurityConstants.Roles.ROLE_ADMIN) ||
+                        r.getAuthority().equals(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR))
 
         // check if we have more than 1 role
         if (p == null || p.getRoles() == null || p.getRoles().size() != 1) {

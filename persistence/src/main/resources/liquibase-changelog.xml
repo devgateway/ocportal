@@ -893,4 +893,21 @@
         </update>
     </changeSet>
 
+    <changeSet id="OCMAKU-510" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="ROLE"/>
+        </preConditions>
+
+        <update tableName="ROLE">
+            <column name="AUTHORITY" value="ROLE_PROCUREMENT_USER"/>
+            <where>AUTHORITY='ROLE_USER'</where>
+        </update>
+
+        <update tableName="ROLE">
+            <column name="AUTHORITY" value="ROLE_PROCUREMENT_VALIDATOR"/>
+            <where>AUTHORITY='ROLE_VALIDATOR'</where>
+        </update>
+
+    </changeSet>
+
 </databaseChangeLog>

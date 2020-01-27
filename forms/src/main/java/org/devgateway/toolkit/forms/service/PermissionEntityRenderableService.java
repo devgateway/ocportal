@@ -9,7 +9,6 @@ import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,19 +21,19 @@ public class PermissionEntityRenderableService {
     public String getAllowedAccess(final AbstractStatusAuditableEntity entity) {
         final Set<String> roles = WebSecurityUtil.getStringRolesForCurrentPerson();
 
-        // admins can edit
+        // admins can always edit
         if (roles.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
             return SecurityConstants.Action.EDIT;
         }
 
         // new forms can be added by validator/users in addition to admin types
-        if (entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_VALIDATOR)
+        if (entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR)
                 || roles.contains(SecurityConstants.Roles.ROLE_USER))) {
             return SecurityConstants.Action.EDIT;
         }
 
         // T should extend AbstractMakueniForm
-        if (!entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_VALIDATOR)
+        if (!entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR)
                 || roles.contains(SecurityConstants.Roles.ROLE_USER))) {
             if (entity instanceof AbstractMakueniEntity) {
                 final ProcurementPlan procurementPlan;
