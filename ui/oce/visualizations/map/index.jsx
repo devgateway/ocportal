@@ -69,7 +69,7 @@ class MapVisual extends backendFilterable(Visualization) {
     }
 
     return (
-      <Map center={center} zoom={_zoom} zoomControl={false}>
+      <Map center={center} zoom={_zoom} zoomControl={false} dragging={!L.Browser.mobile} tap={false}>
         {this.getTiles()}
         <Cluster maxAmount={this.getMaxAmount()}>
           {this.getData()

@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable';
 import { pluck } from '../../../../tools';
 import Donut from '../../../donut';
 import translatable from '../../../../translatable';
