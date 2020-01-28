@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.form.abstracted.ProcurementEditable;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
@@ -31,7 +32,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntity {
+public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntity implements ProcurementEditable {
     @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
 

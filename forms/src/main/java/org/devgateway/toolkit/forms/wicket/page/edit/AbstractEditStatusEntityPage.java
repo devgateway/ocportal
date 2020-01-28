@@ -690,6 +690,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus());
     }
 
+
     private void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, ROLE_PROCUREMENT_USER);

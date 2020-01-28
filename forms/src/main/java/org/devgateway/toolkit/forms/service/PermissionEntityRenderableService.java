@@ -5,6 +5,8 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlanAttachable;
+import org.devgateway.toolkit.persistence.dao.form.abstracted.ImplementationEditable;
+import org.devgateway.toolkit.persistence.dao.form.abstracted.ProcurementEditable;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,9 @@ import org.springframework.util.Assert;
 
 import java.util.Set;
 
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.IMPLEMENTATION_USER;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
-import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR;
 
 /**
  * @author idobre
@@ -22,6 +24,16 @@ import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_P
  */
 @Service
 public class PermissionEntityRenderableService {
+
+    public boolean isMatchingRightsOfEntity(AbstractStatusAuditableEntity entity, Set<String> roles) {
+        if (entity instanceof ProcurementEditable) {
+            return roles.contains(ROLE_PROCUREMENT_USER);
+        }
+        if (entity instanceof ImplementationEditable) {
+            return roles.contains(IMPLEMENTATION_USER);
+        }
+        return false;
+    }
 
     public String getAllowedAccess(final AbstractStatusAuditableEntity entity) {
         final Set<String> roles = WebSecurityUtil.getStringRolesForCurrentPerson();
@@ -33,12 +45,12 @@ public class PermissionEntityRenderableService {
         }
 
         // new forms can be added by validator/users in addition to admin types
-        if (entity.isNew() && (roles.contains(ROLE_PROCUREMENT_VALIDATOR) || roles.contains(ROLE_PROCUREMENT_USER))) {
+        if (entity.isNew() && isMatchingRightsOfEntity(entity, roles)) {
             return SecurityConstants.Action.EDIT;
         }
 
         // T should extend AbstractMakueniForm
-        if (!entity.isNew() && (roles.contains(ROLE_PROCUREMENT_VALIDATOR) || roles.contains(ROLE_PROCUREMENT_USER))) {
+        if (!entity.isNew() && isMatchingRightsOfEntity(entity, roles)) {
             if (entity instanceof AbstractMakueniEntity) {
                 final ProcurementPlan procurementPlan;
 
