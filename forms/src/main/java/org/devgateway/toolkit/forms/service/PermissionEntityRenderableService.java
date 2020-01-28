@@ -8,8 +8,13 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlanAttachable;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.Set;
+
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR;
 
 /**
  * @author idobre
@@ -20,21 +25,20 @@ public class PermissionEntityRenderableService {
 
     public String getAllowedAccess(final AbstractStatusAuditableEntity entity) {
         final Set<String> roles = WebSecurityUtil.getStringRolesForCurrentPerson();
+        Assert.notEmpty(roles, "Will not allow empty roles here!");
 
         // admins can always edit
-        if (roles.contains(SecurityConstants.Roles.ROLE_ADMIN)) {
+        if (roles.contains(ROLE_ADMIN)) {
             return SecurityConstants.Action.EDIT;
         }
 
         // new forms can be added by validator/users in addition to admin types
-        if (entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR)
-                || roles.contains(SecurityConstants.Roles.ROLE_USER))) {
+        if (entity.isNew() && (roles.contains(ROLE_PROCUREMENT_VALIDATOR) || roles.contains(ROLE_PROCUREMENT_USER))) {
             return SecurityConstants.Action.EDIT;
         }
 
         // T should extend AbstractMakueniForm
-        if (!entity.isNew() && (roles.contains(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR)
-                || roles.contains(SecurityConstants.Roles.ROLE_USER))) {
+        if (!entity.isNew() && (roles.contains(ROLE_PROCUREMENT_VALIDATOR) || roles.contains(ROLE_PROCUREMENT_USER))) {
             if (entity instanceof AbstractMakueniEntity) {
                 final ProcurementPlan procurementPlan;
 

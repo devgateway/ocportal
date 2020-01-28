@@ -29,7 +29,7 @@ import java.util.Optional;
  * @author idobre
  * @since 2019-04-02
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/projects")
 public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
     @SpringBean

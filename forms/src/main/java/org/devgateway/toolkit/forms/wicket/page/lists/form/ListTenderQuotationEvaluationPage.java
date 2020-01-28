@@ -15,7 +15,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author gmutuhu
  *
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/tenderQuotationEvaluationList")
 public class ListTenderQuotationEvaluationPage extends ListAbstractTenderProcessMakueniEntity
         <TenderQuotationEvaluation> {

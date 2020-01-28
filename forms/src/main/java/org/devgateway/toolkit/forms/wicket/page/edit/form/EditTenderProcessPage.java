@@ -25,7 +25,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author idobre
  * @since 2019-04-17
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/tenderProcess")
 public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderProcess> {
     @SpringBean

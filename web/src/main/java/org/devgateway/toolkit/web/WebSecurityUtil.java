@@ -13,7 +13,6 @@ package org.devgateway.toolkit.web;
 
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.Role;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -21,9 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 
 public class WebSecurityUtil {
 
@@ -86,35 +88,29 @@ public class WebSecurityUtil {
         return person.getRoles().stream().map(Role::getAuthority).collect(Collectors.toSet());
     }
 
-
-    public static boolean hasUserRole(String role) {
+    public static boolean hasAnyUserRoles(String... roles) {
         final Person p = getCurrentAuthenticatedPerson();
         if (p == null || p.getRoles() == null) {
             return false;
         }
+        List<String> rList = Arrays.asList(roles);
+        return p.getRoles().stream().anyMatch(r -> rList.contains(r.getAuthority()));
+    }
 
-        return p.getRoles().stream().anyMatch(r -> r.getAuthority().equals(role));
+
+    public static boolean hasUserRole(String role) {
+        return hasAnyUserRoles(role);
     }
 
     public static boolean isCurrentUserAdmin() {
-        return hasUserRole(SecurityConstants.Roles.ROLE_ADMIN);
+        return hasUserRole(ROLE_ADMIN);
     }
 
-    public static boolean isCurrentRoleUser(String userRole) {
-        final Person p = getCurrentAuthenticatedPerson();
-
-        p.getRoles().stream().filter(r ->
-                r.getAuthority().equals(SecurityConstants.Roles.ROLE_ADMIN) ||
-                        r.getAuthority().equals(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR))
-
-        // check if we have more than 1 role
-        if (p == null || p.getRoles() == null || p.getRoles().size() != 1) {
+    public static boolean isCurrentRoleOnlyUser(String userRole, String validatorRole) {
+        if (hasAnyUserRoles(ROLE_ADMIN, validatorRole)) {
             return false;
         }
-        if (p.getRoles().get(0).getAuthority().equalsIgnoreCase(SecurityConstants.Roles.ROLE_USER)) {
-            return true;
-        }
-        return false;
+        return hasUserRole(userRole);
     }
 
     public static String createURL(final HttpServletRequest request, final String resourcePath) {
