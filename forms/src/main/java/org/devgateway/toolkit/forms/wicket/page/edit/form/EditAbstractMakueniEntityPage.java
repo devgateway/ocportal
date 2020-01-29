@@ -12,6 +12,8 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.Strings;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
@@ -23,6 +25,7 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,16 +47,35 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected SessionMetadataService sessionMetadataService;
 
     @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
+
+    @SpringBean
     protected MakueniEntityServiceResolver makeniEntityServiceResolver;
 
     private Fragment extraStatusEntityButtons;
 
     protected TransparentWebMarkupContainer alertTerminated;
 
+
+    public EditAbstractMakueniEntityPage() {
+        super(new PageParameters());
+    }
+
     public EditAbstractMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
 
         this.listPageClass = DepartmentOverviewPage.class;
+    }
+
+    @Override
+    protected boolean isViewMode() {
+        return SecurityConstants.Action.VIEW
+                .equals(permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()));
+    }
+
+    @Override
+    public boolean isDisableEditingEvent() {
+        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
     }
 
     @Override
@@ -118,6 +140,11 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
+        if (permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()) == null) {
+            setResponsePage(listPageClass);
+        }
+
 
         alertTerminated = new TransparentWebMarkupContainer("alertTerminated");
         alertTerminated.setVisibilityAllowed(false);

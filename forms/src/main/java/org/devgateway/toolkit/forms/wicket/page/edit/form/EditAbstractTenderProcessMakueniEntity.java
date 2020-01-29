@@ -26,6 +26,7 @@ public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractT
         extends EditAbstractMakueniEntityPage<T> {
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessMakueniEntity.class);
 
+
     public EditAbstractTenderProcessMakueniEntity(final PageParameters parameters) {
         super(parameters);
 

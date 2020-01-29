@@ -9,6 +9,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -27,7 +28,8 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/tenderProcess")
-public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderProcess> {
+public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderProcess>
+        implements ProcurementRoleAssignable {
     @SpringBean
     private TenderProcessService tenderProcessService;
 

@@ -6,7 +6,6 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
-import org.devgateway.toolkit.persistence.dao.form.abstracted.ProcurementEditable;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
@@ -41,7 +40,7 @@ import java.util.function.Consumer;
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable, ProcurementEditable {
+public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable {
     @ExcelExport(useTranslation = true, name = "Tender ID")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;

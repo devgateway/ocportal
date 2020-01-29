@@ -49,8 +49,8 @@ import org.devgateway.toolkit.forms.wicket.components.table.ResettingFilterForm;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractMakueniEntityPage;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
-import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
@@ -65,6 +65,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Deflater;
@@ -228,14 +230,26 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 pageParameters.set(WebConstants.PARAM_ID, entity.getId());
             }
 
+            AbstractEditPage<T> editPage = null;
+
+            try {
+                Constructor<? extends AbstractEditPage<T>> editPageConstructor
+                        = editPageClass.getConstructor(PageParameters.class);
+                editPage = editPageConstructor.newInstance(new PageParameters());
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
             final BootstrapBookmarkablePageLink<T> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", editPageClass, pageParameters, Buttons.Type.Info);
             editPageLink.setIconType(FontAwesomeIconType.edit)
                     .setSize(Size.Small)
                     .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
-            if (entity instanceof AbstractMakueniEntity && SecurityConstants.Action.VIEW.equals(
-                    permissionEntityRenderableService.getAllowedAccess((AbstractStatusAuditableEntity) entity))) {
+            if (editPage instanceof EditAbstractMakueniEntityPage && entity instanceof AbstractMakueniEntity &&
+                    SecurityConstants.Action.VIEW.equals(
+                            permissionEntityRenderableService.getAllowedAccess((EditAbstractMakueniEntityPage<?>) editPage,
+                                    (AbstractMakueniEntity) entity))) {
                 editPageLink.setIconType(FontAwesomeIconType.eye)
                         .setType(Buttons.Type.Warning)
                         .setLabel(new StringResourceModel("view", AbstractListPage.this, null));

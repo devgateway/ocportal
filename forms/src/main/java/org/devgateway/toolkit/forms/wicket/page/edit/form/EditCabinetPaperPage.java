@@ -17,11 +17,11 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.dao.form.abstracted.ProcurementEditable;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -31,7 +31,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> implements ProcurementEditable {
+public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> implements ProcurementRoleAssignable {
 
     @SpringBean
     protected CabinetPaperService cabinetPaperService;
@@ -59,7 +59,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> impleme
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        if (permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()) == null) {
+        if (permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()) == null) {
             setResponsePage(listPageClass);
         }
 
@@ -94,6 +94,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> impleme
         final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
         return new UniqueNameValidator(id.toLong(-1));
     }
+
 
     public class UniqueNameValidator implements IValidator<String> {
         private final Long id;
@@ -148,6 +149,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> impleme
 
     private boolean isViewMode() {
         return SecurityConstants.Action.VIEW.equals(
-                permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()));
+                permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()));
     }
 }

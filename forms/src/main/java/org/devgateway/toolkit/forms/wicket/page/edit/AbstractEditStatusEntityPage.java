@@ -37,13 +37,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
@@ -70,8 +68,6 @@ import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_P
  */
 public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAuditableEntity>
         extends AbstractEditPage<T> {
-    @SpringBean
-    private PermissionEntityRenderableService permissionEntityRenderableService;
 
     protected Fragment entityButtonsFragment;
 
@@ -195,10 +191,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     protected void onInitialize() {
         super.onInitialize();
 
-        if (permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()) == null) {
-            setResponsePage(listPageClass);
-        }
-
         addAutosaveLabel();
         addVerticalMaxPositionFields();
 
@@ -276,20 +268,15 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         this.statusLabel.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusLabel());
     }
 
-    private boolean isViewMode() {
-        return SecurityConstants.Action.VIEW
-                .equals(permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()));
-    }
-
     protected void checkAndSendEventForDisableEditing() {
         if (isDisableEditingEvent()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
     }
 
-    public boolean isDisableEditingEvent() {
-        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
-    }
+    public abstract boolean isDisableEditingEvent();
+
+    protected abstract boolean isViewMode();
 
     private void addAutosaveLabel() {
         autoSaveLabel = new Label("autoSaveLabel",

@@ -6,6 +6,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ProfessionalOpinionItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -22,7 +23,8 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakueniEntity<ProfessionalOpinion> {
+public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakueniEntity<ProfessionalOpinion>
+        implements ProcurementRoleAssignable {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
 
