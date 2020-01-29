@@ -917,19 +917,19 @@
         </preConditions>
         <insert tableName="ROLE">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="AUTHORITY" value="IMPLEMENTATION_USER"/>
+            <column name="AUTHORITY" value="ROLE_IMPLEMENTATION_USER"/>
         </insert>
         <insert tableName="ROLE">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="AUTHORITY" value="PMC_VALIDATOR"/>
+            <column name="AUTHORITY" value="ROLE_PMC_VALIDATOR"/>
         </insert>
         <insert tableName="ROLE">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="AUTHORITY" value="TECH_ADMIN_VALIDATOR"/>
+            <column name="AUTHORITY" value="ROLE_TECH_ADMIN_VALIDATOR"/>
         </insert>
         <insert tableName="ROLE">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="AUTHORITY" value="ME_PAYMENT_VALIDATOR"/>
+            <column name="AUTHORITY" value="ROLE_ME_PAYMENT_VALIDATOR"/>
         </insert>
     </changeSet>
 

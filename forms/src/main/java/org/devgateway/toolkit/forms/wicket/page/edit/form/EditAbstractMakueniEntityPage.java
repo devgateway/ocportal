@@ -14,6 +14,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -34,7 +35,7 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.DRAFT;
  * @since 2019-04-02
  */
 public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
-        extends AbstractEditStatusEntityPage<T> {
+        extends AbstractEditStatusEntityPage<T> implements EditorValidatorRoleAssignable {
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniEntityPage.class);
 
     protected ButtonContentModal revertToDraftModal;

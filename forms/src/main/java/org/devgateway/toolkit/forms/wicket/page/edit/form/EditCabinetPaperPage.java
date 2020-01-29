@@ -21,6 +21,7 @@ import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOv
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.abstracted.ProcurementEditable;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -30,7 +31,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
+public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> implements ProcurementEditable {
 
     @SpringBean
     protected CabinetPaperService cabinetPaperService;

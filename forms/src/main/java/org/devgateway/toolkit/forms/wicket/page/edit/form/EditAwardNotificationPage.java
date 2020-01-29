@@ -6,6 +6,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -21,7 +22,8 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntity<AwardNotification> {
+public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntity<AwardNotification>
+        implements ProcurementRoleAssignable {
     @SpringBean
     protected AwardNotificationService awardNotificationService;
 

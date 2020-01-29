@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.service;
 
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractMakueniEntityPage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -14,8 +15,8 @@ import org.springframework.util.Assert;
 
 import java.util.Set;
 
-import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.IMPLEMENTATION_USER;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
 
 /**
@@ -30,12 +31,12 @@ public class PermissionEntityRenderableService {
             return roles.contains(ROLE_PROCUREMENT_USER);
         }
         if (entity instanceof ImplementationEditable) {
-            return roles.contains(IMPLEMENTATION_USER);
+            return roles.contains(ROLE_IMPLEMENTATION_USER);
         }
         return false;
     }
 
-    public String getAllowedAccess(final AbstractStatusAuditableEntity entity) {
+    public String getAllowedAccess(final EditAbstractMakueniEntityPage<?> page, boolean isNew, Department department) {
         final Set<String> roles = WebSecurityUtil.getStringRolesForCurrentPerson();
         Assert.notEmpty(roles, "Will not allow empty roles here!");
 
@@ -45,12 +46,12 @@ public class PermissionEntityRenderableService {
         }
 
         // new forms can be added by validator/users in addition to admin types
-        if (entity.isNew() && isMatchingRightsOfEntity(entity, roles)) {
+        if (isNew && isMatchingRightsOfEntity(page, roles)) {
             return SecurityConstants.Action.EDIT;
         }
 
         // T should extend AbstractMakueniForm
-        if (!entity.isNew() && isMatchingRightsOfEntity(entity, roles)) {
+        if (!isNew && isMatchingRightsOfEntity(page, roles)) {
             if (entity instanceof AbstractMakueniEntity) {
                 final ProcurementPlan procurementPlan;
 

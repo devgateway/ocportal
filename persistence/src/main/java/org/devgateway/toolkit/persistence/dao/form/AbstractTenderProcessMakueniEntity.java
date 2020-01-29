@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.form.abstracted.ProcurementEditable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import java.util.Objects;
 
 @MappedSuperclass
 public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable,
-        ProcurementPlanAttachable {
+        ProcurementPlanAttachable, ProcurementEditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tender_process_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
