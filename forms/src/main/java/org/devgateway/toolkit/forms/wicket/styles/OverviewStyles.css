@@ -450,7 +450,8 @@
 .status-panel .year {
     border-right: 2px solid #1d7abf;
     color: #7c8ca5;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 130%;
     margin-right: 20px;
     padding-right: 20px;
 }
@@ -690,6 +691,7 @@
 
 .project-status {
     float: left;
+    margin-top: -2px;
 }
 
 .project-status .status,
@@ -710,12 +712,12 @@
     float: left;
     display: block;
     margin-right: 10px;
+    font-size: 12px;
 }
 
 .status-panel.project .year {
     display: block;
     float: left;
-    margin-left: 10px;
     margin-top: 1px;
 }
 
@@ -724,7 +726,7 @@
 }
 
 .status-panel-heading .btn.btn-edit {
-    margin-top: -3px;
+    margin-top: -6px;
 }
 
 .cabinet {
