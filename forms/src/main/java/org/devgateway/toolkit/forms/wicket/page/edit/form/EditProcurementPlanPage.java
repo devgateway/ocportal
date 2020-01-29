@@ -27,11 +27,13 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
 
-    public EditProcurementPlanPage(final PageParameters parameters) {
-        super(parameters);
-
+    public EditProcurementPlanPage() {
+        super();
         this.jpaService = procurementPlanService;
+    }
 
+    @Override
+    public void checkInitParameters() {
         final Department department = sessionMetadataService.getSessionDepartment();
         final FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
 
@@ -48,6 +50,11 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
                     + department + " and fiscalYear: " + fiscalYear);
             setResponsePage(StatusOverviewPage.class);
         }
+    }
+
+    public EditProcurementPlanPage(final PageParameters parameters) {
+        super(parameters);
+        this.jpaService = procurementPlanService;
     }
 
     @Override

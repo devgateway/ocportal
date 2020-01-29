@@ -5,4 +5,5 @@ public interface EditorValidatorRoleAssignable {
     String getUserRole();
 
     String getValidatorRole();
+    
 }

@@ -19,6 +19,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxBut
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -36,6 +37,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -65,8 +67,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Deflater;
@@ -230,15 +230,8 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 pageParameters.set(WebConstants.PARAM_ID, entity.getId());
             }
 
-            AbstractEditPage<T> editPage = null;
-
-            try {
-                Constructor<? extends AbstractEditPage<T>> editPageConstructor
-                        = editPageClass.getConstructor(PageParameters.class);
-                editPage = editPageConstructor.newInstance(new PageParameters());
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            PageProvider pageProvider = new PageProvider(editPageClass);
+            IRequestablePage editPage = pageProvider.getPageInstance();
 
             final BootstrapBookmarkablePageLink<T> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", editPageClass, pageParameters, Buttons.Type.Info);
@@ -246,10 +239,9 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                     .setSize(Size.Small)
                     .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
-            if (editPage instanceof EditAbstractMakueniEntityPage && entity instanceof AbstractMakueniEntity &&
-                    SecurityConstants.Action.VIEW.equals(
-                            permissionEntityRenderableService.getAllowedAccess((EditAbstractMakueniEntityPage<?>) editPage,
-                                    (AbstractMakueniEntity) entity))) {
+            if (editPage instanceof EditAbstractMakueniEntityPage && entity instanceof AbstractMakueniEntity
+                    && SecurityConstants.Action.VIEW.equals(permissionEntityRenderableService.getAllowedAccess(
+                    (EditAbstractMakueniEntityPage<?>) editPage, (AbstractMakueniEntity) entity))) {
                 editPageLink.setIconType(FontAwesomeIconType.eye)
                         .setType(Buttons.Type.Warning)
                         .setLabel(new StringResourceModel("view", AbstractListPage.this, null));

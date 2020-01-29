@@ -56,6 +56,9 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     protected TransparentWebMarkupContainer alertTerminated;
 
+    protected void checkInitParameters() {
+
+    }
 
     public EditAbstractMakueniEntityPage() {
         super(new PageParameters());
@@ -139,6 +142,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @Override
     protected void onInitialize() {
+        checkInitParameters();
         super.onInitialize();
 
         if (permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()) == null) {
