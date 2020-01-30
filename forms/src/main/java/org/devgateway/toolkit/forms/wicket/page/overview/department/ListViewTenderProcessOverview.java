@@ -25,6 +25,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
@@ -187,14 +188,22 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                 "Acceptance",
                 awardAcceptance != null ? awardAcceptance.getItems().stream().map(Objects::toString)
                         .collect(Collectors.toList()) : null,
-                tenderProcess, EditAwardAcceptancePage.class, awardNotification);
+                tenderProcess, EditAwardAcceptancePage.class, awardNotification
+        );
         containerFragment.add(awardAcceptancePanel);
 
         final Panel contractPanel = new TenderDetailPanel<>("contractPanel", contract,
                 "Contracts", contract != null ? new ArrayList<>(Arrays.asList(
                 contract.getAwardee(), contract.getContractValue())) : null,
-                tenderProcess, EditContractPage.class, awardAcceptance);
+                tenderProcess, EditContractPage.class, awardAcceptance
+        );
         containerFragment.add(contractPanel);
+
+        final Panel administratorReportPanel = new TenderDetailPanel<>("administratorReportPanel", null,
+                "Administrator Report", null,
+                tenderProcess, EditAdministratorReportPage.class, contract
+        );
+        containerFragment.add(administratorReportPanel);
 
         hideableContainer.add(containerFragment);
     }

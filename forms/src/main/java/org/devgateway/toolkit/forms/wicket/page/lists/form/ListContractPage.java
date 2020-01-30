@@ -67,7 +67,7 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
                         (new StringResourceModel("awardee", ListContractPage.this)).getString()),
                 "awardee",
                 "awardee",
-                new ListModel(awardees), dataTable, false
+                new ListModel<>(awardees), dataTable, false
         ));
     }
 

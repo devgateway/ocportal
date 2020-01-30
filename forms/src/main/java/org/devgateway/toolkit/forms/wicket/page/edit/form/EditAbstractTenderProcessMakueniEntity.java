@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -30,6 +31,8 @@ public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractT
     public EditAbstractTenderProcessMakueniEntity(final PageParameters parameters) {
         super(parameters);
 
+        final Fragment fragment = new Fragment("extraReadOnlyFields", "noExtraReadOnlyFields", this);
+        editForm.add(fragment);
     }
 
     @Override

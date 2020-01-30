@@ -180,6 +180,17 @@ public final class ComponentUtil {
         return checkToggle;
     }
 
+    public static CheckBoxYesNoToggleBootstrapFormComponent addYesNoToggle(
+            final WebMarkupContainer parent,
+            final String id, Boolean removeCheckboxClass) {
+        final CheckBoxYesNoToggleBootstrapFormComponent checkToggle = new CheckBoxYesNoToggleBootstrapFormComponent(
+                id, removeCheckboxClass
+        );
+        parent.add(checkToggle);
+
+        return checkToggle;
+    }
+
     public static TextAreaFieldBootstrapFormComponent<String> addTextAreaField(
             final WebMarkupContainer parent,
             final String id) {

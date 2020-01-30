@@ -70,6 +70,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
@@ -95,6 +96,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
 
 /**
@@ -386,7 +388,31 @@ public abstract class BasePage extends GenericWebPage<Void> {
         return metadataMenu;
     }
 
-    private NavbarDropDownButton newFormMenu() {
+    private NavbarDropDownButton newImplementationFormMenu() {
+        // form menu
+        final NavbarDropDownButton formMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.implementationForms", this, null)) {
+
+            @Override
+            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
+                final List<AbstractLink> list = new ArrayList<>();
+
+                list.add(new MenuBookmarkablePageLink<ListAdministratorReportPage>(
+                        ListAdministratorReportPage.class, null,
+                        new StringResourceModel("navbar.administratorReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                return list;
+            }
+        };
+
+        formMenu.setIconType(FontAwesomeIconType.wpforms);
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_IMPLEMENTATION_USER);
+
+        return formMenu;
+    }
+
+    private NavbarDropDownButton newProcurementFormMenu() {
         // form menu
         final NavbarDropDownButton formMenu = new NavbarDropDownButton(
                 new StringResourceModel("navbar.forms", this, null)) {
@@ -396,8 +422,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 final List<AbstractLink> list = new ArrayList<>();
 
                 list.add(new MenuBookmarkablePageLink<ListProcurementPlanPage>(ListProcurementPlanPage.class, null,
-                        new StringResourceModel("navbar.procurementPlan", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                        new StringResourceModel("navbar.procurementPlan", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
 
                 list.add(new MenuBookmarkablePageLink<ListCabinetPaperPage>(ListCabinetPaperPage.class, null,
                         new StringResourceModel("navbar.cabinetpapers", this, null))
@@ -584,7 +610,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
         navbar.setBrandName(new StringResourceModel("brandName", this, null));
 
         navbar.addComponents(
-                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newFormMenu(),
+                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newProcurementFormMenu(),
+                        newImplementationFormMenu(),
                         newMetadataMenu(), newAdminMenu(), newAccountMenu(), newLogoutMenu()
                 ));
 

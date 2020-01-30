@@ -99,6 +99,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<Contract> contract = new HashSet<>();
 
+    @ExcelExport(separateSheet = true, name = "Administrator Report")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<AdministratorReport> administratorReports = new HashSet<>();
+
     private boolean checkTerminated(Statusable... statusables) {
         for (Statusable statusable : statusables) {
             if (statusable != null && statusable.isTerminated()) {
@@ -348,5 +354,13 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void setPurchRequisitions(List<PurchRequisition> purchRequisitions) {
         this.purchRequisitions = purchRequisitions;
+    }
+
+    public Set<AdministratorReport> getAdministratorReports() {
+        return administratorReports;
+    }
+
+    public void setAdministratorReports(Set<AdministratorReport> administratorReports) {
+        this.administratorReports = administratorReports;
     }
 }
