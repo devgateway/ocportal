@@ -38,6 +38,10 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
         this.jpaService = tenderQuotationEvaluationService;
     }
 
+    public EditTenderQuotationEvaluationPage() {
+        this(new PageParameters());
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();

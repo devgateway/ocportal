@@ -2,7 +2,9 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -25,6 +27,7 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
+import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +64,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     }
 
     public EditAbstractMakueniEntityPage() {
-        super(new PageParameters());
+        this(new PageParameters());
     }
 
     public EditAbstractMakueniEntityPage(final PageParameters parameters) {
@@ -161,6 +164,61 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         extraStatusEntityButtons.add(revertToDraftModal);
 
 
+    }
+
+    @Override
+    protected void addSaveButtonsPermissions(final Component button) {
+        addDefaultAllButtonsPermissions(button);
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getUserRole());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+    }
+
+    @Override
+    protected void addTerminateButtonPermissions(final Component button) {
+        addDefaultAllButtonsPermissions(button);
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getValidatorRole());
+        if (editForm.getModelObject().isNew()) {
+            button.setVisibilityAllowed(false);
+        }
+    }
+
+    @Override
+    protected void addApproveButtonPermissions(final Component button) {
+        addDefaultAllButtonsPermissions(button);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, getValidatorRole());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
+    }
+
+    @Override
+    protected void addSaveRevertButtonPermissions(final Component button) {
+        addDefaultAllButtonsPermissions(button);
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getValidatorRole());
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getUserRole());
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+
+        // additionally normal users should not revert anything that was already validated
+        if (WebSecurityUtil.isCurrentRoleOnlyUser(getUserRole(), getValidatorRole())
+                && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
+            button.setVisibilityAllowed(false);
+        } else
+
+            //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
+            if (WebSecurityUtil.isCurrentUserAdmin()
+                    && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
+                    || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
+                button.setVisibilityAllowed(true);
+            }
+    }
+
+    @Override
+    protected void addDeleteButtonPermissions(final Component button) {
+        addDefaultAllButtonsPermissions(button);
+        MetaDataRoleAuthorizationStrategy.authorize(
+                button, Component.RENDER, getUserRole());
     }
 
     @Override

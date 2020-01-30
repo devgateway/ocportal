@@ -30,6 +30,10 @@ public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractT
     public EditAbstractTenderProcessMakueniEntity(final PageParameters parameters) {
         super(parameters);
 
+    }
+
+    @Override
+    protected void checkInitParameters() {
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionTenderProcess() == null) {
             logger.warn("Something wrong happened since we are trying to add a new AbstractPurchaseReqMakueni Entity "

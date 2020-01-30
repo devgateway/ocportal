@@ -28,8 +28,7 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
     protected ProcurementPlanService procurementPlanService;
 
     public EditProcurementPlanPage() {
-        super();
-        this.jpaService = procurementPlanService;
+        this(new PageParameters());
     }
 
     @Override

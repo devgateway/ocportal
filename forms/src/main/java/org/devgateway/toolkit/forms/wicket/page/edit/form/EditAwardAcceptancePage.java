@@ -37,6 +37,10 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
 
     private GenericSleepFormComponent supplierID;
 
+    public EditAwardAcceptancePage() {
+        this(new PageParameters());
+    }
+
     public EditAwardAcceptancePage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = awardAcceptanceService;

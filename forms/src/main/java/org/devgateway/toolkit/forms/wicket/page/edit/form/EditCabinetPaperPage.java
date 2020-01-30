@@ -48,16 +48,18 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> impleme
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
 
+    }
+
+    @Override
+    protected void onInitialize() {
+
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionPP() == null) {
             logger.warn("Something wrong happened since we are trying to add a new CabinetPaper Entity "
                     + "without having a ProcurementPlan!");
             setResponsePage(StatusOverviewPage.class);
         }
-    }
 
-    @Override
-    protected void onInitialize() {
         super.onInitialize();
         if (permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()) == null) {
             setResponsePage(listPageClass);

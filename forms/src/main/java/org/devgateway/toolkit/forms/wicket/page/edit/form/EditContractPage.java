@@ -38,7 +38,8 @@ import java.util.Objects;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> implements ProcurementRoleAssignable {
+public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> implements
+        ProcurementRoleAssignable {
     @SpringBean
     protected ContractService contractService;
 
@@ -51,6 +52,10 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
     private GenericSleepFormComponent supplierAddress;
+
+    public EditContractPage() {
+        this(new PageParameters());
+    }
 
     public EditContractPage(final PageParameters parameters) {
         super(parameters);

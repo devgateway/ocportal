@@ -69,10 +69,18 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
 
     protected Select2MultiChoiceBootstrapFormComponent<Ward> wards;
 
+    public EditProjectPage() {
+        this(new PageParameters());
+    }
+
     public EditProjectPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = projectService;
 
+    }
+
+    @Override
+    protected void checkInitParameters() {
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionPP() == null) {
             logger.warn("Something wrong happened since we are trying to add a new Project Entity "

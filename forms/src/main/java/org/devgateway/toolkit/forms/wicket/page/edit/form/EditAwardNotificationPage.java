@@ -30,6 +30,11 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
     @SpringBean
     protected TenderProcessService tenderProcessService;
 
+    public EditAwardNotificationPage() {
+        this(new PageParameters());
+    }
+
+
     public EditAwardNotificationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = awardNotificationService;

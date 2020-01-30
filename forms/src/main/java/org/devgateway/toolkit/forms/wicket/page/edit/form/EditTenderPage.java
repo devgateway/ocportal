@@ -79,6 +79,10 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
         this.jpaService = tenderService;
     }
 
+    public EditTenderPage() {
+        this(new PageParameters());
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();

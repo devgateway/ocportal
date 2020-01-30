@@ -53,14 +53,10 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.datetime.markup.html.basic.DateLabel;
 import org.wicketstuff.select2.Select2Choice;
-
-import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
-import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR;
 
 /**
  * @author mpostelnicu
@@ -660,65 +656,26 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
     }
 
-    private void addDefaultAllButtonsPermissions(final Component button) {
+    protected abstract void addTerminateButtonPermissions(Component button);
+
+    protected abstract void addDeleteButtonPermissions(Component button);
+
+    protected abstract void addSaveRevertButtonPermissions(Component button);
+
+    protected abstract void addApproveButtonPermissions(Component button);
+
+    protected abstract void addSaveButtonsPermissions(Component button);
+
+    protected void addDefaultAllButtonsPermissions(final Component button) {
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
         button.setVisibilityAllowed(!isTerminated() && !isViewMode());
     }
 
-    private void addTerminateButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, ROLE_PROCUREMENT_VALIDATOR);
-        if (editForm.getModelObject().isNew()) {
-            button.setVisibilityAllowed(false);
-        }
-    }
 
     protected boolean isTerminated() {
         return DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus());
     }
 
-
-    private void addSaveButtonsPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, ROLE_PROCUREMENT_USER);
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
-    }
-
-    private void addApproveButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(
-                button, Component.RENDER, ROLE_PROCUREMENT_VALIDATOR);
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
-    }
-
-    private void addSaveRevertButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, ROLE_PROCUREMENT_VALIDATOR);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, ROLE_PROCUREMENT_USER);
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
-
-        // additionally normal users should not revert anything that was already validated
-        if (WebSecurityUtil.isCurrentRoleOnlyUser(ROLE_PROCUREMENT_USER, ROLE_PROCUREMENT_VALIDATOR)
-                && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
-            button.setVisibilityAllowed(false);
-        } else
-
-            //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
-            if (WebSecurityUtil.isCurrentUserAdmin()
-                    && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
-                    || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
-                button.setVisibilityAllowed(true);
-            }
-    }
-
-    private void addDeleteButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(
-                button, Component.RENDER, ROLE_PROCUREMENT_USER);
-    }
 
     private void scrollToPreviousPosition(final IHeaderResponse response) {
         response.render(OnDomReadyHeaderItem.forScript(String.format(

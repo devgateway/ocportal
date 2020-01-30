@@ -50,16 +50,23 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
         }
     }
 
-    public EditTenderProcessPage(final PageParameters parameters) {
-        super(parameters);
-        this.jpaService = tenderProcessService;
+    public EditTenderProcessPage() {
+        this(new PageParameters());
+    }
 
+    @Override
+    protected void checkInitParameters() {
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionProject() == null) {
             logger.warn("Something wrong happened since we are trying to add a new TenderProcess Entity "
                     + "without having a Project!");
             setResponsePage(StatusOverviewPage.class);
         }
+    }
+
+    public EditTenderProcessPage(final PageParameters parameters) {
+        super(parameters);
+        this.jpaService = tenderProcessService;
     }
 
     @Override

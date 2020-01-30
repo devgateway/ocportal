@@ -36,6 +36,11 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
         this.jpaService = professionalOpinionService;
     }
 
+    public EditProfessionalOpinionPage() {
+        this(new PageParameters());
+    }
+
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
