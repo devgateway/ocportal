@@ -55,10 +55,11 @@ public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEn
 
         addContractor();
 
-        ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true);
+        ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
+        formDocs.required();
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
     }
@@ -74,6 +75,7 @@ public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEn
                 "contractor",
                 new GenericChoiceProvider<>(getContractor(editForm.getModelObject().getTenderProcess()))
         );
+        contractSelector.required();
         editForm.add(contractSelector);
     }
 
