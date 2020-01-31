@@ -232,6 +232,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(null);
     }
 
+    public void removeAdministratorReport(final AdministratorReport item) {
+        administratorReports.remove(item);
+        item.setTenderProcess(null);
+    }
+
+
     public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
     }
@@ -296,6 +302,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void addAwardAcceptance(final AwardAcceptance item) {
         awardAcceptance.add(item);
+        item.setTenderProcess(this);
+    }
+
+    public void addAdministratorReport(final AdministratorReport item) {
+        administratorReports.add(item);
         item.setTenderProcess(this);
     }
 

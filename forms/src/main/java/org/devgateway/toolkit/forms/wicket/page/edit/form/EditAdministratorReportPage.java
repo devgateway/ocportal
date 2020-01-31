@@ -14,6 +14,7 @@ import org.devgateway.toolkit.persistence.dao.form.AdministratorReport;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -32,6 +33,9 @@ public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEn
     @SpringBean
     protected AdministratorReportService administratorReportService;
     private Select2ChoiceBootstrapFormComponent<Supplier> contractSelector;
+
+    @SpringBean
+    protected TenderProcessService tenderProcessService;
 
     public EditAdministratorReportPage(PageParameters parameters) {
         super(parameters);
@@ -77,6 +81,24 @@ public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEn
         );
         contractSelector.required();
         editForm.add(contractSelector);
+    }
+
+    @Override
+    protected void beforeSaveEntity(final AdministratorReport report) {
+        super.beforeSaveEntity(report);
+
+        final TenderProcess tenderProcess = report.getTenderProcess();
+        tenderProcess.addAdministratorReport(report);
+        tenderProcessService.save(tenderProcess);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final AdministratorReport report) {
+        super.beforeDeleteEntity(report);
+
+        final TenderProcess tenderProcess = report.getTenderProcess();
+        tenderProcess.removeAdministratorReport(report);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
