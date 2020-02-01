@@ -163,7 +163,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         entityButtonsFragment.replace(extraStatusEntityButtons);
         extraStatusEntityButtons.add(revertToDraftModal);
 
-
     }
 
     @Override

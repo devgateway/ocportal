@@ -75,6 +75,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePa
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListInspectionReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
@@ -400,6 +401,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListAdministratorReportPage>(
                         ListAdministratorReportPage.class, null,
                         new StringResourceModel("navbar.administratorReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListInspectionReportPage>(
+                        ListInspectionReportPage.class, null,
+                        new StringResourceModel("navbar.inspectionReport", this, null)
                 ).setIconType(FontAwesomeIconType.file_text_o));
 
                 return list;

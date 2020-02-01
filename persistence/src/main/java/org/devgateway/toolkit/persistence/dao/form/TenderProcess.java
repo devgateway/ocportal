@@ -105,6 +105,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<AdministratorReport> administratorReports = new HashSet<>();
 
+    @ExcelExport(separateSheet = true, name = "Inspection Report")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<InspectionReport> inspectionReports = new HashSet<>();
+
     private boolean checkTerminated(Statusable... statusables) {
         for (Statusable statusable : statusables) {
             if (statusable != null && statusable.isTerminated()) {
@@ -237,6 +243,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(null);
     }
 
+    public void removeInspectonReport(final InspectionReport item) {
+        inspectionReports.remove(item);
+        item.setTenderProcess(null);
+    }
+
 
     public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
@@ -309,6 +320,13 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         administratorReports.add(item);
         item.setTenderProcess(this);
     }
+
+
+    public void addInspectionReport(final InspectionReport item) {
+        inspectionReports.add(item);
+        item.setTenderProcess(this);
+    }
+
 
     public void removeAwardAcceptance(final AwardAcceptance item) {
         awardAcceptance.remove(item);

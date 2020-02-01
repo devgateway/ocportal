@@ -29,6 +29,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAdministratorRepor
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditInspectionReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
@@ -204,6 +205,13 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                 tenderProcess, EditAdministratorReportPage.class, contract
         );
         containerFragment.add(administratorReportPanel);
+
+        final Panel inspectionReportPanel = new TenderDetailPanel<>("inspectionReportPanel", null,
+                "Inspection Report", null,
+                tenderProcess, EditInspectionReportPage.class, contract
+        );
+        containerFragment.add(inspectionReportPanel);
+
 
         hideableContainer.add(containerFragment);
     }

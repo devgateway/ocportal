@@ -11,6 +11,8 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniE
 public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractTenderProcessMakueniEntity>
         extends EditAbstractTenderProcessMakueniEntity<T> {
 
+    protected Fragment abstractImplExtraFields;
+
     public EditAbstractImplTenderProcessEntity(PageParameters parameters) {
         super(parameters);
     }
@@ -19,9 +21,13 @@ public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractTend
     protected void onInitialize() {
         super.onInitialize();
 
-        entityButtonsFragment = new Fragment("extraReadOnlyFields", "implExtraFields", this);
-        entityButtonsFragment.add(new GenericSleepFormComponent<>("tenderProcess.tender.iterator.next.tenderTitle"));
+        abstractImplExtraFields = new Fragment("extraReadOnlyFields", "abstractImplExtraFields", this);
+        abstractImplExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.tender.iterator.next.tenderTitle"));
+        abstractImplExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.awardee"));
 
-        editForm.replace(entityButtonsFragment);
+        final Fragment fragment = new Fragment("childExtraFields", "noChildExtraFields", this);
+        abstractImplExtraFields.add(fragment);
+
+        editForm.replace(abstractImplExtraFields);
     }
 }
