@@ -19,6 +19,7 @@ class MakueniTenders extends CRDPage {
 
   constructor(props) {
     super(props);
+    this.introjsCnt = 0;
 
     this.state = {
       data: []
@@ -72,10 +73,15 @@ class MakueniTenders extends CRDPage {
     return <FiltersTendersWrapper filters={mtFilters} resetPage={this.resetPage.bind(this)} translations={this.props.translations}/>;
   }
 
+  showDataStep() {
+    return this.introjsCnt++ < 6;
+  }
+
   tenderLink(navigate) {
-    return (tender) => (<div className="tender-title" data-step="9"
-    data-intro="Click on the Tender Title to view the tender details, purchase requisition, tender
-    quotation, professional opinion, notification, award and contract for each tender process.">
+    return (tender) => (<div className="tender-title" data-step={this.showDataStep()?9:""}
+    data-intro={this.showDataStep()?"Click on the Tender Title to view the tender details," +
+    " purchase requisition, tender quotation, professional opinion, notification, award and " +
+    "contract for each tender process.":""}>
       {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
@@ -88,8 +94,10 @@ class MakueniTenders extends CRDPage {
   }
 
   projectLink(navigate) {
-    return (project) => (<div data-step="10" data-intro="Click the Project Title to view project details outlined
-        in the approved cabinet paper.">
+    return (project) => (<div data-step={this.showDataStep()?10:""}
+                              data-intro=
+                                {this.showDataStep()?"Click the Project Title to view project " +
+                                  "details outlined in the approved cabinet paper.":""}>
       {
         project !== undefined
           ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('p', project._id)}
@@ -102,7 +110,9 @@ class MakueniTenders extends CRDPage {
   }
 
   downloadFiles(tender) {
-    return (<div data-step="11" data-intro="Click to download the tender document hardcopy.">
+    return (<div data-step={this.showDataStep()?11:""}
+                 data-intro={this.showDataStep()?"Click to download the tender document " +
+                   "hardcopy.":""}>
         {
           tender && tender.formDocs && tender.formDocs.map(doc => <div key={tender._id+'-'+doc._id}>
             <OverlayTrigger
@@ -140,6 +150,7 @@ linksOrFiles() {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
     const [navigationPage, id] = route;
+    this.introjsCnt = 0;
 
     return (<div className="container-fluid dashboard-default">
 
