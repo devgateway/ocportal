@@ -1,9 +1,9 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
-import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
+import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.repository.form.InspectionReportRepository;
+import org.devgateway.toolkit.persistence.repository.form.PMCReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,26 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class InspectionReportServiceImpl extends AbstractMakueniEntityServiceImpl<InspectionReport>
-        implements InspectionReportService {
+public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCReport>
+        implements PMCReportService {
 
     @Autowired
-    private InspectionReportRepository repository;
+    private PMCReportRepository repository;
 
     @Override
-    protected BaseJpaRepository<InspectionReport, Long> repository() {
+    protected BaseJpaRepository<PMCReport, Long> repository() {
         return repository;
     }
 
     @Override
-    public InspectionReport newInstance() {
-        return new InspectionReport();
+    public PMCReport newInstance() {
+        return new PMCReport();
     }
 
     @Override
     @Cacheable
-    public InspectionReport findByTenderProcess(final TenderProcess tenderProcess) {
+    public PMCReport findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
     }
-
 }

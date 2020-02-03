@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.ButtonGroup;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstrapcheckbox.BootstrapCheckBoxPicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstrapcheckbox.BootstrapCheckBoxPickerConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
@@ -54,7 +53,7 @@ public class CheckBoxPickerBootstrapFormComponent
         final BootstrapCheckBoxPickerConfig config = new BootstrapCheckBoxPickerConfig().withOnClass("btn-info")
                 .withOffClass("btn-warning")
                 .withOnIcon(FontAwesomeIconType.thumbs_up).withOffIcon(FontAwesomeIconType.thumbs_down)
-                .withReverse(true).withStyle(ButtonGroup.Size.Small);
+                .withReverse(true);
 
         final BootstrapCheckBoxPicker checkBoxPicker = new BootstrapCheckBoxPicker("field", initFieldModel(), config);
         checkBoxPicker.add(new AjaxFormComponentUpdatingBehavior("change") {

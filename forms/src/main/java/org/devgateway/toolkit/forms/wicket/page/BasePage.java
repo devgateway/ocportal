@@ -60,7 +60,9 @@ import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatistic
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccountPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentTypePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDesignationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
@@ -76,6 +78,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotification
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListInspectionReportPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPMCReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
@@ -363,6 +366,14 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         "navbar.stafflist", FontAwesomeIconType.user_times
                 );
 
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListPMCStaffPage.class,
+                        "navbar.pmcStaffList", FontAwesomeIconType.user_times
+                );
+
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListDesignationPage.class,
+                        "navbar.designations", FontAwesomeIconType.certificate
+                );
+
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
                         "navbar.procuringentitylist", FontAwesomeIconType.list
                 );
@@ -406,6 +417,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListInspectionReportPage>(
                         ListInspectionReportPage.class, null,
                         new StringResourceModel("navbar.inspectionReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListPMCReportPage>(
+                        ListPMCReportPage.class, null,
+                        new StringResourceModel("navbar.pmcReport", this, null)
                 ).setIconType(FontAwesomeIconType.file_text_o));
 
                 return list;

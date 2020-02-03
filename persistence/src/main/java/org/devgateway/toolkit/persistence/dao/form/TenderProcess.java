@@ -99,13 +99,20 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<Contract> contract = new HashSet<>();
 
-    @ExcelExport(separateSheet = true, name = "Administrator Report")
+    @ExcelExport(separateSheet = true, name = "Administrator Reports")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<AdministratorReport> administratorReports = new HashSet<>();
 
-    @ExcelExport(separateSheet = true, name = "Inspection Report")
+    @ExcelExport(separateSheet = true, name = "PMC Reports")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<PMCReport> pmcReports = new HashSet<>();
+
+
+    @ExcelExport(separateSheet = true, name = "Inspection Reports")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -248,6 +255,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(null);
     }
 
+    public void removePMCReport(final PMCReport item) {
+        pmcReports.remove(item);
+        item.setTenderProcess(null);
+    }
+
 
     public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
@@ -321,12 +333,16 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(this);
     }
 
+    public void addPMCReport(final PMCReport item) {
+        pmcReports.add(item);
+        item.setTenderProcess(this);
+    }
+
 
     public void addInspectionReport(final InspectionReport item) {
         inspectionReports.add(item);
         item.setTenderProcess(this);
     }
-
 
     public void removeAwardAcceptance(final AwardAcceptance item) {
         awardAcceptance.remove(item);

@@ -4,7 +4,7 @@ import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 
 /**
- * @author gmutuhu
+ * @author mpostelnicu
  */
 public interface InspectionReportService extends AbstractMakueniEntityService<InspectionReport> {
     InspectionReport findByTenderProcess(TenderProcess tenderProcess);

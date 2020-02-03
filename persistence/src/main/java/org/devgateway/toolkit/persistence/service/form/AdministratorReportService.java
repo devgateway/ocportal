@@ -4,7 +4,7 @@ import org.devgateway.toolkit.persistence.dao.form.AdministratorReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 
 /**
- * @author gmutuhu
+ * @author mpostelnicu
  */
 public interface AdministratorReportService extends AbstractMakueniEntityService<AdministratorReport> {
     AdministratorReport findByTenderProcess(TenderProcess tenderProcess);
