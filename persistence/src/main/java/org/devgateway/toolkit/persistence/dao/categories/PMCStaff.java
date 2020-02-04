@@ -5,7 +5,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Entity;
 
 /**
- * @author gmutuhu
+ * @author mpostelnicu
  */
 @Entity
 @Audited

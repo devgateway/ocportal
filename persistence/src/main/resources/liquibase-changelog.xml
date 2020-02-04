@@ -933,4 +933,36 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-522-PMCStatus" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="At Risk"/>
+            <column name="DTYPE" value="PMCStatus"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="On Track"/>
+            <column name="DTYPE" value="PMCStatus"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Off Track"/>
+            <column name="DTYPE" value="PMCStatus"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-522-ProjectClosureHandover" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Test"/>
+            <column name="DTYPE" value="ProjectClosureHandover"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

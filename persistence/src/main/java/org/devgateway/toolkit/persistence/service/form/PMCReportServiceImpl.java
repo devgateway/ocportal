@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author mpostelnicu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCReport>
         implements PMCReportService {
 
