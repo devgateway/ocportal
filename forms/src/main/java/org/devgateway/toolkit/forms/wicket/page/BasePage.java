@@ -62,6 +62,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocum
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDesignationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListMEStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
@@ -78,6 +79,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotification
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListInspectionReportPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListMEReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPMCReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
@@ -370,6 +372,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         "navbar.pmcStaffList", FontAwesomeIconType.user_times
                 );
 
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListMEStaffPage.class,
+                        "navbar.meStaffList", FontAwesomeIconType.user_times
+                );
+
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListDesignationPage.class,
                         "navbar.designations", FontAwesomeIconType.certificate
                 );
@@ -422,6 +428,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 list.add(new MenuBookmarkablePageLink<ListPMCReportPage>(
                         ListPMCReportPage.class, null,
                         new StringResourceModel("navbar.pmcReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListMEReportPage>(
+                        ListMEReportPage.class, null,
+                        new StringResourceModel("navbar.meReport", this, null)
                 ).setIconType(FontAwesomeIconType.file_text_o));
 
                 return list;

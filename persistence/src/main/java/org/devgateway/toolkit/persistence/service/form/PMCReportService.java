@@ -4,7 +4,7 @@ import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 
 /**
- * @author gmutuhu
+ * @author mpostelnicu
  */
 public interface PMCReportService extends AbstractMakueniEntityService<PMCReport> {
     PMCReport findByTenderProcess(TenderProcess tenderProcess);

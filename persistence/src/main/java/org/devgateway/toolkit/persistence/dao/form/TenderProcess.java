@@ -111,6 +111,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<PMCReport> pmcReports = new HashSet<>();
 
+    @ExcelExport(separateSheet = true, name = "ME Reports")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<MEReport> meReports = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Inspection Reports")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
@@ -260,6 +265,10 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(null);
     }
 
+    public void removeMEReport(final MEReport item) {
+        meReports.remove(item);
+        item.setTenderProcess(null);
+    }
 
     public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
@@ -338,6 +347,10 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(this);
     }
 
+    public void addMEReport(final MEReport item) {
+        meReports.add(item);
+        item.setTenderProcess(this);
+    }
 
     public void addInspectionReport(final InspectionReport item) {
         inspectionReports.add(item);
@@ -407,5 +420,29 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void setAdministratorReports(Set<AdministratorReport> administratorReports) {
         this.administratorReports = administratorReports;
+    }
+
+    public Set<PMCReport> getPmcReports() {
+        return pmcReports;
+    }
+
+    public void setPmcReports(Set<PMCReport> pmcReports) {
+        this.pmcReports = pmcReports;
+    }
+
+    public Set<MEReport> getMeReports() {
+        return meReports;
+    }
+
+    public void setMeReports(Set<MEReport> meReports) {
+        this.meReports = meReports;
+    }
+
+    public Set<InspectionReport> getInspectionReports() {
+        return inspectionReports;
+    }
+
+    public void setInspectionReports(Set<InspectionReport> inspectionReports) {
+        this.inspectionReports = inspectionReports;
     }
 }

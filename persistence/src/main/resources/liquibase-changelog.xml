@@ -965,4 +965,41 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-521-MEStatus" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Completed not in use"/>
+            <column name="DTYPE" value="MEStatus"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Complete in use"/>
+            <column name="DTYPE" value="MEStatus"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Ongoing"/>
+            <column name="DTYPE" value="MEStatus"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Not started"/>
+            <column name="DTYPE" value="MEStatus"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Stalled"/>
+            <column name="DTYPE" value="MEStatus"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Delayed"/>
+            <column name="DTYPE" value="MEStatus"/>
+        </insert>
+    </changeSet>
+
+
 </databaseChangeLog>
