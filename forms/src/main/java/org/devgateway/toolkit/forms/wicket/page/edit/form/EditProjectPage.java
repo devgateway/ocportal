@@ -4,6 +4,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
@@ -168,7 +169,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
-                wardService, editForm.getModel(), "change"
+                LoadableDetachableModel.of(() -> wardService), editForm.getModel(), "change"
         ));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();

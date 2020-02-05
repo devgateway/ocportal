@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
@@ -92,7 +93,7 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntity<PMCRe
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
-                wardService, editForm.getModel(), "change"
+                LoadableDetachableModel.of(() -> wardService), editForm.getModel(), "change"
         ));
         subcounties.required();
     }
