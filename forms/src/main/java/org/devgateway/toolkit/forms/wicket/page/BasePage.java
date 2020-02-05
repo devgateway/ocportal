@@ -54,7 +54,6 @@ import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.ListTestFormPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatisticsPage;
@@ -94,6 +93,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
 
 /**
  * Base wicket-bootstrap {@link org.apache.wicket.Page}
@@ -326,48 +328,60 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 final List<AbstractLink> list = new ArrayList<>();
 
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListDepartmentPage.class,
-                        "navbar.departments", FontAwesomeIconType.bank);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListDepartmentPage.class,
+                        "navbar.departments", FontAwesomeIconType.bank
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListFiscalYearPage.class,
-                        "navbar.fiscalyear", FontAwesomeIconType.calendar_times_o);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearPage.class,
+                        "navbar.fiscalyear", FontAwesomeIconType.calendar_times_o
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListTargetGroupPage.class,
-                        "navbar.targetgroup", FontAwesomeIconType.object_group);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListTargetGroupPage.class,
+                        "navbar.targetgroup", FontAwesomeIconType.object_group
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListContractDocumentTypePage.class,
-                        "navbar.ContractDocumentType", FontAwesomeIconType.file);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListContractDocumentTypePage.class,
+                        "navbar.ContractDocumentType", FontAwesomeIconType.file
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListItemPage.class,
-                        "navbar.items", FontAwesomeIconType.list);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListItemPage.class,
+                        "navbar.items", FontAwesomeIconType.list
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListChargeAccountPage.class,
-                        "navbar.chargeaccounts", FontAwesomeIconType.money);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListChargeAccountPage.class,
+                        "navbar.chargeaccounts", FontAwesomeIconType.money
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_USER, ListSupplierPage.class,
-                        "navbar.suppliers", FontAwesomeIconType.list);
+                createAddListMenuWithRole(list, ROLE_PROCUREMENT_USER, ListSupplierPage.class,
+                        "navbar.suppliers", FontAwesomeIconType.list
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListStaffPage.class,
-                        "navbar.stafflist", FontAwesomeIconType.user_times);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListStaffPage.class,
+                        "navbar.stafflist", FontAwesomeIconType.user_times
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListProcuringEntityPage.class,
-                        "navbar.procuringentitylist", FontAwesomeIconType.list);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
+                        "navbar.procuringentitylist", FontAwesomeIconType.list
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListSubcountyPage.class,
-                        "navbar.subcountylist", FontAwesomeIconType.flag);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListSubcountyPage.class,
+                        "navbar.subcountylist", FontAwesomeIconType.flag
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListWardPage.class,
-                        "navbar.wardlist", FontAwesomeIconType.flag);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListWardPage.class,
+                        "navbar.wardlist", FontAwesomeIconType.flag
+                );
 
-                createAddListMenuWithRole(list, SecurityConstants.Roles.ROLE_ADMIN, ListUnitPage.class,
-                        "navbar.unitlist", FontAwesomeIconType.list);
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListUnitPage.class,
+                        "navbar.unitlist", FontAwesomeIconType.list
+                );
 
                 return list;
             }
         };
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
 
         return metadataMenu;
     }
@@ -419,7 +433,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         .setIconType(FontAwesomeIconType.file_text_o));
 
                 list.add(new MenuBookmarkablePageLink<ListContractPage>(ListContractPage.class,
-                        null, new StringResourceModel("navbar.contract", this, null))
+                        null, new StringResourceModel("navbar.contract", this, null)
+                )
                         .setIconType(FontAwesomeIconType.file_text_o));
 
                 return list;
@@ -427,7 +442,9 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         formMenu.setIconType(FontAwesomeIconType.wpforms);
-        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER,
+                ROLE_PROCUREMENT_USER
+        );
 
         return formMenu;
     }
@@ -439,7 +456,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
             @Override
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
-                list.add(new MenuBookmarkablePageLink<ListTestFormPage>(ListUserPage.class, null,
+                list.add(new MenuBookmarkablePageLink<ListUserPage>(ListUserPage.class, null,
                         new StringResourceModel("navbar.users", this, null))
                         .setIconType(FontAwesomeIconType.users));
 
@@ -539,7 +556,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         adminMenu.setIconType(FontAwesomeIconType.cog);
-        MetaDataRoleAuthorizationStrategy.authorize(adminMenu, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(adminMenu, Component.RENDER, ROLE_ADMIN);
 
         return adminMenu;
     }

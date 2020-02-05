@@ -8,6 +8,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
@@ -21,10 +22,10 @@ import org.wicketstuff.annotation.mount.MountPath;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
 public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcessMakueniEntity
-        <TenderQuotationEvaluation> {
+        <TenderQuotationEvaluation> implements ProcurementRoleAssignable {
 
     @SpringBean
     protected TenderQuotationEvaluationService tenderQuotationEvaluationService;
@@ -35,6 +36,10 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
     public EditTenderQuotationEvaluationPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderQuotationEvaluationService;
+    }
+
+    public EditTenderQuotationEvaluationPage() {
+        this(new PageParameters());
     }
 
     @Override

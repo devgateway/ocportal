@@ -9,6 +9,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -25,9 +26,10 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author idobre
  * @since 2019-04-17
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/tenderProcess")
-public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderProcess> {
+public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderProcess>
+        implements ProcurementRoleAssignable {
     @SpringBean
     private TenderProcessService tenderProcessService;
 
@@ -48,16 +50,23 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
         }
     }
 
-    public EditTenderProcessPage(final PageParameters parameters) {
-        super(parameters);
-        this.jpaService = tenderProcessService;
+    public EditTenderProcessPage() {
+        this(new PageParameters());
+    }
 
+    @Override
+    protected void checkInitParameters() {
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionProject() == null) {
             logger.warn("Something wrong happened since we are trying to add a new TenderProcess Entity "
                     + "without having a Project!");
             setResponsePage(StatusOverviewPage.class);
         }
+    }
+
+    public EditTenderProcessPage(final PageParameters parameters) {
+        super(parameters);
+        this.jpaService = tenderProcessService;
     }
 
     @Override

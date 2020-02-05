@@ -19,6 +19,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxBut
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -36,6 +37,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -49,8 +51,8 @@ import org.devgateway.toolkit.forms.wicket.components.table.ResettingFilterForm;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractMakueniEntityPage;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
-import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
@@ -228,14 +230,18 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 pageParameters.set(WebConstants.PARAM_ID, entity.getId());
             }
 
+            PageProvider pageProvider = new PageProvider(editPageClass);
+            IRequestablePage editPage = pageProvider.getPageInstance();
+
             final BootstrapBookmarkablePageLink<T> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", editPageClass, pageParameters, Buttons.Type.Info);
             editPageLink.setIconType(FontAwesomeIconType.edit)
                     .setSize(Size.Small)
                     .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
-            if (entity instanceof AbstractMakueniEntity && SecurityConstants.Action.VIEW.equals(
-                    permissionEntityRenderableService.getAllowedAccess((AbstractStatusAuditableEntity) entity))) {
+            if (editPage instanceof EditAbstractMakueniEntityPage && entity instanceof AbstractMakueniEntity
+                    && SecurityConstants.Action.VIEW.equals(permissionEntityRenderableService.getAllowedAccess(
+                    (EditAbstractMakueniEntityPage<?>) editPage, (AbstractMakueniEntity) entity))) {
                 editPageLink.setIconType(FontAwesomeIconType.eye)
                         .setType(Buttons.Type.Warning)
                         .setLabel(new StringResourceModel("view", AbstractListPage.this, null));

@@ -19,6 +19,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstra
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
@@ -45,9 +46,10 @@ import java.util.stream.Collectors;
  * @author idobre
  * @since 2019-04-02
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
+public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
+        implements ProcurementRoleAssignable {
     @SpringBean
     protected ProjectService projectService;
 
@@ -67,10 +69,18 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project> {
 
     protected Select2MultiChoiceBootstrapFormComponent<Ward> wards;
 
+    public EditProjectPage() {
+        this(new PageParameters());
+    }
+
     public EditProjectPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = projectService;
 
+    }
+
+    @Override
+    protected void checkInitParameters() {
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionPP() == null) {
             logger.warn("Something wrong happened since we are trying to add a new Project Entity "

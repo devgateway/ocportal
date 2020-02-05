@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/cabinetPapers")
 public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetPaper> {
 

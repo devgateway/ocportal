@@ -893,4 +893,44 @@
         </update>
     </changeSet>
 
+    <changeSet id="OCMAKU-510" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="ROLE"/>
+        </preConditions>
+
+        <update tableName="ROLE">
+            <column name="AUTHORITY" value="ROLE_PROCUREMENT_USER"/>
+            <where>AUTHORITY='ROLE_USER'</where>
+        </update>
+
+        <update tableName="ROLE">
+            <column name="AUTHORITY" value="ROLE_PROCUREMENT_VALIDATOR"/>
+            <where>AUTHORITY='ROLE_VALIDATOR'</where>
+        </update>
+
+    </changeSet>
+
+
+    <changeSet id="OCMAKU-511" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="ROLE"/>
+        </preConditions>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_IMPLEMENTATION_USER"/>
+        </insert>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_PMC_VALIDATOR"/>
+        </insert>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_TECH_ADMIN_VALIDATOR"/>
+        </insert>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_ME_PAYMENT_VALIDATOR"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

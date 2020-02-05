@@ -15,7 +15,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author idobre
  * @since 2019-04-24
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/professionalOpinions")
 public class ListProfessionalOpinionPage extends ListAbstractTenderProcessMakueniEntity<ProfessionalOpinion> {
     @SpringBean

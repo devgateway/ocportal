@@ -17,6 +17,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
@@ -28,9 +29,9 @@ import org.wicketstuff.annotation.mount.MountPath;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
+public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> implements ProcurementRoleAssignable {
 
     @SpringBean
     protected CabinetPaperService cabinetPaperService;
@@ -47,18 +48,20 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         this.jpaService = cabinetPaperService;
         this.listPageClass = DepartmentOverviewPage.class;
 
+    }
+
+    @Override
+    protected void onInitialize() {
+
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionPP() == null) {
             logger.warn("Something wrong happened since we are trying to add a new CabinetPaper Entity "
                     + "without having a ProcurementPlan!");
             setResponsePage(StatusOverviewPage.class);
         }
-    }
 
-    @Override
-    protected void onInitialize() {
         super.onInitialize();
-        if (permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()) == null) {
+        if (permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()) == null) {
             setResponsePage(listPageClass);
         }
 
@@ -93,6 +96,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
         final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
         return new UniqueNameValidator(id.toLong(-1));
     }
+
 
     public class UniqueNameValidator implements IValidator<String> {
         private final Long id;
@@ -147,6 +151,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> {
 
     private boolean isViewMode() {
         return SecurityConstants.Action.VIEW.equals(
-                permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()));
+                permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()));
     }
 }

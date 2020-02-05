@@ -44,7 +44,7 @@ import java.util.Optional;
  * @author idobre
  * @since 2019-04-17
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath("/tenderProcesses")
 public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderProcess> {
 
