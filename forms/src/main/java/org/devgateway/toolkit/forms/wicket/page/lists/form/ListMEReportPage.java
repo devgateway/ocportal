@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER)
 @MountPath
-public class ListMEReportPage extends ListAbstractTenderProcessMakueniEntity<MEReport> {
+public class ListMEReportPage extends ListAbstractImplTenderProcessMakueniEntity<MEReport> {
 
     @SpringBean
     protected MEReportService service;
