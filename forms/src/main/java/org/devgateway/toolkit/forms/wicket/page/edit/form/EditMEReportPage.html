@@ -52,7 +52,11 @@
     </div>
 
     <wicket:fragment wicket:id="meExtraFields">
-        <div wicket:id="tenderProcess.singleContract.contractValue" class="col-md-12 department"></div>
+        <div class="row col-md-12">
+            <div wicket:id="tenderProcess.singleContract.contractDate" class="col-md-4 department"></div>
+            <div wicket:id="tenderProcess.singleContract.expiryDate" class="col-md-4 department"></div>
+            <div wicket:id="tenderProcess.project.amountBudgeted" class="col-md-4 department"></div>
+        </div>
     </wicket:fragment>
 
 </wicket:extend>

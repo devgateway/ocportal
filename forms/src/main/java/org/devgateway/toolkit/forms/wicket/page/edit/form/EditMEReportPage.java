@@ -2,6 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
@@ -75,16 +76,18 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntity<MERepo
 
         Fragment inspectionExtraFields = new Fragment("childExtraFields", "meExtraFields", this);
         abstractImplExtraFields.replace(inspectionExtraFields);
-        inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.contractValue"));
+        inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.contractDate"));
+        inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.expiryDate"));
+        inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.project.amountBudgeted"));
 
         ComponentUtil.addIntegerTextField(editForm, "sno").required();
         ComponentUtil.addBigDecimalField(editForm, "lpoAmount").required();
         ComponentUtil.addTextField(editForm, "lpoNumber").required();
         ComponentUtil.addBigDecimalField(editForm, "expenditure").required();
         ComponentUtil.addBigDecimalField(editForm, "uncommitted").required();
-        ComponentUtil.addTextAreaField(editForm, "projectScope").required();
-        ComponentUtil.addTextAreaField(editForm, "output").required();
-        ComponentUtil.addTextAreaField(editForm, "outcome").required();
+        ComponentUtil.addTextAreaField(editForm, "projectScope");
+        ComponentUtil.addTextAreaField(editForm, "output");
+        ComponentUtil.addTextAreaField(editForm, "outcome");
         ComponentUtil.addTextAreaField(editForm, "projectProgress").required();
         ComponentUtil.addIntegerTextField(editForm, "directBeneficiariesTarget").required();
         ComponentUtil.addTextAreaField(editForm, "wayForward").required();
@@ -107,7 +110,8 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntity<MERepo
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField()
-                .add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards, wardService, editForm.getModel(),
+                .add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
+                        LoadableDetachableModel.of(() -> wardService), editForm.getModel(),
                         "change"
                 ));
         subcounties.required();
