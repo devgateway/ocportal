@@ -3,12 +3,12 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 
 /**
  * @author mpostelnicu
  */
-public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractTenderProcessMakueniEntity>
+public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractImplTenderProcessMakueniEntity>
         extends EditAbstractTenderProcessMakueniEntity<T> {
 
     protected Fragment abstractImplExtraFields;
@@ -29,5 +29,11 @@ public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractTend
         abstractImplExtraFields.add(fragment);
 
         editForm.replace(abstractImplExtraFields);
+    }
+
+    @Override
+    protected void beforeSaveEntity(T saveable) {
+        super.beforeSaveEntity(saveable);
+        saveable.setContract(saveable.getTenderProcess().getSingleContract());
     }
 }

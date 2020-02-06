@@ -8,6 +8,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.forms.wicket.components.table.SimpleDateProperyColumn;
 import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.service.filterstate.form.AbstractImplTenderProcessFilterState;
 
@@ -47,6 +48,11 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
     @Override
     protected void onInitialize() {
         addAwardeeColumn();
+
+        columns.add(new SimpleDateProperyColumn<>(new Model<>("Approved Date"),
+                "approvedDate", "approvedDate",
+                t -> SimpleDateProperyColumn.convertDateToZonedDateTime(t.getApprovedDate())));
+
         super.onInitialize();
     }
 }

@@ -12,6 +12,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -60,7 +61,7 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
             public void populateItem(final Item<ICellPopulator<T>> item,
                                      final String componentId,
                                      final IModel<T> rowModel) {
-                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(WebConstants.DATE_FORMAT);
                 final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
 
                 if (lastModifiedDate.isPresent()) {

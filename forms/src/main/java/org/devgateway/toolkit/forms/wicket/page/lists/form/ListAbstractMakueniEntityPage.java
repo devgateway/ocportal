@@ -17,6 +17,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
+import org.devgateway.toolkit.forms.wicket.components.table.SimpleDateProperyColumn;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListStatusEntityPage;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -87,6 +88,12 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         }
     }
 
+    protected void addLastModifiedDateColumn() {
+        columns.add(new SimpleDateProperyColumn<>(new Model<>((new StringResourceModel("lastModifiedDate",
+                ListAbstractMakueniEntityPage.this)).getString()),
+                "lastModifiedDate", "lastModifiedDate",
+                t -> t.getLastModifiedDate().orElse(null)));
+    }
 
     protected void addFileDownloadColumn() {
         Component trn = this;

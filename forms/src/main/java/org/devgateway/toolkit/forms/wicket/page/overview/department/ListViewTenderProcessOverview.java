@@ -72,7 +72,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
     private final TenderProcess sessionTenderProcess;
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YYYY");
+    private final SimpleDateFormat formatter = new SimpleDateFormat(WebConstants.DATE_FORMAT);
 
     public ListViewTenderProcessOverview(final String id,
                                          final IModel<List<TenderProcess>> model,
