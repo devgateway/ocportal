@@ -97,10 +97,18 @@ export default class Header extends translatable(React.Component) {
   showIntroJs() {
     window.scrollTo(0, 0);
     introJs.introJs()
+      .onbeforeexit(() => {
+        window.removeEventListener('scroll', this.noScroll);
+        return true;
+      })
       .setOption('overlayOpacity', 0.7)
       .setOption('showProgress', true)
-      .setOption("scrollToElement", true)
+      .setOption('scrollToElement', true)
       .start();
+  }
+
+  noScroll() {
+    window.scrollTo(0, 0);
   }
 
   exportBtn() {
@@ -110,6 +118,7 @@ export default class Header extends translatable(React.Component) {
     return (<div>
         <span className="help-title">
           <a onClick={()=> {
+           window.addEventListener("scroll", this.noScroll);
             this.showIntroJs();
           }
           }>HELP</a>
