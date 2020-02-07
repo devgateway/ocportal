@@ -73,11 +73,6 @@ public class PMCReport extends AbstractImplTenderProcessMakueniEntity implements
 
     }
 
-    @Override
-    public String getLabel() {
-        return null;
-    }
-
     public Boolean getAuthorizePayment() {
         return authorizePayment;
     }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="form-wrapper">
+
+
+        <div class="row">
+            <div wicket:id="totalAmount" class="col-md-12"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="pmcReport" class="col-md-12"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="inspectionReport" class="col-md-12"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="administratorReport" class="col-md-12"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="approvedDate" class="col-md-6"></div>
+            <div wicket:id="lastPayment" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="formDocs" class="col-md-12"></div>
+        </div>
+    </div>
+
+    <wicket:fragment wicket:id="paymentExtraFields">
+        <div class="row col-md-12">
+            <div wicket:id="tenderProcess.singleContract.referenceNumber" class="col-md-4 department"></div>
+        </div>
+    </wicket:fragment>
+
+</wicket:extend>
+</body>
+</html>

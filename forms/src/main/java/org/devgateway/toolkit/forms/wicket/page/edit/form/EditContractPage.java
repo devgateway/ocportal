@@ -38,7 +38,7 @@ import java.util.Objects;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> implements
+public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Contract> implements
         ProcurementRoleAssignable {
     @SpringBean
     protected ContractService contractService;

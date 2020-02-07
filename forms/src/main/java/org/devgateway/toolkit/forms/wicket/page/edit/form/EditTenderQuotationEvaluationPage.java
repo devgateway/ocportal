@@ -24,7 +24,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcessMakueniEntity
+public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcessMakueniEntityPage
         <TenderQuotationEvaluation> implements ProcurementRoleAssignable {
 
     @SpringBean

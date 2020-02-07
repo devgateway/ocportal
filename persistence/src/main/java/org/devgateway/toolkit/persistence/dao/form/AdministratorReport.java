@@ -33,11 +33,6 @@ public class AdministratorReport extends AbstractImplTenderProcessMakueniEntity 
 
     }
 
-    @Override
-    public String getLabel() {
-        return null;
-    }
-
     public Boolean getAuthorizePayment() {
         return authorizePayment;
     }

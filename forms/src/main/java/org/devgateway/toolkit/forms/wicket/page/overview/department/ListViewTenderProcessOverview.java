@@ -32,6 +32,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditInspectionReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditMEReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPMCReportPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPaymentVoucherPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
@@ -72,7 +73,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
     private final TenderProcess sessionTenderProcess;
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat(WebConstants.DATE_FORMAT);
+    private final SimpleDateFormat formatter = new SimpleDateFormat(DBConstants.DATE_FORMAT);
 
     public ListViewTenderProcessOverview(final String id,
                                          final IModel<List<TenderProcess>> model,
@@ -225,6 +226,12 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                 tenderProcess, EditMEReportPage.class, contract
         );
         containerFragment.add(meReportPanel);
+
+        final Panel paymentVoucherPanel = new TenderDetailPanel<>("paymentVoucherPanel", null,
+                "Payment Voucher", null,
+                tenderProcess, EditPaymentVoucherPage.class, contract
+        );
+        containerFragment.add(paymentVoucherPanel);
 
         hideableContainer.add(containerFragment);
     }

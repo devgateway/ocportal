@@ -5,13 +5,15 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.TechAdminRoleAssignable;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
+import org.devgateway.toolkit.persistence.service.form.PMCReportService;
+import org.devgateway.toolkit.persistence.service.form.PaymentVoucherService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -21,27 +23,36 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER)
 @MountPath
-public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntityPage<InspectionReport>
-        implements TechAdminRoleAssignable {
+public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityPage<PaymentVoucher>
+        implements MEPaymentRoleAssignable {
+
+    @SpringBean
+    protected PaymentVoucherService service;
+
+    @SpringBean
+    protected PMCReportService pmcReportService;
 
     @SpringBean
     protected InspectionReportService inspectionReportService;
 
     @SpringBean
+    protected AdministratorReportService administratorReportService;
+
+    @SpringBean
     protected TenderProcessService tenderProcessService;
 
-    public EditInspectionReportPage(PageParameters parameters) {
+    public EditPaymentVoucherPage(PageParameters parameters) {
         super(parameters);
-        this.jpaService = inspectionReportService;
+        this.jpaService = service;
     }
 
-    public EditInspectionReportPage() {
+    public EditPaymentVoucherPage() {
         this(new PageParameters());
     }
 
     @Override
-    protected InspectionReport newInstance() {
-        final InspectionReport ar = super.newInstance();
+    protected PaymentVoucher newInstance() {
+        final PaymentVoucher ar = super.newInstance();
         ar.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
         return ar;
     }
@@ -50,36 +61,36 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
     protected void onInitialize() {
         super.onInitialize();
 
-        Fragment inspectionExtraFields = new Fragment("childExtraFields", "inspectionExtraFields", this);
+        Fragment inspectionExtraFields = new Fragment("childExtraFields", "paymentExtraFields", this);
         abstractImplExtraFields.replace(inspectionExtraFields);
-        inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.contractValue"));
+        inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.referenceNumber"));
 
-        ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
 
-        TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comments");
-        comment.required();
-        editForm.add(comment);
-
+        ComponentUtil.addBigDecimalField(editForm, "totalAmount").required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "pmcReport", pmcReportService).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "inspectionReport", inspectionReportService).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "administratorReport", administratorReportService).required();
+        ComponentUtil.addYesNoToggle(editForm, "lastPayment", true).required();
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
-
+        formDocs.maxFiles(1);
     }
 
     @Override
-    protected void beforeSaveEntity(final InspectionReport report) {
+    protected void beforeSaveEntity(final PaymentVoucher report) {
         super.beforeSaveEntity(report);
 
         final TenderProcess tenderProcess = report.getTenderProcess();
-        tenderProcess.addInspectionReport(report);
+        tenderProcess.addPaymentVoucher(report);
         tenderProcessService.save(tenderProcess);
     }
 
     @Override
-    protected void beforeDeleteEntity(final InspectionReport report) {
+    protected void beforeDeleteEntity(final PaymentVoucher report) {
         super.beforeDeleteEntity(report);
 
         final TenderProcess tenderProcess = report.getTenderProcess();
-        tenderProcess.removeInspectonReport(report);
+        tenderProcess.removePaymentVoucher(report);
         tenderProcessService.save(tenderProcess);
     }
 

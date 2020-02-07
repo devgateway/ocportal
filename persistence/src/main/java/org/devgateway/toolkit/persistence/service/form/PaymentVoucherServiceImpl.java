@@ -1,9 +1,9 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
-import org.devgateway.toolkit.persistence.dao.form.MEReport;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.repository.form.MEReportRepository;
+import org.devgateway.toolkit.persistence.repository.form.PaymentVoucherRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,25 +17,25 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class MEReportServiceImpl extends AbstractMakueniEntityServiceImpl<MEReport>
-        implements MEReportService {
+public class PaymentVoucherServiceImpl extends AbstractMakueniEntityServiceImpl<PaymentVoucher>
+        implements PaymentVoucherService {
 
     @Autowired
-    private MEReportRepository repository;
+    private PaymentVoucherRepository repository;
 
     @Override
-    protected BaseJpaRepository<MEReport, Long> repository() {
+    protected BaseJpaRepository<PaymentVoucher, Long> repository() {
         return repository;
     }
 
     @Override
-    public MEReport newInstance() {
-        return new MEReport();
+    public PaymentVoucher newInstance() {
+        return new PaymentVoucher();
     }
 
     @Override
     @Cacheable
-    public List<MEReport> findByTenderProcess(final TenderProcess tenderProcess) {
+    public List<PaymentVoucher> findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
     }
 }

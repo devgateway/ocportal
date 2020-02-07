@@ -17,6 +17,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
@@ -58,6 +59,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     private Fragment extraStatusEntityButtons;
 
     protected TransparentWebMarkupContainer alertTerminated;
+    protected FileInputBootstrapFormComponent formDocs;
 
     protected void checkInitParameters() {
 
@@ -218,6 +220,12 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(
                 button, Component.RENDER, getUserRole());
+    }
+
+    protected FileInputBootstrapFormComponent addFormDocs() {
+        formDocs = new FileInputBootstrapFormComponent("formDocs");
+        editForm.add(formDocs);
+        return formDocs;
     }
 
     @Override

@@ -37,8 +37,6 @@ public final class WebConstants {
     public static final int PAGE_SIZE = 20;
     public static final int SELECT_PAGE_SIZE = 25;
 
-    public static final String DATE_FORMAT = "dd/MM/YYYY";
-
     public static final String PARAM_PRINT = "print";
 
     public static final String PARAM_ID = "id";

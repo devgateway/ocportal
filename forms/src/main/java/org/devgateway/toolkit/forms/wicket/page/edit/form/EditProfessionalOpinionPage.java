@@ -23,7 +23,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakueniEntity<ProfessionalOpinion>
+public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakueniEntityPage<ProfessionalOpinion>
         implements ProcurementRoleAssignable {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;

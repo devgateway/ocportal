@@ -13,8 +13,6 @@ import org.devgateway.toolkit.persistence.service.alerts.AlertsStatisticsService
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import java.time.format.DateTimeFormatter;
-
 /**
  * @author idobre
  * @since 30/08/2019
@@ -37,7 +35,7 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
 
         columns.add(new SimpleDateProperyColumn<>(new Model<>("Sending Date"),
                 "createdDate", "createdDate",
-                t -> t.getLastModifiedDate().orElse(null), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                t -> t.getLastModifiedDate().orElse(null), "yyyy-MM-dd HH:mm:ss"));
 
         columns.add(new PropertyColumn<>(new Model<>("# Alerts Send"), "numberSentAlerts", "numberSentAlerts"));
         columns.add(new PropertyColumn<>(new Model<>("# Errors"), "numberErrors", "numberErrors"));

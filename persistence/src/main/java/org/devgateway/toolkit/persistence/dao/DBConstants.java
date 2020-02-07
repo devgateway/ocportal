@@ -11,11 +11,16 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public final class DBConstants {
+
+    public static final String DATE_FORMAT = "dd/MM/YYYY";
+
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     private DBConstants() {
 

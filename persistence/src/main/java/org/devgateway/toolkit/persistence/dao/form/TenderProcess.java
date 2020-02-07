@@ -123,6 +123,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<InspectionReport> inspectionReports = new HashSet<>();
 
+    @ExcelExport(separateSheet = true, name = "Payment Vouchers")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<PaymentVoucher> paymentVouchers = new HashSet<>();
+
     private boolean checkTerminated(Statusable... statusables) {
         for (Statusable statusable : statusables) {
             if (statusable != null && statusable.isTerminated()) {
@@ -270,6 +276,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(null);
     }
 
+    public void removePaymentVoucher(final PaymentVoucher item) {
+        paymentVouchers.remove(item);
+        item.setTenderProcess(null);
+    }
+
     public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
     }
@@ -349,6 +360,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void addMEReport(final MEReport item) {
         meReports.add(item);
+        item.setTenderProcess(this);
+    }
+
+    public void addPaymentVoucher(final PaymentVoucher item) {
+        paymentVouchers.add(item);
         item.setTenderProcess(this);
     }
 
@@ -444,5 +460,13 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void setInspectionReports(Set<InspectionReport> inspectionReports) {
         this.inspectionReports = inspectionReports;
+    }
+
+    public Set<PaymentVoucher> getPaymentVouchers() {
+        return paymentVouchers;
+    }
+
+    public void setPaymentVouchers(Set<PaymentVoucher> paymentVouchers) {
+        this.paymentVouchers = paymentVouchers;
     }
 }

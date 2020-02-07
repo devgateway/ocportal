@@ -4,5 +4,5 @@ import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public interface PMCReportRepository extends AbstractPurchaseReqMakueniEntityRepository<PMCReport> {
+public interface PMCReportRepository extends AbstractImplTenderProcessMakueniEntityRepository<PMCReport> {
 }

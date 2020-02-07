@@ -5,16 +5,17 @@ import org.devgateway.toolkit.persistence.dao.form.AdministratorReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.AdministratorReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author mpostelnicu
  */
 @Service
-@Transactional(readOnly = true)
 public class AdministratorReportServiceImpl extends AbstractMakueniEntityServiceImpl<AdministratorReport>
         implements AdministratorReportService {
 
@@ -33,7 +34,12 @@ public class AdministratorReportServiceImpl extends AbstractMakueniEntityService
 
     @Override
     @Cacheable
-    public AdministratorReport findByTenderProcess(final TenderProcess tenderProcess) {
+    public List<AdministratorReport> findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
+    }
+
+    @Override
+    public TextSearchableRepository<AdministratorReport, Long> textRepository() {
+        return repository;
     }
 }

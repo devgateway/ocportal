@@ -5,7 +5,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
-import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PMCMemberPanel;
@@ -29,7 +28,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER)
 @MountPath
-public class EditPMCReportPage extends EditAbstractImplTenderProcessEntity<PMCReport>
+public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<PMCReport>
         implements PMCRoleAssignable {
 
     @SpringBean
@@ -75,10 +74,6 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntity<PMCRe
 
         ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
 
-        final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        editForm.add(formDocs);
-        formDocs.required();
-
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         PMCMemberPanel pmcMembers = new PMCMemberPanel("pmcMembers");
@@ -96,6 +91,8 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntity<PMCRe
                 LoadableDetachableModel.of(() -> wardService), editForm.getModel(), "change"
         ));
         subcounties.required();
+
+        formDocs.maxFiles(1);
     }
 
     @Override

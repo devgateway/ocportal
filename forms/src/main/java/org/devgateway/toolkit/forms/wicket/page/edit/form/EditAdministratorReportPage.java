@@ -3,7 +3,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.TechAdminRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
@@ -19,7 +18,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER)
 @MountPath
-public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEntity<AdministratorReport>
+public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEntityPage<AdministratorReport>
         implements TechAdminRoleAssignable {
 
     @SpringBean
@@ -49,11 +48,6 @@ public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEn
         super.onInitialize();
 
         ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
-
-        final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        editForm.add(formDocs);
-        formDocs.required();
-
         ComponentUtil.addDateField(editForm, "approvedDate").required();
     }
 

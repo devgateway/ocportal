@@ -23,12 +23,12 @@ import org.springframework.util.ObjectUtils;
 /**
  * @author mihai
  */
-public abstract class EditAbstractTenderProcessMakueniEntity<T extends AbstractTenderProcessMakueniEntity>
+public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends AbstractTenderProcessMakueniEntity>
         extends EditAbstractMakueniEntityPage<T> {
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessMakueniEntity.class);
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessMakueniEntityPage.class);
 
 
-    public EditAbstractTenderProcessMakueniEntity(final PageParameters parameters) {
+    public EditAbstractTenderProcessMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
 
         final Fragment fragment = new Fragment("extraReadOnlyFields", "noExtraReadOnlyFields", this);

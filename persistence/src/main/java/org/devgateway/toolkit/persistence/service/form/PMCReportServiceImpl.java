@@ -5,10 +5,12 @@ import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.PMCReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author mpostelnicu
@@ -32,8 +34,12 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
     }
 
     @Override
-    @Cacheable
-    public PMCReport findByTenderProcess(final TenderProcess tenderProcess) {
+    public List<PMCReport> findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
+    }
+
+    @Override
+    public TextSearchableRepository<PMCReport, Long> textRepository() {
+        return repository;
     }
 }

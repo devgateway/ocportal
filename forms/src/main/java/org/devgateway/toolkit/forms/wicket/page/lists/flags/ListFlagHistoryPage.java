@@ -17,8 +17,6 @@ import org.devgateway.toolkit.persistence.service.ReleaseFlagHistoryService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import java.time.format.DateTimeFormatter;
-
 /**
  * @author mpostelnicu
  */
@@ -44,7 +42,7 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
 
         columns.add(new SimpleDateProperyColumn<>(new Model<>("Flagged Date"),
                 "flaggedDate", "flaggedDate",
-                ReleaseFlagHistory::getFlaggedDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                ReleaseFlagHistory::getFlaggedDate, "yyyy-MM-dd HH:mm:ss"));
 
         columns.add(new PropertyColumn<ReleaseFlagHistory, String>(new Model<>("Release Name"),
                 "releaseId", "releaseId") {

@@ -52,7 +52,7 @@ import java.util.Set;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath
-public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tender>
+public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<Tender>
         implements ProcurementRoleAssignable {
 
     @SpringBean

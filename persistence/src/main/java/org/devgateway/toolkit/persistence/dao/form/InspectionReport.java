@@ -38,11 +38,6 @@ public class InspectionReport extends AbstractImplTenderProcessMakueniEntity {
 
     }
 
-    @Override
-    public String getLabel() {
-        return null;
-    }
-
     public Boolean getAuthorizePayment() {
         return authorizePayment;
     }

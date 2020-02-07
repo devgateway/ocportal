@@ -8,12 +8,12 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMaku
 /**
  * @author mpostelnicu
  */
-public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractImplTenderProcessMakueniEntity>
-        extends EditAbstractTenderProcessMakueniEntity<T> {
+public abstract class EditAbstractImplTenderProcessEntityPage<T extends AbstractImplTenderProcessMakueniEntity>
+        extends EditAbstractTenderProcessMakueniEntityPage<T> {
 
     protected Fragment abstractImplExtraFields;
 
-    public EditAbstractImplTenderProcessEntity(PageParameters parameters) {
+    public EditAbstractImplTenderProcessEntityPage(PageParameters parameters) {
         super(parameters);
     }
 
@@ -29,6 +29,8 @@ public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractImpl
         abstractImplExtraFields.add(fragment);
 
         editForm.replace(abstractImplExtraFields);
+
+        addFormDocs().required();
     }
 
     @Override
@@ -36,4 +38,5 @@ public abstract class EditAbstractImplTenderProcessEntity<T extends AbstractImpl
         super.beforeSaveEntity(saveable);
         saveable.setContract(saveable.getTenderProcess().getSingleContract());
     }
+
 }

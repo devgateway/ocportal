@@ -5,16 +5,18 @@ import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.InspectionReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author mpostelnicu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class InspectionReportServiceImpl extends AbstractMakueniEntityServiceImpl<InspectionReport>
         implements InspectionReportService {
 
@@ -32,9 +34,12 @@ public class InspectionReportServiceImpl extends AbstractMakueniEntityServiceImp
     }
 
     @Override
-    @Cacheable
-    public InspectionReport findByTenderProcess(final TenderProcess tenderProcess) {
+    public List<InspectionReport> findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
     }
 
+    @Override
+    public TextSearchableRepository<InspectionReport, Long> textRepository() {
+        return repository;
+    }
 }
