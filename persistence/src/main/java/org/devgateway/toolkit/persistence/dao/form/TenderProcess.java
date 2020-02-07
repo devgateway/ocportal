@@ -146,11 +146,19 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
      */
     @Override
     public boolean isTerminated() {
-        return checkTerminated(
-                PersistenceUtil.getNext(tender), PersistenceUtil.getNext(tenderQuotationEvaluation),
-                PersistenceUtil.getNext(professionalOpinion), PersistenceUtil.getNext(awardNotification),
-                PersistenceUtil.getNext(awardAcceptance), PersistenceUtil.getNext(contract)
-        );
+        ArrayList<Statusable> entityTree = new ArrayList<>();
+        entityTree.add(PersistenceUtil.getNext(tender));
+        entityTree.add(PersistenceUtil.getNext(tenderQuotationEvaluation));
+        entityTree.add(PersistenceUtil.getNext(professionalOpinion));
+        entityTree.add(PersistenceUtil.getNext(awardNotification));
+        entityTree.add(PersistenceUtil.getNext(awardAcceptance));
+        entityTree.add(PersistenceUtil.getNext(contract));
+        entityTree.addAll(administratorReports);
+        entityTree.addAll(inspectionReports);
+        entityTree.addAll(pmcReports);
+        entityTree.addAll(meReports);
+        entityTree.addAll(paymentVouchers);
+        return checkTerminated(entityTree.toArray(new Statusable[]{}));
     }
 
     @JsonProperty("tender")
