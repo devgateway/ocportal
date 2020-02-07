@@ -40,6 +40,7 @@ import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wicketstuff.select2.ChoiceProvider;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -293,6 +294,20 @@ public final class ComponentUtil {
         parent.add(field);
 
         return field;
+    }
+
+    public static <E extends GenericPersistable & Labelable & Serializable> Select2ChoiceBootstrapFormComponent<E>
+    addSelect2ChoiceField(
+            final WebMarkupContainer parent,
+            final String id,
+            ChoiceProvider<E> choiceProvider) {
+        final Select2ChoiceBootstrapFormComponent<E> component = new Select2ChoiceBootstrapFormComponent<E>(
+                id,
+                choiceProvider
+        );
+        parent.add(component);
+
+        return component;
     }
 
     public static <E extends GenericPersistable & Labelable & Serializable> Select2ChoiceBootstrapFormComponent<E>

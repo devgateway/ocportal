@@ -7,9 +7,13 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRoleAssignable;
+import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
 import org.devgateway.toolkit.persistence.service.form.PMCReportService;
@@ -17,6 +21,8 @@ import org.devgateway.toolkit.persistence.service.form.PaymentVoucherService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.util.stream.Collectors;
 
 /**
  * @author mpostelnicu
@@ -67,13 +73,29 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
 
 
         ComponentUtil.addBigDecimalField(editForm, "totalAmount").required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "pmcReport", pmcReportService).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "inspectionReport", inspectionReportService).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "administratorReport", administratorReportService).required();
+
+
+        ComponentUtil.addSelect2ChoiceField(editForm, "pmcReport",
+                submittedAndWithinTenderProcessProvider(pmcReportService)
+        ).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "inspectionReport",
+                submittedAndWithinTenderProcessProvider(inspectionReportService)
+        ).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "administratorReport",
+                submittedAndWithinTenderProcessProvider(administratorReportService)
+        ).required();
         ComponentUtil.addYesNoToggle(editForm, "lastPayment", true).required();
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         formDocs.maxFiles(1);
+    }
+
+    private <X extends AbstractImplTenderProcessMakueniEntity> GenericChoiceProvider<X>
+    submittedAndWithinTenderProcessProvider(AbstractMakueniEntityService<X> service) {
+        return new GenericChoiceProvider<>(service.findAll().stream().filter(x -> x.getContract().equals(
+                editForm.getModelObject().getTenderProcess().getSingleContract())
+                && (x.getStatus().equals(DBConstants.Status.SUBMITTED) || x.getStatus()
+                .equals(DBConstants.Status.APPROVED))).collect(Collectors.toList()));
     }
 
     @Override
