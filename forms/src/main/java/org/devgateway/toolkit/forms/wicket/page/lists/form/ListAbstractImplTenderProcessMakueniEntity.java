@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
+import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -44,6 +45,13 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
 
     }
 
+    protected void addAuthorizePaymentColumn() {
+        columns.add(new PropertyColumn<>(new Model<>(
+                (new StringResourceModel(
+                        "authorizePayment",
+                        ListAbstractImplTenderProcessMakueniEntity.this
+                )).getString()), "authorizePayment", "authorizePayment"));
+    }
 
     @Override
     protected void onInitialize() {
@@ -51,7 +59,8 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
 
         columns.add(new SimpleDateProperyColumn<>(new Model<>("Approved Date"),
                 "approvedDate", "approvedDate",
-                t -> SimpleDateProperyColumn.convertDateToZonedDateTime(t.getApprovedDate())));
+                t -> SimpleDateProperyColumn.convertDateToZonedDateTime(t.getApprovedDate())
+        ));
 
         super.onInitialize();
     }

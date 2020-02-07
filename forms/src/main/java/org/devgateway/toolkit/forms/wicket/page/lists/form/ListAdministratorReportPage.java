@@ -36,6 +36,7 @@ public class ListAdministratorReportPage extends ListAbstractImplTenderProcessMa
 //        ));
         addTenderTitleColumn();
         addFileDownloadColumn();
+        addAuthorizePaymentColumn();
 
         super.onInitialize();
     }
