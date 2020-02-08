@@ -35,7 +35,6 @@ public class ListAdministratorReportPage extends ListAbstractImplTenderProcessMa
 //                "tenderTitle", "tenderTitle"
 //        ));
         addTenderTitleColumn();
-        addFileDownloadColumn();
         addAuthorizePaymentColumn();
 
         super.onInitialize();

@@ -57,7 +57,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
     protected void onInitialize() {
         addAwardeeColumn();
 
-        columns.add(new SimpleDateProperyColumn<>(new Model<>("Approved Date"),
+        columns.add(new SimpleDateProperyColumn<>(new Model<>("Report Date"),
                 "approvedDate", "approvedDate",
                 t -> SimpleDateProperyColumn.convertDateToZonedDateTime(t.getApprovedDate())
         ));

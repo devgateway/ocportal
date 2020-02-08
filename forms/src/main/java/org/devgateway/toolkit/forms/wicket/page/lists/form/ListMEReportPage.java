@@ -38,7 +38,6 @@ public class ListMEReportPage extends ListAbstractImplTenderProcessMakueniEntity
     @Override
     protected void onInitialize() {
         addTenderTitleColumn();
-        addFileDownloadColumn();
         addMEStatusColumn();
 
         super.onInitialize();

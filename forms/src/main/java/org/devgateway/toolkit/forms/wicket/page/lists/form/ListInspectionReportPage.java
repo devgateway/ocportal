@@ -35,7 +35,6 @@ public class ListInspectionReportPage extends ListAbstractImplTenderProcessMakue
 //                "tenderTitle", "tenderTitle"
 //        ));
         addTenderTitleColumn();
-        addFileDownloadColumn();
         addAuthorizePaymentColumn();
 
         super.onInitialize();
