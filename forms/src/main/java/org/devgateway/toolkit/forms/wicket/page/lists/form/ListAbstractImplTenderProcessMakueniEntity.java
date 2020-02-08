@@ -32,7 +32,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
                                 "awardee",
                                 ListAbstractImplTenderProcessMakueniEntity.this
                         )).getString()),
-                "tenderProcess.singleContract.awardee",
+                "tenderProcess.contract.awardee",
                 "tenderProcess.singleContract.awardee",
                 new ListModel(awardees), dataTable, false
         ) {
