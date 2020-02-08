@@ -11,6 +11,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
@@ -37,7 +38,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.select2.ChoiceProvider;
@@ -120,11 +120,11 @@ public final class ComponentUtil {
     }
 
     public static boolean canAccessAddNewButtonInDeptOverview(SessionMetadataService sessionMetadataService) {
-        if (WebSecurityUtil.isCurrentUserAdmin()) {
+        if (FormSecurityUtil.isCurrentUserAdmin()) {
             return true;
         } else {
             return sessionMetadataService.getSessionDepartment() != null
-                    && WebSecurityUtil.getCurrentAuthenticatedPerson()
+                    && FormSecurityUtil.getCurrentAuthenticatedPerson()
                     .getDepartments().contains(sessionMetadataService.getSessionDepartment());
         }
     }

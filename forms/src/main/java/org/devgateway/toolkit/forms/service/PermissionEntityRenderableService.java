@@ -1,9 +1,9 @@
 package org.devgateway.toolkit.forms.service;
 
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,7 +28,7 @@ public class PermissionEntityRenderableService {
     }
 
     public String getAllowedAccess(final EditorValidatorRoleAssignable page, boolean isNew, Department department) {
-        final Set<String> roles = WebSecurityUtil.getStringRolesForCurrentPerson();
+        final Set<String> roles = FormSecurityUtil.getStringRolesForCurrentPerson();
         Assert.notEmpty(roles, "Will not allow empty roles here!");
 
         // admins can always edit
@@ -47,7 +47,7 @@ public class PermissionEntityRenderableService {
                 return SecurityConstants.Action.VIEW;
             } else {
                 final Set<Department> departments =
-                        WebSecurityUtil.getCurrentAuthenticatedPerson().getDepartments();
+                        FormSecurityUtil.getCurrentAuthenticatedPerson().getDepartments();
 
                 // users with different department should be redirected to view mode.
                 if (departments.contains(department)) {

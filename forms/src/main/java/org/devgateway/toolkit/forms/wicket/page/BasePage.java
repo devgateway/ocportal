@@ -49,6 +49,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.string.StringValue;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
@@ -93,7 +94,6 @@ import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.web.Constants;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -277,7 +277,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     private NavbarButton<EditUserPage> newAccountMenu() {
         final PageParameters pageParametersForAccountPage = new PageParameters();
-        final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
+        final Person person = FormSecurityUtil.getCurrentAuthenticatedPerson();
 
         // account menu
         Model<String> account = null;

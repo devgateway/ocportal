@@ -15,6 +15,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
@@ -28,7 +29,6 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -202,13 +202,13 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
                 && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
 
         // additionally normal users should not revert anything that was already validated
-        if (WebSecurityUtil.isCurrentRoleOnlyUser(getUserRole(), getValidatorRole())
+        if (FormSecurityUtil.isCurrentRoleOnlyUser(getUserRole(), getValidatorRole())
                 && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
             button.setVisibilityAllowed(false);
         } else
 
             //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
-            if (WebSecurityUtil.isCurrentUserAdmin()
+            if (FormSecurityUtil.isCurrentUserAdmin()
                     && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
                     || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
                 button.setVisibilityAllowed(true);
