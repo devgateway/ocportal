@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/cabinetPapers")
 public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetPaper> {
 
@@ -48,8 +48,7 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
 
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
                 "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
-                new ListModel(fiscalYears), dataTable,
-                isPreselected() && !FormSecurityUtil.isCurrentUserAdmin()
+                new ListModel(fiscalYears), dataTable
         ));
 
         columns.add(new TextFilteredBootstrapPropertyColumn<>(

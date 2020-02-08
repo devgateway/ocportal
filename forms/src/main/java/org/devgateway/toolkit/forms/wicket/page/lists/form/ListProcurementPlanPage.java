@@ -18,7 +18,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author idobre
  * @since 2019-04-02
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/procurementPlans")
 public class ListProcurementPlanPage extends ListAbstractMakueniEntityPage<ProcurementPlan> {
     @SpringBean

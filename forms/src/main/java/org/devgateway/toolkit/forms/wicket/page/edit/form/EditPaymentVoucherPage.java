@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * @author mpostelnicu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
 public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityPage<PaymentVoucher>
         implements MEPaymentRoleAssignable {

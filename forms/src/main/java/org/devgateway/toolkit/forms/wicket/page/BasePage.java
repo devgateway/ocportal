@@ -103,8 +103,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
-import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_USER;
 
 /**
  * Base wicket-bootstrap {@link org.apache.wicket.Page}
@@ -402,7 +402,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_USER);
 
         return metadataMenu;
     }
@@ -446,7 +446,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         formMenu.setIconType(FontAwesomeIconType.wpforms);
-        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_IMPLEMENTATION_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
 
         return formMenu;
     }
@@ -507,9 +507,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         formMenu.setIconType(FontAwesomeIconType.wpforms);
-        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER,
-                ROLE_PROCUREMENT_USER
-        );
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
 
         return formMenu;
     }

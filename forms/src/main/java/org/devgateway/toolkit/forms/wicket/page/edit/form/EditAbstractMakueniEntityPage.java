@@ -170,7 +170,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     @Override
     protected void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getUserRole());
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getCommaCombinedRoles());
         button.setVisibilityAllowed(button.isVisibilityAllowed()
                 && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
     }
@@ -197,7 +197,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected void addSaveRevertButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getValidatorRole());
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getUserRole());
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getCommaCombinedRoles());
         button.setVisibilityAllowed(button.isVisibilityAllowed()
                 && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
 
@@ -219,7 +219,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected void addDeleteButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(
-                button, Component.RENDER, getUserRole());
+                button, Component.RENDER, getCommaCombinedRoles());
     }
 
     protected FileInputBootstrapFormComponent addFormDocs() {

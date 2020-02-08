@@ -14,7 +14,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/awardNotifications")
 public class ListAwardNotificationPage extends ListAbstractTenderProcessMakueniEntity<AwardNotification> {
     @SpringBean

@@ -20,7 +20,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
 public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntityPage<AwardNotification>
         implements ProcurementRoleAssignable {

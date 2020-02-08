@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author idobre
  * @since 2019-04-24
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
 public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakueniEntityPage<ProfessionalOpinion>
         implements ProcurementRoleAssignable {

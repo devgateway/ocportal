@@ -36,7 +36,7 @@ import java.util.Objects;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
 public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Contract> implements
         ProcurementRoleAssignable {

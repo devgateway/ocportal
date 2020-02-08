@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.service;
 
+import com.google.common.collect.Sets;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -20,7 +21,7 @@ import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_A
 public class PermissionEntityRenderableService {
 
     public boolean isMatchingRightsOfEntity(EditorValidatorRoleAssignable page, Set<String> roles) {
-        return roles.contains(page.getUserRole());
+        return !Sets.intersection(roles, page.getCombinedRoles()).isEmpty();
     }
 
     public String getAllowedAccess(final EditorValidatorRoleAssignable page, AbstractMakueniEntity entity) {
@@ -58,6 +59,6 @@ public class PermissionEntityRenderableService {
             }
         }
 
-        return null;
+        return SecurityConstants.Action.VIEW;
     }
 }
