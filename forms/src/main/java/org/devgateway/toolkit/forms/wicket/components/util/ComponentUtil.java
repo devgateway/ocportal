@@ -3,16 +3,18 @@ package org.devgateway.toolkit.forms.wicket.components.util;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
-import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
@@ -28,6 +30,8 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstra
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.events.EditingEnabledEvent;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
@@ -38,6 +42,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.select2.ChoiceProvider;
@@ -119,14 +124,14 @@ public final class ComponentUtil {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public static boolean canAccessAddNewButtonInDeptOverview(SessionMetadataService sessionMetadataService) {
-        if (FormSecurityUtil.isCurrentUserAdmin()) {
-            return true;
-        } else {
-            return sessionMetadataService.getSessionDepartment() != null
-                    && FormSecurityUtil.getCurrentAuthenticatedPerson()
-                    .getDepartments().contains(sessionMetadataService.getSessionDepartment());
-        }
+    public static boolean canAccessAddNewButtons(Class<? extends AbstractEditPage<?>> editClazz,
+                                                 PermissionEntityRenderableService permissionEntityRenderableService,
+                                                 SessionMetadataService sessionMetadataService) {
+        PageProvider pageProvider = new PageProvider(editClazz);
+        IRequestablePage editPage = pageProvider.getPageInstance();
+        String allowedAccess = permissionEntityRenderableService.getAllowedAccess((EditorValidatorRoleAssignable)
+                editPage, true, sessionMetadataService.getSessionDepartment());
+        return SecurityConstants.Action.EDIT.equals(allowedAccess);
     }
 
     /**

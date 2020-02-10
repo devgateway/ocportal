@@ -21,8 +21,10 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
@@ -50,13 +52,14 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     @SpringBean
     private TenderProcessService tenderProcessService;
 
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
+
     private final Map<Project, List<TenderProcess>> tenderProcesses;
 
     private final Project sessionProject;
 
     private final TenderProcess sessionTenderProcess;
-
-    private final Boolean canAccessAddNewButtonInDeptOverview;
 
     public ListViewProjectsOverview(final String id, final IModel<List<Project>> model,
                                     final IModel<ProcurementPlan> procurementPlanModel) {
@@ -74,8 +77,11 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 .parallelStream()
                 .collect(Collectors.groupingBy(TenderProcess::getProject,
                         Collectors.mapping(Function.identity(), Collectors.toList())));
+    }
 
-        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
+    public boolean canAccessAddNewButtons(Class<? extends AbstractEditPage<?>> clazz) {
+        return ComponentUtil.canAccessAddNewButtons(clazz, permissionEntityRenderableService,
+                sessionMetadataService);
     }
 
     @Override
@@ -119,7 +125,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
 
-                if (!canAccessAddNewButtonInDeptOverview) {
+                if (!canAccessAddNewButtons(EditProjectPage.class)) {
                     Attributes.removeClass(tag, "btn-edit");
                     Attributes.addClass(tag, "btn-view");
                 }
@@ -134,7 +140,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 setResponsePage(EditProjectPage.class, pageParameters);
             }
         };
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProjectPage.class) ? "Edit" : "View")
                 + " Project")));
         headerFragment.add(button);
 
@@ -160,7 +166,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         addTenderProcess.setLabel(
                 new StringResourceModel("addTenderProcess", ListViewProjectsOverview.this, null));
         containerFragment.add(addTenderProcess);
-        addTenderProcess.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        addTenderProcess.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
 
         // sort the purchase requisition list
         final List<TenderProcess> purchaseReqs = tenderProcesses.get(project);

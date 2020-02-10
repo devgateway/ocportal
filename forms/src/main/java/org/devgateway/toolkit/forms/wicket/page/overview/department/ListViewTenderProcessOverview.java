@@ -21,7 +21,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
@@ -69,7 +71,8 @@ import java.util.stream.Collectors;
 public class ListViewTenderProcessOverview extends AbstractListViewStatus<TenderProcess> {
     protected static final Logger logger = LoggerFactory.getLogger(DataEntryBasePage.class);
 
-    private final Boolean canAccessAddNewButtonInDeptOverview;
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
 
     private final TenderProcess sessionTenderProcess;
 
@@ -86,8 +89,11 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         if (sessionTenderProcess != null) {
             expandedContainerIds.add(sessionTenderProcess.getId());
         }
+    }
 
-        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
+    public boolean canAccessAddNewButtons(Class<? extends AbstractEditPage<?>> editClazz) {
+        return ComponentUtil.canAccessAddNewButtons(editClazz, permissionEntityRenderableService,
+                sessionMetadataService);
     }
 
     @Override
@@ -268,12 +274,12 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
         private final TenderProcess tenderProcess;
 
-        private final Class<? extends AbstractEditPage> editClazz;
+        private final Class<? extends AbstractEditPage<?>> editClazz;
         private final Statusable previousStep;
 
         TenderDetailPanel(final String id, final T entity, final String tenderLabel,
                           final List<Object> tenderInfo, final TenderProcess tenderProcess,
-                          final Class<? extends AbstractEditPage> editClazz, Statusable previousStep) {
+                          final Class<? extends AbstractEditPage<?>> editClazz, Statusable previousStep) {
             super(id);
 
             this.entity = entity;
@@ -307,7 +313,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             };
 
             final String buttonType;
-            if (canAccessAddNewButtonInDeptOverview) {
+            if (canAccessAddNewButtons(editClazz)) {
                 if (entity == null) {
                     buttonType = "add";
                 } else {
@@ -319,12 +325,12 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             editTender.add(AttributeAppender.append("class", "no-text btn-" + buttonType));
 
             editTender.add(new TooltipBehavior(Model.of((entity == null
-                    ? "Add " : (canAccessAddNewButtonInDeptOverview ? "Edit " : "View "))
+                    ? "Add " : (canAccessAddNewButtons(editClazz) ? "Edit " : "View "))
                     + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
                     editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")), ' '))));
 
             if (entity == null) {
-                editTender.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+                editTender.setVisibilityAllowed(canAccessAddNewButtons(editClazz));
             }
             if (!(entity instanceof TenderProcess) && !(entity instanceof Tender)) {
                 editTender.setEnabled(canEdit(tenderProcess, entity, previousStep));

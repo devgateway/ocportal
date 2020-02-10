@@ -42,8 +42,10 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
@@ -88,6 +90,9 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
+
     private Label newProcurementPlanLabel;
 
     protected final IModel<FiscalYear> fiscalYearModel;
@@ -96,8 +101,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @SpringBean
     private DataExportService dataExportService;
-
-    private final Boolean canAccessAddNewButtonInDeptOverview;
 
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
@@ -146,8 +149,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 return procurementPlanService.findByDepartmentAndFiscalYear(getDepartment(), getFiscalYear());
             }
         };
-
-        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
     }
 
     @Override
@@ -167,7 +168,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         addProjectButton();
         addYearDropdown();
 
-        final Form excelForm = new ExcelDownloadForm("excelForm");
+        final Form<?> excelForm = new ExcelDownloadForm("excelForm");
         add(excelForm);
 
         addSearchBox();
@@ -241,12 +242,17 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         }
     }
 
+    public boolean canAccessAddNewButtons(Class<? extends AbstractEditPage<?>> clazz) {
+        return ComponentUtil.canAccessAddNewButtons(clazz, permissionEntityRenderableService,
+                sessionMetadataService);
+    }
+
     private void addNewProcurementPlanButton() {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", ProcurementPlanInputSelectPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
         newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
-        newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtons(EditProcurementPlanPage.class));
 
         newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
         newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
@@ -264,15 +270,15 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
 
-                if (!canAccessAddNewButtonInDeptOverview) {
+                if (!canAccessAddNewButtons(EditProcurementPlanPage.class)) {
                     Attributes.removeClass(tag, "btn-edit");
                     Attributes.addClass(tag, "btn-view");
                 }
             }
         };
         button.setEnabled(getProcurementPlan() != null);
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
-                + " Procurement Plan")));
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProcurementPlanPage.class) ? "Edit"
+                : "View") + " Procurement Plan")));
 
         add(button);
 
@@ -293,7 +299,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(Model.of("Add New Cabinet Paper")));
         add(editCabinetPaper);
-        editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtons(EditCabinetPaperPage.class));
     }
 
     private void listCabinetPaperButton() {
@@ -309,7 +315,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
 
-                if (!canAccessAddNewButtonInDeptOverview) {
+                if (!canAccessAddNewButtons(EditCabinetPaperPage.class)) {
                     Attributes.removeClass(tag, "btn-edit");
                     Attributes.addClass(tag, "btn-view");
                 }
@@ -326,13 +332,13 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewPage.this, null));
         addNewProject.setEnabled(getProcurementPlan() != null);
-        addNewProject.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        addNewProject.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
         add(addNewProject);
     }
 
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
-        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
+        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice<>("years",
                 fiscalYearModel, fiscalYearsModel, choiceRenderer);
 
         yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
