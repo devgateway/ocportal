@@ -227,7 +227,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         containerFragment.add(inspectionReportPanel);
 
         final Panel pmcReportPanel = new TenderDetailPanel<>("pmcReportPanel",
-                new ArrayList<>(tenderProcess.getInspectionReports()),
+                new ArrayList<>(tenderProcess.getPmcReports()),
                 "PMC Report", pmc -> Collections.singletonList(pmc.getLabel()),
                 tenderProcess, EditPMCReportPage.class, contract, true
         );
