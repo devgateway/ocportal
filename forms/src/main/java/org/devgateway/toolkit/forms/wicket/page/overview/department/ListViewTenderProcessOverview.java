@@ -158,10 +158,13 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
         final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel",
                 Collections.singletonList(tenderProcess),
-                tenderProcess.getPurchaseRequestNumber(), tp -> Arrays.asList(
+                "Purchase Requisition", tp -> Arrays.asList(
+                tenderProcess.getPurchaseRequestNumber(),
                 tp.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
                         .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
-                tp.getAmount()), tenderProcess, EditTenderProcessPage.class, null, false);
+                tp.getAmount()
+        ), tenderProcess, EditTenderProcessPage.class, null, false
+        );
         containerFragment.add(requisitionPanel);
 
         final Panel tenderPanel = new TenderDetailPanel<>("tenderPanel", Collections.singletonList(tender),
