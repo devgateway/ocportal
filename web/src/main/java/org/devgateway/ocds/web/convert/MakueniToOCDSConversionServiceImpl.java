@@ -15,6 +15,7 @@ import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.persistence.mongo.Detail;
 import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
+import org.devgateway.ocds.persistence.mongo.Implementation;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniAward;
 import org.devgateway.ocds.persistence.mongo.MakueniItem;
@@ -52,6 +53,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
+import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -338,6 +340,21 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return period;
     }
 
+    public Milestone createPMCMilestone(PMCReport pmcReport) {
+        Milestone milestone = new Milestone();
+        safeSet(milestone::setTitle, () -> "Payment Authorization " + pmcReport.getId());
+        safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
+        safeSet(milestone::setCode, pmcReport::getId, this::longIdToString);
+        safeSet(milestone::setDateModified, pmcReport::getApprovedDate);
+        safeSet(milestone::setDateMet, () -> pmcReport.getAuthorizePayment() ? pmcReport.getApprovedDate() : null);
+        safeSet(
+                milestone::setStatus,
+                () -> pmcReport.getAuthorizePayment() ? Milestone.Status.MET : Milestone.Status.NOT_MET
+        );
+        safeSetEach(milestone.getDocuments()::add, pmcReport::getFormDocs, this::storeAsDocumentPhProgressReport);
+        return milestone;
+    }
+
 
     public Budget createPlanningBudget(TenderProcess tenderProcess) {
         Budget budget = new Budget();
@@ -357,6 +374,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return mongoFileStorageService.storeFileAndReferenceAsDocument(
                 entity.getFormDoc(),
                 Document.DocumentType.PROJECT_PLAN
+        );
+    }
+
+    private Document storeAsDocumentPhProgressReport(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(
+                fm,
+                Document.DocumentType.PHYSICAL_PROGRESS_REPORT
         );
     }
 
@@ -831,6 +855,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
         );
         safeSet(ocdsContract::setStatus, contract::getStatus, this::createContractStatus);
+        safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
 
         return ocdsContract;
     }
@@ -956,6 +981,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return release;
     }
 
+    private Implementation createImplementation(TenderProcess tenderProcess) {
+        Implementation impl = new Implementation();
+        safeSetEach(impl.getMilestones()::add, tenderProcess::getPmcReports, this::createPMCMilestone);
+        return impl;
+    }
 
     private void addPartiesToOrganizationCollection(Set<Organization> parties) {
         parties.forEach(p -> {

@@ -408,6 +408,7 @@ public class Document {
         PROJECT_PLAN("projectPlan"),
         PROCUREMENT_PLAN("procurementPlan"),
         EVALUATION_REPORTS("evaluationReports"),
+        PHYSICAL_PROGRESS_REPORT("physicalProgressReport"),
         X_APPROVED_PURCHASE_REQUISITION("x_approvedPurchaseRequisition"),
         X_EVALUATION_PROFESSIONAL_OPINION("x_evaluationProfessionalOpinion"),
         X_AWARD_ACCEPTANCE("x_awardAcceptance");
