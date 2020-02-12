@@ -31,6 +31,7 @@ import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tag;
 import org.devgateway.ocds.persistence.mongo.Tender;
+import org.devgateway.ocds.persistence.mongo.Transaction;
 import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.ocds.persistence.mongo.repository.main.MakueniLocationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
@@ -47,6 +48,7 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AbstractAuthImplTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
@@ -55,6 +57,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
 import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -356,6 +359,17 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return milestone;
     }
 
+    public Transaction createPaymentVoucherTransaction(PaymentVoucher voucher) {
+        Transaction transaction = new Transaction();
+        safeSet(transaction::setDate, voucher::getApprovedDate);
+        safeSet(transaction::setAmount, voucher::getTotalAmount, this::convertAmount);
+        safeSet(transaction::setPayer, voucher::getDepartment, this::convertBuyer);
+        safeSet(transaction::setPayee, voucher::getContract,
+                org.devgateway.toolkit.persistence.dao.form.Contract::getAwardee, this::convertSupplier
+        );
+        return transaction;
+    }
+
     public Milestone createInspectionMilestone(InspectionReport inspectionReport) {
         Milestone milestone = new Milestone();
         safeSet(milestone::setTitle, () -> "Payment Authorization " + inspectionReport.getId());
@@ -401,6 +415,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return mongoFileStorageService.storeFileAndReferenceAsDocument(
                 fm,
                 Document.DocumentType.PHYSICAL_PROGRESS_REPORT
+        );
+    }
+
+    private Document storeAsDocumentFinProgressReport(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(
+                fm,
+                Document.DocumentType.FINANCIAL_PROGRESS_REPORT
         );
     }
 
@@ -1006,8 +1027,30 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSetEach(impl.getMilestones()::add, tenderProcess::getPmcReports, this::createAuthImplMilestone);
         safeSetEach(impl.getMilestones()::add, tenderProcess::getInspectionReports, this::createAuthImplMilestone);
         safeSetEach(impl.getMilestones()::add, tenderProcess::getAdministratorReports, this::createAuthImplMilestone);
+        safeSetEach(
+                impl.getTransactions()::add, tenderProcess::getPaymentVouchers, this::createPaymentVoucherTransaction);
+
+        safeSetEach(impl.getDocuments()::add, () -> convertImplToFileMetadata(tenderProcess.getPmcReports()),
+                this::storeAsDocumentPhProgressReport
+        );
+        safeSetEach(impl.getDocuments()::add, () -> convertImplToFileMetadata(tenderProcess.getInspectionReports()),
+                this::storeAsDocumentPhProgressReport
+        );
+        safeSetEach(impl.getDocuments()::add, () -> convertImplToFileMetadata(tenderProcess.getAdministratorReports()),
+                this::storeAsDocumentPhProgressReport
+        );
+        safeSetEach(impl.getDocuments()::add, () -> convertImplToFileMetadata(tenderProcess.getPaymentVouchers()),
+                this::storeAsDocumentFinProgressReport
+        );
         return impl;
     }
+
+    private <S extends AbstractImplTenderProcessMakueniEntity>
+    Collection<FileMetadata> convertImplToFileMetadata(Collection<S> c) {
+        return c.stream()
+                .flatMap(r -> r.getFormDocs().stream()).collect(Collectors.toList());
+    }
+
 
     private void addPartiesToOrganizationCollection(Set<Organization> parties) {
         parties.forEach(p -> {
