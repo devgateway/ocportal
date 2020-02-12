@@ -46,6 +46,7 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
+import org.devgateway.toolkit.persistence.dao.form.AbstractAuthImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
@@ -53,7 +54,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
-import org.devgateway.toolkit.persistence.dao.form.PMCReport;
+import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -340,18 +341,37 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return period;
     }
 
-    public Milestone createPMCMilestone(PMCReport pmcReport) {
+    public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessMakueniEntity report) {
         Milestone milestone = new Milestone();
-        safeSet(milestone::setTitle, () -> "Payment Authorization " + pmcReport.getId());
+        safeSet(milestone::setTitle, () -> "Payment Authorization " + report.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
-        safeSet(milestone::setCode, () -> "PMC Report");
-        safeSet(milestone::setDateModified, pmcReport::getApprovedDate);
-        safeSet(milestone::setDateMet, () -> pmcReport.getAuthorizePayment() ? pmcReport.getApprovedDate() : null);
+        safeSet(milestone::setCode, () -> report.getClass().getSimpleName());
+        safeSet(milestone::setDateModified, report::getApprovedDate);
+        safeSet(milestone::setDateMet, () -> report.getAuthorizePayment() ? report.getApprovedDate() : null);
         safeSet(
                 milestone::setStatus,
-                () -> pmcReport.getAuthorizePayment() ? Milestone.Status.MET : Milestone.Status.NOT_MET
+                () -> report.getAuthorizePayment() ? Milestone.Status.MET : Milestone.Status.NOT_MET
         );
-        safeSetEach(milestone.getDocuments()::add, pmcReport::getFormDocs, this::storeAsDocumentPhProgressReport);
+        safeSetEach(milestone.getDocuments()::add, report::getFormDocs, this::storeAsDocumentPhProgressReport);
+        return milestone;
+    }
+
+    public Milestone createInspectionMilestone(InspectionReport inspectionReport) {
+        Milestone milestone = new Milestone();
+        safeSet(milestone::setTitle, () -> "Payment Authorization " + inspectionReport.getId());
+        safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
+        safeSet(milestone::setCode, () -> "Inspection Report");
+        safeSet(milestone::setDateModified, inspectionReport::getApprovedDate);
+        safeSet(
+                milestone::setDateMet,
+                () -> inspectionReport.getAuthorizePayment() ? inspectionReport.getApprovedDate() : null
+        );
+        safeSet(
+                milestone::setStatus,
+                () -> inspectionReport.getAuthorizePayment() ? Milestone.Status.MET : Milestone.Status.NOT_MET
+        );
+        safeSetEach(
+                milestone.getDocuments()::add, inspectionReport::getFormDocs, this::storeAsDocumentPhProgressReport);
         return milestone;
     }
 
@@ -983,7 +1003,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private Implementation createImplementation(TenderProcess tenderProcess) {
         Implementation impl = new Implementation();
-        safeSetEach(impl.getMilestones()::add, tenderProcess::getPmcReports, this::createPMCMilestone);
+        safeSetEach(impl.getMilestones()::add, tenderProcess::getPmcReports, this::createAuthImplMilestone);
+        safeSetEach(impl.getMilestones()::add, tenderProcess::getInspectionReports, this::createAuthImplMilestone);
+        safeSetEach(impl.getMilestones()::add, tenderProcess::getAdministratorReports, this::createAuthImplMilestone);
         return impl;
     }
 
