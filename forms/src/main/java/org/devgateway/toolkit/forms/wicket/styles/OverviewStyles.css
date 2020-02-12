@@ -851,6 +851,7 @@
     padding-right: 20px;
 }
 .collapse-content.tender .tender-info ul li ul li:last-child{
+  padding-right: 0;
   position: absolute;
   right: 20px;
   top: 15px;
