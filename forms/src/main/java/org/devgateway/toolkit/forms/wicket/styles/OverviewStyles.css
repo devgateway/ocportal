@@ -853,7 +853,6 @@
 .collapse-content.tender .tender-info ul li ul li:last-child{
   padding-right: 0;
   float: right;
-  margin-top: -35px;
 }
 .collapse-content.tender .tender-info ul li:after{
   content: none;
