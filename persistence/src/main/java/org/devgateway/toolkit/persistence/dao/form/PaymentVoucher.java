@@ -49,6 +49,11 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
 
     }
 
+    @Override
+    public String getLabel() {
+        return super.getLabel() + (totalAmount == null ? "" : " amount " + totalAmount);
+    }
+
     public BigDecimal getTotalAmount() {
         return totalAmount;
     }

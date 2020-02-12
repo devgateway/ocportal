@@ -32,9 +32,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PMCReport extends AbstractImplTenderProcessMakueniEntity implements WardsSettable {
-
-    private Boolean authorizePayment;
+public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implements WardsSettable {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -66,19 +64,6 @@ public class PMCReport extends AbstractImplTenderProcessMakueniEntity implements
     @Override
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public void setLabel(String label) {
-
-    }
-
-    public Boolean getAuthorizePayment() {
-        return authorizePayment;
-    }
-
-    public void setAuthorizePayment(Boolean authorizePayment) {
-        this.authorizePayment = authorizePayment;
     }
 
     public List<Subcounty> getSubcounties() {

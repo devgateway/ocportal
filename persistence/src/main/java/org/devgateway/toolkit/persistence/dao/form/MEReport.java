@@ -102,6 +102,11 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
 
     }
 
+    @Override
+    public String getLabel() {
+        return super.getLabel() + (getMeStatus() == null ? "" : " (" + getMeStatus() + ")");
+    }
+
     public List<Subcounty> getSubcounties() {
         return subcounties;
     }

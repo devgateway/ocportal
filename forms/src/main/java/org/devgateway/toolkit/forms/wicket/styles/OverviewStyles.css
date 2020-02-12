@@ -833,7 +833,7 @@
 .tender-status .btn.btn-edit {
     background-size: 9px 9px;
     height: 16px;
-    margin-top: -3px;
+    margin-top: 0;
     width: 16px;
 }
 
@@ -848,6 +848,14 @@
     border-bottom: none;
     margin-right: 5px;
     padding-left: 0;
+    padding-right: 20px;
+}
+.collapse-content.tender .tender-info ul li ul li:last-child{
+  padding-right: 0;
+  float: right;
+}
+.collapse-content.tender .tender-info ul li:after{
+  content: none;
 }
 
 .tender-info ul li:after {
@@ -858,6 +866,10 @@
 
 .tender-info ul li:last-child:after {
     content: none;
+}
+
+.tender-info .tender-status{
+  float: right;
 }
 
 .borderless tr td {
