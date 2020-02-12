@@ -344,7 +344,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         Milestone milestone = new Milestone();
         safeSet(milestone::setTitle, () -> "Payment Authorization " + pmcReport.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
-        safeSet(milestone::setCode, pmcReport::getId, this::longIdToString);
+        safeSet(milestone::setCode, () -> "PMC Report");
         safeSet(milestone::setDateModified, pmcReport::getApprovedDate);
         safeSet(milestone::setDateMet, () -> pmcReport.getAuthorizePayment() ? pmcReport.getApprovedDate() : null);
         safeSet(
