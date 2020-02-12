@@ -9,7 +9,7 @@ public abstract class AbstractAuthImplTenderProcessMakueniEntity extends Abstrac
 
     @Override
     public String getLabel() {
-        return super.getLabel() + (authorizePayment ? " (authorized)" : "");
+        return super.getLabel() + (Boolean.TRUE.equals(authorizePayment) ? " (authorized)" : "");
     }
 
     @Override
