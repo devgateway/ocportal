@@ -21,9 +21,7 @@ import java.util.Collections;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class InspectionReport extends AbstractImplTenderProcessMakueniEntity {
-
-    private Boolean authorizePayment;
+public class InspectionReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String comments;
@@ -33,18 +31,6 @@ public class InspectionReport extends AbstractImplTenderProcessMakueniEntity {
         return Collections.emptyList();
     }
 
-    @Override
-    public void setLabel(String label) {
-
-    }
-
-    public Boolean getAuthorizePayment() {
-        return authorizePayment;
-    }
-
-    public void setAuthorizePayment(Boolean authorizePayment) {
-        this.authorizePayment = authorizePayment;
-    }
 
     public String getComments() {
         return comments;

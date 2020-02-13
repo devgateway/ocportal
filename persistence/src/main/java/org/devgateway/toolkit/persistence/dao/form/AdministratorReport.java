@@ -19,25 +19,11 @@ import java.util.Collections;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AdministratorReport extends AbstractImplTenderProcessMakueniEntity {
-
-    private Boolean authorizePayment;
+public class AdministratorReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     @Override
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 
-    @Override
-    public void setLabel(String label) {
-
-    }
-
-    public Boolean getAuthorizePayment() {
-        return authorizePayment;
-    }
-
-    public void setAuthorizePayment(Boolean authorizePayment) {
-        this.authorizePayment = authorizePayment;
-    }
 }

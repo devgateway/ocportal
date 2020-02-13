@@ -5,17 +5,23 @@
     <div class="tender-detail">
         <div class="tender-header">
             <div class="tender-label" wicket:id="tenderLabel">[[tender label]]</div>
-            <div class="tender-status">
-                <span class="status" wicket:id="tenderStatus"></span>
-                <button type="button" class="btn btn-small" wicket:id="editTender"></button>
-            </div>
         </div>
+
         <div class="tender-info">
             <ul>
-                <li wicket:id="tenderInfo">
-                    <span class="title-uppercase" wicket:id="item"></span>
+                <li wicket:id="entities">
+                    <ul>
+                        <li wicket:id="tenderInfo">
+                            <span class="title-uppercase" wicket:id="item"></span>
+                        </li>
+                    </ul>
+                    <div class="tender-status">
+                        <span class="status" wicket:id="tenderStatus"></span>
+                        <button type="button" class="btn btn-small" wicket:id="editButton"></button>
+                    </div>
                 </li>
             </ul>
+            <button type="button" class="btn btn-small" wicket:id="editButton"></button>
         </div>
     </div>
 </wicket:panel>
