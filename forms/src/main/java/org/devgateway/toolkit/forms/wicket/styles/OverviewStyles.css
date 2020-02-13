@@ -851,8 +851,6 @@
 
 .collapse-content.tender .tender-info ul li ul li{
   float: left;
-  line-height: 130%;
-  margin-bottom: 4px;
 }
 
 .collapse-content.tender .tender-info ul li ul li:last-child{
