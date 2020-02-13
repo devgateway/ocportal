@@ -20,4 +20,9 @@ public class PMCStaff extends Category {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    @Override
+    public String toString() {
+        return getLabel() + " (tel " + phone + ")";
+    }
 }
