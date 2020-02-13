@@ -1,0 +1,17 @@
+{
+  "name": {
+    "en": "Milestone Delayed"
+  },
+  "description": {
+    "en": "M&E reports for Makueni need a delayed option for reporting it as Milestone. This delayed milestone status is not available and the status codelist is closed. We have added a boolean property to the milestone, delayed that can be set to true"
+  },
+  "documentationUrl": {
+    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/milestone_delayed"
+  },
+  "compatibility": [
+    "1.1"
+  ],
+  "schemas": [
+    "release-schema.json"
+  ]
+}

@@ -21,6 +21,7 @@ import org.devgateway.ocds.persistence.mongo.MakueniAward;
 import org.devgateway.ocds.persistence.mongo.MakueniItem;
 import org.devgateway.ocds.persistence.mongo.MakueniLocation;
 import org.devgateway.ocds.persistence.mongo.MakueniLocationType;
+import org.devgateway.ocds.persistence.mongo.MakueniMilestone;
 import org.devgateway.ocds.persistence.mongo.MakueniOrganization;
 import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.MakueniTender;
@@ -56,7 +57,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
-import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
+import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -112,6 +113,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private static final String OCID_PREFIX = "ocds-muq5cl-";
 
     private ImmutableMap<String, Tender.ProcurementMethod> procurementMethodMap;
+
+    private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
     @Autowired
     private MongoFileStorageService mongoFileStorageService;
@@ -319,6 +322,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return procurementMethodMap.get(procurementMethod.getLabel());
     }
 
+    public Milestone.Status createMeReportMilestoneStatus(MEReport report) {
+        return meMilestoneMap.get(report.getMeStatus().getLabel());
+    }
+
     @PostConstruct
     public void init() {
         procurementMethodMap = ImmutableMap.<String, Tender.ProcurementMethod>builder()
@@ -335,6 +342,15 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 .put("Force Account", Tender.ProcurementMethod.direct)
                 .put("Electronic Reverse Auction", Tender.ProcurementMethod.selective)
                 .put("Open tender International", Tender.ProcurementMethod.open).build();
+
+        meMilestoneMap = ImmutableMap.<String, Milestone.Status>builder()
+                .put("Completed not in use", Milestone.Status.NOT_MET)
+                .put("Complete in use", Milestone.Status.MET)
+                .put("Ongoing", Milestone.Status.NOT_MET)
+                .put("Not started", Milestone.Status.NOT_MET)
+                .put("Stalled", Milestone.Status.NOT_MET)
+                .put("Delayed", Milestone.Status.NOT_MET)
+                .build();
     }
 
     public Period createTenderPeriod(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
@@ -359,6 +375,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return milestone;
     }
 
+    public Milestone createMEMilestone(MEReport report) {
+        MakueniMilestone milestone = new MakueniMilestone();
+        safeSet(milestone::setTitle, () -> "ME Report " + report.getId());
+        safeSet(milestone::setType, Milestone.MilestoneType.DELIVERY::toString);
+        safeSet(milestone::setCode, () -> report.getClass().getSimpleName());
+        safeSet(milestone::setDateModified, report::getApprovedDate);
+        safeSet(milestone::setDescription, report::getProjectProgress);
+        safeSet(milestone::setStatus, () -> report, this::createMeReportMilestoneStatus);
+        safeSet(milestone::setDelayed, () -> report.getMeStatus().getLabel().equals("Delayed") ? true : false);
+        safeSetEach(milestone.getDocuments()::add, report::getFormDocs, this::storeAsDocumentEvaluationReports);
+        return milestone;
+    }
+
     public Transaction createPaymentVoucherTransaction(PaymentVoucher voucher) {
         Transaction transaction = new Transaction();
         safeSet(transaction::setDate, voucher::getApprovedDate);
@@ -369,26 +398,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         );
         return transaction;
     }
-
-    public Milestone createInspectionMilestone(InspectionReport inspectionReport) {
-        Milestone milestone = new Milestone();
-        safeSet(milestone::setTitle, () -> "Payment Authorization " + inspectionReport.getId());
-        safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
-        safeSet(milestone::setCode, () -> "Inspection Report");
-        safeSet(milestone::setDateModified, inspectionReport::getApprovedDate);
-        safeSet(
-                milestone::setDateMet,
-                () -> inspectionReport.getAuthorizePayment() ? inspectionReport.getApprovedDate() : null
-        );
-        safeSet(
-                milestone::setStatus,
-                () -> inspectionReport.getAuthorizePayment() ? Milestone.Status.MET : Milestone.Status.NOT_MET
-        );
-        safeSetEach(
-                milestone.getDocuments()::add, inspectionReport::getFormDocs, this::storeAsDocumentPhProgressReport);
-        return milestone;
-    }
-
 
     public Budget createPlanningBudget(TenderProcess tenderProcess) {
         Budget budget = new Budget();
@@ -1027,6 +1036,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSetEach(impl.getMilestones()::add, tenderProcess::getPmcReports, this::createAuthImplMilestone);
         safeSetEach(impl.getMilestones()::add, tenderProcess::getInspectionReports, this::createAuthImplMilestone);
         safeSetEach(impl.getMilestones()::add, tenderProcess::getAdministratorReports, this::createAuthImplMilestone);
+        safeSetEach(impl.getMilestones()::add, tenderProcess::getMeReports, this::createMEMilestone);
         safeSetEach(
                 impl.getTransactions()::add, tenderProcess::getPaymentVouchers, this::createPaymentVoucherTransaction);
 
@@ -1041,6 +1051,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         );
         safeSetEach(impl.getDocuments()::add, () -> convertImplToFileMetadata(tenderProcess.getPaymentVouchers()),
                 this::storeAsDocumentFinProgressReport
+        );
+        safeSetEach(impl.getDocuments()::add, () -> convertImplToFileMetadata(tenderProcess.getMeReports()),
+                this::storeAsDocumentEvaluationReports
         );
         return impl;
     }
