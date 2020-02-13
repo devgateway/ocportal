@@ -10,8 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author mpostelnicu
@@ -25,11 +23,6 @@ public class InspectionReport extends AbstractAuthImplTenderProcessMakueniEntity
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String comments;
-
-    @Override
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.emptyList();
-    }
 
 
     public String getComments() {

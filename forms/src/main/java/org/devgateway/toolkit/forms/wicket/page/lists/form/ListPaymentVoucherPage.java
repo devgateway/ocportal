@@ -30,7 +30,6 @@ public class ListPaymentVoucherPage extends ListAbstractImplTenderProcessMakueni
     @Override
     protected void onInitialize() {
         addTenderTitleColumn();
-        addFileDownloadColumn();
 
         super.onInitialize();
     }

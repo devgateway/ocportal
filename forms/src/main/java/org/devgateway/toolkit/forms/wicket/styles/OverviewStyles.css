@@ -545,6 +545,10 @@
     flex: auto;
 }
 
+.collapse-content .tender-info > ul > li{
+  display: flex;
+  float: none;
+}
 .project-details .status {
     float: right;
     background-size: 20px 20px;
@@ -552,23 +556,19 @@
     padding: 0;
     width: 20px;
 }
-
 .project-panels-wrapper {
     padding: 0px 30px 30px 30px;
 }
-
 .sidebar-title h2 {
     color: #ffffff;
     font-size: 18px;
     margin-bottom: 15px;
     margin-top: 15px;
 }
-
 .sidebar-title p {
     font-size: 12px;
     color: #ffffff;
 }
-
 .main-content-inner {
     overflow: hidden;
 }
@@ -842,17 +842,21 @@
 }
 
 .collapse-content.tender .tender-info ul li {
-    float: left;
     font-size: 9px;
     font-weight: bold;
     border-bottom: none;
     margin-right: 5px;
     padding-left: 0;
-    padding-right: 20px;
 }
+
+.collapse-content.tender .tender-info ul li ul li{
+  float: left;
+  line-height: 130%;
+  margin-bottom: 4px;
+}
+
 .collapse-content.tender .tender-info ul li ul li:last-child{
   padding-right: 0;
-  float: right;
 }
 .collapse-content.tender .tender-info ul li:after{
   content: none;
@@ -870,6 +874,7 @@
 
 .tender-info .tender-status{
   float: right;
+  width: 50px;
 }
 
 .borderless tr td {
