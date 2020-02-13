@@ -20,8 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,11 +58,6 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implem
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProjectClosureHandover projectClosureHandover;
-
-    @Override
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.emptyList();
-    }
 
     public List<Subcounty> getSubcounties() {
         return subcounties;

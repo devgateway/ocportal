@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import javax.persistence.MappedSuperclass;
+import java.util.Collection;
 
 @MappedSuperclass
 public abstract class AbstractAuthImplTenderProcessMakueniEntity extends AbstractImplTenderProcessMakueniEntity {
@@ -10,6 +11,11 @@ public abstract class AbstractAuthImplTenderProcessMakueniEntity extends Abstrac
     @Override
     public String getLabel() {
         return super.getLabel() + (Boolean.TRUE.equals(authorizePayment) ? " (authorized)" : "");
+    }
+
+    @Override
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+        return getTenderProcessNotNull().getPaymentVouchers();
     }
 
     @Override

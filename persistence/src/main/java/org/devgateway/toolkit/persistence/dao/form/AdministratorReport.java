@@ -8,8 +8,6 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author mpostelnicu
@@ -20,10 +18,5 @@ import java.util.Collections;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AdministratorReport extends AbstractAuthImplTenderProcessMakueniEntity {
-
-    @Override
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.emptyList();
-    }
 
 }
