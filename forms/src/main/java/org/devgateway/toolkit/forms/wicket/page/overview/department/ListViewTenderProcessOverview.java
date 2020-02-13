@@ -62,6 +62,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -216,35 +217,40 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         containerFragment.add(contractPanel);
 
         final Panel administratorReportPanel = new TenderDetailPanel<>("administratorReportPanel",
-                new ArrayList<>(tenderProcess.getAdministratorReports()),
+                tenderProcess.getAdministratorReports().stream().sorted(
+                        Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
                 "Administrator Report", ar -> Collections.singletonList(ar.getLabel()),
                 tenderProcess, EditAdministratorReportPage.class, contract, true
         );
         containerFragment.add(administratorReportPanel);
 
         final Panel inspectionReportPanel = new TenderDetailPanel<>("inspectionReportPanel",
-                new ArrayList<>(tenderProcess.getInspectionReports()),
+                tenderProcess.getInspectionReports().stream().sorted(
+                        Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
                 "Inspection Report", ir -> Collections.singletonList(ir.getLabel()),
                 tenderProcess, EditInspectionReportPage.class, contract, true
         );
         containerFragment.add(inspectionReportPanel);
 
         final Panel pmcReportPanel = new TenderDetailPanel<>("pmcReportPanel",
-                new ArrayList<>(tenderProcess.getPmcReports()),
+                tenderProcess.getPmcReports().stream().sorted(
+                        Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
                 "PMC Report", pmc -> Collections.singletonList(pmc.getLabel()),
                 tenderProcess, EditPMCReportPage.class, contract, true
         );
         containerFragment.add(pmcReportPanel);
 
         final Panel meReportPanel = new TenderDetailPanel<>("meReportPanel",
-                new ArrayList<>(tenderProcess.getMeReports()),
+                tenderProcess.getMeReports().stream().sorted(
+                        Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
                 "M&E Report", me -> Collections.singletonList(me.getLabel()),
                 tenderProcess, EditMEReportPage.class, contract, true
         );
         containerFragment.add(meReportPanel);
 
         final Panel paymentVoucherPanel = new TenderDetailPanel<>("paymentVoucherPanel",
-                new ArrayList<>(tenderProcess.getPaymentVouchers()),
+                tenderProcess.getPaymentVouchers().stream().sorted(
+                        Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
                 "Payment Voucher", pv -> Collections.singletonList(pv.getLabel()),
                 tenderProcess, EditPaymentVoucherPage.class, contract, true
         );
