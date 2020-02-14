@@ -327,12 +327,14 @@
     background-position: center center;
     border-color: #269BF2;
     border-radius: 32px;
-    margin-top: -10px;
+    margin-top: 0;
     height: 32px;
     padding-left: 0;
     width: 32px;
 }
-
+.status-panel-heading .btn.btn-view{
+  margin-top: -10px;
+}
 .btn.btn-view:hover {
     background-color: #2189d7;
 }
