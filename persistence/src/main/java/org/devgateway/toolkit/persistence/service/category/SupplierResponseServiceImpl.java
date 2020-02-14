@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author mpostelnicu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SupplierResponseServiceImpl extends BaseJpaServiceImpl<SupplierResponse>
         implements SupplierResponseService {
     @Autowired
