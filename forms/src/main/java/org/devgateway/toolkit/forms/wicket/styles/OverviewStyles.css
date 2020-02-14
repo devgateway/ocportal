@@ -327,7 +327,7 @@
     background-position: center center;
     border-color: #269BF2;
     border-radius: 32px;
-    margin-top: 0;
+    margin-top: -10px;
     height: 32px;
     padding-left: 0;
     width: 32px;
@@ -427,9 +427,10 @@
     border-left: 3px solid #223a49;
     margin-top: 10px;
     outline: none;
-    padding: 0;
+    padding: 3px 0 0 0;
     text-align: left;
     width: 100%;
+    line-height:16px;
 }
 
 .status-panel.tender {
@@ -713,6 +714,7 @@
     display: block;
     margin-right: 10px;
     font-size: 12px;
+    line-height: 17px;
 }
 
 .status-panel.project .year {
@@ -723,6 +725,7 @@
 
 .status-panel.project .status-panel-heading {
     padding: 15px;
+    line-height: 25px;
 }
 
 .status-panel-heading .btn.btn-edit {
