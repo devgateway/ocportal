@@ -327,7 +327,7 @@
     background-position: center center;
     border-color: #269BF2;
     border-radius: 32px;
-    margin-top: -3px;
+    margin-top: 0;
     height: 32px;
     padding-left: 0;
     width: 32px;
@@ -874,6 +874,7 @@
 
 .tender-info .tender-status{
   float: right;
+  line-height: 18px;
   width: 50px;
 }
 
