@@ -27,7 +27,7 @@ public class GenericKeyGenerator implements KeyGenerator {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Object generate(final Object target, final Method method, final Object... params) {
         final StringBuilder key = new StringBuilder(target.getClass().getSimpleName());
         key.append(method.getName());
@@ -44,7 +44,7 @@ public class GenericKeyGenerator implements KeyGenerator {
         return key.toString().hashCode();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     private String createKey(final Object param) {
         if (param instanceof GenericPersistable) {
             final GenericPersistable persistable = (GenericPersistable) param;
