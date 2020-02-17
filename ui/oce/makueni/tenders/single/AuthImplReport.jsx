@@ -2,7 +2,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
 
-class AdministratorReports extends React.Component {
+class AuthImplReport extends React.Component {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -12,7 +12,11 @@ class AdministratorReports extends React.Component {
         + ' - ' + department.label
         + ' - ' + fiscalYear.name;
     }
-    return escape('Administrator Reports' + metadata);
+    return escape(this.getReportName() + metadata);
+  }
+
+  getReportName(){
+
   }
 
   render() {
@@ -54,10 +58,12 @@ class AdministratorReports extends React.Component {
                   <div className="item-value">{formatDate(i.approvedDate)}</div>
                 </div>
               </div>
-
+              {
+                this.childElements(i)
+              }
               <div className="row padding-top-10">
                 <div className="col-md-12">
-                  <div className="item-label">Administrator Report</div>
+                  <div className="item-label">{this.getReportName()} Uploads</div>
 
                   {
                     i.formDocs.map(doc => <div key={doc._id}>
@@ -83,6 +89,9 @@ class AdministratorReports extends React.Component {
       </div>
     </div>);
   }
+
+  childElements(i) {
+  }
 }
 
-export default AdministratorReports;
+export default AuthImplReport;

@@ -11,7 +11,8 @@ import Award from './Award';
 import Contract from './Contract';
 import React from 'react';
 import FeedbackMessageList from '../../../feedback/feedbackList';
-import AdministratorReports from './AdministratorReports';
+import AdministratorReport from './AdministratorReport';
+import InspectionReport from './InspectionReport';
 
 class PurchaseReqView extends CRDPage {
   constructor(props) {
@@ -58,9 +59,14 @@ class PurchaseReqView extends CRDPage {
       name: 'Contract',
       tab: 7
     }, {
-      name: 'Administrator Reports',
+      name: 'Administrator Report',
       tab: 8
-    }];
+    },
+      {
+        name: 'Inspection Report',
+        tab: 9
+      }
+    ];
 
     this.isActive = this.isActive.bind(this);
     this.changeTab = this.changeTab.bind(this);
@@ -139,7 +145,12 @@ class PurchaseReqView extends CRDPage {
                          fiscalYear={fiscalYear} styling={this.props.styling}/>;
 
       case 8:
-        return <AdministratorReports data={data.administratorReports} department={department}
+        return <AdministratorReport data={data.administratorReports} department={department}
+                                     tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                                     styling={this.props.styling}/>;
+
+      case 9:
+        return <InspectionReport data={data.inspectionReports} department={department}
                                      tenderTitle={tenderTitle} fiscalYear={fiscalYear}
                                      styling={this.props.styling}/>;
 
