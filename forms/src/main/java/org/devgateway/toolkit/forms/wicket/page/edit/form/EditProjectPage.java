@@ -1,10 +1,10 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
@@ -14,6 +14,7 @@ import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
+import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
  * @author idobre
  * @since 2019-04-02
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
 public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         implements ProcurementRoleAssignable {
@@ -164,10 +165,12 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         };
         editForm.add(allWards);
 
-        subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
-        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior("change"));
-
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+
+        subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
+                LoadableDetachableModel.of(() -> wardService), editForm.getModel(), "change"
+        ));
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
@@ -235,31 +238,4 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         }
     }
 
-    class CountyAjaxFormComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        CountyAjaxFormComponentUpdatingBehavior(final String event) {
-            super(event);
-        }
-
-        @Override
-        protected void onUpdate(final AjaxRequestTarget target) {
-            final Collection<Subcounty> subcountyList = subcounties.getModelObject();
-
-            if (subcountyList.isEmpty()) {
-                editForm.getModelObject().setWards(new ArrayList<>());
-                wards.provider(new GenericChoiceProvider<>(new ArrayList<>(wardService.findAll())));
-            } else {
-                final List<Ward> wardList = wardService.findAll().stream()
-                        .filter(ward -> subcountyList.contains(ward.getSubcounty()))
-                        .collect(Collectors.toList());
-                wards.provider(new GenericChoiceProvider<>(wardList));
-
-                // keep only wards that can be selected as well.
-                final List<Ward> newWards = wards.getModelObject().stream()
-                        .filter(ward -> wardList.contains(ward)).collect(Collectors.toList());
-                editForm.getModelObject().setWards(newWards);
-            }
-
-            target.add(wards);
-        }
-    }
 }

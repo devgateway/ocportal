@@ -327,12 +327,14 @@
     background-position: center center;
     border-color: #269BF2;
     border-radius: 32px;
-    margin-top: -3px;
+    margin-top: 0;
     height: 32px;
     padding-left: 0;
     width: 32px;
 }
-
+.status-panel-heading .btn.btn-view{
+  margin-top: -10px;
+}
 .btn.btn-view:hover {
     background-color: #2189d7;
 }
@@ -427,9 +429,10 @@
     border-left: 3px solid #223a49;
     margin-top: 10px;
     outline: none;
-    padding: 0;
+    padding: 3px 0 0 0;
     text-align: left;
     width: 100%;
+    line-height:16px;
 }
 
 .status-panel.tender {
@@ -545,6 +548,10 @@
     flex: auto;
 }
 
+.collapse-content .tender-info > ul > li{
+  display: flex;
+  float: none;
+}
 .project-details .status {
     float: right;
     background-size: 20px 20px;
@@ -552,23 +559,19 @@
     padding: 0;
     width: 20px;
 }
-
 .project-panels-wrapper {
     padding: 0px 30px 30px 30px;
 }
-
 .sidebar-title h2 {
     color: #ffffff;
     font-size: 18px;
     margin-bottom: 15px;
     margin-top: 15px;
 }
-
 .sidebar-title p {
     font-size: 12px;
     color: #ffffff;
 }
-
 .main-content-inner {
     overflow: hidden;
 }
@@ -713,6 +716,7 @@
     display: block;
     margin-right: 10px;
     font-size: 12px;
+    line-height: 17px;
 }
 
 .status-panel.project .year {
@@ -723,6 +727,7 @@
 
 .status-panel.project .status-panel-heading {
     padding: 15px;
+    line-height: 25px;
 }
 
 .status-panel-heading .btn.btn-edit {
@@ -833,7 +838,7 @@
 .tender-status .btn.btn-edit {
     background-size: 9px 9px;
     height: 16px;
-    margin-top: -3px;
+    margin-top: 0;
     width: 16px;
 }
 
@@ -842,12 +847,24 @@
 }
 
 .collapse-content.tender .tender-info ul li {
-    float: left;
     font-size: 9px;
     font-weight: bold;
     border-bottom: none;
     margin-right: 5px;
     padding-left: 0;
+}
+
+.collapse-content.tender .tender-info ul li ul li{
+  float: left;
+  line-height: 130%;
+  margin-bottom: 4px;
+}
+
+.collapse-content.tender .tender-info ul li ul li:last-child{
+  padding-right: 0;
+}
+.collapse-content.tender .tender-info ul li:after{
+  content: none;
 }
 
 .tender-info ul li:after {
@@ -858,6 +875,12 @@
 
 .tender-info ul li:last-child:after {
     content: none;
+}
+
+.tender-info .tender-status{
+  float: right;
+  line-height: 18px;
+  width: 50px;
 }
 
 .borderless tr td {

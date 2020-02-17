@@ -15,8 +15,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
@@ -27,7 +29,6 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     private Fragment extraStatusEntityButtons;
 
     protected TransparentWebMarkupContainer alertTerminated;
+    protected FileInputBootstrapFormComponent formDocs;
 
     protected void checkInitParameters() {
 
@@ -163,13 +165,12 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         entityButtonsFragment.replace(extraStatusEntityButtons);
         extraStatusEntityButtons.add(revertToDraftModal);
 
-
     }
 
     @Override
     protected void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getUserRole());
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getCommaCombinedRoles());
         button.setVisibilityAllowed(button.isVisibilityAllowed()
                 && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
     }
@@ -196,18 +197,18 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected void addSaveRevertButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getValidatorRole());
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getUserRole());
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getCommaCombinedRoles());
         button.setVisibilityAllowed(button.isVisibilityAllowed()
                 && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
 
         // additionally normal users should not revert anything that was already validated
-        if (WebSecurityUtil.isCurrentRoleOnlyUser(getUserRole(), getValidatorRole())
+        if (FormSecurityUtil.isCurrentRoleOnlyUser(getUserRole(), getValidatorRole())
                 && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
             button.setVisibilityAllowed(false);
         } else
 
             //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
-            if (WebSecurityUtil.isCurrentUserAdmin()
+            if (FormSecurityUtil.isCurrentUserAdmin()
                     && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
                     || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
                 button.setVisibilityAllowed(true);
@@ -218,7 +219,13 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected void addDeleteButtonPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(
-                button, Component.RENDER, getUserRole());
+                button, Component.RENDER, getCommaCombinedRoles());
+    }
+
+    protected FileInputBootstrapFormComponent addFormDocs() {
+        formDocs = new FileInputBootstrapFormComponent("formDocs");
+        editForm.add(formDocs);
+        return formDocs;
     }
 
     @Override

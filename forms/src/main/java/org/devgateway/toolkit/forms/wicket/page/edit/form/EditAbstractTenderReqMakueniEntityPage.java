@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mihai
  */
-public abstract class EditAbstractTenderReqMakueniEntity<T extends AbstractTenderProcessMakueniEntity>
-        extends EditAbstractTenderProcessMakueniEntity<T> {
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderReqMakueniEntity.class);
+public abstract class EditAbstractTenderReqMakueniEntityPage<T extends AbstractTenderProcessMakueniEntity>
+        extends EditAbstractTenderProcessMakueniEntityPage<T> {
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderReqMakueniEntityPage.class);
 
     protected GenericSleepFormComponent<String> tenderTitle;
 
     protected GenericSleepFormComponent<String> tenderNumber;
 
-    public EditAbstractTenderReqMakueniEntity(final PageParameters parameters) {
+    public EditAbstractTenderReqMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
     }
 

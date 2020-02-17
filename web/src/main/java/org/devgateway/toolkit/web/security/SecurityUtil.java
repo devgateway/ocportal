@@ -101,9 +101,4 @@ public final class SecurityUtil {
         return false;
     }
 
-    public static boolean isCurrentUserAdmin() {
-        final Person p = getCurrentAuthenticatedPerson();
-        return isUserAdmin(p);
-    }
-
 }

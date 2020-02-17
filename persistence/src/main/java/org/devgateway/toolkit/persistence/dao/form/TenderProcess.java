@@ -99,6 +99,36 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<Contract> contract = new HashSet<>();
 
+    @ExcelExport(separateSheet = true, name = "Administrator Reports")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<AdministratorReport> administratorReports = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "PMC Reports")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<PMCReport> pmcReports = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "ME Reports")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<MEReport> meReports = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Inspection Reports")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<InspectionReport> inspectionReports = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Payment Vouchers")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<PaymentVoucher> paymentVouchers = new HashSet<>();
+
     private boolean checkTerminated(Statusable... statusables) {
         for (Statusable statusable : statusables) {
             if (statusable != null && statusable.isTerminated()) {
@@ -116,11 +146,19 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
      */
     @Override
     public boolean isTerminated() {
-        return checkTerminated(
-                PersistenceUtil.getNext(tender), PersistenceUtil.getNext(tenderQuotationEvaluation),
-                PersistenceUtil.getNext(professionalOpinion), PersistenceUtil.getNext(awardNotification),
-                PersistenceUtil.getNext(awardAcceptance), PersistenceUtil.getNext(contract)
-        );
+        ArrayList<Statusable> entityTree = new ArrayList<>();
+        entityTree.add(PersistenceUtil.getNext(tender));
+        entityTree.add(PersistenceUtil.getNext(tenderQuotationEvaluation));
+        entityTree.add(PersistenceUtil.getNext(professionalOpinion));
+        entityTree.add(PersistenceUtil.getNext(awardNotification));
+        entityTree.add(PersistenceUtil.getNext(awardAcceptance));
+        entityTree.add(PersistenceUtil.getNext(contract));
+        entityTree.addAll(administratorReports);
+        entityTree.addAll(inspectionReports);
+        entityTree.addAll(pmcReports);
+        entityTree.addAll(meReports);
+        entityTree.addAll(paymentVouchers);
+        return checkTerminated(entityTree.toArray(new Statusable[]{}));
     }
 
     @JsonProperty("tender")
@@ -226,6 +264,31 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(null);
     }
 
+    public void removeAdministratorReport(final AdministratorReport item) {
+        administratorReports.remove(item);
+        item.setTenderProcess(null);
+    }
+
+    public void removeInspectonReport(final InspectionReport item) {
+        inspectionReports.remove(item);
+        item.setTenderProcess(null);
+    }
+
+    public void removePMCReport(final PMCReport item) {
+        pmcReports.remove(item);
+        item.setTenderProcess(null);
+    }
+
+    public void removeMEReport(final MEReport item) {
+        meReports.remove(item);
+        item.setTenderProcess(null);
+    }
+
+    public void removePaymentVoucher(final PaymentVoucher item) {
+        paymentVouchers.remove(item);
+        item.setTenderProcess(null);
+    }
+
     public Set<TenderQuotationEvaluation> getTenderQuotationEvaluation() {
         return tenderQuotationEvaluation;
     }
@@ -293,6 +356,31 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(this);
     }
 
+    public void addAdministratorReport(final AdministratorReport item) {
+        administratorReports.add(item);
+        item.setTenderProcess(this);
+    }
+
+    public void addPMCReport(final PMCReport item) {
+        pmcReports.add(item);
+        item.setTenderProcess(this);
+    }
+
+    public void addMEReport(final MEReport item) {
+        meReports.add(item);
+        item.setTenderProcess(this);
+    }
+
+    public void addPaymentVoucher(final PaymentVoucher item) {
+        paymentVouchers.add(item);
+        item.setTenderProcess(this);
+    }
+
+    public void addInspectionReport(final InspectionReport item) {
+        inspectionReports.add(item);
+        item.setTenderProcess(this);
+    }
+
     public void removeAwardAcceptance(final AwardAcceptance item) {
         awardAcceptance.remove(item);
         item.setTenderProcess(null);
@@ -348,5 +436,45 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void setPurchRequisitions(List<PurchRequisition> purchRequisitions) {
         this.purchRequisitions = purchRequisitions;
+    }
+
+    public Set<AdministratorReport> getAdministratorReports() {
+        return administratorReports;
+    }
+
+    public void setAdministratorReports(Set<AdministratorReport> administratorReports) {
+        this.administratorReports = administratorReports;
+    }
+
+    public Set<PMCReport> getPmcReports() {
+        return pmcReports;
+    }
+
+    public void setPmcReports(Set<PMCReport> pmcReports) {
+        this.pmcReports = pmcReports;
+    }
+
+    public Set<MEReport> getMeReports() {
+        return meReports;
+    }
+
+    public void setMeReports(Set<MEReport> meReports) {
+        this.meReports = meReports;
+    }
+
+    public Set<InspectionReport> getInspectionReports() {
+        return inspectionReports;
+    }
+
+    public void setInspectionReports(Set<InspectionReport> inspectionReports) {
+        this.inspectionReports = inspectionReports;
+    }
+
+    public Set<PaymentVoucher> getPaymentVouchers() {
+        return paymentVouchers;
+    }
+
+    public void setPaymentVouchers(Set<PaymentVoucher> paymentVouchers) {
+        this.paymentVouchers = paymentVouchers;
     }
 }

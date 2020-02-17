@@ -23,7 +23,6 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -149,6 +148,12 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.emptyList();
+        ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
+        children.addAll(getTenderProcessNotNull().getAdministratorReports());
+        children.addAll(getTenderProcessNotNull().getPmcReports());
+        children.addAll(getTenderProcessNotNull().getInspectionReports());
+        children.addAll(getTenderProcessNotNull().getMeReports());
+        children.addAll(getTenderProcessNotNull().getPaymentVouchers());
+        return children;
     }
 }

@@ -22,9 +22,9 @@ import org.wicketstuff.annotation.mount.MountPath;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcessMakueniEntity
+public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcessMakueniEntityPage
         <TenderQuotationEvaluation> implements ProcurementRoleAssignable {
 
     @SpringBean

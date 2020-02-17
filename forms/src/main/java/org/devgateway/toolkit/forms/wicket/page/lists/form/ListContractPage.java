@@ -39,7 +39,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/contracts")
 public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Contract> {
     @SpringBean
@@ -67,7 +67,7 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
                         (new StringResourceModel("awardee", ListContractPage.this)).getString()),
                 "awardee",
                 "awardee",
-                new ListModel(awardees), dataTable, false
+                new ListModel<>(awardees), dataTable, false
         ));
     }
 

@@ -2,6 +2,7 @@ package org.devgateway.toolkit.forms.wicket.components.form;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstraptoggle.BootstrapToggle;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstraptoggle.BootstrapToggleConfig;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -18,6 +19,7 @@ public class CheckBoxYesNoToggleBootstrapFormComponent
     private static final long serialVersionUID = -4032850928243673675L;
 
     private CheckBox wrappedCheckbox;
+    private boolean removeCheckboxClass = false;
 
     public CheckBoxYesNoToggleBootstrapFormComponent(final String id, final IModel<String> labelModel,
                                                      final IModel<Boolean> model) {
@@ -34,6 +36,11 @@ public class CheckBoxYesNoToggleBootstrapFormComponent
 
     public CheckBoxYesNoToggleBootstrapFormComponent(final String id) {
         super(id);
+    }
+
+    public CheckBoxYesNoToggleBootstrapFormComponent(final String id, Boolean removeCheckboxClass) {
+        super(id);
+        this.removeCheckboxClass = removeCheckboxClass;
     }
 
     @Override
@@ -74,6 +81,14 @@ public class CheckBoxYesNoToggleBootstrapFormComponent
                     }
                 });
                 return wrappedCheckbox;
+            }
+
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                if (removeCheckboxClass) {
+                    this.get("wrapper").add(new AttributeModifier("class", ""));
+                }
             }
         };
 

@@ -14,13 +14,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.AbstractTenderProcessMakueniFilterState;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,11 +60,10 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
             public void populateItem(final Item<ICellPopulator<T>> item,
                                      final String componentId,
                                      final IModel<T> rowModel) {
-                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
                 final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
 
                 if (lastModifiedDate.isPresent()) {
-                    item.add(new Label(componentId, lastModifiedDate.get().format(formatter)));
+                    item.add(new Label(componentId, lastModifiedDate.get().format(DBConstants.DATE_FORMATTER)));
                 } else {
                     item.add(new Label(componentId, ""));
                 }

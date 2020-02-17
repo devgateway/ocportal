@@ -6,6 +6,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
@@ -14,14 +15,13 @@ import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.filterstate.form.CabinetPaperFilterState;
 import org.devgateway.toolkit.persistence.service.form.CabinetPaperService;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
  * @author gmutuhu
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/cabinetPapers")
 public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetPaper> {
 
@@ -43,13 +43,12 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
                 "procurementPlan.department", "procurementPlan.department",
                 new ListModel(departments), dataTable,
-                isPreselected() && !WebSecurityUtil.isCurrentUserAdmin()
+                isPreselected() && !FormSecurityUtil.isCurrentUserAdmin()
         ));
 
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
                 "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
-                new ListModel(fiscalYears), dataTable,
-                isPreselected() && !WebSecurityUtil.isCurrentUserAdmin()
+                new ListModel(fiscalYears), dataTable
         ));
 
         columns.add(new TextFilteredBootstrapPropertyColumn<>(

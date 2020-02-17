@@ -49,6 +49,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.string.StringValue;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
@@ -60,7 +61,10 @@ import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatistic
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListChargeAccountPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocumentTypePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDesignationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListMEStaffPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
@@ -70,10 +74,15 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListContractPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListInspectionReportPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListMEReportPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPMCReportPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPaymentVoucherPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
@@ -85,7 +94,6 @@ import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.web.Constants;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +104,7 @@ import java.util.Locale;
 
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_USER;
 
 /**
  * Base wicket-bootstrap {@link org.apache.wicket.Page}
@@ -132,7 +141,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
      * Determines if this page has a fluid container for the content or not.
      */
     public Boolean fluidContainer() {
-        return false;
+        return true;
     }
 
     public static class HALRedirectPage extends RedirectPage {
@@ -268,7 +277,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     private NavbarButton<EditUserPage> newAccountMenu() {
         final PageParameters pageParametersForAccountPage = new PageParameters();
-        final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
+        final Person person = FormSecurityUtil.getCurrentAuthenticatedPerson();
 
         // account menu
         Model<String> account = null;
@@ -360,6 +369,18 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         "navbar.stafflist", FontAwesomeIconType.user_times
                 );
 
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListPMCStaffPage.class,
+                        "navbar.pmcStaffList", FontAwesomeIconType.user_times
+                );
+
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListMEStaffPage.class,
+                        "navbar.meStaffList", FontAwesomeIconType.user_times
+                );
+
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListDesignationPage.class,
+                        "navbar.designations", FontAwesomeIconType.certificate
+                );
+
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
                         "navbar.procuringentitylist", FontAwesomeIconType.list
                 );
@@ -381,12 +402,56 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_ADMIN);
         MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
-
         return metadataMenu;
     }
 
-    private NavbarDropDownButton newFormMenu() {
+    private NavbarDropDownButton newImplementationFormMenu() {
+        // form menu
+        final NavbarDropDownButton formMenu = new NavbarDropDownButton(
+                new StringResourceModel("navbar.implementationForms", this, null)) {
+
+            @Override
+            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
+                final List<AbstractLink> list = new ArrayList<>();
+
+                list.add(new MenuBookmarkablePageLink<ListAdministratorReportPage>(
+                        ListAdministratorReportPage.class, null,
+                        new StringResourceModel("navbar.administratorReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListInspectionReportPage>(
+                        ListInspectionReportPage.class, null,
+                        new StringResourceModel("navbar.inspectionReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListPMCReportPage>(
+                        ListPMCReportPage.class, null,
+                        new StringResourceModel("navbar.pmcReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListMEReportPage>(
+                        ListMEReportPage.class, null,
+                        new StringResourceModel("navbar.meReport", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                list.add(new MenuBookmarkablePageLink<ListPaymentVoucherPage>(
+                        ListPaymentVoucherPage.class, null,
+                        new StringResourceModel("navbar.paymentVoucher", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
+
+                return list;
+            }
+        };
+
+        formMenu.setIconType(FontAwesomeIconType.wpforms);
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
+
+        return formMenu;
+    }
+
+    private NavbarDropDownButton newProcurementFormMenu() {
         // form menu
         final NavbarDropDownButton formMenu = new NavbarDropDownButton(
                 new StringResourceModel("navbar.forms", this, null)) {
@@ -396,8 +461,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 final List<AbstractLink> list = new ArrayList<>();
 
                 list.add(new MenuBookmarkablePageLink<ListProcurementPlanPage>(ListProcurementPlanPage.class, null,
-                        new StringResourceModel("navbar.procurementPlan", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                        new StringResourceModel("navbar.procurementPlan", this, null)
+                ).setIconType(FontAwesomeIconType.file_text_o));
 
                 list.add(new MenuBookmarkablePageLink<ListCabinetPaperPage>(ListCabinetPaperPage.class, null,
                         new StringResourceModel("navbar.cabinetpapers", this, null))
@@ -442,9 +507,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         formMenu.setIconType(FontAwesomeIconType.wpforms);
-        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER,
-                ROLE_PROCUREMENT_USER
-        );
+        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
 
         return formMenu;
     }
@@ -584,7 +647,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
         navbar.setBrandName(new StringResourceModel("brandName", this, null));
 
         navbar.addComponents(
-                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newFormMenu(),
+                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newProcurementFormMenu(),
+                        newImplementationFormMenu(),
                         newMetadataMenu(), newAdminMenu(), newAccountMenu(), newLogoutMenu()
                 ));
 

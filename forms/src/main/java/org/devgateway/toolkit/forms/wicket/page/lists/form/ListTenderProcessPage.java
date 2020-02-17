@@ -6,7 +6,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -36,15 +35,13 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 /**
  * @author idobre
  * @since 2019-04-17
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenderProcesses")
 public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderProcess> {
 
@@ -135,25 +132,7 @@ public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderP
                 "project.procurementPlan.fiscalYear", "project.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));
 
-        columns.add(new PropertyColumn<TenderProcess, String>(
-                new Model<>((new StringResourceModel("lastModifiedDate",
-                        ListTenderProcessPage.this)).getString()),
-                "lastModifiedDate", "lastModifiedDate") {
-            @Override
-            public void populateItem(final Item<ICellPopulator<TenderProcess>> item,
-                                     final String componentId,
-                                     final IModel<TenderProcess> rowModel) {
-                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
-                final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
-
-                if (lastModifiedDate.isPresent()) {
-                    item.add(new Label(componentId, lastModifiedDate.get().format(formatter)));
-                } else {
-                    item.add(new Label(componentId, ""));
-                }
-
-            }
-        });
+        addLastModifiedDateColumn();
 
         addOcdsDownloadColumn();
 

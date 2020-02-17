@@ -83,7 +83,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private CheckBoxYesNoToggleBootstrapFormComponent visibleStatusComments;
 
-    private TransparentWebMarkupContainer comments;
+    private TransparentWebMarkupContainer statusCommentsWrapper;
 
     private ListView<StatusChangedComment> statusComments;
 
@@ -196,15 +196,15 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         visibleStatusComments = getVisibleStatusComments();
         editForm.add(visibleStatusComments);
 
-        comments = new TransparentWebMarkupContainer("comments");
-        comments.setOutputMarkupId(true);
-        comments.setOutputMarkupPlaceholderTag(true);
-        comments.setVisibilityAllowed(false);
-        editForm.add(comments);
+        statusCommentsWrapper = new TransparentWebMarkupContainer("statusCommentsWrapper");
+        statusCommentsWrapper.setOutputMarkupId(true);
+        statusCommentsWrapper.setOutputMarkupPlaceholderTag(true);
+        statusCommentsWrapper.setVisibilityAllowed(false);
+        editForm.add(statusCommentsWrapper);
 
         statusComments = getStatusCommentsListView();
         newStatusComment = getNewStatusCommentField();
-        comments.add(statusComments);
+        statusCommentsWrapper.add(statusComments);
         editForm.add(newStatusComment);
 
         entityButtonsFragment = new Fragment("extraButtons", "entityButtons", this);
@@ -390,8 +390,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 new CheckBoxYesNoToggleBootstrapFormComponent("visibleStatusComments") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
-                        comments.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusComments());
-                        target.add(comments);
+                        statusCommentsWrapper.setVisibilityAllowed(editForm.getModelObject()
+                                .getVisibleStatusComments());
+                        target.add(statusCommentsWrapper);
                     }
 
                     @Override
