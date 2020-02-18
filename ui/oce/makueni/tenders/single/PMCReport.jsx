@@ -1,15 +1,14 @@
 import React from 'react';
 import AuthImplReport from './AuthImplReport';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 class PMCReport extends AuthImplReport {
 
   getReportName() {
-    return "PMC Report";
+    return 'PMC Reports';
   }
 
   childElements(i) {
-    return (
+    return super.childElements(i) && (
       <div>
         <div className="row padding-top-10">
           <div className="col-md-4">
@@ -38,18 +37,18 @@ class PMCReport extends AuthImplReport {
             <div className="item-label">PMC MEMBERS:</div>
           </div>
         </div>
-            {
-              i.pmcMembers && i.pmcMembers.map(m => <div className="row padding-top-10" key={m._id}>
-                <div className="col-md-4">
-                  <div className="item-label">PMC Staff</div>
-                  <div className="item-value">{m.staff.label}</div>
-                </div>
-                <div className="col-md-4">
-                  <div className="item-label">Designation</div>
-                  <div className="item-value">{m.designation.label}</div>
-                </div>
-              </div>)
-            }
+        {
+          i.pmcMembers && i.pmcMembers.map(m => <div className="row padding-top-10" key={m._id}>
+            <div className="col-md-4">
+              <div className="item-label">PMC Staff</div>
+              <div className="item-value">{m.staff.label}</div>
+            </div>
+            <div className="col-md-4">
+              <div className="item-label">Designation</div>
+              <div className="item-value">{m.designation.label}</div>
+            </div>
+          </div>)
+        }
       </div>);
   }
 }
