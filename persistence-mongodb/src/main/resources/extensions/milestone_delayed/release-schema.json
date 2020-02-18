@@ -1,0 +1,15 @@
+{
+  "definitions": {
+    "Milestone": {
+      "properties": {
+        "delayed": {
+          "title": "Milestone Delayed",
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
