@@ -8,8 +8,8 @@ class PMCReport extends AuthImplReport {
   }
 
   childElements(i) {
-    return super.childElements(i) && (
-      <div>
+    return [super.childElements(i),
+      (<div>
         <div className="row padding-top-10">
           <div className="col-md-4">
             <div className="item-label">Sub-Counties</div>
@@ -49,7 +49,7 @@ class PMCReport extends AuthImplReport {
             </div>
           </div>)
         }
-      </div>);
+      </div>)];
   }
 }
 

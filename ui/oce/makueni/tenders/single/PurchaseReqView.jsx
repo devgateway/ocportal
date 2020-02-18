@@ -15,6 +15,7 @@ import AdministratorReport from './AdministratorReport';
 import InspectionReport from './InspectionReport';
 import PMCReport from './PMCReport';
 import PaymentVoucher from './PaymentVoucher';
+import MEReport from './MEReport';
 
 class PurchaseReqView extends CRDPage {
   constructor(props) {
@@ -75,6 +76,10 @@ class PurchaseReqView extends CRDPage {
       {
         name: 'Payment Vouchers',
         tab: 11
+      },
+      {
+        name: 'M&E Reports',
+        tab: 12
       }
     ];
 
@@ -173,6 +178,11 @@ class PurchaseReqView extends CRDPage {
         return <PaymentVoucher data={data.paymentVouchers} department={department}
                           tenderTitle={tenderTitle} fiscalYear={fiscalYear}
                           styling={this.props.styling}/>;
+
+      case 12:
+        return <MEReport data={data.meReports} department={department}
+                               tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                               styling={this.props.styling}/>;
 
       default:
         return <Tender data={data.tender} department={department} tenderTitle={tenderTitle}

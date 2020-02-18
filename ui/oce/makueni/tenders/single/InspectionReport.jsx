@@ -9,13 +9,13 @@ class InspectionReport extends AuthImplReport {
 
 
   childElements(i) {
-    return super.childElements(i) &&
+    return [super.childElements(i),
       (<div className="row padding-top-10">
         <div className="col-md-6">
           <div className="item-label">Comments</div>
           <div className="item-value">{i.comments}</div>
         </div>
-      </div>);
+      </div>)];
   }
 }
 
