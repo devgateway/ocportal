@@ -13,6 +13,7 @@ import React from 'react';
 import FeedbackMessageList from '../../../feedback/feedbackList';
 import AdministratorReport from './AdministratorReport';
 import InspectionReport from './InspectionReport';
+import PMCReport from './PMCReport';
 
 class PurchaseReqView extends CRDPage {
   constructor(props) {
@@ -65,6 +66,10 @@ class PurchaseReqView extends CRDPage {
       {
         name: 'Inspection Report',
         tab: 9
+      },
+      {
+        name: 'PMC Report',
+        tab: 10
       }
     ];
 
@@ -153,6 +158,11 @@ class PurchaseReqView extends CRDPage {
         return <InspectionReport data={data.inspectionReports} department={department}
                                      tenderTitle={tenderTitle} fiscalYear={fiscalYear}
                                      styling={this.props.styling}/>;
+
+      case 10:
+        return <PMCReport data={data.pmcReports} department={department}
+                                 tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                                 styling={this.props.styling}/>;
 
       default:
         return <Tender data={data.tender} department={department} tenderTitle={tenderTitle}
