@@ -21,6 +21,7 @@ class ImplReport extends React.Component {
 
   render() {
     const { fiscalYear, data, tenderTitle } = this.props;
+    const { formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
       return (<NoDataMessage/>);
@@ -30,19 +31,24 @@ class ImplReport extends React.Component {
       <div className="row padding-top-10">
         {
           data !== undefined
-            ? data.map(i => <div key={i._id} className="box">
+            ? data.sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
+              .map(i => <div key={i._id} className="box">
               <div className="row padding-top-10">
-                <div className="col-md-4">
+                <div className="col-md-3">
                   <div className="item-label">Tender Title</div>
                   <div className="item-value">{tenderTitle}</div>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-3">
                   <div className="item-label">Contractor</div>
                   <div className="item-value">{i.contract.awardee.label}</div>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-3">
                   <div className="item-label">Fiscal Year</div>
                   <div className="item-value">{fiscalYear.name}</div>
+                </div>
+                <div className="col-md-3">
+                  <div className="item-label">Report Date</div>
+                  <div className="item-value">{formatDate(i.approvedDate)}</div>
                 </div>
               </div>
               {
@@ -78,6 +84,7 @@ class ImplReport extends React.Component {
   }
 
   childElements(i) {
+
   }
 }
 
