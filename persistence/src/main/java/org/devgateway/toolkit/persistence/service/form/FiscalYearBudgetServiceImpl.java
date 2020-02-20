@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.repository.form.FiscalYearBudgetRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -29,4 +31,13 @@ public class FiscalYearBudgetServiceImpl extends BaseJpaServiceImpl<FiscalYearBu
         return new FiscalYearBudget();
     }
 
+    @Override
+    public Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear) {
+        return repository.countByDepartmentAndFiscalYear(department, fiscalYear);
+    }
+
+    @Override
+    public FiscalYearBudget findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear) {
+        return repository.findByDepartmentAndFiscalYear(department, fiscalYear);
+    }
 }
