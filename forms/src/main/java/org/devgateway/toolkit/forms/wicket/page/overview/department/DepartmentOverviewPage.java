@@ -63,6 +63,7 @@ import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.transaction.annotation.Transactional;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.http.HttpServletResponse;
@@ -362,9 +363,11 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         add(searchBoxField);
     }
 
+    @Transactional(readOnly = true)
     private void addProjectList() {
         listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview",
-                new ListModel<>(fetchData()), procurementPlanModel);
+                new ListModel<>(fetchData()), procurementPlanModel
+        );
         add(listViewProjectsOverview);
     }
 
@@ -375,6 +378,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         target.add(listViewProjectsOverview);
     }
 
+    @Transactional(readOnly = true)
     private List<Project> fetchData() {
         return getProcurementPlan() == null
                 ? new ArrayList<>()
