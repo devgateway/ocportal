@@ -74,11 +74,11 @@ class PurchaseReqView extends CRDPage {
         tab: 10
       },
       {
-        name: 'Payment Vouchers',
+        name: 'M&E Reports',
         tab: 11
       },
       {
-        name: 'M&E Reports',
+        name: 'Payment Vouchers',
         tab: 12
       }
     ];
@@ -175,14 +175,14 @@ class PurchaseReqView extends CRDPage {
                                  styling={this.props.styling}/>;
 
       case 11:
+        return <MEReport data={data.meReports} department={department}
+                         tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                         styling={this.props.styling}/>;
+
+      case 12:
         return <PaymentVoucher data={data.paymentVouchers} department={department}
                           tenderTitle={tenderTitle} fiscalYear={fiscalYear}
                           styling={this.props.styling}/>;
-
-      case 12:
-        return <MEReport data={data.meReports} department={department}
-                               tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                               styling={this.props.styling}/>;
 
       default:
         return <Tender data={data.tender} department={department} tenderTitle={tenderTitle}
