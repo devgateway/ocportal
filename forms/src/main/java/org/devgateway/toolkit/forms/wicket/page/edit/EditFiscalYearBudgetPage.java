@@ -21,7 +21,7 @@ import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
 public class EditFiscalYearBudgetPage extends AbstractEditPage<FiscalYearBudget> implements ProcurementRoleAssignable {
     @SpringBean

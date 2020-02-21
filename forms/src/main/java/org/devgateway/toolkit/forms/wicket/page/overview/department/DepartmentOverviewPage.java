@@ -82,6 +82,7 @@ import java.util.List;
 public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private final IModel<ProcurementPlan> procurementPlanModel;
+    private final LoadableDetachableModel<FiscalYearBudget> fiscalYearBudgetModel;
 
     private String searchBox = "";
 
@@ -143,6 +144,19 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
 
+
+        fiscalYearBudgetModel = new LoadableDetachableModel<FiscalYearBudget>() {
+            @Override
+            protected FiscalYearBudget load() {
+                FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
+                Department department = sessionMetadataService.getSessionDepartment();
+                if (fiscalYear != null && department != null) {
+                    return fiscalYearBudgetService.findByDepartmentAndFiscalYear(department, fiscalYear);
+                }
+                return null;
+            }
+        };
+
         // redirect user to status dashboard page if we don't have all the needed info
         if (getDepartment() == null) {
             logger.warn("User landed on DepartmentOverviewPage page without having any department in Session");
@@ -164,6 +178,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
         add(new Label("fiscalYear", new PropertyModel<>(fiscalYearModel, "label")));
         add(new Label("fiscalYear2", new PropertyModel<>(fiscalYearModel, "label")));
+        add(new Label("fiscalBudget", new PropertyModel<>(fiscalYearBudgetModel, "amountBudgeted")));
 
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
@@ -267,7 +282,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 setResponsePage(EditFiscalYearBudgetPage.class);
             }
         };
-        link.setEnabled(fiscalYearBudgetService.countByDepartmentAndFiscalYear(getDepartment(), getFiscalYear()) == 0);
+        link.setEnabled(fiscalYearBudgetModel.getObject() == null);
         link.add(new TooltipBehavior(Model.of("Add New Fiscal Year Budget")));
         add(link);
         link.setVisibilityAllowed(canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
@@ -286,8 +301,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     private void addEditFiscalYearBudgetButton() {
-        FiscalYearBudget fiscalYearBudget = fiscalYearBudgetService.findByDepartmentAndFiscalYear(
-                getDepartment(), getFiscalYear());
+        FiscalYearBudget fiscalYearBudget = fiscalYearBudgetModel.getObject();
         final PageParameters pp = new PageParameters();
         if (fiscalYearBudget != null) {
             pp.set(WebConstants.PARAM_ID, fiscalYearBudget.getId());
