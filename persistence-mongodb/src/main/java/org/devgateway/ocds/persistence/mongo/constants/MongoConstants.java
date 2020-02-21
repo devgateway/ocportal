@@ -46,6 +46,9 @@ public final class MongoConstants {
         public static final String TENDER_PROCURING_ENTITY_NAME = "tender.procuringEntity.name";
         public static final String TENDER_PERIOD = "tender.tenderPeriod";
         public static final String TENDER_TITLE = "tender.title";
+        public static final String CONTRACTS = "contracts";
+        public static final String CONTRACTS_DATE_SIGNED = "contracts.dateSigned";
+        public static final String CONTRACTS_DELAYED = "contracts.implementation.milestones.delayed";
         public static final String TENDER_PERIOD_END_DATE = "tender.tenderPeriod.endDate";
         public static final String TENDER_VALUE = "tender.value";
         public static final String TENDER_VALUE_AMOUNT = "tender.value.amount";

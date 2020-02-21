@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
+import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
@@ -100,6 +101,11 @@ public abstract class GenericOCDSController {
         return MongoConstants.FieldNames.TENDER_PERIOD_START_DATE;
     }
 
+    protected String getContractDateField() {
+        return MongoConstants.FieldNames.CONTRACTS_DATE_SIGNED;
+    }
+
+
     /**
      * The date field that is used to calculate the "award date"
      *
@@ -107,6 +113,10 @@ public abstract class GenericOCDSController {
      */
     protected String getAwardDateField() {
         return MongoConstants.FieldNames.AWARDS_DATE;
+    }
+
+    protected String atLeastOne(String field) {
+        return field + ".0";
     }
 
 
@@ -284,6 +294,15 @@ public abstract class GenericOCDSController {
         }
     }
 
+    protected ProjectionOperation projectYearlyMonthly(YearFilterPagingRequest filter, String field) {
+        ProjectionOperation project = project().and(DateOperators.Year.year(ref(field))).as("year");
+        if (filter.getMonthly()) {
+            return project.and(DateOperators.Month.month(ref(field))).as("month");
+        } else {
+            return project;
+        }
+    }
+
     protected CustomSortingOperation getSortByYearMonth(YearFilterPagingRequest filter) {
         DBObject sort = new BasicDBObject();
         if (filter.getMonthly()) {
@@ -317,6 +336,13 @@ public abstract class GenericOCDSController {
         return new CustomSortingOperation(sort);
     }
 
+    protected GroupOperation groupYearlyMonthly(YearFilterPagingRequest filter) {
+        if (filter.getMonthly()) {
+            return group("year", "month");
+        } else {
+            return group("year");
+        }
+    }
 
     protected void addYearlyMonthlyReferenceToGroup(YearFilterPagingRequest filter, DBObject group) {
         if (filter.getMonthly()) {
