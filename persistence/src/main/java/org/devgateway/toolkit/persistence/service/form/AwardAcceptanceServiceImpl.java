@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gmutuhu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class AwardAcceptanceServiceImpl extends AbstractMakueniEntityServiceImpl<AwardAcceptance>
         implements AwardAcceptanceService {
 
