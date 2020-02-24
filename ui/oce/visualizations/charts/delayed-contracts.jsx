@@ -12,7 +12,6 @@ class DelayedContracts extends FrontendDateFilterableChart{
   getData() {
     let data = super.getData();
     if (!data) return [];
-
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly ?
         data.map(pluckImm('month')).map(month => this.t(`general:months:${month}`)).toArray() :
@@ -33,6 +32,7 @@ class DelayedContracts extends FrontendDateFilterableChart{
       name: this.t('charts:delayedContracts:traces:countDelayed'),
       type: "bar",
       orientation: 'h',
+      text:  data.map(pluckImm('percentDelayed')).map(this.props.styling.charts.hoverFormatter).map(x=>x+"% delayed").toArray(),
       marker: {
         color: this.props.styling.charts.traceColors[1]
       }

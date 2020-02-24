@@ -63,6 +63,7 @@ public class ContractStatsController extends GenericOCDSController {
                         .sum("countDelayed").as("countDelayed")
                         .sum("countOnTime").as("countOnTime"),
                 transformYearlyGrouping(filter).andInclude("countOnTime", "countDelayed")
+                        .andExpression("countDelayed / (countOnTime + countDelayed) * 100").as("percentDelayed")
         );
 
         return releaseAgg(agg);
