@@ -2,7 +2,7 @@ import FrontendDateFilterableChart from "./frontend-date-filterable";
 import {pluckImm} from "../../tools";
 
 
-class DelayedContracts extends FrontendDateFilterableChart{
+class PmcNotAuthContracts extends FrontendDateFilterableChart{
 
   getRawData(){
     return super.getData();
@@ -17,21 +17,21 @@ class DelayedContracts extends FrontendDateFilterableChart{
         data.map(pluckImm('year')).toArray();
 
     return [{
-      x: data.map(pluckImm('countOnTime')).toArray(),
+      x: data.map(pluckImm('countAuthorized')).toArray(),
       y: dates,
-      name: this.t('charts:delayedContracts:traces:countOnTime'),
+      name: this.t('charts:pmcNotAuthContracts:traces:countAuthorized'),
       type: "bar",
       orientation: 'h',
       marker: {
         color: this.props.styling.charts.traceColors[0]
       }
     }, {
-      x: data.map(pluckImm('countDelayed')).toArray(),
+      x: data.map(pluckImm('countNotAuthorized')).toArray(),
       y: dates,
-      name: this.t('charts:delayedContracts:traces:countDelayed'),
+      name: this.t('charts:pmcNotAuthContracts:traces:countNotAuthorized'),
       type: "bar",
       orientation: 'h',
-      text:  data.map(pluckImm('percentDelayed')).map(this.props.styling.charts.hoverFormatter).map(x=>x+"% delayed").toArray(),
+      text:  data.map(pluckImm('percentNotAuthorized')).map(this.props.styling.charts.hoverFormatter).map(x=>x+"% not authorized").toArray(),
       marker: {
         color: this.props.styling.charts.traceColors[1]
       }
@@ -50,7 +50,7 @@ class DelayedContracts extends FrontendDateFilterableChart{
           x: sum,
           xanchor: 'left',
           yanchor: 'middle',
-          text: this.t('charts:delayedContracts:traces:total') + ' ' + sum,
+          text: this.t('charts:pmcNotAuthContracts:traces:total') + ' ' + sum,
           showarrow: false
         }
       }).toArray();
@@ -60,7 +60,7 @@ class DelayedContracts extends FrontendDateFilterableChart{
       annotations,
       barmode: "stack",
       xaxis: {
-        title: this.t('charts:delayedContracts:yAxisTitle'),
+        title: this.t('charts:pmcNotAuthContracts:yAxisTitle'),
         hoverformat: hoverFormat
       },
       yaxis: {
@@ -71,12 +71,12 @@ class DelayedContracts extends FrontendDateFilterableChart{
   }
 }
 
-DelayedContracts.endpoint = 'delayedContracts';
+PmcNotAuthContracts.endpoint = 'pmcNotAuthContracts';
 //BidPeriod.excelEP = 'bidTimelineExcelChart';
-DelayedContracts.getName = t => t('charts:delayedContracts:title');
-DelayedContracts.horizontal = true;
+PmcNotAuthContracts.getName = t => t('charts:pmcNotAuthContracts:title');
+PmcNotAuthContracts.horizontal = true;
 
 //BidPeriod.getFillerDatum = seed => Map(seed).set('tender', 0).set('award', 0);
 //BidPeriod.getMaxField = imm => imm.get('tender', 0) + imm.get('award', 0);
 
-export default DelayedContracts;
+export default PmcNotAuthContracts;

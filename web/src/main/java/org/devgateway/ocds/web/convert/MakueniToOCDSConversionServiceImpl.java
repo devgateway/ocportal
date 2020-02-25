@@ -361,11 +361,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessMakueniEntity report) {
-        Milestone milestone = new Milestone();
+        MakueniMilestone milestone = new MakueniMilestone();
         safeSet(milestone::setTitle, () -> "Payment Authorization " + report.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
         safeSet(milestone::setCode, () -> report.getClass().getSimpleName());
         safeSet(milestone::setDateModified, report::getApprovedDate);
+        safeSet(milestone::setAuthorizePayment, report::getAuthorizePayment);
         safeSet(milestone::setDateMet, () -> report.getAuthorizePayment() ? report.getApprovedDate() : null);
         safeSet(
                 milestone::setStatus,
