@@ -49,6 +49,7 @@ public final class MongoConstants {
         public static final String CONTRACTS = "contracts";
         public static final String CONTRACTS_ID = "contracts._id";
         public static final String CONTRACTS_MILESTONES = "contracts.implementation.milestones";
+        public static final String CONTRACTS_STATUS = "contracts.status";
         public static final String CONTRACTS_DATE_SIGNED = "contracts.dateSigned";
         public static final String CONTRACTS_DELAYED = "contracts.implementation.milestones.delayed";
         public static final String CONTRACTS_PAYMENT_AUTHORIZED = "contracts.implementation.milestones"
