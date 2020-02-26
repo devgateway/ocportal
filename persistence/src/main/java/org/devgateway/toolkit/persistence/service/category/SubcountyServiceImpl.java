@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-06-26
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SubcountyServiceImpl extends BaseJpaServiceImpl<Subcounty> implements SubcountyService {
     @Autowired
     private SubcountyRepository repository;

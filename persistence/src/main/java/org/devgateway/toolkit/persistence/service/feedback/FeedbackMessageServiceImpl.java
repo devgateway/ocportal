@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author mpostelnicu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class FeedbackMessageServiceImpl extends BaseJpaServiceImpl<FeedbackMessage> implements FeedbackMessageService {
     @Autowired
     private FeedbackMessageRepository repository;

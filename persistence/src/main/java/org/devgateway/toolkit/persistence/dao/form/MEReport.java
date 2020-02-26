@@ -10,6 +10,7 @@ import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.AccessType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -91,6 +92,11 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
     private String remarks;
 
     private String contractorContact;
+
+    @AccessType(AccessType.Type.PROPERTY)
+    public BigDecimal getAmountBudgeted() {
+        return getProject().getAmountBudgeted();
+    }
 
     @Override
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {

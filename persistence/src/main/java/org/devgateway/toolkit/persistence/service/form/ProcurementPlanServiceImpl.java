@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @since 2019-04-02
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl<ProcurementPlan>
         implements ProcurementPlanService {
     @Autowired
