@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author mpostelnicu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class DepartmentServiceImpl extends BaseJpaServiceImpl<Department> implements DepartmentService {
     @Autowired
     private DepartmentRepository repository;

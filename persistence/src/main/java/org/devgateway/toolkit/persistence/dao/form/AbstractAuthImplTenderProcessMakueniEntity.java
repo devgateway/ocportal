@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import org.springframework.data.annotation.AccessType;
+
 import javax.persistence.MappedSuperclass;
 import java.util.Collection;
 
@@ -9,6 +11,7 @@ public abstract class AbstractAuthImplTenderProcessMakueniEntity extends Abstrac
     private Boolean authorizePayment;
 
     @Override
+    @AccessType(AccessType.Type.PROPERTY)
     public String getLabel() {
         return super.getLabel() + (Boolean.TRUE.equals(authorizePayment) ? " (authorized)" : "");
     }

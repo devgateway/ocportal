@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-04-18
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PlanItemServiceImpl extends BaseJpaServiceImpl<PlanItem> implements PlanItemService {
 
     @Autowired

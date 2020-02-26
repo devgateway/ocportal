@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 26/08/2019
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UnitServiceImpl extends BaseJpaServiceImpl<Unit> implements UnitService {
     @Autowired
     private UnitRepository repository;

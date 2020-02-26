@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2019-03-04
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements PersonService {
 
     @Autowired

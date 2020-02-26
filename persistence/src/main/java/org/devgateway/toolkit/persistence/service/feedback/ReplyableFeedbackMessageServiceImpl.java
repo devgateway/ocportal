@@ -15,7 +15,7 @@ import java.util.List;
  * @author mpostelnicu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ReplyableFeedbackMessageServiceImpl extends BaseJpaServiceImpl<ReplyableFeedbackMessage>
         implements ReplyableFeedbackMessageService {
 

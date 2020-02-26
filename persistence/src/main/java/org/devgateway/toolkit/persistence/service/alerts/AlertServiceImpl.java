@@ -15,7 +15,7 @@ import java.util.List;
  * @since 23/08/2019
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class AlertServiceImpl extends BaseJpaServiceImpl<Alert> implements AlertService {
     @Autowired
     private AlertRepository alertRepository;
