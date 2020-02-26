@@ -48,6 +48,8 @@ public final class MongoConstants {
         public static final String TENDER_TITLE = "tender.title";
         public static final String CONTRACTS = "contracts";
         public static final String CONTRACTS_ID = "contracts._id";
+        public static final String CONTRACTS_CONTRACTOR = "contracts.contractor";
+        public static final String CONTRACTS_CONTRACTOR_ID = "contracts.contractor._id";
         public static final String CONTRACTS_MILESTONES = "contracts.implementation.milestones";
         public static final String CONTRACTS_STATUS = "contracts.status";
         public static final String CONTRACTS_DATE_SIGNED = "contracts.dateSigned";

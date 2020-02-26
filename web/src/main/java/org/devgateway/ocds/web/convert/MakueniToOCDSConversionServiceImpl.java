@@ -18,6 +18,7 @@ import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Implementation;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniAward;
+import org.devgateway.ocds.persistence.mongo.MakueniContract;
 import org.devgateway.ocds.persistence.mongo.MakueniItem;
 import org.devgateway.ocds.persistence.mongo.MakueniLocation;
 import org.devgateway.ocds.persistence.mongo.MakueniLocationType;
@@ -892,7 +893,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Contract createContract(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
-        Contract ocdsContract = new Contract();
+        MakueniContract ocdsContract = new MakueniContract();
         safeSet(ocdsContract::setId, contract::getReferenceNumber);
         safeSet(ocdsContract::setTitle, contract::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderTitle
@@ -904,6 +905,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setAwardID, contract::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
         );
+        safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertSupplier);
         safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
 

@@ -27,6 +27,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_CONTRACTOR;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_CONTRACTOR_ID;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_DELAYED;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_ID;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_MILESTONES;
@@ -45,6 +47,41 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  */
 @RestController
 public class ContractStatsController extends GenericOCDSController {
+
+
+    @ApiOperation(value = "Top 10 Suppliers with inspection report to not pay")
+    @RequestMapping(value = "/api/topSuppliersInspectionNoPay", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> topSuppliersInspectionReportNotPay(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
+        Aggregation agg = newAggregation(
+                match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
+                        and(CONTRACTS_MILESTONE_CODE).is("InspectionReport").
+                        and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
+                        andOperator(getYearDefaultFilterCriteria(
+                                filter, getContractDateField()))),
+                unwind(CONTRACTS),
+                unwind(CONTRACTS_MILESTONES),
+                project().and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .as(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .and(CONTRACTS_MILESTONE_CODE)
+                        .as(CONTRACTS_MILESTONE_CODE)
+                        .and(CONTRACTS_CONTRACTOR_ID)
+                        .as(CONTRACTS_CONTRACTOR_ID)
+                        .and(CONTRACTS_ID)
+                        .as(CONTRACTS_ID),
+                match(where(CONTRACTS_MILESTONE_CODE).is("InspectionReport")
+                        .and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .is(false)),
+                group(CONTRACTS_ID).first(CONTRACTS_CONTRACTOR_ID).as("contractorName"),
+                group("contractorName").count().as("count")
+
+        );
+
+        return releaseAgg(agg);
+    }
 
 
     @ApiOperation(value = "Cancelled / Terminated Contracts")
