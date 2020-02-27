@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-03-11
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class TargetGroupServiceImpl extends BaseJpaServiceImpl<TargetGroup> implements TargetGroupService {
     @Autowired
     private TargetGroupRepository repository;

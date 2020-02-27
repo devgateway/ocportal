@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-06-26
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class WardServiceImpl extends BaseJpaServiceImpl<Ward> implements WardService {
     @Autowired
     private WardRepository repository;

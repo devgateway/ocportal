@@ -17,7 +17,7 @@ import java.util.List;
  *
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<CabinetPaper>
         implements CabinetPaperService {
 

@@ -43,6 +43,17 @@ const formatDate = stringDate => {
   return `${dd}/${mm}/${yyyy}`;
 };
 
+const formatBoolean = bool => {
+  if(bool === undefined) {
+    return "";
+  }
+  if(bool) {
+    return "YES";
+  } else {
+    return "NO";
+  }
+};
+
 const styling = {
   charts: {
     axisLabelColor: '#000000',
@@ -59,7 +70,8 @@ const styling = {
   },
   tables: {
     currencyFormatter: formatNumber,
-    formatDate: formatDate
+    formatDate: formatDate,
+    formatBoolean : formatBoolean
   },
 };
 

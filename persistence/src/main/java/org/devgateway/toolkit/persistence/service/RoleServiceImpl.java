@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-03-04
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class RoleServiceImpl extends BaseJpaServiceImpl<Role> implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
