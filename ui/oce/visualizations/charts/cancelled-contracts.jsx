@@ -11,9 +11,6 @@ class CancelledContracts extends FrontendDateFilterableChart{
     const dates = monthly ?
         data.map(pluckImm('month')).map(month => this.t(`general:months:${month}`)).toArray() :
         data.map(pluckImm('year')).toArray();
-    if(!monthly) {
-      dates.sort();
-    }
 
     return [{
       x: dates,
