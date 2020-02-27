@@ -1,5 +1,7 @@
 import Tab from './index';
 import DelayedContracts from '../visualizations/charts/delayed-contracts';
+import PmcNotAuthContracts from '../visualizations/charts/pmc-not-auth-contracts';
+import CancelledContracts from '../visualizations/charts/cancelled-contracts';
 
 class Implementation extends Tab {
   static getName(t) {
@@ -8,6 +10,6 @@ class Implementation extends Tab {
 }
 
 Implementation.icon = 'efficiency';
-Implementation.visualizations = [DelayedContracts];
+Implementation.visualizations = [DelayedContracts, PmcNotAuthContracts, CancelledContracts];
 
 export default Implementation;

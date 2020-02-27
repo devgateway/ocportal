@@ -361,11 +361,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessMakueniEntity report) {
-        Milestone milestone = new Milestone();
+        MakueniMilestone milestone = new MakueniMilestone();
         safeSet(milestone::setTitle, () -> "Payment Authorization " + report.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
         safeSet(milestone::setCode, () -> report.getClass().getSimpleName());
         safeSet(milestone::setDateModified, report::getApprovedDate);
+        safeSet(milestone::setAuthorizePayment, report::getAuthorizePayment);
         safeSet(milestone::setDateMet, () -> report.getAuthorizePayment() ? report.getApprovedDate() : null);
         safeSet(
                 milestone::setStatus,
@@ -903,18 +904,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setAwardID, contract::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
         );
-        safeSet(ocdsContract::setStatus, contract::getStatus, this::createContractStatus);
+        safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
 
         return ocdsContract;
     }
 
-    public Contract.Status createContractStatus(String contractStatus) {
-        if (APPROVED.equals(contractStatus)) {
-            return Contract.Status.active;
-        }
-        if (DBConstants.Status.TERMINATED.equals(contractStatus)) {
+    public Contract.Status createContractStatus(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
+        if (contract.isTerminatedWithImplementation()) {
             return Contract.Status.cancelled;
+        }
+
+        if (APPROVED.equals(contract.getStatus())) {
+            return Contract.Status.active;
         }
 
         return Contract.Status.pending;

@@ -124,7 +124,7 @@ public class OcdsController extends GenericOCDSController {
             releasePackage.getExtensions()
                     .add(new URI(
                             "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
-                                    + "/src/main/resources/extensions/milestone_delayed/extension.json"));
+                                    + "/src/main/resources/extensions/milestone_delayed_authorization/extension.json"));
 
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
             releasePackage.setPublicationPolicy(new URI(serverURL + "/publication-policy.txt"));

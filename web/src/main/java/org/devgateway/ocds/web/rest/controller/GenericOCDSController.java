@@ -347,11 +347,11 @@ public abstract class GenericOCDSController {
         return new CustomSortingOperation(sort);
     }
 
-    protected GroupOperation groupYearlyMonthly(YearFilterPagingRequest filter) {
+    protected GroupOperation groupYearlyMonthly(YearFilterPagingRequest filter, String... extraGroups) {
         if (filter.getMonthly()) {
-            return group("year", "month");
+            return group(ArrayUtils.addAll(new String[]{"year", "month"}, extraGroups));
         } else {
-            return group("year");
+            return group(ArrayUtils.addAll(new String[]{"year"}, extraGroups));
         }
     }
 
