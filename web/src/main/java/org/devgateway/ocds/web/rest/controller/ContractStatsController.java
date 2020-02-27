@@ -79,7 +79,8 @@ public class ContractStatsController extends GenericOCDSController {
                         .sum("countNotAuthorized").as("countNotAuthorized"),
                 transformYearlyGrouping(filter).andInclude("countAuthorized", "countNotAuthorized")
                         .andExpression("countNotAuthorized / (countAuthorized + countNotAuthorized) * 100")
-                        .as("percentNotAuthorized")
+                        .as("percentNotAuthorized"),
+                sortByYearMonth(filter)
         );
 
         return releaseAgg(agg);
@@ -108,7 +109,8 @@ public class ContractStatsController extends GenericOCDSController {
                         .sum("countDelayed").as("countDelayed")
                         .sum("countOnTime").as("countOnTime"),
                 transformYearlyGrouping(filter).andInclude("countOnTime", "countDelayed")
-                        .andExpression("countDelayed / (countOnTime + countDelayed) * 100").as("percentDelayed")
+                        .andExpression("countDelayed / (countOnTime + countDelayed) * 100").as("percentDelayed"),
+                sortByYearMonth(filter)
         );
 
         return releaseAgg(agg);
