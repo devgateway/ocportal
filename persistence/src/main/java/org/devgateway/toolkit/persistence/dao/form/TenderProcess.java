@@ -129,14 +129,6 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<PaymentVoucher> paymentVouchers = new HashSet<>();
 
-    private boolean checkTerminated(Statusable... statusables) {
-        for (Statusable statusable : statusables) {
-            if (statusable != null && statusable.isTerminated()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Calculates if this {@link TenderProcess} is terminated. This involves going through all stages and
@@ -159,7 +151,7 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         entityTree.addAll(pmcReports);
         entityTree.addAll(meReports);
         entityTree.addAll(paymentVouchers);
-        return checkTerminated(entityTree.toArray(new Statusable[]{}));
+        return PersistenceUtil.checkTerminated(entityTree.toArray(new Statusable[]{}));
     }
 
     @JsonProperty("tender")

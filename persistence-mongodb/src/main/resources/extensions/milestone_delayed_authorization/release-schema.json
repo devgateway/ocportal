@@ -8,6 +8,13 @@
             "boolean",
             "null"
           ]
+        },
+        "authorizePayment": {
+          "title": "Payment Authorization",
+          "type": [
+            "boolean",
+            "null"
+          ]
         }
       }
     }

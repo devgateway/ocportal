@@ -8,6 +8,7 @@ import EfficiencyTab from '../oce/tabs/efficiency';
 import { fetchJson } from '../oce/tools';
 import Header from '../oce/layout/header';
 import Footer from '../oce/layout/footer';
+import Implementation from '../oce/tabs/implementation';
 
 class OCEMakueni extends OCApp {
   constructor(props) {
@@ -15,6 +16,7 @@ class OCEMakueni extends OCApp {
     this.registerTab(OverviewTab);
     this.registerTab(OCEDemoLocation);
     this.registerTab(CompetitivenessTab);
+    this.registerTab(Implementation);
     this.registerTab(EfficiencyTab);
     //this.registerTab(EProcurementTab);
   }
