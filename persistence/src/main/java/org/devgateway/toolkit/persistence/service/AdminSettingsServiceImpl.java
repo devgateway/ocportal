@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-03-04
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class AdminSettingsServiceImpl extends BaseJpaServiceImpl<AdminSettings> implements AdminSettingsService {
     @Autowired
     private AdminSettingsRepository adminSettingsRepository;

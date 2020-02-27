@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SubmittedAlertService {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmittedAlertService.class);
