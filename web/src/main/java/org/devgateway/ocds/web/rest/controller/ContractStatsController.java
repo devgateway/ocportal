@@ -64,7 +64,8 @@ public class ContractStatsController extends GenericOCDSController {
                         .and(ConditionalOperators.when(where(CONTRACTS_STATUS)
                                 .is(Contract.Status.cancelled.toString())).then(1).otherwise(0)).as("cancelled"),
                 groupYearlyMonthly(filter).sum("cancelled").as("countCancelled"),
-                transformYearlyGrouping(filter).andInclude("countCancelled")
+                transformYearlyGrouping(filter).andInclude("countCancelled"),
+                sortByYearMonth(filter)
         );
 
         return releaseAgg(agg);
@@ -104,7 +105,8 @@ public class ContractStatsController extends GenericOCDSController {
                         .sum("countNotAuthorized").as("countNotAuthorized"),
                 transformYearlyGrouping(filter).andInclude("countAuthorized", "countNotAuthorized")
                         .andExpression("countNotAuthorized / (countAuthorized + countNotAuthorized) * 100")
-                        .as("percentNotAuthorized")
+                        .as("percentNotAuthorized"),
+                sortByYearMonth(filter)
         );
 
         return releaseAgg(agg);
@@ -132,7 +134,8 @@ public class ContractStatsController extends GenericOCDSController {
                         .sum("countDelayed").as("countDelayed")
                         .sum("countOnTime").as("countOnTime"),
                 transformYearlyGrouping(filter).andInclude("countOnTime", "countDelayed")
-                        .andExpression("countDelayed / (countOnTime + countDelayed) * 100").as("percentDelayed")
+                        .andExpression("countDelayed / (countOnTime + countDelayed) * 100").as("percentDelayed"),
+                sortByYearMonth(filter)
         );
 
         return releaseAgg(agg);
