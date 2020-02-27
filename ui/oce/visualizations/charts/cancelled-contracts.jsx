@@ -11,6 +11,9 @@ class CancelledContracts extends FrontendDateFilterableChart{
     const dates = monthly ?
         data.map(pluckImm('month')).map(month => this.t(`general:months:${month}`)).toArray() :
         data.map(pluckImm('year')).toArray();
+    if(!monthly) {
+      dates.sort();
+    }
 
     return [{
       x: dates,
@@ -26,7 +29,8 @@ class CancelledContracts extends FrontendDateFilterableChart{
     const {hoverFormat} = this.props.styling.charts;
     return {
       xaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year')
+        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        type: "category"
       },
       yaxis: {
         title: this.t('charts:cancelledContracts:yAxisTitle'),
