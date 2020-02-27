@@ -26,8 +26,7 @@ class CancelledContracts extends FrontendDateFilterableChart{
     const {hoverFormat} = this.props.styling.charts;
     return {
       xaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
-        type: "category"
+        title: this.props.monthly ? this.t('general:month') : this.t('general:year')
       },
       yaxis: {
         title: this.t('charts:cancelledContracts:yAxisTitle'),
