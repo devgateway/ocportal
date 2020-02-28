@@ -137,7 +137,7 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean isTerminated() {
         ArrayList<Statusable> entityTree = new ArrayList<>();
         entityTree.add(PersistenceUtil.getNext(tender));

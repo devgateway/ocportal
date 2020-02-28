@@ -32,9 +32,11 @@ import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -51,6 +53,9 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
     @SpringBean
     private TenderProcessService tenderProcessService;
+
+    @SpringBean
+    private ProjectService projectService;
 
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
@@ -103,6 +108,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     }
 
     @Override
+    @Transactional(readOnly = true)
     protected void populateHeader(final String headerFragmentId,
                                   final AjaxLink<Void> header,
                                   final ListItem<Project> item) {
@@ -111,7 +117,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("project-header-" + item.getModelObject().getId());
 
-        final Project project = item.getModelObject();
+        final Project project = projectService.findById(item.getModelObject().getId()).get();
 
         headerFragment.add(new DeptOverviewStatusLabel("projectStatus", project));
         headerFragment.add(new Label("projectTitle"));
@@ -148,12 +154,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     }
 
     @Override
+    @Transactional(readOnly = true)
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
                                              final ListItem<Project> item) {
         hideableContainer.add(AttributeAppender.append("class", "tender")); // add specific class to project list
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
-        final Project project = item.getModelObject();
+        final Project project = projectService.findById(item.getModelObject().getId()).get();
 
         final BootstrapAjaxLink<Void> addTenderProcess = new BootstrapAjaxLink<Void>("addTenderProcess",
                 Buttons.Type.Success) {
