@@ -44,7 +44,7 @@ class PmcNotAuthContracts extends FrontendDateFilterableChart{
     let data = super.getData();
     if(data){
       annotations = data.map((imm, index) => {
-        let sum = imm.reduce((sum, val, key) => "year" == key || "month" == key ? sum : sum +val, 0).toFixed(2);
+        let sum = imm.reduce((sum, val, key) => "year" == key || "month" == key ? sum :  "percentNotAuthorized"==key ? sum : sum+val, 0).toFixed(2);
         return {
           y: index,
           x: sum,
