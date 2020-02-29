@@ -72,7 +72,7 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.referenceNumber"));
 
 
-        ComponentUtil.addBigDecimalField(editForm, "totalAmount").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "totalAmount").required();
 
 
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcReport",

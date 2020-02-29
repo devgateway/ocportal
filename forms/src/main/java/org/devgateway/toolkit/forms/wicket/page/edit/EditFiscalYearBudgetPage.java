@@ -76,7 +76,7 @@ public class EditFiscalYearBudgetPage extends AbstractEditPage<FiscalYearBudget>
         super.onInitialize();
         editForm.add(new GenericSleepFormComponent<>("department"));
         editForm.add(new GenericSleepFormComponent<>("fiscalYear"));
-        ComponentUtil.addBigDecimalField(editForm, "amountBudgeted").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "amountBudgeted").required();
     }
 
     @Override
