@@ -575,6 +575,19 @@ public abstract class GenericOCDSController {
     }
 
     /**
+     * Appends the contractor entity id for this filter, this will fitler based
+     * on tender.procuringEntity._id
+     *
+     * @param filter
+     * @return the {@link Criteria} for this filter
+     */
+    protected Criteria getContractorIdCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(MongoConstants.FieldNames.CONTRACTS_CONTRACTOR_ID, filter.getContractorId(),
+                filter);
+    }
+
+
+    /**
      * Appends the buyer entity id for this filter
      *
      * @param filter
@@ -677,6 +690,7 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.PROCURING_ENTITY_ID, getProcuringEntityIdCriteria(filter));
         map.put(MongoConstants.Filters.NOT_PROCURING_ENTITY_ID, getNotProcuringEntityIdCriteria(filter));
         map.put(MongoConstants.Filters.SUPPLIER_ID, getSupplierIdCriteria(filter));
+        map.put(MongoConstants.Filters.CONTRACTOR_ID, getContractorIdCriteria(filter));
         map.put(MongoConstants.Filters.BUYER_ID, getBuyerIdCriteria(filter));
         map.put(MongoConstants.Filters.PROCUREMENT_METHOD, getProcurementMethodCriteria(filter));
         map.put(MongoConstants.Filters.TENDER_LOC, getByTenderLocationIdentifier(filter));

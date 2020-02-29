@@ -48,6 +48,7 @@ public final class MongoConstants {
         public static final String TENDER_TITLE = "tender.title";
         public static final String CONTRACTS = "contracts";
         public static final String CONTRACTS_ID = "contracts._id";
+        public static final String CONTRACTS_TITLE = "contracts.title";
         public static final String CONTRACTS_CONTRACTOR = "contracts.contractor";
         public static final String CONTRACTS_CONTRACTOR_ID = "contracts.contractor._id";
         public static final String CONTRACTS_MILESTONES = "contracts.implementation.milestones";
@@ -98,6 +99,8 @@ public final class MongoConstants {
         public static final String NOT_PROCURING_ENTITY_ID = "notProcuringEntityId";
 
         public static final String SUPPLIER_ID = "supplierId";
+
+        public static final String CONTRACTOR_ID = "contractorId";
 
         public static final String BIDS_DETAILS_TENDERER_ID = "bidderDetailsTendererId";
 

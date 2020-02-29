@@ -15,8 +15,10 @@ import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
+import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.aggregation.SetOperators;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,10 +37,13 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.Fie
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_MILESTONE_CODE;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_PAYMENT_AUTHORIZED;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_STATUS;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_TITLE;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -75,9 +80,10 @@ public class ContractStatsController extends GenericOCDSController {
                 match(where(CONTRACTS_MILESTONE_CODE).is("InspectionReport")
                         .and(CONTRACTS_PAYMENT_AUTHORIZED)
                         .is(false)),
-                group(CONTRACTS_ID).first(CONTRACTS_CONTRACTOR_ID).as("contractorName"),
-                group("contractorName").count().as("count")
-
+                group(CONTRACTS_ID).first(CONTRACTS_CONTRACTOR_ID).as("contractorId"),
+                group("contractorId").count().as("count"),
+                sort(Sort.Direction.DESC, "count"),
+                limit(10)
         );
 
         return releaseAgg(agg);
@@ -103,6 +109,37 @@ public class ContractStatsController extends GenericOCDSController {
                 groupYearlyMonthly(filter).sum("cancelled").as("countCancelled"),
                 transformYearlyGrouping(filter).andInclude("countCancelled"),
                 sortByYearMonth(filter)
+        );
+
+        return releaseAgg(agg);
+    }
+
+    @ApiOperation(value = "List of contract names with Inspection Report to not pay")
+    @RequestMapping(value = "/api/inspectionNoPayContractNames", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> inspectionNoPayContractNames(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        Aggregation agg = newAggregation(
+                match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
+                        andOperator(getYearDefaultFilterCriteria(
+                                filter, getContractDateField()))),
+                project(CONTRACTS).andInclude(Fields.UNDERSCORE_ID),
+                unwind(ref(CONTRACTS)),
+                unwind(ref(CONTRACTS_MILESTONES)),
+                project().and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .as(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .and(CONTRACTS_MILESTONE_CODE)
+                        .as(CONTRACTS_MILESTONE_CODE)
+                        .and(CONTRACTS_TITLE)
+                        .as("title")
+                        .and(Fields.UNDERSCORE_ID)
+                        .as(Fields.UNDERSCORE_ID),
+                match(where(CONTRACTS_MILESTONE_CODE).is("InspectionReport")
+                        .and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .is(false)),
+                group(Fields.UNDERSCORE_ID)
+                        .first("title").as("title")
         );
 
         return releaseAgg(agg);

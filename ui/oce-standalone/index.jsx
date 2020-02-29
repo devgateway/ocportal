@@ -10,6 +10,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
 import Docs from '../oce/makueni/Docs';
 import PublicationPolicy from '../oce/makueni/PublicationPolicy';
+import ContractsList from '../oce/makueni/ContractsList';
 
 const translations = {
   en_US: require('../../web/public/languages/en_US.json'),
@@ -90,6 +91,7 @@ class OceSwitcher extends ViewSwitcher {
 OceSwitcher.views['tender'] = MakueniTenders;
 OceSwitcher.views['docs'] = Docs;
 OceSwitcher.views['publication-policy'] = PublicationPolicy;
+OceSwitcher.views['contracts-list'] = ContractsList;
 OceSwitcher.views['procurement-plan'] = MakueniProcurementPlans;
 OceSwitcher.views['alerts'] = Alerts;
 OceSwitcher.views['m-and-e'] = OCEMakueni;
