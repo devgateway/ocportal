@@ -54,9 +54,11 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -77,7 +79,11 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
 
+    @SpringBean
+    private TenderProcessService tenderProcessService;
+
     private final TenderProcess sessionTenderProcess;
+
 
     private final SimpleDateFormat formatter = new SimpleDateFormat(DBConstants.DATE_FORMAT);
 
@@ -124,6 +130,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     }
 
     @Override
+    @Transactional(readOnly = true)
     protected void populateHeader(final String headerFragmentId,
                                   final AjaxLink<Void> header,
                                   final ListItem<TenderProcess> item) {
@@ -134,20 +141,24 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         headerFragment.add(new Label("title", "Tender Process " + (item.getIndex() + 1)));
 
         WebMarkupContainer terminatedRequisition = new WebMarkupContainer("terminatedRequisition");
-        terminatedRequisition.setVisibilityAllowed(item.getModelObject().isTerminated());
+
+        TenderProcess tenderProcess = tenderProcessService.findById(item.getModelObject().getId()).get();
+        terminatedRequisition.setVisibilityAllowed(tenderProcess.isTerminated());
         headerFragment.add(terminatedRequisition);
 
         header.add(headerFragment);
     }
 
     @Override
+    @Transactional(readOnly = true)
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
                                              final ListItem<TenderProcess> item) {
         hideableContainer.add(AttributeAppender.append("class", "purchase-req")); // add specific class to pr list
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
-        final TenderProcess tenderProcess = item.getModelObject();
+        TenderProcess tenderProcess = tenderProcessService.findById(item.getModelObject().getId()).get();
+
         final Tender tender = PersistenceUtil.getNext(tenderProcess.getTender());
         final TenderQuotationEvaluation tenderQuotationEvaluation = PersistenceUtil.getNext(tenderProcess
                 .getTenderQuotationEvaluation());
@@ -264,9 +275,12 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         return item.getModelObject().getId();
     }
 
-    private boolean canEdit(final TenderProcess tenderProcess,
+    @Transactional(readOnly = true)
+    private boolean canEdit(final TenderProcess tenderProcess2,
                             final AbstractStatusAuditableEntity persistable,
                             final Statusable previousStep) {
+
+        TenderProcess tenderProcess = tenderProcessService.findById(tenderProcess2.getId()).get();
 
         //terminated can always edit
         if (persistable != null && persistable.getStatus().equals(DBConstants.Status.TERMINATED)) {
