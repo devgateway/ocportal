@@ -121,6 +121,7 @@ public class ContractStatsController extends GenericOCDSController {
                 match(where(atLeastOne(CONTRACTS)).exists(true).andOperator(getYearDefaultFilterCriteria(
                         filter, getContractDateField()))),
                 project(CONTRACTS),
+                match(where(CONTRACTS_MILESTONE_CODE).is("MEReport")),
                 unwind(ref(CONTRACTS)),
                 project().and(getContractDateField()).as("date").and(
                         SetOperators.AnyElementTrue.arrayAsSet(CONTRACTS_DELAYED))
