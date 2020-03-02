@@ -8,6 +8,7 @@ class PlotlyChart extends React.PureComponent {
       this.chartContainer,
       data,
       layout,
+      {responsive: true}
     );
     if (onUpdate) this.chartContainer.on('plotly_afterplot', onUpdate);
   }

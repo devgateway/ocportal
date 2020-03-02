@@ -98,6 +98,7 @@ public class TopTenController extends GenericOCDSController {
                         .is(Award.Status.active.toString())
                         .andOperator(getDefaultFilterCriteria(filter))),
                 unwind("awards"),
+                match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 match(getYearFilterCriteria(filter.awardFiltering(), awardDateField())),
                 new CustomProjectionOperation(project),
                 sort(Direction.DESC, MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT), limit(10)

@@ -38,7 +38,8 @@ import java.util.function.Consumer;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
+public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable,
+        WardsSettable {
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Paper")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -120,6 +121,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
         return wards;
     }
 
+    @Override
     public void setWards(final List<Ward> wards) {
         this.wards = wards;
     }

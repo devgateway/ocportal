@@ -121,6 +121,11 @@ public class OcdsController extends GenericOCDSController {
                             "https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.3/extension"
                                     + ".json"));
 
+            releasePackage.getExtensions()
+                    .add(new URI(
+                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                                    + "/src/main/resources/extensions/milestone_delayed_authorization/extension.json"));
+
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
             releasePackage.setPublicationPolicy(new URI(serverURL + "/publication-policy.txt"));
             releasePackage.setUri(new URI(serverURL + "/api/ocds/package/ocid/" + release.getOcid()));

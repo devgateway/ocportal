@@ -20,13 +20,16 @@ import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
+import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.TextCriteria;
@@ -52,6 +55,7 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.Fie
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
@@ -100,6 +104,11 @@ public abstract class GenericOCDSController {
         return MongoConstants.FieldNames.TENDER_PERIOD_START_DATE;
     }
 
+    protected String getContractDateField() {
+        return MongoConstants.FieldNames.CONTRACTS_DATE_SIGNED;
+    }
+
+
     /**
      * The date field that is used to calculate the "award date"
      *
@@ -107,6 +116,10 @@ public abstract class GenericOCDSController {
      */
     protected String getAwardDateField() {
         return MongoConstants.FieldNames.AWARDS_DATE;
+    }
+
+    protected String atLeastOne(String field) {
+        return field + ".0";
     }
 
 
@@ -284,6 +297,23 @@ public abstract class GenericOCDSController {
         }
     }
 
+    protected ProjectionOperation projectYearlyMonthly(YearFilterPagingRequest filter, String field) {
+        ProjectionOperation project = project().and(DateOperators.Year.year(ref(field))).as("year");
+        if (filter.getMonthly()) {
+            return project.and(DateOperators.Month.month(ref(field))).as("month");
+        } else {
+            return project;
+        }
+    }
+
+    protected SortOperation sortByYearMonth(YearFilterPagingRequest filter) {
+        if (filter.getMonthly()) {
+            return sort(Sort.Direction.ASC, "year", "month");
+        } else {
+            return sort(Sort.Direction.ASC, "year");
+        }
+    }
+
     protected CustomSortingOperation getSortByYearMonth(YearFilterPagingRequest filter) {
         DBObject sort = new BasicDBObject();
         if (filter.getMonthly()) {
@@ -317,6 +347,13 @@ public abstract class GenericOCDSController {
         return new CustomSortingOperation(sort);
     }
 
+    protected GroupOperation groupYearlyMonthly(YearFilterPagingRequest filter, String... extraGroups) {
+        if (filter.getMonthly()) {
+            return group(ArrayUtils.addAll(new String[]{"year", "month"}, extraGroups));
+        } else {
+            return group(ArrayUtils.addAll(new String[]{"year"}, extraGroups));
+        }
+    }
 
     protected void addYearlyMonthlyReferenceToGroup(YearFilterPagingRequest filter, DBObject group) {
         if (filter.getMonthly()) {
@@ -356,7 +393,7 @@ public abstract class GenericOCDSController {
 
     protected ProjectionOperation transformYearlyGrouping(YearFilterPagingRequest filter) {
         if (filter.getMonthly()) {
-            return project();
+            return project().andInclude("year", "month");
         } else {
             return project(Fields.from(
                     Fields.field("year", org.springframework.data
@@ -553,6 +590,10 @@ public abstract class GenericOCDSController {
         return createFilterCriteria(MongoConstants.FieldNames.TENDER_TENDERERS_ID, filter.getBidderId(), filter);
     }
 
+    protected Criteria getBidsDetailsTenderersIdCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(MongoConstants.FieldNames.BIDS_DETAILS_TENDERERS_ID, filter.getBidderId(), filter);
+    }
+
     /**
      * Appends the procurement method for this filter, this will fitler based
      * on tender.procurementMethod
@@ -628,7 +669,8 @@ public abstract class GenericOCDSController {
     }
 
 
-    protected Map<String, CriteriaDefinition> createDefaultFilterCriteriaMap(final DefaultFilterPagingRequest filter) {
+    protected Map<String, CriteriaDefinition> createDefaultFilterCriteriaMap(
+            final DefaultFilterPagingRequest filter) {
         HashMap<String, CriteriaDefinition> map = new HashMap<>();
         map.put(MongoConstants.Filters.BID_TYPE_ID, getBidTypeIdFilterCriteria(filter));
         map.put(MongoConstants.Filters.NOT_BID_TYPE_ID, getNotBidTypeIdFilterCriteria(filter));
@@ -700,7 +742,8 @@ public abstract class GenericOCDSController {
         return getDefaultFilterCriteria(filter, createDefaultFilterCriteriaMap(filter));
     }
 
-    protected Criteria getYearDefaultFilterCriteria(final YearFilterPagingRequest filter, final String dateProperty) {
+    protected Criteria getYearDefaultFilterCriteria(final YearFilterPagingRequest filter,
+                                                    final String dateProperty) {
         return getYearDefaultFilterCriteria(filter, createDefaultFilterCriteriaMap(filter), dateProperty);
     }
 

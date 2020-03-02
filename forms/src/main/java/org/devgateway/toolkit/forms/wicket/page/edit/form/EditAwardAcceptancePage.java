@@ -8,6 +8,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardAcceptanceItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
@@ -24,7 +25,8 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<AwardAcceptance> {
+public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntityPage<AwardAcceptance>
+        implements ProcurementRoleAssignable {
     @SpringBean
     protected AwardAcceptanceService awardAcceptanceService;
 
@@ -34,6 +36,10 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntity<
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
     private GenericSleepFormComponent supplierID;
+
+    public EditAwardAcceptancePage() {
+        this(new PageParameters());
+    }
 
     public EditAwardAcceptancePage(final PageParameters parameters) {
         super(parameters);

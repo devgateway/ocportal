@@ -39,6 +39,7 @@ import java.util.stream.Stream;
  */
 @Service
 @CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
+@Transactional
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     protected static final Logger logger = LoggerFactory.getLogger(StatusOverviewService.class);
 

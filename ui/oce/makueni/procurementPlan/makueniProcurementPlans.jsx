@@ -16,10 +16,15 @@ class MakueniProcurementPlans extends CRDPage {
 
   constructor(props) {
     super(props);
+    this.introjsCnt = 0;
 
     this.state = {
       data: []
     };
+  }
+
+  showDataStep() {
+    return this.introjsCnt++ < 4;
   }
 
   componentDidMount() {
@@ -73,7 +78,8 @@ class MakueniProcurementPlans extends CRDPage {
 
   ppLink(navigate) {
     return (ppId) => (
-      <a data-intro="Click to view the procurement plan item details" data-step="9"
+      <a data-intro={this.showDataStep()?"Click to view the procurement plan item details":""}
+         data-step={this.showDataStep()?9:""}
          href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
          className="more-details-link">
         More Details
@@ -93,8 +99,9 @@ class MakueniProcurementPlans extends CRDPage {
                 </Tooltip>
               }>
 
-              <a data-step="10" data-intro="Click to download a hardcopy of the original procurement
-              plan." className="download-file" href={doc.url} target="_blank">
+              <a data-step={this.showDataStep()?10:""} data-intro={this.showDataStep()?"Click to " +
+                "download a hardcopy of the original procurement plan.":""}
+                 className="download-file" href={doc.url} target="_blank">
                 <i className="glyphicon glyphicon-download"/>
                 <span>{doc.name}</span>
               </a>
@@ -109,6 +116,7 @@ class MakueniProcurementPlans extends CRDPage {
     const { data, count } = this.state;
     const { navigate, route } = this.props;
     const [navigationPage, id] = route;
+    this.introjsCnt = 0;
 
     return (<div className="container-fluid dashboard-default">
 

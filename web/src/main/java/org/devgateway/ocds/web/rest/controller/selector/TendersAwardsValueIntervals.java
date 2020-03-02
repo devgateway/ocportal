@@ -5,6 +5,7 @@ package org.devgateway.ocds.web.rest.controller.selector;
 
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
+import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.GenericOCDSController;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.AWARDS_STATUS;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
@@ -64,7 +66,8 @@ public class TendersAwardsValueIntervals extends GenericOCDSController {
         Aggregation agg = Aggregation.newAggregation(
                 unwind("awards"),
                 match(where(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT).exists(true).
-                        andOperator(getYearDefaultFilterCriteria(
+                        and(AWARDS_STATUS).is(Award.Status.active.toString())
+                        .andOperator(getYearDefaultFilterCriteria(
                                 filter.awardFiltering(),
                                 MongoConstants.FieldNames.AWARDS_DATE
                         ))),

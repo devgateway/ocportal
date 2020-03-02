@@ -24,7 +24,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>org.devgateway.toolkit.persistence.spring.PersistenceApplication</start-class>
         <java.version>1.8</java.version>
-        <json.schema.validator.version>2.2.6</json.schema.validator.version>
+        <json.schema.validator.version>2.2.13</json.schema.validator.version>
         <json.patch.version>1.9</json.patch.version>
         <commons-digester3.version>3.2</commons-digester3.version>
         <reflections.version>0.9.11</reflections.version>
@@ -34,14 +34,14 @@
     <parent>
         <groupId>org.devgateway.toolkit</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.7.1-SNAPSHOT</version>
+        <version>1.8.4-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.7.1-SNAPSHOT</version>
+            <version>1.8.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -104,7 +104,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.fge</groupId>
+            <groupId>com.github.java-json-tools</groupId>
             <artifactId>json-schema-validator</artifactId>
             <version>${json.schema.validator.version}</version>
             <exclusions>

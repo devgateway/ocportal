@@ -21,13 +21,13 @@
         <ehcache.version>2.10.6</ehcache.version>
         <dozer.hibernate.model.version>0.3.8</dozer.hibernate.model.version>
         <guava.version>28.1-jre</guava.version>
-        <hibernate-validator.version>6.0.18.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.1.1.Final</hibernate-validator.version>
     </properties>
 
     <parent>
         <groupId>org.devgateway.toolkit</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.7.1-SNAPSHOT</version>
+        <version>1.8.4-SNAPSHOT</version>
     </parent>
 
     <dependencies>

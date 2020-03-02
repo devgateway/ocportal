@@ -58,7 +58,7 @@ public class JavaMelodyConfiguration {
      */
     @Bean
     public ServletListenerRegistrationBean<EventListener> monitoringSessionListener(
-            ServletContext servletContext) {
+            final ServletContext servletContext) {
         final ServletListenerRegistrationBean<EventListener> servletListenerRegistrationBean =
                 new ServletListenerRegistrationBean<>(
                         new SessionListener());
@@ -78,7 +78,7 @@ public class JavaMelodyConfiguration {
      * @return FilterRegistrationBean
      */
     @Bean(name = REGISTRATION_BEAN_NAME)
-    public FilterRegistrationBean monitoringFilter(ServletContext servletContext) {
+    public FilterRegistrationBean monitoringFilter(final ServletContext servletContext) {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 
         // Create the monitoring filter and set its configuration parameters.

@@ -7,6 +7,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
@@ -21,15 +22,17 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<ProcurementPlan> {
+public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<ProcurementPlan>
+        implements ProcurementRoleAssignable {
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
 
-    public EditProcurementPlanPage(final PageParameters parameters) {
-        super(parameters);
+    public EditProcurementPlanPage() {
+        this(new PageParameters());
+    }
 
-        this.jpaService = procurementPlanService;
-
+    @Override
+    public void checkInitParameters() {
         final Department department = sessionMetadataService.getSessionDepartment();
         final FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
 
@@ -46,6 +49,11 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
                     + department + " and fiscalYear: " + fiscalYear);
             setResponsePage(StatusOverviewPage.class);
         }
+    }
+
+    public EditProcurementPlanPage(final PageParameters parameters) {
+        super(parameters);
+        this.jpaService = procurementPlanService;
     }
 
     @Override
