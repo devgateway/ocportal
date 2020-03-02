@@ -1,6 +1,5 @@
 import React from 'react';
 import TopImplSupplier from './top-impl-supplier';
-import TopSuppliersInspectionReportNoPay from './top-suppliers-inspection-report-nopay';
 
 class TopSuppliersDelayedContracts extends TopImplSupplier {
 }

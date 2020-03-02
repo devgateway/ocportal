@@ -14,6 +14,6 @@ class Implementation extends Tab {
 
 Implementation.icon = 'efficiency';
 Implementation.visualizations = [DelayedContracts, PmcNotAuthContracts, CancelledContracts,
-  TopSuppliersInspectionReportNoPay, TopSuppliersDelayedContracts];
+  TopSuppliersInspectionReportNoPay, TopSuppliersDelayedContracts, TopSuppliersInspectionReportNoPay];
 
 export default Implementation;

@@ -183,6 +183,7 @@
   "tables:top10suppliers:title": "Top 10 suppliers",
   "tables:topSuppliersInspectionNoPay:title": "Top 10 Suppliers with inspection report to not pay",
   "tables:topSuppliersDelayedContracts:title": "Top 10 Suppliers who do not complete contracts on expected end date",
+  "tables:topSuppliersPmcNotAuthContracts:title": "Top 10 Suppliers with PMC recommendation to not pay",
   "tables:topSuppliersInspectionNoPay:count": "Contracts with inspection report to not pay",
   "tables:topImplSupplier:supplierName": "Supplier Name",
   "tables:topImplSupplier:noNotPay": "Number of Contracts",
