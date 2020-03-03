@@ -88,6 +88,8 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         formDocs.maxFiles(1);
+
+        saveTerminateButton.setVisibilityAllowed(false);
     }
 
     private <X extends AbstractImplTenderProcessMakueniEntity> GenericChoiceProvider<X>
