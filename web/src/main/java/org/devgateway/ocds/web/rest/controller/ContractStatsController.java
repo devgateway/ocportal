@@ -61,7 +61,7 @@ public class ContractStatsController extends GenericOCDSController {
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
-                        and(CONTRACTS_MILESTONE_CODE).is("MEReport").
+                        and(CONTRACTS_MILESTONE_CODE).is("PMCReport").
                         andOperator(getYearDefaultFilterCriteria(
                                 filter, getContractDateField()))),
                 project(CONTRACTS).andInclude(Fields.UNDERSCORE_ID),
@@ -69,12 +69,15 @@ public class ContractStatsController extends GenericOCDSController {
                 unwind(ref(CONTRACTS_MILESTONES)),
                 project().and(CONTRACTS_MILESTONE_CODE)
                         .as(CONTRACTS_MILESTONE_CODE)
+                        .and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .as(CONTRACTS_PAYMENT_AUTHORIZED)
                         .and(CONTRACTS_TITLE)
                         .as("title")
                         .and(Fields.UNDERSCORE_ID)
                         .as(Fields.UNDERSCORE_ID),
-                match(where(CONTRACTS_MILESTONE_CODE).is("MEReport")
-                        .and(CONTRACTS_DELAYED).is(true)),
+                match(where(CONTRACTS_MILESTONE_CODE).is("PMCReport")
+                        .and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .is(false)),
                 group(Fields.UNDERSCORE_ID)
                         .first("title").as("title")
         );
