@@ -13,9 +13,11 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
+import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
+import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
@@ -258,6 +260,17 @@ public final class ComponentUtil {
             final String id) {
         final TextFieldBootstrapFormComponent<Long> textField = new TextFieldBootstrapFormComponent<>(id);
         textField.longValue();
+        parent.add(textField);
+
+        return textField;
+    }
+
+    public static TextFieldBootstrapFormComponent<BigDecimal> addBigDecimalBudgetAmountField(
+            final WebMarkupContainer parent,
+            final String id) {
+        final TextFieldBootstrapFormComponent<BigDecimal> textField = new TextFieldBootstrapFormComponent<>(id);
+        textField.decimal();
+        textField.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         parent.add(textField);
 
         return textField;

@@ -80,10 +80,10 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.project.amountBudgeted"));
 
         ComponentUtil.addIntegerTextField(editForm, "sno").required();
-        ComponentUtil.addBigDecimalField(editForm, "lpoAmount").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "lpoAmount").required();
         ComponentUtil.addTextField(editForm, "lpoNumber").required();
-        ComponentUtil.addBigDecimalField(editForm, "expenditure").required();
-        ComponentUtil.addBigDecimalField(editForm, "uncommitted").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "expenditure").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "uncommitted").required();
         ComponentUtil.addTextAreaField(editForm, "projectScope");
         ComponentUtil.addTextAreaField(editForm, "output");
         ComponentUtil.addTextAreaField(editForm, "outcome");
