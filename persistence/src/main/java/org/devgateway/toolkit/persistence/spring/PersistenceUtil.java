@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.spring;
 
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.springframework.transaction.annotation.Transactional;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 
 import java.util.Set;
@@ -27,6 +28,7 @@ public final class PersistenceUtil {
      * @param <T>
      * @return
      */
+    @Transactional
     public static <T extends GenericPersistable> T getNext(Set<T> set) {
         if (set == null || set.isEmpty()) {
             return null;
