@@ -119,6 +119,25 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Release.class).ensureIndex(new Index().
                 on(MongoConstants.FieldNames.BIDS_DETAILS_VALUE_AMOUNT, Direction.ASC));
 
+        //contract indexes
+        getTemplate().indexOps(Release.class).ensureIndex(new Index().
+                on(MongoConstants.FieldNames.CONTRACTS_MILESTONE_CODE, Direction.ASC));
+
+        getTemplate().indexOps(Release.class).ensureIndex(new Index().
+                on(MongoConstants.FieldNames.CONTRACTS_ID, Direction.ASC));
+
+        getTemplate().indexOps(Release.class).ensureIndex(new Index().
+                on(MongoConstants.FieldNames.CONTRACTS_PAYMENT_AUTHORIZED, Direction.ASC));
+
+        getTemplate().indexOps(Release.class).ensureIndex(new Index().
+                on(MongoConstants.FieldNames.CONTRACTS_CONTRACTOR_ID, Direction.ASC));
+
+        getTemplate().indexOps(Release.class).ensureIndex(new Index().
+                on(MongoConstants.FieldNames.CONTRACTS_DELAYED, Direction.ASC));
+
+        getTemplate().indexOps(Release.class).ensureIndex(new Index().
+                on(MongoConstants.FieldNames.CONTRACTS_STATUS, Direction.ASC));
+
 
         getTemplate().indexOps(Organization.class).ensureIndex(new TextIndexDefinitionBuilder()
                 .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)
