@@ -53,6 +53,69 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @RestController
 public class ContractStatsController extends GenericOCDSController {
 
+    @ApiOperation(value = "List of contract names with MEReports with delay property")
+    @RequestMapping(value = "/api/delayedContractNames", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> delayedContractNames(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        Aggregation agg = newAggregation(
+                match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
+                        and(CONTRACTS_MILESTONE_CODE).is("MEReport").
+                        andOperator(getYearDefaultFilterCriteria(
+                                filter, getContractDateField()))),
+                project(CONTRACTS).andInclude(Fields.UNDERSCORE_ID),
+                unwind(ref(CONTRACTS)),
+                unwind(ref(CONTRACTS_MILESTONES)),
+                project().and(CONTRACTS_MILESTONE_CODE)
+                        .as(CONTRACTS_MILESTONE_CODE)
+                        .and(CONTRACTS_TITLE)
+                        .as("title")
+                        .and(CONTRACTS_DELAYED).as(CONTRACTS_DELAYED)
+                        .and(Fields.UNDERSCORE_ID)
+                        .as(Fields.UNDERSCORE_ID),
+                match(where(CONTRACTS_MILESTONE_CODE).is("MEReport")
+                        .and(CONTRACTS_DELAYED).is(true)),
+                group(Fields.UNDERSCORE_ID)
+                        .first("title").as("title")
+        );
+
+        return releaseAgg(agg);
+    }
+
+
+    @ApiOperation(value = "Top 10 Suppliers who do not complete contracts on expected end date")
+    @RequestMapping(value = "/api/topSuppliersDelayedContracts", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> topSuppliersDelayedContracts(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
+        Aggregation agg = newAggregation(
+                match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
+                        and(CONTRACTS_MILESTONE_CODE).is("MEReport").
+                        and(CONTRACTS_DELAYED).is(true).
+                        and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
+                        andOperator(getYearDefaultFilterCriteria(
+                                filter, getContractDateField()))),
+                unwind(CONTRACTS),
+                unwind(CONTRACTS_MILESTONES),
+                project().and(CONTRACTS_MILESTONE_CODE)
+                        .as(CONTRACTS_MILESTONE_CODE)
+                        .and(CONTRACTS_CONTRACTOR_ID)
+                        .as(CONTRACTS_CONTRACTOR_ID)
+                        .and(CONTRACTS_ID)
+                        .as(CONTRACTS_ID).and(CONTRACTS_DELAYED).as(CONTRACTS_DELAYED),
+                match(where(CONTRACTS_MILESTONE_CODE).is("MEReport").
+                        and(CONTRACTS_DELAYED).is(true)),
+                group(CONTRACTS_ID).first(CONTRACTS_CONTRACTOR_ID).as("contractorId"),
+                group("contractorId").count().as("count"),
+                sort(Sort.Direction.DESC, "count"),
+                limit(10)
+        );
+
+        return releaseAgg(agg);
+    }
 
     @ApiOperation(value = "Top 10 Suppliers with inspection report to not pay")
     @RequestMapping(value = "/api/topSuppliersInspectionNoPay", method = {RequestMethod.POST,

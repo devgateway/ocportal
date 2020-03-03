@@ -13,8 +13,8 @@ class ContractsList extends React.PureComponent {
   }
 
   fetchData() {
-    const { contractorId } = this.props;
-    fetch(`${API_ROOT}` + '/inspectionNoPayContractNames?contractorId=' + contractorId)
+    const { contractorId, endpointName } = this.props;
+    fetch(`${API_ROOT}` + '/' + endpointName + '?' + 'contractorId=' + contractorId)
       .then(response => response.json())
       .then(data => this.setState({ data }));
   }
