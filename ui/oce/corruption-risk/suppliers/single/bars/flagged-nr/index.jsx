@@ -31,7 +31,7 @@ function mkGradient(id, colors) {
       offset: step * (index + 1) - 1,
     });
   });
-  
+
   return (
     <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
       {stops.map(({ color, offset }) =>
@@ -54,11 +54,11 @@ class TaggedBar extends translatable(Bar) {
       types.map(type => corruptionTypeColors[type])
     );
   }
-  
+
   getGradientId(types) {
     return `gradient_${types.join('_')}`;
   }
-  
+
   getFill(types) {
     if (types.length === 1) {
       const [type] = types;
@@ -67,7 +67,7 @@ class TaggedBar extends translatable(Bar) {
       return `url(#${this.getGradientId(types)})`;
     }
   }
-  
+
   renderRectangle(option, props) {
     const types = props.types;
     return (
@@ -89,7 +89,7 @@ export default class FlaggedNr extends translatable(React.PureComponent) {
     this.state.data = [];
     this.state.length = 5;
   }
-  
+
   componentDidMount() {
     const { zoomed, data, length } = this.props;
     const name = zoomed ? 'ZoomedFlaggedNrChart' : 'FlaggedNrChart';
@@ -106,14 +106,14 @@ export default class FlaggedNr extends translatable(React.PureComponent) {
       .then(length => this.setState({ length }));
     });
   }
-  
+
   componentWillUnmount() {
     const { zoomed, data, length } = this.props;
     const name = zoomed ? 'ZoomedFlaggedNrChart' : 'FlaggedNrChart';
     data.removeListener(name);
     length.removeListener(name);
   }
-  
+
   render() {
     const { zoomed, translations } = this.props;
     let { data, length } = this.state;
@@ -127,17 +127,17 @@ export default class FlaggedNr extends translatable(React.PureComponent) {
           data.unshift({ types: [] });
         }
       }
-      
+
       height = Math.max(length * 70, 200);
     }
-    
+
     const corruptionTypes = new Set();
     data.forEach(
       datum => datum.types.forEach(
         type => corruptionTypes.add(type)
       )
     );
-    
+
     const legendPayload = [...corruptionTypes].map(
       corruptionType => ({
         value: this.t(`crd:corruptionType:${corruptionType}:name`),
@@ -145,17 +145,17 @@ export default class FlaggedNr extends translatable(React.PureComponent) {
         color: corruptionTypeColors[corruptionType],
       })
     );
-    
+
     return (
       <div className="oce-chart">
         {(data === undefined || data.length === 0)
-          ? <did className="row">
+          ? <div className="row">
             <br/>
-            <did className="col-md-12">
+            <div className="col-md-12">
               <div className="message">No data</div>
-            </did>
+            </div>
             <br/>
-          </did>
+          </div>
           : <ResponsiveContainer width="100%" height={height}>
             <BarChart
               layout="vertical"
