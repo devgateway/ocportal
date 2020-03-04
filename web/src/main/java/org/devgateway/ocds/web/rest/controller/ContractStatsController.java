@@ -53,6 +53,72 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @RestController
 public class ContractStatsController extends GenericOCDSController {
 
+    @ApiOperation(value = "List of contract names with PMC recommendation to not pay")
+    @RequestMapping(value = "/api/pmcNotAuthContractNames", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> pmcNotAuthContractNames(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        Aggregation agg = newAggregation(
+                match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
+                        and(CONTRACTS_MILESTONE_CODE).is("PMCReport").
+                        andOperator(getYearDefaultFilterCriteria(
+                                filter, getContractDateField()))),
+                project(CONTRACTS).andInclude(Fields.UNDERSCORE_ID),
+                unwind(ref(CONTRACTS)),
+                unwind(ref(CONTRACTS_MILESTONES)),
+                project().and(CONTRACTS_MILESTONE_CODE)
+                        .as(CONTRACTS_MILESTONE_CODE)
+                        .and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .as(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .and(CONTRACTS_TITLE)
+                        .as("title")
+                        .and(Fields.UNDERSCORE_ID)
+                        .as(Fields.UNDERSCORE_ID),
+                match(where(CONTRACTS_MILESTONE_CODE).is("PMCReport")
+                        .and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .is(false)),
+                group(Fields.UNDERSCORE_ID)
+                        .first("title").as("title")
+        );
+
+        return releaseAgg(agg);
+    }
+
+
+    @ApiOperation(value = "Top 10 Suppliers with PMC recommendation to not pay")
+    @RequestMapping(value = "/api/topSuppliersPmcNotAuthContracts", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> topSuppliersPmcNotAuthContracts(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
+        Aggregation agg = newAggregation(
+                match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
+                        and(CONTRACTS_MILESTONE_CODE).is("PMCReport").
+                        and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
+                        andOperator(getYearDefaultFilterCriteria(
+                                filter, getContractDateField()))),
+                unwind(CONTRACTS),
+                unwind(CONTRACTS_MILESTONES),
+                project().and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .as(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .and(CONTRACTS_MILESTONE_CODE)
+                        .as(CONTRACTS_MILESTONE_CODE)
+                        .and(CONTRACTS_CONTRACTOR_ID)
+                        .as(CONTRACTS_CONTRACTOR_ID)
+                        .and(CONTRACTS_ID).as(CONTRACTS_ID),
+                match(where(CONTRACTS_MILESTONE_CODE).is("PMCReport").and(CONTRACTS_PAYMENT_AUTHORIZED)
+                        .is(false)),
+                group(CONTRACTS_ID).first(CONTRACTS_CONTRACTOR_ID).as("contractorId"),
+                group("contractorId").count().as("count"),
+                sort(Sort.Direction.DESC, "count"),
+                limit(10)
+        );
+
+        return releaseAgg(agg);
+    }
+
     @ApiOperation(value = "List of contract names with MEReports with delay property")
     @RequestMapping(value = "/api/delayedContractNames", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
