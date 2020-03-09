@@ -436,8 +436,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @Transactional(readOnly = true)
     private void addProjectList() {
         ListModel<Project> projectListModel = new ListModel<>(fetchData());
-        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel
-                , procurementPlanModel
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel,
+                procurementPlanModel
         );
         add(listViewProjectsOverview);
 
