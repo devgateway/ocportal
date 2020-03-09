@@ -1,9 +1,14 @@
 package org.devgateway.ocds.web.convert;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.text.WordUtils;
+import org.devgateway.jocds.OcdsValidatorConstants;
+import org.devgateway.jocds.OcdsValidatorNodeRequest;
+import org.devgateway.jocds.OcdsValidatorService;
 import org.devgateway.ocds.persistence.mongo.Address;
 import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
@@ -38,6 +43,7 @@ import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.ocds.persistence.mongo.repository.main.MakueniLocationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
+import org.devgateway.ocds.web.rest.controller.OcdsController;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
@@ -69,12 +75,18 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -91,6 +103,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -109,7 +122,15 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private ReleaseRepository releaseRepository;
 
     @Autowired
+    private OcdsValidatorService ocdsValidatorService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private OrganizationRepository organizationRepository;
+
+    private StringBuffer validationErrors;
 
     private static final String OCID_PREFIX = "ocds-muq5cl-";
 
@@ -125,6 +146,31 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @Autowired
     private MakueniLocationRepository makueniLocationRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Autowired
+    private PersonService personService;
+
+    private void sendValidationFailureAlert(String txt) {
+        if (txt.isEmpty()) {
+            return;
+        }
+        final MimeMessagePreparator messagePreparator = mimeMessage -> {
+            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
+            msg.setTo(personService.getEmailsByRole(SecurityConstants.Roles.ROLE_ADMIN).toArray(new String[0]));
+            msg.setFrom("noreply@dgstg.org");
+            msg.setSubject("OCDS Validation Failures After Import");
+            msg.setText(txt);
+        };
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            logger.error("Failed to send ocds validation failure emails ", e);
+            throw e;
+        }
+    }
 
 
     public MakueniLocation lpcToMakueniLocation(LocationPointCategory lpc) {
@@ -571,6 +617,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             }
             Release save = releaseRepository.save(release);
             logger.info("Saved " + save.getOcid());
+            OcdsValidatorNodeRequest nodeRequest = new OcdsValidatorNodeRequest();
+            nodeRequest.setSchemaType(OcdsValidatorConstants.Schemas.RELEASE);
+            nodeRequest.setExtensions(new TreeSet<>(OcdsController.EXTENSIONS));
+            nodeRequest.setVersion(OcdsValidatorConstants.Versions.OCDS_1_1_3);
+            nodeRequest.setNode(objectMapper.valueToTree(save));
+
+            ProcessingReport validate = ocdsValidatorService.validate(nodeRequest);
+            if (!validate.isSuccess()) {
+                validationErrors.append("TenderProcess with id ").append(tenderProcess.getId()).append(" ")
+                        .append(validate.toString());
+                logger.warn(validate.toString());
+            }
+
             return save;
         } catch (Exception e) {
             logger.info("Exception processing tender process with id " + tenderProcess.getId());
@@ -584,7 +643,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         stopWatch.start();
         releaseRepository.deleteAll();
         organizationRepository.deleteAll();
+        validationErrors = new StringBuffer();
         tenderProcessService.findAllStream().filter(Statusable::isExportable).forEach(this::createAndPersistRelease);
+        sendValidationFailureAlert(validationErrors.toString());
         postProcess();
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
@@ -813,6 +874,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Detail createBidsDetail(Bid bid) {
         Detail detail = new Detail();
+        safeSet(detail::setId, bid::getId, this::longIdToString);
         safeSet(detail.getTenderers()::add, bid::getSupplier, this::convertSupplier);
         safeSet(detail::setValue, bid::getQuotedAmount, this::convertAmount);
         safeSet(detail::setStatus, () -> bid, this::createBidStatus);
@@ -1018,8 +1080,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         );
 
 
-        safeSet(release.getTender()::setTenderers, release::getBids, this::createTenderersFromBids);
-        safeSet(release.getTender()::setNumberOfTenderers, release::getTender, this::getTenderersFromTender);
+        if (release.getTender() != null) {
+            safeSet(release.getTender()::setTenderers, release::getBids, this::createTenderersFromBids);
+            safeSet(release.getTender()::setNumberOfTenderers, release::getTender, this::getTenderersFromTender);
+            addTenderersToOrganizationCollection(release.getTender().getTenderers());
+        }
 
         safeSet(release.getAwards()::add, tenderProcess::getSingleAwardNotification, this::createAward);
         safeSet(release.getContracts()::add, tenderProcess::getSingleContract, this::createContract);
@@ -1029,7 +1094,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release::setInitiationType, () -> Release.InitiationType.tender);
 
         addPartiesToOrganizationCollection(release.getParties());
-        addTenderersToOrganizationCollection(release.getTender().getTenderers());
 
         return release;
     }

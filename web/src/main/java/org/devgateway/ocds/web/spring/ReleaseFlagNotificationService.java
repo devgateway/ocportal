@@ -97,11 +97,6 @@ public class ReleaseFlagNotificationService {
                 .orElseGet(Sets::newHashSet);
     }
 
-    private Set<String> getAdminsEmails() {
-        return personService.findByRoleIn(SecurityConstants.Roles.ROLE_ADMIN).stream().map(Person::getEmail)
-                .map(Strings::trimToNull).filter(Objects::nonNull).collect(Collectors.toSet());
-    }
-
     @Transactional
     public void addFlaggedReleaseToNotificationTree(FlaggedRelease flaggedRelease) {
         Optional<ReleaseFlagHistory> latestReleaseFlagHistory = releaseFlagHistoryService.findLatestReleaseFlagHistory(
@@ -197,7 +192,7 @@ public class ReleaseFlagNotificationService {
     }
 
     private void sendAdminEmails() {
-        String[] strings = getAdminsEmails().toArray(new String[0]);
+        String[] strings = personService.getEmailsByRole(SecurityConstants.Roles.ROLE_ADMIN).toArray(new String[0]);
         if (strings.length == 0) {
             return;
         }
