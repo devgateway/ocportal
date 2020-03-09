@@ -109,6 +109,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @SpringBean
     private DataExportService dataExportService;
+    private WebMarkupContainer noData;
 
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
@@ -198,6 +199,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         addSearchBox();
 
         addProjectList();
+
+
     }
 
     /**
@@ -432,10 +435,17 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @Transactional(readOnly = true)
     private void addProjectList() {
-        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview",
-                new ListModel<>(fetchData()), procurementPlanModel
+        ListModel<Project> projectListModel = new ListModel<>(fetchData());
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel,
+                procurementPlanModel
         );
         add(listViewProjectsOverview);
+
+        noData = new WebMarkupContainer("noData");
+        noData.setOutputMarkupId(true);
+        noData.setOutputMarkupPlaceholderTag(true);
+        add(noData);
+        noData.setVisibilityAllowed(projectListModel.getObject().isEmpty());
     }
 
     private void updateDashboard(final AjaxRequestTarget target) {
