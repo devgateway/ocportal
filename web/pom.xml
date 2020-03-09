@@ -59,6 +59,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.devgateway.jocds</groupId>
+            <artifactId>jocds-core</artifactId>
+            <version>0.3.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons.lang3.version}</version>
