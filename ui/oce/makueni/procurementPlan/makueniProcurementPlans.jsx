@@ -90,7 +90,7 @@ class MakueniProcurementPlans extends CRDPage {
   downloadFiles() {
     return (formDocs) => (<div>
         {
-          formDocs.map(doc => <div key={doc.id}>
+          formDocs && formDocs.map(doc => <div key={doc.id}>
             <OverlayTrigger
               placement="bottom"
               overlay={
