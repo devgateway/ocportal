@@ -1,0 +1,17 @@
+{
+  "name": {
+    "en": "Milestone Delayed and payment authorization"
+  },
+  "description": {
+    "en": "M&E reports for Makueni need a delayed option for reporting it as Milestone. This delayed milestone status is not available and the status codelist is closed. We have added a boolean property to the milestone, delayed that can be set to true. Reports also contain an `authorizePayment` field, which shows if the report recommends proceeding with the actual payment. This is too a boolean property"
+  },
+  "documentationUrl": {
+    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/milestone_delayed_authorization"
+  },
+  "compatibility": [
+    "1.1"
+  ],
+  "schemas": [
+    "release-schema.json"
+  ]
+}

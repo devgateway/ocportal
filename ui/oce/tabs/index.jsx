@@ -65,7 +65,7 @@ class Tab extends Visualization {
   }
 
   render() {
-    let { filters, compareBy, requestNewData, data, years, months, monthly, width, translations, styling } = this.props;
+    let { filters, compareBy, requestNewData, data, years, months, monthly, width, translations, styling, navigate } = this.props;
     return <div className="col-sm-12">
       {this.constructor.visualizations.map((Component, index) =>
         compareBy && Component.comparable ? this.compare(Component, index) :
@@ -79,6 +79,7 @@ class Tab extends Visualization {
               years={years}
               months={months}
               width={width}
+              navigate={navigate}
               translations={translations}
               styling={styling}
               margin={{ t: 10, l: 100, b: 80, r: 20, pad: 20 }}

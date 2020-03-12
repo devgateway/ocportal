@@ -72,7 +72,7 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.referenceNumber"));
 
 
-        ComponentUtil.addBigDecimalField(editForm, "totalAmount").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "totalAmount").required();
 
 
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcReport",
@@ -88,6 +88,8 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
         formDocs.maxFiles(1);
+
+        saveTerminateButton.setVisibilityAllowed(false);
     }
 
     private <X extends AbstractImplTenderProcessMakueniEntity> GenericChoiceProvider<X>

@@ -102,7 +102,7 @@ public class Release implements Identifiable {
             + ".org/latest/en/schema/codelists/#release-tag). Tags may be used to filter release and to understand "
             + "the kind of information that a release might contain.")
     @ExcelExport
-    private List<Tag> tag = new ArrayList<Tag>();
+    private List<Tag> tag = new ArrayList<>();
     /**
      * Initiation type
      * <p>
@@ -131,7 +131,7 @@ public class Release implements Identifiable {
             + "etc. Organization references elsewhere in the schema are used to refer back to this entries in this "
             + "list.")
     @ExcelExport
-    private Set<Organization> parties = new LinkedHashSet<Organization>();
+    private Set<Organization> parties = new LinkedHashSet<>();
 
 
     /**
@@ -144,7 +144,7 @@ public class Release implements Identifiable {
             + " of this contracting process.")
     @ExcelExport
     @ExcelExportSepareteSheet
-    private Bids bids = new Bids();
+    private Bids bids;
 
     /**
      * Organization reference
@@ -168,7 +168,7 @@ public class Release implements Identifiable {
             + "fields may be filled in a planning release, in the appropriate fields in other schema sections, these "
             + "would likely be estimates at this stage e.g. totalValue in tender")
     @ExcelExport
-    private Planning planning = new Planning();
+    private Planning planning;
     /**
      * Tender
      * <p>
@@ -180,7 +180,7 @@ public class Release implements Identifiable {
             + "bids for evaluation and selecting a winner or winners.")
     @ExcelExport
     @ExcelExportSepareteSheet
-    private Tender tender = new Tender();
+    private Tender tender;
     /**
      * Awards
      * <p>
@@ -194,7 +194,7 @@ public class Release implements Identifiable {
             + "because it is a standing offer.")
     @ExcelExportSepareteSheet
     @ExcelExport
-    private Set<Award> awards = new LinkedHashSet<Award>();
+    private Set<Award> awards = new LinkedHashSet<>();
     /**
      * Contracts
      * <p>
@@ -205,7 +205,7 @@ public class Release implements Identifiable {
     @ExcelExportSepareteSheet
     @JsonDeserialize(as = LinkedHashSet.class)
     @JsonPropertyDescription("Information from the contract creation phase of the procurement process.")
-    private Set<Contract> contracts = new LinkedHashSet<Contract>();
+    private Set<Contract> contracts = new LinkedHashSet<>();
     /**
      * Release language
      * <p>
@@ -235,7 +235,7 @@ public class Release implements Identifiable {
             + " open contracting identifier (ocid) then details of the related process can be provided here. This is "
             + "commonly used to relate mini-competitions to their parent frameworks, full tenders to a "
             + "pre-qualification phase, or individual tenders to a broad planning process.")
-    private Set<RelatedProcess> relatedProcesses = new LinkedHashSet<RelatedProcess>();
+    private Set<RelatedProcess> relatedProcesses = new LinkedHashSet<>();
 
 
     /**

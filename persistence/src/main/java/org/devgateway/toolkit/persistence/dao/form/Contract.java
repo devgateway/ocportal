@@ -145,6 +145,7 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
         return "Contract for tender process " + getTenderProcessNotNull().getLabel();
     }
 
+    @JsonIgnore
     public boolean isTerminatedWithImplementation() {
         return PersistenceUtil.checkTerminated(
                 ArrayUtils.add(getDirectChildrenEntities().toArray(new Statusable[]{}), this));

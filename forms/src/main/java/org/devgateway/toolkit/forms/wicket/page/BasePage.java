@@ -54,6 +54,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearBudgetPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
@@ -339,6 +340,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListDepartmentPage.class,
                         "navbar.departments", FontAwesomeIconType.bank
+                );
+
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearBudgetPage.class,
+                        "navbar.fiscalYearBudget", FontAwesomeIconType.money
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearPage.class,

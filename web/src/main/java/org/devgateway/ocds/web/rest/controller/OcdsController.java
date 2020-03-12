@@ -40,6 +40,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -53,6 +55,24 @@ public class OcdsController extends GenericOCDSController {
 
     @Value("${serverURL}")
     private String serverURL;
+
+    public static final List<String> EXTENSIONS = Collections.unmodifiableList(
+            Arrays.asList(
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                            + "/src/main/resources/extensions/first_time_winners/extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                            + "/src/main/resources/extensions/planning_items/extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                            + "/src/main/resources/extensions/target_groups/extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                            + "/src/main/resources/extensions/fiscal_year/extension.json",
+                    "https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.3/extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/develop/persistence-mongodb"
+                            + "/src/main/resources/extensions/milestone_delayed_authorization/extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/develop/persistence-mongodb"
+                            + "/src/main/resources/extensions/contract_contractor/extension.json"
+            )
+    );
 
     @Autowired
     private ReleaseRepository releaseRepository;
@@ -98,33 +118,14 @@ public class OcdsController extends GenericOCDSController {
     public ReleasePackage createReleasePackage(final Release release) {
         ReleasePackage releasePackage = new ReleasePackage();
         try {
-            releasePackage.getExtensions()
-                    .add(new URI(
-                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
-                                    + "/src/main/resources/extensions/first_time_winners/extension.json"));
-            releasePackage.getExtensions()
-                    .add(new URI(
-                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
-                                    + "/src/main/resources/extensions/planning_items/extension.json"));
 
-            releasePackage.getExtensions()
-                    .add(new URI(
-                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
-                                    + "/src/main/resources/extensions/target_groups/extension.json"));
-            releasePackage.getExtensions()
-                    .add(new URI(
-                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
-                                    + "/src/main/resources/extensions/fiscal_year/extension.json"));
-
-            releasePackage.getExtensions()
-                    .add(new URI(
-                            "https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.3/extension"
-                                    + ".json"));
-
-            releasePackage.getExtensions()
-                    .add(new URI(
-                            "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
-                                    + "/src/main/resources/extensions/milestone_delayed_authorization/extension.json"));
+            EXTENSIONS.forEach(e -> {
+                try {
+                    releasePackage.getExtensions().add(new URI(e));
+                } catch (URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
 
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
             releasePackage.setPublicationPolicy(new URI(serverURL + "/publication-policy.txt"));
