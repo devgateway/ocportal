@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.5",
-    "leaflet": "1.0.3",
+    "leaflet": "^1.3.4",
     "react-bootstrap-typeahead": "3.4.6"
   },
   "devDependencies": {
@@ -85,8 +85,8 @@
     "react-ga": "^2.7.0",
     "react-hot-loader": "^4.12.18",
     "react-immutable-proptypes": "^2.1.0",
-    "react-leaflet": "^2.6.1",
-    "react-leaflet-control": "^2.1.2",
+    "react-leaflet": "^1.8.2",
+    "react-leaflet-control": "^1.4.1",
     "axios": "^0.19.1",
     "react-google-recaptcha": "^0.14.2",
     "recharts": "1.0.0-beta.10",
