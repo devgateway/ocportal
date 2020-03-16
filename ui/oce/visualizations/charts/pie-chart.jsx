@@ -15,10 +15,9 @@ class PieChart extends backendYearFilterable(Chart) {
     const values = data.map(pluckImm(this.constructor.VALUE_FIELD)).toJS();
     const text = [];
     const hovertext = [];
-    // const ultimateColors = [
-    //   ['rgb(56, 75, 126)', 'rgb(18, 36, 37)', 'rgb(34, 53, 101)', 'rgb(36, 55, 57)', 'rgb(6, 4, 4)'],
-    // ];
-
+    const colors = ['rgb(9, 66, 115)', 'rgb(26, 95, 155,)', 'rgb(24, 123, 209)', 'rgb(64, 166, 255)'
+      ,'rgb(54, 253, 255)','rgb(55, 255, 140)', 'rgb(30, 213, 31)', 'rgb(31, 178, 32)','rgb(0, 130, 0)',
+  'rgb(2, 94, 2)','rgb(244, 191, 0)','rgb(245, 147, 0)', 'rgb(223, 109, 0)','rgb(223, 67, 0)','rgb(221, 68, 0)'];
     for (let i = 0; i < values.length; i += 1) {
       text.push(this.props.styling.charts.hoverFormatter(values[i]));
       hovertext.push(this.props.styling.charts.hoverFormatter(values[i])+' '+labels[i]);
@@ -32,9 +31,9 @@ class PieChart extends backendYearFilterable(Chart) {
       textposition: 'inside',
       textinfo: 'text',
       hoverinfo: 'text+percent',
-      // marker: {
-      //   colors: ultimateColors[0]
-      // },
+      marker: {
+        colors: colors
+      },
       hovertemplate: this.hoverTemplate(),
       type: 'pie'
     }];
