@@ -4,6 +4,10 @@ import { pluckImm } from '../../tools';
 
 class PieChart extends backendYearFilterable(Chart) {
 
+  hoverTemplate() {
+    return undefined;
+  }
+
   getData(){
     const data = super.getData();
     if(!data || !data.count()) return [];
@@ -16,8 +20,10 @@ class PieChart extends backendYearFilterable(Chart) {
     return [{
       values: values,
       labels: labels,
+      customdata: values,
       text: text,
       textposition: 'inside',
+      textinfo: 'text',
       hoverinfo: 'text+percent',
       type: 'pie'
     }];
