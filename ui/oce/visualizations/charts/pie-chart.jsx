@@ -25,7 +25,7 @@ class PieChart extends backendYearFilterable(Chart) {
     return [{
       values: values,
       labels: labels,
-      customdata: values,
+      customdata: text,
       text: text,
       hovertext: hovertext,
       textposition: 'inside',
