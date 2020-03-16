@@ -624,7 +624,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             nodeRequest.setNode(objectMapper.valueToTree(save));
 
             ProcessingReport validate = ocdsValidatorService.validate(nodeRequest);
-            if (!validate.isSuccess()) {
+            if (!validate.isSuccess() && validationErrors != null) {
                 validationErrors.append("TenderProcess with id ").append(tenderProcess.getId()).append(" ")
                         .append(validate.toString());
                 logger.warn(validate.toString());
