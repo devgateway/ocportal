@@ -14,7 +14,7 @@ public class SMSController {
     @RequestMapping(value = "/api/smsGateway",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    public void smsGateway(@RequestParam(value = "key") String key, @RequestBody Map<String, Object> payload) {
-        System.out.println("Sms Gateway Received for key=" + key + " payload=" + payload);
+    public String smsGateway(@RequestParam(value = "key") String key, @RequestBody Map<String, Object> payload) {
+        return "Sms Gateway Received for key=" + key + " payload=" + payload;
     }
 }
