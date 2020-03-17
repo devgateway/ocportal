@@ -3,7 +3,7 @@ import PieChart from './pie-chart';
 class TotalAmountsByItem extends PieChart {
 
   hoverTemplate() {
-    return '%{customdata} %{label} Items Procured<br>%{percent} of all items procured are %{label}</br><extra></extra>';
+    return '%{customdata} %{label} Items Procured<br>%{percent} of all items procured are <br>%{label}<extra></extra>';
   }
 
   static getName(t){return t('charts:amountsByItem:title')}
