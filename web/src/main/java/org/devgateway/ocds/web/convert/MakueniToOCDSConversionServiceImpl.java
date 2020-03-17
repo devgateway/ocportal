@@ -409,6 +409,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessMakueniEntity report) {
         MakueniMilestone milestone = new MakueniMilestone();
+        safeSet(milestone::setId, report::getId, this::longIdToString);
         safeSet(milestone::setTitle, () -> "Payment Authorization " + report.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
         safeSet(milestone::setCode, () -> report.getClass().getSimpleName());
@@ -425,6 +426,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Milestone createMEMilestone(MEReport report) {
         MakueniMilestone milestone = new MakueniMilestone();
+        safeSet(milestone::setId, report::getId, this::longIdToString);
         safeSet(milestone::setTitle, () -> "ME Report " + report.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.DELIVERY::toString);
         safeSet(milestone::setCode, () -> report.getClass().getSimpleName());
@@ -438,6 +440,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Transaction createPaymentVoucherTransaction(PaymentVoucher voucher) {
         Transaction transaction = new Transaction();
+        safeSet(transaction::setId, voucher::getId, this::longIdToString);
         safeSet(transaction::setDate, voucher::getApprovedDate);
         safeSet(transaction::setAmount, voucher::getTotalAmount, this::convertAmount);
         safeSet(transaction::setPayer, voucher::getDepartment, this::convertBuyer);
@@ -624,7 +627,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             nodeRequest.setNode(objectMapper.valueToTree(save));
 
             ProcessingReport validate = ocdsValidatorService.validate(nodeRequest);
-            if (!validate.isSuccess()) {
+            if (!validate.isSuccess() && validationErrors != null) {
                 validationErrors.append("TenderProcess with id ").append(tenderProcess.getId()).append(" ")
                         .append(validate.toString());
                 logger.warn(validate.toString());
