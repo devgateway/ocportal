@@ -19,8 +19,10 @@ public class SMSController {
     @RequestMapping(value = "/api/smsGateway",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    public String smsGateway(@RequestParam(value = "key") String key, @RequestBody Map<String, Object> payload) {
-        logger.info("Sms Gateway Received for key=" + key + " payload=" + payload);
-        return "Sms Gateway Received for key=" + key + " payload=" + payload;
+    public String smsGateway(@RequestParam(value = "key", required = false)
+                                     String key, @RequestBody Map<String, Object> payload) {
+        String log = "Sms Gateway Received for key=" + (key == null ? "[null]" : key) + " payload=" + payload;
+        logger.info(log);
+        return log;
     }
 }
