@@ -22,7 +22,10 @@ public class SMSController {
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public String smsGateway(@RequestBody SMSMessageWrapper body) {
         String log = "Sms Gateway Received " + body.getMessageCount() + " messages.";
-        body.getResults().forEach(m -> messageService.save(m));
+        body.getResults().forEach(m -> {
+            messageService.save(m);
+            messageService.processAndPersistSMSResult(m);
+        });
         logger.info(log.toString());
         return log;
     }

@@ -8,4 +8,26 @@ import org.devgateway.toolkit.persistence.service.BaseJpaService;
  */
 public interface SMSMessageService extends BaseJpaService<SMSMessage> {
 
+    /**
+     * Decides how to process each message based on the command given
+     *
+     * @param message
+     * @return
+     */
+    boolean processSMS(SMSMessage message);
+
+    /**
+     * @param message
+     * @return
+     */
+    boolean executeINFOCommand(SMSMessage message);
+
+    boolean executeREPORTCommand(SMSMessage message);
+
+    void processSMSQueue();
+
+    boolean sendSMS(String destination, String text);
+
+    void processAndPersistSMSResult(SMSMessage m);
+
 }

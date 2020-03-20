@@ -28,6 +28,10 @@ public class SMSMessage extends AbstractAuditableEntity {
     private String callbackData;
     private Boolean processed = false;
 
+    public String getTextNoKeyword() {
+        return text.substring(keyword.length()).trim();
+    }
+
     public Boolean getProcessed() {
         return processed;
     }

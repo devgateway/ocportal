@@ -18,7 +18,7 @@ class Tender extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, prId } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -36,6 +36,10 @@ class Tender extends React.Component {
         <div className="col-md-4">
           <div className="item-label">Tender ID</div>
           <div className="item-value">{tender.tenderNumber}</div>
+        </div>
+        <div className="col-md-4">
+          <div className="item-label">Tender Code</div>
+          <div className="item-value">{prId}</div>
         </div>
       </div>
 
