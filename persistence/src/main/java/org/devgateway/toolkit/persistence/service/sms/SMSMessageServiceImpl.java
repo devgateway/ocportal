@@ -145,8 +145,8 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
                 .equals(DBConstants.Status.APPROVED)) {
             // send sms back to host
             StringBuffer sb = new StringBuffer("Tender Code: ");
-            sb.append(byId.get().getId()).append("\\n");
-            sb.append("Tender Name: ").append(byId.get().getSingleTender().getTenderTitle()).append("\\n");
+            sb.append(byId.get().getId()).append("\n");
+            sb.append("Tender Name: ").append(byId.get().getSingleTender().getTenderTitle()).append("\n");
             Optional<MEReport> lastMEReport = byId.get().getMeReports().stream()
                     .filter(r -> r.getStatus().equals(DBConstants.Status.APPROVED))
                     .sorted(Comparator.comparing(MEReport::getApprovedDate).reversed()).findFirst();
@@ -156,7 +156,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
             } else {
                 sb.append("Not available");
             }
-            sb.append("\\n");
+            sb.append("\n");
 
             Optional<PMCReport> lastPMCReport = byId.get().getPmcReports().stream()
                     .filter(r -> r.getStatus().equals(DBConstants.Status.APPROVED))
@@ -167,7 +167,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
             } else {
                 sb.append("Not available");
             }
-            sb.append("\\n");
+            sb.append("\n");
             logger.info(sb.toString());
             return sendSMS(message.getFrom(), sb.toString());
         } else {
