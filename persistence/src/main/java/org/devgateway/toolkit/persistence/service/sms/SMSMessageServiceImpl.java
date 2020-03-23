@@ -229,7 +229,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
             sb.append("Feedback recorded.").append("\n");
             sb.append("Thank you.").append("\n");
             System.out.println(sb.toString());
-            //sendSMS(message.getFrom(), sb.toString());
+            sendSMS(message.getFrom(), sb.toString());
         }
         return true;
     }
