@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.persistence.service.sms;
 
+import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -8,6 +10,7 @@ import org.devgateway.toolkit.persistence.dao.sms.SMSMessage;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.sms.SMSMessageRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
+import org.devgateway.toolkit.persistence.service.feedback.ReplyableFeedbackMessageService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -53,6 +56,9 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
 
     @Autowired
     private TenderProcessService tenderProcessService;
+
+    @Autowired
+    private ReplyableFeedbackMessageService replyableFeedbackMessageService;
 
     @Override
     protected BaseJpaRepository<SMSMessage, Long> repository() {
@@ -127,27 +133,45 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
         return true;
     }
 
-    @Override
-    public boolean executeINFOCommand(SMSMessage message) {
-        String tenderProcessStr = message.getTextNoKeyword().substring(INFO.length()).trim();
+    private Long getTenderProcessIdFromCommand(String tenderProcessStr, String command) {
+
         Long tenderProcessId = null;
 
         try {
             tenderProcessId = Long.valueOf(tenderProcessStr);
         } catch (NumberFormatException e) {
             logger.error("Error executing INFO command: number format exception for process id:" + tenderProcessStr);
-            return true;
+            return null;
         }
+        return tenderProcessId;
+    }
 
+    private TenderProcess getTenderProcessIfUsableBySMS(Long tenderProcessId) {
         Optional<TenderProcess> byId = tenderProcessService.findById(tenderProcessId);
         if (byId.isPresent() && byId.get().getStatus().equals(DBConstants.Status.APPROVED)
                 && byId.get().getSingleTender() != null && byId.get().getSingleTender().getStatus()
                 .equals(DBConstants.Status.APPROVED)) {
+            return byId.get();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean executeINFOCommand(SMSMessage message) {
+        String tenderProcessStr = message.getTextNoKeyword().substring(INFO.length()).trim();
+        Long tenderProcessId = getTenderProcessIdFromCommand(tenderProcessStr, INFO);
+        if (tenderProcessId == null) {
+            return true;
+        }
+
+        TenderProcess tenderProcess = getTenderProcessIfUsableBySMS(tenderProcessId);
+        if (tenderProcess != null) {
+
             // send sms back to host
             StringBuffer sb = new StringBuffer("Tender Code: ");
-            sb.append(byId.get().getId()).append("\n");
-            sb.append("Tender Name: ").append(byId.get().getSingleTender().getTenderTitle()).append("\n");
-            Optional<MEReport> lastMEReport = byId.get().getMeReports().stream()
+            sb.append(tenderProcess.getId()).append("\n");
+            sb.append("Tender Name: ").append(tenderProcess.getSingleTender().getTenderTitle()).append("\n");
+            Optional<MEReport> lastMEReport = tenderProcess.getMeReports().stream()
                     .filter(r -> r.getStatus().equals(DBConstants.Status.APPROVED))
                     .sorted(Comparator.comparing(MEReport::getApprovedDate).reversed()).findFirst();
             sb.append("M&E Status: ");
@@ -158,7 +182,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
             }
             sb.append("\n");
 
-            Optional<PMCReport> lastPMCReport = byId.get().getPmcReports().stream()
+            Optional<PMCReport> lastPMCReport = tenderProcess.getPmcReports().stream()
                     .filter(r -> r.getStatus().equals(DBConstants.Status.APPROVED))
                     .sorted(Comparator.comparing(PMCReport::getApprovedDate).reversed()).findFirst();
             sb.append("PMC Status: ");
@@ -178,7 +202,36 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
 
     @Override
     public boolean executeREPORTCommand(SMSMessage message) {
-        return false;
+        String idWithMessage = message.getTextNoKeyword().substring(REPORT.length()).trim();
+        String idWithMessageNorm = StringUtils.normalizeSpace(idWithMessage);
+        if (!idWithMessageNorm.contains(" ")) {
+            return true;
+        }
+        String tenderProcessStr = idWithMessageNorm.split(" ")[0];
+        Long tenderProcessId = getTenderProcessIdFromCommand(tenderProcessStr, REPORT);
+        if (tenderProcessId == null) {
+            return true;
+        }
+
+        TenderProcess tenderProcess = getTenderProcessIfUsableBySMS(tenderProcessId);
+        if (tenderProcess != null) {
+            ReplyableFeedbackMessage fm = new ReplyableFeedbackMessage();
+            fm.setUrl("tender/t/" + tenderProcessId);
+            fm.setAddedByPublic(true);
+            fm.setName("Mobile User " + (message.getFrom().hashCode() & 0xfffffff));
+            fm.setPhoneNumber(message.getFrom());
+            fm.setComment(idWithMessage.substring(tenderProcessStr.length()).trim());
+            fm.setDepartment(tenderProcess.getDepartment());
+            replyableFeedbackMessageService.save(fm);
+
+            StringBuffer sb = new StringBuffer("Tender Code: ");
+            sb.append(tenderProcess.getId()).append("\n");
+            sb.append("Feedback recorded.").append("\n");
+            sb.append("Thank you.").append("\n");
+            System.out.println(sb.toString());
+            //sendSMS(message.getFrom(), sb.toString());
+        }
+        return true;
     }
 }
 
