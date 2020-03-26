@@ -19,7 +19,6 @@ import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.hibernate.proxy.HibernateProxyHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +50,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ME_PAYMENT_VALIDATOR;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_VALIDATOR;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_TECH_ADMIN_VALIDATOR;
 
 @Service
 @Transactional
@@ -127,7 +131,8 @@ public class SubmittedAlertService {
 
     public Set<String> getValidatorEmailsForDepartment(Long departmentId) {
         Optional<Department> department = departmentService.findById(departmentId);
-        return department.map(value -> personService.findByRoleIn(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR)
+        return department.map(value -> personService.findByRoleIn(
+                ROLE_PROCUREMENT_VALIDATOR, ROLE_TECH_ADMIN_VALIDATOR, ROLE_ME_PAYMENT_VALIDATOR, ROLE_PMC_VALIDATOR)
                 .stream().map(Person::getEmail).map(Strings::trimToNull).filter(Objects::nonNull)
                 .collect(Collectors.toSet())).orElseGet(Sets::newHashSet);
     }
