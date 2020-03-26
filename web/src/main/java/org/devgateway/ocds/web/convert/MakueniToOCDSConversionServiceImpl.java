@@ -479,6 +479,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             budget.setBudgetBreakdown(budgetBreakdown);
 
             budgetBreakdown.getMeasures().put("Committed", fiscalYearBudget.getAmountBudgeted());
+            budgetBreakdown.getClassifications().put("Dept", tenderProcess.getDepartment().getLabel());
             budgetBreakdown.setId(fiscalYearBudget.getId().toString());
             Period period = new Period();
             period.setStartDate(fiscalYearBudget.getFiscalYear().getStartDate());
