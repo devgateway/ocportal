@@ -2,22 +2,25 @@ package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
+import org.devgateway.toolkit.persistence.service.filterstate.form.AbstractTenderProcessMakueniFilterState;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,11 +60,10 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
             public void populateItem(final Item<ICellPopulator<T>> item,
                                      final String componentId,
                                      final IModel<T> rowModel) {
-                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
                 final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
 
                 if (lastModifiedDate.isPresent()) {
-                    item.add(new Label(componentId, lastModifiedDate.get().format(formatter)));
+                    item.add(new Label(componentId, lastModifiedDate.get().format(DBConstants.DATE_FORMATTER)));
                 } else {
                     item.add(new Label(componentId, ""));
                 }
@@ -83,22 +85,38 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
     }
 
     protected void addTenderTitleColumn() {
-        columns.add(new PropertyColumn<T, String>(
-                new Model<>((new StringResourceModel("title",
-                        ListAbstractTenderProcessMakueniEntity.this)).getString()),
-                null, "tenderProcess.tender.iterator.next.tenderTitle") {
-            @Override
-            public void populateItem(final Item<ICellPopulator<T>> item,
-                                     final String componentId,
-                                     final IModel<T> rowModel) {
-                final Tender tender = rowModel.getObject().getTenderProcess().getSingleTender();
-                if (tender != null) {
-                    item.add(new Label(componentId, tender.getTenderTitle()));
-                } else {
-                    item.add(new Label(componentId, "[[No Tender]]"));
-                }
 
+        columns.add(new TextFilteredBootstrapPropertyColumn<T, AbstractTenderProcessMakueniFilterState<T>, String>(
+                new Model<>(
+                        (new StringResourceModel("title", ListAbstractTenderProcessMakueniEntity.this)).getString()),
+                null, "tenderProcess.tender.iterator.next.tenderTitle"
+        ) {
+            @Override
+            protected IModel<AbstractTenderProcessMakueniFilterState<T>> getFilterModel(FilterForm form) {
+                return new PropertyModel<>(form.getDefaultModel(), "tenderTitle");
             }
         });
+
+
+//        columns.add(new PropertyColumn<T, String>(
+//                new Model<>((new StringResourceModel(
+//                        "title",
+//                        ListAbstractTenderProcessMakueniEntity.this
+//                )).getString()),
+//                null, "tenderProcess.tender.iterator.next.tenderTitle"
+//        ) {
+//            @Override
+//            public void populateItem(final Item<ICellPopulator<T>> item,
+//                                     final String componentId,
+//                                     final IModel<T> rowModel) {
+//                final Tender tender = rowModel.getObject().getTenderProcess().getSingleTender();
+//                if (tender != null) {
+//                    item.add(new Label(componentId, tender.getTenderTitle()));
+//                } else {
+//                    item.add(new Label(componentId, "[[No Tender]]"));
+//                }
+//
+//            }
+//        });
     }
 }

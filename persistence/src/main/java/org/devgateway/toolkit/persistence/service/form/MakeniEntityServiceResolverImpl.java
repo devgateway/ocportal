@@ -3,10 +3,15 @@ package org.devgateway.toolkit.persistence.service.form;
 
 import com.google.common.collect.ImmutableMap;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AdministratorReport;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
+import org.devgateway.toolkit.persistence.dao.form.MEReport;
+import org.devgateway.toolkit.persistence.dao.form.PMCReport;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -54,6 +59,21 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
     @Autowired
     private TenderService tenderService;
 
+    @Autowired
+    private AdministratorReportService administratorReportService;
+
+    @Autowired
+    private InspectionReportService inspectionReportService;
+
+    @Autowired
+    private PMCReportService pmcReportService;
+
+    @Autowired
+    private MEReportService meReportService;
+
+    @Autowired
+    private PaymentVoucherService paymentVoucherService;
+
     private Map<Class<? extends AbstractMakueniEntity>, AbstractMakueniEntityService<? extends AbstractMakueniEntity>>
             serviceMap;
 
@@ -71,6 +91,11 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
                 .put(CabinetPaper.class, cabinetPaperService)
                 .put(AwardNotification.class, awardNotificationService)
                 .put(AwardAcceptance.class, awardAcceptanceService)
+                .put(AdministratorReport.class, administratorReportService)
+                .put(InspectionReport.class, inspectionReportService)
+                .put(PMCReport.class, pmcReportService)
+                .put(MEReport.class, meReportService)
+                .put(PaymentVoucher.class, paymentVoucherService)
                 .build();
     }
 

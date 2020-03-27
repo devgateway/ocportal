@@ -3,9 +3,9 @@ package org.devgateway.toolkit.forms.service;
 import com.google.common.collect.ImmutableMap;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.GenericWebPage;
-import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
@@ -16,6 +16,8 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardAcceptanceItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
@@ -24,6 +26,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 
@@ -40,7 +43,7 @@ public class TranslateField {
 
     private GenericWebPage genericWebPage;
 
-    private GenericPanel genericPanel;
+    private Component genericComponent;
 
     /**
      * Don't use reflection to get the Wicket class for all entities because it's very slow.
@@ -59,14 +62,17 @@ public class TranslateField {
                     .put("Contract", EditContractPage.class)
                     .build();
 
-    public static final ImmutableMap<String, Class<? extends GenericPanel>> MAP_BEAN_WICKET_PANEL =
-            new ImmutableMap.Builder<String, Class<? extends GenericPanel>>()
+    public static final ImmutableMap<String, Class<? extends Component>> MAP_BEAN_WICKET_PANEL =
+            new ImmutableMap.Builder<String, Class<? extends Component>>()
                     .put("Bid", BidPanel.class)
                     .put("ContractDocument", ContractDocumentPanel.class)
                     .put("PlanItem", PlanItemPanel.class)
                     .put("PurchaseItem", PurchaseItemPanel.class)
                     .put("TenderItem", TenderItemPanel.class)
                     .put("PurchRequisition", PurchRequisitionPanel.class)
+                    .put("ProfessionalOpinionItem", EditProfessionalOpinionPage.class)
+                    .put("AwardNotificationItem", AwardNotificationItemPanel.class)
+                    .put("AwardAcceptanceItem", AwardAcceptanceItemPanel.class)
                     .build();
 
     public TranslateField(final Class entity) {
@@ -77,7 +83,7 @@ public class TranslateField {
         final Class<? extends GenericWebPage> translationsWebPage = MAP_BEAN_WICKET_PAGE.get(entitySimpleName);
 
         // if entity is not a subclass of 'EditAbstractSurvey' then check if it is a subclass of 'GenericPanel'.
-        final Class<? extends GenericPanel> translationsGenericPanel = MAP_BEAN_WICKET_PANEL.get(entitySimpleName);
+        final Class<? extends Component> translationsGenericPanel = MAP_BEAN_WICKET_PANEL.get(entitySimpleName);
 
         // instantiate the class that will be used to get the field label.
         try {
@@ -86,7 +92,12 @@ public class TranslateField {
                         .newInstance(new PageParameters());
             } else {
                 if (translationsGenericPanel != null) {
-                    genericPanel = translationsGenericPanel.getConstructor(String.class).newInstance("id");
+                    if (BasePage.class.isAssignableFrom(translationsGenericPanel)) {
+                        genericComponent = translationsGenericPanel.getConstructor(PageParameters.class)
+                                .newInstance(new PageParameters());
+                    } else {
+                        genericComponent = translationsGenericPanel.getConstructor(String.class).newInstance("id");
+                    }
                 } else {
                     logger.error("We didn't found any class for entity: " + this.entitySimpleName);
                 }
@@ -98,11 +109,11 @@ public class TranslateField {
     }
 
     public String getFieldLabel(final Field field) {
-        final Component component = genericWebPage != null ? genericWebPage : genericPanel;
+        final Component component = genericWebPage != null ? genericWebPage : genericComponent;
         final String fieldName = field.getName() + ".label";
         final String string = new StringResourceModel(fieldName, component).getString();
 
-        if (string.isEmpty()) {
+        if (ObjectUtils.isEmpty(string)) {
             logger.error("We did not find the translation for " + fieldName + " from class: " + this.entitySimpleName);
         }
 

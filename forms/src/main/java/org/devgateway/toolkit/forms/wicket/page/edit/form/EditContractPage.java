@@ -14,6 +14,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
@@ -37,7 +38,8 @@ import java.util.Objects;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contract> {
+public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Contract> implements
+        ProcurementRoleAssignable {
     @SpringBean
     protected ContractService contractService;
 
@@ -50,6 +52,10 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntity<Contrac
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
     private GenericSleepFormComponent supplierAddress;
+
+    public EditContractPage() {
+        this(new PageParameters());
+    }
 
     public EditContractPage(final PageParameters parameters) {
         super(parameters);

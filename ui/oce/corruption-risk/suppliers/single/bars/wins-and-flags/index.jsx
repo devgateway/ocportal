@@ -20,7 +20,7 @@ class WinsAndFlags extends translatable(React.PureComponent) {
     this.state.data = [];
     this.state.length = 5;
   }
-  
+
   componentDidMount() {
     const { zoomed, data, length } = this.props;
     const name = zoomed ? 'ZoomedWinsAndFlagsChart' : 'WinsAndFlagsChart';
@@ -39,18 +39,18 @@ class WinsAndFlags extends translatable(React.PureComponent) {
       });
     });
   }
-  
+
   componentWillUnmount() {
     const { zoomed, data, length } = this.props;
     const name = zoomed ? 'ZoomedWinsAndFlagsChart' : 'WinsAndFlagsChart';
     data.removeListener(name);
     length.removeListener(name);
   }
-  
+
   render() {
     const { translations, zoomed } = this.props;
     let { data, length } = this.state;
-    
+
     let height = 350;
     let slicedData = data;
     if (zoomed) {
@@ -62,20 +62,20 @@ class WinsAndFlags extends translatable(React.PureComponent) {
           slicedData.unshift({});
         }
       }
-      
+
       height = Math.max(length * 70, 200);
     }
-    
+
     return (
       <div className="oce-chart">
         {(data === undefined || data.length === 0)
-          ? <did className="row">
+          ? <div className="row">
             <br/>
-            <did className="col-md-12">
+            <div className="col-md-12">
               <div className="message">No data</div>
-            </did>
+            </div>
             <br/>
-          </did>
+          </div>
           : <ResponsiveContainer width="100%" height={height}>
             <BarChart
               layout="vertical"

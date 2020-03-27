@@ -58,6 +58,10 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> supplierId;
 
+    @ApiModelProperty(value = "This is the id of the contractor entity. "
+            + "Corresponds to the OCDS Organization.identifier")
+    private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> contractorId;
+
     @ApiModelProperty(value = "This is the id of the organization/buyer entity. "
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> buyerId;
@@ -296,5 +300,13 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setFiscalYear(TreeSet<String> fiscalYear) {
         this.fiscalYear = fiscalYear;
+    }
+
+    public TreeSet<String> getContractorId() {
+        return contractorId;
+    }
+
+    public void setContractorId(TreeSet<String> contractorId) {
+        this.contractorId = contractorId;
     }
 }

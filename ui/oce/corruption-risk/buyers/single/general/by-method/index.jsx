@@ -65,13 +65,13 @@ class ProcurementsByMethod extends translatable(React.PureComponent) {
     return (
       <div className="oce-chart">
         {(data === undefined || data.length === 0)
-          ? <did className="row">
+          ? <div className="row">
             <br/>
-            <did className="col-md-12">
+            <div className="col-md-12">
               <div className="message">No data</div>
-            </did>
+            </div>
             <br/>
-          </did>
+          </div>
           : <ResponsiveContainer width="100%" height={height}>
             <BarChart
               layout="vertical"

@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service;
 
 import com.google.common.collect.Sets;
+import org.apache.logging.log4j.util.Strings;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.repository.PersonRepository;
@@ -12,13 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author idobre
  * @since 2019-03-04
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements PersonService {
 
     @Autowired
@@ -59,5 +63,11 @@ public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements Per
     @Override
     public TextSearchableRepository<Person, Long> textRepository() {
         return personRepository;
+    }
+
+    @Override
+    public Set<String> getEmailsByRole(String role) {
+        return findByRoleIn(role).stream().map(Person::getEmail)
+                .map(Strings::trimToNull).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 }

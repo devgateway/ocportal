@@ -119,6 +119,7 @@ class OCApp extends React.Component {
   }
 
   content() {
+    const { navigate } = this.props;
     const {
       filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width, locale
     } = this.state;
@@ -139,6 +140,7 @@ class OCApp extends React.Component {
       months={filters.get('selectedMonths') !== undefined ? filters.get('selectedMonths') : new Set()}
       bidTypes={bidTypes}
       width={width}
+      navigate={navigate}
       translations={this.constructor.TRANSLATIONS[locale]}
       styling={this.constructor.STYLING}
     />);

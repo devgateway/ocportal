@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.devgateway.toolkit</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.8.4-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -56,6 +56,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-schema</artifactId>
             <version>${swagger.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.devgateway.jocds</groupId>
+            <artifactId>jocds-core</artifactId>
+            <version>0.3.2</version>
         </dependency>
 
         <dependency>
@@ -138,7 +144,7 @@
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.8.1-SNAPSHOT</version>
+            <version>1.8.4-SNAPSHOT</version>
         </dependency>
 
 
@@ -164,7 +170,7 @@
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>persistence-mongodb</artifactId>
-            <version>1.8.1-SNAPSHOT</version>
+            <version>1.8.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -25,7 +25,7 @@ import org.devgateway.toolkit.persistence.service.filterstate.category.SupplierF
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 @MountPath(value = "/suppliers")
 public class ListSupplierPage extends AbstractListCategoryPage<Supplier> {
 

@@ -37,13 +37,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
@@ -55,7 +53,6 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.datetime.markup.html.basic.DateLabel;
@@ -67,8 +64,6 @@ import org.wicketstuff.select2.Select2Choice;
  */
 public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAuditableEntity>
         extends AbstractEditPage<T> {
-    @SpringBean
-    private PermissionEntityRenderableService permissionEntityRenderableService;
 
     protected Fragment entityButtonsFragment;
 
@@ -88,7 +83,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private CheckBoxYesNoToggleBootstrapFormComponent visibleStatusComments;
 
-    private TransparentWebMarkupContainer comments;
+    private TransparentWebMarkupContainer statusCommentsWrapper;
 
     private ListView<StatusChangedComment> statusComments;
 
@@ -192,10 +187,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     protected void onInitialize() {
         super.onInitialize();
 
-        if (permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()) == null) {
-            setResponsePage(listPageClass);
-        }
-
         addAutosaveLabel();
         addVerticalMaxPositionFields();
 
@@ -205,15 +196,15 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         visibleStatusComments = getVisibleStatusComments();
         editForm.add(visibleStatusComments);
 
-        comments = new TransparentWebMarkupContainer("comments");
-        comments.setOutputMarkupId(true);
-        comments.setOutputMarkupPlaceholderTag(true);
-        comments.setVisibilityAllowed(false);
-        editForm.add(comments);
+        statusCommentsWrapper = new TransparentWebMarkupContainer("statusCommentsWrapper");
+        statusCommentsWrapper.setOutputMarkupId(true);
+        statusCommentsWrapper.setOutputMarkupPlaceholderTag(true);
+        statusCommentsWrapper.setVisibilityAllowed(false);
+        editForm.add(statusCommentsWrapper);
 
         statusComments = getStatusCommentsListView();
         newStatusComment = getNewStatusCommentField();
-        comments.add(statusComments);
+        statusCommentsWrapper.add(statusComments);
         editForm.add(newStatusComment);
 
         entityButtonsFragment = new Fragment("extraButtons", "entityButtons", this);
@@ -273,20 +264,15 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         this.statusLabel.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusLabel());
     }
 
-    private boolean isViewMode() {
-        return SecurityConstants.Action.VIEW
-                .equals(permissionEntityRenderableService.getAllowedAccess(editForm.getModelObject()));
-    }
-
     protected void checkAndSendEventForDisableEditing() {
         if (isDisableEditingEvent()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
         }
     }
 
-    public boolean isDisableEditingEvent() {
-        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
-    }
+    public abstract boolean isDisableEditingEvent();
+
+    protected abstract boolean isViewMode();
 
     private void addAutosaveLabel() {
         autoSaveLabel = new Label("autoSaveLabel",
@@ -404,8 +390,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 new CheckBoxYesNoToggleBootstrapFormComponent("visibleStatusComments") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
-                        comments.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusComments());
-                        target.add(comments);
+                        statusCommentsWrapper.setVisibilityAllowed(editForm.getModelObject()
+                                .getVisibleStatusComments());
+                        target.add(statusCommentsWrapper);
                     }
 
                     @Override
@@ -670,62 +657,26 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
     }
 
-    private void addDefaultAllButtonsPermissions(final Component button) {
+    protected abstract void addTerminateButtonPermissions(Component button);
+
+    protected abstract void addDeleteButtonPermissions(Component button);
+
+    protected abstract void addSaveRevertButtonPermissions(Component button);
+
+    protected abstract void addApproveButtonPermissions(Component button);
+
+    protected abstract void addSaveButtonsPermissions(Component button);
+
+    protected void addDefaultAllButtonsPermissions(final Component button) {
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
         button.setVisibilityAllowed(!isTerminated() && !isViewMode());
     }
 
-    private void addTerminateButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        if (editForm.getModelObject().isNew()) {
-            button.setVisibilityAllowed(false);
-        }
-    }
 
     protected boolean isTerminated() {
         return DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus());
     }
 
-    private void addSaveButtonsPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
-    }
-
-    private void addApproveButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
-    }
-
-    private void addSaveRevertButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_VALIDATOR);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
-
-        // additionally normal users should not revert anything that was already validated
-        if (WebSecurityUtil.isCurrentRoleUser()
-                && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
-            button.setVisibilityAllowed(false);
-        } else
-
-            //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
-            if (WebSecurityUtil.isCurrentUserAdmin()
-                    && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
-                    || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
-                button.setVisibilityAllowed(true);
-            }
-    }
-
-    private void addDeleteButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-    }
 
     private void scrollToPreviousPosition(final IHeaderResponse response) {
         response.render(OnDomReadyHeaderItem.forScript(String.format(

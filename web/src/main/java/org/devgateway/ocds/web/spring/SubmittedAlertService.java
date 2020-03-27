@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class SubmittedAlertService {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmittedAlertService.class);
@@ -127,7 +127,7 @@ public class SubmittedAlertService {
 
     public Set<String> getValidatorEmailsForDepartment(Long departmentId) {
         Optional<Department> department = departmentService.findById(departmentId);
-        return department.map(value -> personService.findByRoleIn(SecurityConstants.Roles.ROLE_VALIDATOR)
+        return department.map(value -> personService.findByRoleIn(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR)
                 .stream().map(Person::getEmail).map(Strings::trimToNull).filter(Objects::nonNull)
                 .collect(Collectors.toSet())).orElseGet(Sets::newHashSet);
     }

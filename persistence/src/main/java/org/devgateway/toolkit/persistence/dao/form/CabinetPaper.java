@@ -104,7 +104,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public Department getDepartment() {
-        throw new RuntimeException("Department not defined for this entity type!");
+        return null;
     }
 
     @Override

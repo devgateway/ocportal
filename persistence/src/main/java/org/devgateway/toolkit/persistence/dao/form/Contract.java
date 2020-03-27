@@ -2,10 +2,12 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang3.ArrayUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -23,7 +25,6 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -144,11 +145,23 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
         return "Contract for tender process " + getTenderProcessNotNull().getLabel();
     }
 
+    @JsonIgnore
+    public boolean isTerminatedWithImplementation() {
+        return PersistenceUtil.checkTerminated(
+                ArrayUtils.add(getDirectChildrenEntities().toArray(new Statusable[]{}), this));
+    }
+
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.emptyList();
+        ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
+        children.addAll(getTenderProcessNotNull().getAdministratorReports());
+        children.addAll(getTenderProcessNotNull().getPmcReports());
+        children.addAll(getTenderProcessNotNull().getInspectionReports());
+        children.addAll(getTenderProcessNotNull().getMeReports());
+        children.addAll(getTenderProcessNotNull().getPaymentVouchers());
+        return children;
     }
 }

@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.filterstate.form;
 
+import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -8,6 +9,7 @@ import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.Project_;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
+import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -23,11 +25,20 @@ import java.util.List;
 public abstract class AbstractTenderProcessMakueniFilterState<T extends AbstractTenderProcessMakueniEntity>
         extends StatusAuditableEntityFilterState<T> {
     private TenderProcess tenderProcess;
+    private String tenderTitle;
 
     @Override
     public Specification<T> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
+
+            if (StringUtils.isNotBlank(tenderTitle)) {
+                predicates.add(cb.like(
+                        cb.lower(root.join(AbstractTenderProcessMakueniEntity_.tenderProcess)
+                                .join(TenderProcess_.tender).get(Tender_.tenderTitle)),
+                        "%" + tenderTitle.toLowerCase() + "%"
+                ));
+            }
 
             if (tenderProcess != null) {
                 final Project project = tenderProcess.getProject();
@@ -62,6 +73,14 @@ public abstract class AbstractTenderProcessMakueniFilterState<T extends Abstract
 
     public void setTenderProcess(final TenderProcess tenderProcess) {
         this.tenderProcess = tenderProcess;
+    }
+
+    public String getTenderTitle() {
+        return tenderTitle;
+    }
+
+    public void setTenderTitle(String tenderTitle) {
+        this.tenderTitle = tenderTitle;
     }
 }
 

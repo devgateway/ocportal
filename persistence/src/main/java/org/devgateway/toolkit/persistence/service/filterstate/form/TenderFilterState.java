@@ -23,7 +23,7 @@ public class TenderFilterState extends AbstractTenderProcessMakueniFilterState<T
             final List<Predicate> predicates = new ArrayList<>();
 
             if (StringUtils.isNotBlank(tenderTitle)) {
-                predicates.add(cb.like(root.get(Tender_.tenderTitle), "%" + tenderTitle + "%"));
+                predicates.add(cb.like(cb.lower(root.get(Tender_.tenderTitle)), "%" + tenderTitle.toLowerCase() + "%"));
             }
 
             predicates.add(super.getSpecification().toPredicate(root, query, cb));

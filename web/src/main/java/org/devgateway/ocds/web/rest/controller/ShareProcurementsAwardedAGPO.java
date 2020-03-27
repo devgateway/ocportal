@@ -13,6 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
+import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.cache.annotation.CacheConfig;
@@ -57,6 +58,7 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
                 match(where(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT).exists(true)
                         .andOperator(getYearDefaultFilterCriteria(filter, getAwardDateField()))),
                 unwind("awards"),
+                match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 unwind("awards.suppliers"),
                 project(MongoConstants.FieldNames.AWARDS_SUPPLIERS_TARGET_GROUP)
                         .and(ConditionalOperators.ifNull(MongoConstants.FieldNames.AWARDS_SUPPLIERS_TARGET_GROUP)
