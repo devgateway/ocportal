@@ -2,12 +2,10 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.apache.commons.lang3.ArrayUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -143,12 +141,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @org.springframework.data.annotation.Transient
     public String getLabel() {
         return "Contract for tender process " + getTenderProcessNotNull().getLabel();
-    }
-
-    @JsonIgnore
-    public boolean isTerminatedWithImplementation() {
-        return PersistenceUtil.checkTerminated(
-                ArrayUtils.add(getDirectChildrenEntities().toArray(new Statusable[]{}), this));
     }
 
     @Override

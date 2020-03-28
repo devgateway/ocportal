@@ -1013,14 +1013,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Contract.Status createContractStatus(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
-        if (contract.isTerminatedWithImplementation()) {
-            return Contract.Status.cancelled;
-        }
-
-        if (APPROVED.equals(contract.getStatus())) {
-            return Contract.Status.active;
-        }
-
         if (contract.getTenderProcess().isTerminated()) {
             return Contract.Status.cancelled;
         }
