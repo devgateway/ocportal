@@ -1039,13 +1039,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
      * @return
      */
     public Award.Status createAwardStatus(AwardNotification awardNotification) {
-        //Cancelled: if Terminated at Notification of award or later stage
-        if (awardNotification.isTerminated()
-                || Optional.ofNullable(awardNotification.getTenderProcess().getSingleAwardAcceptance())
-                .map(AwardAcceptance::isTerminated).orElse(false)
-                || Optional.ofNullable(awardNotification.getTenderProcess().getSingleContract())
-                .map(org.devgateway.toolkit.persistence.dao.form.Contract::isTerminated).orElse(false)
-        ) {
+        if (awardNotification.getTenderProcess().isTerminated()) {
             return Award.Status.cancelled;
         }
 
