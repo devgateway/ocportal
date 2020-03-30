@@ -35,8 +35,8 @@ import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
 import org.devgateway.ocds.persistence.mongo.MakueniTender;
 import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
+import org.devgateway.ocds.persistence.mongo.OrganizationReference;
 import org.devgateway.ocds.persistence.mongo.Period;
-import org.devgateway.ocds.persistence.mongo.Planning;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.Tag;
 import org.devgateway.ocds.persistence.mongo.Tender;
@@ -210,6 +210,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return makueniLocation;
     }
 
+
     public MakueniTender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
         MakueniTender ocdsTender = new MakueniTender();
         safeSet(ocdsTender::setId, tender::getId, this::longIdToString);
@@ -249,30 +250,50 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public void addOrUpdateOrganizationSetByRole(HashMap<String, Organization> orgs, Organization o) {
-        if (ObjectUtils.isEmpty(o)) {
-            return;
+    public OrganizationReference addOrUpdateOrganizationSetByRole(HashMap<String, Organization> orgs,
+                                                                  OrganizationReference or) {
+        if (ObjectUtils.isEmpty(or)) {
+            return null;
         }
+        Organization o = (Organization) or;
         if (!orgs.containsKey(o.getId())) {
             orgs.put(o.getId(), o);
         } else {
             orgs.get(o.getId()).getRoles().addAll(o.getRoles());
         }
+
+        return orgToReference(or);
     }
 
     public Collection<Organization> createParties(Release release) {
         HashMap<String, Organization> orgs = new HashMap<>();
-        addOrUpdateOrganizationSetByRole(orgs, release.getBuyer());
+        release.setBuyer(addOrUpdateOrganizationSetByRole(orgs, release.getBuyer()));
 
         if (!ObjectUtils.isEmpty(release.getTender())) {
-            addOrUpdateOrganizationSetByRole(orgs, release.getTender().getProcuringEntity());
+            release.getTender().setProcuringEntity(addOrUpdateOrganizationSetByRole(orgs,
+                    release.getTender().getProcuringEntity()));
+        }
+
+        if (!ObjectUtils.isEmpty(release.getTender())) {
+            release.getTender().setTenderers(release.getTender().getTenderers().stream().map(
+                    s -> addOrUpdateOrganizationSetByRole(orgs, s)).collect(Collectors.toSet()));
         }
 
         if (!ObjectUtils.isEmpty(release.getAwards())) {
             release.getAwards().stream().filter(a -> !a.getSuppliers().isEmpty())
-                    .flatMap(a -> a.getSuppliers().stream()).forEach(
-                    s -> addOrUpdateOrganizationSetByRole(orgs, s));
+                    .forEach(a -> a.setSuppliers(a.getSuppliers().stream().map(
+                            s -> addOrUpdateOrganizationSetByRole(orgs, s)).collect(Collectors.toSet())));
         }
+
+        if (!ObjectUtils.isEmpty(release.getContracts())) {
+            release.getContracts().stream().
+                    map(Contract::getImplementation).filter(Objects::nonNull)
+                    .forEach(i -> i.getTransactions().forEach(t -> {
+                        t.setPayee(addOrUpdateOrganizationSetByRole(orgs, t.getPayee()));
+                        t.setPayer(addOrUpdateOrganizationSetByRole(orgs, t.getPayer()));
+                    }));
+        }
+
 
         return orgs.values();
     }
@@ -440,6 +461,17 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         );
         safeSetEach(milestone.getDocuments()::add, report::getFormDocs, this::storeAsDocumentPhProgressReport);
         return milestone;
+    }
+
+
+    public OrganizationReference orgToReference(OrganizationReference org) {
+        if (org == null) {
+            return null;
+        }
+        OrganizationReference or = new OrganizationReference();
+        or.setId(org.getId());
+        or.setName(org.getName());
+        return or;
     }
 
     public Milestone createMEMilestone(MEReport report) {
@@ -700,7 +732,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         allOrderByEndDateStream.forEach(r -> {
             MakueniAward award = (MakueniAward) r.getAwards().iterator().next();
-            Organization supplier = award.getSuppliers().iterator().next();
+            OrganizationReference supplier = award.getSuppliers().iterator().next();
             if (!org.contains(supplier.getId())) {
                 org.add(supplier.getId());
                 award.setFirstTimeWinner(true);
@@ -894,9 +926,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return Amount.Currency.KES;
     }
 
-    public Set<Organization> createParties(Tender tender, Planning planning) {
-        return null;
-    }
 
     public Bids createBids(TenderQuotationEvaluation quotationEvaluation) {
         Bids bids = new Bids();
@@ -905,7 +934,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     }
 
-    public Set<Organization> createTenderersFromBids(Bids bids) {
+    public Set<OrganizationReference> createTenderersFromBids(Bids bids) {
         return bids.getDetails().stream().flatMap(b -> b.getTenderers().stream()).collect(Collectors.toSet());
     }
 
@@ -1185,11 +1214,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         });
     }
 
-    private void addTenderersToOrganizationCollection(Set<Organization> tenderers) {
+    private void addTenderersToOrganizationCollection(Set<OrganizationReference> tenderers) {
         tenderers.forEach(p -> {
             Optional<Organization> organization = organizationRepository.findById(p.getId());
             if (!organization.isPresent()) {
-                organizationRepository.save(p);
+                organizationRepository.save((Organization) p);
             }
         });
     }

@@ -155,7 +155,7 @@ public class Release implements Identifiable {
     @JsonPropertyDescription("The id and name of the party being referenced. Used to cross-reference to the parties "
             + "section")
     @ExcelExport
-    private Organization buyer;
+    private OrganizationReference buyer;
     /**
      * Planning
      * <p>
@@ -394,7 +394,7 @@ public class Release implements Identifiable {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("buyer")
-    public Organization getBuyer() {
+    public OrganizationReference getBuyer() {
         return buyer;
     }
 
@@ -404,7 +404,7 @@ public class Release implements Identifiable {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("buyer")
-    public void setBuyer(Organization buyer) {
+    public void setBuyer(OrganizationReference buyer) {
         this.buyer = buyer;
     }
 

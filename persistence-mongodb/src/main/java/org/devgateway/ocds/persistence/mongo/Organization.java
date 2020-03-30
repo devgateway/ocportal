@@ -36,35 +36,8 @@ import java.util.TreeSet;
         "roles",
         "details"
 })
-public class Organization implements Identifiable {
+public class Organization extends OrganizationReference {
 
-    /**
-     * Common name
-     * <p>
-     * A common name for this organization or other participant in the contracting process. The identifier object
-     * provides an space for the formal legal name, and so this may either repeat that value, or could provide the
-     * common name by which this organization or entity is known. This field may also include details of the
-     * department or sub-unit involved in this contracting process.
-     */
-    @JsonProperty("name")
-    @ExcelExport
-    @JsonPropertyDescription("A common name for this organization or other participant in the contracting process. "
-            + "The identifier object provides an space for the formal legal name, and so this may either repeat that "
-            + "value, or could provide the common name by which this organization or entity is known. This field may "
-            + "also include details of the department or sub-unit involved in this contracting process.")
-    private String name;
-    /**
-     * Entity ID
-     * <p>
-     * The ID used for cross-referencing to this party from other sections of the release. This field may be built
-     * with the following structure {identifier.scheme}-{identifier.id}(-{department-identifier}).
-     */
-    @JsonProperty("id")
-    @ExcelExport
-    @JsonPropertyDescription("The ID used for cross-referencing to this party from other sections of the release. "
-            + "This field may be built with the following structure {identifier.scheme}-{identifier.id}"
-            + "(-{department-identifier}).")
-    private String id;
     /**
      * Identifier
      * <p>
@@ -132,54 +105,6 @@ public class Organization implements Identifiable {
     @JsonPropertyDescription("Additional classification information about parties can be provided using partyDetail "
             + "extensions that define particular properties and classification schemes. ")
     private Details details;
-
-    /**
-     * Common name
-     * <p>
-     * A common name for this organization or other participant in the contracting process. The identifier object
-     * provides an space for the formal legal name, and so this may either repeat that value, or could provide the
-     * common name by which this organization or entity is known. This field may also include details of the
-     * department or sub-unit involved in this contracting process.
-     */
-    @JsonProperty("name")
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Common name
-     * <p>
-     * A common name for this organization or other participant in the contracting process. The identifier object
-     * provides an space for the formal legal name, and so this may either repeat that value, or could provide the
-     * common name by which this organization or entity is known. This field may also include details of the
-     * department or sub-unit involved in this contracting process.
-     */
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Entity ID
-     * <p>
-     * The ID used for cross-referencing to this party from other sections of the release. This field may be built
-     * with the following structure {identifier.scheme}-{identifier.id}(-{department-identifier}).
-     */
-    @JsonProperty("id")
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Entity ID
-     * <p>
-     * The ID used for cross-referencing to this party from other sections of the release. This field may be built
-     * with the following structure {identifier.scheme}-{identifier.id}(-{department-identifier}).
-     */
-    @JsonProperty("id")
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /**
      * Identifier
@@ -317,7 +242,7 @@ public class Organization implements Identifiable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("name", name)
+        return new ToStringBuilder(this).append("name", getName())
                 .append("id", id)
                 .append("identifier", identifier)
                 .append("additionalIdentifiers", additionalIdentifiers)
