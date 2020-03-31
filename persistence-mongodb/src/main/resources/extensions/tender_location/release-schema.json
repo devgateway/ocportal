@@ -9,7 +9,7 @@
             "string"
           ],
           "enum": [
-            "wardx",
+            "ward",
             "subcounty"
           ],
           "codelist": "locationType.csv",
