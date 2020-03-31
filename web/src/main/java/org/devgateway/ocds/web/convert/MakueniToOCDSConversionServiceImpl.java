@@ -1136,8 +1136,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Release createRelease(TenderProcess tenderProcess) {
         Release release = new Release();
         safeSet(release::setId, tenderProcess::getId, this::longIdToString);
-        safeSet(release::setDepartmentId, tenderProcess::getDepartment, Category::getId
-        );
         safeSet(release::setOcid, () -> tenderProcess, this::getOcid);
         safeSet(release::setPlanning, () -> tenderProcess, this::createPlanning);
         safeSet(release::setBids, tenderProcess::getSingleTenderQuotationEvaluation, this::createBids);

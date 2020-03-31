@@ -83,11 +83,6 @@ public class ReleaseFlagNotificationService {
         set.add(releaseId);
     }
 
-
-    private Long getDepartmentIdFromRelease(FlaggedRelease flaggedRelease) {
-        return flaggedRelease.getDepartmentId();
-    }
-
     @Transactional
     private Set<String> getUsersValidatorsEmailsFromRelease(Long departmentId) {
         Optional<Department> department = departmentService.findById(departmentId);
@@ -107,7 +102,7 @@ public class ReleaseFlagNotificationService {
                     if (flag && (!latestReleaseFlagHistory.isPresent()
                             || !latestReleaseFlagHistory.get().getFlagged().contains(f))) {
                         addDepartmentFlagReleaseId(
-                                getDepartmentIdFromRelease(flaggedRelease),
+                                Long.valueOf(flaggedRelease.getBuyer().getId()),
                                 f, flaggedRelease.getId()
                         );
 
