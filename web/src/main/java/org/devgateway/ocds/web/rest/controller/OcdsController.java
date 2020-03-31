@@ -72,7 +72,11 @@ public class OcdsController extends GenericOCDSController {
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/develop/persistence-mongodb"
                             + "/src/main/resources/extensions/contract_contractor/extension.json",
                     "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_and_spend_extension/"
-                            + "master/extension.json"
+                            + "master/extension.json",
+                    "https://raw.githubusercontent.com/open-contracting-extensions/ocds_location_extension/v1.1.3/"
+                            + "extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                            + "/src/main/resources/extensions/tender_location/extension.json"
             )
     );
 
