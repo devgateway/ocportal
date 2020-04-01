@@ -589,8 +589,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private Document storeAsDocumentContractNotice(ContractDocument contractDocument) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(
                 PersistenceUtil.getNext(contractDocument.getFormDocs()),
-                contractDocument.getContractDocumentType().getLabel()
-        );
+                Document.DocumentType.CONTRACT_SIGNED);
     }
 
 
