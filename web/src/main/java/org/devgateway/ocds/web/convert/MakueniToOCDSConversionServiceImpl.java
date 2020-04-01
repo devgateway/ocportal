@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.text.WordUtils;
 import org.devgateway.jocds.OcdsValidatorConstants;
@@ -1100,7 +1101,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
     public String getOcid(TenderProcess tenderProcess) {
-        return OCID_PREFIX + tenderProcess.getId();
+        return OCID_PREFIX + DigestUtils.md5Hex(Instant.now().toString());
     }
 
 
