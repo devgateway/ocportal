@@ -1095,9 +1095,9 @@ public class Tender {
 
     public enum MainProcurementCategory {
 
-        GOODS("goods"),
-        WORKS("works"),
-        SERVICES("services");
+        goods("goods"),
+        works("works"),
+        services("services");
         private final String value;
         private static final Map<String, MainProcurementCategory> CONSTANTS = new HashMap<String,
                 MainProcurementCategory>();
