@@ -30,6 +30,8 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     private Integer daysSubmittedReminder = 14;
 
+    private String superAdminEmail;
+
     /**
      * This disables the security of /api/ endpoints, should be used for demo purposes only
      */
@@ -123,5 +125,13 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     public void setDaysSubmittedReminder(Integer daysSubmittedReminder) {
         this.daysSubmittedReminder = daysSubmittedReminder;
+    }
+
+    public String getSuperAdminEmail() {
+        return superAdminEmail;
+    }
+
+    public void setSuperAdminEmail(String superAdminEmail) {
+        this.superAdminEmail = superAdminEmail;
     }
 }
