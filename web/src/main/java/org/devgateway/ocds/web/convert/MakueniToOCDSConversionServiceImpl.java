@@ -50,6 +50,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
+import org.devgateway.toolkit.persistence.dao.categories.ContractDocumentType;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.LocationPointCategory;
@@ -103,9 +104,11 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -1147,6 +1150,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         if (release.getTender() != null) {
             safeSet(release.getTender()::setTenderers, release::getBids, this::createTenderersFromBids);
             safeSet(release.getTender()::setNumberOfTenderers, release::getTender, this::getTenderersFromTender);
+            safeSet(release.getTender()::setMainProcurementCategory, tenderProcess::getSingleContract,
+                    this::createMainProcurementCategory);
+            safeSet(release.getTender().getAdditionalProcurementCategories()::addAll,
+                    tenderProcess::getSingleContract, this::createAdditionalProcurementCategories);
             addTenderersToOrganizationCollection(release.getTender().getTenderers());
         }
 
@@ -1161,6 +1168,36 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         return release;
     }
+
+    private Tender.MainProcurementCategory createMainProcurementCategory(
+            org.devgateway.toolkit.persistence.dao.form.Contract contract) {
+        if (ObjectUtils.isEmpty(contract.getContractDocs())) {
+            return null;
+        }
+        return contract.getContractDocs().stream().map(ContractDocument::getContractDocumentType)
+                .map(ContractDocumentType::getLabel).map(String::toLowerCase).
+                        collect(Collectors.groupingBy(e -> e, Collectors.counting())).
+                        entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .map(Map.Entry::getKey).findFirst().map(Tender.MainProcurementCategory::fromValue)
+                .orElse(null);
+    }
+
+    private List<String> createAdditionalProcurementCategories(
+            org.devgateway.toolkit.persistence.dao.form.Contract contract) {
+        if (ObjectUtils.isEmpty(contract.getContractDocs())) {
+            return null;
+        }
+        List<String> collect = contract.getContractDocs().stream().map(ContractDocument::getContractDocumentType)
+                .map(ContractDocumentType::getLabel).map(String::toLowerCase).distinct().
+                        map(Tender.MainProcurementCategory::fromValue)
+                .map(Tender.MainProcurementCategory::toString).collect(Collectors.toList());
+        if (collect.size() == 1) {
+            return null;
+        } else {
+            return collect;
+        }
+    }
+
 
     private Implementation createImplementation(TenderProcess tenderProcess) {
         Implementation impl = new Implementation();
