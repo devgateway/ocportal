@@ -2,7 +2,6 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.categories.MEStaff;
 import org.devgateway.toolkit.persistence.dao.categories.MEStatus;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
@@ -78,10 +77,7 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
 
     private Boolean invoiced;
 
-    @ExcelExport(name = "M&E Staff")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private MEStaff officerResponsible;
+    private String officerResponsible;
 
     @ExcelExport(name = "M&E Status")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -242,14 +238,6 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
         this.invoiced = invoiced;
     }
 
-    public MEStaff getOfficerResponsible() {
-        return officerResponsible;
-    }
-
-    public void setOfficerResponsible(MEStaff officerResponsible) {
-        this.officerResponsible = officerResponsible;
-    }
-
     public String getRemarks() {
         return remarks;
     }
@@ -272,5 +260,13 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
 
     public void setMeStatus(MEStatus meStatus) {
         this.meStatus = meStatus;
+    }
+
+    public String getOfficerResponsible() {
+        return officerResponsible;
+    }
+
+    public void setOfficerResponsible(String officerResponsible) {
+        this.officerResponsible = officerResponsible;
     }
 }

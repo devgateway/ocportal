@@ -89,7 +89,7 @@ class MEReport extends ImplReport {
       <div className="row padding-top-10">
         <div className="col-md-3">
           <div className="item-label">Officer Responsible</div>
-          <div className="item-value">{i.officerResponsible.label}</div>
+          <div className="item-value">{i.officerResponsible}</div>
         </div>
         <div className="col-md-3">
           <div className="item-label">M&E Status</div>

@@ -15,7 +15,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.service.category.MEStaffService;
 import org.devgateway.toolkit.persistence.service.category.MEStatusService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
@@ -34,9 +33,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
 
     @SpringBean
     protected MEReportService service;
-
-    @SpringBean
-    protected MEStaffService meStaffService;
 
     @SpringBean
     protected MEStatusService meStatusService;
@@ -79,24 +75,24 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.expiryDate"));
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.project.amountBudgeted"));
 
-        ComponentUtil.addIntegerTextField(editForm, "sno").required();
-        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "lpoAmount").required();
-        ComponentUtil.addTextField(editForm, "lpoNumber").required();
+        ComponentUtil.addIntegerTextField(editForm, "sno");
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "lpoAmount");
+        ComponentUtil.addTextField(editForm, "lpoNumber");
         ComponentUtil.addBigDecimalBudgetAmountField(editForm, "expenditure").required();
-        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "uncommitted").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "uncommitted");
         ComponentUtil.addTextAreaField(editForm, "projectScope");
         ComponentUtil.addTextAreaField(editForm, "output");
         ComponentUtil.addTextAreaField(editForm, "outcome");
         ComponentUtil.addTextAreaField(editForm, "projectProgress").required();
         ComponentUtil.addIntegerTextField(editForm, "directBeneficiariesTarget").required();
         ComponentUtil.addTextAreaField(editForm, "wayForward").required();
-        ComponentUtil.addDateField(editForm, "byWhen").required();
+        ComponentUtil.addDateField(editForm, "byWhen");
         ComponentUtil.addYesNoToggle(editForm, "inspected", true).required();
         ComponentUtil.addYesNoToggle(editForm, "invoiced", true).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "officerResponsible", meStaffService).required();
+        ComponentUtil.addTextField(editForm, "officerResponsible").required();
         ComponentUtil.addSelect2ChoiceField(editForm, "meStatus", meStatusService).required();
         ComponentUtil.addTextAreaField(editForm, "remarks").required();
-        ComponentUtil.addTextField(editForm, "contractorContact").required();
+        ComponentUtil.addTextField(editForm, "contractorContact");
 
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
@@ -111,8 +107,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
                         "change"
                 ));
         subcounties.required();
-
-        formDocs.maxFiles(1);
     }
 
     @Override
