@@ -1001,5 +1001,34 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-583-ProjectClosureHandover" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <update tableName="CATEGORY">
+            <column name="LABEL" value="School management"/>
+            <where>dtype='ProjectClosureHandover' and label=:value</where>
+            <whereParams>
+                <param value="Test"/>
+            </whereParams>
+        </update>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Hospital Management committees"/>
+            <column name="DTYPE" value="ProjectClosureHandover"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Project Sustainability committees"/>
+            <column name="DTYPE" value="ProjectClosureHandover"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-583-SubWards" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <sqlFile path="SubWards.sql"/>
+    </changeSet>
 
 </databaseChangeLog>
