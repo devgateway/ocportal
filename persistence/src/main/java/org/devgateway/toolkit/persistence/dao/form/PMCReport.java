@@ -54,10 +54,10 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implem
     @ManyToOne
     private PMCStatus pmcStatus;
 
-    @ExcelExport(name = "Project Closure Handover")
+    @ExcelExport(justExport = true, useTranslation = true, name = "Project Closure Handover")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private ProjectClosureHandover projectClosureHandover;
+    @ManyToMany
+    private List<ProjectClosureHandover> projectClosureHandover;
 
     public List<Subcounty> getSubcounties() {
         return subcounties;
@@ -92,11 +92,11 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implem
         this.pmcStatus = pmcStatus;
     }
 
-    public ProjectClosureHandover getProjectClosureHandover() {
+    public List<ProjectClosureHandover> getProjectClosureHandover() {
         return projectClosureHandover;
     }
 
-    public void setProjectClosureHandover(ProjectClosureHandover projectClosureHandover) {
+    public void setProjectClosureHandover(List<ProjectClosureHandover> projectClosureHandover) {
         this.projectClosureHandover = projectClosureHandover;
     }
 }
