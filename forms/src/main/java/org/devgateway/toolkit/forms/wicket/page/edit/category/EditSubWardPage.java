@@ -4,7 +4,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubWardPage;
 import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.service.category.SubWardService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
@@ -26,12 +26,14 @@ public class EditSubWardPage extends AbstractLocationPointCategoryEditPage<SubWa
     public EditSubWardPage(final PageParameters parameters) {
         super(parameters);
         jpaService = subWardService;
-        listPageClass = ListWardPage.class;
+        listPageClass = ListSubWardPage.class;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        x.getField().setRequired(false);
+        y.getField().setRequired(false);
 
         ComponentUtil.addSelect2ChoiceField(editForm, "ward", wardService).required();
     }
