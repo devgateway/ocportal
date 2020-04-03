@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.MEStatus;
+import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
@@ -32,7 +33,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MEReport extends AbstractImplTenderProcessMakueniEntity implements WardsSettable {
+public class MEReport extends AbstractImplTenderProcessMakueniEntity {
 
     private Long sno;
 
@@ -45,6 +46,11 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Ward> wards = new ArrayList<>();
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Wards")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<SubWard> subwards = new ArrayList<>();
 
     private BigDecimal lpoAmount;
 
@@ -121,7 +127,6 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
         return wards;
     }
 
-    @Override
     public void setWards(List<Ward> wards) {
         this.wards = wards;
     }
@@ -268,5 +273,13 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
 
     public void setOfficerResponsible(String officerResponsible) {
         this.officerResponsible = officerResponsible;
+    }
+
+    public List<SubWard> getSubwards() {
+        return subwards;
+    }
+
+    public void setSubwards(List<SubWard> subwards) {
+        this.subwards = subwards;
     }
 }

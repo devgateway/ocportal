@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -10,12 +12,14 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRoleAssignable;
+import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.MEStatusService;
+import org.devgateway.toolkit.persistence.service.category.SubWardService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.MEReportService;
@@ -46,8 +50,12 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
     @SpringBean
     protected WardService wardService;
 
+    @SpringBean
+    protected SubWardService subWardService;
+
     private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
     private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
+    private Select2MultiChoiceBootstrapFormComponent<SubWard> subwards;
 
     public EditMEReportPage(PageParameters parameters) {
         super(parameters);
@@ -97,15 +105,30 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
+        subwards = ComponentUtil.addSelect2MultiChoiceField(editForm, "subwards", subWardService);
+        subwards.required();
+
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+        wards.getField()
+                .add(new CountyAjaxFormComponentUpdatingBehavior<>(wards, subwards,
+                        LoadableDetachableModel.of(() -> subWardService), editForm.getModelObject()::setSubwards,
+                        "change"
+                ));
         wards.required();
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField()
-                .add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
-                        LoadableDetachableModel.of(() -> wardService), editForm.getModel(),
+                .add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                        LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards,
                         "change"
                 ));
+        subcounties.getField().add(new AjaxFormComponentUpdatingBehavior("change") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                subwards.getField().getModelObject().clear();
+                target.add(subwards);
+            }
+        });
         subcounties.required();
     }
 

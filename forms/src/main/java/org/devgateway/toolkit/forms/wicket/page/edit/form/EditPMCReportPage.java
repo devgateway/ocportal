@@ -87,8 +87,8 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         wards.required();
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
-        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
-                LoadableDetachableModel.of(() -> wardService), editForm.getModel(), "change"
+        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
         subcounties.required();
 
