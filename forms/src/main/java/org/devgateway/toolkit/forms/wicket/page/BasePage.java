@@ -67,6 +67,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
@@ -392,6 +393,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListWardPage.class,
                         "navbar.wardlist", FontAwesomeIconType.flag
                 );
+
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListSubWardPage.class,
+                        "navbar.subwardlist", FontAwesomeIconType.flag
+                );
+
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListUnitPage.class,
                         "navbar.unitlist", FontAwesomeIconType.list
