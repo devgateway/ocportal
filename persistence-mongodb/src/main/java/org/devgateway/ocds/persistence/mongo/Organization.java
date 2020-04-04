@@ -298,14 +298,20 @@ public class Organization extends OrganizationReference {
 
         buyer("buyer"),
 
-        supplier("supplier");
+        supplier("supplier"),
+
+        tenderer("tenderer"),
+
+        payee("payee"),
+
+        payer("payer");
 
         private final String value;
 
         private static final Map<String, OrganizationType> CONSTANTS = new HashMap<String, OrganizationType>();
 
         static {
-            for (OrganizationType c: values()) {
+            for (OrganizationType c : values()) {
                 CONSTANTS.put(c.value, c);
             }
         }

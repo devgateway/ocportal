@@ -497,10 +497,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(transaction::setId, voucher::getId, this::longIdToString);
         safeSet(transaction::setDate, voucher::getApprovedDate);
         safeSet(transaction::setAmount, voucher::getTotalAmount, this::convertAmount);
-        safeSet(transaction::setPayer, voucher::getDepartment, this::convertBuyer);
+        safeSet(transaction::setPayer, voucher::getDepartment, this::convertBuyer, this::addPayerRole);
         safeSet(transaction::setPayee, voucher::getContract,
-                org.devgateway.toolkit.persistence.dao.form.Contract::getAwardee, this::convertSupplier
-        );
+                org.devgateway.toolkit.persistence.dao.form.Contract::getAwardee, this::convertOrganization,
+                this::addPayeeRole);
         return transaction;
     }
 
@@ -633,16 +633,14 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public MakueniOrganization convertSupplier(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+    public MakueniOrganization convertOrganization(
+            org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
         MakueniOrganization ocdsOrg = new MakueniOrganization();
         safeSet(ocdsOrg::setName, supplier::getLabel, WordUtils::capitalizeFully);
         safeSet(ocdsOrg::setId, () -> supplier, this::entityIdToString);
         safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryCodeToIdentifier);
         safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryToIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
-        safeSet(ocdsOrg.getRoles()::add, () -> Organization.OrganizationType.supplier,
-                Organization.OrganizationType::toValue
-        );
         safeSet(ocdsOrg::setTargetGroup, supplier::getTargetGroup, this::categoryLabel);
         return ocdsOrg;
     }
@@ -937,6 +935,30 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     }
 
+    public Organization addRole(Organization o, Organization.OrganizationType role) {
+        safeSet(o.getRoles()::add, () -> role,
+                Organization.OrganizationType::toValue
+        );
+        return o;
+    }
+
+    public Organization addTendererRole(Organization o) {
+        return addRole(o, Organization.OrganizationType.tenderer);
+    }
+
+    public Organization addSupplierRole(Organization o) {
+        return addRole(o, Organization.OrganizationType.supplier);
+    }
+
+    public Organization addPayeeRole(Organization o) {
+        return addRole(o, Organization.OrganizationType.payee);
+    }
+
+    public Organization addPayerRole(Organization o) {
+        return addRole(o, Organization.OrganizationType.payer);
+    }
+
+
     public Set<OrganizationReference> createTenderersFromBids(Bids bids) {
         return bids.getDetails().stream().flatMap(b -> b.getTenderers().stream()).collect(Collectors.toSet());
     }
@@ -945,7 +967,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Detail createBidsDetail(Bid bid) {
         Detail detail = new Detail();
         safeSet(detail::setId, bid::getId, this::longIdToString);
-        safeSet(detail.getTenderers()::add, bid::getSupplier, this::convertSupplier);
+        safeSet(detail.getTenderers()::add, bid::getSupplier, this::convertOrganization, this::addTendererRole);
         safeSet(detail::setValue, bid::getQuotedAmount, this::convertAmount);
         safeSet(detail::setStatus, () -> bid, this::createBidStatus);
         return detail;
@@ -976,7 +998,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         safeSet(
                 ocdsAward.getSuppliers()::add, awardNotification::getAcceptedNotification,
-                AwardNotificationItem::getAwardee, this::convertSupplier
+                AwardNotificationItem::getAwardee, this::convertOrganization, this::addSupplierRole
         );
 
         safeSet(ocdsAward::setContractPeriod, awardNotification::getAcceptedNotification,
@@ -1016,7 +1038,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 getSingleAwardAcceptance())
                 .filter(Statusable::isExportable)
                 .map(AwardAcceptance::getAcceptedAcceptance)
-                .map(AwardAcceptanceItem::getAwardee).orElse(null), this::convertSupplier);
+                .map(AwardAcceptanceItem::getAwardee).orElse(null), this::convertOrganization, this::addSupplierRole);
 
         safeSet(ocdsAward::setStatus, () -> awardNotification, this::createAwardStatus);
 
@@ -1037,7 +1059,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setAwardID, contract::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderNumber
         );
-        safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertSupplier);
+        safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertOrganization);
         safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
 
