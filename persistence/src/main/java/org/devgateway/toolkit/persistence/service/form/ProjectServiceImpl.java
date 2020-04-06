@@ -8,7 +8,6 @@ import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +38,6 @@ public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project
         return new Project();
     }
 
-    @Cacheable
     @Override
     public Long countByProcurementPlanAndProjectTitleAndIdNot(final ProcurementPlan procurementPlan,
                                                               final String projectTitle,
@@ -47,19 +45,16 @@ public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project
         return projectRepository.countByProcurementPlanAndProjectTitleAndIdNot(procurementPlan, projectTitle, id);
     }
 
-    @Cacheable
     @Override
     public List<Project> findByProcurementPlan(final ProcurementPlan procurementPlan) {
         return projectRepository.findByProcurementPlan(procurementPlan);
     }
 
-    @Cacheable
     @Override
     public Long countByFiscalYear(final FiscalYear fiscalYear) {
         return projectRepository.countByProcurementPlanFiscalYear(fiscalYear);
     }
 
-    @Cacheable
     @Override
     public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return projectRepository.countByProcurementPlanDepartmentAndProcurementPlanFiscalYear(department, fiscalYear);

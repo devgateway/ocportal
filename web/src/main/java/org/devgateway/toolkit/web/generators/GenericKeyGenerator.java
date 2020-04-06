@@ -34,8 +34,7 @@ public class GenericKeyGenerator implements KeyGenerator {
 
         for (final Object param : params) {
             if (param instanceof List<?>) {
-                ((List<?>) param).stream()
-                        .forEach(element -> key.append(createKey(element)));
+                ((List<?>) param).stream().forEach(element -> key.append(createKey(element)));
             } else {
                 key.append(createKey(param));
             }

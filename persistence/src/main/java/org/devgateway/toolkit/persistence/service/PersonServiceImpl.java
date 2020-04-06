@@ -8,7 +8,6 @@ import org.devgateway.toolkit.persistence.repository.PersonRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +28,11 @@ public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements Per
     private PersonRepository personRepository;
 
     @Override
-    @Cacheable
     public Person findByUsername(final String username) {
         return personRepository.findByUsername(username);
     }
 
     @Override
-    @Cacheable
     public Person findByEmail(final String email) {
         return personRepository.findByEmail(email);
     }
