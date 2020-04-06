@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gmutuhu
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ContractServiceImpl extends AbstractMakueniEntityServiceImpl<Contract>
         implements ContractService {
 

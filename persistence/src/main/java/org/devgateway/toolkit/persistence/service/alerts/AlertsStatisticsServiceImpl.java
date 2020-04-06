@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 26/08/2019
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AlertsStatisticsServiceImpl
         extends BaseJpaServiceImpl<AlertsStatistics> implements AlertsStatisticsService {
     @Autowired

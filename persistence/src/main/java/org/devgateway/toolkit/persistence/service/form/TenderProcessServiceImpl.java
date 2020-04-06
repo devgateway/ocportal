@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * @since 2019-04-17
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<TenderProcess>
         implements TenderProcessService {
     @Autowired

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-03-11
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProcurementMethodServiceImpl extends BaseJpaServiceImpl<ProcurementMethod>
         implements ProcurementMethodService {
     @Autowired

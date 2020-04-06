@@ -17,7 +17,7 @@ import java.util.List;
  * @author mpostelnicu
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implements FiscalYearService {
     @Autowired
     private FiscalYearRepository fiscalYearRepository;

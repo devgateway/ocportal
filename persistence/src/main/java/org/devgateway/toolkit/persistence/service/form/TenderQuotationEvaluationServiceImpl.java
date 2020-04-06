@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class TenderQuotationEvaluationServiceImpl extends AbstractMakueniEntityServiceImpl<TenderQuotationEvaluation>
         implements TenderQuotationEvaluationService {
 
