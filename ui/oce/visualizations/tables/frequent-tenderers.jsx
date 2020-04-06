@@ -32,7 +32,7 @@ class FrequentTenderers extends orgNamesFetching(Table) {
     if (!data) return [];
     return data.map(datum => List([datum.get('tendererId1'), datum.get('tendererId2')]))
     .flatten()
-    .filter(id => !this.state.c[id])
+    .filter(id => !this.state.orgNames[id])
     .toJS();
   }
 
