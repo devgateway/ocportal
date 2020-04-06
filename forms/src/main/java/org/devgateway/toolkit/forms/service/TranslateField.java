@@ -6,10 +6,15 @@ import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardNotificationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditContractPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditInspectionReportPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditMEReportPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPMCReportPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPaymentVoucherPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
@@ -20,6 +25,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardAcceptanceItemPa
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PMCMemberPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
@@ -60,6 +66,11 @@ public class TranslateField {
                     .put("AwardNotification", EditAwardNotificationPage.class)
                     .put("AwardAcceptance", EditAwardAcceptancePage.class)
                     .put("Contract", EditContractPage.class)
+                    .put("MEReport", EditMEReportPage.class)
+                    .put("PMCReport", EditPMCReportPage.class)
+                    .put("InspectionReport", EditInspectionReportPage.class)
+                    .put("AdministratorReport", EditAdministratorReportPage.class)
+                    .put("PaymentVoucher", EditPaymentVoucherPage.class)
                     .build();
 
     public static final ImmutableMap<String, Class<? extends Component>> MAP_BEAN_WICKET_PANEL =
@@ -73,6 +84,7 @@ public class TranslateField {
                     .put("ProfessionalOpinionItem", EditProfessionalOpinionPage.class)
                     .put("AwardNotificationItem", AwardNotificationItemPanel.class)
                     .put("AwardAcceptanceItem", AwardAcceptanceItemPanel.class)
+                    .put("PMCMember", PMCMemberPanel.class)
                     .build();
 
     public TranslateField(final Class entity) {
