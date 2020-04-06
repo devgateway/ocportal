@@ -7,7 +7,6 @@ import org.devgateway.toolkit.persistence.repository.form.AdministratorReportRep
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public class AdministratorReportServiceImpl extends AbstractMakueniEntityService
     }
 
     @Override
-    @Cacheable
     public List<AdministratorReport> findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
     }
