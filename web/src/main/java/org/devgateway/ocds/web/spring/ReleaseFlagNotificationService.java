@@ -172,14 +172,16 @@ public class ReleaseFlagNotificationService {
 
     private void sendDepartmentEmails(Long department) {
         String[] strings = getUsersValidatorsEmailsFromRelease(department).toArray(new String[0]);
-        if (strings.length == 0) {
+        long count = countDepartmentContent(department);
+        if (strings.length == 0 || count == 0) {
             return;
         }
+
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
             msg.setFrom("noreply@dgstg.org");
-            msg.setSubject(countDepartmentContent(department) + " new Corruption Risk Flags for "
+            msg.setSubject(count + " new Corruption Risk Flags for "
                     + getDepartmentNameFromId(department));
             msg.setText(createDepartmentContent(department), true);
         };
