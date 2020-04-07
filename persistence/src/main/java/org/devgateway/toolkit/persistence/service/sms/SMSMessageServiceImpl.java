@@ -133,7 +133,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
         return true;
     }
 
-    private Long getTenderProcessIdFromCommand(String tenderProcessStr, String command) {
+    private Long getTenderProcessIdFromCommand(String tenderProcessStr) {
 
         Long tenderProcessId = null;
 
@@ -159,7 +159,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
     @Override
     public boolean executeINFOCommand(SMSMessage message) {
         String tenderProcessStr = message.getTextNoKeyword().substring(INFO.length()).trim();
-        Long tenderProcessId = getTenderProcessIdFromCommand(tenderProcessStr, INFO);
+        Long tenderProcessId = getTenderProcessIdFromCommand(tenderProcessStr);
         if (tenderProcessId == null) {
             return true;
         }
@@ -208,7 +208,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
             return true;
         }
         String tenderProcessStr = idWithMessageNorm.split(" ")[0];
-        Long tenderProcessId = getTenderProcessIdFromCommand(tenderProcessStr, REPORT);
+        Long tenderProcessId = getTenderProcessIdFromCommand(tenderProcessStr);
         if (tenderProcessId == null) {
             return true;
         }
@@ -228,7 +228,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
             sb.append(tenderProcess.getId()).append("\n");
             sb.append("Feedback recorded.").append("\n");
             sb.append("Thank you.").append("\n");
-            System.out.println(sb.toString());
+            logger.info(sb.toString());
             sendSMS(message.getFrom(), sb.toString());
         }
         return true;
