@@ -30,6 +30,9 @@ public final class MongoConstants {
         public static final String PLANNING_FISCAL_YEAR = "planning.fiscalYear";
         public static final String PLANNING_BUDGET_PROJECT_ID = "planning.budget.projectID";
         public static final String PLANNING_BUDGET_AMOUNT = "planning.budget.amount.amount";
+        public static final String PLANNING_BUDGETB_MEASURES_COMMITTED = "planning.budget.budgetBreakdown.measures."
+                + "Committed";
+        public static final String PLANNING_BUDGETB_ID = "planning.budget.budgetBreakdown._id";
         public static final String AWARDS_FIRST_TIME_WINNER = "awards.firstTimeWinner";
         public static final String AWARDS_STATUS = "awards.status";
         public static final String AWARDS_SUPPLIERS_ID = "awards.suppliers._id";
@@ -50,6 +53,9 @@ public final class MongoConstants {
         public static final String CONTRACTS_ID = "contracts._id";
         public static final String CONTRACTS_TITLE = "contracts.title";
         public static final String CONTRACTS_CONTRACTOR = "contracts.contractor";
+        public static final String CONTRACTS_IMPL_TRANSACTIONS = "contracts.implementation.transactions";
+        public static final String CONTRACTS_IMPL_TRANSACTIONS_AMOUNT = "contracts.implementation.transactions.amount"
+                + ".amount";
         public static final String CONTRACTS_CONTRACTOR_ID = "contracts.contractor._id";
         public static final String CONTRACTS_MILESTONES = "contracts.implementation.milestones";
         public static final String CONTRACTS_STATUS = "contracts.status";
