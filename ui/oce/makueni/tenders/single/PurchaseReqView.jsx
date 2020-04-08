@@ -129,7 +129,7 @@ class PurchaseReqView extends CRDPage {
 
     switch (selected) {
       case 1:
-        return <Tender data={data.tender} department={department} fiscalYear={fiscalYear}
+        return <Tender data={data.tender} prId={data._id} department={department} fiscalYear={fiscalYear}
                        styling={this.props.styling}/>;
 
       case 2:

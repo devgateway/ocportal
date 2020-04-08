@@ -1027,6 +1027,7 @@
     <changeSet id="OCMAKU-583-SubWards" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="ward_id"/>
         </preConditions>
         <sqlFile path="SubWards.sql"/>
     </changeSet>
