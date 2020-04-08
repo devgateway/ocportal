@@ -195,14 +195,15 @@ public class ReleaseFlagNotificationService {
 
     private void sendAdminEmails() {
         String[] strings = personService.getEmailsByRole(SecurityConstants.Roles.ROLE_ADMIN).toArray(new String[0]);
-        if (strings.length == 0) {
+        long count = countAdminContent();
+        if (strings.length == 0 || count == 0) {
             return;
         }
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
             msg.setFrom("noreply@dgstg.org");
-            msg.setSubject(countAdminContent() + " new Corruption Risk Flags");
+            msg.setSubject(count + " new Corruption Risk Flags");
             msg.setText(createAdminContent(), true);
 
         };
