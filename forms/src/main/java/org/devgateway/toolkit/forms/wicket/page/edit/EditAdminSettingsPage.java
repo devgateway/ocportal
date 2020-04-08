@@ -4,6 +4,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
+import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -48,6 +49,8 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
     private CheckBoxToggleBootstrapFormComponent disableEmailAlerts;
 
     private TextFieldBootstrapFormComponent<String> importFilesPath;
+
+    private TextFieldBootstrapFormComponent<String> superAdminEmail;
 
     @SpringBean
     private CacheManager cacheManager;
@@ -127,9 +130,13 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
         autosaveTime.getField().add(RangeValidator.range(1, 60));
         editForm.add(autosaveTime);
 
+        superAdminEmail = new TextFieldBootstrapFormComponent<>("superAdminEmail");
+        editForm.add(superAdminEmail);
+        superAdminEmail.required().getField().add(RfcCompliantEmailAddressValidator.getInstance());
+
         addImportToMongoLink();
 
-        sendValidatorNotifications();
+        //sendValidatorNotifications();
     }
 
     private void addCacheClearLink() {

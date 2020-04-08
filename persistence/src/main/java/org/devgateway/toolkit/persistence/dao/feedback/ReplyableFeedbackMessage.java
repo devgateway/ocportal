@@ -28,6 +28,9 @@ public class ReplyableFeedbackMessage extends FeedbackMessage {
 
     private String url;
 
+    @JsonIgnore
+    private String phoneNumber;
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     @JsonIgnore
@@ -61,5 +64,13 @@ public class ReplyableFeedbackMessage extends FeedbackMessage {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
