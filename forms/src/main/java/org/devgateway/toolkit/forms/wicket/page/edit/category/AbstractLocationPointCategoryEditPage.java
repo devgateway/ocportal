@@ -28,8 +28,8 @@ import java.util.Objects;
 public abstract class AbstractLocationPointCategoryEditPage<T extends LocationPointCategory>
         extends AbstractCategoryEditPage<T> {
 
-    private TextFieldBootstrapFormComponent<Double> x;
-    private TextFieldBootstrapFormComponent<Double> y;
+    protected TextFieldBootstrapFormComponent<Double> x;
+    protected TextFieldBootstrapFormComponent<Double> y;
 
     public AbstractLocationPointCategoryEditPage(final PageParameters parameters) {
         super(parameters);

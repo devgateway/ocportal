@@ -23,6 +23,8 @@ import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Implementation;
 import org.devgateway.ocds.persistence.mongo.Item;
 import org.devgateway.ocds.persistence.mongo.MakueniAward;
+import org.devgateway.ocds.persistence.mongo.MakueniBudget;
+import org.devgateway.ocds.persistence.mongo.MakueniBudgetBreakdown;
 import org.devgateway.ocds.persistence.mongo.MakueniContract;
 import org.devgateway.ocds.persistence.mongo.MakueniItem;
 import org.devgateway.ocds.persistence.mongo.MakueniLocation;
@@ -64,6 +66,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
+import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -75,10 +78,12 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.PersonService;
+import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
-import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +153,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private MakueniLocationRepository makueniLocationRepository;
 
     @Autowired
+    private FiscalYearBudgetService fiscalYearBudgetService;
+
+    @Autowired
+    private AdminSettingsRepository adminSettingsRepository;
+
+    @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired
@@ -157,9 +168,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         if (txt.isEmpty()) {
             return;
         }
+
+        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)
+                || SecurityUtil.getSuperAdminEmail(adminSettingsRepository) == null) {
+            logger.info("OCDS Validation Failures After Import: " + txt);
+            return;
+        }
+
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
-            msg.setTo(personService.getEmailsByRole(SecurityConstants.Roles.ROLE_ADMIN).toArray(new String[0]));
+            msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
             msg.setFrom("noreply@dgstg.org");
             msg.setSubject("OCDS Validation Failures After Import");
             msg.setText(txt);
@@ -451,7 +469,24 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Budget createPlanningBudget(TenderProcess tenderProcess) {
-        Budget budget = new Budget();
+        MakueniBudget budget = new MakueniBudget();
+
+        FiscalYearBudget fiscalYearBudget = fiscalYearBudgetService.findByDepartmentAndFiscalYear(
+                tenderProcess.getDepartment(), tenderProcess.getProcurementPlan().getFiscalYear());
+
+        if (fiscalYearBudget != null) {
+            MakueniBudgetBreakdown budgetBreakdown = new MakueniBudgetBreakdown();
+            budget.setBudgetBreakdown(budgetBreakdown);
+
+            budgetBreakdown.getMeasures().put("Committed", fiscalYearBudget.getAmountBudgeted());
+            budgetBreakdown.getClassifications().put("Dept", tenderProcess.getDepartment().getLabel());
+            budgetBreakdown.setId(fiscalYearBudget.getId().toString());
+            Period period = new Period();
+            period.setStartDate(fiscalYearBudget.getFiscalYear().getStartDate());
+            period.setEndDate(fiscalYearBudget.getFiscalYear().getEndDate());
+            budgetBreakdown.setPeriod(period);
+        }
+
 
         safeSet(budget::setProjectID, tenderProcess.getProject()::getProjectTitle);
         safeSet(budget::setAmount, tenderProcess.getProject()::getAmountBudgeted, this::convertAmount);
