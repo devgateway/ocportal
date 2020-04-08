@@ -29,7 +29,7 @@ class MEReport extends ImplReport {
         </div>
         <div className="col-md-3">
           <div className="item-label">Sub-Wards</div>
-          <div className="item-value">{i.subwards.map(item => item.label)
+          <div className="item-value">{i.subwards && i.subwards.map(item => item.label)
             .join(', ')}</div>
         </div>
       </div>
