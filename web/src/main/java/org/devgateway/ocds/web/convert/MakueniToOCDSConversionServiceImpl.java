@@ -85,7 +85,6 @@ import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,14 +173,15 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             return;
         }
 
-        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
+        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)
+                || SecurityUtil.getSuperAdminEmail(adminSettingsRepository) == null) {
             logger.info("OCDS Validation Failures After Import: " + txt);
             return;
         }
 
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
-            msg.setTo(personService.getEmailsByRole(SecurityConstants.Roles.ROLE_ADMIN).toArray(new String[0]));
+            msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
             msg.setFrom("noreply@dgstg.org");
             msg.setSubject("OCDS Validation Failures After Import");
             msg.setText(txt);
