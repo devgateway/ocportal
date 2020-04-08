@@ -207,7 +207,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             Workbook wb = WorkbookFactory.create(new ByteArrayInputStream(file.getContent().getBytes()));
             Sheet sh = wb.getSheetAt(0);
             for (Row r : sh) {
-                if (rn++ < 7) {
+                if (rn++ < 7 || r.getLastCellNum() == -1) {
                     continue;
                 }
                 PlanItem pi = new PlanItem();
