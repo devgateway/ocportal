@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.springframework.data.annotation.AccessType;
 
 import javax.persistence.MappedSuperclass;
@@ -8,6 +9,7 @@ import java.util.Collection;
 @MappedSuperclass
 public abstract class AbstractAuthImplTenderProcessMakueniEntity extends AbstractImplTenderProcessMakueniEntity {
 
+    @ExcelExport(useTranslation = true, name = "Authorize Payment")
     private Boolean authorizePayment;
 
     @Override

@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -14,6 +15,7 @@ public abstract class AbstractImplTenderProcessMakueniEntity extends AbstractTen
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
+    @ExcelExport(name = "Contract", justExport = true)
     private Contract contract;
 
     public Contract getContract() {

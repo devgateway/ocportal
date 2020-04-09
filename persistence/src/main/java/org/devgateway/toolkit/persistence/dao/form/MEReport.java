@@ -35,6 +35,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MEReport extends AbstractImplTenderProcessMakueniEntity {
 
+    @ExcelExport(useTranslation = true)
     private Long sno;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
@@ -52,35 +53,48 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity {
     @ManyToMany
     private List<SubWard> subwards = new ArrayList<>();
 
+    @ExcelExport(useTranslation = true)
     private BigDecimal lpoAmount;
 
+    @ExcelExport(useTranslation = true)
     private String lpoNumber;
 
+    @ExcelExport(useTranslation = true)
     private BigDecimal expenditure;
 
+    @ExcelExport(useTranslation = true)
     private BigDecimal uncommitted;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String projectScope;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String output;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String outcome;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String projectProgress;
 
+    @ExcelExport(useTranslation = true)
     private Integer directBeneficiariesTarget;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String wayForward;
 
+    @ExcelExport(useTranslation = true)
     private Date byWhen;
 
+    @ExcelExport(useTranslation = true)
     private Boolean inspected;
 
+    @ExcelExport(useTranslation = true)
     private Boolean invoiced;
 
     private String officerResponsible;
@@ -91,8 +105,10 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity {
     private MEStatus meStatus;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String remarks;
 
+    @ExcelExport(useTranslation = true)
     private String contractorContact;
 
     @AccessType(AccessType.Type.PROPERTY)
