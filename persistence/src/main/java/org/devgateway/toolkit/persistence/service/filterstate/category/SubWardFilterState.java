@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author mpostelnicu
  */
-public class SubWardFilterState extends AbstractCategoryFilterState<SubWard> {
+public class SubWardFilterState extends GenericCategoryFilterState<SubWard> {
     private Ward ward;
 
     @Override

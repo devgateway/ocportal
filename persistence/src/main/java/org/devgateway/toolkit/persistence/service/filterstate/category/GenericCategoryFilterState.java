@@ -1,9 +1,9 @@
 package org.devgateway.toolkit.persistence.service.filterstate.category;
 
 import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Category_;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-08
  */
-public class AbstractCategoryFilterState<T extends Category> extends JpaFilterState<T> {
+public class GenericCategoryFilterState<T extends Category> extends JpaFilterState<T> {
     private String label;
     private String code;
 

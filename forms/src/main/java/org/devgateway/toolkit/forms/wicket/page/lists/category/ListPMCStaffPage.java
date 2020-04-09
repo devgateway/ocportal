@@ -17,8 +17,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditPMCStaffPage;
 import org.devgateway.toolkit.persistence.dao.categories.PMCStaff;
 import org.devgateway.toolkit.persistence.service.category.PMCStaffService;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.category.PMCStaffFilterState;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -34,10 +32,5 @@ public class ListPMCStaffPage extends AbstractListCategoryPage<PMCStaff> {
 
         this.jpaService = staffService;
         this.editPageClass = EditPMCStaffPage.class;
-    }
-
-    @Override
-    public JpaFilterState<PMCStaff> newFilterState() {
-        return new PMCStaffFilterState();
     }
 }
