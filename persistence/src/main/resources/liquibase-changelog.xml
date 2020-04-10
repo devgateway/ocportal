@@ -1032,4 +1032,46 @@
         <sqlFile path="SubWards.sql"/>
     </changeSet>
 
+    <changeSet id="OCMAKU-590-unit-codes" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="code"/>
+        </preConditions>
+        <update tableName="category">
+            <column name="code" value="5B"/>
+            <column name="label" value="batch"/>
+            <where>dtype='Unit' and label='Lots'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="KMT"/>
+            <column name="label" value="kilometre"/>
+            <where>dtype='Unit' and label='Road'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="MTK"/>
+            <column name="label" value="square metre"/>
+            <where>dtype='Unit' and label='Building'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="BE"/>
+            <column name="label" value="bundle"/>
+            <where>dtype='Unit' and label='Bundle'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="EA"/>
+            <column name="label" value="each"/>
+            <where>dtype='Unit' and label='Each'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="PA"/>
+            <column name="label" value="packet"/>
+            <where>dtype='Unit' and label='Packet'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="RM"/>
+            <column name="label" value="ream"/>
+            <where>dtype='Unit' and label='Realm'</where>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>

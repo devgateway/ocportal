@@ -219,9 +219,11 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 pp.getPlanItems().add(pi);
                 pi.setEstimatedCost(BigDecimal.valueOf(r.getCell(4).getNumericCellValue()));
 
-                Unit unit = unitService.findByLabel(r.getCell(5).getStringCellValue());
+                Unit unit = unitService.findByLabelIgnoreCase(r.getCell(5).getStringCellValue());
                 if (unit == null) {
-                    unit = createUnit(r);
+                    throw new RuntimeException("Unit " + r.getCell(5).getStringCellValue() + " is not supported. "
+                            + "Use standard UNCEFACT unit names and make sure they are added in the admin->metadata "
+                            + "first");
                 }
 
                 pi.setUnitOfIssue(unit);
@@ -279,12 +281,6 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         }
 
         return t;
-    }
-
-    private Unit createUnit(Row r) {
-        Unit unit = new Unit();
-        unit.setLabel(r.getCell(5).getStringCellValue());
-        return unitService.save(unit);
     }
 
     protected Item createItem(Row r) {

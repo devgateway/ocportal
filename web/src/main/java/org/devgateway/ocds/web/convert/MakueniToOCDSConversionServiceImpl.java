@@ -388,12 +388,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Unit createTenderItemUnit(TenderItem tenderItem) {
         Unit unit = new Unit();
-        safeSet(unit::setScheme, () -> "scheme");
+        safeSet(unit::setScheme, () -> "UNCEFACT");
         safeSet(
                 unit::setName, tenderItem::getPurchaseItem, PurchaseItem::getPlanItem, PlanItem::getUnitOfIssue,
                 Category::getLabel
         );
-        safeSet(unit::setId, tenderItem::getId, this::longIdToString);
+
+        safeSet(
+                unit::setId, tenderItem::getPurchaseItem, PurchaseItem::getPlanItem, PlanItem::getUnitOfIssue,
+                Category::getCode
+        );
         safeSet(unit::setValue, tenderItem::getUnitPrice, this::convertAmount);
         return unit;
     }
@@ -892,9 +896,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Unit createPlanningItemUnit(PurchaseItem purchaseItem) {
         Unit unit = new Unit();
-        safeSet(unit::setScheme, () -> "scheme");
+        safeSet(unit::setScheme, () -> "UNCEFACT");
         safeSet(unit::setName, purchaseItem::getPlanItem, PlanItem::getUnitOfIssue, this::categoryLabel);
-        safeSet(unit::setId, purchaseItem::getId, this::longIdToString);
+        safeSet(unit::setId, purchaseItem::getPlanItem, PlanItem::getUnitOfIssue, Category::getCode);
         safeSet(unit::setValue, purchaseItem::getAmount, this::convertAmount);
         return unit;
     }
