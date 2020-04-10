@@ -54,6 +54,11 @@ public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueni
     }
 
     @Override
+    public String toString() {
+        return getClass().getSimpleName() + "-" + getId();
+    }
+
+    @Override
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
