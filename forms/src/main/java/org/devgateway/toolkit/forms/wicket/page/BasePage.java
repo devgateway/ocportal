@@ -64,7 +64,6 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocum
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDesignationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.category.ListMEStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
@@ -377,10 +376,6 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListPMCStaffPage.class,
                         "navbar.pmcStaffList", FontAwesomeIconType.user_times
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListMEStaffPage.class,
-                        "navbar.meStaffList", FontAwesomeIconType.user_times
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListDesignationPage.class,

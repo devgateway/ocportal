@@ -30,7 +30,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implements WardsSettable {
+public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -71,7 +71,6 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implem
         return wards;
     }
 
-    @Override
     public void setWards(List<Ward> wards) {
         this.wards = wards;
     }

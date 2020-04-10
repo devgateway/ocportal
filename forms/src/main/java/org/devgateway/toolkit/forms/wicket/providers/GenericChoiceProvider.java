@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.providers;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class GenericChoiceProvider<T> extends ChoiceProvider<T> {
 
     @Override
     public String getIdValue(final T object) {
-        return object.toString();
+        return ObjectUtils.defaultIfNull(object, "").toString();
     }
 
     @Override

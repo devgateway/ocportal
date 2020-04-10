@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
+import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -25,5 +26,10 @@ public class SubWard extends LocationPointCategory {
 
     public void setWard(Ward ward) {
         this.ward = ward;
+    }
+
+    @Override
+    public AbstractAuditableEntity getParent() {
+        return ward;
     }
 }

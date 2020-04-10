@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -10,13 +12,14 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRoleAssignable;
+import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.service.category.MEStaffService;
 import org.devgateway.toolkit.persistence.service.category.MEStatusService;
+import org.devgateway.toolkit.persistence.service.category.SubWardService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.MEReportService;
@@ -36,9 +39,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
     protected MEReportService service;
 
     @SpringBean
-    protected MEStaffService meStaffService;
-
-    @SpringBean
     protected MEStatusService meStatusService;
 
     @SpringBean
@@ -50,8 +50,12 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
     @SpringBean
     protected WardService wardService;
 
+    @SpringBean
+    protected SubWardService subWardService;
+
     private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
     private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
+    private Select2MultiChoiceBootstrapFormComponent<SubWard> subwards;
 
     public EditMEReportPage(PageParameters parameters) {
         super(parameters);
@@ -79,40 +83,53 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.expiryDate"));
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.project.amountBudgeted"));
 
-        ComponentUtil.addIntegerTextField(editForm, "sno").required();
-        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "lpoAmount").required();
-        ComponentUtil.addTextField(editForm, "lpoNumber").required();
+        ComponentUtil.addIntegerTextField(editForm, "sno");
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "lpoAmount");
+        ComponentUtil.addTextField(editForm, "lpoNumber");
         ComponentUtil.addBigDecimalBudgetAmountField(editForm, "expenditure").required();
-        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "uncommitted").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "uncommitted");
         ComponentUtil.addTextAreaField(editForm, "projectScope");
         ComponentUtil.addTextAreaField(editForm, "output");
         ComponentUtil.addTextAreaField(editForm, "outcome");
         ComponentUtil.addTextAreaField(editForm, "projectProgress").required();
         ComponentUtil.addIntegerTextField(editForm, "directBeneficiariesTarget").required();
         ComponentUtil.addTextAreaField(editForm, "wayForward").required();
-        ComponentUtil.addDateField(editForm, "byWhen").required();
+        ComponentUtil.addDateField(editForm, "byWhen");
         ComponentUtil.addYesNoToggle(editForm, "inspected", true).required();
         ComponentUtil.addYesNoToggle(editForm, "invoiced", true).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "officerResponsible", meStaffService).required();
+        ComponentUtil.addTextField(editForm, "officerResponsible").required();
         ComponentUtil.addSelect2ChoiceField(editForm, "meStatus", meStatusService).required();
         ComponentUtil.addTextAreaField(editForm, "remarks").required();
-        ComponentUtil.addTextField(editForm, "contractorContact").required();
+        ComponentUtil.addTextField(editForm, "contractorContact");
 
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
+        subwards = ComponentUtil.addSelect2MultiChoiceField(editForm, "subwards", subWardService);
+        subwards.required();
+
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+        wards.getField()
+                .add(new CountyAjaxFormComponentUpdatingBehavior<>(wards, subwards,
+                        LoadableDetachableModel.of(() -> subWardService), editForm.getModelObject()::setSubwards,
+                        "change"
+                ));
         wards.required();
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField()
-                .add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
-                        LoadableDetachableModel.of(() -> wardService), editForm.getModel(),
+                .add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                        LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards,
                         "change"
                 ));
+        subcounties.getField().add(new AjaxFormComponentUpdatingBehavior("change") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                subwards.getField().getModelObject().clear();
+                target.add(subwards);
+            }
+        });
         subcounties.required();
-
-        formDocs.maxFiles(1);
     }
 
     @Override
