@@ -2,8 +2,8 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.categories.MEStaff;
 import org.devgateway.toolkit.persistence.dao.categories.MEStatus;
+import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
@@ -33,8 +33,9 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MEReport extends AbstractImplTenderProcessMakueniEntity implements WardsSettable {
+public class MEReport extends AbstractImplTenderProcessMakueniEntity {
 
+    @ExcelExport(useTranslation = true)
     private Long sno;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
@@ -47,41 +48,56 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
     @ManyToMany
     private List<Ward> wards = new ArrayList<>();
 
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Wards")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<SubWard> subwards = new ArrayList<>();
+
+    @ExcelExport(useTranslation = true)
     private BigDecimal lpoAmount;
 
+    @ExcelExport(useTranslation = true)
     private String lpoNumber;
 
+    @ExcelExport(useTranslation = true)
     private BigDecimal expenditure;
 
+    @ExcelExport(useTranslation = true)
     private BigDecimal uncommitted;
 
+    @ExcelExport(useTranslation = true)
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     private String projectScope;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String output;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String outcome;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String projectProgress;
 
+    @ExcelExport(useTranslation = true)
     private Integer directBeneficiariesTarget;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String wayForward;
 
+    @ExcelExport(useTranslation = true)
     private Date byWhen;
 
+    @ExcelExport(useTranslation = true)
     private Boolean inspected;
 
+    @ExcelExport(useTranslation = true)
     private Boolean invoiced;
 
-    @ExcelExport(name = "M&E Staff")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private MEStaff officerResponsible;
+    private String officerResponsible;
 
     @ExcelExport(name = "M&E Status")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -89,8 +105,10 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
     private MEStatus meStatus;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true)
     private String remarks;
 
+    @ExcelExport(useTranslation = true)
     private String contractorContact;
 
     @AccessType(AccessType.Type.PROPERTY)
@@ -125,7 +143,6 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
         return wards;
     }
 
-    @Override
     public void setWards(List<Ward> wards) {
         this.wards = wards;
     }
@@ -242,14 +259,6 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
         this.invoiced = invoiced;
     }
 
-    public MEStaff getOfficerResponsible() {
-        return officerResponsible;
-    }
-
-    public void setOfficerResponsible(MEStaff officerResponsible) {
-        this.officerResponsible = officerResponsible;
-    }
-
     public String getRemarks() {
         return remarks;
     }
@@ -272,5 +281,21 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity implements 
 
     public void setMeStatus(MEStatus meStatus) {
         this.meStatus = meStatus;
+    }
+
+    public String getOfficerResponsible() {
+        return officerResponsible;
+    }
+
+    public void setOfficerResponsible(String officerResponsible) {
+        this.officerResponsible = officerResponsible;
+    }
+
+    public List<SubWard> getSubwards() {
+        return subwards;
+    }
+
+    public void setSubwards(List<SubWard> subwards) {
+        this.subwards = subwards;
     }
 }
