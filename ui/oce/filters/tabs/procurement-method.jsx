@@ -1,7 +1,7 @@
 import Tab from './index';
 import ProcurementMethod from '../procurement-method';
 
-class TenderRules extends Tab {
+class ProcurementMethodRules extends Tab {
   render() {
     return (
       <div>
@@ -11,6 +11,6 @@ class TenderRules extends Tab {
   }
 }
 
-TenderRules.getName = t => t('filters:tabs:procurementMethod:title');
+ProcurementMethodRules.getName = t => t('filters:tabs:procurementMethod:title');
 
-export default TenderRules;
+export default ProcurementMethodRules;
