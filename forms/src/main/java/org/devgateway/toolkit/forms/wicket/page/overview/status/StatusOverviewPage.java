@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.DataExportPage;
@@ -107,7 +106,12 @@ public class StatusOverviewPage extends DataEntryBasePage {
         };
         add(dataExport);
 
-        ListModel<StatusOverviewData> dataListModel = new ListModel<>(fetchData());
+        IModel<List<StatusOverviewData>> dataListModel = new LoadableDetachableModel<List<StatusOverviewData>>() {
+            @Override
+            protected List<StatusOverviewData> load() {
+                return fetchData();
+            }
+        };
 
         listViewStatusOverview = new ListViewStatusOverview("statusPanel", dataListModel);
         add(listViewStatusOverview);
