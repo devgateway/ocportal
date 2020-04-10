@@ -525,7 +525,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
         safeSet(budget::setProjectID, tenderProcess.getProject()::getProjectTitle);
-        safeSet(budget::setAmount, tenderProcess.getProject()::getAmountBudgeted, this::convertAmount);
+        safeSet(budget::setAmount, () -> tenderProcess.getPurchRequisitions().stream().
+                flatMap(pr -> pr.getPurchaseItems().stream()).map(PurchaseItem::getAmount).reduce(
+                BigDecimal.ZERO, BigDecimal::add), this::convertAmount);
 
         return budget;
     }
