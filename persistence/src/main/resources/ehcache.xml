@@ -34,6 +34,14 @@
            diskExpiryThreadIntervalSeconds="120"
     />
 
+    <cache name="procurementMethodRationalesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="120"
+    />
+
+
     <cache name="locationTypesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
     />
 

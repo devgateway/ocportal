@@ -6,8 +6,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditUnitPage;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.service.category.UnitService;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.category.UnitFilterState;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -32,10 +30,5 @@ public class ListUnitPage extends AbstractListCategoryPage<Unit> {
     protected void onInitialize() {
 
         super.onInitialize();
-    }
-
-    @Override
-    public JpaFilterState<Unit> newFilterState() {
-        return new UnitFilterState();
     }
 }

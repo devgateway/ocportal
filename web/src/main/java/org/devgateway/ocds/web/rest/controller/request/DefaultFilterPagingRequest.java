@@ -28,6 +28,9 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "Fiscal Year")
     private TreeSet<String> fiscalYear;
 
+    @ApiModelProperty(value = "Procurement Method Rationale")
+    private TreeSet<String> procurementMethodRationale;
+
     @ApiModelProperty(value = "Location Type, can be ward or subcounty")
     private TreeSet<String> locationType;
 
@@ -308,5 +311,13 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setContractorId(TreeSet<String> contractorId) {
         this.contractorId = contractorId;
+    }
+
+    public TreeSet<String> getProcurementMethodRationale() {
+        return procurementMethodRationale;
+    }
+
+    public void setProcurementMethodRationale(TreeSet<String> procurementMethodRationale) {
+        this.procurementMethodRationale = procurementMethodRationale;
     }
 }
