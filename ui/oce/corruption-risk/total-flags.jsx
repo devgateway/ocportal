@@ -25,7 +25,9 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
         bgcolor: '#144361'
       },
       marker: {
-        colors: ['#fac329', '#289df5', '#3372b1']//if you change this colors you'll have to also change it for the custom legend in ./style.less
+        colors: ['#fac329',
+          //'#289df5',
+          '#3372b1']//if you change this colors you'll have to also change it for the custom legend in ./style.less
       },
       outsidetextfont: {
         size: 15,
@@ -156,9 +158,9 @@ class TotalFlags extends translatable(React.Component) {
           styling={this.props.styling}
         />
         <div className="crd-legend">
-          <div className="fraud">
-            <span className="frc-label">{this.t('crd:corruptionType:FRAUD:name')}</span>
-          </div>
+          {/*<div className="fraud">*/}
+          {/*  <span className="frc-label">{this.t('crd:corruptionType:FRAUD:name')}</span>*/}
+          {/*</div>*/}
           <div className="rigging">
             <span className="frc-label">{this.t('crd:corruptionType:RIGGING:name')}</span>
           </div>
