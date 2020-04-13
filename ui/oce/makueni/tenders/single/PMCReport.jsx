@@ -33,7 +33,7 @@ class PMCReport extends AuthImplReport {
         <div className="row padding-top-10">
           <div className="col-md-3">
             <div className="item-label">Project Closure and Handover</div>
-            <div className="item-value">{i.projectClosureHandover.map(item => item.label)
+            <div className="item-value">{i.projectClosureHandover && i.projectClosureHandover.map(item => item.label)
               .join(', ')}</div>
           </div>
         </div>
@@ -49,7 +49,7 @@ class PMCReport extends AuthImplReport {
               <div className="item-value">{m.staff.label}</div>
             </div>
             <div className="col-md-3">
-              <div className="item-label">Designation</div>
+              <div className="item-label">PMC Designation</div>
               <div className="item-value">{m.designation.label}</div>
             </div>
           </div>)

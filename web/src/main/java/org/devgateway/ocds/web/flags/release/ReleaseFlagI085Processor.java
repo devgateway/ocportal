@@ -53,7 +53,7 @@ public class ReleaseFlagI085Processor extends AbstractFlaggedReleaseFlagProcesso
 
     @Override
     protected Set<FlagType> flagTypes() {
-        return new HashSet<>(Arrays.asList(FlagType.FRAUD, FlagType.COLLUSION));
+        return new HashSet<>(Collections.singletonList(FlagType.COLLUSION));
     }
 
     @Override
