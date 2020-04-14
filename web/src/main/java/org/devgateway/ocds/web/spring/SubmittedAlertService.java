@@ -1,6 +1,5 @@
 package org.devgateway.ocds.web.spring;
 
-import com.google.common.collect.Sets;
 import org.apache.logging.log4j.util.Strings;
 import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -10,16 +9,20 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniE
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
+import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
+import org.devgateway.toolkit.persistence.service.form.MEReportService;
+import org.devgateway.toolkit.persistence.service.form.PMCReportService;
+import org.devgateway.toolkit.persistence.service.form.PaymentVoucherService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.hibernate.proxy.HibernateProxyHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +54,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ME_PAYMENT_VALIDATOR;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_VALIDATOR;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_TECH_ADMIN_VALIDATOR;
 
 @Service
 @Transactional
@@ -92,6 +100,21 @@ public class SubmittedAlertService {
     private TenderQuotationEvaluationService tenderQuotationEvaluationService;
 
     @Autowired
+    private PMCReportService pmcReportService;
+
+    @Autowired
+    private InspectionReportService inspectionReportService;
+
+    @Autowired
+    private AdministratorReportService administratorReportService;
+
+    @Autowired
+    private MEReportService meReportService;
+
+    @Autowired
+    private PaymentVoucherService paymentVoucherService;
+
+    @Autowired
     private PersonService personService;
 
     @Autowired
@@ -103,12 +126,13 @@ public class SubmittedAlertService {
     @Value("${serverURL}")
     private String serverURL;
 
-    private List<? extends AbstractMakueniEntityService> services;
+    private List<? extends AbstractMakueniEntityService<?>> procurementServices;
+
 
     @PostConstruct
     public void init() {
 
-        services = Collections.unmodifiableList(Arrays.asList(
+        procurementServices = Collections.unmodifiableList(Arrays.asList(
                 projectService, //not pr
                 awardAcceptanceService,
                 awardNotificationService,
@@ -122,14 +146,17 @@ public class SubmittedAlertService {
 
     @PreDestroy
     public void destroy() {
-        services = null;
+        procurementServices = null;
     }
 
-    public Set<String> getValidatorEmailsForDepartment(Long departmentId) {
+    public Set<String> getValidatorEmailsForDepartmentAndRole(Long departmentId, String role) {
         Optional<Department> department = departmentService.findById(departmentId);
-        return department.map(value -> personService.findByRoleIn(SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR)
+        if (!department.isPresent()) {
+            return Collections.emptySet();
+        }
+        return personService.findByDepartmentWithRoles(department.get(), role)
                 .stream().map(Person::getEmail).map(Strings::trimToNull).filter(Objects::nonNull)
-                .collect(Collectors.toSet())).orElseGet(Sets::newHashSet);
+                .collect(Collectors.toSet());
     }
 
     private String createDepartmentContent(Long department, Map<Class<? extends AbstractMakueniEntity>,
@@ -150,10 +177,11 @@ public class SubmittedAlertService {
         return sb.toString();
     }
 
-    private void sendDepartmentEmails(Long department,
-                                      Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>> notifyMap) {
+    private void sendDepartmentEmailsForRole(Long department, String role,
+                                             Map<Class<? extends AbstractMakueniEntity>,
+                                                     Map<Long, String[]>> notifyMap) {
         String departmentName = departmentService.findById(department).get().getLabel();
-        String[] strings = getValidatorEmailsForDepartment(department).toArray(new String[0]);
+        String[] strings = getValidatorEmailsForDepartmentAndRole(department, role).toArray(new String[0]);
         if (strings.length == 0 || notifyMap.isEmpty()) {
             return;
         }
@@ -173,7 +201,8 @@ public class SubmittedAlertService {
     }
 
 
-    public Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>> collectDepartmentTypeIdTitle() {
+    public Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>>
+    collectDepartmentTypeIdTitle(List<? extends AbstractMakueniEntityService<?>> services) {
         Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>> departmentTypeIdTitle =
                 new ConcurrentHashMap<>();
 
@@ -214,9 +243,19 @@ public class SubmittedAlertService {
     @Scheduled(cron = "0 0 23 * * SUN")
     @Async
     public void sendNotificationEmails() {
-        Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>> notifyMap =
-                collectDepartmentTypeIdTitle();
-        notifyMap.forEach(this::sendDepartmentEmails);
+        collectDepartmentTypeIdTitle(procurementServices).forEach((aLong, classMapMap) ->
+                this.sendDepartmentEmailsForRole(aLong, ROLE_PROCUREMENT_VALIDATOR, classMapMap));
+
+        collectDepartmentTypeIdTitle(Collections.singletonList(pmcReportService)).forEach((aLong, classMapMap) ->
+                this.sendDepartmentEmailsForRole(aLong, ROLE_PMC_VALIDATOR, classMapMap));
+
+        collectDepartmentTypeIdTitle(Arrays.asList(inspectionReportService, administratorReportService)).
+                forEach((aLong, classMapMap) ->
+                        this.sendDepartmentEmailsForRole(aLong, ROLE_TECH_ADMIN_VALIDATOR, classMapMap));
+
+        collectDepartmentTypeIdTitle(Arrays.asList(meReportService, paymentVoucherService)).
+                forEach((aLong, classMapMap) ->
+                        this.sendDepartmentEmailsForRole(aLong, ROLE_ME_PAYMENT_VALIDATOR, classMapMap));
     }
 
     private String getLinkedEntityWithTitle(Class clazz, String title, String date, Long id) {
