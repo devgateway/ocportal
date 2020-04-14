@@ -1,6 +1,5 @@
 package org.devgateway.ocds.web.spring;
 
-import com.google.common.collect.Sets;
 import org.apache.logging.log4j.util.Strings;
 import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -152,9 +151,12 @@ public class SubmittedAlertService {
 
     public Set<String> getValidatorEmailsForDepartmentAndRole(Long departmentId, String role) {
         Optional<Department> department = departmentService.findById(departmentId);
-        return department.map(value -> personService.findByRoleIn(role)
+        if (!department.isPresent()) {
+            return Collections.emptySet();
+        }
+        return personService.findByDepartmentWithRoles(department.get(), role)
                 .stream().map(Person::getEmail).map(Strings::trimToNull).filter(Objects::nonNull)
-                .collect(Collectors.toSet())).orElseGet(Sets::newHashSet);
+                .collect(Collectors.toSet());
     }
 
     private String createDepartmentContent(Long department, Map<Class<? extends AbstractMakueniEntity>,
