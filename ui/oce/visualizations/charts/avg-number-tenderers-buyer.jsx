@@ -1,6 +1,10 @@
 import CatChart from "./cat-chart";
 
 class AvgTenderersByBuyer extends CatChart{
+  // orientation(): * {
+  //   return "h";
+  // }
+
   static getName(t){return t('charts:avgTenderersByBuyer:title')}
 
   getLayout(){
@@ -8,13 +12,13 @@ class AvgTenderersByBuyer extends CatChart{
       xaxis: {
         title: this.t('charts:avgTenderersByBuyer:xAxisTitle'),
         type: "category",
-        tickangle: 15,
         automargin: true,
         tickfont: {"size": 9},
       },
       yaxis: {
         title: this.t('charts:avgTenderersByBuyer:yAxisTitle'),
-        tickprefix: "   "
+        tickprefix: "   ",
+        automargin: true,
       }
     }
   }
