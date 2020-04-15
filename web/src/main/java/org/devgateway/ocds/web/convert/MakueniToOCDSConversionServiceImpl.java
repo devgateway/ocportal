@@ -403,6 +403,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Classification createPurchaseItemClassification(PurchaseItem purchaseItem) {
         Classification classification = new Classification();
+        safeSet(classification::setScheme, () -> "x_KE-IFMIS");
         safeSet(classification::setId, purchaseItem::getPlanItem, PlanItem::getItem, Category::getCode
         );
         safeSet(classification::setDescription, purchaseItem::getPlanItem, PlanItem::getItem, Category::getLabel,
