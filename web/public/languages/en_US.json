@@ -60,6 +60,7 @@
   "filters:tabs:amounts:title": "Amounts",
   "filters:tabs:organizations:title": "Organizations",
   "filters:tabs:procurementMethod:title": "Procurement method",
+  "filters:tabs:procurementMethodRationale:title": "Procurement method rationale",
   "filters:tabs:location:title": "Location",
   "filters:locationType:title": "Location Type",
   "filters:tabs:fiscalYear:title": "Fiscal Year",

@@ -6,6 +6,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.category.GenericCategoryFilterState;
 
 /**
  * @author idobre
@@ -24,5 +26,10 @@ public abstract class AbstractListCategoryPage<T extends Category> extends Abstr
                 "label", "label"));
 
         super.onInitialize();
+    }
+
+    @Override
+    public JpaFilterState<T> newFilterState() {
+        return new GenericCategoryFilterState<>();
     }
 }

@@ -18,6 +18,8 @@ public class StatusOverviewProjectStatus implements Serializable {
 
     private String awardProcessStatus;
 
+    private String implementationStatus;
+
     public Long getId() {
         return id;
     }
@@ -58,4 +60,11 @@ public class StatusOverviewProjectStatus implements Serializable {
         this.awardProcessStatus = awardProcessStatus;
     }
 
+    public String getImplementationStatus() {
+        return implementationStatus;
+    }
+
+    public void setImplementationStatus(String implementationStatus) {
+        this.implementationStatus = implementationStatus;
+    }
 }

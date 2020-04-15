@@ -79,7 +79,7 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_PROC_METHOD, Direction.ASC));
         getTemplate().indexOps(Release.class)
-                .ensureIndex(new Index().on("tender.procurementMethodRationale", Direction.ASC));
+                .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_PROC_METHOD_RATIONALE, Direction.ASC));
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_STATUS, Direction.ASC));
         getTemplate().indexOps(Release.class)

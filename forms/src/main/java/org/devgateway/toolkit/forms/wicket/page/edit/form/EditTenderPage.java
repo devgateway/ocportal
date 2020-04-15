@@ -34,6 +34,7 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniE
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
+import org.devgateway.toolkit.persistence.service.category.ProcurementMethodRationaleService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
@@ -63,6 +64,11 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
 
     @SpringBean
     protected ProcurementMethodService procurementMethodService;
+
+
+    @SpringBean
+    protected ProcurementMethodRationaleService procurementMethodRationaleService;
+
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
@@ -120,6 +126,9 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
+
+        ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethodRationale",
+                procurementMethodRationaleService);
 
         ComponentUtil.addTextAreaField(editForm, "objective").getField()
                 .add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXTAREA);

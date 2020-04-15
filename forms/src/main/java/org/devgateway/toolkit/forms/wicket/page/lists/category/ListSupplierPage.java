@@ -20,8 +20,6 @@ import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstra
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditSupplierPage;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.category.SupplierFilterState;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -48,8 +46,4 @@ public class ListSupplierPage extends AbstractListCategoryPage<Supplier> {
         super.onInitialize();
     }
 
-    @Override
-    public JpaFilterState<Supplier> newFilterState() {
-        return new SupplierFilterState();
-    }
 }

@@ -35,7 +35,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -435,7 +434,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @Transactional(readOnly = true)
     private void addProjectList() {
-        ListModel<Project> projectListModel = new ListModel<>(fetchData());
+
+        IModel<List<Project>> projectListModel = new LoadableDetachableModel<List<Project>>() {
+            @Override
+            protected List<Project> load() {
+                return fetchData();
+            }
+        };
+        
         listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel,
                 procurementPlanModel
         );

@@ -1032,6 +1032,17 @@
         <sqlFile path="SubWards.sql"/>
     </changeSet>
 
+    <changeSet id="OCMAKU-596" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="COVID-19"/>
+            <column name="DTYPE" value="ProcurementMethodRationale"/>
+        </insert>
+    </changeSet>
+
     <changeSet id="OCMAKU-590-unit-codes" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
             <tableExists tableName="CATEGORY"/>

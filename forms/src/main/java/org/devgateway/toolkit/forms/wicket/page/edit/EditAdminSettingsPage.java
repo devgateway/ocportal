@@ -136,7 +136,7 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
         addImportToMongoLink();
 
-        //sendValidatorNotifications();
+        sendValidatorNotifications();
     }
 
     private void addCacheClearLink() {
