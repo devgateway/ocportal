@@ -11,13 +11,14 @@ class PaginatedTable extends Visualization {
 
   getCustomEP() {
     const { pageSize, page } = this.state;
-    const { dataEP, countEP } = this.props;
+    const { dataEP, countEP, filters } = this.props;
 
     let data = new URI(dataEP)
+      .addSearch(filters.toJS())
       .addSearch('pageSize', pageSize)
       .addSearch('pageNumber', page - 1);
 
-    let count = new URI(countEP);
+    let count = new URI(countEP).addSearch(filters.toJS());
 
     return [
       data,
@@ -32,10 +33,14 @@ class PaginatedTable extends Visualization {
     };
   }
 
-  componentDidUpdate(_, prevState) {
+
+  componentDidUpdate(prevProps, prevState) {
     const stateChanged = ['pageSize', 'page'].some(key => this.state[key] !== prevState[key]);
-    if (stateChanged) {
+    const propsChanged = ['filters', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
+    if (stateChanged || propsChanged) {
       this.fetch();
+    } else {
+      super.componentDidUpdate(_,prevState);
     }
   }
 
