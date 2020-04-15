@@ -1098,14 +1098,14 @@
             <columnExists tableName="CATEGORY" columnName="code"/>
         </preConditions>
 
-        <sql>update plan_item pi set pi.unit_of_issue_id = (select id from category where dtype='Unit' and code='EA')
-            where pi.unit_of_issue_id = (select id from category where dtype='Unit' and code in ('MTK', 'KMT') and
-            pi.quantity &lt;50
+        <sql>update plan_item set unit_of_issue_id = (select id from category where dtype='Unit' and code='EA')
+            where unit_of_issue_id in (select id from category where dtype='Unit' and code in ('MTK', 'KMT')) and
+            quantity &lt;50
         </sql>
 
-        <sql>update plan_item pi set pi.unit_of_issue_id = (select id from category where dtype='Unit' and code='LTR')
-            where pi.unit_of_issue_id = (select id from category where dtype='Unit' and code ='KMT' and
-            pi.quantity &gt;=50
+        <sql>update plan_item set unit_of_issue_id = (select id from category where dtype='Unit' and code='LTR')
+            where unit_of_issue_id = (select id from category where dtype='Unit' and code ='KMT') and
+            quantity &gt;=50
         </sql>
     </changeSet>
 
