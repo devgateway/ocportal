@@ -1083,6 +1083,30 @@
             <column name="label" value="ream"/>
             <where>dtype='Unit' and label='Realm'</where>
         </update>
+
+        <insert tableName="category">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="dtype" value="Unit"/>
+            <column name="code" value="LTR"/>
+            <column name="label" value="litre"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-590-change-unit-codes" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="code"/>
+        </preConditions>
+
+        <sql>update plan_item pi set pi.unit_of_issue_id = (select id from category where dtype='Unit' and code='EA')
+            where pi.unit_of_issue_id = (select id from category where dtype='Unit' and code in ('MTK', 'KMT') and
+            pi.quantity &lt;50
+        </sql>
+
+        <sql>update plan_item pi set pi.unit_of_issue_id = (select id from category where dtype='Unit' and code='LTR')
+            where pi.unit_of_issue_id = (select id from category where dtype='Unit' and code ='KMT' and
+            pi.quantity &gt;=50
+        </sql>
     </changeSet>
 
 </databaseChangeLog>
