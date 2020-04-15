@@ -40,7 +40,7 @@ class PaginatedTable extends Visualization {
     if (stateChanged || propsChanged) {
       this.fetch();
     } else {
-      super.componentDidUpdate(_,prevState);
+      super.componentDidUpdate(prevProps,prevState);
     }
   }
 
