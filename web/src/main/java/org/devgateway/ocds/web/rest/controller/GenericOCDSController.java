@@ -269,6 +269,11 @@ public abstract class GenericOCDSController {
         return createFilterCriteria(MongoConstants.FieldNames.AWARDS_STATUS, filter.getAwardStatus(), filter);
     }
 
+    protected Criteria getProcurementMethodRationaleCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(MongoConstants.FieldNames.TENDER_PROC_METHOD_RATIONALE,
+                filter.getProcurementMethodRationale(), filter);
+    }
+
     protected Criteria getFiscalYearFilterCriteria(final DefaultFilterPagingRequest filter) {
         return createFilterCriteria(MongoConstants.FieldNames.PLANNING_FISCAL_YEAR, filter.getFiscalYear(), filter);
     }
@@ -700,6 +705,7 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.FLAG_TYPE, getFlagTypeFilterCriteria(filter));
         map.put(MongoConstants.Filters.ELECTRONIC_SUBMISSION, getElectronicSubmissionCriteria(filter));
         map.put(MongoConstants.Filters.AWARD_STATUS, getAwardStatusFilterCriteria(filter));
+        map.put(MongoConstants.Filters.PROCUREMENT_METHOD_RATIONALE, getProcurementMethodRationaleCriteria(filter));
         map.put(MongoConstants.Filters.FISCAL_YEAR, getFiscalYearFilterCriteria(filter));
         map.put(MongoConstants.Filters.LOCATION_TYPE, getLocationTypeCriteria(filter));
         map.put(MongoConstants.Filters.TENDER_STATUS, getTenderStatusFilterCriteria(filter));

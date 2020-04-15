@@ -13,7 +13,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-06-26
  */
-public class WardFilterState extends AbstractCategoryFilterState<Ward> {
+public class WardFilterState extends GenericCategoryFilterState<Ward> {
     private Subcounty subcounty;
 
     @Override

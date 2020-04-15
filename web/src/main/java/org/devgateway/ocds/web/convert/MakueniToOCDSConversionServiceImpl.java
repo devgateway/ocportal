@@ -221,6 +221,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsTender::setTitle, tender::getTitle);
         safeSet(ocdsTender::setTenderPeriod, () -> tender, this::createTenderPeriod);
         safeSet(ocdsTender::setProcurementMethod, tender::getProcurementMethod, this::createProcurementMethod);
+        safeSet(ocdsTender::setProcurementMethodRationale, tender::getProcurementMethodRationale,
+                this::categoryLabel);
+
         safeSetEach(ocdsTender.getItems()::add, tender::getTenderItems, this::createTenderItem);
         safeSet(ocdsTender::setDescription, tender::getObjective);
         safeSet(ocdsTender::setProcuringEntity, tender::getIssuedBy, this::convertProcuringEntity);

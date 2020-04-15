@@ -6,8 +6,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditSubcountyPage;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.category.SubcountyFilterState;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -33,8 +31,4 @@ public class ListSubcountyPage extends AbstractListCategoryPage<Subcounty> {
         super.onInitialize();
     }
 
-    @Override
-    public JpaFilterState<Subcounty> newFilterState() {
-        return new SubcountyFilterState();
-    }
 }

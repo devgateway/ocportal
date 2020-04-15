@@ -49,7 +49,7 @@ class PMCReport extends AuthImplReport {
               <div className="item-value">{m.staff.label}</div>
             </div>
             <div className="col-md-3">
-              <div className="item-label">Designation</div>
+              <div className="item-label">PMC Designation</div>
               <div className="item-value">{m.designation.label}</div>
             </div>
           </div>)

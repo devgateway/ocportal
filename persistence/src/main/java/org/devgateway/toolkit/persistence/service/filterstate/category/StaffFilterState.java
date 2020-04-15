@@ -10,17 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class StaffFilterState extends AbstractCategoryFilterState<Staff> {
+public class StaffFilterState extends GenericCategoryFilterState<Staff> {
     private String title;
+
     @Override
     public Specification<Staff> getSpecification() {
         return (root, query, cb) -> {
-            final List<Predicate> predicates = new ArrayList<>();   
+            final List<Predicate> predicates = new ArrayList<>();
 
             if (StringUtils.isNotBlank(title)) {
                 predicates.add(cb.like(cb.lower(root.get(Staff_.title).as(String.class)),
                         "%" + title.toLowerCase() + "%"));
-            }            
+            }
 
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
             return cb.and(predicates.toArray(new Predicate[predicates.size()]));

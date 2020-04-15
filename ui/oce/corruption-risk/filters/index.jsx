@@ -3,6 +3,7 @@ import ProcurementMethodBox from './procurement-method';
 import ValueAmount from './value-amount';
 import DateBox from './date';
 import translatable from '../../translatable';
+import ProcurementMethodRationaleBox from './procurement-method-rationale';
 
 class Filters extends translatable(React.Component) {
   render() {
@@ -41,6 +42,7 @@ Filters.BOXES = [
   DateBox,
   ValueAmount,
   ProcurementMethodBox,
+  ProcurementMethodRationaleBox,
   Organizations
 ];
 

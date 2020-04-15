@@ -2,12 +2,13 @@ import Component from '../pure-render-component';
 import translatable from '../translatable';
 import cn from 'classnames';
 import Organizations from './tabs/organizations';
-import ProcurementRules from './tabs/procurement-rules.jsx';
+import ProcurementMethodRules from './tabs/procurement-method.jsx';
 import Amounts from './tabs/amounts';
 import { Map } from 'immutable';
 import URI from 'urijs';
 import FilterChartsTab from './tabs/date';
 import PlanningRules from './tabs/planning-rules';
+import ProcurementMethodRationaleRules from './tabs/procurement-method-rationale';
 
 const dashboardId = new URI(location).search(true).dashboardId;
 
@@ -90,7 +91,7 @@ class Filters extends translatable(Component) {
   }
 }
 
-Filters.TABS = [Organizations, ProcurementRules, PlanningRules, Amounts, FilterChartsTab];
+Filters.TABS = [Organizations, ProcurementMethodRules, ProcurementMethodRationaleRules, PlanningRules, Amounts, FilterChartsTab];
 Filters.CLASS = ['organizations', 'procurement-method', 'fiscal-year', 'amounts', 'date'];
 
 export default Filters;
