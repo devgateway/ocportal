@@ -7,7 +7,6 @@ import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,6 @@ public class TenderServiceImpl extends AbstractMakueniEntityServiceImpl<Tender> 
     }
 
     @Override
-    @Cacheable
     public Tender findByTenderProcess(final TenderProcess tenderProcess) {
         return tenderRepository.findByTenderProcess(tenderProcess);
     }

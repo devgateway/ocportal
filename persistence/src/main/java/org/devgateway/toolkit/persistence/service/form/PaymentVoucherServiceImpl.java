@@ -6,7 +6,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.PaymentVoucherRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +33,6 @@ public class PaymentVoucherServiceImpl extends AbstractMakueniEntityServiceImpl<
     }
 
     @Override
-    @Cacheable
     public List<PaymentVoucher> findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
     }

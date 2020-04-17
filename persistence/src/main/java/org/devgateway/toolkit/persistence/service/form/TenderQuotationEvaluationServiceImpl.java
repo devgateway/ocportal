@@ -6,7 +6,6 @@ import org.devgateway.toolkit.persistence.repository.form.TenderQuotationEvaluat
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +38,6 @@ public class TenderQuotationEvaluationServiceImpl extends AbstractMakueniEntityS
     }
 
     @Override
-    @Cacheable
     public TenderQuotationEvaluation findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
     }
