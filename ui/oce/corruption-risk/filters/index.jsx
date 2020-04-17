@@ -12,7 +12,7 @@ class Filters extends translatable(React.Component) {
     return (
       <div className="row filters-bar" onMouseDown={e => e.stopPropagation()}>
         <div className="col-md-12 crd-horizontal-filters">
-        <div className="col-md-4 crd-filter-title">
+        <div className="crd-filter-title">
         <div className="title">{this.t('filters:hint')}</div>
         </div>
           {BOXES.map((Box, index) => {
