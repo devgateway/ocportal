@@ -14,6 +14,7 @@ class AvgTenderersByBuyer extends CatChart{
         type: "category",
         automargin: true,
         tickfont: {"size": 9},
+        tickangle: 10,
       },
       yaxis: {
         title: this.t('charts:avgTenderersByBuyer:yAxisTitle'),
