@@ -1,11 +1,18 @@
 import Chart from "./index";
 import backendYearFilterable from "../../backend-year-filterable";
-import {Map, OrderedMap, Set} from "immutable";
+import {Map} from "immutable";
 import Comparison from "../../comparison";
 import {download} from "../../tools";
+import wrap from 'word-wrap';
 
 class CatChart extends backendYearFilterable(Chart) {
-  static getCatName(datum){return datum.get(this.CAT_NAME_FIELD)}
+  static getCatName(datum){
+    if(this.CAT_WRAP_CHARS!==0) {
+      return wrap(datum.get(this.CAT_NAME_FIELD), {width: this.CAT_WRAP_CHARS, newline:'<br>'});
+
+    }
+    return datum.get(this.CAT_NAME_FIELD);
+  }
 
   orientation() {
     return undefined;
@@ -134,5 +141,6 @@ class CatChartComparison extends Comparison{
 CatChart.compareWith = CatChartComparison;
 
 CatChart.UPDATABLE_FIELDS = ['data'];
+CatChart.CAT_WRAP_CHARS = 0;
 
 export default CatChart;

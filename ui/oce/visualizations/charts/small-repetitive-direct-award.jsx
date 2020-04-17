@@ -8,7 +8,7 @@ class SmallRepetitiveDirectAwardsBuyer extends CatChart{
       xaxis: {
         title: this.t('charts:smallRepetitiveDirectAwardsByBuyer:xAxisTitle'),
         type: "category",
-        tickangle: 15,
+        tickangle: 35,
         automargin: true,
         tickfont: {"size": 9},
       },
@@ -23,5 +23,6 @@ class SmallRepetitiveDirectAwardsBuyer extends CatChart{
 SmallRepetitiveDirectAwardsBuyer.endpoint = 'smallRepetitiveDirectAwardsByBuyer';
 SmallRepetitiveDirectAwardsBuyer.CAT_NAME_FIELD = "_id";
 SmallRepetitiveDirectAwardsBuyer.CAT_VALUE_FIELD = "cnt";
+SmallRepetitiveDirectAwardsBuyer.CAT_WRAP_CHARS = 40;
 
 export default SmallRepetitiveDirectAwardsBuyer;

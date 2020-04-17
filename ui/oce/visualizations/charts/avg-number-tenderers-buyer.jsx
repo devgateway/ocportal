@@ -14,7 +14,7 @@ class AvgTenderersByBuyer extends CatChart{
         type: "category",
         automargin: true,
         tickfont: {"size": 8},
-        tickangle: 35,
+        tickangle: 90,
       },
       yaxis: {
         title: this.t('charts:avgTenderersByBuyer:yAxisTitle'),
@@ -27,6 +27,7 @@ class AvgTenderersByBuyer extends CatChart{
 
 AvgTenderersByBuyer.endpoint = 'averageNumberOfTenderersPerBuyer';
 AvgTenderersByBuyer.CAT_NAME_FIELD = "_id";
+AvgTenderersByBuyer.CAT_WRAP_CHARS = 40;
 AvgTenderersByBuyer.CAT_VALUE_FIELD = "numberOfTenderers";
 
 export default AvgTenderersByBuyer;
