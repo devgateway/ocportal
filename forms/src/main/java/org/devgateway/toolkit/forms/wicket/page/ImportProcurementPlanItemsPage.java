@@ -56,7 +56,7 @@ import java.util.Set;
  * @author mpostelnicu
  */
 @MountPath("/importProcurementPlanItems")
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 public class ImportProcurementPlanItemsPage extends BasePage {
 
     @SpringBean

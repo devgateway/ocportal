@@ -1,18 +1,27 @@
 package org.devgateway.toolkit.persistence.service.overview;
 
+import org.apache.commons.collections4.SetUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
+import org.devgateway.toolkit.persistence.service.form.AbstractImplTenderProcessMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
+import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
+import org.devgateway.toolkit.persistence.service.form.MEReportService;
+import org.devgateway.toolkit.persistence.service.form.PMCReportService;
+import org.devgateway.toolkit.persistence.service.form.PaymentVoucherService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
@@ -21,24 +30,25 @@ import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.APPROVED;
+import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.SUBMITTED;
+
 /**
  * @author gmutuhu
  */
 @Service
-@CacheConfig(keyGenerator = "genericKeyGenerator", cacheNames = "servicesCache")
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     protected static final Logger logger = LoggerFactory.getLogger(StatusOverviewService.class);
 
@@ -64,10 +74,24 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private AwardAcceptanceService awardAcceptanceService;
 
     @Autowired
+    private AdministratorReportService administratorReportService;
+
+    @Autowired
+    private InspectionReportService inspectionReportService;
+
+    @Autowired
+    private PMCReportService pmcReportService;
+
+    @Autowired
+    private MEReportService meReportService;
+
+    @Autowired
+    private PaymentVoucherService paymentVoucherService;
+
+    @Autowired
     private ContractService contractService;
 
     @Override
-    @Cacheable
     @Transactional(readOnly = true)
     public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
         final List<Project> projects = projectService.findAll(
@@ -78,6 +102,10 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 tenderQuotationEvaluationService, professionalOpinionService);
         final Map<Project, List<String>> awardStatusMap = addStatus(
                 fiscalYear, awardNotificationService, awardAcceptanceService, contractService);
+
+        final Map<Project, List<String>> implementationStatusMap = addImplementationStatus(
+                fiscalYear, administratorReportService, inspectionReportService, pmcReportService, meReportService,
+                paymentVoucherService);
 
         // get list of statuses of PurchaseRequisition forms grouped by Project
         final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
@@ -106,11 +134,14 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
             if (purchaseStatuses == null || purchaseStatuses.isEmpty()) {
                 statusOverviewProjectStatus.setTenderProcessStatus(DBConstants.Status.NOT_STARTED);
                 statusOverviewProjectStatus.setAwardProcessStatus(DBConstants.Status.NOT_STARTED);
+                statusOverviewProjectStatus.setImplementationStatus(DBConstants.Status.NOT_STARTED);
             } else {
                 statusOverviewProjectStatus.setTenderProcessStatus(
                         getProcessStatus(tenderStatusMap.get(project), purchaseStatuses.size() * 4));
                 statusOverviewProjectStatus.setAwardProcessStatus(
                         getProcessStatus(awardStatusMap.get(project), purchaseStatuses.size() * 3));
+                statusOverviewProjectStatus.setImplementationStatus(
+                        getProcessStatus(implementationStatusMap.get(project), 0));
             }
 
             sod.getProjects().add(statusOverviewProjectStatus);
@@ -120,7 +151,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     }
 
     @Override
-    @Cacheable
     public Long countProjects(FiscalYear fiscalYear, String projectTitle) {
         return projectService.count(new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
     }
@@ -136,7 +166,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 return DBConstants.Status.TERMINATED;
             }
 
-            if (statuses.size() != sizeCheck) {
+            if (statuses.size() == 0 || (sizeCheck != 0 && statuses.size() != sizeCheck)) {
                 return DBConstants.Status.NOT_STARTED;
             }
 
@@ -148,8 +178,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 return DBConstants.Status.SUBMITTED;
             }
 
-            if (statuses.contains(DBConstants.Status.APPROVED)) {
-                return DBConstants.Status.APPROVED;
+            if (statuses.contains(APPROVED)) {
+                return APPROVED;
             }
         }
 
@@ -164,6 +194,21 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         return list.parallelStream()
                 .collect(Collectors.groupingBy(ProjectAttachable::getProject,
                         Collectors.mapping(key -> key.getStatus(), Collectors.toList())));
+    }
+
+    private Map<Project, List<String>> groupStatusByProjectPaymentVoucher(Map<Project, List<String>> statusMap,
+                                                                          final List<PaymentVoucher> list) {
+        Map<Project, List<String>> paymentStatus = list.parallelStream().filter(p -> !p.getStatus().equals(SUBMITTED))
+                .collect(Collectors.groupingBy(ProjectAttachable::getProject,
+                        Collectors.mapping(key -> key.getStatus().equals(APPROVED)
+                                        ? (key.getLastPayment() ? APPROVED : SUBMITTED) : key.getStatus(),
+                                Collectors.toList())));
+
+        //if there are projects with no payment vouchers, consider the project at most submitted, never approved
+        SetUtils.SetView<Project> difference = SetUtils.difference(statusMap.keySet(), paymentStatus.keySet());
+        difference.forEach(i -> paymentStatus.put(i, Collections.singletonList(SUBMITTED)));
+
+        return paymentStatus;
     }
 
     /**
@@ -187,6 +232,23 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         for (AbstractMakueniEntityService<? extends S> service : services) {
             final List<? extends S> list = service.findByFiscalYear(fiscalYear);
             statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(list));
+        }
+
+        return statusMap;
+    }
+
+    private <S extends AbstractImplTenderProcessMakueniEntity & ProjectAttachable & Statusable>
+    Map<Project, List<String>> addImplementationStatus(final FiscalYear fiscalYear,
+                                                       final AbstractImplTenderProcessMakueniEntityService
+                                                               <? extends S>... services) {
+        Map<Project, List<String>> statusMap = new HashMap<>();
+
+        for (AbstractMakueniEntityService<? extends S> service : services) {
+            final List<? extends S> list = service.findByFiscalYear(fiscalYear);
+            statusMap = mergeMapOfStatuses(statusMap,
+                    service instanceof PaymentVoucherService
+                            ? groupStatusByProjectPaymentVoucher(statusMap, (List<PaymentVoucher>) list)
+                            : groupStatusByProject(list));
         }
 
         return statusMap;

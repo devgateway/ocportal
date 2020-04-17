@@ -1,4 +1,4 @@
-# Open Contracting Explorer (OCE)
+# Government of Makueni County Open Contracting Portal (based on the Open Contracting Explorer - OCE)
 
 [![Build Status](https://travis-ci.org/devgateway/oc-explorer.svg?branch=develop)](https://travis-ci.org/devgateway/oc-explorer)
 

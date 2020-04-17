@@ -11,6 +11,11 @@ import Award from './Award';
 import Contract from './Contract';
 import React from 'react';
 import FeedbackMessageList from '../../../feedback/feedbackList';
+import AdministratorReport from './AdministratorReport';
+import InspectionReport from './InspectionReport';
+import PMCReport from './PMCReport';
+import PaymentVoucher from './PaymentVoucher';
+import MEReport from './MEReport';
 
 class PurchaseReqView extends CRDPage {
   constructor(props) {
@@ -56,7 +61,27 @@ class PurchaseReqView extends CRDPage {
     }, {
       name: 'Contract',
       tab: 7
-    }];
+    }, {
+      name: 'Administrator Reports',
+      tab: 8
+    },
+      {
+        name: 'Inspection Reports',
+        tab: 9
+      },
+      {
+        name: 'PMC Reports',
+        tab: 10
+      },
+      {
+        name: 'M&E Reports',
+        tab: 11
+      },
+      {
+        name: 'Payment Vouchers',
+        tab: 12
+      }
+    ];
 
     this.isActive = this.isActive.bind(this);
     this.changeTab = this.changeTab.bind(this);
@@ -104,7 +129,7 @@ class PurchaseReqView extends CRDPage {
 
     switch (selected) {
       case 1:
-        return <Tender data={data.tender} department={department} fiscalYear={fiscalYear}
+        return <Tender data={data.tender} prId={data._id} department={department} fiscalYear={fiscalYear}
                        styling={this.props.styling}/>;
 
       case 2:
@@ -133,6 +158,31 @@ class PurchaseReqView extends CRDPage {
       case 7:
         return <Contract data={data.contract} department={department} tenderTitle={tenderTitle}
                          fiscalYear={fiscalYear} styling={this.props.styling}/>;
+
+      case 8:
+        return <AdministratorReport data={data.administratorReports} department={department}
+                                     tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                                     styling={this.props.styling}/>;
+
+      case 9:
+        return <InspectionReport data={data.inspectionReports} department={department}
+                                     tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                                     styling={this.props.styling}/>;
+
+      case 10:
+        return <PMCReport data={data.pmcReports} department={department}
+                                 tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                                 styling={this.props.styling}/>;
+
+      case 11:
+        return <MEReport data={data.meReports} department={department}
+                         tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                         styling={this.props.styling}/>;
+
+      case 12:
+        return <PaymentVoucher data={data.paymentVouchers} department={department}
+                          tenderTitle={tenderTitle} fiscalYear={fiscalYear}
+                          styling={this.props.styling}/>;
 
       default:
         return <Tender data={data.tender} department={department} tenderTitle={tenderTitle}

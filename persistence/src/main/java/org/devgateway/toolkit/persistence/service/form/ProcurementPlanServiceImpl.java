@@ -18,14 +18,13 @@ import java.util.stream.Stream;
  * @since 2019-04-02
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl<ProcurementPlan>
         implements ProcurementPlanService {
     @Autowired
     private ProcurementPlanRepository procurementPlanRepository;
 
     @Cacheable
-    @Override
     public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.countByDepartmentAndFiscalYear(department, fiscalYear);
     }
@@ -51,7 +50,6 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     }
 
     @Override
-    @Cacheable
     public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.findByDepartmentAndFiscalYear(department, fiscalYear);
     }

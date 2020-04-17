@@ -5,7 +5,6 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -28,7 +27,6 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
     }
 
     @Override
-    @Cacheable
     public List<T> findByFiscalYear(final FiscalYear fiscalYear) {
         return makueniRepository().findByFiscalYear(fiscalYear);
     }

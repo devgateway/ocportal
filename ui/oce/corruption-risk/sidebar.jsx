@@ -60,6 +60,10 @@ class Sidebar extends translatable(React.PureComponent) {
               .filter(key => indicatorTypesMapping[key].types.indexOf(slug) > -1)
                 .length;
 
+              if(count === 0) {
+                return;
+              }
+
               let corruptionType;
               if (page === 'type' || page === 'indicator') {
                 [, corruptionType] = route;

@@ -18,7 +18,7 @@ class Tender extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, prId } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -37,31 +37,33 @@ class Tender extends React.Component {
           <div className="item-label">Tender ID</div>
           <div className="item-value">{tender.tenderNumber}</div>
         </div>
+        <div className="col-md-4">
+          <div className="item-label">Tender Code</div>
+          <div className="item-value">{prId}</div>
+        </div>
       </div>
 
       <div className="row padding-top-10">
-        <div className="col-md-4">
-          <div className="item-label">Invitation to Tender Date</div>
-          <div className="item-value">{formatDate(tender.invitationDate)}</div>
-        </div>
-        <div className="col-md-4">
-          <div className="item-label">Closing Date</div>
-          <div className="item-value">{formatDate(tender.closingDate)}</div>
-        </div>
+
         <div className="col-md-4">
           <div className="item-label">Procurement Method</div>
           <div className="item-value">{tender.procurementMethod.label}</div>
         </div>
-      </div>
-
-      <div className="row padding-top-10">
-        <div className="col-md-12">
-          <div className="item-label">Tender Objective</div>
-          <div className="item-value">{tender.objective}</div>
+        <div className="col-md-4">
+          <div className="item-label">Procurement Method Rationale</div>
+          <div className="item-value">
+            {tender.procurementMethodRationale && tender.procurementMethodRationale.label}</div>
+        </div>
+        <div className="col-md-4">
+          <div className="item-label">Invitation to Tender Date</div>
+          <div className="item-value">{formatDate(tender.invitationDate)}</div>
         </div>
       </div>
-
       <div className="row padding-top-10">
+        <div className="col-md-4">
+          <div className="item-label">Closing Date</div>
+          <div className="item-value">{formatDate(tender.closingDate)}</div>
+        </div>
         <div className="col-md-4">
           <div className="item-label">Tender Issued By</div>
           <div className="item-value">{tender.issuedBy.label}</div>
@@ -70,14 +72,14 @@ class Tender extends React.Component {
           <div className="item-label">Procuring Entity Address</div>
           <div className="item-value">{tender.issuedBy.address}</div>
         </div>
+      </div>
+
+      <div className="row padding-top-10">
         <div className="col-md-4">
           <div className="item-label">Procuring Entity Email</div>
           <div className="item-value download">
             <a href={"mailto:"+tender.issuedBy.emailAddress}>{tender.issuedBy.emailAddress}</a></div>
         </div>
-      </div>
-
-      <div className="row padding-top-10">
         <div className="col-md-4">
           <div className="item-label">Tender Value</div>
           <div className="item-value">{currencyFormatter(tender.tenderValue)}</div>
@@ -89,6 +91,13 @@ class Tender extends React.Component {
               ? <div className="item-value">{tender.targetGroup.label}</div>
               : null
           }
+        </div>
+      </div>
+      
+      <div className="row padding-top-10">
+        <div className="col-md-12">
+          <div className="item-label">Tender Objective</div>
+          <div className="item-value">{tender.objective}</div>
         </div>
       </div>
 

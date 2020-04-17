@@ -5,7 +5,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.AwardNotificationRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gmutuhu
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class AwardNotificationServiceImpl extends AbstractMakueniEntityServiceImpl<AwardNotification>
         implements AwardNotificationService {
 
@@ -31,7 +30,6 @@ public class AwardNotificationServiceImpl extends AbstractMakueniEntityServiceIm
     }
 
     @Override
-    @Cacheable
     public AwardNotification findByTenderProcess(final TenderProcess tenderProcess) {
         return awardNotificationRepository.findByTenderProcess(tenderProcess);
     }

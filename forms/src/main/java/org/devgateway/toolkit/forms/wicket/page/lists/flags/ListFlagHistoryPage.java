@@ -10,14 +10,12 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.ocds.web.spring.ReleaseFlagNotificationService;
+import org.devgateway.toolkit.forms.wicket.components.table.SimpleDateProperyColumn;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.persistence.dao.flags.ReleaseFlagHistory;
 import org.devgateway.toolkit.persistence.service.ReleaseFlagHistoryService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
-
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @author mpostelnicu
@@ -41,17 +39,10 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
 
     @Override
     protected void onInitialize() {
-        columns.add(new PropertyColumn<ReleaseFlagHistory, String>(new Model<>("Flagged Date"),
-                "flaggedDate", "flaggedDate") {
-            @Override
-            public void populateItem(final Item<ICellPopulator<ReleaseFlagHistory>> item,
-                                     final String componentId,
-                                     final IModel<ReleaseFlagHistory> rowModel) {
-                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                ZonedDateTime flaggedDate = rowModel.getObject().getFlaggedDate();
-                item.add(new Label(componentId, flaggedDate.format(formatter)));
-            }
-        });
+
+        columns.add(new SimpleDateProperyColumn<>(new Model<>("Flagged Date"),
+                "flaggedDate", "flaggedDate",
+                ReleaseFlagHistory::getFlaggedDate, "yyyy-MM-dd HH:mm:ss"));
 
         columns.add(new PropertyColumn<ReleaseFlagHistory, String>(new Model<>("Release Name"),
                 "releaseId", "releaseId") {

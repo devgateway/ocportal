@@ -1,0 +1,12 @@
+{
+  "definitions": {
+    "Contract": {
+      "properties": {
+        "contractor": {
+          "title": "Contractor",
+          "$ref": "#/definitions/Organization"
+        }
+      }
+    }
+  }
+}

@@ -132,6 +132,16 @@ public class ProcurementPlan extends AbstractMakueniEntity {
         return getLabel();
     }
 
+    /**
+     * Any procurement plan is exportable, even the draft ones
+     *
+     * @return
+     */
+    @Override
+    public boolean isExportable() {
+        return true;
+    }
+
     @Override
     @Transactional
     @JsonIgnore

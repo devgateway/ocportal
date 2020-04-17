@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="form-wrapper">
+        <div class="row">
+            <div wicket:id="subcounties" class="col-md-4"></div>
+            <div wicket:id="wards" class="col-md-4"></div>
+            <div wicket:id="subwards" class="col-md-4"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="sno" class="col-md-6"></div>
+            <div wicket:id="lpoAmount" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="lpoNumber" class="col-md-6"></div>
+            <div wicket:id="expenditure" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="uncommitted" class="col-md-6"></div>
+            <div wicket:id="projectScope" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="output" class="col-md-6"></div>
+            <div wicket:id="outcome" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="projectProgress" class="col-md-6"></div>
+            <div wicket:id="directBeneficiariesTarget" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="wayForward" class="col-md-6"></div>
+            <div wicket:id="byWhen" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="inspected" class="col-md-6"></div>
+            <div wicket:id="invoiced" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="officerResponsible" class="col-md-6"></div>
+            <div wicket:id="meStatus" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="remarks" class="col-md-6"></div>
+            <div wicket:id="contractorContact" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="approvedDate" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="formDocs" class="col-md-12"></div>
+        </div>
+    </div>
+
+    <wicket:fragment wicket:id="meExtraFields">
+        <div class="row col-md-12">
+            <div wicket:id="tenderProcess.singleContract.contractDate" class="col-md-4 department"></div>
+            <div wicket:id="tenderProcess.singleContract.expiryDate" class="col-md-4 department"></div>
+            <div wicket:id="tenderProcess.project.amountBudgeted" class="col-md-4 department"></div>
+        </div>
+    </wicket:fragment>
+
+</wicket:extend>
+</body>
+</html>

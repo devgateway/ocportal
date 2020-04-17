@@ -35,15 +35,17 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.EditFiscalYearBudgetPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
@@ -53,10 +55,12 @@ import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.excel.DataExportService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
+import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.web.Constants;
@@ -78,6 +82,7 @@ import java.util.List;
 public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private final IModel<ProcurementPlan> procurementPlanModel;
+    private final LoadableDetachableModel<FiscalYearBudget> fiscalYearBudgetModel;
 
     private String searchBox = "";
 
@@ -89,6 +94,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     @SpringBean
     private ProcurementPlanService procurementPlanService;
 
+    @SpringBean
+    private FiscalYearBudgetService fiscalYearBudgetService;
+
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
+
     private Label newProcurementPlanLabel;
 
     protected final IModel<FiscalYear> fiscalYearModel;
@@ -97,8 +108,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @SpringBean
     private DataExportService dataExportService;
-
-    private final Boolean canAccessAddNewButtonInDeptOverview;
+    private WebMarkupContainer noData;
 
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
@@ -135,6 +145,19 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
 
+
+        fiscalYearBudgetModel = new LoadableDetachableModel<FiscalYearBudget>() {
+            @Override
+            protected FiscalYearBudget load() {
+                FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
+                Department department = sessionMetadataService.getSessionDepartment();
+                if (fiscalYear != null && department != null) {
+                    return fiscalYearBudgetService.findByDepartmentAndFiscalYear(department, fiscalYear);
+                }
+                return null;
+            }
+        };
+
         // redirect user to status dashboard page if we don't have all the needed info
         if (getDepartment() == null) {
             logger.warn("User landed on DepartmentOverviewPage page without having any department in Session");
@@ -147,8 +170,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 return procurementPlanService.findByDepartmentAndFiscalYear(getDepartment(), getFiscalYear());
             }
         };
-
-        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
     }
 
     @Override
@@ -157,10 +178,13 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
         add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
         add(new Label("fiscalYear", new PropertyModel<>(fiscalYearModel, "label")));
+        add(new Label("fiscalYear2", new PropertyModel<>(fiscalYearModel, "label")));
+        add(new Label("fiscalBudget", new PropertyModel<>(fiscalYearBudgetModel, "amountBudgeted")));
 
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
-
+        addFiscalYearBudgetButton();
+        addEditFiscalYearBudgetButton();
         addLabelOrInvisibleContainer("procurementPlanLabel", getProcurementPlan());
 
         addCabinetPaperButton();
@@ -168,12 +192,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         addProjectButton();
         addYearDropdown();
 
-        final Form excelForm = new ExcelDownloadForm("excelForm");
+        final Form<?> excelForm = new ExcelDownloadForm("excelForm");
         add(excelForm);
 
         addSearchBox();
 
         addProjectList();
+
+
     }
 
     /**
@@ -242,16 +268,65 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         }
     }
 
+    public boolean canAccessAddNewButtons(Class<? extends AbstractEditPage<?>> clazz) {
+        return ComponentUtil.canAccessAddNewButtons(clazz, permissionEntityRenderableService,
+                sessionMetadataService
+        );
+    }
+
+    private void addFiscalYearBudgetButton() {
+        final BootstrapAjaxLink<Void> link = new BootstrapAjaxLink<Void>(
+                "addFiscalYearBudget",
+                Buttons.Type.Success
+        ) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                sessionMetadataService.setSessionPP(getProcurementPlan());
+                setResponsePage(EditFiscalYearBudgetPage.class);
+            }
+        };
+        link.setEnabled(fiscalYearBudgetModel.getObject() == null);
+        link.add(new TooltipBehavior(Model.of("Add New Fiscal Year Budget")));
+        add(link);
+        link.setVisibilityAllowed(canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
+    }
+
     private void addNewProcurementPlanButton() {
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", ProcurementPlanInputSelectPage.class, Buttons.Type.Success);
         add(newProcurementPlanButton);
         newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
-        newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtons(EditProcurementPlanPage.class));
 
         newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
         newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
         add(newProcurementPlanLabel);
+    }
+
+    private void addEditFiscalYearBudgetButton() {
+        FiscalYearBudget fiscalYearBudget = fiscalYearBudgetModel.getObject();
+        final PageParameters pp = new PageParameters();
+        if (fiscalYearBudget != null) {
+            pp.set(WebConstants.PARAM_ID, fiscalYearBudget.getId());
+        }
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>(
+                "editFiscalYearBudget", EditFiscalYearBudgetPage.class, pp, Buttons.Type.Info) {
+            @Override
+            protected void onComponentTag(final ComponentTag tag) {
+                super.onComponentTag(tag);
+
+                if (!canAccessAddNewButtons(EditFiscalYearBudgetPage.class)) {
+                    Attributes.removeClass(tag, "btn-edit");
+                    Attributes.addClass(tag, "btn-view");
+                }
+            }
+        };
+        button.setEnabled(fiscalYearBudget != null);
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditFiscalYearBudgetPage.class) ? "Edit"
+                : "View") + " Fiscal Year Budget")));
+
+        add(button);
+
     }
 
     private void addEditProcurementPlanButton() {
@@ -265,15 +340,15 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
 
-                if (!canAccessAddNewButtonInDeptOverview) {
+                if (!canAccessAddNewButtons(EditProcurementPlanPage.class)) {
                     Attributes.removeClass(tag, "btn-edit");
                     Attributes.addClass(tag, "btn-view");
                 }
             }
         };
         button.setEnabled(getProcurementPlan() != null);
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
-                + " Procurement Plan")));
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProcurementPlanPage.class) ? "Edit"
+                : "View") + " Procurement Plan")));
 
         add(button);
 
@@ -294,7 +369,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(Model.of("Add New Cabinet Paper")));
         add(editCabinetPaper);
-        editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtons(EditCabinetPaperPage.class));
     }
 
     private void listCabinetPaperButton() {
@@ -310,7 +385,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
 
-                if (!canAccessAddNewButtonInDeptOverview) {
+                if (!canAccessAddNewButtons(EditCabinetPaperPage.class)) {
                     Attributes.removeClass(tag, "btn-edit");
                     Attributes.addClass(tag, "btn-view");
                 }
@@ -327,13 +402,13 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewPage.this, null));
         addNewProject.setEnabled(getProcurementPlan() != null);
-        addNewProject.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        addNewProject.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
         add(addNewProject);
     }
 
     private void addYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
-        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("years",
+        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice<>("years",
                 fiscalYearModel, fiscalYearsModel, choiceRenderer);
 
         yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
@@ -359,10 +434,24 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @Transactional(readOnly = true)
     private void addProjectList() {
-        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview",
-                new ListModel<>(fetchData()), procurementPlanModel
+
+        IModel<List<Project>> projectListModel = new LoadableDetachableModel<List<Project>>() {
+            @Override
+            protected List<Project> load() {
+                return fetchData();
+            }
+        };
+        
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel,
+                procurementPlanModel
         );
         add(listViewProjectsOverview);
+
+        noData = new WebMarkupContainer("noData");
+        noData.setOutputMarkupId(true);
+        noData.setOutputMarkupPlaceholderTag(true);
+        add(noData);
+        noData.setVisibilityAllowed(projectListModel.getObject().isEmpty());
     }
 
     private void updateDashboard(final AjaxRequestTarget target) {

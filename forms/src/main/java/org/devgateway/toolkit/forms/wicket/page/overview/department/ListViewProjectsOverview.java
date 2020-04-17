@@ -21,8 +21,10 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
@@ -30,9 +32,11 @@ import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -50,13 +54,17 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     @SpringBean
     private TenderProcessService tenderProcessService;
 
+    @SpringBean
+    private ProjectService projectService;
+
+    @SpringBean
+    private PermissionEntityRenderableService permissionEntityRenderableService;
+
     private final Map<Project, List<TenderProcess>> tenderProcesses;
 
     private final Project sessionProject;
 
     private final TenderProcess sessionTenderProcess;
-
-    private final Boolean canAccessAddNewButtonInDeptOverview;
 
     public ListViewProjectsOverview(final String id, final IModel<List<Project>> model,
                                     final IModel<ProcurementPlan> procurementPlanModel) {
@@ -74,8 +82,11 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 .parallelStream()
                 .collect(Collectors.groupingBy(TenderProcess::getProject,
                         Collectors.mapping(Function.identity(), Collectors.toList())));
+    }
 
-        canAccessAddNewButtonInDeptOverview = ComponentUtil.canAccessAddNewButtonInDeptOverview(sessionMetadataService);
+    public boolean canAccessAddNewButtons(Class<? extends AbstractEditPage<?>> clazz) {
+        return ComponentUtil.canAccessAddNewButtons(clazz, permissionEntityRenderableService,
+                sessionMetadataService);
     }
 
     @Override
@@ -97,6 +108,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     }
 
     @Override
+    @Transactional(readOnly = true)
     protected void populateHeader(final String headerFragmentId,
                                   final AjaxLink<Void> header,
                                   final ListItem<Project> item) {
@@ -105,7 +117,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("project-header-" + item.getModelObject().getId());
 
-        final Project project = item.getModelObject();
+        final Project project = projectService.findById(item.getModelObject().getId()).get();
 
         headerFragment.add(new DeptOverviewStatusLabel("projectStatus", project));
         headerFragment.add(new Label("projectTitle"));
@@ -119,7 +131,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
             protected void onComponentTag(final ComponentTag tag) {
                 super.onComponentTag(tag);
 
-                if (!canAccessAddNewButtonInDeptOverview) {
+                if (!canAccessAddNewButtons(EditProjectPage.class)) {
                     Attributes.removeClass(tag, "btn-edit");
                     Attributes.addClass(tag, "btn-view");
                 }
@@ -134,7 +146,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 setResponsePage(EditProjectPage.class, pageParameters);
             }
         };
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtonInDeptOverview ? "Edit" : "View")
+        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProjectPage.class) ? "Edit" : "View")
                 + " Project")));
         headerFragment.add(button);
 
@@ -142,12 +154,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     }
 
     @Override
+    @Transactional(readOnly = true)
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
                                              final ListItem<Project> item) {
         hideableContainer.add(AttributeAppender.append("class", "tender")); // add specific class to project list
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
-        final Project project = item.getModelObject();
+        final Project project = projectService.findById(item.getModelObject().getId()).get();
 
         final BootstrapAjaxLink<Void> addTenderProcess = new BootstrapAjaxLink<Void>("addTenderProcess",
                 Buttons.Type.Success) {
@@ -160,7 +173,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         addTenderProcess.setLabel(
                 new StringResourceModel("addTenderProcess", ListViewProjectsOverview.this, null));
         containerFragment.add(addTenderProcess);
-        addTenderProcess.setVisibilityAllowed(canAccessAddNewButtonInDeptOverview);
+        addTenderProcess.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
 
         // sort the purchase requisition list
         final List<TenderProcess> purchaseReqs = tenderProcesses.get(project);

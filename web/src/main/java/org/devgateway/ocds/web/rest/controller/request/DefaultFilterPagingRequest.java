@@ -28,6 +28,9 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "Fiscal Year")
     private TreeSet<String> fiscalYear;
 
+    @ApiModelProperty(value = "Procurement Method Rationale")
+    private TreeSet<String> procurementMethodRationale;
+
     @ApiModelProperty(value = "Location Type, can be ward or subcounty")
     private TreeSet<String> locationType;
 
@@ -57,6 +60,10 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "This is the id of the organization/supplier entity. "
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> supplierId;
+
+    @ApiModelProperty(value = "This is the id of the contractor entity. "
+            + "Corresponds to the OCDS Organization.identifier")
+    private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> contractorId;
 
     @ApiModelProperty(value = "This is the id of the organization/buyer entity. "
             + "Corresponds to the OCDS Organization.identifier")
@@ -296,5 +303,21 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setFiscalYear(TreeSet<String> fiscalYear) {
         this.fiscalYear = fiscalYear;
+    }
+
+    public TreeSet<String> getContractorId() {
+        return contractorId;
+    }
+
+    public void setContractorId(TreeSet<String> contractorId) {
+        this.contractorId = contractorId;
+    }
+
+    public TreeSet<String> getProcurementMethodRationale() {
+        return procurementMethodRationale;
+    }
+
+    public void setProcurementMethodRationale(TreeSet<String> procurementMethodRationale) {
+        this.procurementMethodRationale = procurementMethodRationale;
     }
 }

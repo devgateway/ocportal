@@ -26,6 +26,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -33,6 +34,7 @@ import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniE
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
+import org.devgateway.toolkit.persistence.service.category.ProcurementMethodRationaleService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
@@ -51,7 +53,8 @@ import java.util.Set;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tender> {
+public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<Tender>
+        implements ProcurementRoleAssignable {
 
     @SpringBean
     protected TenderService tenderService;
@@ -61,6 +64,11 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
 
     @SpringBean
     protected ProcurementMethodService procurementMethodService;
+
+
+    @SpringBean
+    protected ProcurementMethodRationaleService procurementMethodRationaleService;
+
 
     @SpringBean
     protected ProcuringEntityService procuringEntityService;
@@ -75,6 +83,10 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
     public EditTenderPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderService;
+    }
+
+    public EditTenderPage() {
+        this(new PageParameters());
     }
 
     @Override
@@ -114,6 +126,9 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntity<Tende
         invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate));
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
+
+        ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethodRationale",
+                procurementMethodRationaleService);
 
         ComponentUtil.addTextAreaField(editForm, "objective").getField()
                 .add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXTAREA);

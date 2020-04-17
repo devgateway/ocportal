@@ -17,6 +17,7 @@ package org.devgateway.toolkit.forms.wicket.page.overview.status;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
@@ -24,7 +25,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.DataExportPage;
@@ -58,6 +58,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
     @SpringBean
     private StatusOverviewService statusOverviewService;
+    private WebMarkupContainer noData;
 
     public StatusOverviewPage(final PageParameters parameters) {
         super(parameters);
@@ -105,8 +106,21 @@ public class StatusOverviewPage extends DataEntryBasePage {
         };
         add(dataExport);
 
-        listViewStatusOverview = new ListViewStatusOverview("statusPanel", new ListModel<>(fetchData()));
+        IModel<List<StatusOverviewData>> dataListModel = new LoadableDetachableModel<List<StatusOverviewData>>() {
+            @Override
+            protected List<StatusOverviewData> load() {
+                return fetchData();
+            }
+        };
+
+        listViewStatusOverview = new ListViewStatusOverview("statusPanel", dataListModel);
         add(listViewStatusOverview);
+
+        noData = new WebMarkupContainer("noData");
+        noData.setOutputMarkupId(true);
+        noData.setOutputMarkupPlaceholderTag(true);
+        add(noData);
+        noData.setVisibilityAllowed(dataListModel.getObject().isEmpty());
     }
 
     private void addYearDropdown() {
@@ -145,6 +159,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
         target.add(listViewStatusOverview);
         target.add(sideBar.getProjectCount());
+        target.add(noData);
     }
 
     private List<StatusOverviewData> fetchData() {

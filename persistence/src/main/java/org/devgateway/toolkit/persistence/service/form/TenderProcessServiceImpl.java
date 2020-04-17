@@ -7,7 +7,6 @@ import org.devgateway.toolkit.persistence.repository.form.TenderProcessRepositor
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,7 @@ import java.util.stream.Stream;
  * @since 2019-04-17
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<TenderProcess>
         implements TenderProcessService {
     @Autowired
@@ -41,13 +40,11 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
         return new TenderProcess();
     }
 
-    @Cacheable
     @Override
     public List<TenderProcess> findByProject(final Project project) {
         return tenderProcessRepository.findByProject(project);
     }
 
-    @Cacheable
     @Override
     public List<TenderProcess> findByProjectProcurementPlan(final ProcurementPlan procurementPlan) {
         return tenderProcessRepository.findByProjectProcurementPlan(procurementPlan);

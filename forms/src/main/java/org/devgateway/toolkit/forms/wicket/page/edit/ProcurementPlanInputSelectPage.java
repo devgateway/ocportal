@@ -13,7 +13,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author mpostelnicu
  */
 @MountPath("/procurementPlanInputSelect")
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PROCUREMENT_USER)
 public class ProcurementPlanInputSelectPage extends BasePage {
     /**
      * Construct.

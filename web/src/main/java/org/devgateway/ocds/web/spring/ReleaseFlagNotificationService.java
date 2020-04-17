@@ -92,14 +92,9 @@ public class ReleaseFlagNotificationService {
     private Set<String> getUsersValidatorsEmailsFromRelease(Long departmentId) {
         Optional<Department> department = departmentService.findById(departmentId);
         return department.map(value -> personService.findByDepartmentWithRoles(value,
-                SecurityConstants.Roles.ROLE_USER, SecurityConstants.Roles.ROLE_VALIDATOR
+                SecurityConstants.Roles.ROLE_PROCUREMENT_USER, SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR
         ).stream().map(Person::getEmail).map(Strings::trimToNull).filter(Objects::nonNull).collect(Collectors.toSet()))
                 .orElseGet(Sets::newHashSet);
-    }
-
-    private Set<String> getAdminsEmails() {
-        return personService.findByRoleIn(SecurityConstants.Roles.ROLE_ADMIN).stream().map(Person::getEmail)
-                .map(Strings::trimToNull).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
     @Transactional
@@ -177,14 +172,16 @@ public class ReleaseFlagNotificationService {
 
     private void sendDepartmentEmails(Long department) {
         String[] strings = getUsersValidatorsEmailsFromRelease(department).toArray(new String[0]);
-        if (strings.length == 0) {
+        long count = countDepartmentContent(department);
+        if (strings.length == 0 || count == 0) {
             return;
         }
+
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
             msg.setFrom("noreply@dgstg.org");
-            msg.setSubject(countDepartmentContent(department) + " new Corruption Risk Flags for "
+            msg.setSubject(count + " new Corruption Risk Flags for "
                     + getDepartmentNameFromId(department));
             msg.setText(createDepartmentContent(department), true);
         };
@@ -197,15 +194,16 @@ public class ReleaseFlagNotificationService {
     }
 
     private void sendAdminEmails() {
-        String[] strings = getAdminsEmails().toArray(new String[0]);
-        if (strings.length == 0) {
+        String[] strings = personService.getEmailsByRole(SecurityConstants.Roles.ROLE_ADMIN).toArray(new String[0]);
+        long count = countAdminContent();
+        if (strings.length == 0 || count == 0) {
             return;
         }
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
             msg.setFrom("noreply@dgstg.org");
-            msg.setSubject(countAdminContent() + " new Corruption Risk Flags");
+            msg.setSubject(count + " new Corruption Risk Flags");
             msg.setText(createAdminContent(), true);
 
         };

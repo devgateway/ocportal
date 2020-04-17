@@ -28,6 +28,7 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.PatternValidator;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
@@ -44,7 +45,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.RoleService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
-import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -110,9 +110,9 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     @Override
     protected void onInitialize() {
-        final Person person = WebSecurityUtil.getCurrentAuthenticatedPerson();
+        final Person person = FormSecurityUtil.getCurrentAuthenticatedPerson();
 
-        if (!WebSecurityUtil.isCurrentUserAdmin()) {
+        if (!FormSecurityUtil.isCurrentUserAdmin()) {
             if (person.getId() != getPageParameters().get(WebConstants.PARAM_ID).toLong()) {
                 setResponsePage(getApplication().getHomePage());
             }
@@ -199,7 +199,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
         plainPasswordCheck.required();
         plainPasswordCheck.getField().setResetPassword(false);
 
-        if (WebSecurityUtil.isCurrentUserAdmin() && idPerson.isNull()) {
+        if (FormSecurityUtil.isCurrentUserAdmin() && idPerson.isNull()) {
             // hide the change password checkbox and set it's model to true
             editForm.getModelObject().setChangeProfilePassword(true);
             changeProfilePassword.setVisibilityAllowed(false);
@@ -246,7 +246,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
                 }
 
 
-                if (!WebSecurityUtil.isCurrentUserAdmin()) {
+                if (!FormSecurityUtil.isCurrentUserAdmin()) {
                     setResponsePage(Homepage.class);
                 } else {
                     setResponsePage(listPageClass);
@@ -262,7 +262,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
      * @param saved
      */
     private void updateCurrentAuthenticatedUserData(Person saved) {
-        Person currentAuthenticatedPerson = WebSecurityUtil.getCurrentAuthenticatedPerson();
+        Person currentAuthenticatedPerson = FormSecurityUtil.getCurrentAuthenticatedPerson();
         Collection<? extends GrantedAuthority> oldAuthorities = currentAuthenticatedPerson.getAuthorities();
         List<Role> oldRoles = currentAuthenticatedPerson.getRoles();
 

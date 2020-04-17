@@ -1,0 +1,22 @@
+{
+  "definitions": {
+    "Milestone": {
+      "properties": {
+        "delayed": {
+          "title": "Milestone Delayed",
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "authorizePayment": {
+          "title": "Payment Authorization",
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

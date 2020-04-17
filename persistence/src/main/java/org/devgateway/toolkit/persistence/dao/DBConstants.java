@@ -11,14 +11,24 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public final class DBConstants {
 
+    public static final String DATE_FORMAT = "dd/MM/YYYY";
+
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
     private DBConstants() {
 
+    }
+
+    public static final class SMSCommands {
+        public static final String INFO = "INFO";
+        public static final String REPORT = "REPORT";
     }
 
     public static final class Status {
@@ -26,7 +36,7 @@ public final class DBConstants {
         public static final String SUBMITTED = "SUBMITTED";
         public static final String APPROVED = "APPROVED";
         public static final String TERMINATED = "TERMINATED";
-        
+
         public static final String NOT_STARTED = "NOT_STARTED";
 
         public static final String[] ALL = {DRAFT, SUBMITTED, APPROVED, TERMINATED};
