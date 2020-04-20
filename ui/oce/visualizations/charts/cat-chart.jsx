@@ -1,11 +1,22 @@
 import Chart from "./index";
 import backendYearFilterable from "../../backend-year-filterable";
-import {Map, OrderedMap, Set} from "immutable";
+import {Map} from "immutable";
 import Comparison from "../../comparison";
 import {download} from "../../tools";
+import wrap from 'word-wrap';
 
 class CatChart extends backendYearFilterable(Chart) {
-  static getCatName(datum){return datum.get(this.CAT_NAME_FIELD)}
+  static getCatName(datum){
+    if(this.CAT_WRAP_CHARS!==0) {
+      return wrap(datum.get(this.CAT_NAME_FIELD), {width: this.CAT_WRAP_CHARS, newline:'<br>'});
+
+    }
+    return datum.get(this.CAT_NAME_FIELD);
+  }
+
+  orientation() {
+    return undefined;
+  }
 
   getData(){
     let data = super.getData();
@@ -14,6 +25,7 @@ class CatChart extends backendYearFilterable(Chart) {
     let trace = {
       x: [],
       y: [],
+      orientation: this.orientation(),
       type: 'bar',
       marker: {
         color: traceColors[0]
@@ -28,8 +40,8 @@ class CatChart extends backendYearFilterable(Chart) {
     data.forEach(datum => {
       let catName = this.constructor.getCatName(datum, this.t.bind(this));
       let value = datum.get(this.constructor.CAT_VALUE_FIELD);
-      trace.x.push(catName);
-      trace.y.push(value);
+      this.orientation()==='h' ?trace.y.push(catName): trace.x.push(catName);
+      this.orientation()==='h' ?trace.x.push(value): trace.y.push(value);
       if(hoverFormatter) trace.text.push(hoverFormatter(value));
     });
 
@@ -129,5 +141,6 @@ class CatChartComparison extends Comparison{
 CatChart.compareWith = CatChartComparison;
 
 CatChart.UPDATABLE_FIELDS = ['data'];
+CatChart.CAT_WRAP_CHARS = 0;
 
 export default CatChart;
