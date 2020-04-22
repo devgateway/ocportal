@@ -18,6 +18,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.AbstractDateT
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -53,6 +54,11 @@ public class DateFieldBootstrapFormComponent extends GenericBootstrapFormCompone
         super(id, model);
     }
 
+    public DateFieldBootstrapFormComponent autoCompleteOff() {
+        field.add(AttributeAppender.append("autocomplete", "new-password"));
+        return this;
+    }
+
     @Override
     protected TextField<Date> inputField(final String id, final IModel<Date> model) {
         DateTextFieldConfig config = new DateTextFieldConfig()
@@ -80,6 +86,7 @@ public class DateFieldBootstrapFormComponent extends GenericBootstrapFormCompone
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        autoCompleteOff();
 
         IndicatingAjaxLink<String> clearDateLink = new IndicatingAjaxLink<String>("clearDate") {
             private static final long serialVersionUID = -1705495886974891511L;
