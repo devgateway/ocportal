@@ -298,7 +298,7 @@
   "crd:overview:overTimeChart:totalFlags": "Total Flags",
   "crd:overview:overTimeChart:totalProcurementsFlagged": "Total Procurements Flagged",
   "crd:overview:overTimeChart:percentFlagged": "% Total Procurements Flagged",
-  "crd:overview:overTimeChart:title": "Risk of Fraud, Collusion and Process Rigging Over Time",
+  "crd:overview:overTimeChart:title": "Risk of Collusion and Process Rigging Over Time",
   "crd:overview:topFlagged:title": "The Procurement Processes with the Most Flags",
   "crd:corruptionType:indicatorTile:procurementsFlagged": "Procurements Flagged",
   "crd:corruptionType:indicatorTile:eligibleProcurements": "Eligible Procurements",

@@ -5,7 +5,7 @@ import { colorLuminance, wireProps } from '../tools';
 import ProcurementsTable from './table';
 import { POPUP_HEIGHT } from '../constants';
 
-const TRACES = ['COLLUSION', 'FRAUD', 'RIGGING'];
+const TRACES = ['COLLUSION', 'RIGGING'];
 
 class CorruptionType extends CustomPopupChart {
   groupData(data) {
@@ -13,7 +13,7 @@ class CorruptionType extends CustomPopupChart {
     TRACES.forEach((trace) => {
       grouped[trace] = {};
     });
-    
+
     const { monthly } = this.props;
     data.forEach((datum) => {
       const type = datum.get('type');
@@ -27,18 +27,18 @@ class CorruptionType extends CustomPopupChart {
       grouped[type] = grouped[type] || {};
       grouped[type][date] = datum.toJS();
     });
-    
+
     return grouped;
   }
-  
+
   getData() {
     const data = super.getData();
     if (!data) return [];
     const { styling, months, monthly, years } = this.props;
     const grouped = this.groupData(data);
-    
+
     const commonYears = new Set();
-    
+
     if (!monthly) {
       Object.values(grouped)
       .forEach(corruptionType =>
@@ -46,7 +46,7 @@ class CorruptionType extends CustomPopupChart {
         .forEach(year => commonYears.add(year))
       );
     }
-    
+
     return Object.keys(grouped)
     .map((type, index) => {
       const dataForType = grouped[type];
@@ -56,7 +56,7 @@ class CorruptionType extends CustomPopupChart {
         dates = range(1, 12)
         .filter(month => months.has(month))
         .map(month => this.t(`general:months:${month}`));
-        
+
         values = dates.map(month => (dataForType[month] ? dataForType[month].flaggedCount : 0));
       } else if (years.count()) {
         dates = years.sort()
@@ -67,14 +67,14 @@ class CorruptionType extends CustomPopupChart {
         .sort();
         values = dates.map(year => dataForType[year] ? dataForType[year].flaggedCount : 0);
       }
-      
+
       if (dates.length === 1) {
         dates.unshift('');
         dates.push(' ');
         values.unshift(0);
         values.push(0);
       }
-      
+
       return {
         x: dates,
         y: values,
@@ -88,7 +88,7 @@ class CorruptionType extends CustomPopupChart {
       };
     });
   }
-  
+
   getLayout() {
     return {
       hovermode: 'closest',
@@ -105,7 +105,7 @@ class CorruptionType extends CustomPopupChart {
       },
     };
   }
-  
+
   getPopup() {
     const { popup } = this.state;
     const { year, traceIndex } = popup;
@@ -120,9 +120,9 @@ class CorruptionType extends CustomPopupChart {
       .filter(indicatorId =>
         indicatorTypesMapping[indicatorId].types.indexOf(dataForPoint.type) > -1
       ).length;
-    
+
     const percentFlaggedLabel = this.t('crd:overview:overTimeChart:percentFlagged');
-    
+
     let height = POPUP_HEIGHT;
     let { top } = popup;
     if (percentFlaggedLabel.length > 30) {
@@ -133,7 +133,7 @@ class CorruptionType extends CustomPopupChart {
       }
       top -= delta;
     }
-    
+
     return (
       <div className="crd-popup" style={{ top, left: popup.left, height }}>
         <div className="row">
@@ -170,7 +170,7 @@ class OverviewPage extends CRDPage {
       topFlaggedContracts: null,
     };
   }
-  
+
   render() {
     const { indicatorTypesMapping, styling, width, navigate } = this.props;
     return (
