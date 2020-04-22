@@ -217,7 +217,8 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @Override
     protected void addDeleteButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        button.setVisibilityAllowed(entityId != null && !isTerminated() && !isViewMode());
         MetaDataRoleAuthorizationStrategy.authorize(
                 button, Component.RENDER, getCommaCombinedRoles());
     }
