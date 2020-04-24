@@ -24,6 +24,7 @@ public final class MongoConstants {
     public static final String MONGO_LANGUAGE = "english";
 
     public static final class FieldNames {
+        public static final String OCID = "ocid";
         public static final String BUYER_ID = "buyer._id";
         public static final String BUYER_NAME = "buyer.name";
         public static final String AWARDS_DATE = "awards.date";
@@ -102,6 +103,8 @@ public final class MongoConstants {
         public static final String NOT_BID_TYPE_ID = "notBidTypeId";
 
         public static final String PROCURING_ENTITY_ID = "procuringEntityId";
+
+        public static final String OCID = "ocid";
 
         public static final String NOT_PROCURING_ENTITY_ID = "notProcuringEntityId";
 

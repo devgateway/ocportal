@@ -14,6 +14,7 @@ import { wireProps } from '../../tools';
 // eslint-disable-next-line no-unused-vars
 import styles from '../style.less';
 import DataFetcher from '../../data-fetcher';
+import { cacheFn } from '../../../tools';
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
   render() {
@@ -203,6 +204,10 @@ export default class Contract extends CRDPage {
       crosstab: Map(),
       indicators: {},
     };
+
+    this.injectOcidFilter = cacheFn((filters, ocid) => {
+      return filters.update('ocid', Set(), ocids => ocids.add(ocid));
+    });
   }
 
   groupIndicators({ indicatorTypesMapping }, { contract }) {
@@ -233,7 +238,7 @@ export default class Contract extends CRDPage {
   }
 
   maybeGetFlagAnalysis() {
-    const { filters, translations, years, totalContracts } = this.props;
+    const { filters, translations, years, totalContracts, id } = this.props;
     const { indicators, crosstab } = this.state;
     const noIndicators = Object.keys(indicators)
       .every(corruptionType =>
@@ -272,7 +277,7 @@ export default class Contract extends CRDPage {
                  />
                </DataFetcher>
                <Crosstab
-                 filters={filters}
+                 filters={this.injectOcidFilter(filters, id)}
                  translations={translations}
                  years={years}
                  data={crosstab.get(corruptionType)}
