@@ -187,7 +187,7 @@ export default class Header extends translatable(React.Component) {
                 <span className="total-label">Total Contracts</span>
                 <span className="total-number">{data.count}</span>
               </div>
-              <div className="col-lg-4 col-md-5 col-sm-6 total-item" data-step="6"
+              <div className="col-lg-5 col-md-5 col-sm-6 total-item" data-step="6"
                    data-intro="This shows the total contracted amount."
                    data-position="right">
                 <span className="total-label">Total Contract Amount</span>

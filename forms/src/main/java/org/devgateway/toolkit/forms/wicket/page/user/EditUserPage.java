@@ -122,6 +122,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         username = ComponentUtil.addTextField(editForm, "username");
         username.required();
+        username.autoCompleteOff();
         username.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         username.getField().add(new UsernamePatternValidator());
         StringValue idPerson = getPageParameters().get(WebConstants.PARAM_ID);
@@ -191,6 +192,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         plainPassword = ComponentUtil.addTextPasswordField(editForm, "plainPassword");
         plainPassword.required();
+        plainPassword.autoCompleteOff();
         // stop resetting the password fields each time they are rendered
         plainPassword.getField().setResetPassword(false);
         plainPassword.getField().add(new PasswordPatternValidator());

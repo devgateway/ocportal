@@ -44,7 +44,7 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
                 "flaggedDate", "flaggedDate",
                 ReleaseFlagHistory::getFlaggedDate, "yyyy-MM-dd HH:mm:ss"));
 
-        columns.add(new PropertyColumn<ReleaseFlagHistory, String>(new Model<>("Release Name"),
+        columns.add(new PropertyColumn<ReleaseFlagHistory, String>(new Model<>("Tender Name"),
                 "releaseId", "releaseId") {
             @Override
             public void populateItem(final Item<ICellPopulator<ReleaseFlagHistory>> item,
@@ -55,7 +55,7 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
             }
         });
 
-        columns.add(new PropertyColumn<>(new Model<>("Release ID"), "releaseId", "releaseId"));
+        columns.add(new PropertyColumn<>(new Model<>("Tender Code"), "releaseId", "releaseId"));
         columns.add(new PropertyColumn<>(new Model<>("Flags Set"), "flagged", "flagged"));
 
         super.onInitialize();
