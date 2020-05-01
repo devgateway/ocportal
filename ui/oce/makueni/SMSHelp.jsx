@@ -13,10 +13,10 @@ class SMSHelp extends CRDPage {
               styling={this.props.styling} selected="smshelp"/>
       <div className="makueni-procurement-plan content row">
 
-        <div className="col-md-8 col-md-offset-3">
+        <div className="col-md-8 col-md-offset-2">
           <h1>The Government of Makueni County Open Contracting SMS Portal</h1>
         </div>
-        <div className="col-md-8 col-md-offset-3">
+        <div className="col-md-8 col-md-offset-2">
           &nbsp;
         </div>
 
