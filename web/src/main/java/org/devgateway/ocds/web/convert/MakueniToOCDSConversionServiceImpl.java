@@ -89,6 +89,7 @@ import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -124,6 +125,9 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.APPROVED
 @Service
 @Transactional(readOnly = true)
 public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversionService {
+
+    @Value("${serverURL}")
+    private String serverURL;
 
     private static final Logger logger = LoggerFactory.getLogger(MakueniToOCDSConversionServiceImpl.class);
 
@@ -281,6 +285,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                     release.getTender().getProcuringEntity()));
         }
 
+        if (!ObjectUtils.isEmpty(release.getBids())) {
+            release.getBids().getDetails().stream().filter(d -> !ObjectUtils.isEmpty(d.getTenderers()))
+                    .forEach(d -> d.setTenderers(d.getTenderers().stream()
+                            .map(s -> addOrUpdateOrganizationSetByRole(orgs, s)).collect(Collectors.toSet())));
+        }
+
         if (!ObjectUtils.isEmpty(release.getTender())) {
             release.getTender().setTenderers(release.getTender().getTenderers().stream().map(
                     s -> addOrUpdateOrganizationSetByRole(orgs, s)).collect(Collectors.toSet()));
@@ -299,6 +309,18 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                         t.setPayee(addOrUpdateOrganizationSetByRole(orgs, t.getPayee()));
                         t.setPayer(addOrUpdateOrganizationSetByRole(orgs, t.getPayer()));
                     }));
+            release.getContracts().forEach(c -> ((MakueniContract) c).setContractor(
+                    addOrUpdateOrganizationSetByRole(orgs, ((MakueniContract) c).getContractor())
+            ));
+        }
+
+        if (!ObjectUtils.isEmpty(release.getPlanning().getBudget())) {
+            Set<MakueniBudgetBreakdown> budgetBreakdown = ((MakueniBudget) release.getPlanning().getBudget())
+                    .getBudgetBreakdown();
+            if (budgetBreakdown != null) {
+                budgetBreakdown.forEach(bb -> bb.setSourceParty(addOrUpdateOrganizationSetByRole(orgs,
+                        bb.getSourceParty())));
+            }
         }
 
 
@@ -318,12 +340,17 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return Tender.Status.active;
     }
 
+    public String convertIdentifierToId(Identifier identifier) {
+        return identifier.getScheme() + "-" + identifier.getId();
+    }
+
     public Organization convertBuyer(Department department) {
         Organization ocdsBuyer = new Organization();
         safeSet(ocdsBuyer::setName, () -> department, this::categoryLabel, WordUtils::capitalizeFully);
-        safeSet(ocdsBuyer::setId, () -> department, this::entityIdToString);
-        safeSet(ocdsBuyer::setIdentifier, () -> department, this::convertCategoryCodeToIdentifier);
-        safeSet(ocdsBuyer.getAdditionalIdentifiers()::add, () -> department, this::convertCategoryToIdentifier);
+        safeSet(ocdsBuyer::setIdentifier, () -> department, this::convertCategoryToIdentifier,
+                this::convertToLocalIdentifier);
+        safeSet(ocdsBuyer::setId, ocdsBuyer::getIdentifier, Identifier::getId);
+        //safeSet(ocdsBuyer.getAdditionalIdentifiers()::add, () -> department, this::convertCategoryToIdentifier);
 //        safeSet(
 //                ocdsBuyer.getAdditionalIdentifiers()::add, () -> department,
 //                this::convertCategoryCodeToIdentifier
@@ -341,12 +368,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Organization convertProcuringEntity(ProcuringEntity procuringEntity) {
         Organization ocdsProcuringEntity = new Organization();
-        safeSet(ocdsProcuringEntity::setId, procuringEntity::getId, this::longIdToString);
-        safeSet(ocdsProcuringEntity::setIdentifier, () -> procuringEntity, this::convertCategoryToIdentifier);
-//        safeSet(
-//                ocdsProcuringEntity.getAdditionalIdentifiers()::add, () -> procuringEntity,
-//                this::convertCategoryCodeToIdentifier
-//        );
+        safeSet(ocdsProcuringEntity::setIdentifier, () -> procuringEntity, this::convertCategoryToIdentifier,
+                this::convertToLocalIdentifier);
+        safeSet(ocdsProcuringEntity::setId, ocdsProcuringEntity::getIdentifier, Identifier::getId);
+        safeSet(ocdsProcuringEntity.getAdditionalIdentifiers()::add, () -> procuringEntity,
+                this::convertCategoryCodeToIdentifier, this::convertToOrgIdentifier);
+
         safeSet(ocdsProcuringEntity::setAddress, () -> procuringEntity, this::createProcuringEntityAddress);
         safeSet(ocdsProcuringEntity::setName, procuringEntity::getLabel, WordUtils::capitalizeFully);
         safeSet(ocdsProcuringEntity::setContactPoint, () -> procuringEntity, this::createProcuringEntityContactPoint);
@@ -512,30 +539,34 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return transaction;
     }
 
-    public Budget createPlanningBudget(TenderProcess tenderProcess) {
-        MakueniBudget budget = new MakueniBudget();
-
+    public MakueniBudgetBreakdown createPlanningBudgetBreakdown(TenderProcess tenderProcess) {
         FiscalYearBudget fiscalYearBudget = fiscalYearBudgetService.findByDepartmentAndFiscalYear(
                 tenderProcess.getDepartment(), tenderProcess.getProcurementPlan().getFiscalYear());
-
+        MakueniBudgetBreakdown budgetBreakdown = null;
         if (fiscalYearBudget != null) {
-            MakueniBudgetBreakdown budgetBreakdown = new MakueniBudgetBreakdown();
-            budget.setBudgetBreakdown(budgetBreakdown);
+            budgetBreakdown = new MakueniBudgetBreakdown();
 
-            budgetBreakdown.getMeasures().put("Committed", fiscalYearBudget.getAmountBudgeted());
-            budgetBreakdown.getClassifications().put("Dept", tenderProcess.getDepartment().getLabel());
+            safeSet(budgetBreakdown::setAmount, fiscalYearBudget::getAmountBudgeted, this::convertAmount);
+            safeSet(budgetBreakdown::setSourceParty, tenderProcess::getDepartment, this::convertBuyer);
+
             budgetBreakdown.setId(fiscalYearBudget.getId().toString());
             Period period = new Period();
             period.setStartDate(fiscalYearBudget.getFiscalYear().getStartDate());
             period.setEndDate(fiscalYearBudget.getFiscalYear().getEndDate());
             budgetBreakdown.setPeriod(period);
         }
+        return budgetBreakdown;
+    }
 
+    public Budget createPlanningBudget(TenderProcess tenderProcess) {
+        MakueniBudget budget = new MakueniBudget();
 
         safeSet(budget::setProjectID, tenderProcess.getProject()::getProjectTitle);
         safeSet(budget::setAmount, () -> tenderProcess.getPurchRequisitions().stream().
                 flatMap(pr -> pr.getPurchaseItems().stream()).map(PurchaseItem::getAmount).reduce(
                 BigDecimal.ZERO, BigDecimal::add), this::convertAmount);
+
+        safeSet(budget.getBudgetBreakdown()::add, () -> tenderProcess, this::createPlanningBudgetBreakdown);
 
         return budget;
     }
@@ -647,9 +678,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
         MakueniOrganization ocdsOrg = new MakueniOrganization();
         safeSet(ocdsOrg::setName, supplier::getLabel, WordUtils::capitalizeFully);
-        safeSet(ocdsOrg::setId, () -> supplier, this::entityIdToString);
-        safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryCodeToIdentifier);
-        safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryToIdentifier);
+        safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryCodeToIdentifier,
+                this::convertToOrgIdentifier);
+        safeSet(ocdsOrg::setId, ocdsOrg::getIdentifier, Identifier::getId);
+        safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryToIdentifier,
+                this::convertToLocalIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
         safeSet(ocdsOrg::setTargetGroup, supplier::getTargetGroup, this::categoryLabel);
         return ocdsOrg;
@@ -671,12 +704,28 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Identifier convertCategoryCodeToIdentifier(Category category) {
+        if (ObjectUtils.isEmpty(category.getCode())) {
+            return null;
+        }
         Identifier identifier = new Identifier();
         safeSet(identifier::setId, category::getCode);
         safeSet(identifier::setLegalName, category::getLabel);
         return identifier;
     }
 
+    public Identifier convertToOrgIdentifier(Identifier identifier) {
+        safeSet(identifier::setScheme, () -> "KE-IFMIS");
+        safeSet(identifier::setUri, () -> "https://www.treasury.go.ke/", URI::create);
+        safeSet(identifier::setId, () -> identifier, this::convertIdentifierToId);
+        return identifier;
+    }
+
+    public Identifier convertToLocalIdentifier(Identifier identifier) {
+        safeSet(identifier::setScheme, () -> "X-KE-OCMAKUENI");
+        safeSet(identifier::setUri, () -> serverURL + "/api/ocds/organization/all?scheme=X-KE-OCMAKUENI", URI::create);
+        safeSet(identifier::setId, () -> identifier, this::convertIdentifierToId);
+        return identifier;
+    }
 
     public Milestone createPlanningMilestone(PurchRequisition pr) {
         Milestone milestone = new Milestone();

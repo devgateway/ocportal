@@ -31,8 +31,8 @@ public final class MongoConstants {
         public static final String PLANNING_FISCAL_YEAR = "planning.fiscalYear";
         public static final String PLANNING_BUDGET_PROJECT_ID = "planning.budget.projectID";
         public static final String PLANNING_BUDGET_AMOUNT = "planning.budget.amount.amount";
-        public static final String PLANNING_BUDGETB_MEASURES_COMMITTED = "planning.budget.budgetBreakdown.measures."
-                + "Committed";
+        public static final String PLANNING_BUDGETB = "planning.budget.budgetBreakdown";
+        public static final String PLANNING_BUDGETB_AMOUNT = "planning.budget.budgetBreakdown.amount.amount";
         public static final String PLANNING_BUDGETB_ID = "planning.budget.budgetBreakdown._id";
         public static final String AWARDS_FIRST_TIME_WINNER = "awards.firstTimeWinner";
         public static final String AWARDS_STATUS = "awards.status";
