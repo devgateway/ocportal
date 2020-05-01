@@ -11,15 +11,33 @@ class SMSHelp extends CRDPage {
     return (<div className="container-fluid dashboard-default">
       <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
               styling={this.props.styling} selected="smshelp"/>
-      <div className="makueni-procurement-plan content row">
+      <div className="makueni-procurement-plan content">
+        <div className="row">
+          <div className="col-md-8 col-md-offset-2 makueni-form">
+            <a href="#" onClick={()=>window.history.back()} className="back-link">
+        <span className="back-icon">
+          <span className="previous">&#8249;</span>
+        </span>
+              <span className="back-text">
+          Go Back
+        </span>
+            </a>
+          </div>
+        </div>
 
+
+        <div className="row">
         <div className="col-md-8 col-md-offset-2">
           <h1>The Government of Makueni County Open Contracting SMS Portal</h1>
         </div>
+        </div>
+        <div className="row">
         <div className="col-md-8 col-md-offset-2">
           &nbsp;
         </div>
+        </div>
 
+        <div className="row">
         <div className="col-md-8 col-md-offset-2">
           <p>The Government of Makueni County SMS portal is a communication tool to the public on the
           implementation status of a particular tender -  M&E report and the PMC report status. Users can use the SMS portal to:
@@ -32,13 +50,19 @@ class SMSHelp extends CRDPage {
           The tender code is the code used to request information on a particular tender.
           This code can be retrieved on the public portal page for each tender shown below:
         </div>
+        </div>
+        <div className="row">
         <div className="col-md-8 col-md-offset-2">
           <img src="assets/help/sms-help.png" width="80%"/>
         </div>
+        </div>
+        <div className="row">
         <div className="col-md-8 col-md-offset-2">
           For those who cannot access the public portal to retrieve the tender code, the County
           will communicate the code to the public through Project Management Committees and local authority offices.
         </div>
+        </div>
+        <div className="row">
         <div className="col-md-8 col-md-offset-2">
           <h2>1. Requesting information about a specific contract</h2>
           <p>To receive information on a specific contract, send an SMS to the number 40014 with the following format:</p>
@@ -55,6 +79,8 @@ class SMSHelp extends CRDPage {
           </samp>
         </p>
         </div>
+        </div>
+        <div className="row">
         <div className="col-md-8 col-md-offset-2">
           <h2>2. Report to the county on any implementation feedback</h2>
           <p>In order to send the county any feedback on a specific tender, send an SMS to the number 40014 with the following format:</p>
@@ -81,6 +107,7 @@ class SMSHelp extends CRDPage {
               Feedback reply: We confirm the work stopped because of budget allocation challenges.
             </samp>
           </p>
+        </div>
         </div>
       </div>
       <Footer/>
