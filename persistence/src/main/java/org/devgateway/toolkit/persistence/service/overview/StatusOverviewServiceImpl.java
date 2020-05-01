@@ -49,7 +49,6 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.SUBMITTE
  * @author gmutuhu
  */
 @Service
-@Transactional
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     protected static final Logger logger = LoggerFactory.getLogger(StatusOverviewService.class);
 

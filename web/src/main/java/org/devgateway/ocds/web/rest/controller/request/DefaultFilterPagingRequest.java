@@ -34,6 +34,9 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "Location Type, can be ward or subcounty")
     private TreeSet<String> locationType;
 
+    @ApiModelProperty(value = "Filter by OCID")
+    private TreeSet<String> ocid;
+
     @ApiModelProperty(value = "Filter by tender.status, possible values are available from the OCDS standard page"
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#tender-status")
     private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(Tender.Status.active.toString()));
@@ -319,5 +322,13 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setProcurementMethodRationale(TreeSet<String> procurementMethodRationale) {
         this.procurementMethodRationale = procurementMethodRationale;
+    }
+
+    public TreeSet<String> getOcid() {
+        return ocid;
+    }
+
+    public void setOcid(TreeSet<String> ocid) {
+        this.ocid = ocid;
     }
 }
