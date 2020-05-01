@@ -71,7 +71,7 @@ public class OcdsController extends GenericOCDSController {
                             + "/src/main/resources/extensions/milestone_delayed_authorization/extension.json",
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/develop/persistence-mongodb"
                             + "/src/main/resources/extensions/contract_contractor/extension.json",
-                    "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_and_spend_extension/"
+                    "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/"
                             + "master/extension.json",
                     "https://raw.githubusercontent.com/open-contracting-extensions/ocds_location_extension/v1.1.3/"
                             + "extension.json",
