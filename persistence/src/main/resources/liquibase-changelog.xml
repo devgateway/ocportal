@@ -1049,19 +1049,9 @@
             <columnExists tableName="CATEGORY" columnName="code"/>
         </preConditions>
         <update tableName="category">
-            <column name="code" value="5B"/>
-            <column name="label" value="batch"/>
+            <column name="code" value="LO"/>
+            <column name="label" value="lot"/>
             <where>dtype='Unit' and label='Lots'</where>
-        </update>
-        <update tableName="category">
-            <column name="code" value="KMT"/>
-            <column name="label" value="kilometre"/>
-            <where>dtype='Unit' and label='Road'</where>
-        </update>
-        <update tableName="category">
-            <column name="code" value="MTK"/>
-            <column name="label" value="square metre"/>
-            <where>dtype='Unit' and label='Building'</where>
         </update>
         <update tableName="category">
             <column name="code" value="BE"/>
@@ -1083,13 +1073,6 @@
             <column name="label" value="ream"/>
             <where>dtype='Unit' and label='Realm'</where>
         </update>
-
-        <insert tableName="category">
-            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="dtype" value="Unit"/>
-            <column name="code" value="LTR"/>
-            <column name="label" value="litre"/>
-        </insert>
     </changeSet>
 
     <changeSet id="OCMAKU-590-change-unit-codes" author="mpostelnicu">
@@ -1099,14 +1082,11 @@
         </preConditions>
 
         <sql>update plan_item set unit_of_issue_id = (select id from category where dtype='Unit' and code='EA')
-            where unit_of_issue_id in (select id from category where dtype='Unit' and code in ('MTK', 'KMT')) and
-            quantity &lt;50
+            where unit_of_issue_id in (select id from category where dtype='Unit' and label in ('Road', 'Building'))
         </sql>
-
-        <sql>update plan_item set unit_of_issue_id = (select id from category where dtype='Unit' and code='LTR')
-            where unit_of_issue_id = (select id from category where dtype='Unit' and code ='KMT') and
-            quantity &gt;=50
-        </sql>
+        <delete tableName="category">
+            <where>dtype='Unit' and label in ('Road', 'Building')</where>
+        </delete>
     </changeSet>
 
 </databaseChangeLog>
