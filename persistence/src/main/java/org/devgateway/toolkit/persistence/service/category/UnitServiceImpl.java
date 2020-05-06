@@ -38,5 +38,10 @@ public class UnitServiceImpl extends BaseJpaServiceImpl<Unit> implements UnitSer
     public Unit findByLabel(String label) {
         return repository.findByLabel(label);
     }
+
+    @Override
+    public Unit findByLabelIgnoreCase(String label) {
+        return repository.findByLabelIgnoreCase(label);
+    }
 }
 

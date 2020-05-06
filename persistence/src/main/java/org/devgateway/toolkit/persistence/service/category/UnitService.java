@@ -12,4 +12,6 @@ public interface UnitService extends BaseJpaService<Unit>, TextSearchableService
 
 
     Unit findByLabel(String label);
+
+    Unit findByLabelIgnoreCase(String label);
 }

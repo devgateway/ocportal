@@ -43,7 +43,7 @@ public class Category extends AbstractAuditableEntity implements Serializable, L
 
     private String description;
 
-    @ExcelExport(name = "Code", onlyForClass = {Supplier.class})
+    @ExcelExport(name = "Code", onlyForClass = {Supplier.class, Unit.class})
     private String code;
 
     public Category() {
