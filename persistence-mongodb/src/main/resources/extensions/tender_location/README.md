@@ -1,7 +1,7 @@
 # Tender Location
 
-Extension of tender entity, that adds location information directly at tender level.
-As a dependency we use the ocds_location_extension.
+Extension of tender entity, that adds location information directly at tender level. Location information
+in Makueni is not tied to the items. As a dependency we use the ocds_location_extension because the Location entity is taken from there.
 
 ```
 {
