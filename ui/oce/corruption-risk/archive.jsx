@@ -26,7 +26,7 @@ class Archive extends CRDPage {
               this.t('crd:contracts:top-search:resultsFor:pl')
             ).replace('$#$', count).replace(
               '$#$',
-              searchQuery.replace(/\%22/g, '')
+              searchQuery.replace(/\%22/g, '').replace(/\%20/g, ' ')
             )}
         </h3>}
 
