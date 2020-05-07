@@ -10,11 +10,8 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 /**
  * @param <T>
@@ -37,13 +34,7 @@ public class SimpleDateProperyColumn<T, R extends ChronoZonedDateTime<LocalDate>
         this.dateGetter = dateGetter;
         this.dateFormat = dateFormat;
     }
-
-
-    public static ZonedDateTime convertDateToZonedDateTime(Date date) {
-        return date == null ? null : date.toInstant().atZone(ZoneId.systemDefault());
-    }
-
-
+    
     @Override
     public void populateItem(final Item<ICellPopulator<T>> item,
                              final String componentId,
