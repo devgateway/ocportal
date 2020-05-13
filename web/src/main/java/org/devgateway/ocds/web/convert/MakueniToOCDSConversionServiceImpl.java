@@ -803,8 +803,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Milestone.Status createPlanningMilestoneStatus(PurchRequisition pr) {
-        //TODO: implement more statuses
-        return Milestone.Status.SCHEDULED;
+        return Milestone.Status.MET;
     }
 
     public <C, S, R extends Supplier<S>> Supplier<S> getSupplier(Supplier<C> parentSupplier,
