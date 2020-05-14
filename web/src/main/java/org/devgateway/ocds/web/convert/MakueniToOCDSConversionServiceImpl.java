@@ -724,7 +724,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Identifier convertToLocalIdentifier(Identifier identifier) {
         safeSet(identifier::setScheme, () -> X_KE_OCMAKUENI);
-        safeSet(identifier::setUri, () -> serverURL + "/api/ocds/organization/all?scheme=+" + X_KE_OCMAKUENI,
+        safeSet(identifier::setUri, () -> serverURL + "/api/ocds/organization/all?scheme=" + X_KE_OCMAKUENI,
                 URI::create);
         safeSet(identifier::setId, () -> identifier, this::convertIdentifierToId);
         return identifier;
