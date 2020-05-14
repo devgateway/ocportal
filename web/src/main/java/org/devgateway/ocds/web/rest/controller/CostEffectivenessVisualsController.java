@@ -16,7 +16,6 @@ import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
-import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.GroupingFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -207,8 +206,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
                 ));
 
         Aggregation agg = Aggregation.newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_STATUS).is(Tender.Status.active.toString()).
-                        and(getAwardDateField())
+                match(where(getAwardDateField())
                         .exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
