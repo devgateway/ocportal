@@ -43,6 +43,7 @@ import org.devgateway.ocds.persistence.mongo.Tag;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Transaction;
 import org.devgateway.ocds.persistence.mongo.Unit;
+import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.repository.main.MakueniLocationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
@@ -118,6 +119,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.OCDSSchemes.X_KE_OCMAKUENI;
 
 @Service
 @Transactional(readOnly = true)
@@ -418,7 +421,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Unit createTenderItemUnit(TenderItem tenderItem) {
         Unit unit = new Unit();
-        safeSet(unit::setScheme, () -> "UNCEFACT");
+        safeSet(unit::setScheme, () -> MongoConstants.OCDSSchemes.UNCEFACT);
         safeSet(unit::setName, tenderItem::getPurchaseItem, PurchaseItem::getPlanItem, PlanItem::getUnitOfIssue,
                 Category::getLabel
         );
@@ -432,7 +435,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Classification createPurchaseItemClassification(PurchaseItem purchaseItem) {
         Classification classification = new Classification();
-        safeSet(classification::setScheme, () -> "x_KE-IFMIS");
+        safeSet(classification::setScheme, () -> MongoConstants.OCDSSchemes.X_KE_IFMIS);
         safeSet(classification::setId, purchaseItem::getPlanItem, PlanItem::getItem, Category::getCode
         );
         safeSet(classification::setDescription, purchaseItem::getPlanItem, PlanItem::getItem, Category::getLabel,
@@ -713,15 +716,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Identifier convertToOrgIdentifier(Identifier identifier) {
-        safeSet(identifier::setScheme, () -> "KE-IFMIS");
+        safeSet(identifier::setScheme, () -> MongoConstants.OCDSSchemes.KE_IFMIS);
         safeSet(identifier::setUri, () -> "https://www.treasury.go.ke/", URI::create);
         safeSet(identifier::setId, () -> identifier, this::convertIdentifierToId);
         return identifier;
     }
 
     public Identifier convertToLocalIdentifier(Identifier identifier) {
-        safeSet(identifier::setScheme, () -> "X-KE-OCMAKUENI");
-        safeSet(identifier::setUri, () -> serverURL + "/api/ocds/organization/all?scheme=X-KE-OCMAKUENI", URI::create);
+        safeSet(identifier::setScheme, () -> X_KE_OCMAKUENI);
+        safeSet(identifier::setUri, () -> serverURL + "/api/ocds/organization/all?scheme=+" + X_KE_OCMAKUENI,
+                URI::create);
         safeSet(identifier::setId, () -> identifier, this::convertIdentifierToId);
         return identifier;
     }
@@ -947,7 +951,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     public Unit createPlanningItemUnit(PurchaseItem purchaseItem) {
         Unit unit = new Unit();
-        safeSet(unit::setScheme, () -> "UNCEFACT");
+        safeSet(unit::setScheme, () -> MongoConstants.OCDSSchemes.UNCEFACT);
         safeSet(unit::setName, purchaseItem::getPlanItem, PlanItem::getUnitOfIssue, this::categoryLabel);
         safeSet(unit::setId, purchaseItem::getPlanItem, PlanItem::getUnitOfIssue, Category::getCode);
         safeSet(unit::setValue, purchaseItem::getAmount, this::convertAmount);
