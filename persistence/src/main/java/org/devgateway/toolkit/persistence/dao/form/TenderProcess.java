@@ -411,7 +411,7 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(tender));
     }
 
