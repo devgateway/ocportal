@@ -175,7 +175,7 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
         DBObject awardLengthDays = new BasicDBObject("$divide", Arrays.asList(
                 new BasicDBObject("$subtract", Arrays.asList(
                         ref(MongoConstants.FieldNames.AWARDS_DATE),
-                        ref(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE)
+                        ref(getTenderDateField())
                 )), DAY_MS));
 
         DBObject project = new BasicDBObject();
@@ -184,12 +184,12 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
         project.put("awardLengthDays", awardLengthDays);
         project.put(MongoConstants.FieldNames.AWARDS_DATE, 1);
         project.put(MongoConstants.FieldNames.AWARDS_STATUS, 1);
-        project.put(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE, 1);
+        project.put(getTenderDateField(), 1);
 
         Aggregation agg = newAggregation(
                 // this is repeated so we gain speed by filtering items before
                 // unwind
-                match(where(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE)
+                match(where(getTenderDateField())
                         .exists(true).and(MongoConstants.FieldNames.AWARDS_DATE).exists(true)
                         .and(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())),
                 unwind("awards"),
@@ -231,7 +231,7 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
                                         new BasicDBObject(
                                                 "$gt",
                                                 Arrays.asList(
-                                                        ref(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE),
+                                                        ref(getTenderDateField()),
                                                         null
                                                 )
                                         )

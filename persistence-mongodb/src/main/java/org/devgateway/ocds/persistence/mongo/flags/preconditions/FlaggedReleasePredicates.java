@@ -14,10 +14,12 @@ public final class FlaggedReleasePredicates {
     private FlaggedReleasePredicates() {
 
     }
-
+    
     public static final NamedPredicate<FlaggedRelease> TENDER_START_DATE = new NamedPredicate<>(
             "Needs to have tender start date", p -> p.getTender() != null && p.getTender().getTenderPeriod() != null
             && p.getTender().getTenderPeriod().getStartDate() != null);
+
+    public static final NamedPredicate<FlaggedRelease> TENDER_DATE = TENDER_START_DATE;
 
     public static final NamedPredicate<FlaggedRelease> TENDER_PROCURING_ENTITY = new NamedPredicate<>(
             "Needs to have tender procuring entity", p -> p.getTender() != null
