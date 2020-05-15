@@ -61,7 +61,7 @@ public class ReleaseFlagI019Processor extends AbstractFlaggedReleaseFlagProcesso
     protected void setPredicates() {
         preconditionsPredicates = Collections.synchronizedList(Arrays.asList(
                 FlaggedReleasePredicates.ACTIVE_AWARD_WITH_DATE,
-                FlaggedReleasePredicates.TENDER_DATE,
+                FlaggedReleasePredicates.TENDER_END_DATE,
                 FlaggedReleasePredicates.ACTIVE_CONTRACT
         ));
     }
