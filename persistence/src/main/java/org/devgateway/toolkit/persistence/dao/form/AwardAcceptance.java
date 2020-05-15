@@ -69,7 +69,7 @@ public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
 
     @Override
     @Transactional
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull().getContract()));
     }
 

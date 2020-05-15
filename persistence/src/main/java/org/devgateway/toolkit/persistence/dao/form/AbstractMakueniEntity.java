@@ -17,7 +17,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author idobre
@@ -49,7 +51,13 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
      */
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
+    protected abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
+
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntitiesNotNull() {
+        return getDirectChildrenEntities().stream().filter(Objects::nonNull).collect(Collectors.toList());
+    }
 
     @Override
     @JsonIgnore
