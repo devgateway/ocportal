@@ -61,7 +61,7 @@ import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_P
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_TECH_ADMIN_VALIDATOR;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class SubmittedAlertService {
 
     protected static Logger logger = LoggerFactory.getLogger(SubmittedAlertService.class);

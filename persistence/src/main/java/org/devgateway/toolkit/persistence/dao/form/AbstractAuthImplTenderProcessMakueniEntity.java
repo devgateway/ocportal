@@ -19,7 +19,7 @@ public abstract class AbstractAuthImplTenderProcessMakueniEntity extends Abstrac
     }
 
     @Override
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return getTenderProcessNotNull().getPaymentVouchers();
     }
 

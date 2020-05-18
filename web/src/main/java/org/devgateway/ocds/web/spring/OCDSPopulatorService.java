@@ -129,10 +129,8 @@ public class OCDSPopulatorService {
         classificationRepository.save(c);
     }
 
-    public <T extends Identifiable, ID extends Serializable> T getSavedOrgEntityFromEntity(T t,
-                                                                                           MongoRepository<T, ID>
-
-                                                                                                   repository) {
+    public <S extends Identifiable, T extends S, ID extends Serializable> T getSavedOrgEntityFromEntity(
+            S t, MongoRepository<T, ID> repository) {
 
         Optional<T> newOrg = repository.findById((ID) orgNameId.get((String) t.getIdProperty()));
         if (!newOrg.isPresent()) {
@@ -152,12 +150,12 @@ public class OCDSPopulatorService {
     }
 
 
-    public <T extends Identifiable, ID extends Serializable>
-    void replaceOrgEntitiesWithSavedEntities(Collection<T> c,
+    public <T extends S, ID extends Serializable, S extends Identifiable>
+    void replaceOrgEntitiesWithSavedEntities(Collection<S> c,
                                              MongoRepository<T, ID> repository) {
-        Iterator<T> i = c.iterator();
+        Iterator<S> i = c.iterator();
         while (i.hasNext()) {
-            T o = i.next();
+            S o = i.next();
             i.remove();
             c.add(getSavedOrgEntityFromEntity(o, repository));
         }

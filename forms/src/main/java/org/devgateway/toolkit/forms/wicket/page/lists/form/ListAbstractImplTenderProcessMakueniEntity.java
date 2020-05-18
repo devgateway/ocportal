@@ -12,6 +12,7 @@ import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootst
 import org.devgateway.toolkit.forms.wicket.components.table.SimpleDateProperyColumn;
 import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.service.filterstate.form.AbstractImplTenderProcessFilterState;
+import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 
 /**
  * @author mpostelnicu
@@ -61,7 +62,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
                 "approvedDate",
                 ListAbstractImplTenderProcessMakueniEntity.this),
                 "approvedDate", "approvedDate",
-                t -> SimpleDateProperyColumn.convertDateToZonedDateTime(t.getApprovedDate())
+                t -> PersistenceUtil.convertDateToZonedDateTime(t.getApprovedDate())
         ));
 
         super.onInitialize();

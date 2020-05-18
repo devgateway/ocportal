@@ -39,7 +39,8 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     @ApiModelProperty(value = "Filter by tender.status, possible values are available from the OCDS standard page"
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#tender-status")
-    private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(Tender.Status.active.toString()));
+    private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(
+            Tender.Status.active.toString(), Tender.Status.complete.toString(), Tender.Status.planned.toString()));
 
     @ApiModelProperty(value = "This corresponds to the tender.items.classification._id")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> bidTypeId;

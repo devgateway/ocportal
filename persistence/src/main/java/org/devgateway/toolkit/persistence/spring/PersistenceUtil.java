@@ -1,9 +1,13 @@
 package org.devgateway.toolkit.persistence.spring;
 
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
-import org.springframework.transaction.annotation.Transactional;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Set;
 
 public final class PersistenceUtil {
@@ -34,6 +38,14 @@ public final class PersistenceUtil {
             return null;
         }
         return set.iterator().next();
+    }
+
+    public static ZonedDateTime convertDateToZonedDateTime(Date date) {
+        return date == null ? null : date.toInstant().atZone(ZoneId.systemDefault());
+    }
+
+    public static ZonedDateTime currentDate() {
+        return LocalDateTime.now().atZone(ZoneId.systemDefault());
     }
 
 }

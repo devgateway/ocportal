@@ -66,9 +66,8 @@ public class TendersByItemClassification extends GenericOCDSController {
 
 
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_PERIOD_END_DATE).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE))),
+                match(where(getTenderDateField()).exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 unwind(MongoConstants.FieldNames.TENDER_ITEMS),
                 project().and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)
                         .as("itemsClassification")
@@ -92,11 +91,10 @@ public class TendersByItemClassification extends GenericOCDSController {
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
         Aggregation agg = newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE).exists(true)
+                match(where(getTenderDateField()).exists(true)
                         .and(MongoConstants.FieldNames.TENDER_ITEMS_UNIT_VALUE_AMOUNT).exists(true)
                         .and(MongoConstants.FieldNames.TENDER_ITEMS_QUANTITY).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE))),
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 unwind("tender.items"),
                 project().and(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)
                         .as(MongoConstants.FieldNames.TENDER_ITEMS_CLASSIFICATION)

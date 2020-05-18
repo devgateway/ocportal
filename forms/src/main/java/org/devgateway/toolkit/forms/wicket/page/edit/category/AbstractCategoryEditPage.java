@@ -64,7 +64,7 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
         ));
     }
 
-    protected void addCode() {
+    protected TextFieldBootstrapFormComponent<String> addCode() {
         final TextFieldBootstrapFormComponent<String> code = ComponentUtil.addTextField(editForm, "code");
         code.required();
         code.getField().add(VALIDATOR);
@@ -75,5 +75,6 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
                 (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(Category_.code)), v.toLowerCase()),
                 editForm.getModel()
         ));
+        return code;
     }
 }

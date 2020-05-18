@@ -1,6 +1,6 @@
 # Planning Items
 
-Allowing Item elements in Planning section
+Allowing Item elements in Planning section, to reflect Makueni's item procurement planning.
 
 ```
 {

@@ -43,7 +43,7 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
     @Transactional
     private void collectChildrenEntities(AbstractMakueniEntity entity,
                                          Collection<AbstractMakueniEntity> ret) {
-        Collection<? extends AbstractMakueniEntity> directChildrenEntities = entity.getDirectChildrenEntities();
+        Collection<? extends AbstractMakueniEntity> directChildrenEntities = entity.getDirectChildrenEntitiesNotNull();
         if (!directChildrenEntities.isEmpty()) {
             ret.addAll(directChildrenEntities);
             directChildrenEntities.forEach(e -> collectChildrenEntities(e, ret));

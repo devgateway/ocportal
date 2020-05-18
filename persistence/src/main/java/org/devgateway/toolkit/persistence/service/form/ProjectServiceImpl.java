@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2019-04-02
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project> implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;

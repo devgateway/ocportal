@@ -45,6 +45,11 @@ public abstract class AbstractOrganizationSearchController extends GenericOCDSCo
             query.addCriteria(Criteria.where("roles").is(type));
         }
 
+        if (request.getScheme() != null) {
+            query.addCriteria(new Criteria().orOperator(Criteria.where("identifier.scheme").is(request.getScheme()),
+                    Criteria.where("additionalIdentifiers.scheme").is(request.getScheme())));
+        }
+
         query.with(new PageRequest(request.getPageNumber(), request.getPageSize()));
         return query;
     }

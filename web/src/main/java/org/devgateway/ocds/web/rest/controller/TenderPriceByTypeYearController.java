@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
-import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomProjectionOperation;
@@ -55,13 +54,8 @@ public class TenderPriceByTypeYearController extends GenericOCDSController {
         project.put("tender.value", 1);
 
         Aggregation agg = newAggregation(
-                match(where("awards").elemMatch(where("status").is(Award.Status.active.toString()))
-                        .and("tender.value")
-                        .exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                MongoConstants.FieldNames.TENDER_PERIOD_END_DATE
-                        ))),
+                match(where("tender.value").exists(true)
+                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
                 new CustomProjectionOperation(project), group("tender." + Keys.PROCUREMENT_METHOD)
                         .sum(ref(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)).as(Keys.TOTAL_TENDER_AMOUNT),
                 project().and(Fields.UNDERSCORE_ID).as(Keys.PROCUREMENT_METHOD).andInclude(Keys.TOTAL_TENDER_AMOUNT)

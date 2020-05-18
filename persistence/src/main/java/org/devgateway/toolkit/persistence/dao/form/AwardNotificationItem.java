@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractDocsChildExpAuditEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author mpostelnicu
@@ -38,6 +41,15 @@ public class AwardNotificationItem extends AbstractDocsChildExpAuditEntity<Award
 
     @ExcelExport(useTranslation = true, name = "Acknowledge Receipt of Award Timeline")
     private Integer acknowledgementDays;
+
+    @JsonIgnore
+    public AwardAcceptanceItem getExportableAcceptanceItem() {
+        return Optional.ofNullable(getParent().getTenderProcess().getSingleAwardAcceptance())
+                .filter(Statusable::isExportable).map(Stream::of).orElseGet(Stream::empty)
+                .flatMap(a -> a.getItems().stream()).filter(a -> a.getAwardee().equals(awardee))
+                .findFirst().orElse(null);
+
+    }
 
     public Date getAwardDate() {
         return awardDate;
