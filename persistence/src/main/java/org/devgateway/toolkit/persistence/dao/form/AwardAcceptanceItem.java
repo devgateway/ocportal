@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.AbstractDocsChildExpAuditEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author mpostelnicu
@@ -61,6 +64,14 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
 
     public BigDecimal getAcceptedAwardValue() {
         return acceptedAwardValue;
+    }
+
+    @JsonIgnore
+    public AwardNotificationItem getExportableNotificationItem() {
+        return Optional.ofNullable(getParent().getTenderProcess().getSingleAwardNotification())
+                .filter(Statusable::isExportable).map(Stream::of).orElseGet(Stream::empty)
+                .flatMap(a -> a.getItems().stream()).filter(a -> a.getAwardee().equals(awardee))
+                .findFirst().orElse(null);
     }
 
     public boolean isAccepted() {

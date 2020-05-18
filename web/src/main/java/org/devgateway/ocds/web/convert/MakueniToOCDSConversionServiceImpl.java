@@ -1099,7 +1099,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setValue, contract::getContractValue, this::convertAmount);
         safeSetEach(ocdsContract.getDocuments()::add, contract::getContractDocs, this::storeAsDocumentContractNotice);
         safeSet(ocdsContract::setAwardID,
-                contract.getTenderProcess().getSingleAwardAcceptance()::getAcceptedAcceptance, this::entityIdToString);
+                contract.getTenderProcess().getSingleAwardAcceptance()
+                        .getAcceptedAcceptance()::getExportableNotificationItem, this::entityIdToString);
         safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertOrganization);
         safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
