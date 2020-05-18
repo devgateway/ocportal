@@ -11,14 +11,17 @@ class PaginatedTable extends Visualization {
 
   getCustomEP() {
     const { pageSize, page } = this.state;
-    const { dataEP, countEP, filters } = this.props;
+    const { dataEP, countEP, filters, years, months } = this.props;
 
     let data = new URI(dataEP)
       .addSearch(filters.toJS())
+      .addSearch('year', years.toArray())
       .addSearch('pageSize', pageSize)
+      .addSearch('month', months.toArray())
       .addSearch('pageNumber', page - 1);
 
-    let count = new URI(countEP).addSearch(filters.toJS());
+    let count = new URI(countEP).addSearch(filters.toJS())
+      .addSearch('year', years.toArray()).addSearch('month', months.toArray());
 
     return [
       data,
@@ -36,7 +39,7 @@ class PaginatedTable extends Visualization {
 
   componentDidUpdate(prevProps, prevState) {
     const stateChanged = ['pageSize', 'page'].some(key => this.state[key] !== prevState[key]);
-    const propsChanged = ['filters', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
+    const propsChanged = ['filters', 'years', 'months', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
     if (stateChanged || propsChanged) {
       this.fetch();
     } else {

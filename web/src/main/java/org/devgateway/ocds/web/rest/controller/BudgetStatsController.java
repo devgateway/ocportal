@@ -27,8 +27,9 @@ import java.util.List;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_IMPL_TRANSACTIONS;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_IMPL_TRANSACTIONS_AMOUNT;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.PLANNING_BUDGETB;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.PLANNING_BUDGETB_AMOUNT;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.PLANNING_BUDGETB_ID;
-import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.PLANNING_BUDGETB_MEASURES_COMMITTED;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.facet;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -51,7 +52,7 @@ public class BudgetStatsController extends GenericOCDSController {
         Aggregation agg = newAggregation(
                 match(getYearDefaultFilterCriteria(
                         filter, getContractDateField())
-                        .orOperator(Criteria.where(PLANNING_BUDGETB_MEASURES_COMMITTED).exists(true),
+                        .orOperator(Criteria.where(PLANNING_BUDGETB_AMOUNT).exists(true),
                                 Criteria.where(CONTRACTS_IMPL_TRANSACTIONS_AMOUNT).exists(true))),
 
                 facet(unwind(CONTRACTS, true),
@@ -59,8 +60,8 @@ public class BudgetStatsController extends GenericOCDSController {
                         group().sum(CONTRACTS_IMPL_TRANSACTIONS_AMOUNT).as("amount"),
                         project("amount").and("Expensed").asLiteral().as("type")
                 ).as("expensed")
-                        .and(
-                                group(PLANNING_BUDGETB_ID).first(PLANNING_BUDGETB_MEASURES_COMMITTED).as("amount"),
+                        .and(unwind(PLANNING_BUDGETB),
+                                group(PLANNING_BUDGETB_ID).first(PLANNING_BUDGETB_AMOUNT).as("amount"),
                                 group().sum("amount").as("amount"),
                                 project("amount").and("Committed").asLiteral().as("type")
                         )

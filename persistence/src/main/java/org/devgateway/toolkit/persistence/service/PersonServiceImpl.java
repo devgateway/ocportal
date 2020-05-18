@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @since 2019-03-04
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements PersonService {
 
     @Autowired

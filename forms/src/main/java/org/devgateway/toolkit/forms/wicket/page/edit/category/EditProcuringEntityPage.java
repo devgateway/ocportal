@@ -35,6 +35,7 @@ public class EditProcuringEntityPage extends AbstractCategoryEditPage<ProcuringE
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        addCode().getField().setRequired(false);
 
         ComponentUtil.addTextField(editForm, "emailAddress").getField().add(EmailAddressValidator.getInstance());
         TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");

@@ -16,7 +16,7 @@ import java.util.List;
  * @since 02/09/2019
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class TenderItemServiceImpl extends BaseJpaServiceImpl<TenderItem> implements TenderItemService {
     @Autowired
     private TenderItemRepository repository;

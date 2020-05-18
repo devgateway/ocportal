@@ -71,8 +71,12 @@ public class OcdsController extends GenericOCDSController {
                             + "/src/main/resources/extensions/milestone_delayed_authorization/extension.json",
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/develop/persistence-mongodb"
                             + "/src/main/resources/extensions/contract_contractor/extension.json",
-                    "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_and_spend_extension/"
-                            + "master/extension.json"
+                    "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/"
+                            + "master/extension.json",
+                    "https://raw.githubusercontent.com/open-contracting-extensions/ocds_location_extension/v1.1.3/"
+                            + "extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master/persistence-mongodb"
+                            + "/src/main/resources/extensions/tender_location/extension.json"
             )
     );
 
@@ -130,7 +134,7 @@ public class OcdsController extends GenericOCDSController {
             });
 
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
-            releasePackage.setPublicationPolicy(new URI(serverURL + "/publication-policy.txt"));
+            releasePackage.setPublicationPolicy(new URI(serverURL + "/ui/index.html#!/publication-policy"));
             releasePackage.setUri(new URI(serverURL + "/api/ocds/package/ocid/" + release.getOcid()));
             releasePackage.setVersion("1.1");
         } catch (URISyntaxException e) {

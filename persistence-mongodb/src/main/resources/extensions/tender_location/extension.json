@@ -1,0 +1,24 @@
+{
+  "name": {
+    "en": "Tender Location"
+  },
+  "description": {
+    "en": "Location entity at tender level"
+  },
+  "documentationUrl": {
+    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/tender_location"
+  },
+  "compatibility": [
+    "1.1"
+  ],
+  "codelists": [
+    "locationGazetteers.csv",
+    "geometryType.csv"
+  ],
+  "schemas": [
+    "release-schema.json"
+  ],
+  "dependencies": [
+    "https://raw.githubusercontent.com/open-contracting-extensions/ocds_location_extension/v1.1.3/extension.json"
+  ]
+}

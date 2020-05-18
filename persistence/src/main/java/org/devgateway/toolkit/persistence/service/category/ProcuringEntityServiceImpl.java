@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProcuringEntityServiceImpl extends BaseJpaServiceImpl<ProcuringEntity> implements ProcuringEntityService {
 
     @Autowired

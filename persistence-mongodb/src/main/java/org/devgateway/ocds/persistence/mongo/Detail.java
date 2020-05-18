@@ -68,7 +68,7 @@ public class Detail {
             + "identifier, cross-referenced to an entry in the parties array at the top level of the release.")
     @JsonDeserialize(as = java.util.LinkedHashSet.class)
     @Merge(MergeStrategy.ocdsVersion)
-    private Set<Organization> tenderers = new LinkedHashSet<>();
+    private Set<OrganizationReference> tenderers = new LinkedHashSet<>();
     @JsonProperty("value")
     private Amount value;
     /**
@@ -150,7 +150,7 @@ public class Detail {
      * to an entry in the parties array at the top level of the release.
      */
     @JsonProperty("tenderers")
-    public Set<Organization> getTenderers() {
+    public Set<OrganizationReference> getTenderers() {
         return tenderers;
     }
 
@@ -161,7 +161,7 @@ public class Detail {
      * to an entry in the parties array at the top level of the release.
      */
     @JsonProperty("tenderers")
-    public void setTenderers(Set<Organization> tenderers) {
+    public void setTenderers(Set<OrganizationReference> tenderers) {
         this.tenderers = tenderers;
     }
 

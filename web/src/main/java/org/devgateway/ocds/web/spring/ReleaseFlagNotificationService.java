@@ -3,6 +3,7 @@ package org.devgateway.ocds.web.spring;
 import com.google.common.collect.Sets;
 import org.apache.logging.log4j.util.Strings;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
+import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.flags.ReleaseFlags;
 import org.devgateway.ocds.persistence.mongo.repository.main.FlaggedReleaseRepository;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -83,11 +84,6 @@ public class ReleaseFlagNotificationService {
         set.add(releaseId);
     }
 
-
-    private Long getDepartmentIdFromRelease(FlaggedRelease flaggedRelease) {
-        return flaggedRelease.getDepartmentId();
-    }
-
     @Transactional
     private Set<String> getUsersValidatorsEmailsFromRelease(Long departmentId) {
         Optional<Department> department = departmentService.findById(departmentId);
@@ -107,7 +103,8 @@ public class ReleaseFlagNotificationService {
                     if (flag && (!latestReleaseFlagHistory.isPresent()
                             || !latestReleaseFlagHistory.get().getFlagged().contains(f))) {
                         addDepartmentFlagReleaseId(
-                                getDepartmentIdFromRelease(flaggedRelease),
+                                Long.valueOf(flaggedRelease.getBuyer().getId().replaceAll(
+                                        MongoConstants.OCDSSchemes.X_KE_OCMAKUENI + "-", "")),
                                 f, flaggedRelease.getId()
                         );
 

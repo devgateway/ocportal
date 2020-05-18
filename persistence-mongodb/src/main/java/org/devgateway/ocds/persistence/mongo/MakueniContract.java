@@ -4,13 +4,13 @@ package org.devgateway.ocds.persistence.mongo;
  * @author mpostelnicu
  */
 public class MakueniContract extends Contract {
-    private MakueniOrganization contractor;
+    private OrganizationReference contractor;
 
-    public MakueniOrganization getContractor() {
+    public OrganizationReference getContractor() {
         return contractor;
     }
 
-    public void setContractor(MakueniOrganization contractor) {
+    public void setContractor(OrganizationReference contractor) {
         this.contractor = contractor;
     }
 }
