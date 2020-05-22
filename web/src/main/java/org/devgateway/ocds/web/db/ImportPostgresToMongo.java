@@ -4,10 +4,15 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,10 @@ import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +70,61 @@ public class ImportPostgresToMongo {
     @Autowired
     private MongoFileStorageService mongoFileStorageService;
 
+    @Autowired
+    private TenderProcessService tenderProcessService;
+
+    @Autowired
+    private AdminSettingsRepository adminSettingsRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Transactional(readOnly = true)
+    public void formStatusIntegrityCheck() {
+        logger.info("Checking forms status integrity...");
+        StringBuffer sb = new StringBuffer();
+        tenderProcessService.findAll().forEach(e -> formStatusIntegrityCheck(e, sb));
+        logger.info("Forms status integrity check done.");
+
+        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)
+                || SecurityUtil.getSuperAdminEmail(adminSettingsRepository) == null) {
+            logger.info("Form Status Integrity Checks Failure: " + sb.toString());
+            return;
+        }
+
+        final MimeMessagePreparator messagePreparator = mimeMessage -> {
+            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
+            msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
+            msg.setFrom("noreply@dgstg.org");
+            msg.setSubject("Form Status Integrity Checks Failure");
+            msg.setText(sb.toString());
+        };
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            logger.error("Failed to send ocds validation failure emails ", e);
+            throw e;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void formStatusIntegrityCheck(AbstractMakueniEntity p, StringBuffer sb) {
+        p.getDirectChildrenEntitiesNotNull().forEach(e -> {
+            if (!goodParentStatus(p.getStatus(), e.getStatus())) {
+                sb.append("Parent ").append(p.getClass().getSimpleName()).append(" with id ").append(p.getId())
+                        .append(" and status ").append(p.getStatus()).append(" has child ")
+                        .append(e.getClass().getSimpleName())
+                        .append(" with id ").append(e.getId()).append(" and status ").append(e.getStatus())
+                        .append("\n");
+            }
+            formStatusIntegrityCheck(e, sb);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public boolean goodParentStatus(String parentStatus, String childStatus) {
+        return !DBConstants.Status.DRAFT.equals(parentStatus) || DBConstants.Status.DRAFT.equals(childStatus);
+    }
 
     @Transactional(readOnly = true)
     public void importToMongo() {

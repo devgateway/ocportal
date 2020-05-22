@@ -35,6 +35,10 @@ public class ImportPostgresToMongoJob {
 
     @Autowired
     private AdminSettingsRepository adminSettingsRepository;
+    
+    public void formStatusIntegrityCheck() {
+        importPostgresToMongo.formStatusIntegrityCheck();
+    }
 
     /**
      * Invoke the import of all makueni data into mongo db.
@@ -42,6 +46,7 @@ public class ImportPostgresToMongoJob {
     @Scheduled(cron = "0 0 23 * * SAT")
     @Async
     public void importOcdsMakueniToMongo() {
+        formStatusIntegrityCheck();
         importPostgresToMongo.importToMongo();
         makueniToOCDSConversionService.convertToOcdsAndSaveAllApprovedPurchaseRequisitions();
         releaseFlaggingService.processAndSaveFlagsForAllReleases(releaseFlaggingService::logMessage);
