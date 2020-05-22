@@ -1089,4 +1089,42 @@
         </delete>
     </changeSet>
 
+    <changeSet id="OCMAKU-651-rename-proc-methods" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <update tableName="CATEGORY">
+            <column name="label" value="Direct Procurement"/>
+            <where>dtype='ProcurementMethod' and label='Direct'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Open Tender - National"/>
+            <where>dtype='ProcurementMethod' and label='Open tender national'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Request for Proposal"/>
+            <where>dtype='ProcurementMethod' and label='RF proposal'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Request for Quotation"/>
+            <where>dtype='ProcurementMethod' and label='RFQ'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Restricted Tender"/>
+            <where>dtype='ProcurementMethod' and label='Restricted tender'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Specially Permitted"/>
+            <where>dtype='ProcurementMethod' and label='Special permitted'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Low Value Procurement"/>
+            <where>dtype='ProcurementMethod' and label='Low value procurement'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Open Tender - International"/>
+            <where>dtype='ProcurementMethod' and label='Open tender International'</where>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
