@@ -11,10 +11,6 @@
   "compatibility": [
     "1.1"
   ],
-  "codelists": [
-    "locationGazetteers.csv",
-    "geometryType.csv"
-  ],
   "schemas": [
     "release-schema.json"
   ],

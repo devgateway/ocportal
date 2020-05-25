@@ -1,15 +1,15 @@
 package org.devgateway.ocds.persistence.mongo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import java.io.Serializable;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJson;
+
+import java.io.Serializable;
 
 /**
  * Location
@@ -26,6 +26,7 @@ import org.springframework.data.mongodb.core.geo.GeoJson;
 })
 public abstract class Location<T extends GeoJson<?>> implements Identifiable {
     @Id
+    @JsonIgnore
     private String id;
 
     /**

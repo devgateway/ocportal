@@ -176,12 +176,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         if (txt.isEmpty()) {
             return;
         }
-
-        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)
-                || SecurityUtil.getSuperAdminEmail(adminSettingsRepository) == null) {
-            logger.info("OCDS Validation Failures After Import: " + txt);
-            return;
-        }
+        
+        logger.info("OCDS Validation Failures After Import: " + txt);
 
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -1099,7 +1095,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setValue, contract::getContractValue, this::convertAmount);
         safeSetEach(ocdsContract.getDocuments()::add, contract::getContractDocs, this::storeAsDocumentContractNotice);
         safeSet(ocdsContract::setAwardID,
-                contract.getTenderProcess().getSingleAwardAcceptance()::getAcceptedAcceptance, this::entityIdToString);
+                contract.getTenderProcess().getSingleAwardAcceptance()
+                        .getAcceptedAcceptance()::getExportableNotificationItem, this::entityIdToString);
         safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertOrganization);
         safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);

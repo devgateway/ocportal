@@ -36,7 +36,9 @@ import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -527,8 +529,16 @@ public abstract class GenericOCDSController {
         if (ObjectUtils.isEmpty(filter.getText()) || filter.getAwardFiltering()) {
             return new Criteria();
         } else {
-            return TextCriteria.forLanguage(MongoConstants.MONGO_LANGUAGE).matchingAny(filter.getText());
+            return TextCriteria.forLanguage(MongoConstants.MONGO_LANGUAGE).matchingAny(decodeText(filter.getText()));
         }
+    }
+
+    protected String decodeText(String txt) {
+        try {
+            return java.net.URLDecoder.decode(txt, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+        }
+        return null;
     }
 
     /**
