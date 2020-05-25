@@ -86,12 +86,8 @@ public class ImportPostgresToMongo {
         tenderProcessService.findAll().forEach(e -> formStatusIntegrityCheck(e, sb));
         logger.info("Forms status integrity check done.");
 
-        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)
-                || SecurityUtil.getSuperAdminEmail(adminSettingsRepository) == null) {
-            logger.info("Form Status Integrity Checks Failure: " + sb.toString());
-            return;
-        }
-
+        logger.info("Form Status Integrity Checks Failure: " + sb.toString());
+        
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
