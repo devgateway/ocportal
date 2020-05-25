@@ -96,7 +96,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
-import org.wicketstuff.pageserializer.fast2.Fast2WicketSerializer;
 import org.wicketstuff.select2.ApplicationSettings;
 
 import javax.persistence.EntityManagerFactory;
@@ -222,40 +221,12 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getResourceSettings().setCssCompressor(new YuiCssCompressor());
             getResourceSettings().setUseMinifiedResources(true);
 
-            // getFrameworkSettings().setSerializer(new DeflatedJavaSerializer(getApplicationKey()));
-            // final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            // getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
-
             getMarkupSettings().setStripComments(true);
             getMarkupSettings().setCompressWhitespace(true);
             getMarkupSettings().setStripWicketTags(true);
         } else {
             getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
-
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
         }
-
-        final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-        fstConfiguration.registerClass(
-                // POJO
-                ProcurementPlan.class, PlanItem.class, Category.class, Department.class,
-                FiscalYear.class, Item.class, ProcurementMethod.class, TargetGroup.class, ZonedDateTime.class,
-                // file
-                FileMetadata.class, FileInputBootstrapFormComponent.class,
-                // components
-                GenericPersistableJpaTextChoiceProvider.class, GenericBootstrapFormComponent.class, FormGroup.class,
-                Select2ChoiceBootstrapFormComponent.class, Select2MultiChoiceBootstrapFormComponent.class,
-                TextFieldBootstrapFormComponent.class, CheckBoxToggleBootstrapFormComponent.class,
-                DateFieldBootstrapFormComponent.class,
-                // sleep component
-                GenericSleepFormComponent.class, Label.class,
-                // buttons
-                BootstrapSubmitButton.class, BootstrapDeleteButton.class, BootstrapCancelButton.class,
-                BootstrapAddButton.class, LaddaAjaxButton.class,
-                // pages
-                EditProcurementPlanPage.class, PlanItemPanel.class);
-        getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
 
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
         // be sure that we have added Dozer Listener

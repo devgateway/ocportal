@@ -19,6 +19,7 @@ import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
@@ -33,6 +34,8 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -135,6 +138,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal deleteModal;
 
+    protected TextContentModal deleteFailedModal;
+
     @SpringBean
     private EntityManager entityManager;
 
@@ -190,6 +195,28 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         return modal;
     }
 
+    protected TextContentModal createDeleteFailedModal() {
+        final TextContentModal modal = new TextContentModal("deleteFailedModal",
+                new ResourceModel("delete_error_message"));
+        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                setResponsePage(listPageClass);
+            }
+        };
+        deleteButton.setDefaultFormProcessing(false);
+        deleteButton.setLabel(Model.of("OK"));
+        modal.addButton(deleteButton);
+
+        modal.add(new AjaxEventBehavior("hidden.bs.modal") {
+            @Override
+            protected void onEvent(final AjaxRequestTarget target) {
+                setResponsePage(listPageClass);
+            }
+        });
+
+        return modal;
+    }
 
     /**
      * Traverses all fields and refreshes the ones that are not valid, so that
@@ -272,17 +299,20 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             deleteModal = createDeleteModal();
             add(deleteModal);
 
+            deleteFailedModal = createDeleteFailedModal();
+            add(deleteFailedModal);
+
             // don't display the delete button if we just create a new entity
             if (entityId == null) {
                 deleteButton.setVisibilityAllowed(false);
             }
 
-            add(getCancelButton());
+            add(getCancelButton("cancel"));
         }
     }
 
-    protected BootstrapCancelButton getCancelButton() {
-        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
+    protected BootstrapCancelButton getCancelButton(final String id) {
+        return new BootstrapCancelButton(id, new StringResourceModel("cancelButton", this, null)) {
             private static final long serialVersionUID = -249084359200507749L;
 
             @Override
@@ -543,6 +573,23 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         // this fragment ensures extra buttons are added below the wicket:child section in child
         final Fragment fragment = new Fragment("extraButtons", "noButtons", this);
         editForm.add(fragment);
+    }
+
+    protected void onDelete(final AjaxRequestTarget target) {
+        final T deleteable = editForm.getModelObject();
+        try {
+            beforeDeleteEntity(deleteable);
+
+            jpaService.delete(deleteable);
+
+            // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
+            flushReportingCaches();
+        } catch (DataIntegrityViolationException e) {
+            deleteFailedModal.show(true);
+            target.add(deleteFailedModal);
+            return;
+        }
+        setResponsePage(listPageClass);
     }
 
     @Override

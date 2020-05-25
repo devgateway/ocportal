@@ -35,7 +35,7 @@ public class LogoutPage extends RedirectPage {
     private RememberMeServices rememberMeServices;
 
     public LogoutPage() {
-        super("/logout");
+        super(RequestCycle.get().getRequest().getContextPath() + "/logout");
 
         if (rememberMeServices != null) {
             rememberMeServices.loginFail((HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest(),

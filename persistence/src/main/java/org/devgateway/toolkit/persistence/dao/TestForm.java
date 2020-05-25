@@ -40,7 +40,8 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-public class TestForm extends AbstractStatusAuditableEntity {
+public class TestForm extends AbstractAuditableEntity {
+
     private static final long serialVersionUID = 1L;
 
     @ExcelExport
