@@ -176,12 +176,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         if (txt.isEmpty()) {
             return;
         }
-
-        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)
-                || SecurityUtil.getSuperAdminEmail(adminSettingsRepository) == null) {
-            logger.info("OCDS Validation Failures After Import: " + txt);
-            return;
-        }
+        
+        logger.info("OCDS Validation Failures After Import: " + txt);
 
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");

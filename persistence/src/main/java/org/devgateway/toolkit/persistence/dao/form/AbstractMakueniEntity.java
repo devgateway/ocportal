@@ -9,6 +9,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.MappedSuperclass;
@@ -51,10 +52,12 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
      */
     @JsonIgnore
     @org.springframework.data.annotation.Transient
+    @Transactional
     protected abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
+    @Transactional
     public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntitiesNotNull() {
         return getDirectChildrenEntities().stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
