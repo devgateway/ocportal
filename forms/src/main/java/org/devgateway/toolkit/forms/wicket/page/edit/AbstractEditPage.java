@@ -12,7 +12,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationMessage;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.util.Attributes;
@@ -34,12 +33,10 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.ValidationError;
@@ -307,12 +304,12 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 deleteButton.setVisibilityAllowed(false);
             }
 
-            add(getCancelButton("cancel"));
+            add(getCancelButton());
         }
     }
 
-    protected BootstrapCancelButton getCancelButton(final String id) {
-        return new BootstrapCancelButton(id, new StringResourceModel("cancelButton", this, null)) {
+    protected BootstrapCancelButton getCancelButton() {
+        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
             private static final long serialVersionUID = -249084359200507749L;
 
             @Override
@@ -516,11 +513,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
             flushReportingCaches();
         } catch (DataIntegrityViolationException e) {
-            error(new NotificationMessage(
-                    new StringResourceModel("delete_error_message", AbstractEditPage.this, null))
-                    .hideAfter(Duration.NONE));
-            target.add(feedbackPanel);
-
+            deleteFailedModal.show(true);
+            target.add(deleteFailedModal);
             return;
         }
         setResponsePage(listPageClass);
@@ -573,23 +567,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         // this fragment ensures extra buttons are added below the wicket:child section in child
         final Fragment fragment = new Fragment("extraButtons", "noButtons", this);
         editForm.add(fragment);
-    }
-
-    protected void onDelete(final AjaxRequestTarget target) {
-        final T deleteable = editForm.getModelObject();
-        try {
-            beforeDeleteEntity(deleteable);
-
-            jpaService.delete(deleteable);
-
-            // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
-            flushReportingCaches();
-        } catch (DataIntegrityViolationException e) {
-            deleteFailedModal.show(true);
-            target.add(deleteFailedModal);
-            return;
-        }
-        setResponsePage(listPageClass);
     }
 
     @Override
