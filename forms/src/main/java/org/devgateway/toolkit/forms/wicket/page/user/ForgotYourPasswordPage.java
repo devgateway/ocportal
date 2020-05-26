@@ -100,33 +100,22 @@ public class ForgotYourPasswordPage extends BasePage {
                     final String email = ForgotPasswordForm.this.getModelObject().getEmailAddress();
                     final Person person = personService.findByEmail(email);
 
-                    if (person == null) {
-                        feedbackPanel.error("Email address not found");
-                    } else {
+                    if (person != null) {
                         final String newPassword = RandomStringUtils.random(RANDOM_PASSWORD_LENGTH, true, true);
                         person.setPassword(passwordEncoder.encode(newPassword));
                         person.setChangePasswordNextSignIn(true);
 
                         personService.saveAndFlush(person);
                         sendEmailService.sendEmailResetPassword(person, newPassword);
-
-                        emailAddress.setVisibilityAllowed(false);
-                        this.setVisibilityAllowed(false);
-
-                        message.setVisibilityAllowed(true);
-                        goBack.setVisibilityAllowed(true);
-
-                        target.add(ForgotPasswordForm.this);
                     }
 
-                    target.add(feedbackPanel);
-                }
+                    emailAddress.setVisibilityAllowed(false);
+                    this.setVisibilityAllowed(false);
 
-                @Override
-                protected void onError(final AjaxRequestTarget target) {
-                    super.onError(target);
+                    message.setVisibilityAllowed(true);
+                    goBack.setVisibilityAllowed(true);
 
-                    target.add(feedbackPanel);
+                    target.add(ForgotPasswordForm.this);
                 }
             };
             add(submit);

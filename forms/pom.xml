@@ -260,12 +260,6 @@
             <artifactId>poi</artifactId>
             <version>${poi.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-serializer-fast2</artifactId>
-            <version>${wicketstuff.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
