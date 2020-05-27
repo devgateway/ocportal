@@ -15,13 +15,19 @@ class PaginatedTable extends Visualization {
 
     let data = new URI(dataEP)
       .addSearch(filters.toJS())
-      .addSearch('year', years.toArray())
       .addSearch('pageSize', pageSize)
-      .addSearch('month', months.toArray())
       .addSearch('pageNumber', page - 1);
 
-    let count = new URI(countEP).addSearch(filters.toJS())
-      .addSearch('year', years.toArray()).addSearch('month', months.toArray());
+    let count = new URI(countEP).addSearch(filters.toJS());
+
+    if(years) {
+      data = data.addSearch('year', years.toArray());
+      count = count.addSearch('year', years.toArray());
+    }
+    if(months) {
+      data.addSearch('month', months.toArray())
+      count = count.addSearch('month', months.toArray());
+    }
 
     return [
       data,
