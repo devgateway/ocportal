@@ -260,6 +260,23 @@
             <artifactId>poi</artifactId>
             <version>${poi.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-serializer-fast2</artifactId>
+            <version>${wicketstuff.version}</version>
+        </dependency>
+
+        <!--
+            Fst 2.43 has a bug in serializing self-referencing arrays. Fst is imported indirectly through
+            wicketstuff-serializer-fast2. At the time there is no update to wicketstuff-serializer-fast2 that
+            uses fst 2.44 or newer. Enforcing latest available release of fst. -->
+        <dependency>
+            <groupId>de.ruedigermoeller</groupId>
+            <artifactId>fst</artifactId>
+            <version>2.56</version>
+        </dependency>
+
     </dependencies>
 
     <build>
