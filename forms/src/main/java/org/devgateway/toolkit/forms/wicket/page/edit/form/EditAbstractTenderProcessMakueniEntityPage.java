@@ -56,8 +56,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
             alertTerminated.setVisibilityAllowed(true);
         }
 
-        saveTerminateButton.setVisibilityAllowed(editForm.getModelObject().getDirectChildrenEntitiesNotNull()
-                .isEmpty());
+        saveTerminateButton.setVisibilityAllowed(!isTerminated()
+                && editForm.getModelObject().getDirectChildrenEntitiesNotNull().isEmpty());
 
         if (!ObjectUtils.isEmpty(getNextForm())) {
             deleteButton.setVisibilityAllowed(false);
