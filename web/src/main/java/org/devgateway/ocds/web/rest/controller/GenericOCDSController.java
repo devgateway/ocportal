@@ -400,6 +400,17 @@ public abstract class GenericOCDSController {
 
     protected ProjectionOperation transformYearlyGrouping(YearFilterPagingRequest filter) {
         if (filter.getMonthly()) {
+            return project().andInclude("year", "month");
+        } else {
+            return project(Fields.from(
+                    Fields.field("year", org.springframework.data
+                            .mongodb.core.aggregation.Fields.UNDERSCORE_ID_REF)))
+                    .andExclude(Fields.UNDERSCORE_ID);
+        }
+    }
+
+    protected ProjectionOperation transformYearlyGroupingCostEff(YearFilterPagingRequest filter) {
+        if (filter.getMonthly()) {
             return project();
         } else {
             return project(Fields.from(
