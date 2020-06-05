@@ -14,13 +14,13 @@ class CorruptionType extends CustomPopupChart {
       grouped[trace] = {};
     });
 
-    const { monthly } = this.props;
+    const { monthly, years } = this.props;
     data.forEach((datum) => {
       const type = datum.get('type');
       let date;
       if (monthly) {
         const month = datum.get('month');
-        date = this.t(`general:months:${month}`);
+        date = this.tMonth(month, years);
       } else {
         date = datum.get('year');
       }
@@ -55,7 +55,7 @@ class CorruptionType extends CustomPopupChart {
       if (monthly) {
         dates = range(1, 12)
         .filter(month => months.has(month))
-        .map(month => this.t(`general:months:${month}`));
+        .map(month => this.tMonth(month, years));
 
         values = dates.map(month => (dataForType[month] ? dataForType[month].flaggedCount : 0));
       } else if (years.count()) {

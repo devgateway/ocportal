@@ -28,10 +28,11 @@ class OverviewChart extends FrontendDateFilterableChart {
       tender: this.t('charts:overview:traces:tender')
     };
 
+    const { years } = this.props;
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly ?
       data.map(pluckImm('month'))
-      .map(month => this.t(`general:months:${month}`))
+        .map(month => this.tMonth(month, years))
       .toArray() :
       data.map(pluckImm('year'))
       .toArray();
