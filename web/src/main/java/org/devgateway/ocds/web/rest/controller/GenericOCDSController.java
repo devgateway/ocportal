@@ -400,7 +400,7 @@ public abstract class GenericOCDSController {
 
     protected ProjectionOperation transformYearlyGrouping(YearFilterPagingRequest filter) {
         if (filter.getMonthly()) {
-            return project().andInclude("year", "month");
+            return project();
         } else {
             return project(Fields.from(
                     Fields.field("year", org.springframework.data
