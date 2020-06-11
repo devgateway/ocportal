@@ -46,6 +46,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +76,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
     @SpringBean
     private TargetGroupService targetGroupService;
 
-    private BootstrapForm<PlanItemFileUpload> form;
+    protected BootstrapForm<PlanItemFileUpload> form;
 
     private Map<String, Integer> colIdx = ImmutableMap.<String, Integer>builder()
             .put("No", 0)
@@ -126,7 +127,12 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         public void validate(Form<?> form) {
             Boolean contentTypeCheck = checkExcelContentType();
             if (contentTypeCheck != null && !contentTypeCheck) {
-                form.error(getString("ExcelContentTypeValidator"));
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("encoding",
+                        ImportProcurementPlanItemsPage.this.form
+                                .getModelObject().getFiles().iterator().next().getContentType());
+                map.put("allowed", Constants.ContentType.XLSX);
+                form.error(getString("ExcelContentTypeValidator"), map);
                 return;
             }
 
@@ -163,6 +169,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             return null;
         }
         FileMetadata file = form.getModelObject().getFiles().iterator().next();
+        logger.info("Content type was " + file.getContentType());
         return file.getContentType().equals(Constants.ContentType.XLSX);
     }
 
