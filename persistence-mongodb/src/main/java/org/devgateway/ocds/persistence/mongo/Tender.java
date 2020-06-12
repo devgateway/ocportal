@@ -115,7 +115,7 @@ public class Tender {
     @JsonPropertyDescription("The id and name of the party being referenced. Used to cross-reference to the parties "
             + "section")
     @ExcelExport
-    private Organization procuringEntity;
+    private OrganizationReference procuringEntity;
     /**
      * Items to be procured
      * <p>
@@ -321,7 +321,7 @@ public class Tender {
     @JsonPropertyDescription("All parties who submit a bid on a tender. More detailed information on bids and the "
             + "bidding organization can be provided using the optional bid extension.")
     @ExcelExport
-    private Set<Organization> tenderers = new LinkedHashSet<Organization>();
+    private Set<OrganizationReference> tenderers = new LinkedHashSet<>();
     /**
      * Documents
      * <p>
@@ -462,7 +462,7 @@ public class Tender {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("procuringEntity")
-    public Organization getProcuringEntity() {
+    public OrganizationReference getProcuringEntity() {
         return procuringEntity;
     }
 
@@ -472,7 +472,7 @@ public class Tender {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("procuringEntity")
-    public void setProcuringEntity(Organization procuringEntity) {
+    public void setProcuringEntity(OrganizationReference procuringEntity) {
         this.procuringEntity = procuringEntity;
     }
 
@@ -881,7 +881,7 @@ public class Tender {
      * be provided using the optional bid extension.
      */
     @JsonProperty("tenderers")
-    public Set<Organization> getTenderers() {
+    public Set<OrganizationReference> getTenderers() {
         return tenderers;
     }
 
@@ -892,7 +892,7 @@ public class Tender {
      * be provided using the optional bid extension.
      */
     @JsonProperty("tenderers")
-    public void setTenderers(Set<Organization> tenderers) {
+    public void setTenderers(Set<OrganizationReference> tenderers) {
         this.tenderers = tenderers;
     }
 
@@ -1095,9 +1095,9 @@ public class Tender {
 
     public enum MainProcurementCategory {
 
-        GOODS("goods"),
-        WORKS("works"),
-        SERVICES("services");
+        goods("goods"),
+        works("works"),
+        services("services");
         private final String value;
         private static final Map<String, MainProcurementCategory> CONSTANTS = new HashMap<String,
                 MainProcurementCategory>();

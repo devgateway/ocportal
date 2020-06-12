@@ -49,7 +49,7 @@ public class ListUserPage extends AbstractListPage<Person> {
 
     public ListUserPage(final PageParameters pageParameters) {
         super(pageParameters);
-
+        filterGoReset = true;
         this.jpaService = personService;
         this.editPageClass = EditUserPageElevated.class;
     }

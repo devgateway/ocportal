@@ -148,14 +148,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     public boolean isTerminatedWithImplementation() {
         return PersistenceUtil.checkTerminated(
-                ArrayUtils.add(getDirectChildrenEntities().toArray(new Statusable[]{}), this));
+                ArrayUtils.add(getDirectChildrenEntitiesNotNull().toArray(new Statusable[]{}), this));
     }
 
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
         children.addAll(getTenderProcessNotNull().getAdministratorReports());
         children.addAll(getTenderProcessNotNull().getPmcReports());

@@ -11,4 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UnitRepository extends CategoryRepository<Unit> {
 
     Unit findByLabel(String label);
+
+    Unit findByLabelIgnoreCase(String label);
 }

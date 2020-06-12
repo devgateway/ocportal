@@ -2,7 +2,7 @@ package org.devgateway.ocds.web.flags.release;
 
 
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
-import org.devgateway.ocds.persistence.mongo.Organization;
+import org.devgateway.ocds.persistence.mongo.OrganizationReference;
 import org.devgateway.ocds.persistence.mongo.flags.AbstractFlaggedReleaseFlagProcessor;
 import org.devgateway.ocds.persistence.mongo.flags.Flag;
 import org.devgateway.ocds.persistence.mongo.flags.FlagType;
@@ -44,7 +44,7 @@ public class ReleaseFlagI083Processor extends AbstractFlaggedReleaseFlagProcesso
         List<String> tenderers = flaggable.getTender()
                 .getTenderers()
                 .stream()
-                .map(Organization::getId)
+                .map(OrganizationReference::getId)
                 .sorted()
                 .collect(Collectors.toList());
         String key = buildKey(

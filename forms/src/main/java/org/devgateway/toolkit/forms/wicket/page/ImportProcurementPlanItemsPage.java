@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -45,7 +44,6 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -126,9 +124,16 @@ public class ImportProcurementPlanItemsPage extends BasePage {
 
         @Override
         public void validate(Form<?> form) {
+            Boolean contentTypeCheck = checkExcelContentType();
+            if (contentTypeCheck != null && !contentTypeCheck) {
+                form.error(getString("ExcelContentTypeValidator"));
+                return;
+            }
+
             Boolean checked = checkExcelFormat();
             if (checked != null && !checked) {
                 form.error(getString("ExcelFormatValidator"));
+                return;
             }
             try {
                 createProcurementPlan();
@@ -153,6 +158,14 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         form.add(downloadLink);
     }
 
+    public Boolean checkExcelContentType() {
+        if (form.getModelObject().getFiles().size() == 0) {
+            return null;
+        }
+        FileMetadata file = form.getModelObject().getFiles().iterator().next();
+        return file.getContentType().equals(Constants.ContentType.XLSX);
+    }
+
     public Boolean checkExcelFormat() {
         if (form.getModelObject().getFiles().size() == 0) {
             return null;
@@ -175,7 +188,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 }
                 rn++;
             }
-        } catch (IOException | InvalidFormatException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -219,9 +232,11 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 pp.getPlanItems().add(pi);
                 pi.setEstimatedCost(BigDecimal.valueOf(r.getCell(4).getNumericCellValue()));
 
-                Unit unit = unitService.findByLabel(r.getCell(5).getStringCellValue());
+                Unit unit = unitService.findByLabelIgnoreCase(r.getCell(5).getStringCellValue());
                 if (unit == null) {
-                    unit = createUnit(r);
+                    throw new RuntimeException("Unit " + r.getCell(5).getStringCellValue() + " is not supported. "
+                            + "Use standard UNCEFACT unit names and make sure they are added in the admin->metadata "
+                            + "first");
                 }
 
                 pi.setUnitOfIssue(unit);
@@ -244,15 +259,13 @@ public class ImportProcurementPlanItemsPage extends BasePage {
     }
 
     private ProcurementMethod getProcurementMethod(Row r) {
-        String pmText = r.getCell(7).getStringCellValue();
-        if (pmText.equals("Request for Quotation")) {
-            return procurementMethodService.findById(18L).get();
-        }
+        String pmText = r.getCell(7).getStringCellValue().trim();
 
-        if (pmText.equals("Direct Procurement")) {
-            return procurementMethodService.findById(15L).get();
+        ProcurementMethod pm = procurementMethodService.findByLabel(pmText);
+        if (pm == null) {
+            throw new RuntimeException("Procurement method " + pmText + " is not mapped");
         }
-        throw new RuntimeException("Procurement method " + pmText + " is not mapped");
+        return pm;
     }
 
     private TargetGroup getTargetGroup(Row r) {
@@ -279,12 +292,6 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         }
 
         return t;
-    }
-
-    private Unit createUnit(Row r) {
-        Unit unit = new Unit();
-        unit.setLabel(r.getCell(5).getStringCellValue());
-        return unitService.save(unit);
     }
 
     protected Item createItem(Row r) {

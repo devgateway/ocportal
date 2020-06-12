@@ -586,6 +586,7 @@ a.more-details-link:hover::before {
     border: 2px solid @border-grey;
 }
 
+
 .alerts-container {
     position: fixed;
     bottom: 30px;
@@ -610,6 +611,36 @@ a.more-details-link:hover::before {
             &:hover{
               background-color: @active-text-color;
               border-color: @active-text-color;
+            }
+        }
+    }
+}
+
+
+.smshelp-container {
+    position: fixed;
+    bottom: 30px;
+    left: 240px;
+    height: 100px;
+    width: 25%;
+    margin-right: 0;
+    margin-left: 0;
+    z-index: 10;
+    @media screen and (max-width: 767px) {
+        margin-left: 13%;
+        position: relative;
+    }
+
+    .alerts-button {
+        height: 100%;
+        margin-left: 5px;
+        .btn {
+            background-color: @active-tab-color;
+            border-color: @active-tab-color;
+            margin-top: 40px;
+            &:hover{
+                background-color: @active-text-color;
+                border-color: @active-text-color;
             }
         }
     }

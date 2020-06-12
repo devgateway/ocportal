@@ -171,7 +171,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return tenderProcesses;
     }
 

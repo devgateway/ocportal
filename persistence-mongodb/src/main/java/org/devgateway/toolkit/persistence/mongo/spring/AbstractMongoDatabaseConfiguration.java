@@ -144,6 +144,10 @@ public abstract class AbstractMongoDatabaseConfiguration {
                 .onField("name")
                 .onField("_id").onField("additionalIdentifiers._id").build());
 
+        getTemplate().indexOps(Organization.class).ensureIndex(new Index()
+                .on("additionalIdentifiers.scheme", Direction.ASC)
+                .on("identifier.scheme", Direction.ASC));
+
         getTemplate().indexOps(Release.class).ensureIndex(new TextIndexDefinitionBuilder()
                 .named("text_search")
                 .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)

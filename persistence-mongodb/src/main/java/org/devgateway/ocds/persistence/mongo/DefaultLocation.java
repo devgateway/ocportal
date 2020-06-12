@@ -1,5 +1,6 @@
 package org.devgateway.ocds.persistence.mongo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.devgateway.ocds.persistence.mongo.excel.annotation.ExcelExport;
@@ -41,6 +42,7 @@ public class DefaultLocation extends Location<GeoJsonPoint> {
     }
 
     @Override
+    @JsonIgnore
     public String getGazetteerPrefix() {
         return GEONAMES_URI_PREFIX;
     }

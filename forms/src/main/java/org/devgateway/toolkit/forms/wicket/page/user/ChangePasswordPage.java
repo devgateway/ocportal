@@ -30,6 +30,8 @@ public class ChangePasswordPage extends EditUserPage {
         enabled.setVisibilityAllowed(false);
         changePasswordNextSignIn.setVisibilityAllowed(false);
         changeProfilePassword.setVisibilityAllowed(false);
+        plainPassword.setVisibilityAllowed(true);
+        plainPasswordCheck.setVisibilityAllowed(true);
     }
 
     @Override

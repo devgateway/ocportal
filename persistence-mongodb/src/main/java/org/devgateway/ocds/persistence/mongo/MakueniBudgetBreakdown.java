@@ -2,16 +2,14 @@ package org.devgateway.ocds.persistence.mongo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MakueniBudgetBreakdown {
     private String id;
     private Period period;
-    private Map<String, String> classifications = new HashMap<>();
-    private Map<String, BigDecimal> measures = new HashMap<>();
+
+    private Amount amount;
+
+    private OrganizationReference sourceParty;
 
     public String getId() {
         return id;
@@ -29,19 +27,19 @@ public class MakueniBudgetBreakdown {
         this.period = period;
     }
 
-    public Map<String, String> getClassifications() {
-        return classifications;
+    public Amount getAmount() {
+        return amount;
     }
 
-    public void setClassifications(Map<String, String> classifications) {
-        this.classifications = classifications;
+    public void setAmount(Amount amount) {
+        this.amount = amount;
     }
 
-    public Map<String, BigDecimal> getMeasures() {
-        return measures;
+    public OrganizationReference getSourceParty() {
+        return sourceParty;
     }
 
-    public void setMeasures(Map<String, BigDecimal> measures) {
-        this.measures = measures;
+    public void setSourceParty(OrganizationReference sourceParty) {
+        this.sourceParty = sourceParty;
     }
 }

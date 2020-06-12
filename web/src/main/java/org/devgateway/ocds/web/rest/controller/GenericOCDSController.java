@@ -36,7 +36,9 @@ import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -518,12 +520,25 @@ public abstract class GenericOCDSController {
                 MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID, filter.getProcuringEntityId(), filter);
     }
 
+    protected Criteria getOcIdCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(
+                MongoConstants.FieldNames.OCID, filter.getOcid(), filter);
+    }
+
     protected CriteriaDefinition getTextCriteria(DefaultFilterPagingRequest filter) {
         if (ObjectUtils.isEmpty(filter.getText()) || filter.getAwardFiltering()) {
             return new Criteria();
         } else {
-            return TextCriteria.forLanguage(MongoConstants.MONGO_LANGUAGE).matchingAny(filter.getText());
+            return TextCriteria.forLanguage(MongoConstants.MONGO_LANGUAGE).matchingAny(decodeText(filter.getText()));
         }
+    }
+
+    protected String decodeText(String txt) {
+        try {
+            return java.net.URLDecoder.decode(txt, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+        }
+        return null;
     }
 
     /**
@@ -693,6 +708,7 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.BID_TYPE_ID, getBidTypeIdFilterCriteria(filter));
         map.put(MongoConstants.Filters.NOT_BID_TYPE_ID, getNotBidTypeIdFilterCriteria(filter));
         map.put(MongoConstants.Filters.PROCURING_ENTITY_ID, getProcuringEntityIdCriteria(filter));
+        map.put(MongoConstants.Filters.OCID, getOcIdCriteria(filter));
         map.put(MongoConstants.Filters.NOT_PROCURING_ENTITY_ID, getNotProcuringEntityIdCriteria(filter));
         map.put(MongoConstants.Filters.SUPPLIER_ID, getSupplierIdCriteria(filter));
         map.put(MongoConstants.Filters.CONTRACTOR_ID, getContractorIdCriteria(filter));

@@ -117,7 +117,7 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity {
     }
 
     @Override
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

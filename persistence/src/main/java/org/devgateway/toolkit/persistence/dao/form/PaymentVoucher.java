@@ -46,7 +46,7 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
     private Boolean lastPayment;
 
     @Override
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 
