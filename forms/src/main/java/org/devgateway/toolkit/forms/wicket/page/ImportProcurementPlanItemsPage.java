@@ -131,7 +131,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 map.put("encoding",
                         ImportProcurementPlanItemsPage.this.form
                                 .getModelObject().getFiles().iterator().next().getContentType());
-                map.put("allowed", Constants.ContentType.XLSX);
+                map.put("allowed", String.join(" , ", Constants.ContentType.ALL_XLSX));
                 form.error(getString("ExcelContentTypeValidator"), map);
                 return;
             }
@@ -170,7 +170,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         }
         FileMetadata file = form.getModelObject().getFiles().iterator().next();
         logger.info("Content type was " + file.getContentType());
-        return file.getContentType().equals(Constants.ContentType.XLSX);
+        return Constants.ContentType.ALL_XLSX.contains(file.getContentType());
     }
 
     public Boolean checkExcelFormat() {
