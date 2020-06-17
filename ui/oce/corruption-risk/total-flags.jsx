@@ -19,6 +19,7 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
       .toJS(),
       labels: labels,
       textinfo: 'value',
+      textposition: 'outside',
       hole: .8,
       type: 'pie',
       hoverlabel: {
@@ -156,7 +157,6 @@ class TotalFlags extends translatable(React.Component) {
           years={years}
           months={months}
           monthly={monthly}
-          textposition={outside}
           styling={this.props.styling}
         />
         <div className="crd-legend">
