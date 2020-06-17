@@ -44,7 +44,8 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
     const { width } = this.props;
     return {
       showlegend: false,
-      paper_bgcolor: 'rgba(0,0,0,0)'
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
     };
   }
 }
@@ -155,6 +156,7 @@ class TotalFlags extends translatable(React.Component) {
           years={years}
           months={months}
           monthly={monthly}
+          textposition={outside}
           styling={this.props.styling}
         />
         <div className="crd-legend">
