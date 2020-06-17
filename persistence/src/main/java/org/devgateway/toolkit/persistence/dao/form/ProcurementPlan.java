@@ -133,13 +133,15 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     }
 
     /**
-     * Any procurement plan is exportable, even the draft ones
+     * Procurement Plan is exportable only if there is at least one approved/terminated tender process
      *
      * @return
      */
     @Override
+    @Transactional
     public boolean isExportable() {
-        return true;
+        return super.isExportable() || getProjects().stream().filter(Statusable::isExportable).
+                flatMap(p -> p.getTenderProcesses().stream()).anyMatch(Statusable::isExportable);
     }
 
     @Override
