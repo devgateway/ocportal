@@ -13,4 +13,4 @@ env:
 install: mvn install -Dskip.frontend.build=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test -Dskip.frontend.build=true -B --quiet
 jdk:
-    - oraclejdk8
+    - openjdk8

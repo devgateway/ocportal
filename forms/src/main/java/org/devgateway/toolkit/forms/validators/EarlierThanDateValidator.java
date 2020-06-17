@@ -11,35 +11,26 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.validators;
 
-import java.util.Date;
-
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
+import java.util.Date;
+
 /**
  * Validator to test if the date is earlier than provided high date
- *
+ * 
  * @author idobre
  * @since 5/18/15
  */
-public class EarlierThanDateValidator implements IValidator<Date> {
-    private Date highDate;
+public class EarlierThanDateValidator extends AbstractEarlierThanDateValidator<Date> {
+    private static final long serialVersionUID = -6111787761451589941L;
 
     public EarlierThanDateValidator(final Date highDate) {
-        this.highDate = highDate;
+        super(highDate);
     }
 
-    @Override
-    public void validate(final IValidatable<Date> validatable) {
-        if (highDate == null) {
-            return;
-        }
-
-        if (validatable.getValue() != null && highDate.before(validatable.getValue())) {
-            ValidationError error = new ValidationError(this);
-            error.setVariable("highDate", highDate);
-            validatable.error(error);
-        }
+    protected boolean isBefore(final Date highValue, final Date currentValue) {
+        return highValue.before(currentValue);
     }
 }

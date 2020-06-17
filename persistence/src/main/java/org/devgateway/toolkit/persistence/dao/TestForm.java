@@ -35,12 +35,12 @@ import java.util.Set;
 
 /**
  * @author mpostelnicu
- *
  */
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 public class TestForm extends AbstractStatusAuditableEntity {
+
     private static final long serialVersionUID = 1L;
 
     @ExcelExport
