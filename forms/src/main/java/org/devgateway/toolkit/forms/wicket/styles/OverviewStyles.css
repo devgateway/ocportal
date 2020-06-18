@@ -542,6 +542,7 @@
 @media screen and (max-width: 767px){
   .collapse-content ul li{
     display: block;
+    padding-bottom: 10px;
   }
 }
 
