@@ -139,6 +139,7 @@
             margin-top: 35px;
             padding-left: 15px;
             position: relative;
+            top: 0;
         }
 
         .crd-filter-title {
@@ -338,6 +339,7 @@
 
         @media (max-width: 768px) {
             margin-left: 0;
+            padding-bottom: 30px;
             position: relative !important;
             top: auto;
             width: 102%;
@@ -573,7 +575,8 @@
             padding: 30px @gutterRightMd 0 50px;
         }
         @media (max-width: 768px) {
-            padding: 40px;
+          margin-top: 0;
+          padding: 40px;
         }
 
         h2, h3, h4 {
@@ -766,9 +769,20 @@
             @media (max-width: 768px) {
                 font-size: 8px;
                 margin-left: -30px;
+                overflow-x: auto;
                 width: 125%;
             }
+
+            .react-bs-table-bordered{
+              @media (max-width: 768px){
+                overflow-x: scroll;
+                width: 200%;
+              }
+            }
+
         }
+
+
 
         .react-bs-container-body {
             &, td.hoverable {
