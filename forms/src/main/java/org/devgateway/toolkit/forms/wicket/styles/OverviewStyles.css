@@ -539,6 +539,12 @@
     padding-left: 5px;
 }
 
+@media screen and (max-width: 767px){
+  .collapse-content ul li{
+    display: block;
+  }
+}
+
 .collapse-content ul li .project-title,
 .collapse-content ul li .tender,
 .collapse-content ul li .award {
@@ -548,6 +554,15 @@
     flex: auto;
 }
 
+@media screen and (max-width: 767px){
+  .collapse-content ul li .project-title,
+  .collapse-content ul li .tender,
+  .collapse-content ul li .award{
+    clear: both;
+    display: block;
+    flex: none;
+  }
+}
 .collapse-content .tender-info > ul > li{
   display: flex;
   float: none;
@@ -813,6 +828,11 @@
 .tender-detail {
     border-right: 1px solid #eeeeee;
     margin-bottom: 15px;
+}
+@media screen and (max-width: 767px){
+  .tender-detail {
+    border-right: none;
+  }
 }
 
 .tender-header .tender-label {
