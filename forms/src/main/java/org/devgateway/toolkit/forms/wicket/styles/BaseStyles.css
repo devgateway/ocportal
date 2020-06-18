@@ -619,6 +619,9 @@ hr.edit-separator {
   .row.bottom-form-btns{
     padding-bottom: 30px;
   }
+  .row.list-form-wrapper{
+    padding-bottom: 50px;
+  }
 }
 
 /*
