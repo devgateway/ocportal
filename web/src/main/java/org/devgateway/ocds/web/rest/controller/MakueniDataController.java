@@ -309,7 +309,8 @@ public class MakueniDataController extends GenericOCDSController {
         project.put("_id.code", 1);
 
         final Aggregation aggregation = newAggregation(project("department", Fields.UNDERSCORE_ID),
-                group("department"), new CustomOperation(new Document("$project", project)));
+                group("department"), new CustomOperation(new Document("$project", project)),
+                sort(Sort.by("_id.label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
