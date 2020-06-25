@@ -1163,9 +1163,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
     public String getOcid(TenderProcess tenderProcess) {
-        return OCID_PREFIX + DigestUtils.md5Hex(Instant.now().toString());
+        return OCID_PREFIX + tenderProcess.getId();
     }
 
+    public String getReleaseId() {
+        return DigestUtils.md5Hex(Instant.now().toString());
+    }
 
     public List<Tag> createReleaseTag(Release release) {
         List<Tag> tags = new ArrayList<>();
@@ -1198,7 +1201,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Override
     public Release createRelease(TenderProcess tenderProcess) {
         Release release = new Release();
-        safeSet(release::setId, tenderProcess::getId, this::longIdToString);
+        safeSet(release::setId, this::getReleaseId);
         safeSet(release::setOcid, () -> tenderProcess, this::getOcid);
         safeSet(release::setPlanning, () -> tenderProcess, this::createPlanning);
         safeSet(release::setBids, tenderProcess::getSingleTenderQuotationEvaluation, this::createBids);
