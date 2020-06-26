@@ -6,30 +6,30 @@ import FeedbackPage from '../../FeedbackPage';
 class ProcurementPlan extends FeedbackPage {
   constructor(props) {
     super(props);
-    
+
     this.state = {};
-    
+
     this.ppID = ppState.input({
       name: 'ppID',
     });
-    
+
     this.ppInfoUrl = ppState.mapping({
       name: 'ppInfoUrl',
       deps: [this.ppID],
       mapper: id => `${API_ROOT}/makueni/procurementPlan/id/${id}`,
     });
-    
+
     this.ppInfo = ppState.remote({
       name: 'ppInfo',
       url: this.ppInfoUrl,
     });
   }
-  
+
   componentDidMount() {
     const { id } = this.props;
-    
+
     this.ppID.assign('PP', id);
-    
+
     this.ppInfo.addListener('PP', () => {
       this.ppInfo.getState()
       .then(data => {
@@ -37,27 +37,27 @@ class ProcurementPlan extends FeedbackPage {
       });
     });
   }
-  
+
   componentWillUnmount() {
     this.ppInfo.removeListener('PP');
   }
-  
+
   getFeedbackSubject() {
     const { data } = this.state;
-    
+
     let metadata;
     if (data !== undefined) {
       metadata = " - " + data.department.label + " - " + data.fiscalYear.name;
     }
     return escape("Procurement Plan" + metadata);
   }
-  
+
   render() {
     const { navigate } = this.props;
     const { data } = this.state;
-    
+
     const { currencyFormatter, formatDate } = this.props.styling.tables;
-    
+
     return (<div className="procurement-plan makueni-form">
       <div className="row">
         <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-3">
@@ -69,13 +69,13 @@ class ProcurementPlan extends FeedbackPage {
         </span>
         </a>
       </div>
-      
+
       <div className="row padding-top-10">
         <div className="col-md-12">
           <h1 className="page-title">Procurement Plan</h1>
         </div>
       </div>
-      
+
       {
         data !== undefined
           ? <div>
@@ -89,7 +89,7 @@ class ProcurementPlan extends FeedbackPage {
                 <div className="item-value">{data.fiscalYear.name}</div>
               </div>
             </div>
-            
+
             {
               data.planItems !== undefined
                 ? <div>
@@ -98,7 +98,7 @@ class ProcurementPlan extends FeedbackPage {
                       ({data.planItems.length})
                     </div>
                   </div>
-                  
+
                   {
                     data.planItems.map(planItem => <div key={planItem.id} className="box">
                       <div className="row">
@@ -107,8 +107,8 @@ class ProcurementPlan extends FeedbackPage {
                           <div className="item-value">{planItem.item.label}</div>
                         </div>
                       </div>
-                      
-                      
+
+
                       <div className="row padding-top-10">
                         <div className="col-md-3">
                           <div className="item-label">Unit Of Issue</div>
@@ -127,7 +127,7 @@ class ProcurementPlan extends FeedbackPage {
                           <div className="item-value">{currencyFormatter(planItem.quantity * planItem.estimatedCost)}</div>
                         </div>
                       </div>
-                      
+
                       <div className="row padding-top-10">
                         <div className="col-md-3">
                           <div className="item-label">Procurement Method</div>
@@ -153,7 +153,7 @@ class ProcurementPlan extends FeedbackPage {
                             className="item-value">{currencyFormatter(planItem.targetGroupValue)}</div>
                         </div>
                       </div>
-  
+
                       <div className="row padding-top-10">
                         <h4 className="col-md-12">Timing of activities (quarterly basis)</h4>
                         <div className="col-md-3">
@@ -175,13 +175,13 @@ class ProcurementPlan extends FeedbackPage {
                       </div>
                     </div>)
                   }
-                  
+
                   <div className="row padding-top-10">
                     <div className="col-md-6">
                       <div className="item-label">Procurement Plan Documents</div>
-                      
+
                       {
-                        data.formDocs.map(doc => <div key={doc.id}>
+                        data.formDocs && data.formDocs.map(doc => <div key={doc.id}>
                           <OverlayTrigger
                             placement="bottom"
                             overlay={
@@ -189,7 +189,7 @@ class ProcurementPlan extends FeedbackPage {
                                 Click to download the file
                               </Tooltip>
                             }>
-                            
+
                             <a className="item-value download" href={doc.url} target="_blank">
                               <i className="glyphicon glyphicon-download"/>
                               <span>{doc.name}</span>
@@ -210,7 +210,7 @@ class ProcurementPlan extends FeedbackPage {
           </div>
           : null
       }
-  
+
       {this.getFeedbackMessage()}
     </div>);
   }

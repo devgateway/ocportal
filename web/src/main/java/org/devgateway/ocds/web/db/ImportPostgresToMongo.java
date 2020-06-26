@@ -171,7 +171,11 @@ public class ImportPostgresToMongo {
                     pr.getAdministratorReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
                     pr.setInspectionReports(new HashSet<>(filterNotExportable(pr.getInspectionReports())));
-                    pr.getInspectionReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
+                    pr.getInspectionReports().stream().forEach(doc -> {
+                        self.storeMakueniFormFiles(doc.getFormDocs());
+                        doc.getPrivateSectorRequests().stream()
+                                .forEach(psr -> self.storeMakueniFormFiles(psr.getUpload()));
+                    });
 
                     pr.setPmcReports(new HashSet<>(filterNotExportable(pr.getPmcReports())));
                     pr.getPmcReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
