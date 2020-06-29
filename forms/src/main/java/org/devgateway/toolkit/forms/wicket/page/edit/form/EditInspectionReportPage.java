@@ -7,6 +7,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PrivateSectorRequestPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.TechAdminRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
@@ -62,7 +63,7 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
-
+        editForm.add(new PrivateSectorRequestPanel("privateSectorRequests"));
     }
 
     @Override

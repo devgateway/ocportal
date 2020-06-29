@@ -19,6 +19,7 @@ import java.util.Date;
  * Created by mpostelnicu
  */
 public class DateFilteredBootstrapPropertyColumn<T, S> extends TextFilteredPropertyColumn<T, Date, S> {
+    private static final long serialVersionUID = -7916572904120503939L;
 
     public DateFilteredBootstrapPropertyColumn(final IModel<String> displayModel, final S sortProperty,
                                                final String propertyExpression) {

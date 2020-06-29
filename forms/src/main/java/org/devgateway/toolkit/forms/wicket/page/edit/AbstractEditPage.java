@@ -12,13 +12,13 @@
 package org.devgateway.toolkit.forms.wicket.page.edit;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationMessage;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
@@ -33,10 +33,10 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.ValidationError;
@@ -135,6 +135,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal deleteModal;
 
+    protected TextContentModal deleteFailedModal;
+
     @SpringBean
     private EntityManager entityManager;
 
@@ -190,6 +192,28 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         return modal;
     }
 
+    protected TextContentModal createDeleteFailedModal() {
+        final TextContentModal modal = new TextContentModal("deleteFailedModal",
+                new ResourceModel("delete_error_message"));
+        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                setResponsePage(listPageClass);
+            }
+        };
+        deleteButton.setDefaultFormProcessing(false);
+        deleteButton.setLabel(Model.of("OK"));
+        modal.addButton(deleteButton);
+
+        modal.add(new AjaxEventBehavior("hidden.bs.modal") {
+            @Override
+            protected void onEvent(final AjaxRequestTarget target) {
+                setResponsePage(listPageClass);
+            }
+        });
+
+        return modal;
+    }
 
     /**
      * Traverses all fields and refreshes the ones that are not valid, so that
@@ -271,6 +295,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
             deleteModal = createDeleteModal();
             add(deleteModal);
+
+            deleteFailedModal = createDeleteFailedModal();
+            add(deleteFailedModal);
 
             // don't display the delete button if we just create a new entity
             if (entityId == null) {
@@ -486,11 +513,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             // we flush the mondrian/wicket/reports cache to ensure it gets rebuilt
             flushReportingCaches();
         } catch (DataIntegrityViolationException e) {
-            error(new NotificationMessage(
-                    new StringResourceModel("delete_error_message", AbstractEditPage.this, null))
-                    .hideAfter(Duration.NONE));
-            target.add(feedbackPanel);
-
+            deleteFailedModal.show(true);
+            target.add(deleteFailedModal);
             return;
         }
         setResponsePage(listPageClass);

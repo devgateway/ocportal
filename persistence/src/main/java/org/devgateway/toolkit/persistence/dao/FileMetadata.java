@@ -36,7 +36,7 @@ import java.io.Serializable;
 @Audited
 @Table(indexes = {@Index(columnList = "name")})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class FileMetadata extends AbstractAuditableEntity implements Serializable {
+public class FileMetadata extends AbstractAuditableEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @org.springframework.data.annotation.Transient
