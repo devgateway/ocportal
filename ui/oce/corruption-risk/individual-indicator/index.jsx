@@ -15,14 +15,14 @@ class IndividualIndicatorChart extends CustomPopupChart {
     let data = super.getData();
     const { traceColors } = this.props.styling.charts;
     if (!data) return [];
-    const { monthly } = this.props;
+    const { monthly, years } = this.props;
 
     data = data.sort(sortByField(monthly ? 'month' : 'year'));
 
     const dates = monthly ?
       data.map((datum) => {
         const month = datum.get('month');
-        return this.t(`general:months:${month}`);
+        return this.tMonth(month, years);
       }).toJS() :
       data.map(pluckImm('year')).toJS();
 
@@ -89,7 +89,7 @@ class IndividualIndicatorChart extends CustomPopupChart {
   }
 
   getPopup() {
-    const { monthly } = this.props;
+    const { monthly, years } = this.props;
     const { popup } = this.state;
     const { year } = popup;
     const data = super.getData();
@@ -99,7 +99,7 @@ class IndividualIndicatorChart extends CustomPopupChart {
     if (monthly) {
       datum = data.find((datum) => {
         const month = datum.get('month');
-        return year == this.t(`general:months:${month}`);
+        return year == this.tMonth(month, years);
       });
     } else {
       datum = data.find(datum => datum.get('year') == year);

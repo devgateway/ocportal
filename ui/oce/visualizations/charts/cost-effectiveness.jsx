@@ -29,10 +29,11 @@ class CostEffectiveness extends FrontendDateFilterableChart{
     ];
 
     let {hoverFormatter} = this.props.styling.charts;
+    const { years } = this.props;
 
     data.forEach(datum => {
       const date = datum.has('month') ?
-          this.t('general:months:' + datum.get('month')) :
+          this.tMonth(datum.get('month'), years) :
           datum.get('year');
       traces.forEach(trace => trace.x.push(date));
       let tender = datum.get('totalTenderAmount');
