@@ -3,6 +3,7 @@ package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import org.bson.Document;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.alerts.AlertsStatistics;
@@ -181,7 +182,7 @@ public class AlertsManagerImpl implements AlertsManager {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
             msg.setTo(alert.getEmail());
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
 
             final String content;
             if (alert.getPurchaseReq() != null) {

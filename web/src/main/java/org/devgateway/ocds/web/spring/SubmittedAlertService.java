@@ -2,6 +2,7 @@ package org.devgateway.ocds.web.spring;
 
 import org.apache.logging.log4j.util.Strings;
 import org.devgateway.ocds.web.util.SettingsUtils;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -193,7 +194,7 @@ public class SubmittedAlertService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("Reminder - There are pending forms for you to validate on department " + departmentName);
             msg.setText(createDepartmentContent(department, notifyMap), true);
         };
