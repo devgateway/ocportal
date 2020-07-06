@@ -25,7 +25,7 @@ class PortalVideos extends CRDPage {
         </div>
 
         <div className="col-md-8 col-md-offset-4 text-justify">
-          <h2>How to send and receiving feedback</h2>
+          <h2>How to send and receive feedback</h2>
           <iframe width="640" height="480" src="https://www.youtube.com/embed/sKMy2NfIr6I"
                   frameBorder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
