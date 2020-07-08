@@ -103,7 +103,7 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().
-                on(MongoConstants.FieldNames.AWARDS_SUPPLIERS_TARGET_GROUP, Direction.ASC));
+                on(MongoConstants.FieldNames.PARTIES_TARGET_GROUP, Direction.ASC));
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_NO_TENDERERS, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().on(

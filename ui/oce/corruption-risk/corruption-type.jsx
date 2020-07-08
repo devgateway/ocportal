@@ -18,12 +18,13 @@ class IndicatorTile extends CustomPopupChart{
     let data = super.getData();
     if(!data) return [];
     const { monthly } = this.props;
+    const { years } = this.props;
     data = data.sort(sortByField(monthly ? 'month': 'year'));
 
     let dates = monthly ?
       data.map(datum => {
         const month = datum.get('month');
-        return this.t(`general:months:${month}`);
+        return this.tMonth(month, years);
       }).toJS() :
       data.map(pluckImm('year')).toJS();
 
