@@ -19,6 +19,9 @@ class Docs extends CRDPage {
 
         <div className="col-md-6 col-md-offset-3">
           <div className="list-group">
+            <a href="#!/portal-videos" className="list-group-item">
+              <h3 className="list-group-item-heading">Portal Walkthrough and Videos</h3>
+            </a>
             <a href="/swagger-ui.html" className="list-group-item">
               <h3 className="list-group-item-heading">All API Endpoints</h3>
               <p className="list-group-item-text">Access portal data in JSON Format. This is a list all API Endpoints available for this portal.</p>

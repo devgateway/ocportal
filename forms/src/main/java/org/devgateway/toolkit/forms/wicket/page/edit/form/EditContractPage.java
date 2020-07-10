@@ -83,7 +83,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         }
 
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
-        ComponentUtil.addDateField(editForm, "expiryDate");
+        ComponentUtil.addDateField(editForm, "expiryDate").required();
         ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
 
         addSupplierInfo();

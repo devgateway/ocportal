@@ -182,7 +182,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("OCDS Validation Failures After Import");
             msg.setText(txt);
         };

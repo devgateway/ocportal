@@ -20,9 +20,10 @@ class CancelledFunding extends FrontendDateFilterableChart{
       trace.hoverinfo = "text";
     }
 
+    const { years } = this.props;
     data.forEach(datum => {
       const date = datum.has('month') ?
-          this.t('general:months:' + datum.get('month')) :
+        this.tMonth(datum.get('month'), years) :
           datum.get('year');
 
       let count = datum.get('totalCancelledTendersAmount');
