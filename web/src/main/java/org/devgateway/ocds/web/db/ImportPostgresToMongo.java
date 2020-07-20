@@ -23,7 +23,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -132,7 +131,7 @@ public class ImportPostgresToMongo {
 
         // first clean the procurement plan collection and delete all saved files
         mongoTemplate.dropCollection(ProcurementPlan.class);
-        gridFsOperations.delete(new Query());
+        //gridFsOperations.delete(new Query());
 
         procurementPlanService.findAllStream().filter(Statusable::isExportable).forEach(pp -> {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));

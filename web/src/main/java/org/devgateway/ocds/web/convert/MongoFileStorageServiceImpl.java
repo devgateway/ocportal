@@ -59,11 +59,12 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
 
             final DBObject metaData = new BasicDBObject();
             String md5 = computeFileMd5(fileMetadata);
-            GridFSFile existingFile = gridFsOperations.findOne(new Query(Criteria.where("md5").is(md5)));
+            GridFSFile existingFile = gridFsOperations.findOne(new Query(Criteria.where("md5").is(md5)
+                    .and("filename").is(fileMetadata.getName())));
             ObjectId objId;
 
             //will not store the same file twice
-            if (existingFile != null && existingFile.getFilename().equals(fileMetadata.getName())) {
+            if (existingFile != null) {
                 objId = existingFile.getObjectId();
             } else {
                 final InputStream is = ByteSource.wrap(fileMetadata.getContent().getBytes()).openStream();
