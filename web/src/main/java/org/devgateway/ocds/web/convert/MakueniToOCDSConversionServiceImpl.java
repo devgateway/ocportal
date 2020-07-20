@@ -1168,7 +1168,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public String getOcid(TenderProcess tenderProcess) {
+    public static String getOcid(TenderProcess tenderProcess) {
         return OCID_PREFIX + tenderProcess.getId();
     }
 
@@ -1208,7 +1208,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Release createRelease(TenderProcess tenderProcess) {
         Release release = new Release();
         safeSet(release::setId, this::getReleaseId);
-        safeSet(release::setOcid, () -> tenderProcess, this::getOcid);
+        safeSet(release::setOcid, () -> tenderProcess, MakueniToOCDSConversionServiceImpl::getOcid);
         safeSet(release::setPlanning, () -> tenderProcess, this::createPlanning);
         safeSet(release::setBids, tenderProcess::getSingleTenderQuotationEvaluation, this::createBids);
         safeSet(release::setTender, tenderProcess::getSingleTender, this::createTender);
