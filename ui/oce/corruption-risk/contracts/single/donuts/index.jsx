@@ -17,7 +17,7 @@ class CenterTextDonut extends translatable(React.PureComponent) {
           <Donut
             margin={{ b: 0, t: 0, r: 0, l: 0, pad: 0 }}
             height={300}
-            width={width}
+            width={300}
             {...this.props}
           />
           <div className="center-text">
