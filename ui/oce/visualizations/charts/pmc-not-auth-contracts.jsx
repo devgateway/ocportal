@@ -12,8 +12,9 @@ class PmcNotAuthContracts extends FrontendDateFilterableChart{
     let data = super.getData();
     if (!data) return [];
     const monthly = data.hasIn([0, 'month']);
+    const { years } = this.props;
     const dates = monthly ?
-        data.map(pluckImm('month')).map(month => this.t(`general:months:${month}`)).toArray() :
+        data.map(pluckImm('month')).map(month => this.tMonth(month, years)).toArray() :
         data.map(pluckImm('year')).toArray();
 
     return [{

@@ -2,10 +2,12 @@ package org.devgateway.ocds.web.spring;
 
 import org.apache.logging.log4j.util.Strings;
 import org.devgateway.ocds.web.util.SettingsUtils;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -23,6 +25,7 @@ import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.hibernate.proxy.HibernateProxyHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +71,9 @@ public class SubmittedAlertService {
 
     @Autowired
     private SendEmailService sendEmailService;
+
+    @Autowired
+    private AdminSettingsRepository adminSettingsRepository;
 
     @Autowired
     private ProjectService projectService;
@@ -188,7 +194,7 @@ public class SubmittedAlertService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("Reminder - There are pending forms for you to validate on department " + departmentName);
             msg.setText(createDepartmentContent(department, notifyMap), true);
         };
@@ -243,6 +249,9 @@ public class SubmittedAlertService {
     @Scheduled(cron = "0 0 23 * * SUN")
     @Async
     public void sendNotificationEmails() {
+        if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
+            return;
+        }
         collectDepartmentTypeIdTitle(procurementServices).forEach((aLong, classMapMap) ->
                 this.sendDepartmentEmailsForRole(aLong, ROLE_PROCUREMENT_VALIDATOR, classMapMap));
 

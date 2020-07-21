@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.mongo.spring;
 
 import org.apache.commons.io.IOUtils;
+import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.DefaultLocation;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.Release;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.ScriptOperations;
+import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition.TextIndexDefinitionBuilder;
 import org.springframework.data.mongodb.core.script.ExecutableMongoScript;
@@ -38,6 +40,8 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Organization.class).ensureIndex(new Index().on("name", Direction.ASC).unique());
         getTemplate().indexOps(DefaultLocation.class).ensureIndex(new Index().on("description", Direction.ASC));
         getTemplate().indexOps("fs.files").ensureIndex(new Index().on("md5", Direction.ASC));
+        getTemplate().indexOps("fs.files").ensureIndex(new CompoundIndexDefinition(
+                new Document("filename", 1).append("md5", 1)).unique());
         getLogger().info("Added mandatory Mongo indexes");
     }
 
@@ -99,7 +103,7 @@ public abstract class AbstractMongoDatabaseConfiguration {
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().
-                on(MongoConstants.FieldNames.AWARDS_SUPPLIERS_TARGET_GROUP, Direction.ASC));
+                on(MongoConstants.FieldNames.PARTIES_TARGET_GROUP, Direction.ASC));
         getTemplate().indexOps(Release.class)
                 .ensureIndex(new Index().on(MongoConstants.FieldNames.TENDER_NO_TENDERERS, Direction.ASC));
         getTemplate().indexOps(Release.class).ensureIndex(new Index().on(
