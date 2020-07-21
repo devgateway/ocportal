@@ -25,7 +25,7 @@ import java.io.Serializable;
  */
 
 @Entity
-public class FileContent extends AbstractAuditableEntity implements Serializable {
+public class FileContent extends AbstractAuditableEntity {
     private static final int LOB_LENGTH = 10000000;
 
     @Column(length = LOB_LENGTH)

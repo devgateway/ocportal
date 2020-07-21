@@ -1,6 +1,7 @@
 package org.devgateway.ocds.web.db;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
@@ -19,9 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -91,7 +92,7 @@ public class ImportPostgresToMongo {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("Form Status Integrity Checks Failure");
             msg.setText(sb.toString());
         };
@@ -130,7 +131,7 @@ public class ImportPostgresToMongo {
 
         // first clean the procurement plan collection and delete all saved files
         mongoTemplate.dropCollection(ProcurementPlan.class);
-        gridFsOperations.delete(new Query());
+        //gridFsOperations.delete(new Query());
 
         procurementPlanService.findAllStream().filter(Statusable::isExportable).forEach(pp -> {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
@@ -169,7 +170,11 @@ public class ImportPostgresToMongo {
                     pr.getAdministratorReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
                     pr.setInspectionReports(new HashSet<>(filterNotExportable(pr.getInspectionReports())));
-                    pr.getInspectionReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
+                    pr.getInspectionReports().stream().forEach(doc -> {
+                        self.storeMakueniFormFiles(doc.getFormDocs());
+                        doc.getPrivateSectorRequests().stream()
+                                .forEach(psr -> self.storeMakueniFormFiles(psr.getUpload()));
+                    });
 
                     pr.setPmcReports(new HashSet<>(filterNotExportable(pr.getPmcReports())));
                     pr.getPmcReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
@@ -213,6 +218,12 @@ public class ImportPostgresToMongo {
                 new Index().on("projects.tenderProcesses.lastModifiedDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.tenderProcesses.tender.lastModifiedDate", Sort.Direction.ASC));
+
+        Document fyDepartmentIndex = new Document();
+        fyDepartmentIndex.put("fiscalYear.startDate", -1);
+        fyDepartmentIndex.put("department.label", 1);
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(new CompoundIndexDefinition(fyDepartmentIndex));
+
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new TextIndexDefinition.TextIndexDefinitionBuilder()
                         .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)

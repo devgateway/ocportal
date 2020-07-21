@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.devgateway.toolkit</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.10.3-SNAPSHOT</version>
+        <version>1.10.7-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -44,19 +44,19 @@
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.10.3-SNAPSHOT</version>
+            <version>1.10.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>persistence-mongodb</artifactId>
-            <version>1.10.3-SNAPSHOT</version>
+            <version>1.10.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>ui</artifactId>
-            <version>1.10.3-SNAPSHOT</version>
+            <version>1.10.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.devgateway.toolkit</groupId>
             <artifactId>web</artifactId>
-            <version>1.10.3-SNAPSHOT</version>
+            <version>1.10.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -266,6 +266,17 @@
             <artifactId>wicketstuff-serializer-fast2</artifactId>
             <version>${wicketstuff.version}</version>
         </dependency>
+
+        <!--
+            Fst 2.43 has a bug in serializing self-referencing arrays. Fst is imported indirectly through
+            wicketstuff-serializer-fast2. At the time there is no update to wicketstuff-serializer-fast2 that
+            uses fst 2.44 or newer. Enforcing latest available release of fst. -->
+        <dependency>
+            <groupId>de.ruedigermoeller</groupId>
+            <artifactId>fst</artifactId>
+            <version>2.56</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -27,12 +27,15 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MONGO_DECIMAL_SCALE;
 
 /**
  * Run this application only when you need access to Spring Data JPA but without
@@ -103,7 +106,7 @@ public class MongoPersistenceApplication {
 
         @Override
         public BigDecimal convert(final Double source) {
-            return source != null ? new BigDecimal(source) : null;
+            return source != null ? new BigDecimal(source).setScale(MONGO_DECIMAL_SCALE, RoundingMode.HALF_UP) : null;
         }
     }
 

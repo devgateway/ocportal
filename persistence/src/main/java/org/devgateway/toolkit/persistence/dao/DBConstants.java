@@ -20,6 +20,10 @@ public final class DBConstants {
 
     public static final String DATE_FORMAT = "dd/MM/YYYY";
 
+
+    public static final String FROM_EMAIL = "noreply@opencontracting.makueni.go.ke";
+
+
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     private DBConstants() {

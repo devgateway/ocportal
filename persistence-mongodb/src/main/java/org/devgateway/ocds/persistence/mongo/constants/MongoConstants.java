@@ -87,7 +87,8 @@ public final class MongoConstants {
         public static final String TENDER_SUBMISSION_METHOD = "tender.submissionMethod";
         public static final String BIDS_DETAILS_TENDERERS_ID = "bids.details.tenderers._id";
         public static final String BIDS_DETAILS_VALUE_AMOUNT = "bids.details.value.amount";
-        public static final String AWARDS_SUPPLIERS_TARGET_GROUP = "awards.suppliers.targetGroup";
+        public static final String PARTIES_TARGET_GROUP = "parties.targetGroup";
+        public static final String PARTIES_ID = "parties._id";
         public static final String FLAGS_TOTAL_FLAGGED = "flags.totalFlagged";
         public static final String FLAGS_COUNT = "flags.flaggedStats.count";
     }
@@ -143,4 +144,6 @@ public final class MongoConstants {
 
         public static final String TOTAL_FLAGGED = "totalFlagged";
     }
+
+    public static final Integer MONGO_DECIMAL_SCALE = 2;
 }

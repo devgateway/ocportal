@@ -17,6 +17,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
+import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.Fields;
@@ -57,6 +59,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.skip;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -125,6 +128,7 @@ public class MakueniDataController extends GenericOCDSController {
                 unwind("projects"),
                 unwind("projects.tenderProcesses"),
                 match(criteriaTender),
+                sort(Sort.Direction.DESC, "projects.tenderProcesses.tender.closingDate"),
                 skip(filter.getSkip()),
                 limit(filter.getPageSize()));
 
@@ -189,8 +193,13 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
+        BasicDBObject customSorting = new BasicDBObject();
+        customSorting.put("fiscalYear.startDate", -1);
+        customSorting.put("department.label", 1);
+
         final Aggregation aggregation = newAggregation(match(criteria),
                 project("formDocs", "department", "fiscalYear", "status", "approvedDate"),
+                new CustomSortingOperation(customSorting),
                 skip(filter.getSkip()),
                 limit(filter.getPageSize()));
 
@@ -300,7 +309,8 @@ public class MakueniDataController extends GenericOCDSController {
         project.put("_id.code", 1);
 
         final Aggregation aggregation = newAggregation(project("department", Fields.UNDERSCORE_ID),
-                group("department"), new CustomOperation(new Document("$project", project)));
+                group("department"), new CustomOperation(new Document("$project", project)),
+                sort(Sort.by("_id.label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();

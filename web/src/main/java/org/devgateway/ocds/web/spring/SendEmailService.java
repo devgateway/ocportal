@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.spring;
 
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.web.rest.controller.alerts.AlertsEmailService;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class SendEmailService {
     public void sendEmailResetPassword(final Person person, final String newPassword) {
         final SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(person.getEmail());
-        msg.setFrom("noreply@dgstg.org");
+        msg.setFrom(DBConstants.FROM_EMAIL);
         msg.setSubject("Recover your password");
         msg.setText("Dear " + person.getFirstName() + " " + person.getLastName() + ",\n\n"
                 + "These are your new login credentials for Makueni.\n\n" + "Username: " + person.getUsername() + "\n"
@@ -86,7 +87,7 @@ public class SendEmailService {
                     + "Kind regards,\n"
                     + "Makueni Team";
             msg.setTo(person.getEmail());
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("Your Makueni Account");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
