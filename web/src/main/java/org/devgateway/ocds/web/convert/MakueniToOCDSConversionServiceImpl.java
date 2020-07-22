@@ -1,9 +1,9 @@
 package org.devgateway.ocds.web.convert;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.text.WordUtils;
@@ -23,7 +23,6 @@ import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Implementation;
 import org.devgateway.ocds.persistence.mongo.Item;
-import org.devgateway.ocds.persistence.mongo.MakueniAward;
 import org.devgateway.ocds.persistence.mongo.MakueniBudget;
 import org.devgateway.ocds.persistence.mongo.MakueniBudgetBreakdown;
 import org.devgateway.ocds.persistence.mongo.MakueniContract;
@@ -120,6 +119,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MONGO_DECIMAL_SCALE;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.OCDSSchemes.X_KE_OCMAKUENI;
 
 @Service
@@ -566,7 +566,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(budget::setProjectID, tenderProcess::getProject, this::entityIdToString);
         safeSet(budget::setAmount, () -> tenderProcess.getPurchRequisitions().stream().
                 flatMap(pr -> pr.getPurchaseItems().stream()).map(PurchaseItem::getAmount).reduce(
-                BigDecimal.ZERO, BigDecimal::add), this::convertAmount);
+                BigDecimal.ZERO.setScale(MONGO_DECIMAL_SCALE), BigDecimal::add), this::convertAmount);
 
         safeSet(budget.getBudgetBreakdown()::add, () -> tenderProcess, this::createPlanningBudgetBreakdown);
 
@@ -666,7 +666,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::storeAsDocumentProcurementPlan
         );
 
-        safeSet(planning.getDocuments()::add, tenderProcess.getProject()::getCabinetPaper,
+        safeSetEach(planning.getDocuments()::add, tenderProcess.getProject()::getCabinetPapers,
                 this::storeAsDocumentProjectPlan
         );
 
@@ -740,30 +740,59 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return milestone;
     }
 
+    public boolean areReleasesIdentical(Release newRelease, Release oldRelease) {
+        if (oldRelease == null) {
+            return false;
+        }
+        Date newDate = newRelease.getDate();
+        String newId = newRelease.getId();
+        Date oldDate = oldRelease.getDate();
+        String oldId = oldRelease.getId();
+        newRelease.setDate(null);
+        oldRelease.setDate(null);
+        newRelease.setId(null);
+        oldRelease.setId(null);
+        try {
+            String newReleaseJson = objectMapper.writeValueAsString(newRelease);
+            String oldReleaseJson = objectMapper.writeValueAsString(oldRelease);
+            newRelease.setDate(newDate);
+            newRelease.setId(newId);
+            oldRelease.setDate(oldDate);
+            oldRelease.setId(oldId);
+            return newReleaseJson.equals(oldReleaseJson);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public Release createAndPersistRelease(TenderProcess tenderProcess) {
         try {
             Release release = createRelease(tenderProcess);
             Release byOcid = releaseRepository.findByOcid(release.getOcid());
-            if (byOcid != null) {
-                releaseRepository.delete(byOcid);
-            }
-            Release save = releaseRepository.save(release);
-            logger.info("Saved " + save.getOcid());
-            OcdsValidatorNodeRequest nodeRequest = new OcdsValidatorNodeRequest();
-            nodeRequest.setSchemaType(OcdsValidatorConstants.Schemas.RELEASE);
-            nodeRequest.setExtensions(new TreeSet<>(OcdsController.EXTENSIONS));
-            nodeRequest.setVersion(OcdsValidatorConstants.Versions.OCDS_1_1_3);
-            nodeRequest.setNode(objectMapper.valueToTree(save));
+            if (!areReleasesIdentical(release, byOcid)) {
+                if (byOcid != null) {
+                    releaseRepository.delete(byOcid);
+                }
+                Release save = releaseRepository.save(release);
+                logger.info("Saved " + save.getOcid());
+                OcdsValidatorNodeRequest nodeRequest = new OcdsValidatorNodeRequest();
+                nodeRequest.setSchemaType(OcdsValidatorConstants.Schemas.RELEASE);
+                nodeRequest.setExtensions(new TreeSet<>(OcdsController.EXTENSIONS));
+                nodeRequest.setVersion(OcdsValidatorConstants.Versions.OCDS_1_1_3);
+                nodeRequest.setNode(objectMapper.valueToTree(save));
 
-            ProcessingReport validate = ocdsValidatorService.validate(nodeRequest);
-            if (!validate.isSuccess() && validationErrors != null) {
-                validationErrors.append("TenderProcess with id ").append(tenderProcess.getId()).append(" ")
-                        .append(validate.toString());
-                logger.warn(validate.toString());
+                ProcessingReport validate = ocdsValidatorService.validate(nodeRequest);
+                if (!validate.isSuccess() && validationErrors != null) {
+                    validationErrors.append("TenderProcess with id ").append(tenderProcess.getId()).append(" ")
+                            .append(validate.toString());
+                    logger.warn(validate.toString());
+                }
+                return save;
+            } else {
+                logger.info("Will not resave unchanged release " + release.getOcid());
+                return null;
             }
-
-            return save;
         } catch (Exception e) {
             logger.info("Exception processing tender process with id " + tenderProcess.getId());
             throw e;
@@ -774,36 +803,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        releaseRepository.deleteAll();
-        organizationRepository.deleteAll();
+        //releaseRepository.deleteAll();
+        //organizationRepository.deleteAll();
         validationErrors = new StringBuffer();
         tenderProcessService.findAllStream().filter(Statusable::isExportable).forEach(this::createAndPersistRelease);
         sendValidationFailureAlert(validationErrors.toString());
-        postProcess();
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
-    }
-
-    public void postProcess() {
-        applyFirstTimeWinners();
-    }
-
-    public void applyFirstTimeWinners() {
-        Stream<Release> allOrderByEndDateStream =
-                releaseRepository.findAllNonEmptyEndDatesAwardSuppliersOrderByEndDateDesc();
-        Set<String> org = Sets.newConcurrentHashSet();
-
-        allOrderByEndDateStream.forEach(r -> {
-            MakueniAward award = (MakueniAward) r.getAwards().iterator().next();
-            OrganizationReference supplier = award.getSuppliers().iterator().next();
-            if (!org.contains(supplier.getId())) {
-                org.add(supplier.getId());
-                award.setFirstTimeWinner(true);
-            } else {
-                award.setFirstTimeWinner(false);
-            }
-            releaseRepository.save(r); //this is not very efficient, we should use update
-        });
     }
 
     public Milestone.Status createPlanningMilestoneStatus(PurchRequisition pr) {
@@ -1041,8 +1047,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return "disqualified";
     }
 
-    public MakueniAward createAward(AwardNotificationItem item) {
-        MakueniAward ocdsAward = new MakueniAward();
+    public Award createAward(AwardNotificationItem item) {
+        Award ocdsAward = new Award();
         safeSet(ocdsAward::setTitle, item.getParent()::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderTitle
         );
@@ -1162,10 +1168,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public String getOcid(TenderProcess tenderProcess) {
-        return OCID_PREFIX + DigestUtils.md5Hex(Instant.now().toString());
+    public static String getOcid(TenderProcess tenderProcess) {
+        return OCID_PREFIX + tenderProcess.getId();
     }
 
+    public String getReleaseId() {
+        return DigestUtils.md5Hex(Instant.now().toString());
+    }
 
     public List<Tag> createReleaseTag(Release release) {
         List<Tag> tags = new ArrayList<>();
@@ -1198,8 +1207,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Override
     public Release createRelease(TenderProcess tenderProcess) {
         Release release = new Release();
-        safeSet(release::setId, tenderProcess::getId, this::longIdToString);
-        safeSet(release::setOcid, () -> tenderProcess, this::getOcid);
+        safeSet(release::setId, this::getReleaseId);
+        safeSet(release::setOcid, () -> tenderProcess, MakueniToOCDSConversionServiceImpl::getOcid);
         safeSet(release::setPlanning, () -> tenderProcess, this::createPlanning);
         safeSet(release::setBids, tenderProcess::getSingleTenderQuotationEvaluation, this::createBids);
         safeSet(release::setTender, tenderProcess::getSingleTender, this::createTender);

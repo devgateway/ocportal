@@ -144,4 +144,6 @@ public final class MongoConstants {
 
         public static final String TOTAL_FLAGGED = "totalFlagged";
     }
+
+    public static final Integer MONGO_DECIMAL_SCALE = 2;
 }

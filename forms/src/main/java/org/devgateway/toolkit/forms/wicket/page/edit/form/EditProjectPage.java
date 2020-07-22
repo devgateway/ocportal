@@ -16,7 +16,6 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -108,8 +107,8 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         // filtered CabinetPapers based on form Procurement Plan
         final List<CabinetPaper> cabinetPapers = cabinetPaperService
                 .findByProcurementPlan(editForm.getModelObject().getProcurementPlan());
-        final Select2ChoiceBootstrapFormComponent cabinetPaper = new Select2ChoiceBootstrapFormComponent<>(
-                "cabinetPaper", new GenericChoiceProvider<>(cabinetPapers));
+        final Select2MultiChoiceBootstrapFormComponent cabinetPaper = new Select2MultiChoiceBootstrapFormComponent<>(
+                "cabinetPapers", new GenericChoiceProvider<>(cabinetPapers));
         cabinetPaper.required();
         editForm.add(cabinetPaper);
 

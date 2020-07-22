@@ -29,12 +29,12 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PrivateSectorRequest extends AbstractChildExpandableAuditEntity<InspectionReport> implements ListViewItem {
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Private Sector Request Upload")
+    @ExcelExport(justExport = true, name = "Private Sector Request Upload")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> upload = new HashSet<>();
 
-    @ExcelExport(useTranslation = true)
+    @ExcelExport(name = "Request Date")
     private Date requestDate;
 
     public Set<FileMetadata> getUpload() {

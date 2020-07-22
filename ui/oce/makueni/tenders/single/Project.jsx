@@ -87,23 +87,25 @@ class Project extends React.Component {
                 <div className="item-value">{data.projects.projectTitle}</div>
               </div>
               <div className="col-md-6">
-                <div className="item-label">Cabinet Paper</div>
+                <div className="item-label">Cabinet Papers</div>
                 {
-                  data.projects.cabinetPaper.formDocs.map(doc => <div key={doc._id}>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="download-tooltip">
-                          Click to download the file
-                        </Tooltip>
-                      }>
+                  data.projects.cabinetPapers.map(cp=>
+                    cp.formDocs.map(doc => <div key={doc._id}>
+                      <OverlayTrigger
+                        placement="bottom"
+                        overlay={
+                          <Tooltip id="download-tooltip">
+                            Click to download the file
+                          </Tooltip>
+                        }>
 
-                      <a className="item-value download" href={doc.url} target="_blank">
-                        <i className="glyphicon glyphicon-download"/>
-                        <span>{doc.name}</span>
-                      </a>
-                    </OverlayTrigger>
-                  </div>)
+                        <a className="item-value download" href={doc.url} target="_blank">
+                          <i className="glyphicon glyphicon-download"/>
+                          <span>{doc.name}</span>
+                        </a>
+                      </OverlayTrigger>
+                    </div>))
+
                 }
               </div>
             </div>
@@ -126,7 +128,7 @@ class Project extends React.Component {
               </div>
               <div className="col-md-6">
                 <div className="item-label">Wards</div>
-                <div className="item-value">{data.projects.wards.map(item => item.label).join(', ')}</div>
+                <div className="item-value">{data.projects.wards && data.projects.wards.map(item => item.label).join(', ')}</div>
               </div>
             </div>
 
