@@ -1127,4 +1127,15 @@
         </update>
     </changeSet>
 
+
+    <changeSet id="OCMAKU-685-project-cabinet-papers" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="PROJECT_CABINET_PAPERS"/>
+        </preConditions>
+        <sql>insert into project_cabinet_papers (project_id, cabinet_papers_id)
+            (select id, cabinet_paper_id from project where cabinet_paper_id is not null);
+            alter table project drop column cabinet_paper_id;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

@@ -189,7 +189,7 @@ public class ImportPostgresToMongo {
                     //self.storeMakueniFormFiles(pr.getFormDocs());
                 });
 
-                self.storeMakueniFormFiles(project.getCabinetPaper().getFormDocs());
+                project.getCabinetPapers().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
             });
 
             self.storeMakueniFormFiles(pp.getFormDocs());

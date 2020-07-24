@@ -666,7 +666,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::storeAsDocumentProcurementPlan
         );
 
-        safeSet(planning.getDocuments()::add, tenderProcess.getProject()::getCabinetPaper,
+        safeSetEach(planning.getDocuments()::add, tenderProcess.getProject()::getCabinetPapers,
                 this::storeAsDocumentProjectPlan
         );
 
