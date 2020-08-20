@@ -13,6 +13,8 @@ package org.devgateway.toolkit.web.spring;
 
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.spring.CustomJPAUserDetailsService;
+import org.devgateway.toolkit.web.security.JWTAuthenticationFilter;
+import org.devgateway.toolkit.web.security.JWTAuthorizationFilter;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +40,9 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * @author mpostelnicu This configures the spring security for the Web project.
@@ -64,6 +69,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${roleHierarchy}")
     private String roleHierarchyStringRepresentation;
+
+    @Value("${jwtSecret}")
+    private String jwtSecret;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -104,11 +112,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.cors().and().authorizeRequests()
                 .expressionHandler(webExpressionHandler()) // inject role hierarchy
-                .antMatchers("/monitoring/**")
-                .access("hasRole('ROLE_ADMIN')")
-                .anyRequest().authenticated().and().formLogin().
+                .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtSecret))
+                .authorizeRequests().anyRequest().authenticated().and()
+                .formLogin().
                 loginPage("/login").
                 permitAll().and().requestCache().and()
                 .logout().permitAll().and().sessionManagement().and().csrf().disable();
@@ -147,4 +156,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(customJPAUserDetailsService).passwordEncoder(passwordEncoder);
     }
 
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
+        return source;
+    }
 }

@@ -24,7 +24,7 @@ export function Login() {
         return (
             <div className="row">
                 <div className="col-8 offset-2">
-                    <h2>User {login.user.token} authenticated</h2>
+                    <h2>Hello {login.user.lastname} {login.user.firstname} </h2>
                 </div>
             </div>
         );
@@ -32,7 +32,7 @@ export function Login() {
         return (
             <div>
                 <div className="row login-form">
-                    <div className="col-4 offset-4 jumbotron">
+                    <div className="col-10 offset-1 jumbotron">
                         <h2>Sign In</h2>
                         <Form onSubmit={submitForm}>
                             <FormGroup>

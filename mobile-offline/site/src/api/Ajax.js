@@ -9,7 +9,7 @@ export const httpGet = (url, params) => Axios.get(url, {
 });
 
 export const httpPost = (url, data) => Axios.post(url, data, {
-//  withCredentials: true,  // use this param to receive/send cookies
-//   credentials: "include",
-//   crossDomain: true
+  // withCredentials: true,  // use this param to receive/send cookies
+  //  credentials: "include",
+  //  crossDomain: true
 });
