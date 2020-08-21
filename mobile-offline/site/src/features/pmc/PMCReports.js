@@ -20,24 +20,20 @@ export function PMCReports() {
         return <div />;
     } else {
         const rows = reports.map((report) => (
-            <tr key={report.id}>
-                <td>{report.department.label}</td>
-                <td>{report.tender.tenderTitle}</td>
-            </tr>
+            <div key={report.id} className="card mt-3">
+                <div className="card-body">
+                    <h5 className="card-title">{report.tender.tenderTitle}</h5>
+                    <p className="card-text">Report date: {report.reportDate.toLocaleDateString()}
+                      <span className="badge badge-secondary ml-1">{report.status}</span>
+                    </p>
+                </div>
+            </div>
         ));
 
         return (
-            <table className="table table-sm">
-                <thead>
-                <tr>
-                    <th scope="col">Department</th>
-                    <th scope="col">Tender Title</th>
-                </tr>
-                </thead>
-                <tbody>
+            <div className="container-fluid">
                 {rows}
-                </tbody>
-            </table>
+            </div>
         );
     }
 }

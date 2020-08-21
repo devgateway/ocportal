@@ -1,4 +1,6 @@
 
+import {PMCReportStatus} from "./constants";
+
 // TODO use real database
 
 const pmcReports = [{
@@ -49,7 +51,8 @@ const pmcReports = [{
     eSignature: {
         fullName: 'Makua Peris',
         accepted: true
-    }
+    },
+    status: PMCReportStatus.DRAFT
 }, {
     id: 2,
     fiscalYear: '2018/2019',
@@ -95,7 +98,8 @@ const pmcReports = [{
     eSignature: {
         fullName: 'Makua Peris',
         accepted: true
-    }
+    },
+    status: PMCReportStatus.SUBMITTED
 }];
 
 const success = true;
