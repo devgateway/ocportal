@@ -98,7 +98,7 @@ const pmcReports = [{
     }
 }];
 
-const success = false;
+const success = true;
 
 export const loadPMCReports = () => {
     return new Promise((resolve, reject) => {
