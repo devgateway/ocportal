@@ -34,23 +34,22 @@ export const {loginInvoked, loginFailure, loginSuccess} = loginSlice.actions;
  */
 export const performLogin = userPass => dispatch => {
     dispatch(loginInvoked(userPass));
-    setTimeout(() => {
-        loginUser(userPass)
-            .then(resolve => {
-                const {data} = resolve;
-                // check if the user is authenticated and save it's details
-                if (data.token) {
-                    dispatch(loginSuccess(data));
-                    console.log("User authenticated");
-                } else {
-                    dispatch(loginFailure("Username or password is incorrect!"));
-                }
-            })
-            .catch(reject => {
-                console.log(reject);
-                dispatch(loginFailure("Network Error! Ensure Internet is up and retry!"));
-            });
-    }, 3000); //simulate network delay
+
+    loginUser(userPass)
+        .then(resolve => {
+            const {data} = resolve;
+            // check if the user is authenticated and save it's details
+            if (data.token) {
+                dispatch(loginSuccess(data));
+                console.log("User authenticated");
+            } else {
+                dispatch(loginFailure("Username or password is incorrect!"));
+            }
+        })
+        .catch(reject => {
+            console.log(reject);
+            dispatch(loginFailure("Network Error! Ensure Internet is up and retry!"));
+        });
 };
 
 export const selectLogin = state => state.login;

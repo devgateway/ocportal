@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {Login} from "./features/login/Login";
+import {Main} from "./features/main/Main";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
       <header>
 
       </header>
-      <Login />
+      <Main />
     </div>
   );
 }

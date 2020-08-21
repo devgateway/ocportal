@@ -20,39 +20,29 @@ export function Login() {
         });
     };
 
-    if (login.authenticated === true) {
-        return (
-            <div className="row">
-                <div className="col-8 offset-2">
-                    <h2>Hello {login.user.lastname} {login.user.firstname} </h2>
+    return (
+        <div className="container-fluid">
+            <div className="row login-form">
+                <div className="col-10 offset-1 jumbotron">
+                    <h2>Sign In</h2>
+                    <Form onSubmit={submitForm}>
+                        <FormGroup>
+                            <Label>Username</Label>
+                            <Input type="text" name="username" placeholder="username"
+                                   value={userPass.username} readOnly={login.loading}
+                                   onChange={updateField} required/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="examplePassword">Password</Label>
+                            <Input type="password" name="password" placeholder="********"
+                                   value={userPass.password} readOnly={login.loading}
+                                   onChange={updateField} required/>
+                        </FormGroup>
+                        <Button color="primary" disabled={login.loading}>Submit</Button>
+                    </Form>
+                    {login.loading ? <Spinner style={{width: '3rem', height: '3rem'}}/> : ""}
                 </div>
             </div>
-        );
-    } else {
-        return (
-            <div>
-                <div className="row login-form">
-                    <div className="col-10 offset-1 jumbotron">
-                        <h2>Sign In</h2>
-                        <Form onSubmit={submitForm}>
-                            <FormGroup>
-                                <Label>Username</Label>
-                                <Input type="text" name="username" placeholder="username"
-                                       value={userPass.username} readOnly={login.loading}
-                                       onChange={updateField} required/>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="examplePassword">Password</Label>
-                                <Input type="password" name="password" placeholder="********"
-                                       value={userPass.password} readOnly={login.loading}
-                                       onChange={updateField} required/>
-                            </FormGroup>
-                            <Button color="primary" disabled={login.loading}>Submit</Button>
-                        </Form>
-                        {login.loading ? <Spinner style={{width: '3rem', height: '3rem'}}/> : ""}
-                    </div>
-                </div>
-            </div>
-        );
-    }
+        </div>
+    );
 }
