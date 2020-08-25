@@ -70,6 +70,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> mapResponse = new HashMap<>();
         Person p = (Person) auth.getPrincipal();
+        mapResponse.put("id", p.getId());
         mapResponse.put("username", p.getUsername());
         mapResponse.put("firstname", p.getFirstName());
         mapResponse.put("lastname", p.getLastName());
