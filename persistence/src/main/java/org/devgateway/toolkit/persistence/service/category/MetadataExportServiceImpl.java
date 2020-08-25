@@ -75,7 +75,7 @@ public class MetadataExportServiceImpl implements MetadataExportService {
     protected static ImmutableMap<String, Serializable>
     convertTenderToMap(Tender t) {
         return ImmutableMap.of("id", t.getId(), "fyId", t.getProcurementPlan().getFiscalYear().getId(),
-                "label", t.getLabel());
+                "deptId", t.getDepartment().getId(), "label", t.getLabel());
     }
 
     protected static ImmutableMap<String, Serializable>
