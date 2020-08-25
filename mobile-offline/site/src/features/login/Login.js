@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Spinner, Form, FormGroup, Label, Input, Button} from 'reactstrap';
+import {Spinner, Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap';
 import {performLogin, selectLogin} from './loginSlice';
 
 export function Login() {
@@ -40,6 +40,7 @@ export function Login() {
                         </FormGroup>
                         <Button color="primary" disabled={login.loading}>Submit</Button>
                     </Form>
+                    {login.failed ? <Alert color="danger">Login Failed</Alert>: ""}
                     {login.loading ? <Spinner style={{width: '3rem', height: '3rem'}}/> : ""}
                 </div>
             </div>
