@@ -1145,6 +1145,9 @@
         <insert tableName="ROLE">
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
             <column name="AUTHORITY" value="ROLE_PMC_USER"/>
+        </insert>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
             <column name="AUTHORITY" value="ROLE_PMC_ADMIN"/>
         </insert>
     </changeSet>
