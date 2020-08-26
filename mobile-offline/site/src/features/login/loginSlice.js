@@ -5,6 +5,7 @@ export const loginSlice = createSlice({
     name: 'login',
     initialState: {
         authenticated: false,
+        failed: false,
         user: {},
         loading: false
     },
@@ -17,6 +18,7 @@ export const loginSlice = createSlice({
             console.log("Login failed: " + JSON.stringify(action.payload));
             state.authenticated = false;
             state.loading = false;
+            state.failed = true;
         },
         loginSuccess: (state, action) => {
             console.log("Login success: " + JSON.stringify(action.payload));

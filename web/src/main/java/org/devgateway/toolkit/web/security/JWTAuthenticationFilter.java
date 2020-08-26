@@ -44,9 +44,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             ObjectMapper objectMapper = new ObjectMapper();
             MapType mapType = objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
             Map<String, String> map = objectMapper.readValue(req.getInputStream(), mapType);
-            return authenticationManager.authenticate(
+            Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(map.get("username"), map.get("password"), new ArrayList<>())
             );
+            if (authenticate != null) {
+                Person person = (Person) authenticate.getPrincipal();
+                if (!SecurityUtil.isUserPMCUser(person)) {
+                    authenticate = null;
+                }
+
+            }
+            return authenticate;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -62,6 +70,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> mapResponse = new HashMap<>();
         Person p = (Person) auth.getPrincipal();
+        mapResponse.put("id", p.getId());
         mapResponse.put("username", p.getUsername());
         mapResponse.put("firstname", p.getFirstName());
         mapResponse.put("lastname", p.getLastName());

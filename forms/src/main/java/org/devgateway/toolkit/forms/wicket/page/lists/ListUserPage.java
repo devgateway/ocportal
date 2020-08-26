@@ -32,7 +32,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@AuthorizeInstantiation({SecurityConstants.Roles.ROLE_ADMIN, SecurityConstants.Roles.ROLE_PMC_ADMIN})
 @MountPath(value = "/listusers")
 public class ListUserPage extends AbstractListPage<Person> {
 
