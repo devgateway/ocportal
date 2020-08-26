@@ -49,6 +49,13 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
     @OrderColumn(name = "index")
     private List<PMCMember> pmcMembers = new ArrayList<>();
 
+    @ExcelExport(name = "PMC Notes", separateSheet = true)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    @OrderColumn(name = "index")
+    private List<PMCNotes> pmcNotes = new ArrayList<>();
+
     @ExcelExport(name = "PMC Status")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
@@ -58,6 +65,12 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<ProjectClosureHandover> projectClosureHandover;
+
+    private String signatureNames;
+
+    private Boolean acknowledgeSignature;
+
+    private Boolean rejected = false;
 
     public List<Subcounty> getSubcounties() {
         return subcounties;
@@ -97,5 +110,37 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     public void setProjectClosureHandover(List<ProjectClosureHandover> projectClosureHandover) {
         this.projectClosureHandover = projectClosureHandover;
+    }
+
+    public List<PMCNotes> getPmcNotes() {
+        return pmcNotes;
+    }
+
+    public void setPmcNotes(List<PMCNotes> pmcNotes) {
+        this.pmcNotes = pmcNotes;
+    }
+
+    public String getSignatureNames() {
+        return signatureNames;
+    }
+
+    public void setSignatureNames(String signatureNames) {
+        this.signatureNames = signatureNames;
+    }
+
+    public Boolean getAcknowledgeSignature() {
+        return acknowledgeSignature;
+    }
+
+    public void setAcknowledgeSignature(Boolean acknowledgeSignature) {
+        this.acknowledgeSignature = acknowledgeSignature;
+    }
+
+    public Boolean getRejected() {
+        return rejected;
+    }
+
+    public void setRejected(Boolean rejected) {
+        this.rejected = rejected;
     }
 }
