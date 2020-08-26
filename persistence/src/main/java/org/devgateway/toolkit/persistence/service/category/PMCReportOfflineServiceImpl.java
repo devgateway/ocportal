@@ -35,7 +35,7 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
     protected PMCNotesOffline convertToOffline(PMCNotes n) {
         PMCNotesOffline no = new PMCNotesOffline();
         no.setId(n.getId());
-        no.setNotes(n.getNotes());
+        no.setText(n.getText());
         return no;
     }
 
@@ -90,8 +90,7 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         if (!user.isPresent()) {
             throw new RuntimeException("Unknown user id");
         }
-        List<PMCReport> pmcReportsForDepartments = pmcReportService.getPMCReportsForDepartments(
-                user.get().getDepartments());
-        return pmcReportsForDepartments.stream().map(this::convertToOffline).collect(Collectors.toList());
+        return pmcReportService.getPMCReportsForDepartments(
+                user.get().getDepartments()).stream().map(this::convertToOffline).collect(Collectors.toList());
     }
 }

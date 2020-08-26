@@ -65,7 +65,7 @@ public class PMCNotesPanel extends ListViewSectionPanel<PMCNotes, PMCReport> {
 
     @Override
     public void populateCompoundListItem(final ListItem<PMCNotes> item) {
-        ComponentUtil.addTextAreaField(item, "notes").required();
+        ComponentUtil.addTextAreaField(item, "text").required();
     }
 
     @Override

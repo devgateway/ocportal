@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class PMCNotesOffline implements Serializable {
     private Long id;
-    private String notes;
+    private String text;
 
     public Long getId() {
         return id;
@@ -14,11 +14,11 @@ public class PMCNotesOffline implements Serializable {
         this.id = id;
     }
 
-    public String getNotes() {
-        return notes;
+    public String getText() {
+        return text;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setText(String text) {
+        this.text = text;
     }
 }

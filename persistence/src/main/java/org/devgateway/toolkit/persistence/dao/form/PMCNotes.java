@@ -28,7 +28,7 @@ public class PMCNotes extends AbstractChildExpandableAuditEntity<PMCReport> impl
 
     @ExcelExport(name = "Notes")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
-    private String notes;
+    private String text;
 
     @Override
     public void setLabel(final String label) {
@@ -39,7 +39,7 @@ public class PMCNotes extends AbstractChildExpandableAuditEntity<PMCReport> impl
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return notes;
+        return text;
     }
 
 
@@ -48,11 +48,11 @@ public class PMCNotes extends AbstractChildExpandableAuditEntity<PMCReport> impl
         return getLabel();
     }
 
-    public String getNotes() {
-        return notes;
+    public String getText() {
+        return text;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setText(String text) {
+        this.text = text;
     }
 }
