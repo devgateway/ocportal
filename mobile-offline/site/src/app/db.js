@@ -1,5 +1,6 @@
 
 import {PMCReportStatus} from "./constants";
+import {hardcodedMetadata} from "./hardcoded";
 
 // TODO use real database
 
@@ -14,7 +15,7 @@ const pmcReports = [{
         id:342,
         tenderTitle: 'MAINTENANCE OF KWA TUVA-NGIINI-KALANZONI-MBONDONI-YAITHA ROAD'
     },
-    reportDate: new Date(1995, 11, 17),
+    date: '1995-11-17',
     subCounties: [{
         id: 1,
         label: 'Mbooni'
@@ -64,7 +65,7 @@ const pmcReports = [{
         id:342,
         tenderTitle: 'EXTENSION OF KIAONI PIPELINE EXTENSION'
     },
-    reportDate: new Date(2020, 5, 20),
+    date: '2020-05-20',
     subCounties: [{
         id: 2,
         label: 'Makueni'
@@ -109,6 +110,32 @@ export const loadPMCReports = () => {
         setTimeout(() => {
             if (success) {
                 resolve(pmcReports);
+            } else {
+                reject(new Error('Whoops!'));
+            }
+        }, 100);
+    });
+};
+
+function generateGroupedMetadataItems(rawMetadata) {
+    let metadata = {};
+
+    for (const [key, value] of Object.entries(rawMetadata)) {
+        metadata[key] = value;
+        let byId = {};
+        value.forEach(item => byId[item.id] = item);
+        metadata[key+'ById'] = byId;
+    }
+
+    return metadata;
+}
+
+export const loadMetadata = () => {
+    return new Promise((resolve, reject) => {
+        console.log("Loading metadata from db...");
+        setTimeout(() => {
+            if (success) {
+                resolve(generateGroupedMetadataItems(hardcodedMetadata));
             } else {
                 reject(new Error('Whoops!'));
             }
