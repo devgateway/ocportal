@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {useEffect} from "react";
-import {selectPMCReports, preformLoadPMCReports, addReport} from "./pmcReportsSlice";
+import {selectPMCReports, preformLoadPMCReports, addReport, editReport} from "./pmcReportsSlice";
 import {EditReport} from "./EditReport";
 import {preformLoadMetadata} from "./metadataSlice";
 
@@ -19,8 +19,13 @@ export function PMCReports() {
         dispatch(addReport());
     };
 
+    const handleEditReport = report => e => {
+        e.preventDefault();
+        dispatch(editReport(report));
+    }
+
     if (pmcReports.editingReport !== null) {
-        return <EditReport />;
+        return <EditReport value={pmcReports.editingReport} />;
     } else if (pmcReports.error) {
         return (
             <div className="container-fluid">
@@ -31,9 +36,9 @@ export function PMCReports() {
         return <div />;
     } else {
         const rows = pmcReports.reports.map((report) => (
-            <div key={report.id} className="card mt-3">
+            <div key={report.id} className="card mt-3" onClick={handleEditReport(report)}>
                 <div className="card-body">
-                    <h5 className="card-title">{report.tender.tenderTitle}</h5>
+                    <h5 className="card-title">{report.tenderId}</h5>
                     <p className="card-text">Report date: {report.reportDate}
                       <span className="badge badge-secondary ml-1">{report.status}</span>
                     </p>

@@ -4,6 +4,7 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import {cancelEditReport} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
+import {DATE_FORMAT} from "./../../app/constants";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./../../react-datepicker.css";
@@ -12,12 +13,13 @@ import "./../../react-datepicker.css";
 // TODO implement actual save
 // TODO validation & error reporting
 // TODO prevent data loss
-export function EditReport() {
+export function EditReport(props) {
     const metadata = useSelector(selectMetadata);
     const subCounties = metadata.ref["Subcounty"];
     const fiscalYears = metadata.ref["FiscalYear"];
     const departments = metadata.ref["Department"];
     const tenders = metadata.ref["Tender"];
+    const tendersById = metadata.ref["TenderById"];
     const wards = metadata.ref["Ward"];
     const pmcStaff = metadata.ref["PMCStaff"];
     const designations = metadata.ref["Designation"];
@@ -25,21 +27,27 @@ export function EditReport() {
 
     const dispatch = useDispatch();
 
-    function filterWards(subCounties, wards) {
-        return (wards || []).filter(w => (subCounties || []).some(sc => w.parentId === sc.id));
-    }
+    const filterWards = (subCountyIds, wards) => {
+        return (wards || []).filter(w => (subCountyIds || []).some(scId => w.parentId === scId));
+    };
 
-    function filterTenders(fiscalYear, department, tenders) {
-        if (!department || !fiscalYear) {
+    function filterTenders(fyId, deptId, tenders) {
+        if (!deptId || !fyId) {
             return [];
         }
-        return (tenders || []).filter(t => t.fyId === fiscalYear.id && t.deptId === department.id);
+        return (tenders || []).filter(t => t.fyId === fyId && t.deptId === deptId);
     }
 
-    const [report, setReport] = useState({authorizePayment: false});
+    const [report, setReport] = useState({
+        authorizePayment: false,
+        signature: false,
+        fyId: (tendersById[props.value.tenderId] || {}).fyId,
+        deptId: (tendersById[props.value.tenderId] || {}).deptId,
+        ...props.value
+    });
 
-    const availableWards = filterWards(report.subCounties, wards);
-    const availableTenders = filterTenders(report.fiscalYear, report.department, tenders);
+    const availableWards = filterWards(report.subcountyIds, wards);
+    const availableTenders = filterTenders(report.fyId, report.deptId, tenders);
 
     const fieldChanged = e => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -50,21 +58,25 @@ export function EditReport() {
     };
 
     useEffect(() => {
-        setReport(report => ({
-            ...report,
-            wards: filterWards(report.subCounties, report.wards)
-        }));
-    }, [report.subCounties]);
+        setReport(report => {
+            let ids = {};
+            filterWards(report.subcountyIds, wards).forEach(w => ids[w.id] = true);
+            return {
+                ...report,
+                wardIds: (report.wardIds || []).filter(wardId => ids[wardId])
+            }
+        });
+    }, [report.subcountyIds, wards]);
 
     useEffect(() => {
         setReport(report => {
-            const tenders = filterTenders(report.fiscalYear, report.department, report.tender ? [ report.tender ] : []);
+            const tenders = filterTenders(report.fyId, report.deptId, report.tender ? [ report.tender ] : []);
             return {
                 ...report,
                 tender: tenders.length === 0 ? null : tenders[0]
             }
         });
-    }, [report.fiscalYear, report.department]);
+    }, [report.fyId, report.deptId]);
 
     const handleCancel = (e) => {
         e.preventDefault();
@@ -87,21 +99,21 @@ export function EditReport() {
         <div className="container-fluid pt-3 pb-3">
             <h1>New report</h1>
 
-            <SelectCategoryField label="Fiscal Year" name="fiscalYear" value={report.fiscalYear} options={fiscalYears}
+            <SelectCategoryField label="Fiscal Year" name="fyId" value={report.fyId} options={fiscalYears}
                                  onChange={fieldChanged} />
 
-            <SelectCategoryField label="Department" name="department" value={report.department} options={departments}
+            <SelectCategoryField label="Department" name="deptId" value={report.deptId} options={departments}
                                  onChange={fieldChanged} />
 
-            <SelectCategoryField label="Tender" name="tender" value={report.tender} options={availableTenders}
+            <SelectCategoryField label="Tender" name="tenderId" value={report.tenderId} options={availableTenders}
                                  onChange={fieldChanged} />
 
-            <DateField label="Date" name="date" value={report.date} onChange={fieldChanged} />
+            <DateField label="Date" name="reportDate" value={report.reportDate} onChange={fieldChanged} />
 
-            <SelectCategoryField label="Subcounties" name="subCounties" value={report.subCounties} options={subCounties}
+            <SelectCategoryField label="Subcounties" name="subcountyIds" value={report.subcountyIds} options={subCounties}
                                  isMulti onChange={fieldChanged} />
 
-            <SelectCategoryField label="Wards" name="wards" value={report.wards} options={availableWards}
+            <SelectCategoryField label="Wards" name="wardIds" value={report.wardIds} options={availableWards}
                                  isMulti onChange={fieldChanged} />
 
             <PMCMembers name="pmcMembers" value={report.pmcMembers} pmcStaff={pmcStaff} designations={designations}
@@ -112,8 +124,8 @@ export function EditReport() {
 
             <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} />
 
-            <SelectCategoryField label="Project Closure and Handover" name="projectClosureAndHandover"
-                                 value={report.projectClosureAndHandover} options={projectClosureHandoverOptions}
+            <SelectCategoryField label="Project Closure and Handover" name="projectClosureHandoverIds" isMulti
+                                 value={report.projectClosureHandoverIds} options={projectClosureHandoverOptions}
                                  onChange={fieldChanged} />
 
             <CheckboxField label="eSignature" name="signature" value={report.signature}
@@ -172,12 +184,12 @@ function PMCMembers(props) {
                     </button>
                 </p>
 
-                <SelectCategoryField label="PMC Staff" name="pmcStaff"
-                                     value={m.pmcStaff} options={props.pmcStaff}
+                <SelectCategoryField label="PMC Staff" name="staffId"
+                                     value={m.staffId} options={props.pmcStaff}
                                      onChange={changeField(idx)} />
 
-                <SelectCategoryField label="Designation" name="designation"
-                                     value={m.designation} options={props.designations}
+                <SelectCategoryField label="Designation" name="designationId"
+                                     value={m.designationId} options={props.designations}
                                      onChange={changeField(idx)} />
             </div>
         )
@@ -249,27 +261,42 @@ function Notes(props) {
 }
 
 function SelectCategoryField(props) {
-    const onChange = value => {
+    const onChange = objVal => {
+        let idVal;
+        if (props.isMulti) {
+            idVal = (objVal || []).map(el => el.id);
+        } else {
+            idVal = (objVal || {}).id;
+        }
         const event = {
             target: {
                 name: props.name,
-                value: value
+                value: idVal
             }
         };
         props.onChange(event);
     }
 
+    let objValue;
+    if (props.isMulti) {
+        objValue = (props.value || []).map(valueId => ({
+            id: valueId,
+            label: (props.options.find(option => valueId === option.id) || {}).label
+        }));
+    } else {
+        objValue = {
+            id: props.value,
+            label: (props.options.find(option => props.value === option.id) || {}).label
+        };
+    }
+
     return (
         <div className="form-group">
             <label>{props.label}</label>
-            <SelectCategory value={props.value} options={props.options} isMulti={props.isMulti}
-                            onChange={onChange} />
+            <Select value={objValue} options={props.options} isMulti={props.isMulti}
+                    onChange={onChange} getOptionValue={option => option['id']} />
         </div>
     );
-}
-
-function SelectCategory(props) {
-    return <Select getOptionValue={option => option['id']} {...props} />
 }
 
 function DateField(props) {
@@ -288,7 +315,7 @@ function DateField(props) {
             <div>
                 <DatePicker selected={Date.parse(props.value)} onChange={dateChanged}
                             customInput={<input type="text" className="form-control" />}
-                            dateFormat="dd/MM/yyyy"/>
+                            dateFormat={DATE_FORMAT} />
             </div>
         </div>
     );
@@ -310,7 +337,7 @@ function TextField(props) {
         <div className="form-group">
             <label>{props.label}</label>
             <input name={props.name} type="text" className="form-control"
-                   checked={props.value} onChange={props.onChange} />
+                   value={props.value} onChange={props.onChange} />
         </div>
     );
 }

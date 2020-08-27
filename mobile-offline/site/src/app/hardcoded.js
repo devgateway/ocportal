@@ -16,12 +16,20 @@ export const hardcodedMetadata = {
         {
             "id": 5,
             "label": "Devolution, County Administration, Participatory Development and Public Service"
+        },
+        {
+            "id": 12,
+            "label": "Roads, Transport, Energy and Public Works"
         }
     ],
     "FiscalYear": [
         {
             "id": 15884,
             "label": "2018/2019"
+        },
+        {
+            "id": 33951,
+            "label": "2019/2020"
         }
     ],
     "Subcounty": [
@@ -223,10 +231,148 @@ export const hardcodedMetadata = {
     ],
     "Tender": [
         {
+            "id": 19365,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "716305 construction of kwa kukui drift"
+        },
+        {
+            "id": 28270,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "742027 CONSTRUCTION OF WATUKA-NTHANGU-KAKO DRIFT"
+        },
+        {
+            "id": 28335,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "716280 Heavy grading of Kathonzweni-mathemba-makutano road (drainage works)"
+        },
+        {
+            "id": 28624,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703809 REHABILITATION OF YUMBUNI-KAVATINI ROAD (DRAINAGE WORKS)"
+        },
+        {
+            "id": 28859,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "718392 construction of kima drift"
+        },
+        {
+            "id": 29831,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "718313 construction of manyenoni drift"
+        },
+        {
+            "id": 30338,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703826 MAINTENANCE OF KWA TUVA-NGIINI-KALANZONI-MBONDONI-YAITHA ROAD"
+        },
+        {
+            "id": 30627,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703733 OPENING, GRADING AND MAINTENANCE OF MAKUTANO-MALILI ROAD"
+        },
+        {
+            "id": 30904,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703414 REHABILITATION OF YUMBUNI-KAVATINI-KYANGULI ROAD (GRADING AND GRAVELLING)"
+        },
+        {
+            "id": 31226,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703415 REHABILITATION OF KWA SOMBA-MULALA-KATHUMA ROAD (GRADING & GRAVELLING)"
+        },
+        {
+            "id": 31693,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703772 MAINTENANCE OF KASIKEU-KAYATTA-UVETE-KITONGUNI ROAD (GRADING)"
+        },
+        {
+            "id": 31862,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703869 REHABILITATION OF MAKUTANO-MATUTU-MLOLONGO ROAD (GRADING)"
+        },
+        {
+            "id": 32184,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703755 OPENING AND HEAVY GRADING OF NDULUKU-KIKUSWI-KYALUAMA-KITONGUNI-KWA NDUNGI-KIKUSWI ROAD 8KM"
+        },
+        {
+            "id": 32342,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "704119 HEAVY GRADING OF KIUKUNI-KAKO ROAD (GRADING)"
+        },
+        {
+            "id": 32488,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "716314 GRADING OF MBENUU-KATHUMA ROAD (CULVERT WORKS)"
+        },
+        {
+            "id": 32692,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "718318 CONSTRUCTION OF SIEMBENI-KWA KYAI- KAMULEMBENI-REHEMA ROAD"
+        },
+        {
+            "id": 32857,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "734044 MAINTENANCE OF WOTE ROADS (KIVANDINI-NZIU ROADS)"
+        },
+        {
+            "id": 33395,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "723232 OPENING/GRADING OF MWAANI-KENZE-UVETE ROAD"
+        },
+        {
+            "id": 33627,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "718443 REHABILITATION OF KIBARANI-WIIVIA-KIVUTHU-KAUNGUNI ROAD (GRADING)"
+        },
+        {
+            "id": 33809,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "718374 CONSTRUCTION OF KWA SAMMY DRIFT"
+        },
+        {
             "id": 34009,
             "fyId": 15884,
             "deptId": 5,
             "label": "GMC/D/T/050/2018/2019 CONSTRUCTION OF PERIMETER WALL AND A GUARD HOUSE"
+        },
+        {
+            "id": 34356,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703717 REHABILITATION OF IVINGONI-MAKUTANO-NZAMBANI ROAD"
+        },
+        {
+            "id": 34600,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703768 ROUTINE MAINTENANCE OF MTITO ANDEI-MWEETWANI-MAVINDINI-LUKENYA UNIVERSITY ROAD"
+        },
+        {
+            "id": 34918,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "716287 routine maintenance of muusini jucntion-kwa matungu road (culvert works)"
         },
         {
             "id": 35244,
@@ -235,10 +381,52 @@ export const hardcodedMetadata = {
             "label": "GMC/D/Q/31/2018/2019 SUPPLY AND DELIVERY OF MOTOR VEHICLE."
         },
         {
+            "id": 35340,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "718368 opening of watuka-mituvu-nthaatwa-kwa mutumba road"
+        },
+        {
+            "id": 35670,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "718452 CONSTRUCTION OF KATHULUNI- ITETANI ROAD (DRAINAGE WORKS)"
+        },
+        {
             "id": 35762,
             "fyId": 15884,
             "deptId": 5,
             "label": "743145-2018/2019 SUPPLY AND DELIVERY OF OFFICE STATIONERY."
+        },
+        {
+            "id": 36001,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "723137 HEAVY GRADING OF KITHULUNI-ITETANI ROAD (OPENING)"
+        },
+        {
+            "id": 36281,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "723141 IVIANI-KITHONGO-KWA LENGA-MBYANI ROAD (EQUIPMENT HIRE)"
+        },
+        {
+            "id": 36811,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "737027 GRADING AND MAINTENANCE OF MAKUTANO-KYANGEE-KYAKATONI-KYAMBEKE ROAD"
+        },
+        {
+            "id": 36898,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703412 CONSTRUCTION OF KAYATTA DRIFT"
+        },
+        {
+            "id": 37106,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703410 CONSTRUCTION OF WATUKA-NTHANGU DRIFT"
         },
         {
             "id": 40382,
@@ -251,6 +439,24 @@ export const hardcodedMetadata = {
             "fyId": 15884,
             "deptId": 5,
             "label": "729112 TONERS"
+        },
+        {
+            "id": 41510,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "703843 rehalibitation of ngomano- kalulu-utithi road (drainage works)"
+        },
+        {
+            "id": 49570,
+            "fyId": 15884,
+            "deptId": 12,
+            "label": "GMC/TR/D/30/2018/2019 PURCHASE OF MOTOR GRADERS"
+        },
+        {
+            "id": 69649,
+            "fyId": 33951,
+            "deptId": 12,
+            "label": "26738 Construction"
         }
     ]
 };

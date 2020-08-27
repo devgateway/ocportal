@@ -1,107 +1,114 @@
 
-import {PMCReportStatus} from "./constants";
 import {hardcodedMetadata} from "./hardcoded";
 
 // TODO use real database
 
-const pmcReports = [{
-    id: 1,
-    fiscalYear: '2019/2020',
-    department: {
-        id: 10,
-        label: 'Roads, Transport, Energy and Public Works'
+const pmcReports = [
+    {
+        "id": 65624,
+        "tenderId": 30338,
+        "authorizePayment": false,
+        "subcountyIds": [
+            15852,
+            15853
+        ],
+        "wardIds": [
+            15858
+        ],
+        "pmcMembers": [
+            {
+                "id": 65628,
+                "staffId": 65620,
+                "designationId": 65622
+            },
+            {
+                "id": 78869
+            }
+        ],
+        "pmcNotes": [
+            {
+                "id": 79088,
+                "text": "a note"
+            },
+            {
+                "id": 79089,
+                "text": "another note"
+            }
+        ],
+        "statusComments": [
+            {
+                "id": 65625,
+                "status": "SUBMITTED",
+                "createdBy": "admin",
+                "createdDate": "2020-05-26T09:59:34.498+03:00"
+            },
+            {
+                "id": 65630,
+                "status": "APPROVED",
+                "createdBy": "admin",
+                "createdDate": "2020-05-26T10:00:45.668+03:00"
+            },
+            {
+                "id": 69082,
+                "status": "DRAFT",
+                "createdBy": "admin",
+                "createdDate": "2020-05-26T21:04:37.031+03:00"
+            },
+            {
+                "id": 78734,
+                "status": "DRAFT",
+                "comment": "this is a comment",
+                "createdBy": "admin",
+                "createdDate": "2020-08-04T17:33:48.009+03:00"
+            }
+        ],
+        "pmcStatusId": 54724,
+        "projectClosureHandoverIds": [
+            54735
+        ],
+        "signatureNames": "MY NAMES",
+        "status": "DRAFT",
+        "reportDate": "2020-05-25T21:00:00Z"
     },
-    tender: {
-        id:342,
-        tenderTitle: 'MAINTENANCE OF KWA TUVA-NGIINI-KALANZONI-MBONDONI-YAITHA ROAD'
-    },
-    date: '1995-11-17',
-    subCounties: [{
-        id: 1,
-        label: 'Mbooni'
-    }, {
-        id: 2,
-        label: 'Makueni'
-    }],
-    wards: [{
-        id: 1,
-        label: 'Kako/Waia'
-    }],
-    pmcMembers: [{
-        id: 111,
-        pmcStaff: {
-            id: 10,
-            label: 'Makua Peris',
-            phone: '+254 735601847'
-        },
-        designation: {
-            id: 32,
-            label: 'Chairperson'
-        }
-    }],
-    authorizePayment: true,
-    notes: ["Note 1", "Note 2"],
-    pmcStatus: {
-        id: 10,
-        name: 'At Risk'
-    },
-    projectClosureAndHandover: [{
-        id: 2231,
-        label: 'Wat?'
-    }],
-    eSignature: {
-        fullName: 'Makua Peris',
-        accepted: true
-    },
-    status: PMCReportStatus.DRAFT
-}, {
-    id: 2,
-    fiscalYear: '2018/2019',
-    department: {
-        id: 11,
-        label: 'Water, Sanitation, Environment and Climate Change'
-    },
-    tender: {
-        id:342,
-        tenderTitle: 'EXTENSION OF KIAONI PIPELINE EXTENSION'
-    },
-    date: '2020-05-20',
-    subCounties: [{
-        id: 2,
-        label: 'Makueni'
-    }],
-    wards: [{
-        id: 2,
-        label: 'Mbitini'
-    }],
-    pmcMembers: [{
-        id: 111,
-        pmcStaff: {
-            id: 10,
-            label: 'Makua Peris',
-            phone: '+254 735601847'
-        },
-        designation: {
-            id: 32,
-            label: 'Chairperson'
-        }
-    }],
-    authorizePayment: false,
-    notes: ["Note 1", "Note 2"],
-    pmcStatus: {
-        id: 11,
-        name: 'On Track'
-    },
-    projectClosureAndHandover: [{
-        id: 2232,
-        label: 'Hospital Management committees'
-    }],
-    eSignature: {
-        fullName: 'Makua Peris',
-        accepted: true
-    },
-    status: PMCReportStatus.SUBMITTED
-}];
+    {
+        "id": 69843,
+        "tenderId": 69649,
+        "authorizePayment": true,
+        "subcountyIds": [
+            15853
+        ],
+        "wardIds": [
+            15859
+        ],
+        "pmcMembers": [
+            {
+                "id": 69847,
+                "staffId": 65620,
+                "designationId": 65622
+            }
+        ],
+        "statusComments": [
+            {
+                "id": 69844,
+                "status": "SUBMITTED",
+                "createdBy": "admin",
+                "createdDate": "2020-05-29T07:25:55.569+03:00"
+            },
+            {
+                "id": 74815,
+                "status": "APPROVED",
+                "createdBy": "admin",
+                "createdDate": "2020-06-29T20:15:51.351+03:00"
+            }
+        ],
+        "pmcStatusId": 54725,
+        "projectClosureHandoverIds": [
+            54734
+        ],
+        "status": "APPROVED",
+        "reportDate": "2010-01-31T21:00:00Z"
+    }
+];
 
 const success = true;
 

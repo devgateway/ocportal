@@ -6,3 +6,5 @@ export const PMCReportStatus = {
     APPROVED: "APPROVED",
     TERMINATED: "TERMINATED"
 }
+
+export const DATE_FORMAT = "yyyy/MM/dd";

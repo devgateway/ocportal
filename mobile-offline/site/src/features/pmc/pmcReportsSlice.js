@@ -21,16 +21,21 @@ export const pmcReportsSlice = createSlice({
         addReport: (state, action) => {
             state.editingReport = {};
         },
+        editReport: (state, action) => {
+            state.editingReport = action.payload;
+        },
         cancelEditReport: (state, action) => {
             state.editingReport = null;
         }
     }
 });
 
-export const {loadSuccess, loadFailure, addReport, cancelEditReport} = pmcReportsSlice.actions;
+export const {loadSuccess, loadFailure, addReport, editReport, cancelEditReport} = pmcReportsSlice.actions;
 
 export const preformLoadPMCReports = () => dispatch => {
-    loadPMCReports().then(d => dispatch(loadSuccess(d)), e => dispatch(loadFailure(e)));
+    loadPMCReports().then(
+        reports => dispatch(loadSuccess(reports)),
+        e => dispatch(loadFailure(e)));
 };
 
 export const selectPMCReports = state => state.pmcReports;
