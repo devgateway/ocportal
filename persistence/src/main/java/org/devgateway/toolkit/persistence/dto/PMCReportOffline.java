@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ public class PMCReportOffline implements Serializable {
     private String signatureNames;
     private Boolean acknowledgeSignature;
     private String status;
+    private Date reportDate;
 
     public Long getId() {
         return id;
@@ -121,5 +123,13 @@ public class PMCReportOffline implements Serializable {
 
     public void setStatusComments(List<StatusChangedCommentOffline> statusComments) {
         this.statusComments = statusComments;
+    }
+
+    public Date getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(Date reportDate) {
+        this.reportDate = reportDate;
     }
 }

@@ -81,6 +81,8 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
                 .collect(Collectors.toSet()));
         pmco.setTenderId(pmc.getTenderProcess().getSingleTender().getId());
         pmco.setStatus(pmc.getStatus());
+        pmco.setReportDate(pmc.getApprovedDate());
+
         return pmco;
     }
 
