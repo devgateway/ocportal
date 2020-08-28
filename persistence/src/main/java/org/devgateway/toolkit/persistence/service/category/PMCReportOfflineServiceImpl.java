@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.category;
 
+import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
 import org.devgateway.toolkit.persistence.dao.categories.ProjectClosureHandover;
@@ -8,12 +9,15 @@ import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.PMCMember;
 import org.devgateway.toolkit.persistence.dao.form.PMCNotes;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dto.PMCMemberOffline;
 import org.devgateway.toolkit.persistence.dto.PMCNotesOffline;
 import org.devgateway.toolkit.persistence.dto.PMCReportOffline;
 import org.devgateway.toolkit.persistence.dto.StatusChangedCommentOffline;
+import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.form.PMCReportService;
+import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +40,81 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private WardService wardService;
+
+    @Autowired
+    private SubcountyService subcountyService;
+
+    @Autowired
+    private TenderService tenderService;
+
+    @Autowired
+    private PMCStatusService pmcStatusService;
+
+    @Autowired
+    private DesignationService designationService;
+
+    @Autowired
+    private PMCStaffService staffService;
+
+    @Autowired
+    private ProjectClosureHandoverService projectClosureHandoverService;
+
     protected PMCNotesOffline convertToOffline(PMCNotes n) {
         PMCNotesOffline no = new PMCNotesOffline();
         no.setId(n.getId());
         no.setText(n.getText());
         return no;
+    }
+
+
+    protected <C extends AbstractAuditableEntity> C getChildEntity(
+            Long childId, List<C> childList) {
+        if (childId == null) {
+            return null;
+        }
+        Optional<C> first = childList.stream().filter(n -> n.getId().equals(childId)).findFirst();
+        return first.orElse(null);
+    }
+
+
+    protected PMCNotes convertToDao(PMCNotesOffline no, PMCReport parentDao) {
+        PMCNotes notes = getChildEntity(no.getId(), parentDao.getPmcNotes());
+        if (notes == null) {
+            notes = new PMCNotes();
+        }
+        notes.setParent(parentDao);
+        notes.setText(no.getText());
+        return notes;
+    }
+
+    protected StatusChangedComment convertToDao(StatusChangedCommentOffline off, PMCReport parentDao) {
+        StatusChangedComment comment = getChildEntity(off.getId(), parentDao.getStatusComments());
+        if (comment == null) {
+            comment = new StatusChangedComment();
+        }
+        comment.setComment(off.getComment());
+        comment.setStatus(off.getStatus());
+        comment.setCreatedBy(off.getCreatedBy());
+        comment.setCreatedDate(off.getCreatedDate());
+        return comment;
+    }
+
+
+    protected PMCMember convertToDao(PMCMemberOffline mo, PMCReport parentDao) {
+        PMCMember ret = getChildEntity(mo.getId(), parentDao.getPmcMembers());
+        if (ret == null) {
+            ret = new PMCMember();
+        }
+        ret.setParent(parentDao);
+        if (mo.getDesignationId() != null) {
+            ret.setDesignation(loadObjectById(mo.getDesignationId(), designationService));
+        }
+        if (mo.getStaffId() != null) {
+            ret.setStaff(loadObjectById(mo.getStaffId(), staffService));
+        }
+        return ret;
     }
 
     protected StatusChangedCommentOffline convertToOffline(StatusChangedComment c) {
@@ -65,6 +139,67 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         return mo;
     }
 
+    protected <T extends AbstractAuditableEntity> T loadObjectById(Long id, BaseJpaService<T> service) {
+        Optional<T> byId = service.findById(id);
+        if (!byId.isPresent()) {
+            throw new RuntimeException("Cannot find object with id " + id + " of service "
+                    + service.getClass().getSimpleName());
+        }
+        return byId.get();
+    }
+
+    protected <C extends AbstractAuditableEntity> void addToList(Supplier<List<C>> getter, Consumer<List<C>> setter,
+                                                                 Stream<C> inStream) {
+        if (getter.get() == null) {
+            setter.accept(inStream.collect(Collectors.toList()));
+        } else {
+            getter.get().clear();
+            getter.get().addAll(inStream.collect(Collectors.toList()));
+        }
+    }
+
+
+    protected PMCReport convertToDao(PMCReportOffline pmco, Person person) {
+        PMCReport pmc;
+        if (pmco.getId() != null) {
+            pmc = loadObjectById(pmco.getId(), pmcReportService);
+            pmc.setLastModifiedBy(person.getUsername());
+            pmc.setLastModifiedDate(ZonedDateTime.now());
+        } else {
+            pmc = pmcReportService.newInstance();
+            Tender tender = loadObjectById(pmco.getTenderId(), tenderService);
+            pmc.setTenderProcess(tender.getTenderProcess());
+            pmc.setCreatedBy(person.getUsername());
+            pmc.setCreatedDate(ZonedDateTime.now());
+        }
+        pmc.setAcknowledgeSignature(pmco.getAcknowledgeSignature());
+        pmc.setAuthorizePayment(pmco.getAuthorizePayment());
+        pmc.setSignatureNames(pmco.getSignatureNames());
+        if (pmco.getPmcStatusId() != null) {
+            pmc.setPmcStatus(loadObjectById(pmco.getPmcStatusId(), pmcStatusService));
+        }
+
+        addToList(pmc::getWards, pmc::setWards, pmco.getWardIds().stream().map(id -> loadObjectById(id, wardService)));
+
+        addToList(pmc::getSubcounties, pmc::setSubcounties, pmco.getSubcountyIds().stream().map(id -> loadObjectById(id,
+                subcountyService)));
+
+        addToList(pmc::getPmcNotes, pmc::setPmcNotes, pmco.getPmcNotes().stream().map(n -> convertToDao(n, pmc)));
+
+        addToList(pmc::getStatusComments, pmc::setStatusComments, pmco.getStatusComments().stream().map(n ->
+                convertToDao(n, pmc)));
+
+        addToList(pmc::getPmcMembers, pmc::setPmcMembers, pmco.getPmcMembers().stream().map(n -> convertToDao(n, pmc)));
+
+        addToList(pmc::getProjectClosureHandover, pmc::setProjectClosureHandover,
+                pmco.getProjectClosureHandoverIds().stream().map(c -> loadObjectById(c,
+                        projectClosureHandoverService)));
+
+        pmc.setApprovedDate(pmco.getReportDate());
+        pmc.setStatus(pmco.getStatus());
+
+        return pmc;
+    }
 
     protected PMCReportOffline convertToOffline(PMCReport pmc) {
         PMCReportOffline pmco = new PMCReportOffline();
@@ -95,5 +230,12 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         Person user = loadObjectById(userId, personService);
         return pmcReportService.getPMCReportsForDepartments(
                 user.getDepartments()).stream().map(this::convertToOffline).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PMCReportOffline> updatePMCReports(Long userId, List<PMCReportOffline> listPMCReports) {
+        Person person = loadObjectById(userId, personService);
+        return listPMCReports.stream().map(r -> convertToDao(r, person)).map(pmcReportService::saveAndFlush)
+                .map(this::convertToOffline).collect(Collectors.toList());
     }
 }
