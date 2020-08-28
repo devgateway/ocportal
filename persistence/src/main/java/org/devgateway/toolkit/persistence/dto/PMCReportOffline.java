@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,8 @@ public class PMCReportOffline implements Serializable {
     private String signatureNames;
     private Boolean acknowledgeSignature;
     private String status;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date reportDate;
 
     public Long getId() {
