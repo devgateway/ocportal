@@ -3,7 +3,9 @@ package org.devgateway.toolkit.persistence.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,13 +13,13 @@ public class PMCReportOffline implements Serializable {
     private Long id;
     private Long tenderId;
     private Boolean authorizePayment;
-    private Set<Long> subcountyIds;
-    private Set<Long> wardIds;
-    private List<PMCMemberOffline> pmcMembers;
-    private List<PMCNotesOffline> pmcNotes;
+    private Set<Long> subcountyIds = new HashSet<>();
+    private Set<Long> wardIds = new HashSet<>();
+    private List<PMCMemberOffline> pmcMembers = new ArrayList<>();
+    private List<PMCNotesOffline> pmcNotes = new ArrayList<>();
     private List<StatusChangedCommentOffline> statusComments;
     private Long pmcStatusId;
-    private Set<Long> projectClosureHandoverIds;
+    private Set<Long> projectClosureHandoverIds = new HashSet<>();
     private String signatureNames;
     private Boolean acknowledgeSignature;
     private String status;

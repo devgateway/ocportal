@@ -18,9 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Transactional
 @Service
@@ -88,11 +92,8 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
 
     @Override
     public List<PMCReportOffline> getPMCReports(Long userId) {
-        Optional<Person> user = personService.findById(userId);
-        if (!user.isPresent()) {
-            throw new RuntimeException("Unknown user id");
-        }
+        Person user = loadObjectById(userId, personService);
         return pmcReportService.getPMCReportsForDepartments(
-                user.get().getDepartments()).stream().map(this::convertToOffline).collect(Collectors.toList());
+                user.getDepartments()).stream().map(this::convertToOffline).collect(Collectors.toList());
     }
 }
