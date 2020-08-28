@@ -68,7 +68,7 @@ const pmcReports = [
         ],
         "signatureNames": "MY NAMES",
         "status": "DRAFT",
-        "reportDate": "2020-05-25T21:00:00Z"
+        "reportDate": "2020-05-25"
     },
     {
         "id": 69843,
@@ -106,7 +106,7 @@ const pmcReports = [
             54734
         ],
         "status": "APPROVED",
-        "reportDate": "2010-01-31T21:00:00Z"
+        "reportDate": "2010-01-31"
     }
 ];
 

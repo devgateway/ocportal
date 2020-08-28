@@ -4,14 +4,21 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import {cancelEditReport} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
-import {DATE_FORMAT} from "./../../app/constants";
+import {DATE_FORMAT} from "../../app/constants";
+import _ from "lodash";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./../../react-datepicker.css";
 
+const scrollToFirstError = () => {
+    let elems = document.getElementsByClassName("is-invalid");
+    if (elems && elems.length) {
+        window.scrollTo(0, elems[0].parentElement.offsetTop);
+    }
+}
+
 // TODO think of view
 // TODO implement actual save
-// TODO validation & error reporting
 // TODO prevent data loss
 export function EditReport(props) {
     const metadata = useSelector(selectMetadata);
@@ -46,15 +53,66 @@ export function EditReport(props) {
         ...props.value
     });
 
+    const [errors, setErrors] = useState({});
+    const [submit, setSubmit] = useState(false);
+
     const availableWards = filterWards(report.subcountyIds, wards);
     const availableTenders = filterTenders(report.fyId, report.deptId, tenders);
 
+    const validate = (report) => {
+        let errors = {};
+
+        const notNull = (errors, obj, field, message) => errors[field] = obj[field] ? undefined : message;
+        const nonEmptyArray = (errors, obj, field, message) => {
+            const array = obj[field];
+            errors[field] = array && array.length ? undefined : message;
+        }
+
+        notNull(errors, report, 'fyId', 'Required');
+        notNull(errors, report, 'deptId', 'Required');
+        notNull(errors, report, 'tenderId', 'Required');
+        notNull(errors, report, 'reportDate', 'Required');
+        nonEmptyArray(errors, report, 'subcountyIds', 'Please select at least one subcounty');
+        nonEmptyArray(errors, report, 'wardIds', 'Please select at least one ward');
+
+        nonEmptyArray(errors, report, 'pmcMembers', 'Please add at least one PMC member');
+        if (report.pmcMembers && report.pmcMembers.length) {
+            errors.pmcMembersArray = report.pmcMembers.map(member => {
+                let memberErrors = {};
+                notNull(memberErrors, member, 'staffId', 'Required');
+                notNull(memberErrors, member, 'designationId', 'Required');
+                return memberErrors;
+            });
+        }
+
+        nonEmptyArray(errors, report, 'pmcNotes', 'Please add at least one note');
+        if (report.pmcNotes && report.pmcNotes.length) {
+            errors.pmcNotesArray = report.pmcNotes.map(note => {
+                let noteErrors = {};
+                notNull(noteErrors, note, 'text', 'Required');
+                return noteErrors;
+            });
+        }
+
+        if (report.signature !== true) {
+            errors.signature = 'Report must be signed';
+        }
+        notNull(errors, report, 'signatureNames', 'Required');
+
+        return errors;
+    };
+
     const fieldChanged = e => {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        setReport({
+        const newReport = {
             ...report,
             [e.target.name]: value
-        });
+        };
+        setReport(newReport);
+
+        if (!_.isEmpty(errors)) {
+            setErrors(validate(newReport));
+        }
     };
 
     useEffect(() => {
@@ -89,8 +147,20 @@ export function EditReport(props) {
         console.log(report);
     };
 
+    useEffect(() => {
+        if (submit) {
+            scrollToFirstError();
+        }
+        setSubmit(false);
+    }, [submit]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const errors = validate(report);
+        setErrors(errors);
+        setSubmit(true);
+
         // TODO set status
         console.log(report);
     };
@@ -100,39 +170,40 @@ export function EditReport(props) {
             <h1>New report</h1>
 
             <SelectCategoryField label="Fiscal Year" name="fyId" value={report.fyId} options={fiscalYears}
-                                 onChange={fieldChanged} />
+                                 onChange={fieldChanged} errors={errors} />
 
             <SelectCategoryField label="Department" name="deptId" value={report.deptId} options={departments}
-                                 onChange={fieldChanged} />
+                                 onChange={fieldChanged} errors={errors} />
 
             <SelectCategoryField label="Tender" name="tenderId" value={report.tenderId} options={availableTenders}
-                                 onChange={fieldChanged} />
+                                 onChange={fieldChanged} errors={errors} />
 
-            <DateField label="Date" name="reportDate" value={report.reportDate} onChange={fieldChanged} />
+            <DateField label="Date" name="reportDate" value={report.reportDate} onChange={fieldChanged}
+                       errors={errors} />
 
             <SelectCategoryField label="Subcounties" name="subcountyIds" value={report.subcountyIds} options={subCounties}
-                                 isMulti onChange={fieldChanged} />
+                                 isMulti onChange={fieldChanged} errors={errors} />
 
             <SelectCategoryField label="Wards" name="wardIds" value={report.wardIds} options={availableWards}
-                                 isMulti onChange={fieldChanged} />
+                                 isMulti onChange={fieldChanged} errors={errors} />
 
             <PMCMembers name="pmcMembers" value={report.pmcMembers} pmcStaff={pmcStaff} designations={designations}
-                        onChange={fieldChanged} />
+                        onChange={fieldChanged} errors={errors} />
 
             <CheckboxField label="Authorize payment" name="authorizePayment" value={report.authorizePayment}
-                           onChange={fieldChanged} />
+                           onChange={fieldChanged} errors={errors} />
 
-            <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} />
+            <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} errors={errors} />
 
             <SelectCategoryField label="Project Closure and Handover" name="projectClosureHandoverIds" isMulti
                                  value={report.projectClosureHandoverIds} options={projectClosureHandoverOptions}
-                                 onChange={fieldChanged} />
+                                 onChange={fieldChanged} errors={errors} />
 
             <CheckboxField label="eSignature" name="signature" value={report.signature}
-                           onChange={fieldChanged} />
+                           onChange={fieldChanged} errors={errors} />
 
             <TextField label="eSignature First Name & Last Name" name="signatureNames" value={report.signatureNames}
-                       onChange={fieldChanged} />
+                       onChange={fieldChanged} errors={errors} />
 
             <div>
                 <button type="button" className="btn btn-primary" onClick={handleSave}>Save as Draft</button>
@@ -172,34 +243,44 @@ function PMCMembers(props) {
         onChange(newValue);
     };
 
+    const error = (props.errors || {})[props.name];
+    const pmcMemberErrors = (props.errors.pmcMembersArray || []);
+
     const pmcMemberRows = pmcMembers.map(
-        (m, idx) => (
-            <div key={idx} className="form-group">
-                <p>
-                    Member {idx+1}
+        (m, idx) => {
+            const pmcMemberError = pmcMemberErrors[idx];
+            return (
+                <div key={idx} className="form-group">
+                    <p>
+                        Member #{idx + 1}
 
-                    <button type="button" className="btn btn-sm btn-danger float-right"
-                            onClick={removePMCMember(idx)}>
-                        Remove PMC Member
-                    </button>
-                </p>
+                        <button type="button" className="btn btn-sm btn-danger float-right"
+                                onClick={removePMCMember(idx)}>
+                            Remove PMC Member
+                        </button>
+                    </p>
 
-                <SelectCategoryField label="PMC Staff" name="staffId"
-                                     value={m.staffId} options={props.pmcStaff}
-                                     onChange={changeField(idx)} />
+                    <SelectCategoryField label="PMC Staff" name="staffId"
+                                         value={m.staffId} options={props.pmcStaff} errors={pmcMemberError}
+                                         onChange={changeField(idx)}/>
 
-                <SelectCategoryField label="Designation" name="designationId"
-                                     value={m.designationId} options={props.designations}
-                                     onChange={changeField(idx)} />
-            </div>
-        )
+                    <SelectCategoryField label="Designation" name="designationId"
+                                         value={m.designationId} options={props.designations} errors={pmcMemberError}
+                                         onChange={changeField(idx)}/>
+                </div>
+            );
+        }
     );
 
     return (
         <div className="form-group">
             <label>PMC Members</label>
 
-            {pmcMemberRows}
+            <div className={(error ? "is-invalid" : "")}>
+                {pmcMemberRows}
+            </div>
+
+            {error && <div className="list-input invalid-feedback">{error}</div>}
 
             <div>
                 <button type="button" className="btn btn-success" onClick={addPMCMember}>Add PMC Member</button>
@@ -225,11 +306,17 @@ function Notes(props) {
         onChange(newValue);
     };
 
+    const error = (props.errors || {})[props.name];
+    const noteErrors = (props.errors.pmcNotesArray || []);
+
     const rows = notes.map(
-        (note, idx) => (
+        (note, idx) => {
+            const textError = (noteErrors[idx] || {})["text"];
+
+            return (
             <div key={idx} className="form-group">
                 <p>
-                    Note {idx+1}
+                    Note #{idx+1}
 
                     <button type="button" className="btn btn-sm btn-danger float-right"
                             onClick={() => onChange(notes.filter((m, sidx) => sidx !== idx))}>
@@ -237,17 +324,23 @@ function Notes(props) {
                     </button>
                 </p>
 
-                <textarea name="notes" value={note.notes} onChange={changeField(idx)} rows="2"
-                          className="form-control" />
+                <textarea name="text" value={note.text} onChange={changeField(idx)} rows="2"
+                          className={"form-control" + (textError ? " is-invalid" : "")} />
+
+                {textError && <div className="invalid-feedback">{textError}</div>}
             </div>
-        )
+        )}
     );
 
     return (
         <div className="form-group">
             <label>Notes</label>
 
-            {rows}
+            <div className={(error ? "is-invalid" : "")}>
+                {rows}
+            </div>
+
+            {error && <div className="list-input invalid-feedback">{error}</div>}
 
             <div>
                 <button type="button" className="btn btn-success"
@@ -290,11 +383,22 @@ function SelectCategoryField(props) {
         };
     }
 
+    const error = (props.errors || {})[props.name];
+
+    const customStyles = {
+        control: (provided, state) => ({
+            ...provided,
+            borderColor: error ? 'red' : provided.borderColor
+        })
+    };
+
     return (
         <div className="form-group">
             <label>{props.label}</label>
-            <Select value={objValue} options={props.options} isMulti={props.isMulti}
-                    onChange={onChange} getOptionValue={option => option['id']} />
+            <Select value={objValue} styles={customStyles} options={props.options} isMulti={props.isMulti}
+                    onChange={onChange} getOptionValue={option => option['id']}
+                    className={(error ? "is-invalid" : "")}/>
+            {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
 }
@@ -309,35 +413,45 @@ function DateField(props) {
         });
     };
 
+    const error = (props.errors || {})[props.name];
+
     return (
         <div className="form-group">
             <label>{props.label}</label>
-            <div>
+            <div className={(error ? " is-invalid" : "")}>
                 <DatePicker selected={Date.parse(props.value)} onChange={dateChanged}
-                            customInput={<input type="text" className="form-control" />}
+                            customInput={
+                                <input type="text" className={"form-control" + (error ? " is-invalid" : "")} />
+                            }
                             dateFormat={DATE_FORMAT} />
             </div>
+            {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
 }
 
 function CheckboxField(props) {
     const id = props.name;
+    const error = (props.errors || {})[props.name];
     return (
         <div className="form-group form-check">
-            <input name={props.name} id={id} type="checkbox" className="form-check-input"
+            <input name={props.name} id={id} type="checkbox"
+                   className={"form-check-input" + (error ? " is-invalid" : "")}
                    checked={props.value} onChange={props.onChange} />
             <label className="form-check-label" htmlFor={id}>{props.label}</label>
+            {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
 }
 
 function TextField(props) {
+    const error = (props.errors || {})[props.name];
     return (
         <div className="form-group">
             <label>{props.label}</label>
-            <input name={props.name} type="text" className="form-control"
-                   value={props.value} onChange={props.onChange} />
+            <input name={props.name} type="text" className={"form-control" + (error ? " is-invalid" : "")}
+                   value={props.value || ''} onChange={props.onChange} />
+            {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
 }

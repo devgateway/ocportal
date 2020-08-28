@@ -36,3 +36,8 @@
     transform: translateY(0px)
   }
 }
+
+.list-input.invalid-feedback {
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
