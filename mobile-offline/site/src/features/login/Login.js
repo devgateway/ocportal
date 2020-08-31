@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import {useHistory, useLocation} from "react-router-dom";
 import {Spinner, Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap';
 import {performLogin, selectLogin} from './loginSlice';
 
@@ -19,6 +20,16 @@ export function Login() {
             [e.target.name]: e.target.value
         });
     };
+
+    const history = useHistory();
+    const location = useLocation();
+    const { from } = location.state || { from: { pathname: "/" } };
+
+    useEffect(() => {
+        if (login.authenticated) {
+            history.replace(from);
+        }
+    }, [login, history, from]);
 
     return (
         <div className="container-fluid mt-3">

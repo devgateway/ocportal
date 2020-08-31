@@ -4,33 +4,24 @@ import {loadPMCReports} from "../../app/db";
 export const pmcReportsSlice = createSlice({
     name: 'pmcReports',
     initialState: {
-        reports: [],
-        editingReport: null,
-        error: null,
-        viewReportId: null
+        reports: null,
+        error: null
     },
     reducers: {
         loadSuccess: (state, action) => {
-            state.reports = action.payload;
+            let reports = {};
+            action.payload.forEach(r => reports[r.id] = r);
+            state.reports = reports;
             state.error = null;
         },
         loadFailure: (state, action) => {
-            state.reports = [];
+            state.reports = null;
             state.error = action.payload;
-        },
-        addReport: (state, action) => {
-            state.editingReport = {};
-        },
-        editReport: (state, action) => {
-            state.editingReport = action.payload;
-        },
-        cancelEditReport: (state, action) => {
-            state.editingReport = null;
         }
     }
 });
 
-export const {loadSuccess, loadFailure, addReport, editReport, cancelEditReport} = pmcReportsSlice.actions;
+export const {loadSuccess, loadFailure} = pmcReportsSlice.actions;
 
 export const preformLoadPMCReports = () => dispatch => {
     loadPMCReports().then(
@@ -39,5 +30,13 @@ export const preformLoadPMCReports = () => dispatch => {
 };
 
 export const selectPMCReports = state => state.pmcReports;
+
+export const selectPMCReportsArray = state => {
+    let array = [];
+    for (const [, report] of Object.entries(state.pmcReports.reports || {})) {
+        array.push(report);
+    }
+    return array;
+}
 
 export default pmcReportsSlice.reducer;

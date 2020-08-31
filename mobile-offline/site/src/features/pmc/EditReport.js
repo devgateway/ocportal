@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
-import {cancelEditReport} from "./pmcReportsSlice";
+import {Prompt, useHistory, useParams} from "react-router-dom";
+import {selectPMCReports} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
 import {DATE_FORMAT} from "../../app/constants";
 import _ from "lodash";
@@ -19,8 +20,8 @@ const scrollToFirstError = () => {
 
 // TODO think of view
 // TODO implement actual save
-// TODO prevent data loss
 export function EditReport(props) {
+    const pmcReports = useSelector(selectPMCReports);
     const metadata = useSelector(selectMetadata);
     const subCounties = metadata.ref["Subcounty"];
     const fiscalYears = metadata.ref["FiscalYear"];
@@ -32,7 +33,7 @@ export function EditReport(props) {
     const designations = metadata.ref["Designation"];
     const projectClosureHandoverOptions = metadata.ref["ProjectClosureHandover"];
 
-    const dispatch = useDispatch();
+    const [isBlocking, setIsBlocking] = useState(false);
 
     const filterWards = (subCountyIds, wards) => {
         return (wards || []).filter(w => (subCountyIds || []).some(scId => w.parentId === scId));
@@ -45,12 +46,17 @@ export function EditReport(props) {
         return (tenders || []).filter(t => t.fyId === fyId && t.deptId === deptId);
     }
 
+    const { reportId } = useParams();
+    const originalReport = pmcReports.reports[reportId];
+
+    const tender = tendersById[(originalReport || {}).tenderId] || {};
+
     const [report, setReport] = useState({
         authorizePayment: false,
         signature: false,
-        fyId: (tendersById[props.value.tenderId] || {}).fyId,
-        deptId: (tendersById[props.value.tenderId] || {}).deptId,
-        ...props.value
+        fyId: tender.fyId,
+        deptId: tender.deptId,
+        ...originalReport
     });
 
     const [errors, setErrors] = useState({});
@@ -109,6 +115,7 @@ export function EditReport(props) {
             [e.target.name]: value
         };
         setReport(newReport);
+        setIsBlocking(true);
 
         if (!_.isEmpty(errors)) {
             setErrors(validate(newReport));
@@ -136,15 +143,20 @@ export function EditReport(props) {
         });
     }, [report.fyId, report.deptId]);
 
+    const history = useHistory();
+
     const handleCancel = (e) => {
         e.preventDefault();
-        dispatch(cancelEditReport());
+        history.goBack();
     };
 
     const handleSave = (e) => {
         e.preventDefault();
         // TODO set status
         console.log(report);
+        setIsBlocking(false);
+
+        history.goBack();
     };
 
     useEffect(() => {
@@ -163,11 +175,20 @@ export function EditReport(props) {
 
         // TODO set status
         console.log(report);
+
+        if (_.isEmpty(errors)) {
+            setIsBlocking(false);
+            history.goBack();
+        }
     };
 
     return (
         <div className="container-fluid pt-3 pb-3">
-            <h1>New report</h1>
+            <Prompt
+                when={isBlocking}
+                message='Your changes will be lost. Are you sure?' />
+
+            <h1>{originalReport ? "Edit report" : "New report"} </h1>
 
             <SelectCategoryField label="Fiscal Year" name="fyId" value={report.fyId} options={fiscalYears}
                                  onChange={fieldChanged} errors={errors} />

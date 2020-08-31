@@ -114,6 +114,7 @@ const success = true;
 
 export const loadPMCReports = () => {
     return new Promise((resolve, reject) => {
+        console.log("Loading reports!");
         setTimeout(() => {
             if (success) {
                 resolve(pmcReports);

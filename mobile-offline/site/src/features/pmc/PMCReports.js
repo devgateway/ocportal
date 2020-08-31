@@ -1,41 +1,28 @@
 import React from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import {useEffect} from "react";
-import {selectPMCReports, preformLoadPMCReports, addReport, editReport} from "./pmcReportsSlice";
-import {EditReport} from "./EditReport";
-import {preformLoadMetadata} from "./metadataSlice";
+import {useSelector} from 'react-redux';
+import {Link, useHistory} from "react-router-dom";
+import {selectPMCReports, selectPMCReportsArray} from "./pmcReportsSlice";
 
 export function PMCReports() {
     const pmcReports = useSelector(selectPMCReports);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(preformLoadPMCReports());
-        dispatch(preformLoadMetadata());
-    }, [dispatch]);
-
-    const handleAddReport = (e) => {
-        e.preventDefault();
-        dispatch(addReport());
-    };
+    const pmcReportArray = useSelector(selectPMCReportsArray);
+    const history = useHistory();
 
     const handleEditReport = report => e => {
         e.preventDefault();
-        dispatch(editReport(report));
+        history.push("/report/" + report.id);
     }
 
-    if (pmcReports.editingReport !== null) {
-        return <EditReport value={pmcReports.editingReport} />;
-    } else if (pmcReports.error) {
+    if (pmcReports.error) {
         return (
             <div className="container-fluid">
                 <div className="alert alert-danger mt-3" role="alert">{pmcReports.error.message}</div>
             </div>
         );
-    } else if (pmcReports.reports === null) {
+    } else if (pmcReportArray === null) {
         return <div />;
     } else {
-        const rows = pmcReports.reports.map((report) => (
+        const rows = pmcReportArray.map((report) => (
             <div key={report.id} className="card mt-3" onClick={handleEditReport(report)}>
                 <div className="card-body">
                     <h5 className="card-title">{report.tenderId}</h5>
@@ -48,7 +35,7 @@ export function PMCReports() {
 
         return (
             <div className="container-fluid pt-3 pb-3">
-                <button onClick={handleAddReport} className="btn btn-success">Add report</button>
+                <Link to="/report" className="btn btn-success">Add report</Link>
                 {rows}
             </div>
         );
