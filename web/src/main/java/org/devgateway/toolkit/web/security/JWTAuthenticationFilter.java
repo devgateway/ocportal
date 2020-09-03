@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
+import org.apache.commons.lang.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,7 +50,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             );
             if (authenticate != null) {
                 Person person = (Person) authenticate.getPrincipal();
-                if (!SecurityUtil.isUserPMCUser(person)) {
+                if (!SecurityUtil.isUserPMCUser(person) || BooleanUtils.isFalse(person.isEnabled())) {
                     authenticate = null;
                 }
 

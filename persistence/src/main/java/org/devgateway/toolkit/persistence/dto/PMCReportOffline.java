@@ -23,6 +23,7 @@ public class PMCReportOffline implements Serializable {
     private String signatureNames;
     private Boolean acknowledgeSignature;
     private String status;
+    private Boolean rejected;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date reportDate;
@@ -137,5 +138,13 @@ public class PMCReportOffline implements Serializable {
 
     public void setReportDate(Date reportDate) {
         this.reportDate = reportDate;
+    }
+
+    public Boolean getRejected() {
+        return rejected;
+    }
+
+    public void setRejected(Boolean rejected) {
+        this.rejected = rejected;
     }
 }
