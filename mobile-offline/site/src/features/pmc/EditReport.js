@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import {Prompt, useHistory, useParams} from "react-router-dom";
-import {selectPMCReports} from "./pmcReportsSlice";
+import {
+    performDeletePMCReport,
+    performReplacePMCReport, performRevertPMCReportToDraft,
+    performSubmitPMCReport,
+    selectPMCReports
+} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
-import {DATE_FORMAT} from "../../app/constants";
-import _ from "lodash";
+import {DATE_FORMAT, PMCReportStatus} from "../../app/constants";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./../../react-datepicker.css";
@@ -18,8 +22,6 @@ const scrollToFirstError = () => {
     }
 }
 
-// TODO think of view
-// TODO implement actual save
 export function EditReport(props) {
     const pmcReports = useSelector(selectPMCReports);
     const metadata = useSelector(selectMetadata);
@@ -46,16 +48,20 @@ export function EditReport(props) {
         return (tenders || []).filter(t => t.fyId === fyId && t.deptId === deptId);
     }
 
-    const { reportId } = useParams();
-    const originalReport = pmcReports.reports[reportId];
+    const { internalId } = useParams();
+    const originalReport = pmcReports.reports[internalId];
 
     const tender = tendersById[(originalReport || {}).tenderId] || {};
+
+    const status = isNaN(internalId) ? PMCReportStatus.DRAFT : (originalReport || {}).status;
+    const isDisabled = status !== PMCReportStatus.DRAFT;
 
     const [report, setReport] = useState({
         authorizePayment: false,
         signature: false,
         fyId: tender.fyId,
         deptId: tender.deptId,
+        status: status,
         ...originalReport
     });
 
@@ -67,11 +73,20 @@ export function EditReport(props) {
 
     const validate = (report) => {
         let errors = {};
+        let valid = true;
 
-        const notNull = (errors, obj, field, message) => errors[field] = obj[field] ? undefined : message;
+        const notNull = (errors, obj, field, message) => {
+            if (!obj[field]) {
+                errors[field] = message;
+                valid = false;
+            }
+        };
         const nonEmptyArray = (errors, obj, field, message) => {
             const array = obj[field];
-            errors[field] = array && array.length ? undefined : message;
+            if (!array || !array.length) {
+                errors[field] = message;
+                valid = false;
+            }
         }
 
         notNull(errors, report, 'fyId', 'Required');
@@ -102,10 +117,11 @@ export function EditReport(props) {
 
         if (report.signature !== true) {
             errors.signature = 'Report must be signed';
+            valid = false;
         }
         notNull(errors, report, 'signatureNames', 'Required');
 
-        return errors;
+        return [valid, errors];
     };
 
     const fieldChanged = e => {
@@ -117,8 +133,9 @@ export function EditReport(props) {
         setReport(newReport);
         setIsBlocking(true);
 
-        if (!_.isEmpty(errors)) {
-            setErrors(validate(newReport));
+        if (submit) {
+            const [, errors] = validate(newReport);
+            setErrors(errors);
         }
     };
 
@@ -133,6 +150,7 @@ export function EditReport(props) {
         });
     }, [report.subcountyIds, wards]);
 
+    // FIXME switch to tenderId
     useEffect(() => {
         setReport(report => {
             const tenders = filterTenders(report.fyId, report.deptId, report.tender ? [ report.tender ] : []);
@@ -150,12 +168,20 @@ export function EditReport(props) {
         history.goBack();
     };
 
+    const dispatch = useDispatch();
+
+    const removeExtraFields = report => {
+        let newReport = {...report};
+        delete newReport.fyId;
+        delete newReport.dptId;
+        return newReport;
+    }
+
     const handleSave = (e) => {
         e.preventDefault();
-        // TODO set status
-        console.log(report);
-        setIsBlocking(false);
 
+        dispatch(performReplacePMCReport(removeExtraFields(report)));
+        setIsBlocking(false);
         history.goBack();
     };
 
@@ -166,20 +192,31 @@ export function EditReport(props) {
         setSubmit(false);
     }, [submit]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
 
-        const errors = validate(report);
+        const [valid, errors] = validate(report);
         setErrors(errors);
         setSubmit(true);
 
-        // TODO set status
-        console.log(report);
-
-        if (_.isEmpty(errors)) {
+        if (valid) {
+            dispatch(performSubmitPMCReport(removeExtraFields(report)));
             setIsBlocking(false);
             history.goBack();
         }
+    };
+
+    const handleDelete = e => {
+        e.preventDefault();
+        setIsBlocking(false);
+        dispatch(performDeletePMCReport(report.internalId));
+        history.goBack();
+    };
+
+    const handleRevertToDraft = e => {
+        e.preventDefault();
+        dispatch(performRevertPMCReportToDraft(report.internalId));
+        history.goBack();
     };
 
     return (
@@ -188,50 +225,70 @@ export function EditReport(props) {
                 when={isBlocking}
                 message='Your changes will be lost. Are you sure?' />
 
-            <h1>{originalReport ? "Edit report" : "New report"} </h1>
+            <h1>{isNaN(internalId) ? "New report" : "Edit report"} </h1>
 
             <SelectCategoryField label="Fiscal Year" name="fyId" value={report.fyId} options={fiscalYears}
-                                 onChange={fieldChanged} errors={errors} />
+                                 onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <SelectCategoryField label="Department" name="deptId" value={report.deptId} options={departments}
-                                 onChange={fieldChanged} errors={errors} />
+                                 onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <SelectCategoryField label="Tender" name="tenderId" value={report.tenderId} options={availableTenders}
-                                 onChange={fieldChanged} errors={errors} />
+                                 onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <DateField label="Date" name="reportDate" value={report.reportDate} onChange={fieldChanged}
-                       errors={errors} />
+                       errors={errors} isDisabled={isDisabled} />
 
             <SelectCategoryField label="Subcounties" name="subcountyIds" value={report.subcountyIds} options={subCounties}
-                                 isMulti onChange={fieldChanged} errors={errors} />
+                                 isMulti onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <SelectCategoryField label="Wards" name="wardIds" value={report.wardIds} options={availableWards}
-                                 isMulti onChange={fieldChanged} errors={errors} />
+                                 isMulti onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <PMCMembers name="pmcMembers" value={report.pmcMembers} pmcStaff={pmcStaff} designations={designations}
-                        onChange={fieldChanged} errors={errors} />
+                        onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <CheckboxField label="Authorize payment" name="authorizePayment" value={report.authorizePayment}
-                           onChange={fieldChanged} errors={errors} />
+                           onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
-            <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} errors={errors} />
+            <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} errors={errors}
+                   isDisabled={isDisabled} />
 
             <SelectCategoryField label="Project Closure and Handover" name="projectClosureHandoverIds" isMulti
                                  value={report.projectClosureHandoverIds} options={projectClosureHandoverOptions}
-                                 onChange={fieldChanged} errors={errors} />
+                                 onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <CheckboxField label="eSignature" name="signature" value={report.signature}
-                           onChange={fieldChanged} errors={errors} />
+                           onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <TextField label="eSignature First Name & Last Name" name="signatureNames" value={report.signatureNames}
-                       onChange={fieldChanged} errors={errors} />
+                       onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <div>
-                <button type="button" className="btn btn-primary" onClick={handleSave}>Save as Draft</button>
-                &nbsp;
-                <button type="button" className="btn btn-success" onClick={handleSubmit}>Submit</button>
-                &nbsp;
+                {
+                    report.status === PMCReportStatus.DRAFT &&
+                    (<>
+                        <button type="button" className="btn btn-primary" onClick={handleSave}>Save as Draft</button>
+                        &nbsp;
+                        <button type="button" className="btn btn-success" onClick={handleSubmit}>Submit</button>
+                        &nbsp;
+                    </>)
+                }
+                {
+                    report.status === PMCReportStatus.SUBMITTED_PENDING &&
+                    (<>
+                        <button type="button" className="btn btn-primary" onClick={handleRevertToDraft}>Revert to Draft</button>
+                        &nbsp;
+                    </>)
+                }
                 <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+                {
+                    report.status === PMCReportStatus.DRAFT && !isNaN(report.internalId) &&
+                    (<>
+                        &nbsp;
+                        <button type="button" className="btn btn-danger" onClick={handleDelete}>Delete</button>
+                    </>)
+                }
             </div>
         </div>
     );
@@ -274,20 +331,21 @@ function PMCMembers(props) {
                 <div key={idx} className="form-group">
                     <p>
                         Member #{idx + 1}
-
-                        <button type="button" className="btn btn-sm btn-danger float-right"
-                                onClick={removePMCMember(idx)}>
-                            Remove PMC Member
-                        </button>
+                        {props.isDisabled || (
+                            <button type="button" className="btn btn-sm btn-danger float-right"
+                                    onClick={removePMCMember(idx)}>
+                                Remove PMC Member
+                            </button>
+                        )}
                     </p>
 
                     <SelectCategoryField label="PMC Staff" name="staffId"
                                          value={m.staffId} options={props.pmcStaff} errors={pmcMemberError}
-                                         onChange={changeField(idx)}/>
+                                         onChange={changeField(idx)} isDisabled={props.isDisabled} />
 
                     <SelectCategoryField label="Designation" name="designationId"
                                          value={m.designationId} options={props.designations} errors={pmcMemberError}
-                                         onChange={changeField(idx)}/>
+                                         onChange={changeField(idx)} isDisabled={props.isDisabled} />
                 </div>
             );
         }
@@ -303,9 +361,11 @@ function PMCMembers(props) {
 
             {error && <div className="list-input invalid-feedback">{error}</div>}
 
-            <div>
-                <button type="button" className="btn btn-success" onClick={addPMCMember}>Add PMC Member</button>
-            </div>
+            {props.isDisabled || (
+                <div>
+                    <button type="button" className="btn btn-success" onClick={addPMCMember}>Add PMC Member</button>
+                </div>
+            )}
         </div>
     );
 }
@@ -338,15 +398,16 @@ function Notes(props) {
             <div key={idx} className="form-group">
                 <p>
                     Note #{idx+1}
-
-                    <button type="button" className="btn btn-sm btn-danger float-right"
-                            onClick={() => onChange(notes.filter((m, sidx) => sidx !== idx))}>
-                        Remove Note
-                    </button>
+                    {props.isDisabled || (
+                        <button type="button" className="btn btn-sm btn-danger float-right"
+                                onClick={() => onChange(notes.filter((m, sidx) => sidx !== idx))}>
+                            Remove Note
+                        </button>
+                    )}
                 </p>
 
                 <textarea name="text" value={note.text} onChange={changeField(idx)} rows="2"
-                          className={"form-control" + (textError ? " is-invalid" : "")} />
+                          className={"form-control" + (textError ? " is-invalid" : "")} disabled={props.isDisabled} />
 
                 {textError && <div className="invalid-feedback">{textError}</div>}
             </div>
@@ -363,12 +424,14 @@ function Notes(props) {
 
             {error && <div className="list-input invalid-feedback">{error}</div>}
 
-            <div>
-                <button type="button" className="btn btn-success"
-                        onClick={() => onChange(notes.concat({}))}>
-                    Add Note
-                </button>
-            </div>
+            {props.isDisabled || (
+                <div>
+                    <button type="button" className="btn btn-success"
+                            onClick={() => onChange(notes.concat({}))}>
+                        Add Note
+                    </button>
+                </div>
+            )}
         </div>
     );
 
@@ -418,7 +481,7 @@ function SelectCategoryField(props) {
             <label>{props.label}</label>
             <Select value={objValue} styles={customStyles} options={props.options} isMulti={props.isMulti}
                     onChange={onChange} getOptionValue={option => option['id']}
-                    className={(error ? "is-invalid" : "")}/>
+                    className={(error ? "is-invalid" : "")} isDisabled={props.isDisabled}/>
             {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
@@ -444,7 +507,7 @@ function DateField(props) {
                             customInput={
                                 <input type="text" className={"form-control" + (error ? " is-invalid" : "")} />
                             }
-                            dateFormat={DATE_FORMAT} />
+                            dateFormat={DATE_FORMAT} disabled={props.isDisabled} />
             </div>
             {error && <div className="invalid-feedback">{error}</div>}
         </div>
@@ -458,7 +521,7 @@ function CheckboxField(props) {
         <div className="form-group form-check">
             <input name={props.name} id={id} type="checkbox"
                    className={"form-check-input" + (error ? " is-invalid" : "")}
-                   checked={props.value} onChange={props.onChange} />
+                   checked={props.value} onChange={props.onChange} disabled={props.isDisabled} />
             <label className="form-check-label" htmlFor={id}>{props.label}</label>
             {error && <div className="invalid-feedback">{error}</div>}
         </div>
@@ -471,7 +534,7 @@ function TextField(props) {
         <div className="form-group">
             <label>{props.label}</label>
             <input name={props.name} type="text" className={"form-control" + (error ? " is-invalid" : "")}
-                   value={props.value || ''} onChange={props.onChange} />
+                   value={props.value || ''} onChange={props.onChange} disabled={props.isDisabled} />
             {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );

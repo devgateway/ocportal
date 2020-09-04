@@ -1,16 +1,20 @@
-import {httpPost} from "./Ajax.js";
+import {httpPost, httpGet} from "./Ajax.js";
 
 export const API_ROOT_URL = (document.location.hostname === "localhost" || document.location.protocol === "file:")
     ? "https://makuenioc.dgstg.org" : "";
 
 const API_LOGIN = API_ROOT_URL + "/api/login";
-
-const dummy = true; // TODO undo!
+const API_LIST_REPORTS = API_ROOT_URL + "/api/pmcReport/list/";
+const API_UPDATE_REPORTS = API_ROOT_URL + "/api/pmcReport/update/";
 
 export const loginUser = (data) => {
-    if (dummy) {
-        return new Promise(resolve => resolve({data: {token: "xyz"}}));
-    } else {
-        return httpPost(API_LOGIN, data);
-    }
+    return httpPost(API_LOGIN, data);
 };
+
+export const retrievePMCReports = (userId, token) => {
+    return httpGet(API_LIST_REPORTS + userId, {}, token);
+}
+
+export const updatePMCReports = (userId, token, reports) => {
+    return httpPost(API_UPDATE_REPORTS + userId, reports, token);
+}

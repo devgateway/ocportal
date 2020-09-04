@@ -1,10 +1,24 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {loginUser} from "../../api/Api";
+import {loadReports, saveUser} from "../../app/db";
+import {replaceReports} from "../../features/pmc/pmcReportsSlice";
+
+export const loginStateFromUser = user => {
+    if (user === undefined) {
+        return undefined
+    }
+    return {
+        authenticated: true,
+        tokenValid: true,
+        user: user
+    }
+}
 
 export const loginSlice = createSlice({
     name: 'login',
     initialState: {
         authenticated: false,
+        tokenValid: false,
         failed: false,
         user: {},
         loading: false
@@ -12,19 +26,17 @@ export const loginSlice = createSlice({
     reducers: {
         loginInvoked: (state, action) => {
             state.loading = true;
-            console.log("Login was invoked for " + JSON.stringify(action.payload));
         },
         loginFailure: (state, action) => {
-            console.log("Login failed: " + JSON.stringify(action.payload));
             state.authenticated = false;
             state.loading = false;
             state.failed = true;
         },
         loginSuccess: (state, action) => {
-            console.log("Login success: " + JSON.stringify(action.payload));
             state.loading = false;
             state.user = action.payload;
             state.authenticated = true;
+            state.tokenValid = true;
         },
     },
 });
@@ -40,16 +52,12 @@ export const performLogin = userPass => dispatch => {
     loginUser(userPass)
         .then(resolve => {
             const {data} = resolve;
-            // check if the user is authenticated and save it's details
-            if (data.token) {
-                dispatch(loginSuccess(data));
-                console.log("User authenticated");
-            } else {
-                dispatch(loginFailure("Username or password is incorrect!"));
-            }
+            dispatch(loginSuccess(data));
+            saveUser(data);
+            dispatch(replaceReports(loadReports(data.id)))
         })
         .catch(reject => {
-            console.log(reject);
+            console.log(JSON.stringify(reject));
             dispatch(loginFailure("Network Error! Ensure Internet is up and retry!"));
         });
 };
