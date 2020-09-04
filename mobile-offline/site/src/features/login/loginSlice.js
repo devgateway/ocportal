@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {loginUser} from "../../api/Api";
-import {loadReports, saveUser} from "../../app/db";
+import {loadReports, saveUser, deleteUser} from "../../app/db";
 import {replaceReports} from "../../features/pmc/pmcReportsSlice";
 
 export const loginStateFromUser = user => {
@@ -24,6 +24,10 @@ export const loginSlice = createSlice({
         loading: false
     },
     reducers: {
+        logout: (state, action) => {
+            state.authenticated = false;
+            state.user = {};
+        },
         loginInvoked: (state, action) => {
             state.loading = true;
         },
@@ -40,6 +44,8 @@ export const loginSlice = createSlice({
         },
     },
 });
+
+const {logout} = loginSlice.actions
 
 export const {loginInvoked, loginFailure, loginSuccess} = loginSlice.actions;
 
@@ -60,6 +66,11 @@ export const performLogin = userPass => dispatch => {
             console.log(JSON.stringify(reject));
             dispatch(loginFailure("Network Error! Ensure Internet is up and retry!"));
         });
+};
+
+export const performLogout = () => dispatch => {
+    deleteUser()
+    dispatch(logout())
 };
 
 export const selectLogin = state => state.login;

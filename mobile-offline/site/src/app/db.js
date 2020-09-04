@@ -22,6 +22,15 @@ export const saveUser = user => {
     }
 }
 
+export const deleteUser = () => {
+    try {
+        window.localStorage.removeItem("user")
+    } catch (e) {
+        // ignore
+        console.log(e)
+    }
+}
+
 export const loadReports = userId => {
     try {
         const reportsStr = window.localStorage.getItem(`reports-${userId}`)

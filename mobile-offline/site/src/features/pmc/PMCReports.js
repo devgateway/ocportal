@@ -1,12 +1,14 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link, useHistory} from "react-router-dom";
 import {selectPMCReportsArray} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
+import {performLogout} from "../login/loginSlice";
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const metadata = useSelector(selectMetadata);
     const tendersById = metadata.ref["TenderById"];
@@ -14,6 +16,11 @@ export function PMCReports() {
     const handleEditReport = report => e => {
         e.preventDefault();
         history.push("/report/" + report.internalId);
+    }
+
+    const handleLogout = e => {
+        e.preventDefault()
+        dispatch(performLogout())
     }
 
     const rows = pmcReportArray.map((report) => (
@@ -29,7 +36,11 @@ export function PMCReports() {
 
     return (
         <div className="container-fluid pt-3 pb-3">
+            <div>
             <Link to="/report" className="btn btn-success">Add report</Link>
+
+            <button type='button' className="btn btn-secondary float-right" onClick={handleLogout}>Logout</button>
+            </div>
 
             {rows}
 
