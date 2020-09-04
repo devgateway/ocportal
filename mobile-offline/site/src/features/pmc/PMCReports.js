@@ -4,6 +4,7 @@ import {Link, useHistory} from "react-router-dom";
 import {selectPMCReportsArray} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
 import {performLogout} from "../login/loginSlice";
+import {PMCReportStatus} from "../../app/constants";
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
@@ -23,6 +24,25 @@ export function PMCReports() {
         dispatch(performLogout())
     }
 
+    const getStatusClassName = status => {
+        switch (status) {
+            case PMCReportStatus.APPROVED: return "badge-success"
+            case PMCReportStatus.TERMINATED: return "badge-term"
+            case PMCReportStatus.DRAFT:
+            case PMCReportStatus.REJECTED:
+                return "badge-danger"
+            case PMCReportStatus.SUBMITTED:
+            case PMCReportStatus.SUBMITTED_PENDING:
+                return "badge-warning"
+            default:
+                return ""
+        }
+    }
+
+    const getDerivedStatusName = report => {
+        return report.rejected ? PMCReportStatus.REJECTED : report.status
+    }
+
     const rows = pmcReportArray.map((report) => (
         <div key={report.internalId} className="card mt-3" onClick={handleEditReport(report)}>
             <div className="card-body">
@@ -30,7 +50,9 @@ export function PMCReports() {
                     || <span className="text-muted">Tender not selected</span>}</h5>
                 <p className="card-text">Report date: {report.reportDate
                     || <span className="text-muted">N/A</span>}
-                  <span className="badge badge-secondary ml-1 float-right">{report.status}</span>
+                  <span className={"badge ml-1 float-right " + getStatusClassName(getDerivedStatusName(report))}>
+                      {getDerivedStatusName(report)}
+                  </span>
                 </p>
             </div>
         </div>

@@ -41,3 +41,8 @@
   margin-bottom: 0.5rem;
   margin-top: 0;
 }
+
+.badge-term {
+  color: #fff;
+  background-color: #8a0f13;
+}
