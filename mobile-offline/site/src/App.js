@@ -14,40 +14,39 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useDispatch, useSelector} from "react-redux";
 import {selectLogin} from "./features/login/loginSlice";
-import {preformLoadMetadata, selectMetadata} from "./features/pmc/metadataSlice";
-import {preformLoadPMCReports, selectPMCReports} from "./features/pmc/pmcReportsSlice";
+import {performSynchronization} from "./features/pmc/pmcReportsSlice";
 
 function App() {
-  return (
-      <Router>
-          <div className="App">
-              <header>
+    const dispatch = useDispatch()
+    const login = useSelector(selectLogin)
 
-              </header>
+    useEffect(() => {
+        if (login.authenticated) {
+            dispatch(performSynchronization())
+        }
+    }, [dispatch, login.authenticated])
 
-              <Switch>
-                  <Route path="/login">
-                      <Login />
-                  </Route>
-                  <PrivateRoute exact path="/">
-                      <WithMetadata>
-                          <WithReports>
-                              <PMCReports />
-                          </WithReports>
-                      </WithMetadata>
-                  </PrivateRoute>
-                  <PrivateRoute path={["/report/:reportId", "/report"]}>
-                      <WithMetadata>
-                          <WithReports>
-                              <EditReport />
-                          </WithReports>
-                      </WithMetadata>
-                  </PrivateRoute>
-              </Switch>
+    return (
+        <Router>
+            <div className="App">
+                <header>
 
-          </div>
-      </Router>
-  );
+                </header>
+
+                <Switch>
+                    <Route path="/login">
+                        <Login />
+                    </Route>
+                    <PrivateRoute exact path="/">
+                        <PMCReports />
+                    </PrivateRoute>
+                    <PrivateRoute path={["/report/:internalId", "/report"]}>
+                        <EditReport />
+                    </PrivateRoute>
+                </Switch>
+            </div>
+        </Router>
+    );
 }
 
 function PrivateRoute({ children, ...rest }) {
@@ -69,37 +68,6 @@ function PrivateRoute({ children, ...rest }) {
             }
         />
     );
-}
-
-function WithMetadata(props) {
-    const metadata = useSelector(selectMetadata);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        if (metadata.ref === null) {
-            dispatch(preformLoadMetadata());
-        }
-    }, [metadata.ref, dispatch]);
-    if (metadata.ref === null) {
-        return <div>Loading...</div>;
-    } else {
-        return props.children;
-    }
-}
-
-// TODO combine with WithMetadata?!
-function WithReports(props) {
-    const reports = useSelector(selectPMCReports);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        if (reports.reports === null) {
-            dispatch(preformLoadPMCReports());
-        }
-    }, [reports.reports, dispatch]);
-    if (reports.reports === null) {
-        return <div>Loading...</div>;
-    } else {
-        return props.children;
-    }
 }
 
 export default App;
