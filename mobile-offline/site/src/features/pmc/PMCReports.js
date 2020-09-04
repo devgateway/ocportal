@@ -11,7 +11,7 @@ export function PMCReports() {
     const dispatch = useDispatch();
 
     const metadata = useSelector(selectMetadata);
-    const tendersById = metadata.ref["TenderById"];
+    const tendersById = metadata.refById["Tender"];
 
     const handleEditReport = report => e => {
         e.preventDefault();
@@ -26,9 +26,11 @@ export function PMCReports() {
     const rows = pmcReportArray.map((report) => (
         <div key={report.internalId} className="card mt-3" onClick={handleEditReport(report)}>
             <div className="card-body">
-                <h5 className="card-title">{(tendersById[report.tenderId] || {}).label}</h5>
-                <p className="card-text">Report date: {report.reportDate || 'N/A'}
-                  <span className="badge badge-secondary ml-1">{report.status}</span>
+                <h5 className="card-title">{(tendersById[report.tenderId] || {}).label
+                    || <span className="text-muted">Tender not selected</span>}</h5>
+                <p className="card-text">Report date: {report.reportDate
+                    || <span className="text-muted">N/A</span>}
+                  <span className="badge badge-secondary ml-1 float-right">{report.status}</span>
                 </p>
             </div>
         </div>

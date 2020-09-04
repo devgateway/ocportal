@@ -29,7 +29,7 @@ export function EditReport(props) {
     const fiscalYears = metadata.ref["FiscalYear"];
     const departments = metadata.ref["Department"];
     const tenders = metadata.ref["Tender"];
-    const tendersById = metadata.ref["TenderById"];
+    const tendersById = metadata.refById["Tender"];
     const wards = metadata.ref["Ward"];
     const pmcStaff = metadata.ref["PMCStaff"];
     const designations = metadata.ref["Designation"];

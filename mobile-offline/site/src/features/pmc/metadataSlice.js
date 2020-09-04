@@ -1,30 +1,42 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {loadMetadata} from "../../app/db";
 
 export const metadataSlice = createSlice({
     name: 'metadata',
     initialState: {
-        error: null,
-        ref: null
+        ref: {},
+        refById: {}
     },
     reducers: {
         loadSuccess: (state, action) => {
-            state.ref = action.payload;
-            state.error = null;
-        },
-        loadFailure: (state, action) => {
-            state.ref = null;
-            state.error = action.payload;
+            state.ref = action.payload
+            state.refById = getRefById(action.payload)
         }
     }
 });
 
-export const {loadSuccess, loadFailure} = metadataSlice.actions;
-
-export const preformLoadMetadata = () => dispatch => {
-    loadMetadata().then(d => dispatch(loadSuccess(d)), e => dispatch(loadFailure(e)));
-};
+export const {loadSuccess} = metadataSlice.actions;
 
 export const selectMetadata = state => state.metadata;
 
 export default metadataSlice.reducer;
+
+export const metadataStateFrom = metadata => {
+    if (!metadata) {
+        return undefined
+    }
+    return {
+        ref: metadata,
+        refById: getRefById(metadata)
+    }
+}
+
+const getRefById = ref => {
+    let refById = {}
+    for (const [key, value] of Object.entries(ref)) {
+        refById[key] = value.reduce((byId, entity) => {
+            byId[entity.id] = entity
+            return byId
+        }, {})
+    }
+    return refById
+}

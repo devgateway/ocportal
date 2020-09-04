@@ -1,26 +1,7 @@
 
-import {hardcodedMetadata} from "./hardcoded";
+export const loadUser = () => safeGetItem("user")
 
-const success = true;
-
-export const loadUser = () => {
-    try {
-        const userStr = window.localStorage.getItem("user");
-        return userStr ? JSON.parse(userStr) : undefined;
-    } catch (e) {
-        console.log(e)
-        return undefined
-    }
-}
-
-export const saveUser = user => {
-    try {
-        window.localStorage.setItem("user", JSON.stringify(user));
-    } catch (e) {
-        // ignore
-        console.log(e)
-    }
-}
+export const saveUser = user => safeSetItem("user", user)
 
 export const deleteUser = () => {
     try {
@@ -31,46 +12,30 @@ export const deleteUser = () => {
     }
 }
 
-export const loadReports = userId => {
+export const loadReports = userId => safeGetItem(`reports-${userId}`)
+
+export const saveReports = (userId, reports) => safeSetItem(`reports-${userId}`, reports)
+
+export const loadMetadata = userId => safeGetItem(`metadata-${userId}`)
+
+export const saveMetadata = (userId, metadata) => safeSetItem(`metadata-${userId}`, metadata)
+
+const safeGetItem = key => {
     try {
-        const reportsStr = window.localStorage.getItem(`reports-${userId}`)
-        return reportsStr ? JSON.parse(reportsStr) : undefined
+        const str = window.localStorage.getItem(key)
+        return str ? JSON.parse(str) : undefined
     } catch (e) {
+        // ignore
         console.log(e)
         return undefined
     }
-};
+}
 
-export const saveReports = (userId, reports) => {
+const safeSetItem = (key, value) => {
     try {
-        window.localStorage.setItem(`reports-${userId}`, JSON.stringify(reports))
+        window.localStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
+        // ignore
         console.log(e)
     }
 }
-
-function generateGroupedMetadataItems(rawMetadata) {
-    let metadata = {};
-
-    for (const [key, value] of Object.entries(rawMetadata)) {
-        metadata[key] = value;
-        let byId = {};
-        value.forEach(item => byId[item.id] = item);
-        metadata[key+'ById'] = byId;
-    }
-
-    return metadata;
-}
-
-export const loadMetadata = () => {
-    return new Promise((resolve, reject) => {
-        console.log("Loading metadata from db...");
-        setTimeout(() => {
-            if (success) {
-                resolve(generateGroupedMetadataItems(hardcodedMetadata));
-            } else {
-                reject(new Error('Whoops!'));
-            }
-        }, 100);
-    });
-};

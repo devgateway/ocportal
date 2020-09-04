@@ -1,8 +1,9 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {saveReports} from "../../app/db";
+import {saveMetadata, saveReports} from "../../app/db";
 import {PMCReportStatus} from "../../app/constants";
 import {selectLogin} from "../login/loginSlice";
 import {synchronize} from "../../app/sync";
+import {loadSuccess as metadataLoadSuccess, selectMetadata} from "../../features/pmc/metadataSlice";
 
 export const reportsStateFromReports = reports => {
     if (reports === undefined) {
@@ -94,7 +95,7 @@ export const pmcReportsSlice = createSlice({
             state.synchronizing = false
         },
         synchronizationFailure: (state, action) => {
-            console.log(JSON.stringify(action.payload))
+            console.log(`synchronizationFailure ${action.payload}`)
             state.synchronizing = false
         }
     }
@@ -150,12 +151,18 @@ export const performSynchronization = () => (dispatch, getState) => {
 
     synchronize(login.user.id, login.user.token, reportsToSync).then(
         r => {
+            dispatch(metadataLoadSuccess(r.metadata))
             dispatch(synchronizationSuccess(r))
 
-            const reports = selectPMCReportsArray(getState());
+            let state2 = getState();
+
+            const reports = selectPMCReportsArray(state2);
             saveReports(login.user.id, reports)
+
+            const metadata = selectMetadata(state2)
+            saveMetadata(login.user.id, metadata.ref)
         },
-        e => dispatch(synchronizationFailure(e)))
+        e => dispatch(synchronizationFailure(e.toString())))
 }
 
 export default pmcReportsSlice.reducer;

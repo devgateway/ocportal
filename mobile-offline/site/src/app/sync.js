@@ -1,11 +1,11 @@
-import { retrievePMCReports, updatePMCReports } from '../api/Api'
+import {getMetadata, retrievePMCReports, updatePMCReports} from '../api/Api'
 import {PMCReportStatus} from "./constants";
 
 export const synchronize = async (userId, token, reports) => {
 
     const listReportsResponse = await retrievePMCReports(userId, token)
 
-    // TODO also retrieve metadata here
+    const getMetadataResponse = await getMetadata(userId, token)
 
     let savedReports = []
 
@@ -29,6 +29,7 @@ export const synchronize = async (userId, token, reports) => {
 
     return {
         existingReports: listReportsResponse.data,
-        savedReports: savedReports
+        savedReports: savedReports,
+        metadata: getMetadataResponse.data
     }
 }

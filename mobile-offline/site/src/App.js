@@ -14,7 +14,6 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useDispatch, useSelector} from "react-redux";
 import {selectLogin} from "./features/login/loginSlice";
-import {preformLoadMetadata, selectMetadata} from "./features/pmc/metadataSlice";
 import {performSynchronization} from "./features/pmc/pmcReportsSlice";
 
 function App() {
@@ -39,14 +38,10 @@ function App() {
                         <Login />
                     </Route>
                     <PrivateRoute exact path="/">
-                        <WithMetadata>
-                            <PMCReports />
-                        </WithMetadata>
+                        <PMCReports />
                     </PrivateRoute>
                     <PrivateRoute path={["/report/:internalId", "/report"]}>
-                        <WithMetadata>
-                            <EditReport />
-                        </WithMetadata>
+                        <EditReport />
                     </PrivateRoute>
                 </Switch>
             </div>
@@ -73,21 +68,6 @@ function PrivateRoute({ children, ...rest }) {
             }
         />
     );
-}
-
-function WithMetadata(props) {
-    const metadata = useSelector(selectMetadata);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        if (metadata.ref === null) {
-            dispatch(preformLoadMetadata());
-        }
-    }, [metadata.ref, dispatch]);
-    if (metadata.ref === null) {
-        return <div>Loading...</div>;
-    } else {
-        return props.children;
-    }
 }
 
 export default App;
