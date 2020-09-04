@@ -9,6 +9,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.Designation;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.PMCStaff;
+import org.devgateway.toolkit.persistence.dao.categories.PMCStatus;
 import org.devgateway.toolkit.persistence.dao.categories.ProjectClosureHandover;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
@@ -63,6 +64,9 @@ public class MetadataExportServiceImpl implements MetadataExportService {
 
     @Autowired
     private TenderService tenderService;
+
+    @Autowired
+    private PMCStatusService pmcStatusService;
 
     @Autowired
     private PersonService personService;
@@ -131,6 +135,7 @@ public class MetadataExportServiceImpl implements MetadataExportService {
 
         Map<String, List<Serializable>> ret = new HashMap<>();
         convertAndAddPairListToMap(ret, pmcStaffService, PMCStaff.class);
+        convertAndAddPairListToMap(ret, pmcStatusService, PMCStatus.class);
         convertAndAddPairListToMap(ret, projectClosureHandoverService, ProjectClosureHandover.class);
         convertAndAddPairListToMap(ret, designationService, Designation.class);
         convertAndAddPairListToMap(ret, subcountyService, Subcounty.class);
