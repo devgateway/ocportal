@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.category;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
@@ -148,6 +149,14 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         return byId.get();
     }
 
+    protected Person loadPersonById(Long id, PersonService service) {
+        Person person = loadObjectById(id, personService);
+        if (BooleanUtils.isFalse(person.isEnabled())) {
+            throw new RuntimeException("User with id " + id + " is disabled");
+        }
+        return person;
+    }
+
     protected <C extends AbstractAuditableEntity> void addToList(Supplier<List<C>> getter, Consumer<List<C>> setter,
                                                                  Stream<C> inStream) {
         if (getter.get() == null) {
@@ -207,6 +216,7 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         pmco.setAcknowledgeSignature(pmc.getAcknowledgeSignature());
         pmco.setAuthorizePayment(pmc.getAuthorizePayment());
         pmco.setSignatureNames(pmc.getSignatureNames());
+        pmco.setRejected(pmc.getRejected());
         pmco.setPmcMembers(pmc.getPmcMembers().stream().map(this::convertToOffline).collect(Collectors.toList()));
         pmco.setPmcNotes(pmc.getPmcNotes().stream().map(this::convertToOffline).collect(Collectors.toList()));
         pmco.setStatusComments(pmc.getStatusComments().stream().map(this::convertToOffline)
@@ -227,14 +237,14 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
 
     @Override
     public List<PMCReportOffline> getPMCReports(Long userId) {
-        Person user = loadObjectById(userId, personService);
+        Person user = loadPersonById(userId, personService);
         return pmcReportService.getPMCReportsForDepartments(
                 user.getDepartments()).stream().map(this::convertToOffline).collect(Collectors.toList());
     }
 
     @Override
     public List<PMCReportOffline> updatePMCReports(Long userId, List<PMCReportOffline> listPMCReports) {
-        Person person = loadObjectById(userId, personService);
+        Person person = loadPersonById(userId, personService);
         return listPMCReports.stream().map(r -> convertToDao(r, person)).map(pmcReportService::saveAndFlush)
                 .map(this::convertToOffline).collect(Collectors.toList());
     }

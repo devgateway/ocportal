@@ -17,12 +17,13 @@ public class PMCReportOffline implements Serializable {
     private Set<Long> wardIds = new HashSet<>();
     private List<PMCMemberOffline> pmcMembers = new ArrayList<>();
     private List<PMCNotesOffline> pmcNotes = new ArrayList<>();
-    private List<StatusChangedCommentOffline> statusComments;
+    private List<StatusChangedCommentOffline> statusComments = new ArrayList<>();
     private Long pmcStatusId;
     private Set<Long> projectClosureHandoverIds = new HashSet<>();
     private String signatureNames;
     private Boolean acknowledgeSignature;
     private String status;
+    private Boolean rejected;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date reportDate;
@@ -137,5 +138,13 @@ public class PMCReportOffline implements Serializable {
 
     public void setReportDate(Date reportDate) {
         this.reportDate = reportDate;
+    }
+
+    public Boolean getRejected() {
+        return rejected;
+    }
+
+    public void setRejected(Boolean rejected) {
+        this.rejected = rejected;
     }
 }
