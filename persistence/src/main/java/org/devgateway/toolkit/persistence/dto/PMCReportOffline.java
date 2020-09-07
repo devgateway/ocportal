@@ -1,7 +1,12 @@
 package org.devgateway.toolkit.persistence.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.devgateway.toolkit.persistence.validator.groups.Draft;
+import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,20 +17,33 @@ import java.util.Set;
 public class PMCReportOffline implements Serializable {
     private Long id;
     private Long tenderId;
+
+    @NotNull(groups = NonDraft.class)
     private Boolean authorizePayment;
     private Set<Long> subcountyIds = new HashSet<>();
     private Set<Long> wardIds = new HashSet<>();
     private List<PMCMemberOffline> pmcMembers = new ArrayList<>();
+
+    @NotEmpty(groups = NonDraft.class)
     private List<PMCNotesOffline> pmcNotes = new ArrayList<>();
     private List<StatusChangedCommentOffline> statusComments = new ArrayList<>();
+
+    @NotNull(groups = NonDraft.class)
     private Long pmcStatusId;
+
+    @NotEmpty(groups = NonDraft.class)
     private Set<Long> projectClosureHandoverIds = new HashSet<>();
+
+    @NotBlank(groups = NonDraft.class)
     private String signatureNames;
     private Boolean acknowledgeSignature;
+
+    @NotNull(groups = {NonDraft.class, Draft.class})
     private String status;
     private Boolean rejected;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @NotNull(groups = NonDraft.class)
     private Date reportDate;
 
     public Long getId() {

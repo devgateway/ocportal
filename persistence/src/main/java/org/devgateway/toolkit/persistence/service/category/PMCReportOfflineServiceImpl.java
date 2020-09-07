@@ -19,10 +19,14 @@ import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.form.PMCReportService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
+import org.devgateway.toolkit.persistence.validator.groups.Draft;
+import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +37,7 @@ import java.util.stream.Stream;
 
 @Transactional
 @Service
+@Validated
 public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
 
     @Autowired
@@ -149,7 +154,7 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         return byId.get();
     }
 
-    protected Person loadPersonById(Long id, PersonService service) {
+    public Person loadPersonById(Long id, PersonService service) {
         Person person = loadObjectById(id, personService);
         if (BooleanUtils.isFalse(person.isEnabled())) {
             throw new RuntimeException("User with id " + id + " is disabled");
@@ -167,8 +172,20 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         }
     }
 
+    @Validated(NonDraft.class)
+    @Override
+    public PMCReport convertToDaoNonDraft(@Valid PMCReportOffline pmco, Person person) {
+        return convertToDao(pmco, person);
+    }
 
-    protected PMCReport convertToDao(PMCReportOffline pmco, Person person) {
+    @Validated(Draft.class)
+    @Override
+    public PMCReport convertToDaoDraft(@Valid PMCReportOffline pmco, Person person) {
+        return convertToDao(pmco, person);
+    }
+
+
+    public PMCReport convertToDao(PMCReportOffline pmco, Person person) {
         PMCReport pmc;
         if (pmco.getId() != null) {
             pmc = loadObjectById(pmco.getId(), pmcReportService);
@@ -210,7 +227,8 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         return pmc;
     }
 
-    protected PMCReportOffline convertToOffline(PMCReport pmc) {
+    @Override
+    public PMCReportOffline convertToOffline(PMCReport pmc) {
         PMCReportOffline pmco = new PMCReportOffline();
         pmco.setId(pmc.getId());
         pmco.setAcknowledgeSignature(pmc.getAcknowledgeSignature());
@@ -241,11 +259,6 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         return pmcReportService.getPMCReportsForDepartments(
                 user.getDepartments()).stream().map(this::convertToOffline).collect(Collectors.toList());
     }
-
-    @Override
-    public List<PMCReportOffline> updatePMCReports(Long userId, List<PMCReportOffline> listPMCReports) {
-        Person person = loadPersonById(userId, personService);
-        return listPMCReports.stream().map(r -> convertToDao(r, person)).map(pmcReportService::saveAndFlush)
-                .map(this::convertToOffline).collect(Collectors.toList());
-    }
+    
 }
+
