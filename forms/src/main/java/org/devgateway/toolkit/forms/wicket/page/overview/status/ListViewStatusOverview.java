@@ -55,7 +55,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
     @Override
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
-                                             final ListItem<StatusOverviewData> item) {
+                                             final ListItem<StatusOverviewData> item, boolean expanded) {
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
         final ProcurementPlan procurementPlan = item.getModelObject().getProcurementPlan();

@@ -69,6 +69,13 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
                                     Attributes.removeClass(tag, "in");
                                 }
                             }
+
+                            @Override
+                            protected void onBeforeRender() {
+                                super.onBeforeRender();
+                                populateHideableContainer("containerFragment", this, item,
+                                        isExpanded(item));
+                            }
                         };
                 hideableContainer.setOutputMarkupId(true);
                 hideableContainer.setOutputMarkupPlaceholderTag(true);
@@ -78,6 +85,7 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
                 final AjaxLink<Void> header = new AjaxLink<Void>("header") {
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
+                        target.add(hideableContainer);
                         if (isExpanded(item)) {
                             target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('hide')");
                             expandedContainerIds.remove(getItemId(item));
@@ -106,9 +114,6 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
 
                 // we add the rest of the items in the listItem
                 populateCompoundListItem(item);
-
-                // populate hideable container
-                populateHideableContainer("containerFragment", hideableContainer, item);
             }
 
         };
@@ -131,7 +136,7 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
 
     protected abstract void populateHideableContainer(String containerFragmentId,
                                                       TransparentWebMarkupContainer hideableContainer,
-                                                      ListItem<T> item);
+                                                      ListItem<T> item, boolean expanded);
 
     protected abstract Long getItemId(ListItem<T> item);
 
