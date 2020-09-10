@@ -4,7 +4,7 @@ import {Link, useHistory} from "react-router-dom";
 import {selectPMCReportsArray} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
 import {performLogout} from "../login/loginSlice";
-import {PMCReportStatus} from "../../app/constants";
+import {isRejectedReport, PMCReportStatus} from "../../app/constants";
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
@@ -40,7 +40,7 @@ export function PMCReports() {
     }
 
     const getDerivedStatusName = report => {
-        return report.status === PMCReportStatus.DRAFT && report.rejected ? PMCReportStatus.REJECTED : report.status
+        return isRejectedReport(report) ? PMCReportStatus.REJECTED : report.status
     }
 
     const rows = pmcReportArray.map((report) => (

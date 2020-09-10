@@ -9,3 +9,5 @@ export const PMCReportStatus = {
 }
 
 export const DATE_FORMAT = "yyyy/MM/dd";
+
+export const isRejectedReport = report => report.status === PMCReportStatus.DRAFT && report.rejected

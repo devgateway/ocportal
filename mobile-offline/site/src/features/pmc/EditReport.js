@@ -316,8 +316,10 @@ function StatusComments(props) {
             statusComments.map((comment, idx) => {
                 const d = new Date(comment.createdDate)
                 const prettyDateAndTime = `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
-                return (<p key={idx}><span className="text-muted">Status changed to {comment.status}
-                    on {prettyDateAndTime} by {comment.createdBy}</span>
+                return (<p key={idx}>
+                    <span className="text-muted">
+                        Status changed to {comment.status} on {prettyDateAndTime} by {comment.createdBy}
+                    </span>
                     <br/>{comment.comment}
                 </p>)
             })
