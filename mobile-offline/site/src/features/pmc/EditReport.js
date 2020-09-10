@@ -271,6 +271,8 @@ export function EditReport(props) {
             <TextField label="eSignature First Name & Last Name" name="signatureNames" value={report.signatureNames}
                        onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
+            <StatusComments statusComments={report.statusComments} />
+
             <div>
                 {
                     report.status === PMCReportStatus.DRAFT &&
@@ -299,6 +301,28 @@ export function EditReport(props) {
             </div>
         </div>
     );
+}
+
+function StatusComments(props) {
+    const statusComments = props.statusComments
+
+    if (!statusComments || statusComments.length === 0) {
+        return null
+    }
+
+    return (<>
+        <h4>Status comments</h4>
+        {
+            statusComments.map(comment => {
+                const d = new Date(comment.createdDate)
+                const prettyDateAndTime = `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
+                return (<p><span className="text-muted">Status changed to {comment.status}
+                    on {prettyDateAndTime} by {comment.createdBy}</span>
+                    <br/>{comment.comment}
+                </p>)
+            })
+        }
+    </>)
 }
 
 function PMCMembers(props) {
