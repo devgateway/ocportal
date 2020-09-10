@@ -40,7 +40,7 @@ export function PMCReports() {
     }
 
     const getDerivedStatusName = report => {
-        return report.rejected ? PMCReportStatus.REJECTED : report.status
+        return report.status === PMCReportStatus.DRAFT && report.rejected ? PMCReportStatus.REJECTED : report.status
     }
 
     const rows = pmcReportArray.map((report) => (
