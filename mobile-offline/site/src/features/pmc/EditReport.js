@@ -32,6 +32,7 @@ export function EditReport(props) {
     const tendersById = metadata.refById["Tender"];
     const wards = metadata.ref["Ward"];
     const pmcStaff = metadata.ref["PMCStaff"];
+    const pmcStatus = metadata.ref["PMCStatus"];
     const designations = metadata.ref["Designation"];
     const projectClosureHandoverOptions = metadata.ref["ProjectClosureHandover"];
 
@@ -114,6 +115,8 @@ export function EditReport(props) {
                 return noteErrors;
             });
         }
+
+        notNull(errors, report, 'pmcStatusId', 'Required');
 
         if (report.signature !== true) {
             errors.signature = 'Report must be signed';
@@ -253,6 +256,10 @@ export function EditReport(props) {
 
             <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} errors={errors}
                    isDisabled={isDisabled} />
+
+            <SelectCategoryField label="PMC Status" name="pmcStatusId"
+                                 value={report.pmcStatusId} options={pmcStatus}
+                                 onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <SelectCategoryField label="Project Closure and Handover" name="projectClosureHandoverIds" isMulti
                                  value={report.projectClosureHandoverIds} options={projectClosureHandoverOptions}
