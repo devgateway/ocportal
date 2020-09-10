@@ -1,12 +1,10 @@
 package org.devgateway.makueni.pmcdc;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
 
         mWebView.loadUrl("file:///android_asset/www/index.html");
     }
