@@ -119,7 +119,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
             }
         });
 
-        hideableContainer.add(containerFragment);
+        hideableContainer.addOrReplace(containerFragment);
     }
 
     @Override
