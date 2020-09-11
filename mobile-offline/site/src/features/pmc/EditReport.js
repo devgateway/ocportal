@@ -10,10 +10,11 @@ import {
     selectPMCReports
 } from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
-import {DATE_FORMAT, PMCReportStatus} from "../../app/constants";
+import {DP_DATE_FORMAT, PMCReportStatus} from "../../app/constants";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./../../react-datepicker.css";
+import {formatDateForAPI, parseDate} from "../../app/date";
 
 const scrollToFirstError = () => {
     let elems = document.getElementsByClassName("is-invalid");
@@ -525,22 +526,24 @@ function DateField(props) {
         props.onChange({
             target: {
                 name: props.name,
-                value: value.toISOString().substring(0, 10)
+                value: formatDateForAPI(value)
             }
         });
     };
 
     const error = (props.errors || {})[props.name];
 
+    const date = parseDate(props.value)
+
     return (
         <div className="form-group">
             <label>{props.label}</label>
             <div className={(error ? " is-invalid" : "")}>
-                <DatePicker selected={Date.parse(props.value)} onChange={dateChanged}
+                <DatePicker selected={date} onChange={dateChanged}
                             customInput={
                                 <input type="text" className={"form-control" + (error ? " is-invalid" : "")} />
                             }
-                            dateFormat={DATE_FORMAT} disabled={props.isDisabled} />
+                            dateFormat={DP_DATE_FORMAT} disabled={props.isDisabled} />
             </div>
             {error && <div className="invalid-feedback">{error}</div>}
         </div>
