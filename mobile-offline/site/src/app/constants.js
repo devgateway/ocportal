@@ -8,4 +8,13 @@ export const PMCReportStatus = {
     TERMINATED: "TERMINATED"
 }
 
-export const DATE_FORMAT = "yyyy/MM/dd";
+// date format for display (momentjs)
+export const DISPLAY_DATE_FORMAT = "DD/MM/YYYY";
+
+// date format for display (date picker component)
+export const DP_DATE_FORMAT = "dd/MM/yyyy";
+
+// API date format (momentjs)
+export const API_DATE_FORMAT = "YYYY-MM-DD";
+
+export const isRejectedReport = report => report.status === PMCReportStatus.DRAFT && report.rejected

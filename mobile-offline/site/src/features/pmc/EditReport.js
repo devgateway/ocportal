@@ -10,10 +10,11 @@ import {
     selectPMCReports
 } from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
-import {DATE_FORMAT, PMCReportStatus} from "../../app/constants";
+import {DP_DATE_FORMAT, PMCReportStatus} from "../../app/constants";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./../../react-datepicker.css";
+import {formatDateForAPI, parseDate} from "../../app/date";
 
 const scrollToFirstError = () => {
     let elems = document.getElementsByClassName("is-invalid");
@@ -32,6 +33,7 @@ export function EditReport(props) {
     const tendersById = metadata.refById["Tender"];
     const wards = metadata.ref["Ward"];
     const pmcStaff = metadata.ref["PMCStaff"];
+    const pmcStatus = metadata.ref["PMCStatus"];
     const designations = metadata.ref["Designation"];
     const projectClosureHandoverOptions = metadata.ref["ProjectClosureHandover"];
 
@@ -114,6 +116,8 @@ export function EditReport(props) {
                 return noteErrors;
             });
         }
+
+        notNull(errors, report, 'pmcStatusId', 'Required');
 
         if (report.signature !== true) {
             errors.signature = 'Report must be signed';
@@ -254,6 +258,10 @@ export function EditReport(props) {
             <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} errors={errors}
                    isDisabled={isDisabled} />
 
+            <SelectCategoryField label="PMC Status" name="pmcStatusId"
+                                 value={report.pmcStatusId} options={pmcStatus}
+                                 onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
+
             <SelectCategoryField label="Project Closure and Handover" name="projectClosureHandoverIds" isMulti
                                  value={report.projectClosureHandoverIds} options={projectClosureHandoverOptions}
                                  onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
@@ -263,6 +271,8 @@ export function EditReport(props) {
 
             <TextField label="eSignature First Name & Last Name" name="signatureNames" value={report.signatureNames}
                        onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
+
+            <StatusComments statusComments={report.statusComments} />
 
             <div>
                 {
@@ -292,6 +302,30 @@ export function EditReport(props) {
             </div>
         </div>
     );
+}
+
+function StatusComments(props) {
+    const statusComments = props.statusComments
+
+    if (!statusComments || statusComments.length === 0) {
+        return null
+    }
+
+    return (<>
+        <h4>Status comments</h4>
+        {
+            statusComments.map((comment, idx) => {
+                const d = new Date(comment.createdDate)
+                const prettyDateAndTime = `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
+                return (<p key={idx}>
+                    <span className="text-muted">
+                        Status changed to {comment.status} on {prettyDateAndTime} by {comment.createdBy}
+                    </span>
+                    <br/>{comment.comment}
+                </p>)
+            })
+        }
+    </>)
 }
 
 function PMCMembers(props) {
@@ -492,22 +526,24 @@ function DateField(props) {
         props.onChange({
             target: {
                 name: props.name,
-                value: value.toISOString().substring(0, 10)
+                value: formatDateForAPI(value)
             }
         });
     };
 
     const error = (props.errors || {})[props.name];
 
+    const date = parseDate(props.value)
+
     return (
         <div className="form-group">
             <label>{props.label}</label>
             <div className={(error ? " is-invalid" : "")}>
-                <DatePicker selected={Date.parse(props.value)} onChange={dateChanged}
+                <DatePicker selected={date} onChange={dateChanged}
                             customInput={
                                 <input type="text" className={"form-control" + (error ? " is-invalid" : "")} />
                             }
-                            dateFormat={DATE_FORMAT} disabled={props.isDisabled} />
+                            dateFormat={DP_DATE_FORMAT} disabled={props.isDisabled} />
             </div>
             {error && <div className="invalid-feedback">{error}</div>}
         </div>

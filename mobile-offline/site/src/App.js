@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Switch,
     Route,
-    Redirect
+    Redirect,
+    useLocation
 } from "react-router-dom";
 
 import {Login} from "./features/login/Login";
@@ -28,6 +29,7 @@ function App() {
 
     return (
         <Router>
+            <ScrollToTop />
             <div className="App">
                 <header>
 
@@ -68,6 +70,16 @@ function PrivateRoute({ children, ...rest }) {
             }
         />
     );
+}
+
+function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
 }
 
 export default App;

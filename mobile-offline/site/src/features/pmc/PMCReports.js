@@ -4,7 +4,8 @@ import {Link, useHistory} from "react-router-dom";
 import {selectPMCReportsArray} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
 import {performLogout} from "../login/loginSlice";
-import {PMCReportStatus} from "../../app/constants";
+import {isRejectedReport, PMCReportStatus} from "../../app/constants";
+import {formatDateForDisplay, parseDate} from "../../app/date";
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
@@ -40,7 +41,7 @@ export function PMCReports() {
     }
 
     const getDerivedStatusName = report => {
-        return report.rejected ? PMCReportStatus.REJECTED : report.status
+        return isRejectedReport(report) ? PMCReportStatus.REJECTED : report.status
     }
 
     const rows = pmcReportArray.map((report) => (
@@ -48,7 +49,7 @@ export function PMCReports() {
             <div className="card-body">
                 <h5 className="card-title">{(tendersById[report.tenderId] || {}).label
                     || <span className="text-muted">Tender not selected</span>}</h5>
-                <p className="card-text">Report date: {report.reportDate
+                <p className="card-text">Report date: {formatDateForDisplay(parseDate(report.reportDate))
                     || <span className="text-muted">N/A</span>}
                   <span className={"badge ml-1 float-right " + getStatusClassName(getDerivedStatusName(report))}>
                       {getDerivedStatusName(report)}

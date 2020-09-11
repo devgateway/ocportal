@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {saveMetadata, saveReports} from "../../app/db";
-import {PMCReportStatus} from "../../app/constants";
+import {isRejectedReport, PMCReportStatus} from "../../app/constants";
 import {selectLogin} from "../login/loginSlice";
 import {synchronize} from "../../app/sync";
 import {loadSuccess as metadataLoadSuccess, selectMetadata} from "../../features/pmc/metadataSlice";
@@ -82,9 +82,11 @@ export const pmcReportsSlice = createSlice({
 
                 delete idToInternalId[report.id]
 
-                state.reports[internalId] = {
-                    ...report,
-                    internalId: internalId
+                if (!isRejectedReport(report)) {
+                    state.reports[internalId] = {
+                        ...report,
+                        internalId: internalId
+                    }
                 }
             })
 
