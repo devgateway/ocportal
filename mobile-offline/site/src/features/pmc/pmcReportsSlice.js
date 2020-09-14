@@ -82,7 +82,7 @@ export const pmcReportsSlice = createSlice({
 
                 delete idToInternalId[report.id]
 
-                if (!isRejectedReport(report)) {
+                if (!(isRejectedReport(report) && isRejectedReport(state.reports[internalId]))) {
                     state.reports[internalId] = {
                         ...report,
                         internalId: internalId
