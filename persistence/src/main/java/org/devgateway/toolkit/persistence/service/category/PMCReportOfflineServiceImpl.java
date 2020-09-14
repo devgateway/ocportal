@@ -231,6 +231,8 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
     public PMCReportOffline convertToOffline(PMCReport pmc) {
         PMCReportOffline pmco = new PMCReportOffline();
         pmco.setId(pmc.getId());
+        pmco.setLastModifiedDate(pmc.getLastModifiedDate().orElse(null));
+        pmco.setCreatedDate(pmc.getCreatedDate().orElse(null));
         pmco.setAcknowledgeSignature(pmc.getAcknowledgeSignature());
         pmco.setAuthorizePayment(pmc.getAuthorizePayment());
         pmco.setSignatureNames(pmc.getSignatureNames());

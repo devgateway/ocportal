@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,6 +24,10 @@ public class PMCReportOffline implements Serializable {
     private Set<Long> subcountyIds = new HashSet<>();
     private Set<Long> wardIds = new HashSet<>();
     private List<PMCMemberOffline> pmcMembers = new ArrayList<>();
+
+    private ZonedDateTime createdDate;
+
+    private ZonedDateTime lastModifiedDate;
 
     @NotEmpty(groups = NonDraft.class)
     private List<PMCNotesOffline> pmcNotes = new ArrayList<>();
@@ -164,5 +169,21 @@ public class PMCReportOffline implements Serializable {
 
     public void setRejected(Boolean rejected) {
         this.rejected = rejected;
+    }
+
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public ZonedDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }
