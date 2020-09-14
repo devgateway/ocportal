@@ -15,6 +15,7 @@ import {DP_DATE_FORMAT, PMCReportStatus} from "../../app/constants";
 import "react-datepicker/dist/react-datepicker.css";
 import "./../../react-datepicker.css";
 import {formatDateForAPI, parseDate} from "../../app/date";
+import {Border} from "./Border";
 
 const scrollToFirstError = () => {
     let elems = document.getElementsByClassName("is-invalid");
@@ -224,12 +225,11 @@ export function EditReport(props) {
     };
 
     return (
+        <Border title={isNaN(internalId) ? "New report" : "Edit report"}>
         <div className="container-fluid pt-3 pb-3">
             <Prompt
                 when={isBlocking}
                 message='Your changes will be lost. Are you sure?' />
-
-            <h1>{isNaN(internalId) ? "New report" : "Edit report"} </h1>
 
             <SelectCategoryField label="Fiscal Year" name="fyId" value={report.fyId} options={fiscalYears}
                                  onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
@@ -301,6 +301,7 @@ export function EditReport(props) {
                 }
             </div>
         </div>
+        </Border>
     );
 }
 

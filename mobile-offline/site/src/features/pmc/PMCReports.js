@@ -1,16 +1,15 @@
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Link, useHistory} from "react-router-dom";
 import {selectPMCReportsArray} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
-import {performLogout} from "../login/loginSlice";
 import {isRejectedReport, PMCReportStatus} from "../../app/constants";
 import {formatDateForDisplay, parseDate} from "../../app/date";
+import {Border} from "./Border";
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
     const history = useHistory();
-    const dispatch = useDispatch();
 
     const metadata = useSelector(selectMetadata);
     const tendersById = metadata.refById["Tender"] || {};
@@ -18,11 +17,6 @@ export function PMCReports() {
     const handleEditReport = report => e => {
         e.preventDefault();
         history.push("/report/" + report.internalId);
-    }
-
-    const handleLogout = e => {
-        e.preventDefault()
-        dispatch(performLogout())
     }
 
     const getStatusClassName = status => {
@@ -60,16 +54,15 @@ export function PMCReports() {
     ));
 
     return (
-        <div className="container-fluid pt-3 pb-3">
-            <div>
+        <Border title="Reports" extraNavBar={
             <Link to="/report" className="btn btn-success">Add report</Link>
+        }>
+            <div className="container-fluid pb-3">
 
-            <button type='button' className="btn btn-secondary float-right" onClick={handleLogout}>Logout</button>
+                {rows}
+
+                {pmcReportArray.length === 0 ? <div className='text-muted text-center mt-3'>No reports.</div> : null}
             </div>
-
-            {rows}
-
-            {pmcReportArray.length === 0 ? <div className='text-muted text-center mt-3'>No reports.</div> : null}
-        </div>
+        </Border>
     );
 }
