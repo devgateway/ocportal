@@ -13,7 +13,7 @@ export function PMCReports() {
     const dispatch = useDispatch();
 
     const metadata = useSelector(selectMetadata);
-    const tendersById = metadata.refById["Tender"];
+    const tendersById = metadata.refById["Tender"] || {};
 
     const handleEditReport = report => e => {
         e.preventDefault();

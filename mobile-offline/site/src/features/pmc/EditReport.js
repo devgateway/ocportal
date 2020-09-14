@@ -30,7 +30,7 @@ export function EditReport(props) {
     const fiscalYears = metadata.ref["FiscalYear"];
     const departments = metadata.ref["Department"];
     const tenders = metadata.ref["Tender"];
-    const tendersById = metadata.refById["Tender"];
+    const tendersById = metadata.refById["Tender"] || {};
     const wards = metadata.ref["Ward"];
     const pmcStaff = metadata.ref["PMCStaff"];
     const pmcStatus = metadata.ref["PMCStatus"];
@@ -488,16 +488,18 @@ function SelectCategoryField(props) {
         props.onChange(event);
     }
 
+    const options = props.options || [];
+
     let objValue;
     if (props.isMulti) {
         objValue = (props.value || []).map(valueId => ({
             id: valueId,
-            label: (props.options.find(option => valueId === option.id) || {}).label
+            label: (options.find(option => valueId === option.id) || {}).label
         }));
     } else {
         objValue = {
             id: props.value,
-            label: (props.options.find(option => props.value === option.id) || {}).label
+            label: (options.find(option => props.value === option.id) || {}).label
         };
     }
 
@@ -513,7 +515,7 @@ function SelectCategoryField(props) {
     return (
         <div className="form-group">
             <label>{props.label}</label>
-            <Select value={objValue} styles={customStyles} options={props.options} isMulti={props.isMulti}
+            <Select value={objValue} styles={customStyles} options={options} isMulti={props.isMulti}
                     onChange={onChange} getOptionValue={option => option['id']}
                     className={(error ? "is-invalid" : "")} isDisabled={props.isDisabled}/>
             {error && <div className="invalid-feedback">{error}</div>}
