@@ -1,6 +1,7 @@
 package org.devgateway.makueni.pmcdc;
 
 import android.os.Bundle;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+
+        mWebView.setWebChromeClient(new WebChromeClient());
 
         mWebView.loadUrl("file:///android_asset/www/index.html");
     }
