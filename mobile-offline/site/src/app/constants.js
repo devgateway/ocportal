@@ -18,3 +18,6 @@ export const DP_DATE_FORMAT = "dd/MM/yyyy";
 export const API_DATE_FORMAT = "YYYY-MM-DD";
 
 export const isRejectedReport = report => report.status === PMCReportStatus.DRAFT && report.rejected
+
+// sync every 5 minutes
+export const SYNC_INTERVAL = 5 * 60 * 1000

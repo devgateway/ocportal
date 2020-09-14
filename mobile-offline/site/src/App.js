@@ -16,16 +16,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useDispatch, useSelector} from "react-redux";
 import {selectLogin} from "./features/login/loginSlice";
 import {performSynchronization} from "./features/pmc/pmcReportsSlice";
+import {SYNC_INTERVAL} from "./app/constants";
 
 function App() {
-    const dispatch = useDispatch()
-    const login = useSelector(selectLogin)
 
-    useEffect(() => {
-        if (login.authenticated) {
-            dispatch(performSynchronization())
-        }
-    }, [dispatch, login.authenticated])
+    useSync()
 
     return (
         <Router>
@@ -80,6 +75,28 @@ function ScrollToTop() {
     }, [pathname]);
 
     return null;
+}
+
+function useSync() {
+    const dispatch = useDispatch()
+    const login = useSelector(selectLogin)
+
+    useEffect(() => {
+        const sync = () => {
+            if (login.authenticated) {
+                console.log('sync!')
+                dispatch(performSynchronization())
+            }
+        }
+
+        sync()
+
+        const intervalId = setInterval(sync, SYNC_INTERVAL)
+        return () => {
+            console.log('cleared sync!')
+            clearInterval(intervalId)
+        }
+    }, [dispatch, login.authenticated])
 }
 
 export default App;
