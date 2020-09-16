@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     HashRouter as Router,
     Switch,
@@ -92,11 +92,26 @@ function useSync() {
         sync()
 
         const intervalId = setInterval(sync, SYNC_INTERVAL)
-        return () => {
-            console.log('cleared sync!')
-            clearInterval(intervalId)
-        }
+
+        return () => clearInterval(intervalId)
     }, [dispatch, login.authenticated])
+
+    const [lastSyncTime, setLastSyncTime] = useState(null)
+
+    useEffect(() => {
+        const onlineEventListener = () => {
+            let now = Date.now()
+            if (!lastSyncTime || lastSyncTime + SYNC_INTERVAL < now) {
+                setLastSyncTime(now)
+                console.log('sync after coming back online!')
+                dispatch(performSynchronization())
+            }
+        }
+
+        window.addEventListener('online', onlineEventListener)
+
+        return () => window.removeEventListener('online', onlineEventListener)
+    }, [dispatch, lastSyncTime])
 }
 
 export default App;
