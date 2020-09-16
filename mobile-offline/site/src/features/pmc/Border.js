@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Navbar, NavbarBrand, NavbarToggler, NavbarText, Collapse, Nav, NavItem, NavLink} from "reactstrap";
+import {Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink} from "reactstrap";
 import logo from '../../logo-normal.png';
 import {performLogout, selectLogin} from "../login/loginSlice";
 import {useDispatch, useSelector} from "react-redux";
@@ -38,7 +38,7 @@ export const Border = props => {
                     </Nav>
                 </Collapse>
             </Navbar>
-            <div style={{"padding-top": "56px"}}>
+            <div style={{paddingTop: "56px"}}>
                 {props.children}
             </div>
         </>

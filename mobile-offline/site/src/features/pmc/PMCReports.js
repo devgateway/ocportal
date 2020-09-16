@@ -1,11 +1,12 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link, useHistory} from "react-router-dom";
-import {selectPMCReportsArray} from "./pmcReportsSlice";
+import {errorDialogClosed, selectPMCReports, selectPMCReportsArray} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
 import {isRejectedReport, PMCReportStatus} from "../../app/constants";
 import {formatDateForDisplay, parseDate} from "../../app/date";
 import {Border} from "./Border";
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
@@ -59,10 +60,34 @@ export function PMCReports() {
         }>
             <div className="container-fluid pb-3">
 
+                <SyncErrorDialog />
+
                 {rows}
 
                 {pmcReportArray.length === 0 ? <div className='text-muted text-center mt-3'>No reports.</div> : null}
             </div>
         </Border>
     );
+}
+
+function SyncErrorDialog() {
+    const pmcReports = useSelector(selectPMCReports)
+    const dispatch = useDispatch()
+
+    const toggle = () => {
+        dispatch(errorDialogClosed())
+    }
+
+    return (
+        <Modal isOpen={pmcReports.showSyncError} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Error</ModalHeader>
+            <ModalBody>
+                <p>An error occurred while sending the reports to the server.</p>
+                <p>Reports were reverted back to draft. Please check and submit again.</p>
+            </ModalBody>
+            <ModalFooter>
+                <Button color="primary" onClick={toggle}>Ok</Button>
+            </ModalFooter>
+        </Modal>
+    )
 }

@@ -29,7 +29,8 @@ export const pmcReportsSlice = createSlice({
     initialState: {
         reports: {},
         synchronizing: false,
-        nextInternalId: 0
+        nextInternalId: 0,
+        showSyncError: false
     },
     reducers: {
         replaceReports: (state, action) => {
@@ -92,13 +93,26 @@ export const pmcReportsSlice = createSlice({
 
             Object.values(idToInternalId).forEach(internalId => delete state.reports[internalId])
 
-            action.payload.savedReports.forEach(r => state.reports[r.internalId] = r);
+            if (action.payload.savedReports) {
+                action.payload.savedReports.forEach(r => state.reports[r.internalId] = r)
+                state.showSyncError = false
+            } else {
+                Object.values(state.reports).forEach(r => {
+                    if (r.status === PMCReportStatus.SUBMITTED_PENDING) {
+                        r.status = PMCReportStatus.DRAFT
+                    }
+                })
+                state.showSyncError = true
+            }
 
             state.synchronizing = false
         },
         synchronizationFailure: (state, action) => {
             console.log(`synchronizationFailure ${action.payload}`)
             state.synchronizing = false
+        },
+        errorDialogClosed: (state) => {
+            state.showSyncError = false
         }
     }
 });
@@ -108,7 +122,7 @@ const {
     synchronizationStarted, synchronizationSuccess, synchronizationFailure
 } = pmcReportsSlice.actions;
 
-export const { replaceReports } = pmcReportsSlice.actions;
+export const { replaceReports, errorDialogClosed } = pmcReportsSlice.actions;
 
 export const selectPMCReports = state => state.pmcReports;
 
