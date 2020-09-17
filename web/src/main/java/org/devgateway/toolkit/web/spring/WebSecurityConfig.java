@@ -106,7 +106,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/configuration/**", "/swagger-resources/**", "/dashboard", "/languages/**",
                         "/isAuthenticated",
                         "/wicket/resource/**/*.ttf", "/wicket/resource/**/*.woff", "/corruption-risk",
-                        "/api/user/forgotPassword",
                         SecurityUtil.getDisabledApiSecurity(adminSettingsRepository) ? "/api/**" : "/",
                         "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.css.map"
                 ).antMatchers(allowedApiEndpoints);
@@ -120,7 +119,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .expressionHandler(webExpressionHandler()) // inject role hierarchy
                 .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtSecret))
-                .authorizeRequests().anyRequest().authenticated().and()
+                .authorizeRequests().antMatchers("/api/user/forgotPassword").permitAll()
+                .anyRequest().authenticated().and()
                 .formLogin().
                 loginPage("/login").
                 permitAll().and().requestCache().and()
