@@ -119,8 +119,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .expressionHandler(webExpressionHandler()) // inject role hierarchy
                 .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtSecret))
-                .authorizeRequests().antMatchers("/api/user/forgotPassword").permitAll()
-                .anyRequest().authenticated().and()
+                .authorizeRequests().antMatchers("/api/user/forgotPassword").permitAll().and()
+                .authorizeRequests().anyRequest().authenticated().and()
                 .formLogin().
                 loginPage("/login").
                 permitAll().and().requestCache().and()
