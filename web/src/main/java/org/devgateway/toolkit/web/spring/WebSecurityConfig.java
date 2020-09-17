@@ -106,6 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/configuration/**", "/swagger-resources/**", "/dashboard", "/languages/**",
                         "/isAuthenticated",
                         "/wicket/resource/**/*.ttf", "/wicket/resource/**/*.woff", "/corruption-risk",
+                        "/api/user/forgotPassword",
                         SecurityUtil.getDisabledApiSecurity(adminSettingsRepository) ? "/api/**" : "/",
                         "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.css.map"
                 ).antMatchers(allowedApiEndpoints);
