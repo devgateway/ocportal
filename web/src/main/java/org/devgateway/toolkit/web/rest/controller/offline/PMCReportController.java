@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.web.rest.controller.offline;
 
 import org.devgateway.toolkit.persistence.dao.Person;
+import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dto.PMCReportOffline;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.category.PMCReportOfflineService;
@@ -40,21 +41,32 @@ public class PMCReportController {
         return reportOfflineService.getPMCReports(userId);
     }
 
-    @RequestMapping(value = "/api/pmcReport/update/{userId}",
+    @RequestMapping(value = "/api/pmcReport/update/list/{userId}",
             method = {RequestMethod.POST}, produces = APPLICATION_JSON_UTF8_VALUE,
             consumes = APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<PMCReportOffline> updatePMCReports(@PathVariable Long userId,
                                                    @RequestBody List<PMCReportOffline> pmcReportList) {
         Person person = reportOfflineService.loadPersonById(userId, personService);
-        return pmcReportList.stream().map(r -> {
-            if (DRAFT.equals(r.getStatus())) {
-                return reportOfflineService.convertToDaoDraft(r, person);
-            } else {
-                return reportOfflineService.convertToDaoNonDraft(r, person);
-            }
-        }).map(pmcReportService::saveAndFlush)
-                .map(reportOfflineService::convertToOffline).collect(Collectors.toList());
+        return pmcReportList.stream().map(r -> updatePMCReports(userId, r)).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/api/pmcReport/update/{userId}",
+            method = {RequestMethod.POST}, produces = APPLICATION_JSON_UTF8_VALUE,
+            consumes = APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+
+    public PMCReportOffline updatePMCReports(@PathVariable Long userId,
+                                             @RequestBody PMCReportOffline pmcReport) {
+        Person person = reportOfflineService.loadPersonById(userId, personService);
+        PMCReport ret = null;
+        if (DRAFT.equals(pmcReport.getStatus())) {
+            ret = reportOfflineService.convertToDaoDraft(pmcReport, person);
+        } else {
+            ret = reportOfflineService.convertToDaoNonDraft(pmcReport, person);
+        }
+
+        return reportOfflineService.convertToOffline(pmcReportService.saveAndFlush(ret));
     }
 
 }
