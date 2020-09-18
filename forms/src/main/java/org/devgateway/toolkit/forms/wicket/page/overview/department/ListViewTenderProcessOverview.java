@@ -250,7 +250,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     tenderProcess.getPmcReports().stream().sorted(
                             Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
                     "PMC Report", pmc -> Collections.singletonList(pmc.getLabel()),
-                    tenderProcess, EditPMCReportPage.class, contract, true
+                    tenderProcess, EditPMCReportPage.class, contract, false
             );
             containerFragment.add(pmcReportPanel);
 
