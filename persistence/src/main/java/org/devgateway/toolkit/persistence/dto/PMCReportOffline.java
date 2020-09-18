@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.devgateway.toolkit.persistence.validator.groups.Draft;
 import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -41,6 +42,9 @@ public class PMCReportOffline implements Serializable {
 
     @NotBlank(groups = NonDraft.class)
     private String signatureNames;
+
+    @AssertTrue(groups = NonDraft.class)
+    @NotNull(groups = NonDraft.class)
     private Boolean acknowledgeSignature;
 
     @NotNull(groups = {NonDraft.class, Draft.class})
