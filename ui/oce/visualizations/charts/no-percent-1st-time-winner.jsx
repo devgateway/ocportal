@@ -6,10 +6,11 @@ class NoPercent1StTimeWinner extends FrontendDateFilterableChart{
   getData(){
     let data = super.getData();
     if(!data) return [];
+    const { years } = this.props;
 
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly ?
-        data.map(pluckImm('month')).map(month => this.t(`general:months:${month}`)).toArray() :
+        data.map(pluckImm('month')).map(month => this.tMonth(month, years)).toArray() :
         data.map(pluckImm('year')).toArray();
 
     return [{

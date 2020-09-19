@@ -30,7 +30,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implements WardsSettable {
+public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -54,10 +54,10 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implem
     @ManyToOne
     private PMCStatus pmcStatus;
 
-    @ExcelExport(name = "Project Closure Handover")
+    @ExcelExport(justExport = true, useTranslation = true, name = "Project Closure Handover")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private ProjectClosureHandover projectClosureHandover;
+    @ManyToMany
+    private List<ProjectClosureHandover> projectClosureHandover;
 
     public List<Subcounty> getSubcounties() {
         return subcounties;
@@ -71,7 +71,6 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implem
         return wards;
     }
 
-    @Override
     public void setWards(List<Ward> wards) {
         this.wards = wards;
     }
@@ -92,11 +91,11 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity implem
         this.pmcStatus = pmcStatus;
     }
 
-    public ProjectClosureHandover getProjectClosureHandover() {
+    public List<ProjectClosureHandover> getProjectClosureHandover() {
         return projectClosureHandover;
     }
 
-    public void setProjectClosureHandover(ProjectClosureHandover projectClosureHandover) {
+    public void setProjectClosureHandover(List<ProjectClosureHandover> projectClosureHandover) {
         this.projectClosureHandover = projectClosureHandover;
     }
 }

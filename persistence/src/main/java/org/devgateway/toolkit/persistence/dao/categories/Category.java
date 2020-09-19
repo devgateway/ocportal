@@ -35,7 +35,7 @@ import java.io.Serializable;
 @DiscriminatorColumn(length = Category.DTYPE_COLUMN_LENGTH)
 @Table(indexes = {@Index(columnList = "label"), @Index(columnList = "DTYPE"), @Index(columnList = "code")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Category extends AbstractAuditableEntity implements Serializable, Labelable {
+public class Category extends AbstractAuditableEntity implements Labelable {
     static final int DTYPE_COLUMN_LENGTH = 100;
 
     @ExcelExport(name = "Name")
@@ -43,7 +43,7 @@ public class Category extends AbstractAuditableEntity implements Serializable, L
 
     private String description;
 
-    @ExcelExport(name = "Code", onlyForClass = {Supplier.class})
+    @ExcelExport(name = "Code", onlyForClass = {Supplier.class, Unit.class})
     private String code;
 
     public Category() {

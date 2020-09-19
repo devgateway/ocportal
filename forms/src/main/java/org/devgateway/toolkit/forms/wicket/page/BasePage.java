@@ -64,10 +64,11 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListContractDocum
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDepartmentPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListDesignationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.category.ListMEStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcurementMethodRationalePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListTargetGroupPage;
@@ -342,6 +343,10 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         "navbar.departments", FontAwesomeIconType.bank
                 );
 
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListProcurementMethodRationalePage.class,
+                        "navbar.procurementMethodRationale", FontAwesomeIconType.bug
+                );
+
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearBudgetPage.class,
                         "navbar.fiscalYearBudget", FontAwesomeIconType.money
                 );
@@ -378,10 +383,6 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         "navbar.pmcStaffList", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListMEStaffPage.class,
-                        "navbar.meStaffList", FontAwesomeIconType.user_times
-                );
-
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListDesignationPage.class,
                         "navbar.designations", FontAwesomeIconType.certificate
                 );
@@ -397,6 +398,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListWardPage.class,
                         "navbar.wardlist", FontAwesomeIconType.flag
                 );
+
+                createAddListMenuWithRole(list, ROLE_ADMIN, ListSubWardPage.class,
+                        "navbar.subwardlist", FontAwesomeIconType.flag
+                );
+
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListUnitPage.class,
                         "navbar.unitlist", FontAwesomeIconType.list

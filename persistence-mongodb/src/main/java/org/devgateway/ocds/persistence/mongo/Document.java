@@ -405,6 +405,7 @@ public class Document {
         TENDER_NOTICE("tenderNotice"),
         AWARD_NOTICE("awardNotice"),
         CONTRACT_NOTICE("contractNotice"),
+        CONTRACT_SIGNED("contractSigned"),
         PROJECT_PLAN("projectPlan"),
         PROCUREMENT_PLAN("procurementPlan"),
         EVALUATION_REPORTS("evaluationReports"),

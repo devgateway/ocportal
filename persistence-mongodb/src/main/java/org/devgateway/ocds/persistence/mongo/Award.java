@@ -116,7 +116,7 @@ public class Award {
     @JsonPropertyDescription("The suppliers awarded this award. If different suppliers have been awarded different "
             + "items of values, these should be split into separate award blocks.")
     @ExcelExport
-    private Set<Organization> suppliers = new LinkedHashSet<Organization>();
+    private Set<OrganizationReference> suppliers = new LinkedHashSet<OrganizationReference>();
     /**
      * Items awarded
      * <p>
@@ -301,7 +301,7 @@ public class Award {
      * should be split into separate award blocks.
      */
     @JsonProperty("suppliers")
-    public Set<Organization> getSuppliers() {
+    public Set<OrganizationReference> getSuppliers() {
         return suppliers;
     }
 
@@ -312,7 +312,7 @@ public class Award {
      * should be split into separate award blocks.
      */
     @JsonProperty("suppliers")
-    public void setSuppliers(Set<Organization> suppliers) {
+    public void setSuppliers(Set<OrganizationReference> suppliers) {
         this.suppliers = suppliers;
     }
 

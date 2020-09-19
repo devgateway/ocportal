@@ -95,7 +95,7 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
         final ArrayList<T> response = new ArrayList<>();
         for (final String s : idsList) {
             final Long id = Long.parseLong(s);
-            final Optional<T> findOne = textSearchableService.findByIdCached(id);
+            final Optional<T> findOne = textSearchableService.findById(id);
             if (!findOne.isPresent()) {
                 logger.error("Cannot find entity with id=" + id + " in service " + textSearchableService.getClass());
             } else {

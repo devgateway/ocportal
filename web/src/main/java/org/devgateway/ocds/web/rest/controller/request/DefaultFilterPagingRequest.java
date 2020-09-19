@@ -28,12 +28,19 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "Fiscal Year")
     private TreeSet<String> fiscalYear;
 
+    @ApiModelProperty(value = "Procurement Method Rationale")
+    private TreeSet<String> procurementMethodRationale;
+
     @ApiModelProperty(value = "Location Type, can be ward or subcounty")
     private TreeSet<String> locationType;
 
+    @ApiModelProperty(value = "Filter by OCID")
+    private TreeSet<String> ocid;
+
     @ApiModelProperty(value = "Filter by tender.status, possible values are available from the OCDS standard page"
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#tender-status")
-    private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(Tender.Status.active.toString()));
+    private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(
+            Tender.Status.active.toString(), Tender.Status.complete.toString(), Tender.Status.planned.toString()));
 
     @ApiModelProperty(value = "This corresponds to the tender.items.classification._id")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> bidTypeId;
@@ -308,5 +315,21 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setContractorId(TreeSet<String> contractorId) {
         this.contractorId = contractorId;
+    }
+
+    public TreeSet<String> getProcurementMethodRationale() {
+        return procurementMethodRationale;
+    }
+
+    public void setProcurementMethodRationale(TreeSet<String> procurementMethodRationale) {
+        this.procurementMethodRationale = procurementMethodRationale;
+    }
+
+    public TreeSet<String> getOcid() {
+        return ocid;
+    }
+
+    public void setOcid(TreeSet<String> ocid) {
+        this.ocid = ocid;
     }
 }

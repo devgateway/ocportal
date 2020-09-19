@@ -6,6 +6,7 @@ import org.devgateway.ocds.web.rest.controller.GenericOCDSController;
 import org.devgateway.ocds.web.rest.controller.request.OrganizationSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +46,13 @@ public abstract class AbstractOrganizationSearchController extends GenericOCDSCo
             query.addCriteria(Criteria.where("roles").is(type));
         }
 
-        query.with(new PageRequest(request.getPageNumber(), request.getPageSize()));
+        if (request.getScheme() != null) {
+            query.addCriteria(new Criteria().orOperator(Criteria.where("identifier.scheme").is(request.getScheme()),
+                    Criteria.where("additionalIdentifiers.scheme").is(request.getScheme())));
+        }
+
+        query.with(PageRequest.of(request.getPageNumber(), request.getPageSize()));
+        query.with(Sort.by("name"));
         return query;
     }
 

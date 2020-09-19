@@ -32,6 +32,7 @@ public class EditUnitPage extends AbstractCategoryEditPage<Unit> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        addCode();
     }
 }
 

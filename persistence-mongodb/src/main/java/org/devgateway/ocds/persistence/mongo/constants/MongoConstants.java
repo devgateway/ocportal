@@ -17,6 +17,13 @@ public final class MongoConstants {
     }
 
 
+    public static final class OCDSSchemes {
+        public static final String X_KE_OCMAKUENI = "X-KE-OCMAKUENI";
+        public static final String X_KE_IFMIS = "x_KE-IFMIS";
+        public static final String KE_IFMIS = "KE-IFMIS";
+        public static final String UNCEFACT = "UNCEFACT";
+    }
+
     public static final String OCDS_PREFIX = "ocds-ep75k8-";
 
     public static final int IMPORT_ROW_BATCH = 1000;
@@ -24,18 +31,23 @@ public final class MongoConstants {
     public static final String MONGO_LANGUAGE = "english";
 
     public static final class FieldNames {
+        public static final String OCID = "ocid";
         public static final String BUYER_ID = "buyer._id";
         public static final String BUYER_NAME = "buyer.name";
         public static final String AWARDS_DATE = "awards.date";
         public static final String PLANNING_FISCAL_YEAR = "planning.fiscalYear";
         public static final String PLANNING_BUDGET_PROJECT_ID = "planning.budget.projectID";
         public static final String PLANNING_BUDGET_AMOUNT = "planning.budget.amount.amount";
+        public static final String PLANNING_BUDGETB = "planning.budget.budgetBreakdown";
+        public static final String PLANNING_BUDGETB_AMOUNT = "planning.budget.budgetBreakdown.amount.amount";
+        public static final String PLANNING_BUDGETB_ID = "planning.budget.budgetBreakdown._id";
         public static final String AWARDS_FIRST_TIME_WINNER = "awards.firstTimeWinner";
         public static final String AWARDS_STATUS = "awards.status";
         public static final String AWARDS_SUPPLIERS_ID = "awards.suppliers._id";
         public static final String AWARDS_SUPPLIERS_NAME = "awards.suppliers.name";
         public static final String AWARDS_VALUE_AMOUNT = "awards.value.amount";
         public static final String AWARDS_VALUE = "awards.value";
+        public static final String TENDER_PROC_METHOD_RATIONALE = "tender.procurementMethodRationale";
         public static final String TENDER_ITEMS = "tender.items";
         public static final String TENDER_ITEMS_CLASSIFICATION = "tender.items.classification";
         public static final String TENDER_ITEMS_CLASSIFICATION_ID = "tender.items.classification._id";
@@ -50,6 +62,9 @@ public final class MongoConstants {
         public static final String CONTRACTS_ID = "contracts._id";
         public static final String CONTRACTS_TITLE = "contracts.title";
         public static final String CONTRACTS_CONTRACTOR = "contracts.contractor";
+        public static final String CONTRACTS_IMPL_TRANSACTIONS = "contracts.implementation.transactions";
+        public static final String CONTRACTS_IMPL_TRANSACTIONS_AMOUNT = "contracts.implementation.transactions.amount"
+                + ".amount";
         public static final String CONTRACTS_CONTRACTOR_ID = "contracts.contractor._id";
         public static final String CONTRACTS_MILESTONES = "contracts.implementation.milestones";
         public static final String CONTRACTS_STATUS = "contracts.status";
@@ -72,7 +87,8 @@ public final class MongoConstants {
         public static final String TENDER_SUBMISSION_METHOD = "tender.submissionMethod";
         public static final String BIDS_DETAILS_TENDERERS_ID = "bids.details.tenderers._id";
         public static final String BIDS_DETAILS_VALUE_AMOUNT = "bids.details.value.amount";
-        public static final String AWARDS_SUPPLIERS_TARGET_GROUP = "awards.suppliers.targetGroup";
+        public static final String PARTIES_TARGET_GROUP = "parties.targetGroup";
+        public static final String PARTIES_ID = "parties._id";
         public static final String FLAGS_TOTAL_FLAGGED = "flags.totalFlagged";
         public static final String FLAGS_COUNT = "flags.flaggedStats.count";
     }
@@ -96,6 +112,8 @@ public final class MongoConstants {
 
         public static final String PROCURING_ENTITY_ID = "procuringEntityId";
 
+        public static final String OCID = "ocid";
+
         public static final String NOT_PROCURING_ENTITY_ID = "notProcuringEntityId";
 
         public static final String SUPPLIER_ID = "supplierId";
@@ -112,6 +130,8 @@ public final class MongoConstants {
 
         public static final String PROCUREMENT_METHOD = "procurementMethod";
 
+        public static final String PROCUREMENT_METHOD_RATIONALE = "procurementMethodRationale";
+
         public static final String TENDER_VALUE = "tenderValue";
 
         public static final String AWARD_VALUE = "awardValue";
@@ -124,4 +144,6 @@ public final class MongoConstants {
 
         public static final String TOTAL_FLAGGED = "totalFlagged";
     }
+
+    public static final Integer MONGO_DECIMAL_SCALE = 2;
 }

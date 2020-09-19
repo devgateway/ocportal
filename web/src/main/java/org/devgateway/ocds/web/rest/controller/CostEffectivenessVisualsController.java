@@ -16,7 +16,6 @@ import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
-import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.GroupingFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -141,7 +140,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
                         Keys.FRACTION_AWARDS_WITH_TENDER
                 ).and(Keys.FRACTION_AWARDS_WITH_TENDER).multiply(100)
                         .as(Keys.PERCENTAGE_AWARDS_WITH_TENDER),
-                transformYearlyGrouping(filter).andInclude(Keys.TOTAL_AWARD_AMOUNT, Keys.TOTAL_AWARDS,
+                transformYearlyGroupingCostEff(filter).andInclude(Keys.TOTAL_AWARD_AMOUNT, Keys.TOTAL_AWARDS,
                         Keys.TOTAL_AWARDS_WITH_TENDER, Keys.PERCENTAGE_AWARDS_WITH_TENDER
                 ), getSortByYearMonth(filter),
                 skip(filter.getSkip()), limit(filter.getPageSize())
@@ -207,8 +206,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
                 ));
 
         Aggregation agg = Aggregation.newAggregation(
-                match(where(MongoConstants.FieldNames.TENDER_STATUS).is(Tender.Status.active.toString()).
-                        and(getAwardDateField())
+                match(where(getAwardDateField())
                         .exists(true)
                         .andOperator(getYearDefaultFilterCriteria(
                                 filter,
@@ -232,7 +230,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
                 ).and(Keys.FRACTION_TENDERS_WITH_AWARDS).multiply(100)
                         .as(Keys.PERCENTAGE_TENDERS_WITH_AWARDS),
                 (filter.getGroupByCategory() == null
-                        ? transformYearlyGrouping(filter) : project()).andInclude(Keys.TOTAL_TENDER_AMOUNT,
+                        ? transformYearlyGroupingCostEff(filter) : project()).andInclude(Keys.TOTAL_TENDER_AMOUNT,
                         Keys.TOTAL_TENDERS,
                         Keys.TOTAL_TENDER_WITH_AWARDS, Keys.PERCENTAGE_TENDERS_WITH_AWARDS
                 ),

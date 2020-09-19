@@ -1,9 +1,11 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
+import org.devgateway.toolkit.persistence.service.sms.SMSMessageService;
 import org.devgateway.toolkit.web.WebSecurityUtil;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -34,6 +37,8 @@ public class AlertsEmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private SMSMessageService smsMessageService;
 
     @Value("${serverURL}")
     private String serverURL;
@@ -49,7 +54,7 @@ public class AlertsEmailService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(parent.getEmail());
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("You've received a reply to your feedback message!");
             msg.setText("Click on the link below to view your message on the Government of Makueni County Open"
                     + " Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
@@ -81,7 +86,14 @@ public class AlertsEmailService {
         if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
             return;
         }
-        sendFeedbackAlertEmails(replyableFeedbackMessage, fm);
+
+        if (ObjectUtils.isEmpty(replyableFeedbackMessage.getEmail())) {
+            smsMessageService.sendSMS(replyableFeedbackMessage.getPhoneNumber(),
+                    "Tender Code: " + replyableFeedbackMessage.getUrl().substring("tender/t/".length())
+                            + "\nFeedback reply: " + fm.getComment());
+        } else {
+            sendFeedbackAlertEmails(replyableFeedbackMessage, fm);
+        }
     }
 
 
@@ -105,7 +117,7 @@ public class AlertsEmailService {
                     + "Makueni Portal Team";
 
             msg.setTo(alert.getEmail());
-            msg.setFrom("noreply@dgstg.org");
+            msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("Makueni OC Portal - Please Verify Email Address");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };

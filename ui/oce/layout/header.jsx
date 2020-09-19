@@ -116,13 +116,6 @@ export default class Header extends translatable(React.Component) {
     const jsonURL = new URI('/api/ocds/package/all');
 
     return (<div>
-        <span className="help-title">
-          <a onClick={()=> {
-           window.addEventListener("scroll", this.noScroll);
-            this.showIntroJs();
-          }
-          }>HELP</a>
-        </span>
         <span className="download-title" data-step="7" data-intro="Download the data in either XLS,
         which uses the standard government terminology, or in JSON which uses the Open Contracting
          Data Standard.">
@@ -172,6 +165,13 @@ export default class Header extends translatable(React.Component) {
                   );
                 })
               }
+              <a key="HELP" href="javascript:void(0);" onClick={() => {
+                window.addEventListener('scroll', this.noScroll);
+                this.showIntroJs();
+              }
+              }>
+                <span data-intro="HELP" data-step="6">HELP</span>
+              </a>
             </div>
           </div>
         </div>
@@ -187,7 +187,7 @@ export default class Header extends translatable(React.Component) {
                 <span className="total-label">Total Contracts</span>
                 <span className="total-number">{data.count}</span>
               </div>
-              <div className="col-lg-4 col-md-5 col-sm-6 total-item" data-step="6"
+              <div className="col-lg-5 col-md-5 col-sm-6 total-item" data-step="6"
                    data-intro="This shows the total contracted amount."
                    data-position="right">
                 <span className="total-label">Total Contract Amount</span>

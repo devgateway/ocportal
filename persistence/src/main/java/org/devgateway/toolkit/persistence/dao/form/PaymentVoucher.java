@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -23,24 +24,29 @@ import java.util.Collections;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
 
+    @ExcelExport(useTranslation = true)
     private BigDecimal totalAmount;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
+    @ExcelExport(name = "Payment Vouchers PMC Reports", justExport = true)
     private PMCReport pmcReport;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
+    @ExcelExport(name = "Inspection Report", justExport = true)
     private InspectionReport inspectionReport;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
+    @ExcelExport(name = "Administrator Report", justExport = true)
     private AdministratorReport administratorReport;
 
+    @ExcelExport(useTranslation = true)
     private Boolean lastPayment;
 
     @Override
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

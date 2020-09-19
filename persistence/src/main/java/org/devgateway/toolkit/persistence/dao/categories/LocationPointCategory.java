@@ -9,7 +9,7 @@ import javax.persistence.Transient;
  * @author mpostelnicu
  */
 @MappedSuperclass
-public class LocationPointCategory extends Category {
+public abstract class LocationPointCategory extends Category {
 
     @org.springframework.data.annotation.Transient
     protected Point locationPoint;

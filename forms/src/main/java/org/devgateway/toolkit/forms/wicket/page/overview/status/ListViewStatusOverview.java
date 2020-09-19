@@ -55,7 +55,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
     @Override
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
-                                             final ListItem<StatusOverviewData> item) {
+                                             final ListItem<StatusOverviewData> item, boolean expanded) {
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
         final ProcurementPlan procurementPlan = item.getModelObject().getProcurementPlan();
@@ -83,7 +83,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                 };
                 link.add(new Label("projectTitle"));
                 item.add(link);
-
+                
                 item.add(addStatus("projectStatus", item.getModelObject().getProjectStatus(), ""));
 
                 item.add(addStatus("tenderLabel", item.getModelObject().getTenderProcessStatus(),
@@ -93,6 +93,11 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                 item.add(addStatus("awardLabel", item.getModelObject().getAwardProcessStatus(),
                         getString("awardProcess")));
                 item.add(addStatus("awardProcessStatus", item.getModelObject().getAwardProcessStatus(), ""));
+
+                item.add(addStatus("implementationLabel", item.getModelObject().getImplementationStatus(),
+                        getString("implementationProcess")));
+
+                item.add(addStatus("implementationProcessStatus", item.getModelObject().getImplementationStatus(), ""));
             }
 
             private Label addStatus(final String id, final String status, final String label) {
@@ -114,7 +119,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
             }
         });
 
-        hideableContainer.add(containerFragment);
+        hideableContainer.addOrReplace(containerFragment);
     }
 
     @Override

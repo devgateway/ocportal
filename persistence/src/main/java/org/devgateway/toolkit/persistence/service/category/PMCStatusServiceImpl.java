@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PMCStatusServiceImpl extends BaseJpaServiceImpl<PMCStatus> implements PMCStatusService {
 
     @Autowired

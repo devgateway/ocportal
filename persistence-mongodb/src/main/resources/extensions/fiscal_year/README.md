@@ -1,6 +1,6 @@
 # Fiscal Year
 
-Allowing Fiscal Year under Planning
+Allowing Fiscal Year under Planning.
 
 ```
 {

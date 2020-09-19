@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.components.form;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.model.IModel;
 
@@ -45,5 +46,10 @@ public class PasswordFieldBootstrapFormComponent extends GenericBootstrapFormCom
     @Override
     protected PasswordTextField inputField(final String id, final IModel<String> model) {
         return new PasswordTextField(id, initFieldModel());
+    }
+
+    public PasswordFieldBootstrapFormComponent autoCompleteOff() {
+        field.add(AttributeAppender.append("autocomplete", "new-password"));
+        return this;
     }
 }

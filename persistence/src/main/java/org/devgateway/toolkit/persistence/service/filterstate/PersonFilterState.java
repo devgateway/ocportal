@@ -32,7 +32,7 @@ public class PersonFilterState extends JpaFilterState<Person> {
             final List<Predicate> predicates = new ArrayList<>();
 
             if (StringUtils.isNotBlank(username)) {
-                predicates.add(cb.like(root.get(Person_.username), "%" + username + "%"));
+                predicates.add(cb.like(cb.lower(root.get(Person_.username)), "%" + username.toLowerCase() + "%"));
             }
 
             if (departments != null && !departments.isEmpty()) {

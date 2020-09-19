@@ -132,11 +132,35 @@ public class ProcurementPlan extends AbstractMakueniEntity {
         return getLabel();
     }
 
+    /**
+     * please read first OCMAKU-477 to understand why we need to export draft procurement plans.
+     * <p>
+     * the rule to determine if a procurement plan will be published is now the following (by "exportable"
+     * we mean terminated or approved):
+     * <p>
+     * if the procurement plan is exportable - it gets published
+     * if the procurement plan is draft AND it contains at least one exportable project which contains at least
+     * one tender process which is exportable
+     * <p>
+     * This has implications on the public portal pages, since draft submission of procurement plans is
+     * <p>
+     * procurement plans can be exported without file uploads
+     * procurement plans can be exported without approval dates
+     *
+     * @return
+     */
+    @Override
+    @Transactional
+    public boolean isExportable() {
+        return super.isExportable() || getProjects().stream().filter(Statusable::isExportable).
+                flatMap(p -> p.getTenderProcesses().stream()).anyMatch(Statusable::isExportable);
+    }
+
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 }

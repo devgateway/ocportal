@@ -1001,5 +1001,141 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-583-ProjectClosureHandover" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <update tableName="CATEGORY">
+            <column name="LABEL" value="School management"/>
+            <where>dtype='ProjectClosureHandover' and label=:value</where>
+            <whereParams>
+                <param value="Test"/>
+            </whereParams>
+        </update>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Hospital Management committees"/>
+            <column name="DTYPE" value="ProjectClosureHandover"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Project Sustainability committees"/>
+            <column name="DTYPE" value="ProjectClosureHandover"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-583-SubWards" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="ward_id"/>
+        </preConditions>
+        <sqlFile path="SubWards.sql"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-596" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="COVID-19"/>
+            <column name="DTYPE" value="ProcurementMethodRationale"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-590-unit-codes" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="code"/>
+        </preConditions>
+        <update tableName="category">
+            <column name="code" value="LO"/>
+            <column name="label" value="lot"/>
+            <where>dtype='Unit' and label='Lots'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="BE"/>
+            <column name="label" value="bundle"/>
+            <where>dtype='Unit' and label='Bundle'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="EA"/>
+            <column name="label" value="each"/>
+            <where>dtype='Unit' and label='Each'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="PA"/>
+            <column name="label" value="packet"/>
+            <where>dtype='Unit' and label='Packet'</where>
+        </update>
+        <update tableName="category">
+            <column name="code" value="RM"/>
+            <column name="label" value="ream"/>
+            <where>dtype='Unit' and label='Realm'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="OCMAKU-590-change-unit-codes" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="code"/>
+        </preConditions>
+
+        <sql>update plan_item set unit_of_issue_id = (select id from category where dtype='Unit' and code='EA')
+            where unit_of_issue_id in (select id from category where dtype='Unit' and label in ('Road', 'Building'))
+        </sql>
+        <delete tableName="category">
+            <where>dtype='Unit' and label in ('Road', 'Building')</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="OCMAKU-651-rename-proc-methods" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <update tableName="CATEGORY">
+            <column name="label" value="Direct Procurement"/>
+            <where>dtype='ProcurementMethod' and label='Direct'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Open Tender - National"/>
+            <where>dtype='ProcurementMethod' and label='Open tender national'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Request for Proposal"/>
+            <where>dtype='ProcurementMethod' and label='RF proposal'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Request for Quotation"/>
+            <where>dtype='ProcurementMethod' and label='RFQ'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Restricted Tender"/>
+            <where>dtype='ProcurementMethod' and label='Restricted tender'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Specially Permitted"/>
+            <where>dtype='ProcurementMethod' and label='Special permitted'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Low Value Procurement"/>
+            <where>dtype='ProcurementMethod' and label='Low value procurement'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="label" value="Open Tender - International"/>
+            <where>dtype='ProcurementMethod' and label='Open tender International'</where>
+        </update>
+    </changeSet>
+
+
+    <changeSet id="OCMAKU-685-project-cabinet-papers" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="PROJECT_CABINET_PAPERS"/>
+        </preConditions>
+        <sql>insert into project_cabinet_papers (project_id, cabinet_papers_id)
+            (select id, cabinet_paper_id from project where cabinet_paper_id is not null);
+            alter table project drop column cabinet_paper_id;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

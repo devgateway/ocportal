@@ -38,12 +38,11 @@ import java.util.function.Consumer;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable,
-        WardsSettable {
-    @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Paper")
+public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
+    @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Papers")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private CabinetPaper cabinetPaper;
+    @ManyToMany
+    private List<CabinetPaper> cabinetPapers;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -76,14 +75,6 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<Ward> wards = new ArrayList<>();
-
-    public CabinetPaper getCabinetPaper() {
-        return cabinetPaper;
-    }
-
-    public void setCabinetPaper(final CabinetPaper cabinetPaper) {
-        this.cabinetPaper = cabinetPaper;
-    }
 
     public String getProjectTitle() {
         return projectTitle;
@@ -121,7 +112,6 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
         return wards;
     }
 
-    @Override
     public void setWards(final List<Ward> wards) {
         this.wards = wards;
     }
@@ -173,7 +163,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return tenderProcesses;
     }
 
@@ -195,5 +185,13 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @org.springframework.data.annotation.Transient
     public Department getDepartment() {
         return getProcurementPlan().getDepartment();
+    }
+
+    public List<CabinetPaper> getCabinetPapers() {
+        return cabinetPapers;
+    }
+
+    public void setCabinetPapers(List<CabinetPaper> cabinetPapers) {
+        this.cabinetPapers = cabinetPapers;
     }
 }

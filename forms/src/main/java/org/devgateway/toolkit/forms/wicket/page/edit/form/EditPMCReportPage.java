@@ -80,15 +80,15 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         editForm.add(pmcMembers);
 
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcStatus", pmcStatusService).required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService)
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService)
                 .required();
 
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
         wards.required();
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
-        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior(subcounties, wards,
-                LoadableDetachableModel.of(() -> wardService), editForm.getModel(), "change"
+        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
         subcounties.required();
 

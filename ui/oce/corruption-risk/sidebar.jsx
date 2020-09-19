@@ -60,6 +60,10 @@ class Sidebar extends translatable(React.PureComponent) {
               .filter(key => indicatorTypesMapping[key].types.indexOf(slug) > -1)
                 .length;
 
+              if(count === 0) {
+                return;
+              }
+
               let corruptionType;
               if (page === 'type' || page === 'indicator') {
                 [, corruptionType] = route;
@@ -74,8 +78,8 @@ class Sidebar extends translatable(React.PureComponent) {
                 >
                   <img className="blue" src={`assets/icons/blue/${slug}.svg`} alt="Tab icon"/>
                   <img className="white" src={`assets/icons/white/${slug}.svg`} alt="Tab icon"/>
-                  {this.t(`crd:corruptionType:${slug}:name`)} <span
-                  className="count">({count})</span>
+                  {this.t(`crd:corruptionType:${slug}:name`)}
+                  {/*<span className="count">({count})</span>*/}
                 </a>
               );
             })}

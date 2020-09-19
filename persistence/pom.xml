@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.devgateway.toolkit</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.8.4-SNAPSHOT</version>
+        <version>1.11.3-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -37,6 +37,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20190722</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

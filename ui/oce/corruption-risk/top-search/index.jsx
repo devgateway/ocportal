@@ -56,7 +56,7 @@ class TopSearch extends translatable(React.Component) {
                   })}
               />
               <div className="input-group-addon">
-                <i className="glyphicon glyphicon-search" />
+                <i className="glyphicon glyphicon-search" onClick={() => doSearch(this.convertExactMatch(inputValue))} />
               </div>
             </div>
           </div>

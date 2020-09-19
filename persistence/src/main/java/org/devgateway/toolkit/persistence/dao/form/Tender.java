@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
+import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethodRationale;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
@@ -59,6 +60,12 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
+
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method Rationale")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    private ProcurementMethodRationale procurementMethodRationale;
 
     @ExcelExport(useTranslation = true, name = "Tender Objective")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
@@ -208,7 +215,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     @Override
     @Transactional
-    public Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getTenderQuotationEvaluation()));
     }
@@ -223,5 +230,13 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @Override
     public Consumer<String> titleSetter() {
         return this::setTenderTitle;
+    }
+
+    public ProcurementMethodRationale getProcurementMethodRationale() {
+        return procurementMethodRationale;
+    }
+
+    public void setProcurementMethodRationale(ProcurementMethodRationale procurementMethodRationale) {
+        this.procurementMethodRationale = procurementMethodRationale;
     }
 }

@@ -85,7 +85,7 @@ public class Transaction {
     @JsonProperty("payer")
     @JsonPropertyDescription("The id and name of the party being referenced. Used to cross-reference to the parties "
             + "section")
-    private Organization payer;
+    private OrganizationReference payer;
     /**
      * Organization reference
      * <p>
@@ -94,7 +94,7 @@ public class Transaction {
     @JsonProperty("payee")
     @JsonPropertyDescription("The id and name of the party being referenced. Used to cross-reference to the parties "
             + "section")
-    private Organization payee;
+    private OrganizationReference payee;
     /**
      * Linked spending information
      * <p>
@@ -217,7 +217,7 @@ public class Transaction {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("payer")
-    public Organization getPayer() {
+    public OrganizationReference getPayer() {
         return payer;
     }
 
@@ -227,7 +227,7 @@ public class Transaction {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("payer")
-    public void setPayer(Organization payer) {
+    public void setPayer(OrganizationReference payer) {
         this.payer = payer;
     }
 
@@ -237,7 +237,7 @@ public class Transaction {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("payee")
-    public Organization getPayee() {
+    public OrganizationReference getPayee() {
         return payee;
     }
 
@@ -247,7 +247,7 @@ public class Transaction {
      * The id and name of the party being referenced. Used to cross-reference to the parties section
      */
     @JsonProperty("payee")
-    public void setPayee(Organization payee) {
+    public void setPayee(OrganizationReference payee) {
         this.payee = payee;
     }
 

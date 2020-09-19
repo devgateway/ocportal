@@ -90,7 +90,7 @@ class MakueniProcurementPlans extends CRDPage {
   downloadFiles() {
     return (formDocs) => (<div>
         {
-          formDocs.map(doc => <div key={doc.id}>
+          formDocs && formDocs.map(doc => <div key={doc.id}>
             <OverlayTrigger
               placement="bottom"
               overlay={
@@ -179,6 +179,16 @@ class MakueniProcurementPlans extends CRDPage {
           <div className="col-md-12">
             <button className="btn btn-info btn-lg" type="submit"
                     onClick={() => this.props.onSwitch('alerts')}>Subscribe to Email Alerts
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="smshelp-container">
+        <div className="row alerts-button subscribe">
+          <div className="col-md-12">
+            <button className="btn btn-info btn-lg" type="submit"
+                    onClick={() => this.props.onSwitch('smshelp')}>SMS Feedback Help
             </button>
           </div>
         </div>

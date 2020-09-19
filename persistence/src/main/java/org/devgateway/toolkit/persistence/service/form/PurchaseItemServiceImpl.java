@@ -18,7 +18,7 @@ import java.util.List;
  *
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PurchaseItemServiceImpl extends BaseJpaServiceImpl<PurchaseItem> implements PurchaseItemService {
 
     @Autowired

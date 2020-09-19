@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-03-04
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class TestFormServiceImpl extends BaseJpaServiceImpl<TestForm> implements TestFormService {
     @Autowired
     private TestFormRepository testFormRepository;

@@ -11,6 +11,8 @@ import Alerts from '../oce/alerts/Alerts';
 import Docs from '../oce/makueni/Docs';
 import PublicationPolicy from '../oce/makueni/PublicationPolicy';
 import ContractsList from '../oce/makueni/ContractsList';
+import SMSHelp from '../oce/makueni/SMSHelp';
+import PortalVideos from '../oce/makueni/PortalVideos';
 
 const translations = {
   en_US: require('../../web/public/languages/en_US.json'),
@@ -90,7 +92,9 @@ class OceSwitcher extends ViewSwitcher {
 
 OceSwitcher.views['tender'] = MakueniTenders;
 OceSwitcher.views['docs'] = Docs;
+OceSwitcher.views['smshelp'] = SMSHelp;
 OceSwitcher.views['publication-policy'] = PublicationPolicy;
+OceSwitcher.views['portal-videos'] = PortalVideos;
 OceSwitcher.views['contracts-list'] = ContractsList;
 OceSwitcher.views['procurement-plan'] = MakueniProcurementPlans;
 OceSwitcher.views['alerts'] = Alerts;

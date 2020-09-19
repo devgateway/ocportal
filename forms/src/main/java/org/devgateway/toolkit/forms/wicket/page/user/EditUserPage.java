@@ -122,6 +122,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         username = ComponentUtil.addTextField(editForm, "username");
         username.required();
+        username.autoCompleteOff();
         username.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         username.getField().add(new UsernamePatternValidator());
         StringValue idPerson = getPageParameters().get(WebConstants.PARAM_ID);
@@ -190,13 +191,15 @@ public class EditUserPage extends AbstractEditPage<Person> {
         editForm.add(changeProfilePassword);
 
         plainPassword = ComponentUtil.addTextPasswordField(editForm, "plainPassword");
-        plainPassword.required();
+        plainPassword.required().setVisibilityAllowed(false);
+
+        plainPassword.autoCompleteOff();
         // stop resetting the password fields each time they are rendered
         plainPassword.getField().setResetPassword(false);
         plainPassword.getField().add(new PasswordPatternValidator());
 
         plainPasswordCheck = ComponentUtil.addTextPasswordField(editForm, "plainPasswordCheck");
-        plainPasswordCheck.required();
+        plainPasswordCheck.required().setVisibilityAllowed(false);
         plainPasswordCheck.getField().setResetPassword(false);
 
         if (FormSecurityUtil.isCurrentUserAdmin() && idPerson.isNull()) {
@@ -207,9 +210,9 @@ public class EditUserPage extends AbstractEditPage<Person> {
             plainPasswordCheck.setVisibilityAllowed(true);
         } else {
             plainPassword.setVisibilityAllowed(BooleanUtils.toBoolean(
-                    editForm.getModelObject().getChangePasswordNextSignIn()));
+                    editForm.getModelObject().getChangeProfilePassword()));
             plainPasswordCheck.setVisibilityAllowed(BooleanUtils.toBoolean(
-                    editForm.getModelObject().getChangePasswordNextSignIn()));
+                    editForm.getModelObject().getChangeProfilePassword()));
         }
 
         editForm.add(new EqualPasswordInputValidator(plainPassword.getField(), plainPasswordCheck.getField()));

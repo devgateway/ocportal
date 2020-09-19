@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 26/08/2019
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UnitServiceImpl extends BaseJpaServiceImpl<Unit> implements UnitService {
     @Autowired
     private UnitRepository repository;
@@ -37,6 +37,11 @@ public class UnitServiceImpl extends BaseJpaServiceImpl<Unit> implements UnitSer
     @Override
     public Unit findByLabel(String label) {
         return repository.findByLabel(label);
+    }
+
+    @Override
+    public Unit findByLabelIgnoreCase(String label) {
+        return repository.findByLabelIgnoreCase(label);
     }
 }
 

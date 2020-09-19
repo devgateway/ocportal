@@ -1,23 +1,33 @@
 package org.devgateway.ocds.web.db;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +71,57 @@ public class ImportPostgresToMongo {
     @Autowired
     private MongoFileStorageService mongoFileStorageService;
 
+    @Autowired
+    private TenderProcessService tenderProcessService;
+
+    @Autowired
+    private AdminSettingsRepository adminSettingsRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Transactional(readOnly = true)
+    public void formStatusIntegrityCheck() {
+        logger.info("Checking forms status integrity...");
+        StringBuffer sb = new StringBuffer();
+        tenderProcessService.findAll().forEach(e -> formStatusIntegrityCheck(e, sb));
+        logger.info("Forms status integrity check done.");
+
+        logger.info("Form Status Integrity Checks Failure: " + sb.toString());
+        
+        final MimeMessagePreparator messagePreparator = mimeMessage -> {
+            final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
+            msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
+            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setSubject("Form Status Integrity Checks Failure");
+            msg.setText(sb.toString());
+        };
+        try {
+            javaMailSender.send(messagePreparator);
+        } catch (MailException e) {
+            logger.error("Failed to send ocds validation failure emails ", e);
+            throw e;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void formStatusIntegrityCheck(AbstractMakueniEntity p, StringBuffer sb) {
+        p.getDirectChildrenEntitiesNotNull().forEach(e -> {
+            if (!goodParentStatus(p.getStatus(), e.getStatus())) {
+                sb.append("Parent ").append(p.getClass().getSimpleName()).append(" with id ").append(p.getId())
+                        .append(" and status ").append(p.getStatus()).append(" has child ")
+                        .append(e.getClass().getSimpleName())
+                        .append(" with id ").append(e.getId()).append(" and status ").append(e.getStatus())
+                        .append("\n");
+            }
+            formStatusIntegrityCheck(e, sb);
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public boolean goodParentStatus(String parentStatus, String childStatus) {
+        return !DBConstants.Status.DRAFT.equals(parentStatus) || DBConstants.Status.DRAFT.equals(childStatus);
+    }
 
     @Transactional(readOnly = true)
     public void importToMongo() {
@@ -70,7 +131,7 @@ public class ImportPostgresToMongo {
 
         // first clean the procurement plan collection and delete all saved files
         mongoTemplate.dropCollection(ProcurementPlan.class);
-        gridFsOperations.delete(new Query());
+        //gridFsOperations.delete(new Query());
 
         procurementPlanService.findAllStream().filter(Statusable::isExportable).forEach(pp -> {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
@@ -109,7 +170,11 @@ public class ImportPostgresToMongo {
                     pr.getAdministratorReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
                     pr.setInspectionReports(new HashSet<>(filterNotExportable(pr.getInspectionReports())));
-                    pr.getInspectionReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
+                    pr.getInspectionReports().stream().forEach(doc -> {
+                        self.storeMakueniFormFiles(doc.getFormDocs());
+                        doc.getPrivateSectorRequests().stream()
+                                .forEach(psr -> self.storeMakueniFormFiles(psr.getUpload()));
+                    });
 
                     pr.setPmcReports(new HashSet<>(filterNotExportable(pr.getPmcReports())));
                     pr.getPmcReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
@@ -124,7 +189,7 @@ public class ImportPostgresToMongo {
                     //self.storeMakueniFormFiles(pr.getFormDocs());
                 });
 
-                self.storeMakueniFormFiles(project.getCabinetPaper().getFormDocs());
+                project.getCabinetPapers().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
             });
 
             self.storeMakueniFormFiles(pp.getFormDocs());
@@ -153,6 +218,12 @@ public class ImportPostgresToMongo {
                 new Index().on("projects.tenderProcesses.lastModifiedDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.tenderProcesses.tender.lastModifiedDate", Sort.Direction.ASC));
+
+        Document fyDepartmentIndex = new Document();
+        fyDepartmentIndex.put("fiscalYear.startDate", -1);
+        fyDepartmentIndex.put("department.label", 1);
+        mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(new CompoundIndexDefinition(fyDepartmentIndex));
+
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new TextIndexDefinition.TextIndexDefinitionBuilder()
                         .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)

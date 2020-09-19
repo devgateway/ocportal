@@ -6,7 +6,6 @@ import org.devgateway.toolkit.persistence.repository.form.CabinetPaperRepository
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,7 @@ import java.util.List;
  *
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<CabinetPaper>
         implements CabinetPaperService {
 
@@ -40,13 +39,11 @@ public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<Ca
     }
 
     @Override
-    @Cacheable
     public Long countByProcurementPlanAndNameAndIdNot(final ProcurementPlan procurementPlan, final String name,
             final Long id) {
         return cabinetPaperRepository.countByProcurementPlanAndNameAndIdNot(procurementPlan, name, id);
     }
 
-    @Cacheable
     @Override
     public List<CabinetPaper> findByProcurementPlan(final ProcurementPlan procurementPlan) {
         return cabinetPaperRepository.findByProcurementPlan(procurementPlan);
