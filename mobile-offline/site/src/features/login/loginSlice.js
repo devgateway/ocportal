@@ -59,12 +59,15 @@ export const performLogin = userPass => dispatch => {
     loginUser(userPass)
         .then(resolve => {
             const {data} = resolve;
-            dispatch(loginSuccess(data));
-            saveUser(data);
-            dispatch(replaceReports(loadReports(data.id)))
+            if (data === '') {
+                dispatch(loginFailure("Not a PMC user!"));
+            } else {
+                dispatch(loginSuccess(data));
+                saveUser(data);
+                dispatch(replaceReports(loadReports(data.id)))
+            }
         })
         .catch(reject => {
-            console.log(JSON.stringify(reject));
             dispatch(loginFailure("Network Error! Ensure Internet is up and retry!"));
         });
 };
