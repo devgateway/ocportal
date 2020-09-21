@@ -1,11 +1,10 @@
 import cn from 'classnames';
-import { fromJS, Map, Set } from 'immutable';
+import {fromJS, Map, Set} from 'immutable';
 import URI from 'urijs';
 import PropTypes from 'prop-types';
-import { fetchJson, debounce, download, pluck, range } from './tools';
+import {download, fetchJson, pluck, range} from './tools';
 import Filters from './filters';
 // eslint-disable-next-line no-unused-vars
-import OCEStyle from './style.less';
 
 if (process.env.NODE_ENV === 'development') {
   require('./dev');
@@ -70,7 +69,6 @@ class OCApp extends React.Component {
     return range(1, 12)
     .map(month => (<a
       key={month}
-      href="javascript:void(0);"
       className={cn({ active: selectedMonths.has(+month) })}
       onClick={() => this.setState({
         selectedMonths: selectedMonths.has(+month) ?
@@ -104,7 +102,6 @@ class OCApp extends React.Component {
     .map(year =>
       (<a
         key={year}
-        href="javascript:void(0);"
         className={cn({ active: selectedYears.has(+year) })}
         onDoubleClick={() => toggleOthersYears(year)}
         onClick={e => (e.shiftKey ? toggleOthersYears(year) : toggleYear(year))}
@@ -160,7 +157,6 @@ class OCApp extends React.Component {
 
   navigationLink({ getName, icon }, index) {
     return (<a
-      href="javascript:void(0);"
       key={index}
       className={cn('', { active: index === this.state.currentTab })}
       onClick={() => this.setState({ currentTab: index })}
@@ -371,7 +367,7 @@ class OCApp extends React.Component {
         </h1>
         {dashboardSwitcherOpen &&
         <div className="dashboard-switcher">
-          <a href="javascript:void(0);" onClick={() => onSwitch('crd')}>
+          <a onClick={() => onSwitch('crd')}>
             Corruption Risk Dashboard
           </a>
         </div>

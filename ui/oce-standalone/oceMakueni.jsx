@@ -1,11 +1,11 @@
-import { Map } from 'immutable';
+import {Map} from 'immutable';
 import cn from 'classnames';
 import OCApp from '../oce';
 import OverviewTab from '../oce/tabs/overview';
 import LocationTab from '../oce/tabs/location';
 import CompetitivenessTab from '../oce/tabs/competitiveness';
 import EfficiencyTab from '../oce/tabs/efficiency';
-import { fetchJson } from '../oce/tools';
+import {fetchJson} from '../oce/tools';
 import Header from '../oce/layout/header';
 import Footer from '../oce/layout/footer';
 import Implementation from '../oce/tabs/implementation';
@@ -61,7 +61,7 @@ class OCEMakueni extends OCApp {
         </h1>
         {dashboardSwitcherOpen &&
         <div className="dashboard-switcher">
-          <a href="javascript:void(0);" onClick={() => onSwitch('crd')}>
+          <a onClick={() => onSwitch('crd')}>
             Corruption Risk Dashboard
           </a>
         </div>
@@ -102,7 +102,6 @@ class OCEMakueni extends OCApp {
     return Object.keys(TRANSLATIONS)
     .map(locale => (
       <a key={locale}
-         href="javascript:void(0);"
          onClick={() => this.setLocale(locale)}
          className={cn({ active: locale === selectedLocale })}
       >

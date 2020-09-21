@@ -1,7 +1,7 @@
 import CRDPage from '../../../corruption-risk/page';
-import { mtState } from '../state';
+import {mtState} from '../state';
 import cn from 'classnames';
-import { API_ROOT } from '../../../state/oce-state';
+import {API_ROOT} from '../../../state/oce-state';
 import Tender from './Tender';
 import PurchaseReq from './PurchaseReq';
 import TenderQuotation from './TenderQuotation';
@@ -202,7 +202,6 @@ class PurchaseReqView extends CRDPage {
             this.tabs.map(tab => {
               return (<a
                   key={tab.tab}
-                  href="javascript:void(0);"
                   className={cn('', { active: this.isActive(tab.tab) })}
                   onClick={() => this.changeTab(tab.tab)}
                 >

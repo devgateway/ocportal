@@ -1,6 +1,6 @@
-import { ControlLabel, Form, FormControl, FormGroup, HelpBlock, InputGroup } from 'react-bootstrap';
+import {FormControl, FormGroup, FormLabel, FormText, InputGroup} from 'react-bootstrap';
 import React from 'react';
-import { getFeedbackUrlPart } from './feedbackList';
+import {getFeedbackUrlPart} from './feedbackList';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 
@@ -130,58 +130,58 @@ class FeedbackMessageForm extends React.PureComponent {
     return (
       <div className="col-md-6">
         <FormGroup validationState={this.validateEmail()}>
-          <ControlLabel>Email</ControlLabel>
+          <FormLabel>Email</FormLabel>
           <InputGroup>
             <InputGroup.Addon>@</InputGroup.Addon>
             <FormControl
-              type="email"
-              name="email"
-              maxLength={255}
-              value={this.state.email}
-              placeholder="Email address"
-              onChange={this.handleChange.bind(this)}
+                type="email"
+                name="email"
+                maxLength={255}
+                value={this.state.email}
+                placeholder="Email address"
+                onChange={this.handleChange.bind(this)}
             />
           </InputGroup>
           <FormControl.Feedback/>
           {
             this.state.emailValid
-              ? null
-              : <HelpBlock>Email is invalid</HelpBlock>
+                ? null
+                : <FormText>Email is invalid</FormText>
           }
         </FormGroup>
 
         <FormGroup validationState={this.validateTxt(this.state.name)}>
-          <ControlLabel>Name</ControlLabel>
+          <FormLabel>Name</FormLabel>
           <FormControl
-            name="name"
-            maxLength={255}
-            value={this.state.name}
-            placeholder="Name"
-            onChange={this.handleChange.bind(this)}
+              name="name"
+              maxLength={255}
+              value={this.state.name}
+              placeholder="Name"
+              onChange={this.handleChange.bind(this)}
           />
           <FormControl.Feedback/>
           {
             this.state.changeNeverFired || this.state.name ? null :
-              <HelpBlock>Please add a name</HelpBlock>
+                <FormText>Please add a name</FormText>
           }
         </FormGroup>
 
         <FormGroup validationState={this.validateTxt(this.state.comment)}>
-          <ControlLabel>Comment</ControlLabel>
+          <FormLabel>Comment</FormLabel>
           <FormControl
-            required
-            componentClass="textarea"
-            name="comment"
-            maxLength={10000}
-            rows={5}
-            value={this.state.comment}
-            placeholder="Comment"
-            onChange={this.handleChange.bind(this)}
+              required
+              componentClass="textarea"
+              name="comment"
+              maxLength={10000}
+              rows={5}
+              value={this.state.comment}
+              placeholder="Comment"
+              onChange={this.handleChange.bind(this)}
           />
           <FormControl.Feedback/>
           {
             this.state.changeNeverFired || this.state.comment ? null :
-              <HelpBlock>Please add a comment</HelpBlock>
+                <FormText>Please add a comment</FormText>
           }
         </FormGroup>
         <ReCAPTCHA
