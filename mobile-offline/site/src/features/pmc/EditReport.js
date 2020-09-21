@@ -61,7 +61,7 @@ export function EditReport(props) {
 
     const [report, setReport] = useState({
         authorizePayment: false,
-        signature: false,
+        acknowledgeSignature: false,
         fyId: tender.fyId,
         deptId: tender.deptId,
         status: status,
@@ -120,8 +120,8 @@ export function EditReport(props) {
 
         notNull(errors, report, 'pmcStatusId', 'Required');
 
-        if (report.signature !== true) {
-            errors.signature = 'Report must be signed';
+        if (report.acknowledgeSignature !== true) {
+            errors.acknowledgeSignature = 'Report must be signed';
             valid = false;
         }
         notNull(errors, report, 'signatureNames', 'Required');
@@ -266,7 +266,7 @@ export function EditReport(props) {
                                  value={report.projectClosureHandoverIds} options={projectClosureHandoverOptions}
                                  onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
-            <CheckboxField label="eSignature" name="signature" value={report.signature}
+            <CheckboxField label="eSignature" name="acknowledgeSignature" value={report.acknowledgeSignature}
                            onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <TextField label="eSignature First Name & Last Name" name="signatureNames" value={report.signatureNames}
