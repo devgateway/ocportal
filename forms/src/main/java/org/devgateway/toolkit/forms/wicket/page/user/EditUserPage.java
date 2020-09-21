@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.PASSWORD_PATTERN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_ROLES;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
@@ -335,16 +336,9 @@ public class EditUserPage extends AbstractEditPage<Person> {
     public static class PasswordPatternValidator extends PatternValidator {
         private static final long serialVersionUID = 7886016396095273777L;
 
-        // 1 digit, 1 lower, 1 upper, 1 symbol "@#$%", from 6 to 20
-        // private static final String PASSWORD_PATTERN =
-        // "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
-        // 1 digit, 1 caps letter, from 10 to 20
-        private static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z]).{10,20})";
-
         public PasswordPatternValidator() {
             super(PASSWORD_PATTERN);
         }
-
     }
 
     public static class UsernamePatternValidator extends PatternValidator {

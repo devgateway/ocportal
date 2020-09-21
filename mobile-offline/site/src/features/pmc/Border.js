@@ -20,9 +20,9 @@ export const Border = props => {
 
     return (
         <>
-            <Navbar dark fixed="top" color="dark">
+            <Navbar dark fixed="top" color="navy">
                 <NavbarBrand>
-                    <img src={logo} className="d-inline-block align-top" alt="" width="27" height="30" />
+                    <img src={logo} className="d-inline-block align-top mr-2" alt="" width="27" height="30" />
                     {props.title}
                 </NavbarBrand>
 

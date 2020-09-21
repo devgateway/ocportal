@@ -17,6 +17,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectLogin} from "./features/login/loginSlice";
 import {performSynchronization} from "./features/pmc/pmcReportsSlice";
 import {SYNC_INTERVAL} from "./app/constants";
+import {RecoverPwd} from "./features/login/RecoverPwd";
+import {ChangePwd} from "./features/login/ChangePwd";
 
 function App() {
 
@@ -33,6 +35,12 @@ function App() {
                 <Switch>
                     <Route path="/login">
                         <Login />
+                    </Route>
+                    <Route path="/recoverPwd">
+                        <RecoverPwd />
+                    </Route>
+                    <Route path="/changePwd">
+                        <ChangePwd />
                     </Route>
                     <PrivateRoute exact path="/">
                         <PMCReports />

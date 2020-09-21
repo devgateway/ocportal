@@ -75,6 +75,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         mapResponse.put("username", p.getUsername());
         mapResponse.put("firstname", p.getFirstName());
         mapResponse.put("lastname", p.getLastName());
+        mapResponse.put("changePasswordNextSignIn", p.getChangePasswordNextSignIn());
         mapResponse.put("roles", p.getRoles());
         mapResponse.put("token", token);
         res.getWriter().write(objectMapper.writeValueAsString(mapResponse));

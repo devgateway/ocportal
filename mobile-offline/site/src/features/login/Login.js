@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {useHistory, useLocation} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {Spinner, Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap';
 import {performLogin, selectLogin} from './loginSlice';
 
@@ -22,14 +22,17 @@ export function Login() {
     };
 
     const history = useHistory();
-    const location = useLocation();
-    const { from } = location.state || { from: { pathname: "/" } };
 
     useEffect(() => {
         if (login.authenticated) {
-            history.replace(from);
+            history.replace(login.user.changePasswordNextSignIn ? "/changePwd" : "/")
         }
-    }, [login, history, from]);
+    }, [login, history]);
+
+    const handlePasswordRecovery = e => {
+        e.preventDefault();
+        history.push("/recoverPwd");
+    }
 
     return (
         <div className="container-fluid mt-3">
@@ -49,10 +52,25 @@ export function Login() {
                                    value={userPass.password} readOnly={login.loading}
                                    onChange={updateField} required/>
                         </FormGroup>
-                        <Button color="primary" disabled={login.loading}>Submit</Button>
+                        <div>
+                            <Button color="primary" block disabled={login.loading}>Submit</Button>{" "}
+                        </div>
+                        <div className="mt-3">
+                            <Button color="primary" block disabled={login.loading} onClick={handlePasswordRecovery}>
+                                Forgot your password?
+                            </Button>
+                        </div>
                     </Form>
-                    {login.failed ? <Alert color="danger">Login Failed</Alert>: ""}
-                    {login.loading ? <Spinner style={{width: '3rem', height: '3rem'}}/> : ""}
+
+                    {login.failed &&
+                        <Alert color="danger" className="mt-3">Login Failed</Alert>
+                    }
+
+                    {login.loading &&
+                        <div className="d-flex justify-content-center">
+                            <Spinner className="mt-3"/>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

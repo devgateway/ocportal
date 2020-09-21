@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {loginUser} from "../../api/Api";
 import {loadReports, saveUser, deleteUser} from "../../app/db";
-import {replaceReports} from "../../features/pmc/pmcReportsSlice";
+import {replaceReports} from "../pmc/pmcReportsSlice";
 
 export const loginStateFromUser = user => {
     if (user === undefined) {
@@ -41,7 +41,8 @@ export const loginSlice = createSlice({
             state.user = action.payload;
             state.authenticated = true;
             state.tokenValid = true;
-        },
+            state.failed = false;
+        }
     },
 });
 
