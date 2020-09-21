@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.type.MapType;
 import org.apache.commons.lang.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -50,8 +52,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             );
             if (authenticate != null) {
                 Person person = (Person) authenticate.getPrincipal();
-                if (!SecurityUtil.isUserPMCUser(person) || BooleanUtils.isFalse(person.isEnabled())) {
-                    authenticate = null;
+                if (BooleanUtils.isFalse(person.isEnabled())) {
+                    throw new DisabledException(messages.getMessage(
+                            "AccountStatusUserDetailsChecker.disabled", "User is disabled"));
+                }
+                if (!SecurityUtil.isUserPMCUser(person)) {
+                    throw new InsufficientAuthenticationException("User is not allowed to access this resource");
                 }
 
             }
