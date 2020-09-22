@@ -1,5 +1,0 @@
-- implement login when token is invalid
-- show an error if token is invalid
-- implement reset password with change pwd
-- do not allow login to non-pmc users
-
