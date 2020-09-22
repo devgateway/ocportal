@@ -114,11 +114,16 @@ export const pmcReportsSlice = createSlice({
             state.synchronizing = false
         },
         synchronizationFailure: (state, action) => {
-            console.log(`synchronizationFailure ${action.payload}`)
+            if (action.payload === 401) {
+                state.tokenIsExpired = true
+            }
             state.synchronizing = false
         },
         errorDialogClosed: (state) => {
             state.showSyncError = false
+        },
+        tokenDialogClosed: (state) => {
+            state.tokenIsExpired = false
         }
     }
 });
@@ -128,7 +133,7 @@ const {
     synchronizationStarted, synchronizationSuccess, synchronizationFailure
 } = pmcReportsSlice.actions;
 
-export const { replaceReports, errorDialogClosed } = pmcReportsSlice.actions;
+export const { replaceReports, errorDialogClosed, tokenDialogClosed } = pmcReportsSlice.actions;
 
 export const selectPMCReports = state => state.pmcReports;
 
@@ -184,7 +189,10 @@ export const performSynchronization = () => (dispatch, getState) => {
             const metadata = selectMetadata(state2)
             saveMetadata(login.user.id, metadata.ref)
         },
-        e => dispatch(synchronizationFailure(e.toString())))
+        e => {
+            const status = e.response ? e.response.status : null
+            dispatch(synchronizationFailure(status))
+        })
 }
 
 export default pmcReportsSlice.reducer;

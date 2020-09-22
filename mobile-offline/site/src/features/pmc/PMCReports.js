@@ -1,13 +1,14 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useHistory} from "react-router-dom";
-import {errorDialogClosed, selectPMCReports, selectPMCReportsArray} from "./pmcReportsSlice";
+import {errorDialogClosed, selectPMCReports, selectPMCReportsArray, tokenDialogClosed} from "./pmcReportsSlice";
 import {selectMetadata} from "./metadataSlice";
 import {isRejectedReport, PMCReportStatus} from "../../app/constants";
 import {formatDateForDisplay, parseDate} from "../../app/date";
 import {Border} from "./Border";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import 'font-awesome/css/font-awesome.min.css';
+import {performLogout} from "../login/loginSlice";
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
@@ -66,6 +67,8 @@ export function PMCReports() {
 
                 <SyncErrorDialog />
 
+                <TokenNoLongerValidDialog />
+
                 {rows}
 
                 {pmcReportArray.length === 0 ? <div className='text-muted text-center mt-3'>No reports.</div> : null}
@@ -91,6 +94,33 @@ function SyncErrorDialog() {
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={toggle}>Ok</Button>
+            </ModalFooter>
+        </Modal>
+    )
+}
+
+function TokenNoLongerValidDialog() {
+    const pmcReports = useSelector(selectPMCReports)
+    const dispatch = useDispatch()
+
+    const toggle = () => {
+        dispatch(tokenDialogClosed())
+    }
+    const goToLogin = () => {
+        dispatch(performLogout())
+    }
+
+    return (
+        <Modal isOpen={pmcReports.tokenIsExpired} toggle={toggle}>
+            <ModalHeader toggle={toggle}>Session Expired</ModalHeader>
+            <ModalBody>
+                <p>You must login again to be able to submit new reports to the server.</p>
+                <p>Pressing Ok will allow you continue to use the app in offline mode.</p>
+                <p>Pressing Login redirect to login page and requires internet connection.</p>
+            </ModalBody>
+            <ModalFooter>
+                    <Button color="primary" block onClick={toggle}>Ok</Button>
+                <Button color="success" block onClick={goToLogin}>Login</Button>
             </ModalFooter>
         </Modal>
     )
