@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.DRAFT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -41,31 +40,22 @@ public class PMCReportController {
         return reportOfflineService.getPMCReports(userId);
     }
 
-    @RequestMapping(value = "/api/pmcReport/update/list/{userId}",
-            method = {RequestMethod.POST}, produces = APPLICATION_JSON_UTF8_VALUE,
-            consumes = APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public List<PMCReportOffline> updatePMCReports(@PathVariable Long userId,
-                                                   @RequestBody List<PMCReportOffline> pmcReportList) {
-        Person person = reportOfflineService.loadPersonById(userId, personService);
-        return pmcReportList.stream().map(r -> updatePMCReports(userId, r)).collect(Collectors.toList());
-    }
-
     @RequestMapping(value = "/api/pmcReport/update/{userId}",
             method = {RequestMethod.POST}, produces = APPLICATION_JSON_UTF8_VALUE,
             consumes = APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-
     public PMCReportOffline updatePMCReports(@PathVariable Long userId,
                                              @RequestBody PMCReportOffline pmcReport) {
         Person person = reportOfflineService.loadPersonById(userId, personService);
-        PMCReport ret = null;
+        PMCReport ret;
         if (DRAFT.equals(pmcReport.getStatus())) {
             ret = reportOfflineService.convertToDaoDraft(pmcReport, person);
         } else {
             ret = reportOfflineService.convertToDaoNonDraft(pmcReport, person);
         }
-
+        if (!person.getDepartments().contains(ret.getDepartment())) {
+            throw new RuntimeException("User cannot add report to " + ret.getDepartment() + " department");
+        }
         return reportOfflineService.convertToOffline(pmcReportService.saveAndFlush(ret));
     }
 

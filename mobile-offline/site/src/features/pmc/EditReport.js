@@ -155,13 +155,12 @@ export function EditReport(props) {
         });
     }, [report.subcountyIds, wards]);
 
-    // FIXME switch to tenderId
     useEffect(() => {
         setReport(report => {
             const tenders = filterTenders(report.fyId, report.deptId, report.tender ? [ report.tender ] : []);
             return {
                 ...report,
-                tender: tenders.length === 0 ? null : tenders[0]
+                tenderId: tenders.length === 0 ? null : tenders[0].id
             }
         });
     }, [report.fyId, report.deptId]);
@@ -178,7 +177,8 @@ export function EditReport(props) {
     const removeExtraFields = report => {
         let newReport = {...report};
         delete newReport.fyId;
-        delete newReport.dptId;
+        delete newReport.deptId;
+        delete newReport.syncError;
         return newReport;
     }
 

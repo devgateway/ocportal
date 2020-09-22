@@ -7,6 +7,7 @@ import {isRejectedReport, PMCReportStatus} from "../../app/constants";
 import {formatDateForDisplay, parseDate} from "../../app/date";
 import {Border} from "./Border";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import 'font-awesome/css/font-awesome.min.css';
 
 export function PMCReports() {
     const pmcReportArray = useSelector(selectPMCReportsArray);
@@ -46,8 +47,11 @@ export function PMCReports() {
                     || <span className="text-muted">Tender not selected</span>}</h5>
                 <p className="card-text">Report date: {formatDateForDisplay(parseDate(report.reportDate))
                     || <span className="text-muted">N/A</span>}
-                  <span className={"badge ml-1 float-right " + getStatusClassName(getDerivedStatusName(report))}>
-                      {getDerivedStatusName(report)}
+                  <span className="ml-1 float-right">
+                      {report.syncError && <i className="fa fa-exclamation-circle sync-error-icon"/>}
+                      <span className={"badge " + getStatusClassName(getDerivedStatusName(report))}>
+                          {getDerivedStatusName(report)}
+                      </span>
                   </span>
                 </p>
             </div>

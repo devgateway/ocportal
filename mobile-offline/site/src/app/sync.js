@@ -1,4 +1,4 @@
-import {getMetadata, retrievePMCReports, updatePMCReports} from '../api/Api'
+import {getMetadata, retrievePMCReports, updatePMCReport} from '../api/Api'
 import {PMCReportStatus} from "./constants";
 
 export const synchronize = async (userId, token, reports) => {
@@ -7,29 +7,24 @@ export const synchronize = async (userId, token, reports) => {
 
     const getMetadataResponse = await getMetadata(userId, token)
 
-    let savedReports = []
+    let savedReports = {}
 
     if (reports.length > 0) {
-        try {
-            if (reports.some(report => report.status !== PMCReportStatus.SUBMITTED_PENDING)) {
-                throw new Error(`Reports for sync must be in ${PMCReportStatus.SUBMITTED_PENDING} status`)
-            }
+        if (reports.some(report => report.status !== PMCReportStatus.SUBMITTED_PENDING)) {
+            throw new Error(`Reports for sync must be in ${PMCReportStatus.SUBMITTED_PENDING} status`)
+        }
 
-            const reportsWithCorrectStatus = reports.map(report => ({
-                ...report,
+        for (let i = 0; i < reports.length; i++) {
+            let report = {
+                ...reports[i],
                 status: PMCReportStatus.SUBMITTED
-            }))
-
-            const savedReportsResponse = await updatePMCReports(userId, token, reportsWithCorrectStatus)
-
-            savedReports = savedReportsResponse.data.map((report, idx) => ({
-                ...report,
-                internalId: reports[idx].internalId
-            }))
-        } catch (e) {
-            console.log(e)
-
-            savedReports = null
+            }
+            try {
+                let response = await updatePMCReport(userId, token, report)
+                savedReports[report.internalId] = response.data
+            } catch (e) {
+                savedReports[report.internalId] = e.message
+            }
         }
     }
 

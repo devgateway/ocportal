@@ -50,3 +50,8 @@
 .bg-navy {
   background-color: #223a49;
 }
+
+.sync-error-icon {
+  color: #dc3545;
+  padding-right: 5px;
+}

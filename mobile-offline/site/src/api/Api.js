@@ -7,7 +7,7 @@ const API_LOGIN = API_ROOT_URL + "/api/login";
 const API_FORGOT_PASSWORD = API_ROOT_URL + "/api/user/forgotPassword";
 const API_CHANGE_PASSWORD = API_ROOT_URL + "/api/user/changePassword";
 const API_LIST_REPORTS = API_ROOT_URL + "/api/pmcReport/list/";
-const API_UPDATE_REPORTS = API_ROOT_URL + "/api/pmcReport/update/";
+const API_UPDATE_REPORT = API_ROOT_URL + "/api/pmcReport/update/";
 const API_METADATA_EXPORT = API_ROOT_URL + "/api/metadataExport/";
 
 export const loginUser = (data) => {
@@ -26,6 +26,4 @@ export const retrievePMCReports = (userId, token) => {
     return httpGet(API_LIST_REPORTS + userId, {}, token);
 }
 
-export const updatePMCReports = (userId, token, reports) => {
-    return httpPost(API_UPDATE_REPORTS + userId, reports, token);
-}
+export const updatePMCReport = (userId, token, reports) => httpPost(API_UPDATE_REPORT + userId, reports, token)

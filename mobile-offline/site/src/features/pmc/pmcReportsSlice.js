@@ -98,16 +98,17 @@ export const pmcReportsSlice = createSlice({
 
             Object.values(idToInternalId).forEach(internalId => delete state.reports[internalId])
 
-            if (action.payload.savedReports) {
-                action.payload.savedReports.forEach(r => state.reports[r.internalId] = r)
-                state.showSyncError = false
-            } else {
-                Object.values(state.reports).forEach(r => {
-                    if (r.status === PMCReportStatus.SUBMITTED_PENDING) {
-                        r.status = PMCReportStatus.DRAFT
+            state.showSyncError = Object.values(action.payload.savedReports).some(v => typeof v === 'string')
+            for (const [internalId, value] of Object.entries(action.payload.savedReports)) {
+                if (typeof value === 'string') {
+                    state.reports[internalId].syncError = value
+                    state.reports[internalId].status = PMCReportStatus.DRAFT
+                } else {
+                    state.reports[internalId] = {
+                        ...value,
+                        internalId: internalId
                     }
-                })
-                state.showSyncError = true
+                }
             }
 
             state.synchronizing = false
