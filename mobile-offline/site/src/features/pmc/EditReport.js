@@ -237,10 +237,10 @@ export function EditReport(props) {
             <SelectCategoryField label="Department" name="deptId" value={report.deptId} options={departments}
                                  onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
-            <SelectCategoryField label="Tender" name="tenderId" value={report.tenderId} options={availableTenders}
+            <SelectCategoryField label="Tender Title" name="tenderId" value={report.tenderId} options={availableTenders}
                                  onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
-            <DateField label="Date" name="reportDate" value={report.reportDate} onChange={fieldChanged}
+            <DateField label="Report Date" name="reportDate" value={report.reportDate} onChange={fieldChanged}
                        errors={errors} isDisabled={isDisabled} />
 
             <SelectCategoryField label="Subcounties" name="subcountyIds" value={report.subcountyIds} options={subCounties}
@@ -374,7 +374,7 @@ function PMCMembers(props) {
                         )}
                     </p>
 
-                    <SelectCategoryField label="PMC Staff" name="staffId"
+                    <SelectCategoryField label="Staff" name="staffId"
                                          value={m.staffId} options={props.pmcStaff} errors={pmcMemberError}
                                          onChange={changeField(idx)} isDisabled={props.isDisabled} />
 

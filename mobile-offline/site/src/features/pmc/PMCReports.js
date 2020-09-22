@@ -60,7 +60,7 @@ export function PMCReports() {
 
     return (
         <Border title="PMC Reports" extraNavBar={
-            <Link to="/report" className="btn btn-success">Add report</Link>
+            <Link to="/report" className="btn btn-success">Add New</Link>
         }>
             <div className="container-fluid pb-3">
 
