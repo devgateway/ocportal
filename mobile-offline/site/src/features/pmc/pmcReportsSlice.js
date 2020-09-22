@@ -56,6 +56,9 @@ export const pmcReportsSlice = createSlice({
             const originalReport = action.payload;
             const report = {
                 ...originalReport,
+                internalId: isNaN(originalReport.internalId)
+                    ? state.nextInternalId++
+                    : originalReport.internalId,
                 status: PMCReportStatus.SUBMITTED_PENDING
             };
             state.reports[report.internalId] = report;
