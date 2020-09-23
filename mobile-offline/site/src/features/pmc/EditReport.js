@@ -293,7 +293,7 @@ export function EditReport(props) {
                 }
                 <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
                 {
-                    report.status === PMCReportStatus.DRAFT && !isNaN(report.internalId) &&
+                    report.status === PMCReportStatus.DRAFT && isNaN(report.id) &&
                     (<>
                         &nbsp;
                         <button type="button" className="btn btn-danger" onClick={handleDelete}>Delete</button>
