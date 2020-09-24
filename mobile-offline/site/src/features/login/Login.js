@@ -62,8 +62,8 @@ export function Login() {
                         </div>
                     </Form>
 
-                    {login.failed &&
-                        <Alert color="danger" className="mt-3">Login Failed</Alert>
+                    {login.error &&
+                        <Alert color="danger" className="mt-3">{login.error}</Alert>
                     }
 
                     {login.loading &&

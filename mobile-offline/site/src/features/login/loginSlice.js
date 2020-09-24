@@ -19,7 +19,6 @@ export const loginSlice = createSlice({
     initialState: {
         authenticated: false,
         tokenValid: false,
-        failed: false,
         user: {},
         loading: false
     },
@@ -30,18 +29,19 @@ export const loginSlice = createSlice({
         },
         loginInvoked: (state, action) => {
             state.loading = true;
+            state.error = null;
         },
         loginFailure: (state, action) => {
             state.authenticated = false;
             state.loading = false;
-            state.failed = true;
+            state.error = action.payload;
         },
         loginSuccess: (state, action) => {
             state.loading = false;
             state.user = action.payload;
             state.authenticated = true;
             state.tokenValid = true;
-            state.failed = false;
+            state.error = null;
         }
     },
 });
@@ -60,15 +60,23 @@ export const performLogin = userPass => dispatch => {
         .then(resolve => {
             const {data} = resolve;
             if (data === '') {
-                dispatch(loginFailure("Not a PMC user!"));
+                dispatch(loginFailure("Login failed. Not a PMC user!"));
             } else {
                 dispatch(loginSuccess(data));
                 saveUser(data);
                 dispatch(replaceReports(loadReports(data.id)))
             }
         })
-        .catch(reject => {
-            dispatch(loginFailure("Network Error! Ensure Internet is up and retry!"));
+        .catch(error => {
+            let message;
+            if (error.response) {
+                message = "Login failed. Please check your credentials."
+            } else if (error.request) {
+                message = "Network error. Please check your internet connection."
+            } else {
+                message = "Unknown error."
+            }
+            dispatch(loginFailure(message));
         });
 };
 
