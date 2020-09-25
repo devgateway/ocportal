@@ -157,7 +157,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
     @Transactional(readOnly = true)
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
-                                             final ListItem<Project> item) {
+                                             final ListItem<Project> item, boolean expanded) {
+
         hideableContainer.add(AttributeAppender.append("class", "tender")); // add specific class to project list
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
         final Project project = projectService.findById(item.getModelObject().getId()).get();
@@ -186,7 +187,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                         new ListModel<>(purchaseReqs), sessionTenderProcess);
         containerFragment.add(listViewTenderProcessOverview);
 
-        hideableContainer.add(containerFragment);
+        hideableContainer.addOrReplace(containerFragment);
     }
 
     @Override
