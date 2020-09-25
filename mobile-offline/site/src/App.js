@@ -92,7 +92,6 @@ function useSync() {
     useEffect(() => {
         const sync = () => {
             if (login.authenticated) {
-                console.log('sync!')
                 dispatch(performSynchronization())
             }
         }
@@ -109,9 +108,8 @@ function useSync() {
     useEffect(() => {
         const onlineEventListener = () => {
             let now = Date.now()
-            if (!lastSyncTime || lastSyncTime + SYNC_INTERVAL < now) {
+            if (login.authenticated && (!lastSyncTime || lastSyncTime + SYNC_INTERVAL < now)) {
                 setLastSyncTime(now)
-                console.log('sync after coming back online!')
                 dispatch(performSynchronization())
             }
         }
@@ -119,7 +117,7 @@ function useSync() {
         window.addEventListener('online', onlineEventListener)
 
         return () => window.removeEventListener('online', onlineEventListener)
-    }, [dispatch, lastSyncTime])
+    }, [dispatch, lastSyncTime, login.authenticated])
 }
 
 export default App;
