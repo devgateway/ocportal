@@ -164,7 +164,6 @@ export function EditReport(props) {
         setReport(report => {
             const filteredTenders = filterTenders(report.fyId, report.deptId,
                 report.tenderId ? [ tendersById[report.tenderId] ] : []);
-            console.log(JSON.stringify(filteredTenders))
             return {
                 ...report,
                 tenderId: filteredTenders.length === 0 ? null : filteredTenders[0].id
