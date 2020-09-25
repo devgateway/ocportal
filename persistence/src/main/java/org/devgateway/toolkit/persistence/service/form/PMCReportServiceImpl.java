@@ -29,6 +29,9 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
     @Autowired
     private PMCReportRepository repository;
 
+    @Autowired
+    private TenderProcessService tenderProcessService;
+
     @Override
     protected BaseJpaRepository<PMCReport, Long> repository() {
         return repository;
@@ -55,5 +58,13 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
                 r.join(PMCReport_.tenderProcess).join(TenderProcess_.project).join(Project_.procurementPlan)
                         .join(ProcurementPlan_.department).in(deps)
         ));
+    }
+
+    @Override
+    public PMCReport saveReportAndUpdateTenderProcess(PMCReport entity) {
+        TenderProcess tenderProcess = entity.getTenderProcess();
+        tenderProcess.addPMCReport(entity);
+        tenderProcessService.save(tenderProcess);
+        return save(entity);
     }
 }

@@ -14,4 +14,6 @@ public interface PMCReportService extends AbstractImplTenderProcessMakueniEntity
         TextSearchableService<PMCReport> {
 
     List<PMCReport> getPMCReportsForDepartments(Collection<Department> departments);
+
+    PMCReport saveReportAndUpdateTenderProcess(PMCReport entity);
 }
