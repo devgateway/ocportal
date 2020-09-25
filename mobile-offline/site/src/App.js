@@ -15,10 +15,11 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useDispatch, useSelector} from "react-redux";
 import {selectLogin} from "./features/login/loginSlice";
-import {performSynchronization} from "./features/pmc/pmcReportsSlice";
+import {clearSubmittedOffline, performSynchronization, selectPMCReports} from "./features/pmc/pmcReportsSlice";
 import {SYNC_INTERVAL} from "./app/constants";
 import {RecoverPwd} from "./features/login/RecoverPwd";
 import {ChangePwd} from "./features/login/ChangePwd";
+import {Alert} from "reactstrap";
 
 function App() {
 
@@ -27,6 +28,9 @@ function App() {
     return (
         <Router>
             <ScrollToTop />
+
+            <OfflineMessage />
+
             <div className="App">
                 <header>
 
@@ -52,6 +56,37 @@ function App() {
             </div>
         </Router>
     );
+}
+
+function OfflineMessage() {
+    const pmcReports = useSelector(selectPMCReports)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        let timeout = null
+        if (pmcReports.submittedOffline) {
+            timeout = setTimeout(() => {
+                dispatch(clearSubmittedOffline())
+            }, 10000)
+        }
+        return () => {
+            if (timeout !== null) {
+                clearTimeout(timeout)
+            }
+        }
+    }, [dispatch, pmcReports.submittedOffline])
+
+    if (pmcReports.submittedOffline) {
+        return (
+            <div style={{position: 'fixed', bottom: 15, right: 15, left: 15, zIndex: 1050}}>
+                <Alert color="info" className="mb-0">
+                    Offline. Report will be submitted later.
+                </Alert>
+            </div>
+        )
+    } else {
+        return null
+    }
 }
 
 function PrivateRoute({ children, ...rest }) {

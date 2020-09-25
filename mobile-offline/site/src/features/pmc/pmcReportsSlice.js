@@ -114,8 +114,11 @@ export const pmcReportsSlice = createSlice({
             state.synchronizing = false
         },
         synchronizationFailure: (state, action) => {
-            if (action.payload === 401) {
+            if (action.payload.tokenIsExpired) {
                 state.tokenIsExpired = true
+            }
+            if (action.payload.submittedOffline) {
+                state.submittedOffline = true
             }
             state.synchronizing = false
         },
@@ -124,6 +127,9 @@ export const pmcReportsSlice = createSlice({
         },
         tokenDialogClosed: (state) => {
             state.tokenIsExpired = false
+        },
+        clearSubmittedOffline: (state) => {
+            state.submittedOffline = false
         }
     }
 });
@@ -133,7 +139,7 @@ const {
     synchronizationStarted, synchronizationSuccess, synchronizationFailure
 } = pmcReportsSlice.actions;
 
-export const { replaceReports, errorDialogClosed, tokenDialogClosed } = pmcReportsSlice.actions;
+export const { replaceReports, errorDialogClosed, tokenDialogClosed, clearSubmittedOffline } = pmcReportsSlice.actions;
 
 export const selectPMCReports = state => state.pmcReports;
 
@@ -151,13 +157,13 @@ export const performDeletePMCReport = internalId => createPersistingThunk(
     dispatch => dispatch(deleteReport(internalId)));
 
 export const performSubmitPMCReport = report => createPersistingThunk(
-    dispatch => dispatch(submitReport(report)));
+    dispatch => dispatch(submitReport(report)), true);
 
 // TODO this action must not succeed if sync is in progress
 export const performRevertPMCReportToDraft = internalId => createPersistingThunk(
     dispatch => dispatch(revertToDraft(internalId)));
 
-const createPersistingThunk = cb => (dispatch, getState) => {
+const createPersistingThunk = (cb, submitted) => (dispatch, getState) => {
     cb(dispatch, getState);
 
     const state = getState()
@@ -166,10 +172,10 @@ const createPersistingThunk = cb => (dispatch, getState) => {
 
     saveReports(login.user.id, reports)
 
-    performSynchronization()(dispatch, getState)
+    performSynchronization(submitted)(dispatch, getState)
 }
 
-export const performSynchronization = () => (dispatch, getState) => {
+export const performSynchronization = submitted => (dispatch, getState) => {
     dispatch(synchronizationStarted)
 
     const state = getState()
@@ -190,8 +196,10 @@ export const performSynchronization = () => (dispatch, getState) => {
             saveMetadata(login.user.id, metadata.ref)
         },
         e => {
-            const status = e.response ? e.response.status : null
-            dispatch(synchronizationFailure(status))
+            dispatch(synchronizationFailure({
+                tokenIsExpired: e.response ? e.response.status === 401 : false,
+                submittedOffline: !!(submitted && !e.response && e.request)
+            }))
         })
 }
 
