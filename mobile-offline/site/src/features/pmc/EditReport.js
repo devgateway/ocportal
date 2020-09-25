@@ -136,6 +136,11 @@ export function EditReport(props) {
             [e.target.name]: value
         };
         setReport(newReport);
+        setErrors({
+            ...errors,
+            [e.target.name]: undefined,
+            [e.target.name + 'Array']: undefined
+        })
         setIsBlocking(true);
 
         if (submit) {
