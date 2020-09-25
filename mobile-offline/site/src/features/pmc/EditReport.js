@@ -162,13 +162,15 @@ export function EditReport(props) {
 
     useEffect(() => {
         setReport(report => {
-            const tenders = filterTenders(report.fyId, report.deptId, report.tender ? [ report.tender ] : []);
+            const filteredTenders = filterTenders(report.fyId, report.deptId,
+                report.tenderId ? [ tendersById[report.tenderId] ] : []);
+            console.log(JSON.stringify(filteredTenders))
             return {
                 ...report,
-                tenderId: tenders.length === 0 ? null : tenders[0].id
+                tenderId: filteredTenders.length === 0 ? null : filteredTenders[0].id
             }
         });
-    }, [report.fyId, report.deptId]);
+    }, [report.fyId, report.deptId, tendersById]);
 
     const history = useHistory();
 
