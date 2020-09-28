@@ -46,7 +46,7 @@ export function PMCReports() {
             <div className="card-body">
                 <h5 className="card-title">{(tendersById[report.tenderId] || {}).label
                     || <span className="text-muted">Tender not selected</span>}</h5>
-                <p className="card-text">Report date: {formatDateForDisplay(parseDate(report.reportDate))
+                <p className="card-text">Date: {formatDateForDisplay(parseDate(report.reportDate))
                     || <span className="text-muted">N/A</span>}
                   <span className="ml-1 float-right">
                       {report.syncError && <i className="fa fa-exclamation-circle sync-error-icon"/>}
@@ -61,7 +61,7 @@ export function PMCReports() {
 
     return (
         <Border title="PMC Reports" extraNavBar={
-            <Link to="/report" className="btn btn-success">Add New</Link>
+            <Link to="/report" className="btn btn-success"><i className="fa fa-plus"/></Link>
         }>
             <div className="container-fluid pb-3">
 
