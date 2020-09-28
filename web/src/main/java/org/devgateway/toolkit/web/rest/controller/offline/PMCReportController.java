@@ -56,7 +56,7 @@ public class PMCReportController {
         if (!person.getDepartments().contains(ret.getDepartment())) {
             throw new RuntimeException("User cannot add report to " + ret.getDepartment() + " department");
         }
-        return reportOfflineService.convertToOffline(pmcReportService.saveAndFlush(ret));
+        return reportOfflineService.convertToOffline(pmcReportService.saveReportAndUpdateTenderProcess(ret));
     }
 
 }

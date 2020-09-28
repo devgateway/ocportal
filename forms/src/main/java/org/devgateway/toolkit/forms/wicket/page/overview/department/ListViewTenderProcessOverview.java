@@ -284,9 +284,9 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     }
 
     @Transactional(readOnly = true)
-    private boolean canEdit(final TenderProcess tenderProcess2,
-                            final AbstractStatusAuditableEntity persistable,
-                            final Statusable previousStep) {
+    public boolean canEdit(final TenderProcess tenderProcess2,
+                           final AbstractStatusAuditableEntity persistable,
+                           final Statusable previousStep) {
 
         TenderProcess tenderProcess = tenderProcessService.findById(tenderProcess2.getId()).get();
 

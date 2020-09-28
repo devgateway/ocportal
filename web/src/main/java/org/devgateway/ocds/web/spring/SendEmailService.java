@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.spring;
 
-import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_USER;
-
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.web.rest.controller.alerts.AlertsEmailService;
@@ -27,6 +25,8 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_USER;
 
 /**
  * Service to send emails to users to validate email addresses or reset passwords
@@ -79,8 +79,10 @@ public class SendEmailService {
             String url;
             if (person.getRoles().stream().anyMatch(r -> r.getAuthority().equals(ROLE_PMC_USER))) {
                 url = "\nPlease install PMC Reporter app from Google Play\n"
-                        + "<a href='https://play.google.com/store/apps/details?id=org.devgateway.makueni.pmcdc&hl=en&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>"
-                        + "<img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style='width: 250px;'/>"
+                        + "<a href='https://play.google.com/store/apps/details?id=org.devgateway.makueni.pmcdc&hl="
+                        + "en&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>"
+                        + "<img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/"
+                        + "images/badges/en_badge_web_generic.png' style='width: 250px;'/>"
                         + "</a>";
             } else {
                 url = "URL: " + AlertsEmailService.createURL(request, "");
