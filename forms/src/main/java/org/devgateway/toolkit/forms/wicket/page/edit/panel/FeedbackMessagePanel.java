@@ -5,7 +5,7 @@ import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddres
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
@@ -51,7 +51,7 @@ public class FeedbackMessagePanel extends ListViewSectionPanel<FeedbackMessage, 
     public void populateCompoundListItem(final ListItem<FeedbackMessage> item) {
 
 
-        Label addedBy = new Label("addedBy", Model.of("REPLY ADDED BY THE PUBLIC"));
+        Label addedBy = new Label("addedBy", new StringResourceModel("addedBy", this));
         addedBy.setVisibilityAllowed(item.getModelObject().isAddedByPublic());
         item.add(addedBy);
 

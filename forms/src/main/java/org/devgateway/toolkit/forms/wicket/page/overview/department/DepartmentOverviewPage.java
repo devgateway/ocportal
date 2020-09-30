@@ -32,7 +32,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestCycle;
@@ -44,6 +43,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditFiscalYearBudgetPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectPage;
@@ -286,7 +286,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         link.setEnabled(fiscalYearBudgetModel.getObject() == null);
-        link.add(new TooltipBehavior(Model.of("Add New Fiscal Year Budget")));
+        link.add(new TooltipBehavior(new StringResourceModel("addFiscalYearBudget.tooltip", this)));
         add(link);
         link.setVisibilityAllowed(canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
     }
@@ -298,7 +298,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
         newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtons(EditProcurementPlanPage.class));
 
-        newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
+        newProcurementPlanLabel = new Label("newProcurementPlanLabel",
+                new StringResourceModel("newProcurementPlanLabel", this));
         newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
         add(newProcurementPlanLabel);
     }
@@ -322,8 +323,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         button.setEnabled(fiscalYearBudget != null);
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditFiscalYearBudgetPage.class) ? "Edit"
-                : "View") + " Fiscal Year Budget")));
+        button.add(new TooltipBehavior(EditViewResourceModel.of(
+                canAccessAddNewButtons(EditFiscalYearBudgetPage.class), "fiscalYearBudget", this)));
 
         add(button);
 
@@ -347,8 +348,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         button.setEnabled(getProcurementPlan() != null);
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProcurementPlanPage.class) ? "Edit"
-                : "View") + " Procurement Plan")));
+        button.add(new TooltipBehavior(EditViewResourceModel.of(
+                canAccessAddNewButtons(EditProcurementPlanPage.class), "procurementPlan", this)));
 
         add(button);
 
@@ -367,7 +368,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
-        editCabinetPaper.add(new TooltipBehavior(Model.of("Add New Cabinet Paper")));
+        editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("editCabinetPaper.tooltip", this)));
         add(editCabinetPaper);
         editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtons(EditCabinetPaperPage.class));
     }
@@ -392,7 +393,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
-        editCabinetPaper.add(new TooltipBehavior(Model.of("List Cabinet Papers")));
+        editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("listCabinetPaper.tooltip", this)));
         add(editCabinetPaper);
     }
 
