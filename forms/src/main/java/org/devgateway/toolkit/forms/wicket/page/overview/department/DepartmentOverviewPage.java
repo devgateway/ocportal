@@ -72,6 +72,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author gmutuhu
@@ -177,9 +178,18 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         super.onInitialize();
 
         add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
-        add(new Label("fiscalYear", new PropertyModel<>(fiscalYearModel, "label")));
-        add(new Label("fiscalYear2", new PropertyModel<>(fiscalYearModel, "label")));
-        add(new Label("fiscalBudget", new PropertyModel<>(fiscalYearBudgetModel, "amountBudgeted")));
+
+        add(new Label("cabinetMinisterialPaper",
+                new StringResourceModel("cabinetMinisterialPaper", this)
+                        .setParameters(new PropertyModel<>(fiscalYearModel, "label"))));
+
+        add(new Label("budget",
+                new StringResourceModel("budget", this).setParameters(
+                        new PropertyModel<>(fiscalYearModel, "label"),
+                        fiscalYearBudgetModel
+                                .map(FiscalYearBudget::getAmountBudgeted)
+                                .map(Objects::toString)
+                                .orElse(""))));
 
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
