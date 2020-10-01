@@ -48,7 +48,7 @@ public class ViewModeConverterModel<T> implements IComponentAssignedModel<String
 
         private final Component component;
 
-        public AssignmentWrapper(Component component) {
+        AssignmentWrapper(Component component) {
             this.component = component;
         }
 
