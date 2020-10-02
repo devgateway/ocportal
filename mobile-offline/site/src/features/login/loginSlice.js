@@ -46,9 +46,7 @@ export const loginSlice = createSlice({
     },
 });
 
-const {logout} = loginSlice.actions
-
-export const {loginInvoked, loginFailure, loginSuccess} = loginSlice.actions;
+const {logout, loginSuccess, loginInvoked, loginFailure} = loginSlice.actions
 
 /**
  * Login a user using (username, password) tuple.

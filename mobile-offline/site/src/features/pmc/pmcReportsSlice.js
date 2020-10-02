@@ -38,6 +38,7 @@ export const pmcReportsSlice = createSlice({
             state.reports = newState.reports
             state.synchronizing = newState.synchronizing
             state.nextInternalId = newState.nextInternalId
+            state.tokenIsExpired = false
         },
         replaceReport: (state, action) => {
             const originalReport = action.payload;
