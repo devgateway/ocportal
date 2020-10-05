@@ -122,10 +122,10 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         acknowledgeSignature = ComponentUtil.addCheckBox(editForm, "acknowledgeSignature");
         editForm.add(acknowledgeSignature);
 
-        ComponentUtil.addTextAreaField(editForm, "socialSafeguards");
-        ComponentUtil.addTextAreaField(editForm, "emergingComplaints");
-        ComponentUtil.addTextAreaField(editForm, "pmcChallenges");
-        
+        ComponentUtil.addTextAreaField(editForm, "socialSafeguards").required();
+        ComponentUtil.addTextAreaField(editForm, "emergingComplaints").required();
+        ComponentUtil.addTextAreaField(editForm, "pmcChallenges").required();
+
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcStatus", pmcStatusService).required();
         ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService)
                 .required();
