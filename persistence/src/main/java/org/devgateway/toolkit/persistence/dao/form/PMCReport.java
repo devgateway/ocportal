@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.PMCStatus;
 import org.devgateway.toolkit.persistence.dao.categories.ProjectClosureHandover;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
@@ -48,6 +50,15 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<PMCMember> pmcMembers = new ArrayList<>();
+
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    private String socialSafeguards;
+
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    private String emergingComplaints;
+
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    private String pmcChallenges;
 
     @ExcelExport(name = "PMC Notes", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -142,5 +153,29 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     public void setRejected(Boolean rejected) {
         this.rejected = rejected;
+    }
+
+    public String getSocialSafeguards() {
+        return socialSafeguards;
+    }
+
+    public void setSocialSafeguards(String socialSafeguards) {
+        this.socialSafeguards = socialSafeguards;
+    }
+
+    public String getEmergingComplaints() {
+        return emergingComplaints;
+    }
+
+    public void setEmergingComplaints(String emergingComplaints) {
+        this.emergingComplaints = emergingComplaints;
+    }
+
+    public String getPmcChallenges() {
+        return pmcChallenges;
+    }
+
+    public void setPmcChallenges(String pmcChallenges) {
+        this.pmcChallenges = pmcChallenges;
     }
 }

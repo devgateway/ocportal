@@ -20,6 +20,10 @@ public class PMCReportOffline implements Serializable {
     private Long id;
     private Long tenderId;
 
+    private String socialSafeguards;
+    private String emergingComplaints;
+    private String pmcChallenges;
+
     @NotNull(groups = NonDraft.class)
     private Boolean authorizePayment;
     private Set<Long> subcountyIds = new HashSet<>();
@@ -189,5 +193,29 @@ public class PMCReportOffline implements Serializable {
 
     public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getSocialSafeguards() {
+        return socialSafeguards;
+    }
+
+    public void setSocialSafeguards(String socialSafeguards) {
+        this.socialSafeguards = socialSafeguards;
+    }
+
+    public String getEmergingComplaints() {
+        return emergingComplaints;
+    }
+
+    public void setEmergingComplaints(String emergingComplaints) {
+        this.emergingComplaints = emergingComplaints;
+    }
+
+    public String getPmcChallenges() {
+        return pmcChallenges;
+    }
+
+    public void setPmcChallenges(String pmcChallenges) {
+        this.pmcChallenges = pmcChallenges;
     }
 }

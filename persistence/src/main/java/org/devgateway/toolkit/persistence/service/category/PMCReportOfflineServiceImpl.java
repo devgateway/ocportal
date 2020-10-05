@@ -200,6 +200,9 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         }
         pmc.setAcknowledgeSignature(pmco.getAcknowledgeSignature());
         pmc.setAuthorizePayment(pmco.getAuthorizePayment());
+        pmc.setSocialSafeguards(pmco.getSocialSafeguards());
+        pmc.setEmergingComplaints(pmco.getEmergingComplaints());
+        pmc.setPmcChallenges(pmco.getPmcChallenges());
         pmc.setSignatureNames(pmco.getSignatureNames());
         if (pmco.getPmcStatusId() != null) {
             pmc.setPmcStatus(loadObjectById(pmco.getPmcStatusId(), pmcStatusService));
@@ -235,6 +238,9 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
         pmco.setCreatedDate(pmc.getCreatedDate().orElse(null));
         pmco.setAcknowledgeSignature(pmc.getAcknowledgeSignature());
         pmco.setAuthorizePayment(pmc.getAuthorizePayment());
+        pmco.setSocialSafeguards(pmc.getSocialSafeguards());
+        pmco.setEmergingComplaints(pmc.getEmergingComplaints());
+        pmco.setPmcChallenges(pmc.getPmcChallenges());
         pmco.setSignatureNames(pmc.getSignatureNames());
         pmco.setRejected(pmc.getRejected());
         pmco.setPmcMembers(pmc.getPmcMembers().stream().map(this::convertToOffline).collect(Collectors.toList()));
