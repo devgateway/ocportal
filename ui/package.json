@@ -39,7 +39,8 @@
   "dependencies": {
     "bootstrap": "^3.3.5",
     "leaflet": "1.0.3",
-    "react-bootstrap-typeahead": "3.4.6"
+    "react-bootstrap-typeahead": "3.4.6",
+    "react-string-replace": "^0.4.4"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",

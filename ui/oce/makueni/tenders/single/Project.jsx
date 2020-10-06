@@ -2,8 +2,9 @@ import { API_ROOT } from '../../../state/oce-state';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { mtState } from '../state';
 import React from 'react';
+import translatable from "../../../translatable";
 
-class Project extends React.Component {
+class Project extends translatable(React.Component) {
   constructor(props) {
     super(props);
 
@@ -51,7 +52,7 @@ class Project extends React.Component {
         + " - " + data.department.label
         + " - " + data.fiscalYear.name;
     }
-    return escape("Project" + metadata);
+    return escape(this.t("project:feedbackSubject") + metadata);
   }
 
   render() {
@@ -67,14 +68,14 @@ class Project extends React.Component {
           <span className="previous">&#8249;</span>
         </span>
           <span className="back-text">
-          Go Back
+            {this.t("general:goBack")}
         </span>
         </a>
       </div>
 
       <div className="row padding-top-10">
         <div className="col-md-12">
-          <h1 className="page-title">Project</h1>
+          <h1 className="page-title">{this.t("project:pageTitle")}</h1>
         </div>
       </div>
 
@@ -83,11 +84,11 @@ class Project extends React.Component {
           ? <div>
             <div className="row">
               <div className="col-md-6">
-                <div className="item-label">Project Title</div>
+                <div className="item-label">{this.t("project:title")}</div>
                 <div className="item-value">{data.projects.projectTitle}</div>
               </div>
               <div className="col-md-6">
-                <div className="item-label">Cabinet Papers</div>
+                <div className="item-label">{this.t("project:title")}</div>
                 {
                   data.projects.cabinetPapers.map(cp=>
                     cp.formDocs.map(doc => <div key={doc._id}>
@@ -95,7 +96,7 @@ class Project extends React.Component {
                         placement="bottom"
                         overlay={
                           <Tooltip id="download-tooltip">
-                            Click to download the file
+                            {this.t("general:downloadFile:tooltip")}
                           </Tooltip>
                         }>
 
@@ -112,29 +113,29 @@ class Project extends React.Component {
 
             <div className="row padding-top-10">
               <div className="col-md-6">
-                <div className="item-label">Amount Budgeted</div>
+                <div className="item-label">{this.t("project:amountBudgeted")}</div>
                 <div className="item-value">{currencyFormatter(data.projects.amountBudgeted)}</div>
               </div>
               <div className="col-md-6">
-                <div className="item-label">Amount Requested</div>
+                <div className="item-label">{this.t("project:amountRequested")}</div>
                 <div className="item-value">{currencyFormatter(data.projects.amountRequested)}</div>
               </div>
             </div>
 
             <div className="row padding-top-10">
               <div className="col-md-6">
-                <div className="item-label">Sub-Counties</div>
+                <div className="item-label">{this.t("project:subcounties")}</div>
                 <div className="item-value">{data.projects.subcounties.map(item => item.label).join(', ')}</div>
               </div>
               <div className="col-md-6">
-                <div className="item-label">Wards</div>
+                <div className="item-label">{this.t("project:wards")}</div>
                 <div className="item-value">{data.projects.wards && data.projects.wards.map(item => item.label).join(', ')}</div>
               </div>
             </div>
 
             <div className="row padding-top-10">
               <div className="col-md-6">
-                <div className="item-label">Approved Date</div>
+                <div className="item-label">{this.t("project:approvedDate")}</div>
                 <div className="item-value">{formatDate(data.projects.approvedDate)}</div>
               </div>
             </div>

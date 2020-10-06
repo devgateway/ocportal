@@ -1,10 +1,11 @@
 import React from 'react';
+import translatable from "../../../translatable";
 
-class NoDataMessage extends React.Component {
+class NoDataMessage extends translatable(React.Component) {
 render() {
     return (
       <div className="no-data-wrapper">
-        <h2>No Data</h2>
+        <h2>{this.t("general:noData")}</h2>
       </div>
     )
   }

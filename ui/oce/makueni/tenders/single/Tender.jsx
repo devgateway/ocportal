@@ -1,8 +1,9 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import translatable from "../../../translatable";
 
-class Tender extends React.Component {
+class Tender extends translatable(React.Component) {
   getFeedbackSubject() {
     const { data, department, fiscalYear } = this.props;
 
@@ -14,7 +15,7 @@ class Tender extends React.Component {
         + ' - ' + department.label
         + ' - ' + fiscalYear.name;
     }
-    return escape('Tender' + metadata);
+    return escape(this.t("tender:label") + metadata);
   }
 
   render() {
@@ -22,7 +23,7 @@ class Tender extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     const tender = data[0];
@@ -30,15 +31,15 @@ class Tender extends React.Component {
     return (<div>
       <div className="row padding-top-10">
         <div className="col-md-4">
-          <div className="item-label">Tender Name</div>
+          <div className="item-label">{this.t("tender:title")}</div>
           <div className="item-value">{tender.tenderTitle}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Tender ID</div>
+          <div className="item-label">{this.t("tender:number")}</div>
           <div className="item-value">{tender.tenderNumber}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Tender Code</div>
+          <div className="item-label">{this.t("tender:code")}</div>
           <div className="item-value">{prId}</div>
         </div>
       </div>
@@ -46,46 +47,46 @@ class Tender extends React.Component {
       <div className="row padding-top-10">
 
         <div className="col-md-4">
-          <div className="item-label">Procurement Method</div>
+          <div className="item-label">{this.t("tender:procurementMethod")}</div>
           <div className="item-value">{tender.procurementMethod.label}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Procurement Method Rationale</div>
+          <div className="item-label">{this.t("tender:procurementMethodRationale")}</div>
           <div className="item-value">
             {tender.procurementMethodRationale && tender.procurementMethodRationale.label}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Invitation to Tender Date</div>
+          <div className="item-label">{this.t("tender:invitationDate")}</div>
           <div className="item-value">{formatDate(tender.invitationDate)}</div>
         </div>
       </div>
       <div className="row padding-top-10">
         <div className="col-md-4">
-          <div className="item-label">Closing Date</div>
+          <div className="item-label">{this.t("tender:closingDate")}</div>
           <div className="item-value">{formatDate(tender.closingDate)}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Tender Issued By</div>
+          <div className="item-label">{this.t("tender:issuedBy:label")}</div>
           <div className="item-value">{tender.issuedBy.label}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Procuring Entity Address</div>
+          <div className="item-label">{this.t("tender:issuedBy:address")}</div>
           <div className="item-value">{tender.issuedBy.address}</div>
         </div>
       </div>
 
       <div className="row padding-top-10">
         <div className="col-md-4">
-          <div className="item-label">Procuring Entity Email</div>
+          <div className="item-label">{this.t("tender:issuedBy:email")}</div>
           <div className="item-value download">
             <a href={"mailto:"+tender.issuedBy.emailAddress}>{tender.issuedBy.emailAddress}</a></div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Tender Value</div>
+          <div className="item-label">{this.t("tender:value")}</div>
           <div className="item-value">{currencyFormatter(tender.tenderValue)}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Target Group</div>
+          <div className="item-label">{this.t("tender:targetGroup")}</div>
           {
             tender.targetGroup !== undefined
               ? <div className="item-value">{tender.targetGroup.label}</div>
@@ -96,7 +97,7 @@ class Tender extends React.Component {
       
       <div className="row padding-top-10">
         <div className="col-md-12">
-          <div className="item-label">Tender Objective</div>
+          <div className="item-label">{this.t("tender:objective")}</div>
           <div className="item-value">{tender.objective}</div>
         </div>
       </div>
@@ -105,7 +106,7 @@ class Tender extends React.Component {
         tender.tenderItems !== undefined
           ? <div>
             <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">Tender Items
+              <div className="col-md-12 sub-title">{this.t("tender:tenderItems")}
                 ({tender.tenderItems.length})
               </div>
             </div>
@@ -114,31 +115,31 @@ class Tender extends React.Component {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="item-label">Item</div>
+                    <div className="item-label">{this.t("tender:item")}</div>
                     <div
                       className="item-value">{tenderItem.purchaseItem.planItem.item.label}</div>
                   </div>
                   <div className="col-md-6">
-                    <div className="item-label">Description</div>
+                    <div className="item-label">{this.t("tender:item:description")}</div>
                     <div className="item-value">{tenderItem.description}</div>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-3">
-                    <div className="item-label">Unit of Issue</div>
+                    <div className="item-label">{this.t("tender:item:unitOfIssue")}</div>
                     <div
                       className="item-value">{tenderItem.purchaseItem.planItem.unitOfIssue.label}</div>
                   </div>
                   <div className="col-md-3">
-                    <div className="item-label">Quantity</div>
+                    <div className="item-label">{this.t("tender:item:quantity")}</div>
                     <div className="item-value">{currencyFormatter(tenderItem.quantity)}</div>
                   </div>
                   <div className="col-md-3">
-                    <div className="item-label">Unit Price</div>
+                    <div className="item-label">{this.t("tender:item:unitPrice")}</div>
                     <div className="item-value">{currencyFormatter(tenderItem.unitPrice)}</div>
                   </div>
                   <div className="col-md-3">
-                    <div className="item-label">Total Cost</div>
+                    <div className="item-label">{this.t("tender:item:totalCost")}</div>
                     <div
                       className="item-value">{currencyFormatter(tenderItem.quantity * tenderItem.unitPrice)}</div>
                   </div>
@@ -151,16 +152,15 @@ class Tender extends React.Component {
 
       <div className="row padding-top-10">
         <div className="col-md-6"
-             data-intro="Download the original hardcopy of the tender document or link to a site
-             where the document can be downloaded.">
-          <div className="item-label">Download Tender</div>
+             data-intro={this.t("tender:item:dlTender:dataIntro")}>
+          <div className="item-label">{this.t("tender:item:dlTender")}</div>
           {
             tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>
               <OverlayTrigger
                 placement="bottom"
                 overlay={
                   <Tooltip id="download-tooltip">
-                    Click to download the file
+                    {this.t("general:downloadFile:tooltip")}
                   </Tooltip>
                 }>
 
@@ -173,7 +173,7 @@ class Tender extends React.Component {
           }
         </div>
         <div className="col-md-6">
-          <div className="item-label">Tender Link</div>
+          <div className="item-label">{this.t("tender:item:tenderLink")}</div>
           <div className="item-value">
             <a className="item-value download" href={tender.tenderLink} target="_blank">
               {tender.tenderLink}

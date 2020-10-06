@@ -1,8 +1,9 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import translatable from "../../../translatable";
 
-class ImplReport extends React.Component {
+class ImplReport extends translatable(React.Component) {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -24,7 +25,7 @@ class ImplReport extends React.Component {
     const { formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     return (<div>
@@ -35,19 +36,19 @@ class ImplReport extends React.Component {
               .map(i => <div key={i._id} className="box">
               <div className="row padding-top-10">
                 <div className="col-md-3">
-                  <div className="item-label">Tender Title</div>
+                  <div className="item-label">{this.t("report:tenderTitle")}</div>
                   <div className="item-value">{tenderTitle}</div>
                 </div>
                 <div className="col-md-3">
-                  <div className="item-label">Contractor</div>
+                  <div className="item-label">{this.t("report:awardee:label")}</div>
                   <div className="item-value">{i.contract.awardee.label}</div>
                 </div>
                 <div className="col-md-3">
-                  <div className="item-label">Fiscal Year</div>
+                  <div className="item-label">{this.t("report:fiscalYear")}</div>
                   <div className="item-value">{fiscalYear.name}</div>
                 </div>
                 <div className="col-md-3">
-                  <div className="item-label">Report Date</div>
+                  <div className="item-label">{this.t("report:approvedDate")}</div>
                   <div className="item-value">{formatDate(i.approvedDate)}</div>
                 </div>
               </div>
@@ -56,7 +57,7 @@ class ImplReport extends React.Component {
               }
               <div className="row padding-top-10">
                 <div className="col-md-12">
-                  <div className="item-label">{this.getReportName()} Uploads</div>
+                  <div className="item-label">{this.t("report:uploads").replace("$#$", this.getReportName())}</div>
 
                   {
                     i.formDocs.map(doc => <div key={doc._id}>
@@ -64,7 +65,7 @@ class ImplReport extends React.Component {
                         placement="bottom"
                         overlay={
                           <Tooltip id="download-tooltip">
-                            Click to download the file
+                            {this.t("general:downloadFile:tooltip")}
                           </Tooltip>
                         }>
 

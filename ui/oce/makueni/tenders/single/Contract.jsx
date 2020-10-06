@@ -1,8 +1,9 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import translatable from "../../../translatable";
 
-class Contract extends React.Component {
+class Contract extends translatable(React.Component) {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -12,7 +13,7 @@ class Contract extends React.Component {
         + " - " + department.label
         + " - " + fiscalYear.name;
     }
-    return escape("Contract" + metadata);
+    return escape(this.t("contract:subject") + metadata);
   }
 
   render() {
@@ -20,7 +21,7 @@ class Contract extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     const contract = data[0];
@@ -28,41 +29,41 @@ class Contract extends React.Component {
     return (<div>
       <div className="row padding-top-10">
         <div className="col-md-4">
-          <div className="item-label">Reference Number</div>
+          <div className="item-label">{this.t("contract:referenceNumber")}</div>
           <div className="item-value">{contract.referenceNumber}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Contract Date</div>
+          <div className="item-label">{this.t("contract:contractDate")}</div>
           <div className="item-value">{formatDate(contract.contractDate)}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Expiry Date</div>
+          <div className="item-label">{this.t("contract:expiryDate")}</div>
           <div className="item-value">{formatDate(contract.expiryDate)}</div>
         </div>
       </div>
 
       <div className="row padding-top-10">
         <div className="col-md-6">
-          <div className="item-label">Supplier Name</div>
+          <div className="item-label">{this.t("contract:awardee:label")}</div>
           <div className="item-value">{contract.awardee.label}</div>
         </div>
         <div className="col-md-6">
-          <div className="item-label">Supplier Postal Address</div>
+          <div className="item-label">{this.t("contract:awardee:address")}</div>
           <div className="item-value">{contract.awardee.address}</div>
         </div>
       </div>
 
       <div className="row padding-top-10">
         <div className="col-md-4">
-          <div className="item-label">Procuring Entity Name</div>
+          <div className="item-label">{this.t("contract:procuringEntity:label")}</div>
           <div className="item-value">{contract.procuringEntity.label}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Contract Value</div>
+          <div className="item-label">{this.t("contract:contractValue")}</div>
           <div className="item-value">{currencyFormatter(contract.contractValue)}</div>
         </div>
         <div className="col-md-4">
-          <div className="item-label">Contract Approved Date</div>
+          <div className="item-label">{this.t("contract:contractApprovalDate")}</div>
           <div className="item-value">{formatDate(contract.contractApprovalDate)}</div>
         </div>
       </div>
@@ -71,7 +72,7 @@ class Contract extends React.Component {
         contract.contractDocs !== undefined
           ? <div>
             <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">Contract Documents
+              <div className="col-md-12 sub-title">{this.t("contract:contractDocs")}
                 ({contract.contractDocs.length})
               </div>
             </div>
@@ -80,11 +81,11 @@ class Contract extends React.Component {
               contract.contractDocs.map(contractDoc => <div key={contractDoc._id} className="box">
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="item-label">Contract Document Type</div>
+                    <div className="item-label">{this.t("contract:contractDocs:type")}</div>
                     <div className="item-value">{contractDoc.contractDocumentType.label}</div>
                   </div>
                   <div className="col-md-6">
-                    <div className="item-label">Contract Documents</div>
+                    <div className="item-label">{this.t("contract:contractDocs")}</div>
 
                     {
                       contractDoc.formDocs.map(doc => <div key={doc._id}>
@@ -92,7 +93,7 @@ class Contract extends React.Component {
                           placement="bottom"
                           overlay={
                             <Tooltip id="download-tooltip">
-                              Click to download the file
+                              {this.t("general:downloadFile:tooltip")}
                             </Tooltip>
                           }>
 
