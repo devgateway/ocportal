@@ -1,4 +1,4 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
 
@@ -51,33 +51,36 @@ class ImplReport extends React.Component {
                   <div className="item-value">{formatDate(i.approvedDate)}</div>
                 </div>
               </div>
-              {
-                this.childElements(i)
-              }
-              <div className="row padding-top-10">
-                <div className="col-md-12">
-                  <div className="item-label">{this.getReportName()} Uploads</div>
+                {
+                  this.childElements(i)
+                }
+                {
+                  i.formDocs ?
+                      <div className="row padding-top-10">
+                        <div className="col-md-12">
+                          <div className="item-label">{this.getReportName()} Uploads</div>
+                          {
+                            i.formDocs.map(doc => <div key={doc._id}>
+                              <OverlayTrigger
+                                  placement="bottom"
+                                  overlay={
+                                    <Tooltip id="download-tooltip">
+                                      Click to download the file
+                                    </Tooltip>
+                                  }>
 
-                  {
-                    i.formDocs.map(doc => <div key={doc._id}>
-                      <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                          <Tooltip id="download-tooltip">
-                            Click to download the file
-                          </Tooltip>
-                        }>
-
-                        <a className="item-value download" href={doc.url} target="_blank">
-                          <i className="glyphicon glyphicon-download"/>
-                          <span>{doc.name}</span>
-                        </a>
-                      </OverlayTrigger>
-                    </div>)
-                  }
-                </div>
-              </div>
-            </div>) : null
+                                <a className="item-value download" href={doc.url} target="_blank">
+                                  <i className="glyphicon glyphicon-download"/>
+                                  <span>{doc.name}</span>
+                                </a>
+                              </OverlayTrigger>
+                            </div>)
+                          }
+                        </div>
+                      </div>
+                      : null
+                }
+              </div>) : null
         }
       </div>
     </div>);
