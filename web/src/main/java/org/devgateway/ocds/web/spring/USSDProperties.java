@@ -1,5 +1,6 @@
 package org.devgateway.ocds.web.spring;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -20,6 +21,8 @@ public class USSDProperties {
      */
     private String baseString = "7";
 
+    private String endpointSecret = RandomStringUtils.randomAlphanumeric(16);
+
     public String getServiceCode() {
         return serviceCode;
     }
@@ -34,5 +37,13 @@ public class USSDProperties {
 
     public void setBaseString(String baseString) {
         this.baseString = baseString;
+    }
+
+    public String getEndpointSecret() {
+        return endpointSecret;
+    }
+
+    public void setEndpointSecret(String endpointSecret) {
+        this.endpointSecret = endpointSecret;
     }
 }

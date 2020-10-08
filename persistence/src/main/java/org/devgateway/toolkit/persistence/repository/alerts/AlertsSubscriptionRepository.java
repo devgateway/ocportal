@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.repository.alerts;
 
 import org.devgateway.toolkit.persistence.dao.alerts.AlertsSubscription;
+import org.devgateway.toolkit.persistence.repository.CacheHibernateQueryResult;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 
 /**
@@ -9,5 +10,6 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
  */
 public interface AlertsSubscriptionRepository extends BaseJpaRepository<AlertsSubscription, Long> {
 
+    @CacheHibernateQueryResult
     AlertsSubscription getByMsisdn(String msisdn);
 }

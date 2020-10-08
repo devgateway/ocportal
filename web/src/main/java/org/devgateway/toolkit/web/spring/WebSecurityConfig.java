@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -34,10 +35,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * @author mpostelnicu This configures the spring security for the Web project.
@@ -93,7 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(allowUrlEncodedSlashHttpFirewall()).ignoring().
                 antMatchers("/", "/v2/api-docs/**", "/swagger-ui.html**", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/dashboard", "/languages/**",
-                        "/isAuthenticated",
+                        "/isAuthenticated", "/error",
                         "/wicket/resource/**/*.ttf", "/wicket/resource/**/*.woff", "/corruption-risk",
                         SecurityUtil.getDisabledApiSecurity(adminSettingsRepository) ? "/api/**" : "/",
                         "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.css.map"
@@ -111,7 +114,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated().and().formLogin().
                 loginPage("/login").
                 permitAll().and().requestCache().and()
-                .logout().permitAll().and().sessionManagement().and().csrf().disable();
+                .logout().permitAll().and().sessionManagement().and().csrf().disable()
+                .exceptionHandling().defaultAuthenticationEntryPointFor(
+                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                        new AntPathRequestMatcher("/api/**"));
         http.addFilter(securityContextPersistenceFilter());
     }
 
