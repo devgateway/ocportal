@@ -156,7 +156,9 @@ public class LoginPage extends BasePage {
                     if (session.signIn(name, pass)) {
                         final Person user = FormSecurityUtil.getCurrentAuthenticatedPerson();
                         if (SecurityUtil.isUserPMCUser(user)) {
-                            setResponsePage(LogoutPage.class);
+                            notificationPanel.error(getString("pmc_cannot_login"));
+                            target.add(notificationPanel);
+                            getSession().invalidateNow();
                             return;
                         }
                         changeSessionId();
