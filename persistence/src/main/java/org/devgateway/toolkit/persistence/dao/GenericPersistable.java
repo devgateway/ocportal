@@ -30,7 +30,7 @@ public class GenericPersistable extends AbstractPersistable<Long> implements Ser
 //     * Serializable.
 //     */
 //    private void writeObject(final ObjectOutputStream out) throws IOException {
-//        out.writeObject(getId());
+//        out.writeObject((this instanceof Proxied) ? null : getId());
 //        out.defaultWriteObject();
 //    }
 //
