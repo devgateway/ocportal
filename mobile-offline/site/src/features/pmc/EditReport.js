@@ -109,6 +109,10 @@ export function EditReport(props) {
             });
         }
 
+        notNull(errors, report, 'socialSafeguards', 'Required');
+        notNull(errors, report, 'emergingComplaints', 'Required');
+        notNull(errors, report, 'pmcChallenges', 'Required');
+
         nonEmptyArray(errors, report, 'pmcNotes', 'Please add at least one note');
         if (report.pmcNotes && report.pmcNotes.length) {
             errors.pmcNotesArray = report.pmcNotes.map(note => {
@@ -258,15 +262,24 @@ export function EditReport(props) {
             <PMCMembers name="pmcMembers" value={report.pmcMembers} pmcStaff={pmcStaff} designations={designations}
                         onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
-            <CheckboxField label="Authorize payment" name="authorizePayment" value={report.authorizePayment}
-                           onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
-
             <Notes name="pmcNotes" value={report.pmcNotes} onChange={fieldChanged} errors={errors}
                    isDisabled={isDisabled} />
 
-            <SelectCategoryField label="PMC Status" name="pmcStatusId"
+            <TextAreaField label="Social safeguards" name="socialSafeguards" value={report.socialSafeguards}
+                           onChange={fieldChanged} errors={errors} isDisabled={isDisabled}/>
+
+            <TextAreaField label="Emerging complaints(GRM)" name="emergingComplaints" value={report.emergingComplaints}
+                           onChange={fieldChanged} errors={errors} isDisabled={isDisabled}/>
+
+            <TextAreaField label="PMC challenges" name="pmcChallenges" value={report.pmcChallenges}
+                           onChange={fieldChanged} errors={errors} isDisabled={isDisabled}/>
+
+            <SelectCategoryField label="CBM/PMC report" name="pmcStatusId"
                                  value={report.pmcStatusId} options={pmcStatus}
                                  onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
+
+            <CheckboxField label="Authorize payment" name="authorizePayment" value={report.authorizePayment}
+                           onChange={fieldChanged} errors={errors} isDisabled={isDisabled} />
 
             <SelectCategoryField label="Project Closure and Handover" name="projectClosureHandoverIds" isMulti
                                  value={report.projectClosureHandoverIds} options={projectClosureHandoverOptions}
@@ -580,6 +593,18 @@ function TextField(props) {
             <label>{props.label}</label>
             <input name={props.name} type="text" className={"form-control" + (error ? " is-invalid" : "")}
                    value={props.value || ''} onChange={props.onChange} disabled={props.isDisabled} />
+            {error && <div className="invalid-feedback">{error}</div>}
+        </div>
+    );
+}
+
+function TextAreaField(props) {
+    const error = (props.errors || {})[props.name];
+    return (
+        <div className="form-group">
+            <label>{props.label}</label>
+            <textarea name={props.name} value={props.value || ''} onChange={props.onChange} rows="2"
+                      className={"form-control" + (error ? " is-invalid" : "")} disabled={props.isDisabled} />
             {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
