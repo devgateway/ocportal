@@ -30,8 +30,8 @@ public class SubscribeToWardPage extends Page {
 
     @Override
     public String getText() {
-        String options = "1. " + getMessage("allWards") + "\n" +
-                IntStream.range(0, wards.size())
+        String options = "1. " + getMessage("allWards") + "\n"
+                + IntStream.range(0, wards.size())
                         .mapToObj(i -> (i + 2) + ". " + wards.get(i).getLabel())
                         .collect(Collectors.joining("\n"));
         String message = getMessage("subscribeToWardMenu") + "\n" + options;
@@ -41,11 +41,11 @@ public class SubscribeToWardPage extends Page {
     @Override
     public String processOption(int selectedOption) {
         if (selectedOption == 1) {
-            ussdService.getAlertsSubscriptionService().subscribe(request.msisdn, subcounty);
+            getUssdService().getAlertsSubscriptionService().subscribe(getRequest().getMsisdn(), subcounty);
             return endConversation(getMessage("subscriptionSuccessful", subcounty.getLabel()));
         } else if ((selectedOption - 2) < wards.size()) {
             Ward ward = wards.get(selectedOption - 2);
-            ussdService.getAlertsSubscriptionService().subscribe(request.msisdn, ward);
+            getUssdService().getAlertsSubscriptionService().subscribe(getRequest().getMsisdn(), ward);
             return endConversation(getMessage("subscriptionSuccessful", ward.getLabel()));
         } else {
             return endConversation(getMessage("invalidOption"));

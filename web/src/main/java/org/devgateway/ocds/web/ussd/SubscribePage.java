@@ -37,7 +37,7 @@ public class SubscribePage extends Page {
     public String processOption(int option) {
         if (option > 0 && (option - 1) < subcounties.size()) {
             Subcounty subcounty = subcounties.get(option - 1);
-            return new SubscribeToWardPage(ussdService, request.shift(), locale, subcounty).respond();
+            return new SubscribeToWardPage(getUssdService(), getRequest().shift(), getLocale(), subcounty).respond();
         } else {
             return endConversation(getMessage("invalidOption"));
         }

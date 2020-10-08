@@ -9,10 +9,10 @@ import org.devgateway.toolkit.persistence.dao.alerts.AlertsSubscription;
 /**
  * @author Octavian Ciubotaru
  */
-public class MainMenuPage extends Page {
+public final class MainMenuPage extends Page {
 
     public static MainMenuPage from(USSDService ussdService, USSDRequest request) {
-        AlertsSubscription sub = ussdService.getAlertsSubscriptionService().getByMsisdn(request.msisdn);
+        AlertsSubscription sub = ussdService.getAlertsSubscriptionService().getByMsisdn(request.getMsisdn());
         Locale locale = Stream.of(USSDService.LOCALES)
                 .filter(l -> sub != null && l.getLanguage().equals(sub.getLanguage()))
                 .findFirst()
@@ -32,11 +32,11 @@ public class MainMenuPage extends Page {
     @Override
     public String processOption(int option) {
         if (option == 1) {
-            return new SubscribePage(ussdService, request.shift(), locale).respond();
+            return new SubscribePage(getUssdService(), getRequest().shift(), getLocale()).respond();
         } else if (option == 2) {
-            return new UnsubscribePage(ussdService, request.shift(), locale).respond();
+            return new UnsubscribePage(getUssdService(), getRequest().shift(), getLocale()).respond();
         } else if (option == 3) {
-            return new ChooseLanguagePage(ussdService, request.shift(), locale).respond();
+            return new ChooseLanguagePage(getUssdService(), getRequest().shift(), getLocale()).respond();
         } else {
             return endConversation(getMessage("invalidOption"));
         }

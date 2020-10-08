@@ -7,13 +7,21 @@ import java.util.Arrays;
  */
 public class USSDRequest {
 
-    final String msisdn;
+    private final String msisdn;
 
-    final String[] path;
+    private final String[] path;
 
     public USSDRequest(String msisdn, String[] path) {
         this.msisdn = msisdn;
         this.path = path;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public String[] getPath() {
+        return path;
     }
 
     public USSDRequest shift() {

@@ -22,7 +22,8 @@ public class ChooseLanguagePage extends Page {
     public String processOption(int option) {
         if (option > 0 || (option - 1) < USSDService.LOCALES.length) {
             Locale locale = USSDService.LOCALES[option - 1];
-            ussdService.getAlertsSubscriptionService().changeLanguage(request.msisdn, locale.getLanguage());
+            String msisdn = getRequest().getMsisdn();
+            getUssdService().getAlertsSubscriptionService().changeLanguage(msisdn, locale.getLanguage());
             return endConversation(getMessage(locale, "languageChangedSuccessfully"));
         } else {
             return endConversation(getMessage("invalidOption"));

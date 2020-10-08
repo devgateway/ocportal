@@ -20,9 +20,9 @@ public abstract class Page {
      */
     private static final String END = "END";
 
-    final USSDService ussdService;
-    final USSDRequest request;
-    final Locale locale;
+    private final USSDService ussdService;
+    private final USSDRequest request;
+    private final Locale locale;
 
     public Page(USSDService ussdService, USSDRequest request, Locale locale) {
         this.ussdService = ussdService;
@@ -31,11 +31,11 @@ public abstract class Page {
     }
 
     public final String respond() {
-        if (request.path.length == 0) {
+        if (request.getPath().length == 0) {
             return getText();
         } else {
             try {
-                int option = Integer.parseInt(request.path[0]);
+                int option = Integer.parseInt(request.getPath()[0]);
                 return processOption(option);
             } catch (NumberFormatException e) {
                 return endConversation(getMessage("invalidOption"));
@@ -61,5 +61,17 @@ public abstract class Page {
 
     protected String getMessage(Locale locale, String code, Object... args) throws NoSuchMessageException {
         return ussdService.getMessage(code, args, locale);
+    }
+
+    public USSDService getUssdService() {
+        return ussdService;
+    }
+
+    public USSDRequest getRequest() {
+        return request;
+    }
+
+    public Locale getLocale() {
+        return locale;
     }
 }

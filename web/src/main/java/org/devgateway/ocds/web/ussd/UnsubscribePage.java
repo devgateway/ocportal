@@ -23,7 +23,7 @@ public class UnsubscribePage extends Page {
     public UnsubscribePage(USSDService ussdService, USSDRequest request, Locale locale) {
         super(ussdService, request, locale);
 
-        AlertsSubscription sub = ussdService.getAlertsSubscriptionService().getByMsisdn(request.msisdn);
+        AlertsSubscription sub = ussdService.getAlertsSubscriptionService().getByMsisdn(request.getMsisdn());
         if (sub == null || (sub.getWards().isEmpty() && sub.getSubcounties().isEmpty())) {
             items = new ArrayList<>();
         } else {
@@ -40,8 +40,8 @@ public class UnsubscribePage extends Page {
         if (items.isEmpty()) {
             return endConversation(getMessage("noSubscriptions"));
         } else {
-            String options = "1. " + getMessage("all") + "\n" +
-                    IntStream.range(0, items.size())
+            String options = "1. " + getMessage("all") + "\n"
+                    + IntStream.range(0, items.size())
                             .mapToObj(i -> (i + 2) + ". " + items.get(i).getLabel())
                             .collect(Collectors.joining("\n"));
             return continueConversation(getMessage("unsubscribeMenu")) + "\n" + options;
@@ -51,14 +51,14 @@ public class UnsubscribePage extends Page {
     @Override
     public String processOption(int option) {
         if (option == 1) {
-            ussdService.getAlertsSubscriptionService().unsubscribe(request.msisdn);
+            getUssdService().getAlertsSubscriptionService().unsubscribe(getRequest().getMsisdn());
             return endConversation(getMessage("unsubscribeAllSuccessful"));
         } else if (option > 1 && (option - 2) < items.size()) {
             SubscriptionTarget item = items.get(option - 2);
             if (item.ward != null) {
-                ussdService.getAlertsSubscriptionService().unsubscribe(request.msisdn, item.ward);
+                getUssdService().getAlertsSubscriptionService().unsubscribe(getRequest().getMsisdn(), item.ward);
             } else {
-                ussdService.getAlertsSubscriptionService().unsubscribe(request.msisdn, item.subcounty);
+                getUssdService().getAlertsSubscriptionService().unsubscribe(getRequest().getMsisdn(), item.subcounty);
             }
             return endConversation(getMessage("unsubscribeSuccessful", item.label));
         } else {
@@ -72,11 +72,12 @@ public class UnsubscribePage extends Page {
         private Subcounty subcounty;
         private Ward ward;
 
-        public SubscriptionTarget(Subcounty subcounty) {
+        SubscriptionTarget(Subcounty subcounty) {
             this.subcounty = subcounty;
             label = subcounty.getLabel();
         }
-        public SubscriptionTarget(Ward ward) {
+
+        SubscriptionTarget(Ward ward) {
             this.ward = ward;
             label = ward.getSubcounty().getLabel() + " / " + ward.getLabel();
         }
