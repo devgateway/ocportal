@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.web.spring;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,6 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import static springfox.documentation.builders.PathSelectors.regex;
 
+@ConditionalOnProperty("apiDocs")
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
