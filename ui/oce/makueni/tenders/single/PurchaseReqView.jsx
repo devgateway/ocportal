@@ -1,7 +1,7 @@
 import CRDPage from '../../../corruption-risk/page';
-import { mtState } from '../state';
+import {mtState} from '../state';
 import cn from 'classnames';
-import { API_ROOT } from '../../../state/oce-state';
+import {API_ROOT} from '../../../state/oce-state';
 import Tender from './Tender';
 import PurchaseReq from './PurchaseReq';
 import TenderQuotation from './TenderQuotation';
@@ -87,13 +87,19 @@ class PurchaseReqView extends CRDPage {
     this.changeTab = this.changeTab.bind(this);
   }
 
+  maybeTrimOcidPrefix(id) {
+    if (id.includes("ocds-muq5cl-")) {
+      return id.replace("ocds-muq5cl-", "");
+    }
+    return id;
+  }
 
   componentDidMount() {
     super.componentDidMount();
 
-    const { id } = this.props;
+    const {id} = this.props;
 
-    this.prID.assign('PR', id);
+    this.prID.assign('PR', this.maybeTrimOcidPrefix(id));
 
     this.prInfo.addListener('PR', () => {
       this.prInfo.getState()
