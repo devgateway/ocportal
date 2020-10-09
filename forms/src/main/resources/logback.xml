@@ -25,6 +25,8 @@
     <logger name="org.hibernate.tool.hbm2ddl" level="WARN"/>
     <logger name="org.hibernate.cache.ehcache" level="ERROR"/>
 
+    <logger name="org.devgateway.toolkit.web.fm" level="DEBUG"/>
+
     <logger name="org.apache.wicket.resource" level="WARN"/>
     <logger name="org.apache.wicket.Localizer" level="ERROR"/>
     <logger name="net.sf.ehcache.pool.sizeof.SizeOf" level="ERROR"/>

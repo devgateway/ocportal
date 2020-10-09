@@ -59,6 +59,11 @@ public class CheckBoxYesNoToggleBootstrapFormComponent
             private static final long serialVersionUID = 1L;
 
             @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+
+            @Override
             protected IModel<String> getOffLabel() {
                 return Model.of("No");
             }

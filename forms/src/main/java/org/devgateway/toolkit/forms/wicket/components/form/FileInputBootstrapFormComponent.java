@@ -81,7 +81,13 @@ public class FileInputBootstrapFormComponent extends GenericBootstrapFormCompone
     @Override
     protected FileInputBootstrapFormComponentWrapper<Collection<FileMetadata>> inputField(final String id,
             final IModel<Collection<FileMetadata>> model) {
-        fileInputBootstrapFormComponentWrapper = new FileInputBootstrapFormComponentWrapper<>(id, initFieldModel());
+        fileInputBootstrapFormComponentWrapper = new FileInputBootstrapFormComponentWrapper<Collection<FileMetadata>>(
+                id, initFieldModel()) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
 
         return fileInputBootstrapFormComponentWrapper;
     }

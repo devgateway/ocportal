@@ -28,6 +28,8 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.models.SubComponentWrapModel;
 import org.devgateway.toolkit.forms.models.ViewModeConverterModel;
 import org.devgateway.toolkit.forms.wicket.components.FieldPanel;
@@ -35,6 +37,7 @@ import org.devgateway.toolkit.forms.wicket.components.TooltipLabel;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.web.fm.service.DgFmService;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
@@ -47,7 +50,8 @@ import java.util.List;
 /**
  * @author mpostelnicu
  */
-public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>> extends FieldPanel<TYPE> {
+public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>>
+        extends FieldPanel<TYPE> implements DgFmFormComponentSubject {
     private static final long serialVersionUID = -7051128382707812456L;
 
     protected FormGroup border;

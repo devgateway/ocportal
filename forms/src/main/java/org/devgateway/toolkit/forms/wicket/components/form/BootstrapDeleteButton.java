@@ -30,7 +30,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
  * @author mpostelnicu
  * 
  */
-public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
+public abstract class BootstrapDeleteButton extends DgFmLaddaAjaxButton {
 
     private static final long serialVersionUID = 8306451874943978003L;
 

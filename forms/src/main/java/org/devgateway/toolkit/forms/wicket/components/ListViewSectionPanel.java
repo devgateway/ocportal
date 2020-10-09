@@ -25,6 +25,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.validation.ValidationError;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -34,6 +37,7 @@ import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.web.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +55,30 @@ import java.util.Optional;
  */
 
 public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & ListViewItem,
-        PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> {
+        PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> implements DgFmComponentSubject {
     private static final Logger logger = LoggerFactory.getLogger(ListViewSectionPanel.class);
+
+    @SpringBean
+    protected DgFmService fmService;
+
+    @Override
+    public DgFmService getFmService() {
+        return fmService;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isFmEnabled(super::isEnabled);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isFmVisible(super::isVisible);
+    }
+
+    protected WebMarkupContainer listWrapper;
+
+    protected ListView<T> listView;
 
     public static final String ID_ACCORDION = "accordion";
 
