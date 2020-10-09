@@ -24,10 +24,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
-import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -85,10 +84,6 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     public static final String ID_HIDEABLE_CONTAINER = "hideableContainer";
 
     public static final String ID_ACCORDION_TOGGLE = "accordionToggle";
-
-    protected WebMarkupContainer listWrapper;
-
-    protected ListView<T> listView;
 
     protected NotificationPanel addButtonNotificationPanel;
 

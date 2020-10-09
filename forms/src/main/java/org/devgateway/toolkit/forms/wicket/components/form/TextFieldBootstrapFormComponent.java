@@ -49,7 +49,7 @@ public class TextFieldBootstrapFormComponent<TYPE> extends GenericBootstrapFormC
 
     @Override
     protected TextField<TYPE> inputField(final String id, final IModel<TYPE> model) {
-        return new TextField<>(id, initFieldModel()) {
+        return new TextField<TYPE>(id, initFieldModel()) {
             @Override
             public boolean isRequired() {
                 return isFmMandatory(super::isRequired);

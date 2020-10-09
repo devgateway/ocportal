@@ -92,7 +92,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
+        
         final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "tenderTitle");
         title.required();
         title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
