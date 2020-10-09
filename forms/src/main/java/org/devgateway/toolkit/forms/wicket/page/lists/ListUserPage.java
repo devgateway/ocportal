@@ -61,7 +61,7 @@ public class ListUserPage extends AbstractListPage<Person> {
 
         final List<Department> departments = departmentService.findAll();
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Departments"),
-                "departments", new ListModel(departments), dataTable));
+                "departments", new ListModel<>(departments), dataTable));
 
         List<Role> roles = null;
         if (FormSecurityUtil.isCurrentUserAdmin()) {
@@ -72,7 +72,8 @@ public class ListUserPage extends AbstractListPage<Person> {
             }
         }
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),
-                "roles", new ListModel(roles), dataTable));
+                "roles", new ListModel<>(roles), dataTable,
+                !FormSecurityUtil.isCurrentUserPmcAdmin()));
 
         super.onInitialize();
         // enable excel download
