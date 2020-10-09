@@ -169,6 +169,14 @@ public class EditUserPage extends AbstractEditPage<Person> {
         roles.getField().add(new IValidator<Collection<Role>>() {
             @Override
             public void validate(IValidatable<Collection<Role>> validatable) {
+
+                if (validatable.getValue().size() > 1 && validatable.getValue().stream().map(Role::getAuthority)
+                        .anyMatch(s -> s.equals(SecurityConstants.Roles.ROLE_PMC_USER))) {
+                    final ValidationError error = new ValidationError();
+                    error.addKey("pmcUserError");
+                    validatable.error(error);
+                }
+
                 if (FormSecurityUtil.isCurrentUserPmcAdmin()) {
                     Set<String> addedRoles = validatable.getValue().stream().map(Role::getAuthority)
                             .collect(Collectors.toSet());
