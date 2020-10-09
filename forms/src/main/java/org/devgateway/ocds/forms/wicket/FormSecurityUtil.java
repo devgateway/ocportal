@@ -102,7 +102,7 @@ public class FormSecurityUtil {
     }
 
     public static boolean isCurrentUserPmcAdmin() {
-        return hasUserRole(ROLE_PMC_ADMIN);
+        return hasUserRole(ROLE_PMC_ADMIN) && !isCurrentUserAdmin();
     }
 
     public static boolean isCurrentUserPmcUser() {
