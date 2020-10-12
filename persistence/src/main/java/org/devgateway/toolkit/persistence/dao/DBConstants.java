@@ -67,4 +67,10 @@ public final class DBConstants {
     public static final int STD_DEFAULT_TEXT_LENGTH = 255;
     public static final int MAX_DEFAULT_TEXT_LENGTH_ONE_LINE = 3000;
     public static final int MAX_DEFAULT_TEXT_AREA = 10000;
+
+    // 1 digit, 1 lower, 1 upper, 1 symbol "@#$%", from 6 to 20
+    // private static final String PASSWORD_PATTERN =
+    // "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
+    // 1 digit, 1 caps letter, from 10 to 20
+    public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z]).{10,20})";
 }

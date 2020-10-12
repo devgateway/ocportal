@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.devgateway.toolkit</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.11.3-SNAPSHOT</version>
+        <version>1.12.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -181,12 +181,6 @@
         <!--<artifactId>javax.el-api</artifactId>-->
         <!--<version>3.0.1-b06</version>-->
         <!--</dependency>-->
-
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.liquibase</groupId>

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author idobre
  * @since 2019-03-04
@@ -31,5 +34,15 @@ public class RoleServiceImpl extends BaseJpaServiceImpl<Role> implements RoleSer
     @Override
     public Role newInstance() {
         return new Role();
+    }
+
+    @Override
+    public Role findByAuthority(String authority) {
+        return roleRepository.findByAuthority(authority);
+    }
+
+    @Override
+    public List<Role> findByAuthorityIn(Collection<String> authority) {
+        return roleRepository.findByAuthorityIn(authority);
     }
 }

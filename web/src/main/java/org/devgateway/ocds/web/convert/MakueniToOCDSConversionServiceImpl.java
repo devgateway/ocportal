@@ -716,8 +716,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Identifier convertToOrgIdentifier(Identifier identifier) {
-        safeSet(identifier::setScheme, () -> MongoConstants.OCDSSchemes.KE_IFMIS);
-        safeSet(identifier::setUri, () -> "https://www.treasury.go.ke/", URI::create);
+        safeSet(identifier::setScheme, () -> X_KE_OCMAKUENI);
+        safeSet(identifier::setUri, () -> serverURL + "/api/ocds/organization/all?scheme=" + X_KE_OCMAKUENI,
+                URI::create);
         safeSet(identifier::setId, () -> identifier, this::convertIdentifierToId);
         return identifier;
     }
@@ -768,6 +769,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Override
     public Release createAndPersistRelease(TenderProcess tenderProcess) {
         try {
+            //never export releases from draft procurement plans or projects
+            if (!tenderProcess.getProcurementPlan().getStatus().equals(DBConstants.Status.APPROVED)
+                    || !tenderProcess.getProject().getStatus().equals(DBConstants.Status.APPROVED)) {
+                return null;
+            }
             Release release = createRelease(tenderProcess);
             Release byOcid = releaseRepository.findByOcid(release.getOcid());
             if (!areReleasesIdentical(release, byOcid)) {

@@ -13,7 +13,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.devgateway.toolkit</groupId>
     <artifactId>makueni</artifactId>
-    <version>1.11.3-SNAPSHOT</version>
+    <version>1.12.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Makueni</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
@@ -151,20 +151,20 @@
                     <execution>
                         <id>validate</id>
                         <phase>validate</phase>
-                        <configuration>
-                            <configLocation>checkstyle.xml</configLocation>
-                            <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-                            <encoding>UTF-8</encoding>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>false</failsOnError>
-                            <failOnViolation>true</failOnViolation>
-                            <violationSeverity>warning</violationSeverity>
-                        </configuration>
                         <goals>
                             <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>false</failsOnError>
+                    <failOnViolation>true</failOnViolation>
+                    <violationSeverity>warning</violationSeverity>
+                </configuration>
             </plugin>
 
             <plugin>

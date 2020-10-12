@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.user;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
@@ -10,13 +9,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.ocds.web.spring.SendEmailService;
+import org.devgateway.toolkit.web.spring.PasswordRecoveryService;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
-import org.devgateway.toolkit.persistence.dao.Person;
-import org.devgateway.toolkit.persistence.service.PersonService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.io.Serializable;
@@ -25,16 +21,8 @@ import java.io.Serializable;
 public class ForgotYourPasswordPage extends BasePage {
     private static final long serialVersionUID = -6767090562116351915L;
 
-    public static final int RANDOM_PASSWORD_LENGTH = 16;
-
     @SpringBean
-    private PersonService personService;
-
-    @SpringBean
-    private SendEmailService sendEmailService;
-
-    @SpringBean
-    private PasswordEncoder passwordEncoder;
+    private PasswordRecoveryService passwordRecoveryService;
 
     private final ForgotPasswordBean forgotPasswordBean;
 
@@ -98,16 +86,8 @@ public class ForgotYourPasswordPage extends BasePage {
                     super.onSubmit(target);
 
                     final String email = ForgotPasswordForm.this.getModelObject().getEmailAddress();
-                    final Person person = personService.findByEmail(email);
 
-                    if (person != null) {
-                        final String newPassword = RandomStringUtils.random(RANDOM_PASSWORD_LENGTH, true, true);
-                        person.setPassword(passwordEncoder.encode(newPassword));
-                        person.setChangePasswordNextSignIn(true);
-
-                        personService.saveAndFlush(person);
-                        sendEmailService.sendEmailResetPassword(person, newPassword);
-                    }
+                    passwordRecoveryService.resetPassword(email);
 
                     emailAddress.setVisibilityAllowed(false);
                     this.setVisibilityAllowed(false);

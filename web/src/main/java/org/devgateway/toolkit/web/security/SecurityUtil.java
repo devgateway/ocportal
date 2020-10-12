@@ -117,4 +117,17 @@ public final class SecurityUtil {
         return false;
     }
 
+    public static boolean isUserPMCUser(final Person p) {
+        if (p == null || p.getRoles() == null) {
+            return false;
+        }
+        for (final Role r : p.getRoles()) {
+            if (r.getAuthority().equalsIgnoreCase(SecurityConstants.Roles.ROLE_PMC_USER)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

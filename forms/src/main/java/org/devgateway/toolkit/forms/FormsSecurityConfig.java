@@ -49,7 +49,7 @@ public class FormsSecurityConfig extends WebSecurityConfig {
                 "/img/**", "/css*/**", "/js*/**", "/assets*/**", "/wicket/resource/**/*.js",
                 "/wicket/resource/**/*.css", "/wicket/resource/**/*.png", "/wicket/resource/**/*.jpg",
                 "/wicket/resource/**/*.woff", "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.ttf",
-                "/favicon.ico",
+                "/favicon.ico", "/error",
                 "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**", "/verifyEmail/**",
                 "/unsubscribeEmail/**", "/resources/**", "/resources/public/**");
     }
@@ -82,11 +82,7 @@ public class FormsSecurityConfig extends WebSecurityConfig {
     protected void configure(final HttpSecurity http) throws Exception {
         super.configure(http);
 
-        // we do not allow anyonymous token. When
-        // enabled this basically means any guest
-        // user will have an annoymous default role
-        http.anonymous().disable().
-                sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).
                 //we let Wicket create and manage sessions, so we disable
                 //session creation by spring
                         and().csrf().disable();  // csrf protection interferes with some wicket stuff
