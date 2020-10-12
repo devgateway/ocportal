@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 public final class SecurityConstants {
 
     public static final class JWTConstants {
-        public static final long EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(30);
-//        public static final long EXPIRATION_TIME = 604_800_000; //one week
+        public static final long EXPIRATION_TIME = TimeUnit.DAYS.toMillis(30 * 6);
+        //        public static final long EXPIRATION_TIME = 604_800_000; //one week
         public static final String TOKEN_PREFIX = "Bearer ";
         public static final String HEADER_STRING = "Authorization";
         public static final String AUTH_URL = "/api/login";
