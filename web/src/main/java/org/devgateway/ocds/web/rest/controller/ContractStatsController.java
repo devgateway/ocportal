@@ -58,8 +58,10 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> pmcNotAuthContractNames(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
                         and(CONTRACTS_MILESTONE_CODE).is("PMCReport").
                         andOperator(getYearDefaultFilterCriteria(
@@ -124,8 +126,10 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> delayedContractNames(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
                         and(CONTRACTS_MILESTONE_CODE).is("MEReport").
                         andOperator(getYearDefaultFilterCriteria(
@@ -248,8 +252,10 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> inspectionNoPayContractNames(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
                         andOperator(getYearDefaultFilterCriteria(
                                 filter, getContractDateField()))),
@@ -280,6 +286,7 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> pmcNotAuthContracts(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
@@ -320,6 +327,7 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> delayedContracts(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).andOperator(getYearDefaultFilterCriteria(
                         filter, getContractDateField()))),
