@@ -589,10 +589,14 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             protected void onSubmit(final AjaxRequestTarget target) {
                 setStatusAppendComment(DBConstants.Status.APPROVED);
                 super.onSubmit(target);
+                onApproved();
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
         return saveEditPageButton;
+    }
+
+    protected void onApproved() {
     }
 
     protected SaveEditPageButton getRevertToDraftPageButton() {

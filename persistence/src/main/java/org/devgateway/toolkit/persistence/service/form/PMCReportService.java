@@ -8,4 +8,6 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
  */
 public interface PMCReportService extends AbstractImplTenderProcessMakueniEntityService<PMCReport>,
         TextSearchableService<PMCReport> {
+
+    void onApproved(PMCReport report);
 }

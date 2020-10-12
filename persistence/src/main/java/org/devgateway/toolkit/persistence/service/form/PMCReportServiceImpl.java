@@ -1,8 +1,10 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
+import org.devgateway.toolkit.persistence.dao.alerts.ApprovedReport;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.repository.alerts.ApprovedReportRepository;
 import org.devgateway.toolkit.persistence.repository.form.PMCReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
@@ -23,6 +25,9 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
     @Autowired
     private PMCReportRepository repository;
 
+    @Autowired
+    private ApprovedReportRepository approvedReportRepository;
+
     @Override
     protected BaseJpaRepository<PMCReport, Long> repository() {
         return repository;
@@ -41,5 +46,13 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
     @Override
     public TextSearchableRepository<PMCReport, Long> textRepository() {
         return repository;
+    }
+
+    @Override
+    public void onApproved(PMCReport report) {
+        ApprovedReport approvedReport = new ApprovedReport();
+        approvedReport.setPmcReport(report);
+
+        approvedReportRepository.save(approvedReport);
     }
 }
