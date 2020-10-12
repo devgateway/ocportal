@@ -433,7 +433,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     @Transactional(readOnly = true)
-    private void addProjectList() {
+    public void addProjectList() {
 
         IModel<List<Project>> projectListModel = new LoadableDetachableModel<List<Project>>() {
             @Override
@@ -441,7 +441,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 return fetchData();
             }
         };
-        
+
         listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel,
                 procurementPlanModel
         );
@@ -462,7 +462,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     @Transactional(readOnly = true)
-    private List<Project> fetchData() {
+    public List<Project> fetchData() {
         return getProcurementPlan() == null
                 ? new ArrayList<>()
                 : projectService.findAll(new ProjectFilterState(getProcurementPlan(), searchBox).getSpecification());

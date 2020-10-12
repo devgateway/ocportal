@@ -1,8 +1,13 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
+import org.devgateway.toolkit.persistence.dao.form.PMCReport_;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
+import org.devgateway.toolkit.persistence.dao.form.Project_;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.repository.form.PMCReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
@@ -10,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,6 +28,9 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
 
     @Autowired
     private PMCReportRepository repository;
+
+    @Autowired
+    private TenderProcessService tenderProcessService;
 
     @Override
     protected BaseJpaRepository<PMCReport, Long> repository() {
@@ -41,5 +50,21 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
     @Override
     public TextSearchableRepository<PMCReport, Long> textRepository() {
         return repository;
+    }
+
+    @Override
+    public List<PMCReport> getPMCReportsForDepartments(Collection<Department> deps) {
+        return repository.findAll((r, cq, cb) -> cb.and(
+                r.join(PMCReport_.tenderProcess).join(TenderProcess_.project).join(Project_.procurementPlan)
+                        .join(ProcurementPlan_.department).in(deps)
+        ));
+    }
+
+    @Override
+    public PMCReport saveReportAndUpdateTenderProcess(PMCReport entity) {
+        TenderProcess tenderProcess = entity.getTenderProcess();
+        tenderProcess.addPMCReport(entity);
+        tenderProcessService.save(tenderProcess);
+        return save(entity);
     }
 }

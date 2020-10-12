@@ -26,6 +26,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_USER;
+
 /**
  * Service to send emails to users to validate email addresses or reset passwords
  *
@@ -74,11 +76,23 @@ public class SendEmailService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
+            String url;
+            if (person.getRoles().stream().anyMatch(r -> r.getAuthority().equals(ROLE_PMC_USER))) {
+                url = "\nPlease install PMC Reporter app from Google Play\n"
+                        + "<a href='https://play.google.com/store/apps/details?id=org.devgateway.makueni.pmcdc&hl="
+                        + "en&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>"
+                        + "<img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/"
+                        + "images/badges/en_badge_web_generic.png' style='width: 250px;'/>"
+                        + "</a>";
+            } else {
+                url = "URL: " + AlertsEmailService.createURL(request, "");
+            }
+
             final String content = "Dear " + person.getFirstName() + " " + person.getLastName() + ",\n\n"
                     + "Your Username and Password to access the system are as follows:\n"
                     + "Username: " + person.getUsername() + "\n"
                     + "Password: " + plainPassword + "\n"
-                    + "URL: " + AlertsEmailService.createURL(request, "") + "\n\n"
+                    + url + "\n\n"
                     + "For the first time you Login with the password given, you will be required to:\n"
                     + "1. Change your password: Please ensure that your new password is known only to you. "
                     + "Password should have a minimum of 6 characters where 2 of them must be numbers and "
