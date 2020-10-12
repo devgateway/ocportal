@@ -716,8 +716,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Identifier convertToOrgIdentifier(Identifier identifier) {
-        safeSet(identifier::setScheme, () -> MongoConstants.OCDSSchemes.KE_IFMIS);
-        safeSet(identifier::setUri, () -> "https://www.treasury.go.ke/", URI::create);
+        safeSet(identifier::setScheme, () -> X_KE_OCMAKUENI);
+        safeSet(identifier::setUri, () -> serverURL + "/api/ocds/organization/all?scheme=" + X_KE_OCMAKUENI,
+                URI::create);
         safeSet(identifier::setId, () -> identifier, this::convertIdentifierToId);
         return identifier;
     }

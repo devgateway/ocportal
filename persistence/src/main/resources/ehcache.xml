@@ -126,4 +126,19 @@
            maxEntriesLocalHeap="100000"
            statistics="true">
     </cache>
+
+    <cache name="default-update-timestamps-region"
+           eternal="true"
+           diskPersistent="false"
+           maxEntriesLocalHeap="10000"
+           statistics="true">
+    </cache>
+
+    <cache name="default-query-results-region"
+           eternal="true"
+           diskPersistent="false"
+           maxEntriesLocalHeap="10000"
+           statistics="true">
+    </cache>
+
 </ehcache>
