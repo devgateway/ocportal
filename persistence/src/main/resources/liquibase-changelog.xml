@@ -1152,4 +1152,35 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-731" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender_process"/>
+            <tableExists tableName="tender"/>
+        </preConditions>
+        <sql>
+            insert into tender_process (id, created_by, created_date, last_modified_by,
+            last_modified_date, status, project_id) (
+            select nextval('hibernate_sequence'), 'admin', now(), 'admin', now(), 'DRAFT', 85691);
+        </sql>
+        <sql>
+            update tender set tender_process_id = (select max(id) from tender_process),
+            status='DRAFT' where id = 87066;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-731-2" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="bid"/>
+            <tableExists tableName="tender_quotation_evaluation_form_docs"/>
+        </preConditions>
+        <sql>
+            update bid set parent_id = 91051, index = 1 where parent_id = 91024;
+        </sql>
+        <sql>
+            update tender_quotation_evaluation_form_docs set
+            tender_quotation_evaluation_id = 91051 where
+            tender_quotation_evaluation_id = 91024
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
