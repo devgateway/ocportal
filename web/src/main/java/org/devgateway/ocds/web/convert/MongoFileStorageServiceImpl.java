@@ -85,7 +85,9 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
     @Override
     public Document storeFileAndReferenceAsDocument(FileMetadata fm, String documentType) {
         FileMetadata fileMetadata = storeFile(fm);
-
+        if (fileMetadata == null) {
+            return null;
+        }
         Document doc = new Document();
         if (fileMetadata.getCreatedDate().isPresent()) {
             doc.setDatePublished(Date.from(fileMetadata.getCreatedDate().get().toInstant()));

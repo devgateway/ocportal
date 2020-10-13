@@ -24,7 +24,7 @@ public class PersonFilterState extends JpaFilterState<Person> {
 
     private List<Department> departments;
 
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public Specification<Person> getSpecification() {

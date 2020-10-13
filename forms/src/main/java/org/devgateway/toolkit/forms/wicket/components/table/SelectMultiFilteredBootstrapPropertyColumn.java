@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilteredPropertyColumn<T, Y, S> {
     private final AjaxFallbackBootstrapDataTable dataTable;
+    private Boolean enableInput = true;
 
     public SelectMultiFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
                                                       final S sortProperty,
@@ -40,6 +41,16 @@ public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceF
         this.dataTable = dataTable;
     }
 
+    public SelectMultiFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
+                                                      final String propertyExpression,
+                                                      final IModel<? extends List<? extends Y>> filterChoices,
+                                                      final AjaxFallbackBootstrapDataTable dataTable,
+                                                      boolean enableInput) {
+        this(displayModel, propertyExpression, filterChoices, dataTable);
+        this.enableInput = enableInput;
+    }
+
+
     @Override
     public Component getFilter(final String componentId, final FilterForm<?> form) {
         final Select2MultiChoiceBootstrapFormComponent<Y> selectorField =
@@ -47,6 +58,7 @@ public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceF
                         new GenericChoiceProvider<>((List<Y>) getFilterChoices().getObject()),
                         (IModel<Collection<Y>>) getFilterModel(form));
         selectorField.hideLabel();
+        selectorField.setEnabled(enableInput);
 
         selectorField.getField().add(new AjaxComponentUpdatingBehavior(form, "change"));
 

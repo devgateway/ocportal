@@ -18,7 +18,6 @@ import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
-import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.aggregation.SetOperators;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +37,7 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.Fie
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_PAYMENT_AUTHORIZED;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_STATUS;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_TITLE;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.OCID;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -58,13 +58,15 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> pmcNotAuthContractNames(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
                         and(CONTRACTS_MILESTONE_CODE).is("PMCReport").
                         andOperator(getYearDefaultFilterCriteria(
                                 filter, getContractDateField()))),
-                project(CONTRACTS).andInclude(Fields.UNDERSCORE_ID),
+                project(CONTRACTS).andInclude(OCID),
                 unwind(ref(CONTRACTS)),
                 unwind(ref(CONTRACTS_MILESTONES)),
                 project().and(CONTRACTS_MILESTONE_CODE)
@@ -73,12 +75,12 @@ public class ContractStatsController extends GenericOCDSController {
                         .as(CONTRACTS_PAYMENT_AUTHORIZED)
                         .and(CONTRACTS_TITLE)
                         .as("title")
-                        .and(Fields.UNDERSCORE_ID)
-                        .as(Fields.UNDERSCORE_ID),
+                        .and(OCID)
+                        .as(OCID),
                 match(where(CONTRACTS_MILESTONE_CODE).is("PMCReport")
                         .and(CONTRACTS_PAYMENT_AUTHORIZED)
                         .is(false)),
-                group(Fields.UNDERSCORE_ID)
+                group(OCID)
                         .first("title").as("title")
         );
 
@@ -124,13 +126,15 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> delayedContractNames(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
                         and(CONTRACTS_MILESTONE_CODE).is("MEReport").
                         andOperator(getYearDefaultFilterCriteria(
                                 filter, getContractDateField()))),
-                project(CONTRACTS).andInclude(Fields.UNDERSCORE_ID),
+                project(CONTRACTS).andInclude(OCID),
                 unwind(ref(CONTRACTS)),
                 unwind(ref(CONTRACTS_MILESTONES)),
                 project().and(CONTRACTS_MILESTONE_CODE)
@@ -138,11 +142,11 @@ public class ContractStatsController extends GenericOCDSController {
                         .and(CONTRACTS_TITLE)
                         .as("title")
                         .and(CONTRACTS_DELAYED).as(CONTRACTS_DELAYED)
-                        .and(Fields.UNDERSCORE_ID)
-                        .as(Fields.UNDERSCORE_ID),
+                        .and(OCID)
+                        .as(OCID),
                 match(where(CONTRACTS_MILESTONE_CODE).is("MEReport")
                         .and(CONTRACTS_DELAYED).is(true)),
-                group(Fields.UNDERSCORE_ID)
+                group(OCID)
                         .first("title").as("title")
         );
 
@@ -248,12 +252,14 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> inspectionNoPayContractNames(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
+                        and(CONTRACTS_CONTRACTOR).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
                         andOperator(getYearDefaultFilterCriteria(
                                 filter, getContractDateField()))),
-                project(CONTRACTS).andInclude(Fields.UNDERSCORE_ID),
+                project(CONTRACTS).andInclude(OCID),
                 unwind(ref(CONTRACTS)),
                 unwind(ref(CONTRACTS_MILESTONES)),
                 project().and(CONTRACTS_PAYMENT_AUTHORIZED)
@@ -262,12 +268,12 @@ public class ContractStatsController extends GenericOCDSController {
                         .as(CONTRACTS_MILESTONE_CODE)
                         .and(CONTRACTS_TITLE)
                         .as("title")
-                        .and(Fields.UNDERSCORE_ID)
-                        .as(Fields.UNDERSCORE_ID),
+                        .and(OCID)
+                        .as(OCID),
                 match(where(CONTRACTS_MILESTONE_CODE).is("InspectionReport")
                         .and(CONTRACTS_PAYMENT_AUTHORIZED)
                         .is(false)),
-                group(Fields.UNDERSCORE_ID)
+                group(OCID)
                         .first("title").as("title")
         );
 
@@ -280,6 +286,7 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> pmcNotAuthContracts(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).
                         and(atLeastOne(CONTRACTS_MILESTONES)).exists(true).
@@ -320,6 +327,7 @@ public class ContractStatsController extends GenericOCDSController {
             RequestMethod.GET}, produces = "application/json")
     public List<Document> delayedContracts(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        clearTenderStatus(filter);
         Aggregation agg = newAggregation(
                 match(where(atLeastOne(CONTRACTS)).exists(true).andOperator(getYearDefaultFilterCriteria(
                         filter, getContractDateField()))),

@@ -39,6 +39,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.service.PersonService;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -154,6 +155,12 @@ public class LoginPage extends BasePage {
 
                     if (session.signIn(name, pass)) {
                         final Person user = FormSecurityUtil.getCurrentAuthenticatedPerson();
+                        if (SecurityUtil.isUserPMCUser(user)) {
+                            notificationPanel.error(getString("pmc_cannot_login"));
+                            target.add(notificationPanel);
+                            getSession().invalidateNow();
+                            return;
+                        }
                         changeSessionId();
                         if (BooleanUtils.isTrue(user.getChangePasswordNextSignIn())) {
                             final PageParameters pageParam = new PageParameters();

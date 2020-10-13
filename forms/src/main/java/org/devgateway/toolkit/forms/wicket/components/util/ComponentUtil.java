@@ -199,6 +199,11 @@ public final class ComponentUtil {
         return checkToggle;
     }
 
+    public static FormComponent<?>[] getFormComponentsFromBootstrapComponents(List<GenericBootstrapFormComponent<?, ?>>
+                                                                                      bc) {
+        return bc.stream().map(GenericBootstrapFormComponent::getField).toArray(FormComponent[]::new);
+    }
+
     public static TextAreaFieldBootstrapFormComponent<String> addTextAreaField(
             final WebMarkupContainer parent,
             final String id) {
