@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.repository.norepository;
 
 import org.devgateway.toolkit.persistence.repository.CacheHibernateQueryResult;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -18,4 +19,8 @@ public interface BaseJpaRepository<T, ID extends Serializable>
     @Override
     @CacheHibernateQueryResult
     List<T> findAll();
+
+    @Override
+    @CacheHibernateQueryResult
+    List<T> findAll(Specification<T> spec);
 }
