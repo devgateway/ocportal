@@ -23,12 +23,18 @@ public class UnchainedDgFeature implements Serializable {
     @JsonIgnore
     private String hash;
 
+    @JsonIgnore
     private String resourceLocation;
 
     @NotNull
     private Set<String> mixins = ConcurrentHashMap.newKeySet();
     @NotNull
-    private Set<String> hardDeps = ConcurrentHashMap.newKeySet();
+    private Set<String> enabledDeps = ConcurrentHashMap.newKeySet();
+    @NotNull
+    private Set<String> visibleDeps = ConcurrentHashMap.newKeySet();
+    @NotNull
+    private Set<String> mandatoryDeps = ConcurrentHashMap.newKeySet();
+
     @NotNull
     private Set<String> softDeps = ConcurrentHashMap.newKeySet();
 
@@ -80,14 +86,6 @@ public class UnchainedDgFeature implements Serializable {
         this.mixins = mixins;
     }
 
-    public Set<String> getHardDeps() {
-        return hardDeps;
-    }
-
-    public void setHardDeps(Set<String> hardDeps) {
-        this.hardDeps = hardDeps;
-    }
-
     public Set<String> getSoftDeps() {
         return softDeps;
     }
@@ -102,6 +100,30 @@ public class UnchainedDgFeature implements Serializable {
 
     public void setVisible(Boolean visible) {
         this.visible = visible;
+    }
+
+    public Set<String> getEnabledDeps() {
+        return enabledDeps;
+    }
+
+    public void setEnabledDeps(Set<String> enabledDeps) {
+        this.enabledDeps = enabledDeps;
+    }
+
+    public Set<String> getVisibleDeps() {
+        return visibleDeps;
+    }
+
+    public void setVisibleDeps(Set<String> visibleDeps) {
+        this.visibleDeps = visibleDeps;
+    }
+
+    public Set<String> getMandatoryDeps() {
+        return mandatoryDeps;
+    }
+
+    public void setMandatoryDeps(Set<String> mandatoryDeps) {
+        this.mandatoryDeps = mandatoryDeps;
     }
 
     @Override

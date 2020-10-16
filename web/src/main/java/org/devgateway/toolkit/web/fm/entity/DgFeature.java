@@ -3,6 +3,7 @@ package org.devgateway.toolkit.web.fm.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devgateway.toolkit.web.fm.DgFmSubject;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,12 +13,21 @@ public class DgFeature extends UnchainedDgFeature {
     private Set<DgFeature> chainedMixins = ConcurrentHashMap.newKeySet();
 
     @JsonIgnore
-    private Set<DgFeature> chainedHardDeps = ConcurrentHashMap.newKeySet();
+    private Set<DgFeature> chainedEnabledDeps = ConcurrentHashMap.newKeySet();
+
+    @NotNull
+    @JsonIgnore
+    private Set<DgFeature> chainedVisibleDeps = ConcurrentHashMap.newKeySet();
+
+    @NotNull
+    @JsonIgnore
+    private Set<DgFeature> chainedMandatoryDeps = ConcurrentHashMap.newKeySet();
 
     @JsonIgnore
     private Set<DgFeature> chainedSoftDeps = ConcurrentHashMap.newKeySet();
 
-    private Set<String> attachedLog =  ConcurrentHashMap.newKeySet();
+    @JsonIgnore
+    private Set<String> attachedLog = ConcurrentHashMap.newKeySet();
 
     public Set<String> getAttachedLog() {
         return attachedLog;
@@ -33,14 +43,6 @@ public class DgFeature extends UnchainedDgFeature {
 
     public void setChainedMixins(Set<DgFeature> chainedMixins) {
         this.chainedMixins = chainedMixins;
-    }
-
-    public Set<DgFeature> getChainedHardDeps() {
-        return chainedHardDeps;
-    }
-
-    public void setChainedHardDeps(Set<DgFeature> chainedHardDeps) {
-        this.chainedHardDeps = chainedHardDeps;
     }
 
     public Set<DgFeature> getChainedSoftDeps() {
@@ -59,4 +61,27 @@ public class DgFeature extends UnchainedDgFeature {
         addAttachedLog(String.format("Attached to class %s", attachedTo.getClass().getSimpleName()));
     }
 
+    public Set<DgFeature> getChainedEnabledDeps() {
+        return chainedEnabledDeps;
+    }
+
+    public void setChainedEnabledDeps(Set<DgFeature> chainedEnabledDeps) {
+        this.chainedEnabledDeps = chainedEnabledDeps;
+    }
+
+    public Set<DgFeature> getChainedVisibleDeps() {
+        return chainedVisibleDeps;
+    }
+
+    public void setChainedVisibleDeps(Set<DgFeature> chainedVisibleDeps) {
+        this.chainedVisibleDeps = chainedVisibleDeps;
+    }
+
+    public Set<DgFeature> getChainedMandatoryDeps() {
+        return chainedMandatoryDeps;
+    }
+
+    public void setChainedMandatoryDeps(Set<DgFeature> chainedMandatoryDeps) {
+        this.chainedMandatoryDeps = chainedMandatoryDeps;
+    }
 }

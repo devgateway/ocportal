@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -72,8 +73,9 @@ public class DgFmServiceImpl implements DgFmService {
             hydrateUnchainedFeatures();
             Map<String, DgFeature> mutableChainedFeatures = new ConcurrentHashMap<>();
             chainFeatures(mutableChainedFeatures);
-            projectProperties(mutableChainedFeatures);
-            features = ImmutableMap.copyOf(mutableChainedFeatures);
+            Map<String, DgFeature> projectedFeatures = new ConcurrentHashMap<>();
+            projectProperties(projectedFeatures, mutableChainedFeatures);
+            features = projectedFeatures;
             emitProjectedFm();
             logger.info("FM: Done initializing the Feature Manager.");
         } else {
@@ -83,7 +85,8 @@ public class DgFmServiceImpl implements DgFmService {
 
     private void emitProjectedFm() {
         if (emitProjectedFm) {
-            dgFeatureMarshallerService.marshall("_projectedFm.yml", features.values());
+            dgFeatureMarshallerService.marshall("_projectedFm.yml", features.values()
+                    .stream().sorted(Comparator.comparing(DgFeature::getName)).collect(Collectors.toList()));
         }
     }
 
@@ -109,6 +112,7 @@ public class DgFmServiceImpl implements DgFmService {
         if (dgFeature == null) {
             if (defaultsForMissingFeatures) {
                 dgFeature = createFeatureWithDefaults(featureName);
+                features.put(featureName, dgFeature);
             } else {
                 throw new RuntimeException(String.format("Unknown feature with name %s", featureName));
             }
@@ -166,23 +170,37 @@ public class DgFmServiceImpl implements DgFmService {
         if (featureName == null) {
             throw new RuntimeException("Cannot create a parent combined fmName for a null fmName");
         }
-        return parentFmName + "/" + featureName;
+        return parentFmName + "." + featureName;
     }
 
-    private void projectProperties(Map<String, DgFeature> features) {
+    private void projectProperties(Map<String, DgFeature> projectedFeatures, Map<String, DgFeature> features) {
         logger.debug("FM: Projecting properties for all features");
-        features.values().forEach(this::projectProperties);
+        features.values().forEach(f -> projectProperties(projectedFeatures, f));
         logger.debug("FM: Projected properties for all features");
     }
 
-    private void projectProperties(DgFeature feature) {
+    private void projectProperties(Map<String, DgFeature> projectedFeatures,
+                                   DgFeature feature) {
+        if (projectedFeatures.containsKey(feature.getName())) {
+            return;
+        }
+
+        feature.getChainedMixins().forEach(m -> projectProperties(projectedFeatures, m));
+        feature.getChainedEnabledDeps().forEach(m -> projectProperties(projectedFeatures, m));
+        feature.getChainedVisibleDeps().forEach(m -> projectProperties(projectedFeatures, m));
+        feature.getChainedMandatoryDeps().forEach(m -> projectProperties(projectedFeatures, m));
+        feature.getChainedSoftDeps().forEach(m -> projectProperties(projectedFeatures, m));
+
         logger.debug(String.format("FM: Projecting properties for feature %s", feature));
         projectChainedMixins(feature);
-        projectChainedHardDeps(feature);
+        projectChainedVisibleDeps(feature);
+        projectChainedEnabledDeps(feature);
+        projectChainedMandatoryDeps(feature);
         projectChainedSoftDeps(feature);
         projectEnabled(feature);
         projectVisible(feature);
         projectMandatory(feature);
+        projectedFeatures.put(feature.getName(), feature);
         logger.debug(String.format("FM: Projected properties for feature %s", feature));
     }
 
@@ -194,9 +212,11 @@ public class DgFmServiceImpl implements DgFmService {
 
     private void projectEnabled(DgFeature feature) {
         logger.debug(String.format("FM: Projecting enabled for feature %s", feature));
-        feature.setEnabled(feature.getEnabled() && feature
-                .getChainedMixins().stream().map(DgFeature::getEnabled).reduce(Boolean::logicalAnd)
-                .orElse(FmConstants.DEFAULT_ENABLED));
+        feature.setEnabled(feature.getEnabled()
+                && feature.getChainedMixins().stream().map(DgFeature::getEnabled).reduce(Boolean::logicalAnd)
+                .orElse(FmConstants.DEFAULT_ENABLED)
+                && feature.getChainedEnabledDeps().stream().map(DgFeature::getEnabled).reduce(Boolean::logicalAnd)
+                .orElse(FmConstants.DEFAULT_VISIBLE));
         logger.debug(String.format("FM: Projected enabled for feature %s", feature));
     }
 
@@ -204,6 +224,8 @@ public class DgFmServiceImpl implements DgFmService {
         logger.debug(String.format("FM: Projecting visible for feature %s", feature));
         feature.setVisible(feature.getVisible() && feature
                 .getChainedMixins().stream().map(DgFeature::getVisible).reduce(Boolean::logicalAnd)
+                .orElse(FmConstants.DEFAULT_VISIBLE)
+                && feature.getChainedVisibleDeps().stream().map(DgFeature::getVisible).reduce(Boolean::logicalAnd)
                 .orElse(FmConstants.DEFAULT_VISIBLE));
         logger.debug(String.format("FM: Projected visible for feature %s", feature));
     }
@@ -212,14 +234,30 @@ public class DgFmServiceImpl implements DgFmService {
         logger.debug(String.format("FM: Projecting mandatory for feature %s", feature));
         feature.setMandatory(feature.getMandatory() || feature
                 .getChainedMixins().stream().map(DgFeature::getMandatory).reduce(Boolean::logicalOr)
-                .orElse(FmConstants.DEFAULT_MANDATORY));
+                .orElse(FmConstants.DEFAULT_MANDATORY)
+                || feature.getChainedMandatoryDeps().stream().map(DgFeature::getMandatory).reduce(Boolean::logicalOr)
+                .orElse(FmConstants.DEFAULT_MANDATORY)
+        );
         logger.debug(String.format("FM: Projected mandatory for feature %s", feature));
     }
 
-    private void projectChainedHardDeps(DgFeature feature) {
-        logger.debug(String.format("FM: Projecting chained hard deps for feature %s", feature));
-        feature.getChainedHardDeps().addAll(getHierarchyChainedHardDeps(feature));
-        logger.debug(String.format("FM: Projected chained hard deps for feature %s", feature));
+    private void projectChainedVisibleDeps(DgFeature feature) {
+        logger.debug(String.format("FM: Projecting chained visible deps for feature %s", feature));
+        feature.getChainedVisibleDeps().addAll(getHierarchyChainedVisibleDeps(feature));
+        logger.debug(String.format("FM: Projected chained visible deps for feature %s", feature));
+    }
+
+
+    private void projectChainedMandatoryDeps(DgFeature feature) {
+        logger.debug(String.format("FM: Projecting chained mandatory deps for feature %s", feature));
+        feature.getChainedVisibleDeps().addAll(getHierarchyChainedMandatoryDeps(feature));
+        logger.debug(String.format("FM: Projected chained mandatory deps for feature %s", feature));
+    }
+
+    private void projectChainedEnabledDeps(DgFeature feature) {
+        logger.debug(String.format("FM: Projecting chained enabled deps for feature %s", feature));
+        feature.getChainedEnabledDeps().addAll(getHierarchyChainedEnabledDeps(feature));
+        logger.debug(String.format("FM: Projected chained enabled deps for feature %s", feature));
     }
 
     private void projectChainedSoftDeps(DgFeature feature) {
@@ -233,8 +271,18 @@ public class DgFmServiceImpl implements DgFmService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<DgFeature> getHierarchyChainedHardDeps(DgFeature feature) {
-        return feature.getChainedHardDeps().stream().flatMap(f -> getHierarchyChainedHardDeps(f).stream())
+    public Set<DgFeature> getHierarchyChainedVisibleDeps(DgFeature feature) {
+        return feature.getChainedVisibleDeps().stream().flatMap(f -> getHierarchyChainedVisibleDeps(f).stream())
+                .collect(Collectors.toSet());
+    }
+
+    public Set<DgFeature> getHierarchyChainedMandatoryDeps(DgFeature feature) {
+        return feature.getChainedMandatoryDeps().stream().flatMap(f -> getHierarchyChainedMandatoryDeps(f).stream())
+                .collect(Collectors.toSet());
+    }
+
+    public Set<DgFeature> getHierarchyChainedEnabledDeps(DgFeature feature) {
+        return feature.getChainedEnabledDeps().stream().flatMap(f -> getHierarchyChainedEnabledDeps(f).stream())
                 .collect(Collectors.toSet());
     }
 
@@ -300,7 +348,9 @@ public class DgFmServiceImpl implements DgFmService {
 
     private void chainReferences(Map<String, DgFeature> features, DgFeature f) {
         logger.debug(String.format("FM: Chaining references for feature %s", f));
-        chainReferences(features, f.getName(), f::getHardDeps, f.getChainedHardDeps()::add, "hard deps");
+        chainReferences(features, f.getName(), f::getVisibleDeps, f.getChainedVisibleDeps()::add, "visible deps");
+        chainReferences(features, f.getName(), f::getEnabledDeps, f.getChainedEnabledDeps()::add, "enabled deps");
+        chainReferences(features, f.getName(), f::getMandatoryDeps, f.getChainedMandatoryDeps()::add, "mandatory deps");
         chainReferences(features, f.getName(), f::getSoftDeps, f.getChainedSoftDeps()::add, "soft deps");
         chainReferences(features, f.getName(), f::getMixins, f.getChainedMixins()::add, "mixins");
         logger.debug(String.format("FM: Chained references for feature %s", f));

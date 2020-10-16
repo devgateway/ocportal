@@ -52,8 +52,8 @@ public class DgFmTest extends AbstractWebTest {
 
 
     @Test
-    public void testHardDeps() {
-        Assert.assertTrue( fmService.getFeature("tenderChart").getHardDeps().contains("tenderField"));
-        Assert.assertTrue( fmService.getFeature("tenderChart").getHardDeps().contains("tender"));
+    public void testVisibleDeps() {
+        Assert.assertTrue(fmService.getFeature("tenderChart").getVisibleDeps().contains("tenderField"));
+        Assert.assertTrue(fmService.getFeature("tenderChart").getVisibleDeps().contains("tender"));
     }
 }

@@ -6,9 +6,17 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration
 public class ObjectMapperConfig {
+
+    @Primary
+    @Bean
+    public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder objectMapperBuilder) {
+        return objectMapperBuilder.build();
+    }
 
     @Bean("yamlObjectMapper")
     public ObjectMapper yamlObjectMapper() {

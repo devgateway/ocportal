@@ -2,8 +2,6 @@ package org.devgateway.toolkit.forms.fm;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.devgateway.toolkit.web.fm.DgFmSubject;
 import org.devgateway.toolkit.web.fm.entity.DgFeature;
 
@@ -74,11 +72,15 @@ public interface DgFmComponentSubject extends DgFmSubject {
      * construct the {@link DgFeature#getName()}
      */
     default void attachFm() {
+        attachWithParentFm(((Component) this).getId());
+    }
+
+    default void attachWithParentFm(String fmName) {
         if (isNoAutoAttach() || isFmAttached()) {
             return;
         }
         String parentCombinedFmName = getFmService().getParentCombinedFmName(getParentFmName(((Component) this)
-                .getParent()), ((Component) this).getId());
+                .getParent()), fmName);
         if (parentCombinedFmName == null) {
             return;
         }
@@ -88,6 +90,7 @@ public interface DgFmComponentSubject extends DgFmSubject {
     /**
      * Alternative way to attach FM behavior to children components.
      * {@link DgFmAttachingVisitor} is preferred
+     *
      * @param children
      */
     default void attachFmForChildren(Component... children) {
