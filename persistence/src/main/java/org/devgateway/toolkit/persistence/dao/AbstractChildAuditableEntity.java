@@ -15,7 +15,6 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractChildAuditableEntity<P extends AbstractAuditableEntity> extends AbstractAuditableEntity {
     @ManyToOne
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "parent_id", insertable = false, updatable = false)
     @JsonIgnore
     @org.springframework.data.annotation.Transient

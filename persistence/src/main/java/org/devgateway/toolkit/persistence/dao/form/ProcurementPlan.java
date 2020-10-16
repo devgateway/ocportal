@@ -38,12 +38,10 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private FiscalYear fiscalYear;
 

@@ -29,7 +29,6 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderItem extends AbstractChildExpandableAuditEntity<Tender> implements ListViewItem {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PurchaseItem purchaseItem;
 

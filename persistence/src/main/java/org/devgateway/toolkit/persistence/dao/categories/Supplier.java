@@ -2,8 +2,6 @@ package org.devgateway.toolkit.persistence.dao.categories;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
@@ -21,7 +19,6 @@ public class Supplier extends Category {
     private String address;
 
     @ExcelExport(justExport = true, name = "Target Group")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 

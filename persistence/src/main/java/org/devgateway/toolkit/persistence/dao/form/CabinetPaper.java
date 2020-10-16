@@ -34,7 +34,6 @@ import java.util.Collections;
 public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
     @org.springframework.data.annotation.Transient

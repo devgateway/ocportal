@@ -57,13 +57,11 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     private Date closingDate;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method Rationale")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethodRationale procurementMethodRationale;
 
@@ -72,7 +70,6 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     private String objective;
 
     @ExcelExport(useTranslation = true, name = "Tender Issued By")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcuringEntity issuedBy;
 
@@ -80,7 +77,6 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     private BigDecimal tenderValue;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 

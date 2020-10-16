@@ -35,7 +35,6 @@ public class AwardNotificationItem extends AbstractDocsChildExpAuditEntity<Award
     private BigDecimal awardValue;
 
     @ExcelExport(name = "Supplier")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 

@@ -45,11 +45,13 @@ public class UserDashboard extends AbstractAuditableEntity implements Serializab
         this.formUrlEncodedBody = formUrlEncodedBody;
     }
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "defaultDashboard")
     @RestResource(exported = false)
     @JsonIgnore
     private Set<Person> defaultDashboardUsers = new HashSet<>();
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany(fetch = FetchType.LAZY)
     @RestResource(exported = false)
     @JsonIgnore

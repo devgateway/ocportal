@@ -27,17 +27,14 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true)
     private BigDecimal totalAmount;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     @ExcelExport(name = "Payment Vouchers PMC Reports", justExport = true)
     private PMCReport pmcReport;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     @ExcelExport(name = "Inspection Report", justExport = true)
     private InspectionReport inspectionReport;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     @ExcelExport(name = "Administrator Report", justExport = true)
     private AdministratorReport administratorReport;
