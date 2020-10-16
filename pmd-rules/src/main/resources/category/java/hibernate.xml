@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<ruleset name="JPA Best Practices"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Rules which enforce generally accepted JPA best practices.
+    </description>
+
+    <rule name="CachedCollectionRule"
+          language="java"
+          since="3.0"
+          message="This collection is not cached"
+          class="org.devgateway.dgtoolkit.pmd.lang.java.rule.hibernate.CachedCollectionRule">
+        <description>
+            Missing an opportunity to improve performance. Collection can be cached.
+        </description>
+        <priority>3</priority>
+        <example>
+            <![CDATA[
+public class User {
+
+    @Cache
+    @OneToMany
+    List<Role> roles = new ArrayList();
+}
+]]>
+        </example>
+    </rule>
+
+    <rule name="CachedToOneRule"
+          language="java"
+          since="3.0"
+          message="Cache annotation has no effect"
+          class="org.devgateway.dgtoolkit.pmd.lang.java.rule.hibernate.CachedToOneRule">
+        <description>
+            To one associations do not need to be marked as cached.
+        </description>
+        <priority>5</priority>
+        <example>
+            <![CDATA[
+public class User {
+
+    @Cache // this annotation has no effect
+    @ManyToOne
+    Role role;
+}
+]]>
+        </example>
+    </rule>
+
+</ruleset>

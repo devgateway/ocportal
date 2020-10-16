@@ -48,6 +48,7 @@
         <module>ui</module>
         <module>forms</module>
         <module>persistence-mongodb</module>
+        <module>pmd-rules</module>
     </modules>
 
     <inceptionYear>2015</inceptionYear>
@@ -206,6 +207,33 @@
                         <source>1.8</source>
                         <target>1.8</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <analysisCache>true</analysisCache>
+                        <printFailingErrors>true</printFailingErrors>
+                        <rulesets>
+                            <ruleset>${project.basedir}/../pmd.xml</ruleset>
+                        </rulesets>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.devgateway.toolkit</groupId>
+                            <artifactId>pmd-rules</artifactId>
+                            <version>1.12.1-SNAPSHOT</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
