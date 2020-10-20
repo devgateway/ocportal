@@ -76,7 +76,6 @@ public class DgFmServiceImpl implements DgFmService {
             Map<String, DgFeature> projectedFeatures = new ConcurrentHashMap<>();
             projectProperties(projectedFeatures, mutableChainedFeatures);
             features = projectedFeatures;
-            emitProjectedFm();
             logger.info("FM: Done initializing the Feature Manager.");
         } else {
             logger.info("FM: Feature Manager is disabled.");
