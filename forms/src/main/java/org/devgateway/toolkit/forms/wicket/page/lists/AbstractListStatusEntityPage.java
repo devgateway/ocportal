@@ -46,7 +46,7 @@ public abstract class AbstractListStatusEntityPage<T extends AbstractStatusAudit
     }
 
     private void addStatusColumn() {
-        columns.add(1, new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Status"),
+        addFmColumn("status", 1, new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Status"),
                 "status", "status", new ListModel(getStatusDropdownValues()), dataTable));
     }
 }
