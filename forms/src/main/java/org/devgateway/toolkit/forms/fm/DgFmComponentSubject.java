@@ -79,12 +79,15 @@ public interface DgFmComponentSubject extends DgFmSubject {
         if (isNoAutoAttach() || isFmAttached()) {
             return;
         }
-        String parentCombinedFmName = getFmService().getParentCombinedFmName(getParentFmName(((Component) this)
-                .getParent()), fmName);
+        String parentCombinedFmName = getParentCombinedFmName(((Component) this).getParent(), fmName);
         if (parentCombinedFmName == null) {
             return;
         }
         attachFm(parentCombinedFmName);
+    }
+
+    default String getParentCombinedFmName(Component parent, String fmName) {
+        return getFmService().getParentCombinedFmName(getParentFmName(parent), fmName);
     }
 
     /**
