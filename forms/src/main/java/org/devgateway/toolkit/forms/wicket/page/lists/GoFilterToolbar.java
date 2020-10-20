@@ -4,11 +4,32 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.GoFilter;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
+import org.devgateway.toolkit.web.fm.service.DgFmService;
 
 /**
  * @author mpostelnicu
  */
-public class GoFilterToolbar extends FilterToolbar {
+public class GoFilterToolbar extends FilterToolbar implements DgFmFormComponentSubject {
+
+    @SpringBean
+    protected DgFmService fmService;
+
+    @Override
+    public DgFmService getFmService() {
+        return fmService;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isFmEnabled(super::isEnabled);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isFmVisible(super::isVisible);
+    }
 
     private GoFilter goFilter;
 
