@@ -47,7 +47,7 @@ public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceF
                         new GenericChoiceProvider<>((List<Y>) getFilterChoices().getObject()),
                         (IModel<Collection<Y>>) getFilterModel(form));
         selectorField.hideLabel();
-
+        selectorField.fmNoAutoAttach();
         selectorField.getField().add(new AjaxComponentUpdatingBehavior(form, "change"));
 
         return selectorField;
