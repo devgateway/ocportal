@@ -170,7 +170,7 @@ class FeedbackMessageForm extends React.PureComponent {
           <FormLabel>Comment</FormLabel>
           <FormControl
               required
-              componentClass="textarea"
+              as="textarea"
               name="comment"
               maxLength={10000}
               rows={5}

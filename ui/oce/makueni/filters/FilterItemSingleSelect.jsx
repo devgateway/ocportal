@@ -85,7 +85,7 @@ class FilterItemSingleSelect extends translatable(React.Component) {
     return (
       <FormGroup>
         <FormLabel>Select a Value</FormLabel>
-        <FormControl componentClass="select" placeholder="select" onChange={this.handleChange}
+        <FormControl as="select" placeholder="select" onChange={this.handleChange}
                      value={selected}>
           <option value="all">All</option>
           {
