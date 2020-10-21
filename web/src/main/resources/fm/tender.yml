@@ -147,34 +147,18 @@
   enabled: yes
   visible: yes
 - name: tendersList
-  mandatory: no
-  enabled: yes
   visible: yes
 - name: tendersList.department
-  mandatory: no
-  enabled: yes
   visible: yes
 - name: tendersList.downloadFile
-  mandatory: no
-  enabled: yes
   visible: yes
 - name: tendersList.filterToolbar
-  mandatory: no
-  enabled: yes
   visible: yes
 - name: tendersList.fiscalYear
-  mandatory: no
-  enabled: yes
   visible: yes
 - name: tendersList.lastModifiedDate
-  mandatory: no
-  enabled: yes
   visible: yes
 - name: tendersList.status
-  mandatory: no
-  enabled: yes
   visible: yes
 - name: tendersList.tenderTitle
-  mandatory: no
-  enabled: yes
   visible: yes
