@@ -1,226 +1,180 @@
-- name: singleSelect
-  enabled: yes
-  visible: no
-
-- name: tenderForm.identification
-  enabled: yes
-
-- name: tenderForm.procurementMethodSelectors
-  enabled: yes
-  mixins:
-    - singleSelect
-
-
 - name: tenderForm
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.address
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.approve
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.cancel
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.closingDate
   mandatory: yes
-  enabled: no
+  enabled: yes
   visible: yes
-  mixins:
-    - tenderForm.identification
-
 - name: tenderForm.delete
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.emailAddress
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.formDocs
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.invitationDate
   mandatory: yes
   enabled: yes
   visible: yes
-  mixins:
-    - tenderForm.identification
-
 - name: tenderForm.issuedBy
-  mixins:
-    - singleSelect
   mandatory: yes
   enabled: yes
   visible: yes
-
 - name: tenderForm.newStatusComment
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.objective
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.procurementMethod
   mandatory: no
   enabled: yes
   visible: yes
-  mixins:
-    - tenderForm.identification
-    - tenderForm.procurementMethodSelectors
-
 - name: tenderForm.procurementMethodRationale
   mandatory: no
   enabled: yes
   visible: yes
-  visibleDeps:
-    - tenderForm.procurementMethod
-  enabledDeps:
-    - tenderForm.procurementMethod
-  mixins:
-    - tenderForm.procurementMethodSelectors
-
 - name: tenderForm.revertToDraft
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.save
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.saveContinue
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.saveSubmit
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.submitAndNext
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.targetGroup
-  mixins:
-    - singleSelect
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.description
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.newButton
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.purchaseItem
-  mixins:
-    - singleSelect
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.quantity
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.remove
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.totalCost
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.unit
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderItems.unitPrice
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderLink
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderNumber
   mandatory: yes
   enabled: yes
   visible: yes
-  mixins:
-    - tenderForm.identification
-
 - name: tenderForm.tenderProcess.project.procurementPlan.department
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderProcess.project.procurementPlan.fiscalYear
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.tenderTitle
   mandatory: yes
   enabled: yes
   visible: yes
-  mixins:
-    - tenderForm.identification
-
 - name: tenderForm.tenderValue
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.terminate
   mandatory: no
   enabled: yes
   visible: yes
-
 - name: tenderForm.visibleStatusComments
   mandatory: no
   enabled: yes
   visible: yes
-
-- name: test
+- name: tendersList
   mandatory: no
   enabled: yes
   visible: yes
-  
+- name: tendersList.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tendersList.downloadFile
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tendersList.filterToolbar
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tendersList.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tendersList.lastModifiedDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tendersList.status
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tendersList.tenderTitle
+  mandatory: no
+  enabled: yes
+  visible: yes

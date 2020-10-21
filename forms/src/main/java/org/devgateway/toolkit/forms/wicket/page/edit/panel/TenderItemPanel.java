@@ -121,7 +121,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 };
         quantity.decimal();
         quantity.getField().add(RangeValidator.minimum(BigDecimal.ONE), new BigDecimalValidator());
-        quantity.required();
+        //quantity.required();
         item.add(quantity);
 
         unit = new GenericSleepFormComponent<>("unit",
@@ -145,7 +145,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                 };
         price.decimal();
-        price.required();
+        //price.required();
         price.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         item.add(price);
 
@@ -191,7 +191,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                             target.add(unit);
                         }
                     };
-            purchaseItem.required();
+            //purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
 
             final Component description = ComponentUtil.addTextField(this, "description");
