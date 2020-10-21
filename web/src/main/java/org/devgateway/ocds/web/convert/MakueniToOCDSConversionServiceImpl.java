@@ -769,6 +769,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     @Override
     public Release createAndPersistRelease(TenderProcess tenderProcess) {
         try {
+            //never export releases from draft procurement plans or projects
+            if (!tenderProcess.getProcurementPlan().getStatus().equals(DBConstants.Status.APPROVED)
+                    || !tenderProcess.getProject().getStatus().equals(DBConstants.Status.APPROVED)) {
+                return null;
+            }
             Release release = createRelease(tenderProcess);
             Release byOcid = releaseRepository.findByOcid(release.getOcid());
             if (!areReleasesIdentical(release, byOcid)) {

@@ -16,6 +16,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectMultiFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPageElevated;
@@ -32,7 +33,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@AuthorizeInstantiation({SecurityConstants.Roles.ROLE_ADMIN, SecurityConstants.Roles.ROLE_PMC_ADMIN})
 @MountPath(value = "/listusers")
 public class ListUserPage extends AbstractListPage<Person> {
 
@@ -60,11 +61,19 @@ public class ListUserPage extends AbstractListPage<Person> {
 
         final List<Department> departments = departmentService.findAll();
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Departments"),
-                "departments", new ListModel(departments), dataTable));
+                "departments", new ListModel<>(departments), dataTable));
 
-        final List<Role> roles = roleService.findAll();
+        List<Role> roles = null;
+        if (FormSecurityUtil.isCurrentUserAdmin()) {
+            roles = roleService.findAll();
+        } else {
+            if (FormSecurityUtil.isCurrentUserPmcAdmin()) {
+                roles = roleService.findByAuthorityIn(SecurityConstants.Roles.PMC_ROLES);
+            }
+        }
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),
-                "roles", new ListModel(roles), dataTable));
+                "roles", new ListModel<>(roles), dataTable,
+                !FormSecurityUtil.isCurrentUserPmcAdmin()));
 
         super.onInitialize();
         // enable excel download
@@ -73,6 +82,10 @@ public class ListUserPage extends AbstractListPage<Person> {
 
     @Override
     public JpaFilterState<Person> newFilterState() {
-        return new PersonFilterState();
+        PersonFilterState personFilterState = new PersonFilterState();
+        if (FormSecurityUtil.isCurrentUserPmcAdmin()) {
+            personFilterState.getRoles().addAll(roleService.findByAuthorityIn(SecurityConstants.Roles.PMC_ROLES));
+        }
+        return personFilterState;
     }
 }

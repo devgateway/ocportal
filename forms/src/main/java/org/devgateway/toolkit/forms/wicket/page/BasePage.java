@@ -110,6 +110,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_USER;
 
@@ -566,9 +567,12 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             @Override
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
-                list.add(new MenuBookmarkablePageLink<ListUserPage>(ListUserPage.class, null,
-                        new StringResourceModel("navbar.users", this, null))
-                        .setIconType(FontAwesomeIconType.users));
+                BootstrapBookmarkablePageLink<ListUserPage> users =
+                        new MenuBookmarkablePageLink<ListUserPage>(ListUserPage.class, null,
+                                new StringResourceModel("navbar.users", this, null))
+                                .setIconType(FontAwesomeIconType.users);
+                FormSecurityUtil.authorizeRender(users, ROLE_PMC_ADMIN, ROLE_ADMIN);
+                list.add(users);
 
                 /*
                 list.add(new MenuBookmarkablePageLink<ListTestFormPage>(ListTestFormPage.class, null,
@@ -631,43 +635,47 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 */
                 list.add(new MenuDivider());
 
-                list.add(new MenuBookmarkablePageLink<Void>(
+                BootstrapBookmarkablePageLink<Void> adminSettings = new MenuBookmarkablePageLink<Void>(
                         EditAdminSettingsPage.class,
                         new StringResourceModel("navbar.adminSettings", BasePage.this, null)
-                )
-                        .setIconType(FontAwesomeIconType.briefcase));
+                ).setIconType(FontAwesomeIconType.briefcase);
+                MetaDataRoleAuthorizationStrategy.authorize(adminSettings, Component.RENDER, ROLE_ADMIN);
+                list.add(adminSettings);
 
-                list.add(new MenuBookmarkablePageLink<ListAlertPage>(
-                        ListFeedbackMessagePage.class,
+                BootstrapBookmarkablePageLink<ListAlertPage> feedbackMessages
+                        = new MenuBookmarkablePageLink<ListAlertPage>(ListFeedbackMessagePage.class,
                         new StringResourceModel("navbar.feedbackMessages", BasePage.this, null)
-                ).setIconType(FontAwesomeIconType.warning));
+                ).setIconType(FontAwesomeIconType.warning);
+                MetaDataRoleAuthorizationStrategy.authorize(feedbackMessages, Component.RENDER, ROLE_ADMIN);
+                list.add(feedbackMessages);
 
-                list.add(new MenuBookmarkablePageLink<ListAlertPage>(
+
+                BootstrapBookmarkablePageLink<ListAlertPage> navbarAlerts = new MenuBookmarkablePageLink<ListAlertPage>(
                         ListAlertPage.class,
                         new StringResourceModel("navbar.alerts", BasePage.this, null)
-                )
-                        .setIconType(FontAwesomeIconType.envelope));
+                ).setIconType(FontAwesomeIconType.envelope);
+                MetaDataRoleAuthorizationStrategy.authorize(navbarAlerts, Component.RENDER, ROLE_ADMIN);
+                list.add(navbarAlerts);
 
-                list.add(new MenuBookmarkablePageLink<ListFlagHistoryPage>(
-                        ListFlagHistoryPage.class,
-                        new StringResourceModel("navbar.redFlagHistory", BasePage.this, null)
-                )
-                        .setIconType(FontAwesomeIconType.flag));
+                BootstrapBookmarkablePageLink<ListFlagHistoryPage> redFlagHistory =
+                        new MenuBookmarkablePageLink<ListFlagHistoryPage>(ListFlagHistoryPage.class,
+                                new StringResourceModel("navbar.redFlagHistory", BasePage.this, null)
+                        ).setIconType(FontAwesomeIconType.flag);
+                MetaDataRoleAuthorizationStrategy.authorize(redFlagHistory, Component.RENDER, ROLE_ADMIN);
+                list.add(redFlagHistory);
 
-
-                list.add(new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(
-                        ListAlertsStatisticsPage.class,
-                        new StringResourceModel("navbar.alertsStatistics", BasePage.this, null)
-                )
-                        .setIconType(FontAwesomeIconType.mail_reply_all));
-
+                BootstrapBookmarkablePageLink<ListAlertsStatisticsPage> alertsStatistics =
+                        new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
+                                new StringResourceModel("navbar.alertsStatistics", BasePage.this, null)
+                        ).setIconType(FontAwesomeIconType.mail_reply_all);
+                MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
+                list.add(alertsStatistics);
                 return list;
             }
         };
 
         adminMenu.setIconType(FontAwesomeIconType.cog);
-        MetaDataRoleAuthorizationStrategy.authorize(adminMenu, Component.RENDER, ROLE_ADMIN);
-
+        FormSecurityUtil.authorizeRender(adminMenu, ROLE_ADMIN, ROLE_PMC_ADMIN);
         return adminMenu;
     }
 

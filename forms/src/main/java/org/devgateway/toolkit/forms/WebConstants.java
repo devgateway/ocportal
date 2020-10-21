@@ -40,6 +40,7 @@ public final class WebConstants {
     public static final String PARAM_PRINT = "print";
 
     public static final String PARAM_ID = "id";
+    public static final String PARAM_DELETE_ENABLED = "deleteEnabled";
     public static final String V_POSITION = "vPosition";
     public static final String MAX_HEIGHT = "maxPosition";
     public static final String PARAM_REVISION_ID = "revisionId";

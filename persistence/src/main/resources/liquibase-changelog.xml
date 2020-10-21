@@ -1138,4 +1138,42 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-691" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="ROLE"/>
+        </preConditions>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_PMC_USER"/>
+        </insert>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_PMC_ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-731" author="mpostelnicu">
+        <sql>update tender set tender_process_id = null where id=87066</sql>
+        <sql>update tender set tender_process_id = null where id=50732</sql>
+        <sql>update tender set tender_process_id = null where id=64385</sql>
+        <sql>update tender set tender_process_id = null where id=96667</sql>
+
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=91030</sql>
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=91024</sql>
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=95537</sql>
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=95100</sql>
+
+        <sql>update professional_opinion set tender_process_id = null where id = 66733</sql>
+        <sql>update professional_opinion set tender_process_id = null where id = 98641</sql>
+
+        <sql>update award_notification set tender_process_id = null where id = 42932</sql>
+        <sql>update award_notification set tender_process_id = null where id = 100943</sql>
+        <sql>update award_notification set tender_process_id = null where id = 64519</sql>
+
+        <sql>update award_acceptance set tender_process_id = null where id = 103163</sql>
+        <sql>update award_acceptance set tender_process_id = null where id = 99745</sql>
+
+        <sql>update contract set tender_process_id = null where id = 51303</sql>
+        <sql>update contract set tender_process_id = null where id = 27675</sql>
+    </changeSet>
 </databaseChangeLog>

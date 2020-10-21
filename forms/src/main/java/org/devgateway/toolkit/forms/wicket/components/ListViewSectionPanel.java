@@ -16,7 +16,6 @@ import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -112,12 +111,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         listView.forEach(c -> ret.add((GenericBootstrapFormComponent<?, ?>) c.get(name)));
         return ret;
     }
-
-    protected FormComponent<?>[] getFormComponentsFromBootstrapComponents(List<GenericBootstrapFormComponent<?, ?>>
-                                                                                  bc) {
-        return bc.stream().map(GenericBootstrapFormComponent::getField).toArray(FormComponent[]::new);
-    }
-
+    
     @Override
     protected void onInitialize() {
         super.onInitialize();
