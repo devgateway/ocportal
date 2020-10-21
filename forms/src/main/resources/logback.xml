@@ -25,7 +25,7 @@
     <logger name="org.hibernate.tool.hbm2ddl" level="WARN"/>
     <logger name="org.hibernate.cache.ehcache" level="ERROR"/>
 
-    <logger name="org.devgateway.toolkit.web.fm" level="DEBUG"/>
+    <logger name="org.devgateway.toolkit.web.fm" level="INFO"/>
 
     <logger name="org.apache.wicket.resource" level="WARN"/>
     <logger name="org.apache.wicket.Localizer" level="ERROR"/>
