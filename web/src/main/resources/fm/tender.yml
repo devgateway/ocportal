@@ -4,148 +4,148 @@
   visible: yes
 - name: tenderForm.address
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.approve
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.cancel
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.closingDate
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.delete
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.emailAddress
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.formDocs
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.invitationDate
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.issuedBy
   mandatory: yes
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.newStatusComment
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.objective
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.procurementMethod
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.procurementMethodRationale
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.revertToDraft
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.save
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.saveContinue
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.saveSubmit
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.submitAndNext
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.targetGroup
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderItems.description
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.newButton
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderItems.purchaseItem
   mandatory: yes
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.quantity
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderItems.remove
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.totalCost
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderItems.unit
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.unitPrice
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderLink
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderNumber
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderProcess.project.procurementPlan.department
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderProcess.project.procurementPlan.fiscalYear
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderTitle
   mandatory: yes
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderValue
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.terminate
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.visibleStatusComments
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tendersList
   visible: yes
 - name: tendersList.department
