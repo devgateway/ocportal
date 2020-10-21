@@ -1,5 +1,5 @@
 - name: tenderForm
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: tenderForm.address
