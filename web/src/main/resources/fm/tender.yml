@@ -5,7 +5,7 @@
 - name: tenderForm.address
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.approve
   mandatory: no
   enabled: yes
@@ -25,18 +25,18 @@
 - name: tenderForm.emailAddress
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.formDocs
   mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.invitationDate
   mandatory: yes
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.issuedBy
   mandatory: yes
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.newStatusComment
   mandatory: no
@@ -51,7 +51,7 @@
   enabled: yes
   visible: yes
 - name: tenderForm.procurementMethodRationale
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: tenderForm.revertToDraft
@@ -84,7 +84,7 @@
   visible: yes
 - name: tenderForm.tenderItems.description
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.newButton
   mandatory: no
@@ -92,15 +92,15 @@
   visible: yes
 - name: tenderForm.tenderItems.purchaseItem
   mandatory: yes
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.quantity
   mandatory: yes
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.remove
   mandatory: no
-  enabled: yes
+  enabled: no
   visible: yes
 - name: tenderForm.tenderItems.totalCost
   mandatory: no
