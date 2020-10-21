@@ -57,7 +57,6 @@ import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.forms.wicket.page.user.LoginPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.spring.SpringLiquibaseRunner;
-import org.nustaq.serialization.FSTConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
-import org.wicketstuff.pageserializer.fast2.Fast2WicketSerializer;
 import org.wicketstuff.select2.ApplicationSettings;
 
 import javax.persistence.EntityManagerFactory;
@@ -195,17 +193,11 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getResourceSettings().setCssCompressor(new YuiCssCompressor());
             getResourceSettings().setUseMinifiedResources(true);
 
-            // getFrameworkSettings().setSerializer(new DeflatedJavaSerializer(getApplicationKey()));
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
-
             getMarkupSettings().setStripComments(true);
             getMarkupSettings().setCompressWhitespace(true);
             getMarkupSettings().setStripWicketTags(true);
         } else {
             getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
         }
 
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
@@ -238,8 +230,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
     protected void init() {
         super.init();
 
-        //getFrameworkSettings().setSerializer(new SpringDevToolsSerializer());
-        // add allowed woff2 extension
+       
         IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
         if (packageResourceGuard instanceof SecurePackageResourceGuard) {
             SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
