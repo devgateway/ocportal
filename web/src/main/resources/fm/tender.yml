@@ -79,73 +79,73 @@
   enabled: no
   visible: yes
 - name: tenderForm.tenderItems
-  mandatory: no
+  mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.tenderItems.description
   mandatory: no
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.newButton
-  mandatory: no
+  mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.tenderItems.purchaseItem
   mandatory: yes
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.quantity
   mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.tenderItems.remove
-  mandatory: no
-  enabled: no
+  mandatory: yes
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.totalCost
-  mandatory: no
+  mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.tenderItems.unit
-  mandatory: no
-  enabled: no
+  mandatory: yes
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.unitPrice
   mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.tenderLink
-  mandatory: no
-  enabled: no
+  mandatory: yes
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderNumber
   mandatory: yes
   enabled: yes
-  visible: no
-- name: tenderForm.tenderProcess.project.procurementPlan.department
-  mandatory: no
-  enabled: no
   visible: yes
-- name: tenderForm.tenderProcess.project.procurementPlan.fiscalYear
-  mandatory: no
+- name: tenderForm.tenderProcess.project.procurementPlan.department
+  mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
+- name: tenderForm.tenderProcess.project.procurementPlan.fiscalyesr
+  mandatory: yes
+  enabled: yes
+  visible: yes
 - name: tenderForm.tenderTitle
   mandatory: yes
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderValue
-  mandatory: no
+  mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.terminate
   mandatory: no
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.visibleStatusComments
   mandatory: no
   enabled: yes
-  visible: no
+  visible: yes
 - name: tendersList
   visible: yes
 - name: tendersList.department
@@ -154,7 +154,7 @@
   visible: yes
 - name: tendersList.filterToolbar
   visible: yes
-- name: tendersList.fiscalYear
+- name: tendersList.fiscalyesr
   visible: yes
 - name: tendersList.lastModifiedDate
   visible: yes
