@@ -106,6 +106,9 @@ public class DgFmServiceImpl implements DgFmService {
         if (!fmActive) {
             return null;
         }
+        if (featureName == null) {
+            return createFeatureWithDefaults(null);
+        }
         logger.debug(String.format("FM: Querying feature %s", featureName));
         DgFeature dgFeature = features.get(featureName);
         if (dgFeature == null) {
