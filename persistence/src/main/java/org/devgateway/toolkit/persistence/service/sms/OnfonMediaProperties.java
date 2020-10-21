@@ -8,13 +8,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("onfonmedia")
 public class OnfonMediaProperties {
 
-    private String baseURL = "https://api.onfonmedia.co.ke/v1/sms/SendBulkSMS";
+    private String baseURL = "https://api.onfonmedia.co.ke";
 
-    private String senderId = "Makueni";
+    private String senderId;
 
     private String clientId;
 
     private String apiKey;
+
+    private String accessKey;
 
     public String getBaseURL() {
         return baseURL;
@@ -46,5 +48,13 @@ public class OnfonMediaProperties {
 
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
     }
 }

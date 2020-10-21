@@ -5,14 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -70,6 +73,65 @@ public class OnfonMediaClient {
         }
     }
 
+    public static class BulkSMSResponse {
+
+        @JsonProperty("Data")
+        private List<SMSResponse> data;
+
+        public List<SMSResponse> getData() {
+            return data;
+        }
+
+        public void setData(List<SMSResponse> data) {
+            this.data = data;
+        }
+    }
+
+    public static class SMSResponse {
+
+        @JsonProperty("MessageErrorCode")
+        private int messageErrorCode;
+
+        @JsonProperty("MessageErrorDescription")
+        private String messageErrorDescription;
+
+        @JsonProperty("MobileNumber")
+        private String mobileNumber;
+
+        public int getMessageErrorCode() {
+            return messageErrorCode;
+        }
+
+        public void setMessageErrorCode(int messageErrorCode) {
+            this.messageErrorCode = messageErrorCode;
+        }
+
+        public String getMessageErrorDescription() {
+            return messageErrorDescription;
+        }
+
+        public void setMessageErrorDescription(String messageErrorDescription) {
+            this.messageErrorDescription = messageErrorDescription;
+        }
+
+        public String getMobileNumber() {
+            return mobileNumber;
+        }
+
+        public void setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", SMSResponse.class.getSimpleName() + "[", "]")
+                    .add("messageErrorCode=" + messageErrorCode)
+                    .add("messageErrorDescription='" + messageErrorDescription + "'")
+                    .add("mobileNumber='" + mobileNumber + "'")
+                    .toString();
+        }
+    }
+
     private class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
         @Override
@@ -95,8 +157,19 @@ public class OnfonMediaClient {
         BulkSMSRequest request = new BulkSMSRequest(properties.getApiKey(), properties.getClientId(),
                 properties.getSenderId(), messages);
 
-        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("AccessKey", properties.getAccessKey());
+        HttpEntity<BulkSMSRequest> httpEntity = new HttpEntity<>(request, headers);
+
+        RestTemplate restTemplate = new RestTemplate(
+                new BufferingClientHttpRequestFactory(
+                        new HttpComponentsClientHttpRequestFactory()));
         restTemplate.getInterceptors().add(new LoggingInterceptor());
-        restTemplate.postForObject(properties.getBaseURL() + "/v1/sms/SendBulkSMS", request, Map.class);
+        String url = properties.getBaseURL() + "/v1/sms/SendBulkSMS";
+        BulkSMSResponse response = restTemplate.postForObject(url, httpEntity, BulkSMSResponse.class);
+
+        response.getData().stream()
+                .filter(r -> r.getMessageErrorCode() != 0)
+                .forEach(r -> logger.error(r.toString()));
     }
 }
