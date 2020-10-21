@@ -508,4 +508,8 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
         return true;
     }
+
+    public void setRequireAtLeastOneItem(boolean requireAtLeastOneItem) {
+        this.requireAtLeastOneItem = requireAtLeastOneItem;
+    }
 }

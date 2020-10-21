@@ -70,7 +70,7 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
     protected class WrongDistinctCountValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
-            return getFormComponentsFromBootstrapComponents(getAwardeeComponents());
+            return ComponentUtil.getFormComponentsFromBootstrapComponents(getAwardeeComponents());
         }
 
         @Override

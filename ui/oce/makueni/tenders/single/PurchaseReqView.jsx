@@ -87,13 +87,19 @@ class PurchaseReqView extends CRDPage {
     this.changeTab = this.changeTab.bind(this);
   }
 
+  maybeTrimOcidPrefix(id) {
+    if (id.includes("ocds-muq5cl-")) {
+      return id.replace("ocds-muq5cl-", "");
+    }
+    return id;
+  }
 
   componentDidMount() {
     super.componentDidMount();
 
-    const { id } = this.props;
+    const {id} = this.props;
 
-    this.prID.assign('PR', id);
+    this.prID.assign('PR', this.maybeTrimOcidPrefix(id));
 
     this.prInfo.addListener('PR', () => {
       this.prInfo.getState()

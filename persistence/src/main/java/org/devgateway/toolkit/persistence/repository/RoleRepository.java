@@ -18,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author mpostelnicu
  */
@@ -29,4 +32,6 @@ public interface RoleRepository extends TextSearchableRepository<Role, Long> {
     Page<Role> searchText(String code, Pageable page);
 
     Role findByAuthority(String authority);
+
+    List<Role> findByAuthorityIn(Collection<String> authority);
 }

@@ -19,6 +19,7 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
       .toJS(),
       labels: labels,
       textinfo: 'value',
+      textposition: 'outside',
       hole: .8,
       type: 'pie',
       hoverlabel: {
@@ -44,7 +45,8 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
     const { width } = this.props;
     return {
       showlegend: false,
-      paper_bgcolor: 'rgba(0,0,0,0)'
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
     };
   }
 }
