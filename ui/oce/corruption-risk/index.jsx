@@ -18,6 +18,8 @@ import Filters from './filters';
 import LandingPopup from './landing-popup';
 import {LOGIN_URL} from './constants';
 // eslint-disable-next-line no-unused-vars
+// noinspection ES6UnusedImports
+import style from './style.less';
 import Sidebar from './sidebar';
 import {filters as CRDFilters} from '../state/oce-state';
 

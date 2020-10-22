@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import {download, fetchJson, pluck, range} from './tools';
 import Filters from './filters';
 // eslint-disable-next-line no-unused-vars
+// noinspection ES6UnusedImports
+import OCEStyle from './style.less';
 
 if (process.env.NODE_ENV === 'development') {
   require('./dev');

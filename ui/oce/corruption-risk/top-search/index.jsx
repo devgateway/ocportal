@@ -1,7 +1,8 @@
 import translatable from '../../translatable';
 
 // eslint-disable-next-line no-unused-vars
-
+// noinspection ES6UnusedImports
+import style from './style.less';
 
 class TopSearch extends translatable(React.Component) {
   constructor(props, ...rest) {
