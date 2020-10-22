@@ -1176,4 +1176,25 @@
         <sql>update contract set tender_process_id = null where id = 51303</sql>
         <sql>update contract set tender_process_id = null where id = 27675</sql>
     </changeSet>
+
+    <changeSet id="OCMAKU-739" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="PLAN_ITEM"/>
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <sql>
+            update plan_item set item_id = (select id from category where dtype='Item' and code='S000000319')
+            where id = 20195 and item_id is null
+        </sql>
+        <sql>
+            update plan_item set quantity = 3 where id = 16286 and quantity is null
+        </sql>
+        <sql>
+            delete from category where id = 8672 and dtype='Item' and label is null
+        </sql>
+        <sql>
+            ALTER TABLE category ALTER COLUMN label SET NOT NULL;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

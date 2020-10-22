@@ -19,11 +19,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 /**
  * @author idobre
@@ -39,6 +39,7 @@ public class Category extends AbstractAuditableEntity implements Labelable {
     static final int DTYPE_COLUMN_LENGTH = 100;
 
     @ExcelExport(name = "Name")
+    @Column(nullable = false)
     protected String label;
 
     private String description;
