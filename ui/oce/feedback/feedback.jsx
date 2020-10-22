@@ -1,4 +1,4 @@
-import {FormControl, FormGroup, FormLabel, FormText, InputGroup} from 'react-bootstrap';
+import {FormControl, FormGroup, ControlLabel, HelpBlock, InputGroup} from 'react-bootstrap';
 import React from 'react';
 import {getFeedbackUrlPart} from './feedbackList';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -130,7 +130,7 @@ class FeedbackMessageForm extends React.PureComponent {
     return (
       <div className="col-md-6">
         <FormGroup validationState={this.validateEmail()}>
-          <FormLabel>Email</FormLabel>
+          <ControlLabel>Email</ControlLabel>
           <InputGroup>
             <InputGroup.Addon>@</InputGroup.Addon>
             <FormControl
@@ -146,12 +146,12 @@ class FeedbackMessageForm extends React.PureComponent {
           {
             this.state.emailValid
                 ? null
-                : <FormText>Email is invalid</FormText>
+                : <HelpBlock>Email is invalid</HelpBlock>
           }
         </FormGroup>
 
         <FormGroup validationState={this.validateTxt(this.state.name)}>
-          <FormLabel>Name</FormLabel>
+          <ControlLabel>Name</ControlLabel>
           <FormControl
               name="name"
               maxLength={255}
@@ -162,12 +162,12 @@ class FeedbackMessageForm extends React.PureComponent {
           <FormControl.Feedback/>
           {
             this.state.changeNeverFired || this.state.name ? null :
-                <FormText>Please add a name</FormText>
+                <HelpBlock>Please add a name</HelpBlock>
           }
         </FormGroup>
 
         <FormGroup validationState={this.validateTxt(this.state.comment)}>
-          <FormLabel>Comment</FormLabel>
+          <ControlLabel>Comment</ControlLabel>
           <FormControl
               required
               as="textarea"
@@ -181,7 +181,7 @@ class FeedbackMessageForm extends React.PureComponent {
           <FormControl.Feedback/>
           {
             this.state.changeNeverFired || this.state.comment ? null :
-                <FormText>Please add a comment</FormText>
+                <HelpBlock>Please add a comment</HelpBlock>
           }
         </FormGroup>
         <ReCAPTCHA

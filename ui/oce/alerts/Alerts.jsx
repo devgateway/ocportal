@@ -1,6 +1,6 @@
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
-import {Alert, FormControl, FormGroup, FormLabel, FormText} from 'react-bootstrap';
+import {Alert, FormControl, FormGroup, ControlLabel, FormText} from 'react-bootstrap';
 import {Typeahead} from 'react-bootstrap-typeahead';
 
 import './alerts.less';
@@ -182,7 +182,7 @@ class Alerts extends CRDPage {
               
               <div className="col-md-6">
                 <FormGroup validationState={this.validateEmail()} bsSize={'large'}>
-                  <FormLabel>Enter your email address</FormLabel>
+                  <ControlLabel>Enter your email address</ControlLabel>
                   <FormControl
                       type="email"
                       name="email"
@@ -224,10 +224,10 @@ class Alerts extends CRDPage {
                     </div>
                     <div className="col-md-2"></div>
                     <div className="col-md-5">
-                      <FormLabel>Receive alerts for all Tenders from this Department</FormLabel>
+                      <ControlLabel>Receive alerts for all Tenders from this Department</ControlLabel>
                     </div>
                     <div className="col-md-5">
-                      <FormLabel>Receive alerts for these Items from all Departments</FormLabel>
+                      <ControlLabel>Receive alerts for these Items from all Departments</ControlLabel>
                     </div>
                   </div>
                   <div className="row">

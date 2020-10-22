@@ -1,7 +1,7 @@
 import translatable from '../../translatable';
 import {ppState} from '../procurementPlan/state';
 import {API_ROOT} from '../../state/oce-state';
-import {FormControl, FormGroup, FormLabel} from 'react-bootstrap';
+import {FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import React from "react";
 
 class FilterItemSingleSelect extends translatable(React.Component) {
@@ -84,8 +84,8 @@ class FilterItemSingleSelect extends translatable(React.Component) {
     
     return (
       <FormGroup>
-        <FormLabel>Select a Value</FormLabel>
-        <FormControl as="select" placeholder="select" onChange={this.handleChange}
+        <ControlLabel>Select a Value</ControlLabel>
+        <FormControl componentClass="select" placeholder="select" onChange={this.handleChange}
                      value={selected}>
           <option value="all">All</option>
           {
