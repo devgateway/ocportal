@@ -27,6 +27,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author mpostelnicu
+ */
 @Service
 @Validated
 public class DgFmServiceImpl implements DgFmService {

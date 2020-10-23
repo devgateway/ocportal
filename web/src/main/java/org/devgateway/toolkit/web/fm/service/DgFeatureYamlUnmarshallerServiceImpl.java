@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author mpostelnicu
+ */
 @Service
 @Validated
 public class DgFeatureYamlUnmarshallerServiceImpl implements DgFeatureYamlUnmarshallerService {

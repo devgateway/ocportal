@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author mpostelnicu
+ */
 public class DgFeature extends UnchainedDgFeature {
 
     @JsonIgnore

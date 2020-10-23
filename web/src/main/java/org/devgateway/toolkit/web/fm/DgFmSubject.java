@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * Base interface of any java object that needs FM behavior
+ *
+ * @author mpostelnicu
  */
 public interface DgFmSubject {
 

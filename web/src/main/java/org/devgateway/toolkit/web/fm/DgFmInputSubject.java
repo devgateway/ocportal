@@ -5,6 +5,8 @@ import org.danekja.java.util.function.serializable.SerializableBooleanSupplier;
 /**
  * Interface that should be attached to objects for FM behavior, that also provide input means. This is not bound
  * to wicket component
+ *
+ * @author mpostelnicu
  */
 public interface DgFmInputSubject extends DgFmSubject {
 

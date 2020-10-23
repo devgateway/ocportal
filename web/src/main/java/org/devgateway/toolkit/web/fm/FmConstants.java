@@ -1,5 +1,8 @@
 package org.devgateway.toolkit.web.fm;
 
+/**
+ * @author mpostelnicu
+ */
 public final class FmConstants {
 
     private FmConstants() {

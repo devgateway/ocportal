@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 
+/**
+ * @author mpostelnicu
+ */
 @Service
 public class DgFeatureYamlMarshallerServiceImpl implements DgFeatureYamlMarshallerService {
 

@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author mpostelnicu
+ */
 public class UnchainedDgFeature implements Serializable {
 
     @NotEmpty
