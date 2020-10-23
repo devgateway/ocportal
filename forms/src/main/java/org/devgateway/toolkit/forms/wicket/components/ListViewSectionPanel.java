@@ -119,7 +119,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         setOutputMarkupId(true);
         setOutputMarkupPlaceholderTag(true);
 
-        addFilterPanel();
+        //addFilterPanel();
 
         listWrapper = new TransparentWebMarkupContainer("listWrapper");
         listWrapper.setOutputMarkupId(true);

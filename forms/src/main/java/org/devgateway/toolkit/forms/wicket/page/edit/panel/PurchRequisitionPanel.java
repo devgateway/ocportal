@@ -50,7 +50,7 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
         super(id);
     }
 
-    protected class ListItemsValidator implements IFormValidator {
+    protected class PurchRequisitionItemCountValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
             return new FormComponent[0];
@@ -58,40 +58,13 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
 
         @Override
         public void validate(Form<?> form) {
-//            final Set<PlanItem> planItems = new HashSet<>();
-//            final List<PurchaseItem> purchaseItems = PRequisitionPanel.this.getModelObject();
-//            for (final PurchaseItem purchaseItem : purchaseItems) {
-//                if (purchaseItem.getPlanItem() != null) {
-//                    planItems.add(purchaseItem.getPlanItem());
-//                }
-//            }
-//
-//            if (purchaseItems.size() != 0 && purchaseItems.size() != planItems.size()) {
-//                final ListView<PurchaseItem> list = (ListView<PurchaseItem>) PRequisitionPanel.this
-//                        .get("listWrapper").get("list");
-//                if (list != null) {
-//                    for (int i = 0; i < list.size(); i++) {
-//                        final TransparentWebMarkupContainer accordion =
-//                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
-//
-//                        final GenericBootstrapFormComponent planItem =
-//                                (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
-//                                        .get("headerField").get("planItem");
-//
-//                        if (planItem != null) {
-//                            planItem.getField().error(getString("uniqueItem"));
-//
-//                          final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
-//                            if (target.isPresent()) {
-//                                target.get().add(planItem.getBorder());
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            List<PurchRequisition> items = PurchRequisitionPanel.this.getModelObject();
+            if (items.size() == 0) {
+                form.error(getString("atLeastOnePurchRequisition"));
+            }
+
         }
     }
-
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
         return new AddNewChildButton("newButton", Model.of("New Purchase Requisition"));
@@ -104,7 +77,7 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
 
         final Form form = (Form) getParent();
         if (form != null) {
-            form.add(new ListItemsValidator());
+            form.add(new PurchRequisitionItemCountValidator());
         }
     }
 
