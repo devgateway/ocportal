@@ -112,7 +112,7 @@ public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderP
 
     protected void addOcdsDownloadColumn() {
         Component trn = this;
-        columns.add(new AbstractColumn<TenderProcess, String>(
+        addFmColumn("downloadOcds", new AbstractColumn<TenderProcess, String>(
                 new StringResourceModel("downloadOcds", trn)) {
             @Override
             public void populateItem(final Item<ICellPopulator<TenderProcess>> cellItem, final String componentId,
@@ -130,12 +130,15 @@ public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderP
 
     @Override
     protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(
+        attachFm("tendersProcessList");
+
+
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("department", ListTenderProcessPage.this)).getString()),
                 "project.procurementPlan.department", "project.procurementPlan.department",
                 new ListModel(departments), dataTable));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("fiscalYear", ListTenderProcessPage.this)).getString()),
                 "project.procurementPlan.fiscalYear", "project.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));

@@ -36,13 +36,15 @@ public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
     @Override
     protected void onInitialize() {
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+        attachFm("projectList");
+
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
                 "procurementPlan.department", "procurementPlan.department", new ListModel(departments), dataTable));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
                 "procurementPlan.fiscalYear", "procurementPlan.fiscalYear", new ListModel(fiscalYears), dataTable));
 
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(
+        addFmColumn("projectTitle", new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("projectTitle", ListProjectPage.this)).getString()),
                 "projectTitle", "projectTitle"));
 

@@ -1,17 +1,16 @@
+# TENDER FORM PAGE
 - name: tenderForm
-  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.address
   mandatory: no
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.approve
   mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.cancel
-  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.closingDate
@@ -19,24 +18,23 @@
   enabled: yes
   visible: yes
 - name: tenderForm.delete
-  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.emailAddress
   mandatory: no
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.formDocs
   mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.invitationDate
   mandatory: yes
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.issuedBy
   mandatory: yes
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.newStatusComment
   mandatory: no
@@ -51,7 +49,7 @@
   enabled: yes
   visible: yes
 - name: tenderForm.procurementMethodRationale
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.revertToDraft
@@ -59,19 +57,15 @@
   enabled: yes
   visible: yes
 - name: tenderForm.save
-  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.saveContinue
-  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.saveSubmit
-  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.submitAndNext
-  mandatory: no
   enabled: yes
   visible: yes
 - name: tenderForm.targetGroup
@@ -84,7 +78,7 @@
   visible: yes
 - name: tenderForm.tenderItems.description
   mandatory: no
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.newButton
   mandatory: no
@@ -92,15 +86,14 @@
   visible: yes
 - name: tenderForm.tenderItems.purchaseItem
   mandatory: yes
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.quantity
   mandatory: yes
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.remove
-  mandatory: no
-  enabled: no
+  enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.totalCost
   mandatory: no
@@ -139,26 +132,36 @@
   enabled: yes
   visible: yes
 - name: tenderForm.terminate
-  mandatory: no
   enabled: yes
   visible: yes
+# TENDERS LIST PAGE
 - name: tenderForm.visibleStatusComments
   mandatory: no
   enabled: yes
   visible: yes
 - name: tendersList
   visible: yes
+  visibleDeps:
+    - tenderForm
 - name: tendersList.department
   visible: yes
+  visibleDeps:
+    - tenderForm.tenderProcess.project.procurementPlan.department
 - name: tendersList.downloadFile
   visible: yes
+  visibleDeps:
+    - tenderForm.formDocs
 - name: tendersList.filterToolbar
   visible: yes
 - name: tendersList.fiscalYear
   visible: yes
+  visibleDeps:
+    - tenderForm.tenderProcess.project.procurementPlan.fiscalYear
 - name: tendersList.lastModifiedDate
   visible: yes
 - name: tendersList.status
   visible: yes
 - name: tendersList.tenderTitle
   visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
