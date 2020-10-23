@@ -186,9 +186,6 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         // -Dwicket.configuration=deployment
         // The default is Development, so this code is not used
         if (usesDeploymentConfig()) {
-            getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy("-v-",
-                    new CachingResourceVersion(new Adler32ResourceVersion())
-            ));
             getResourceSettings().setJavaScriptCompressor(
                     new GoogleClosureJavaScriptCompressor(CompilationLevel.SIMPLE_OPTIMIZATIONS));
             getResourceSettings().setCssCompressor(new YuiCssCompressor());
@@ -201,11 +198,10 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getMarkupSettings().setStripComments(true);
             getMarkupSettings().setCompressWhitespace(true);
             getMarkupSettings().setStripWicketTags(true);
-        } else {
-            getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
         }
+
+        getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy("-v-",
+                new CachingResourceVersion(new Adler32ResourceVersion())));
 
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
         // be sure that we have added Dozer Listener
