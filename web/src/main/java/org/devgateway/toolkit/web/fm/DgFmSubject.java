@@ -37,7 +37,7 @@ public interface DgFmSubject {
      * @param fmName
      */
     default void attachFm(String fmName) {
-        if (!getFmService().isFmActive()) {
+        if (!getFmService().isFmActive() || isFmAttached()) {
             return;
         }
         if (StringUtils.isEmpty(fmName)) {
