@@ -79,20 +79,17 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
                         new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
                                 item.getModelObject().getParent().getTenderProcess(), true))
                 );
-        awardeeSelector.required();
         item.add(awardeeSelector);
 
-        ComponentUtil.addDateField(item, "professionalOpinionDate").required();
+        ComponentUtil.addDateField(item, "professionalOpinionDate");
 
         final TextFieldBootstrapFormComponent<BigDecimal> recommendedAwardAmount =
                 ComponentUtil.addBigDecimalField(item, "recommendedAwardAmount");
-        recommendedAwardAmount.required();
         recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
-        ComponentUtil.addDateField(item, "approvedDate").required();
+        ComponentUtil.addDateField(item, "approvedDate");
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
 
