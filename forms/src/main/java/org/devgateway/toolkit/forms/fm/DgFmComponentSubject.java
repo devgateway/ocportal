@@ -12,11 +12,9 @@ import org.devgateway.toolkit.web.fm.entity.DgFeature;
 public interface DgFmComponentSubject extends DgFmSubject {
 
     MetaDataKey<String> FM_NAME_KEY = new MetaDataKey<String>() {
-        private static final long serialVersionUID = 1L;
     };
 
     MetaDataKey<Boolean> FM_NO_AUTO_ATTACH_KEY = new MetaDataKey<Boolean>() {
-        private static final long serialVersionUID = 1L;
     };
 
     /**
@@ -24,15 +22,20 @@ public interface DgFmComponentSubject extends DgFmSubject {
      */
     @Override
     default String getFmName() {
-        return ((Component) this).getMetaData(FM_NAME_KEY);
+        return asComponent().getMetaData(FM_NAME_KEY);
+    }
+
+    default Component asComponent() {
+        return (Component) this;
     }
 
     /**
      * Mark this component not to auto attach to FM.
+     *
      * @see #attachFm()
      */
     default void fmNoAutoAttach() {
-        ((Component) this).setMetaData(FM_NO_AUTO_ATTACH_KEY, true);
+        asComponent().setMetaData(FM_NO_AUTO_ATTACH_KEY, true);
     }
 
     /**
@@ -40,7 +43,7 @@ public interface DgFmComponentSubject extends DgFmSubject {
      * @return
      */
     default Boolean isNoAutoAttach() {
-        return Boolean.TRUE.equals(((Component) this).getMetaData(FM_NO_AUTO_ATTACH_KEY));
+        return Boolean.TRUE.equals(asComponent().getMetaData(FM_NO_AUTO_ATTACH_KEY));
     }
 
     /**
@@ -49,7 +52,7 @@ public interface DgFmComponentSubject extends DgFmSubject {
      */
     @Override
     default void setFmName(String fmName) {
-        ((Component) this).setMetaData(FM_NAME_KEY, fmName);
+        asComponent().setMetaData(FM_NAME_KEY, fmName);
     }
 
     /**
@@ -72,14 +75,14 @@ public interface DgFmComponentSubject extends DgFmSubject {
      * construct the {@link DgFeature#getName()}
      */
     default void attachFm() {
-        attachWithParentFm(((Component) this).getId());
+        attachWithParentFm(asComponent().getId());
     }
 
     default void attachWithParentFm(String fmName) {
         if (isNoAutoAttach() || isFmAttached()) {
             return;
         }
-        String parentCombinedFmName = getParentCombinedFmName(((Component) this).getParent(), fmName);
+        String parentCombinedFmName = getParentCombinedFmName(asComponent().getParent(), fmName);
         if (parentCombinedFmName == null) {
             return;
         }
