@@ -1194,4 +1194,166 @@
         </update>
     </changeSet>
 
+    <changeSet id="OCNYAN-32" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="release_flag_history" columnName="optlock"/>
+            <columnExists tableName="alerts_statistics" columnName="optlock"/>
+            <columnExists tableName="color_indicator_pair" columnName="optlock"/>
+            <columnExists tableName="feedback_message" columnName="optlock"/>
+            <columnExists tableName="fiscal_year" columnName="optlock"/>
+            <columnExists tableName="fiscal_year_budget" columnName="optlock"/>
+            <columnExists tableName="procurement_plan" columnName="optlock"/>
+            <columnExists tableName="cabinet_paper" columnName="optlock"/>
+            <columnExists tableName="plan_item" columnName="optlock"/>
+            <columnExists tableName="project" columnName="optlock"/>
+            <columnExists tableName="release_flag_history" columnName="optlock"/>
+            <columnExists tableName="smsmessage" columnName="optlock"/>
+            <columnExists tableName="status_changed_comment" columnName="optlock"/>
+            <columnExists tableName="tender_process" columnName="optlock"/>
+            <columnExists tableName="alert" columnName="optlock"/>
+            <columnExists tableName="award_acceptance" columnName="optlock"/>
+            <columnExists tableName="award_acceptance_item" columnName="optlock"/>
+            <columnExists tableName="award_notification" columnName="optlock"/>
+            <columnExists tableName="award_notification_item" columnName="optlock"/>
+            <columnExists tableName="contract" columnName="optlock"/>
+            <columnExists tableName="administrator_report" columnName="optlock"/>
+            <columnExists tableName="contract_document" columnName="optlock"/>
+            <columnExists tableName="inspection_report" columnName="optlock"/>
+            <columnExists tableName="mereport" columnName="optlock"/>
+            <columnExists tableName="pmcreport" columnName="optlock"/>
+            <columnExists tableName="payment_voucher" columnName="optlock"/>
+            <columnExists tableName="pmcmember" columnName="optlock"/>
+            <columnExists tableName="pmcnotes" columnName="optlock"/>
+            <columnExists tableName="private_sector_request" columnName="optlock"/>
+            <columnExists tableName="professional_opinion" columnName="optlock"/>
+            <columnExists tableName="professional_opinion_item" columnName="optlock"/>
+            <columnExists tableName="purch_requisition" columnName="optlock"/>
+            <columnExists tableName="purchase_item" columnName="optlock"/>
+            <columnExists tableName="tender_quotation_evaluation" columnName="optlock"/>
+            <columnExists tableName="bid" columnName="optlock"/>
+            <columnExists tableName="user_dashboard" columnName="optlock"/>
+            <columnExists tableName="tender" columnName="optlock"/>
+            <columnExists tableName="tender_item" columnName="optlock"/>
+            <columnExists tableName="alerts_subscription" columnName="optlock"/>
+        </preConditions>
+
+        <update tableName="release_flag_history">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="alerts_statistics">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="color_indicator_pair">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="feedback_message">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="fiscal_year">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="fiscal_year_budget">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="procurement_plan">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="cabinet_paper">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="plan_item">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="project">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="release_flag_history">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="smsmessage">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="status_changed_comment">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="tender_process">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="alert">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="award_acceptance">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="award_acceptance_item">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="award_notification">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="award_notification_item">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="contract">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="administrator_report">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="contract_document">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="inspection_report">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="mereport">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="pmcreport">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="payment_voucher">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="pmcmember">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="pmcnotes">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="private_sector_request">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="professional_opinion">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="professional_opinion_item">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="purch_requisition">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="purchase_item">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="tender_quotation_evaluation">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="bid">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="user_dashboard">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="tender">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="tender_item">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="alerts_subscription">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
