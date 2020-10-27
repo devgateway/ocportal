@@ -72,7 +72,7 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
     protected class WrongDistinctCountValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
-            return getFormComponentsFromBootstrapComponents(getAwardeeComponents());
+            return ComponentUtil.getFormComponentsFromBootstrapComponents(getAwardeeComponents());
         }
 
         @Override
@@ -99,7 +99,7 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
     protected class OneAwardAcceptedValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
-            return getFormComponentsFromBootstrapComponents(getAwardeeComponents());
+            return ComponentUtil.getFormComponentsFromBootstrapComponents(getAwardeeComponents());
         }
 
         @Override

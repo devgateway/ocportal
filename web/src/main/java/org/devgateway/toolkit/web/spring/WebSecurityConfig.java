@@ -13,6 +13,8 @@ package org.devgateway.toolkit.web.spring;
 
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.spring.CustomJPAUserDetailsService;
+import org.devgateway.toolkit.web.security.JWTAuthenticationFilter;
+import org.devgateway.toolkit.web.security.JWTAuthorizationFilter;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -34,10 +37,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * @author mpostelnicu This configures the spring security for the Web project.
@@ -64,6 +72,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${roleHierarchy}")
     private String roleHierarchyStringRepresentation;
+
+    @Value("${jwtSecret}")
+    private String jwtSecret;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -93,7 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(allowUrlEncodedSlashHttpFirewall()).ignoring().
                 antMatchers("/", "/v2/api-docs/**", "/swagger-ui.html**", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/dashboard", "/languages/**",
-                        "/isAuthenticated",
+                        "/isAuthenticated", "/error",
                         "/wicket/resource/**/*.ttf", "/wicket/resource/**/*.woff", "/corruption-risk",
                         SecurityUtil.getDisabledApiSecurity(adminSettingsRepository) ? "/api/**" : "/",
                         "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.css.map"
@@ -104,14 +115,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.cors().and().authorizeRequests()
                 .expressionHandler(webExpressionHandler()) // inject role hierarchy
-                .antMatchers("/monitoring/**")
-                .access("hasRole('ROLE_ADMIN')")
-                .anyRequest().authenticated().and().formLogin().
+                .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtSecret))
+                .authorizeRequests().antMatchers("/api/user/forgotPassword").permitAll().and()
+                .authorizeRequests().anyRequest().authenticated().and()
+                .formLogin().
                 loginPage("/login").
                 permitAll().and().requestCache().and()
-                .logout().permitAll().and().sessionManagement().and().csrf().disable();
+                .logout().permitAll().and().sessionManagement().and().csrf().disable()
+                .exceptionHandling().defaultAuthenticationEntryPointFor(
+                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                        new AntPathRequestMatcher("/api/**"));
         http.addFilter(securityContextPersistenceFilter());
     }
 
@@ -147,4 +163,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(customJPAUserDetailsService).passwordEncoder(passwordEncoder);
     }
 
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
+        return source;
+    }
 }

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.devgateway.toolkit.web.spring;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
@@ -21,12 +23,22 @@ import org.springframework.context.annotation.PropertySource;
  * @author mpostelnicu
  */
 
-@SpringBootApplication(exclude = { EmbeddedMongoAutoConfiguration.class })
+@SpringBootApplication(exclude = {EmbeddedMongoAutoConfiguration.class})
 @PropertySource("classpath:/org/devgateway/toolkit/web/application.properties")
 @ComponentScan("org.devgateway.toolkit")
 public class WebApplication {
 
+    private static final Logger logger = LoggerFactory.getLogger(WebApplication.class);
+
     public static void main(final String[] args) {
         SpringApplication.run(WebApplication.class, args);
     }
+
+//    @Bean
+//    public SpringLiquibaseRunner liquibaseAfterJPA(final SpringLiquibase springLiquibase,
+//                                                   final EntityManagerFactory entityManagerFactory) {
+//        logger.info("Instantiating SpringLiquibaseRunner after initialization of entityManager using factory "
+//                + entityManagerFactory);
+//        return new SpringLiquibaseRunner(springLiquibase);
+//    }
 }

@@ -179,7 +179,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     tp.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
                             .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
                     tp.getAmount()
-            ), tenderProcess, EditTenderProcessPage.class, null, false
+            ), tenderProcess, EditTenderProcessPage.class, tenderProcess.getProject(), false
             );
             containerFragment.add(requisitionPanel);
 
@@ -249,7 +249,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     tenderProcess.getPmcReports().stream().sorted(
                             Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
                     pmc -> Collections.singletonList(pmc.getLabel()),
-                    tenderProcess, EditPMCReportPage.class, contract, true
+                    tenderProcess, EditPMCReportPage.class, contract, false
             );
             containerFragment.add(pmcReportPanel);
 
@@ -283,9 +283,9 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     }
 
     @Transactional(readOnly = true)
-    private boolean canEdit(final TenderProcess tenderProcess2,
-                            final AbstractStatusAuditableEntity persistable,
-                            final Statusable previousStep) {
+    public boolean canEdit(final TenderProcess tenderProcess2,
+                           final AbstractStatusAuditableEntity persistable,
+                           final Statusable previousStep) {
 
         TenderProcess tenderProcess = tenderProcessService.findById(tenderProcess2.getId()).get();
 
@@ -375,9 +375,9 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     if (item.getModelObject() == null) {
                         editTender.setVisibilityAllowed(canAccessAddNewButtons(editClazz));
                     }
-                    if (!(itemObj instanceof TenderProcess) && !(itemObj instanceof Tender)) {
-                        editTender.setEnabled(canEdit(tenderProcess, item.getModelObject(), previousStep));
-                    }
+
+                    editTender.setEnabled(canEdit(tenderProcess, item.getModelObject(), previousStep));
+
                     item.add(editTender);
 
                     item.add(new ListView<Object>("tenderInfo", new ListModel<>(tenderInfo.apply(itemObj))) {

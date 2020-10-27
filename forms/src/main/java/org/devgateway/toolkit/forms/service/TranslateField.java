@@ -26,6 +26,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItem
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PMCMemberPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.PMCNotesPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchaseItemPanel;
@@ -85,6 +86,7 @@ public class TranslateField {
                     .put("AwardNotificationItem", AwardNotificationItemPanel.class)
                     .put("AwardAcceptanceItem", AwardAcceptanceItemPanel.class)
                     .put("PMCMember", PMCMemberPanel.class)
+                    .put("PMCNotes", PMCNotesPanel.class)
                     .build();
 
     public TranslateField(final Class entity) {

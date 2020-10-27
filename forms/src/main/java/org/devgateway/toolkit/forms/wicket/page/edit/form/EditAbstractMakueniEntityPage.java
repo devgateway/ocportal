@@ -127,6 +127,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
             @Override
             public void continueSubmit(AjaxRequestTarget target) {
+                onBeforeRevertToDraft(target);
                 setStatusAppendComment(DBConstants.Status.DRAFT);
                 super.continueSubmit(target);
                 target.add(editForm);
@@ -136,6 +137,10 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         revertToDraftModal.modalSavePageButton(saveEditPageButton);
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
         return saveEditPageButton;
+    }
+
+    protected void onBeforeRevertToDraft(AjaxRequestTarget target) {
+
     }
 
 
