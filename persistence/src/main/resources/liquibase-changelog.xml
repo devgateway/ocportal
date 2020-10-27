@@ -1152,4 +1152,46 @@
         </insert>
     </changeSet>
 
+    <changeSet id="#325-optlock" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="ADMIN_SETTINGS" columnName="optlock"/>
+            <columnExists tableName="CATEGORY" columnName="optlock"/>
+            <columnExists tableName="FILE_CONTENT" columnName="optlock"/>
+            <columnExists tableName="FILE_METADATA" columnName="optlock"/>
+            <columnExists tableName="PERSON" columnName="optlock"/>
+            <columnExists tableName="ROLE" columnName="optlock"/>
+            <columnExists tableName="STATUS_CHANGED_COMMENT" columnName="optlock"/>
+            <columnExists tableName="TEST_FORM" columnName="optlock"/>
+            <columnExists tableName="TEST_FORM_CHILD" columnName="optlock"/>
+        </preConditions>
+
+        <update tableName="ADMIN_SETTINGS">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="FILE_CONTENT">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="FILE_METADATA">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="PERSON">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="ROLE">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="STATUS_CHANGED_COMMENT">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="TEST_FORM">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+        <update tableName="TEST_FORM_CHILD">
+            <column name="optlock" valueNumeric="0"/>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>

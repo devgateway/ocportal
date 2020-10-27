@@ -17,6 +17,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
@@ -562,8 +563,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             }
 
             @Override
-            protected Class<? extends BasePage> getResponsePage() {
-                return (Class<? extends BasePage>) getPage().getClass();
+            protected Class<? extends Page> getResponsePage() {
+                return getPage().getClass();
             }
 
             @Override
