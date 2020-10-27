@@ -1138,4 +1138,18 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-691" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="ROLE"/>
+        </preConditions>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_PMC_USER"/>
+        </insert>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_PMC_ADMIN"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
