@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.devgateway.toolkit.persistence.dao.DBConstants.PASSWORD_PATTERN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_ROLES;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
@@ -117,12 +119,11 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     @Override
     protected void onInitialize() {
-        final Person person = FormSecurityUtil.getCurrentAuthenticatedPerson();
-
-        if (!FormSecurityUtil.isCurrentUserAdmin() && !FormSecurityUtil.isCurrentUserPmcAdmin()) {
-            if (person.getId() != getPageParameters().get(WebConstants.PARAM_ID).toLong()) {
-                setResponsePage(getApplication().getHomePage());
-            }
+        if (!isAuthorized()) {
+            getApplication()
+                    .getSecuritySettings()
+                    .getUnauthorizedComponentInstantiationListener()
+                    .onUnauthorizedInstantiation(this);
         }
 
         super.onInitialize();
@@ -139,7 +140,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
             username.getField().add(new UniqueUsernameValidator());
         }
         editForm.add(username);
-        MetaDataRoleAuthorizationStrategy.authorize(username, Component.ENABLE, ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(username, Component.ENABLE, ROLE_PMC_ADMIN);
 
         firstName = ComponentUtil.addTextField(editForm, "firstName");
         firstName.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
@@ -162,7 +163,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         departments = ComponentUtil.addSelect2MultiChoiceField(editForm, "departments", departmentService);
         departments.required();
-        FormSecurityUtil.authorizeEnable(departments, ROLE_ADMIN, ROLE_PMC_ADMIN);
+        FormSecurityUtil.authorizeEnable(departments, ROLE_PMC_ADMIN);
 
         roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService);
         roles.getField().add(new RoleAjaxFormComponentUpdatingBehavior("change"));
@@ -196,13 +197,13 @@ public class EditUserPage extends AbstractEditPage<Person> {
         if (editForm.getModelObject().getRoles() != null) {
             final List<String> authority = editForm.getModelObject().getRoles().stream()
                     .map(Role::getAuthority)
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
             if (authority.contains(ROLE_ADMIN)) {
                 departments.setVisibilityAllowed(false);
             }
         }
-        FormSecurityUtil.authorizeRender(roles, ROLE_ADMIN, ROLE_PMC_ADMIN);
+        FormSecurityUtil.authorizeRender(roles, ROLE_PMC_ADMIN);
 
         enabled = ComponentUtil.addCheckToggle(editForm, "enabled");
         MetaDataRoleAuthorizationStrategy.authorize(enabled, Component.RENDER, ROLE_ADMIN);
@@ -250,6 +251,34 @@ public class EditUserPage extends AbstractEditPage<Person> {
         editForm.add(new EqualPasswordInputValidator(plainPassword.getField(), plainPasswordCheck.getField()));
 
         MetaDataRoleAuthorizationStrategy.authorize(deleteButton, Component.RENDER, ROLE_ADMIN);
+    }
+
+    private boolean isAuthorized() {
+        if (FormSecurityUtil.isCurrentUserAdmin()) {
+            return true;
+        }
+
+        final Person principal = FormSecurityUtil.getCurrentAuthenticatedPerson();
+        if (principal.getId().equals(entityId)) {
+            return true;
+        }
+
+        if (FormSecurityUtil.isCurrentUserPmcAdmin()) {
+            if (entityId != null) {
+                Person person = jpaService.findById(entityId).orElse(null);
+                return person != null && !intersection(PMC_ROLES, getRolesAsStrings(person)).isEmpty();
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<String> getRolesAsStrings(Person person) {
+        return person.getRoles().stream()
+                .map(Role::getAuthority)
+                .collect(toList());
     }
 
     @Override
@@ -328,7 +357,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
         protected void onUpdate(final AjaxRequestTarget target) {
             final List<String> authority = roles.getModelObject().stream()
                     .map(Role::getAuthority)
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
             if (authority.contains(ROLE_ADMIN)) {
                 departments.setVisibilityAllowed(false);

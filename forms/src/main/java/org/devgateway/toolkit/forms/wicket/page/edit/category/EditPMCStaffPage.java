@@ -18,7 +18,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  * @author mpostlenicu
  *
  */
-@AuthorizeInstantiation(value = {SecurityConstants.Roles.ROLE_ADMIN, SecurityConstants.Roles.ROLE_PMC_ADMIN})
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PMC_ADMIN)
 @MountPath
 public class EditPMCStaffPage extends AbstractCategoryEditPage<PMCStaff> {
     @SpringBean
