@@ -40,6 +40,7 @@
         <jminix.version>1.2.0</jminix.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <swagger.version>2.9.2</swagger.version>
+        <maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
     </properties>
 
     <modules>
@@ -211,7 +212,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.13.0</version>
+                    <version>${maven-pmd-plugin.version}</version>
                     <configuration>
                         <analysisCache>true</analysisCache>
                         <printFailingErrors>true</printFailingErrors>

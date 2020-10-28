@@ -11,6 +11,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <pmd.version>6.21.0</pmd.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <parent>
@@ -23,12 +25,12 @@
         <dependency>
             <groupId>net.sourceforge.pmd</groupId>
             <artifactId>pmd-java</artifactId>
-            <version>6.21.0</version>
+            <version>${pmd.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.pmd</groupId>
             <artifactId>pmd-test</artifactId>
-            <version>6.21.0</version>
+            <version>${pmd.version}</version>
         </dependency>
     </dependencies>
 
