@@ -1,0 +1,104 @@
+- name: administratorReportForm
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.approve
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.approvedDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.authorizePayment
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.cancel
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.delete
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.save
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.tenderProcess.project.procurementPlan.department
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: administratorReportForm.tenderProcess.project.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: administratorReportForm.tenderProcess.singleContract.awardee
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: administratorReportForm.tenderProcess.tender.iterator.next.tenderTitle
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: administratorReportForm.terminate
+  enabled: yes
+  visible: yes
+- name: administratorReportForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: administratorReportsList
+  enabled: yes
+  visible: yes
+- name: administratorReportsList.department
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.tenderProcess.project.procurementPlan.department
+- name: administratorReportsList.filterToolbar
+  visible: yes
+- name: administratorReportsList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: administratorReportsList.lastModifiedDate
+  visible: yes
+- name: administratorReportsList.status
+  visible: yes
+- name: administratorReportsList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.tenderProcess.tender.iterator.next.tenderTitle
+- name: administratorReportsList.approvedDate
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.approvedDate
+- name: administratorReportsList.authorizePayment
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.authorizePayment
+- name: administratorReportsList.awardee
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.tenderProcess.singleContract.awardee

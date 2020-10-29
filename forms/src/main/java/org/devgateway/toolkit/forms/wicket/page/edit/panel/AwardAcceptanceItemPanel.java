@@ -84,22 +84,6 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
         }
     }
 
-    protected class AwardAcceptanceItemCountValidator implements IFormValidator {
-        @Override
-        public FormComponent<?>[] getDependentFormComponents() {
-            return new FormComponent[0];
-        }
-
-        @Override
-        public void validate(Form<?> form) {
-            List<AwardAcceptanceItem> items = AwardAcceptanceItemPanel.this.getModelObject();
-            if (items.size() == 0) {
-                form.error(getString("atLeastOneAwardAcceptance"));
-            }
-
-        }
-    }
-
     protected boolean getWrongAwardNotificationCount() {
         AwardAcceptance awardAcceptance = (AwardAcceptance) Form.findForm(AwardAcceptanceItemPanel.this)
                 .getModelObject();
@@ -151,14 +135,10 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
     protected void onInitialize() {
         super.onInitialize();
 
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new OneAwardAcceptedValidator());
-            form.add(new WrongDistinctCountValidator());
-            form.add(new AwardNotificationCountValidator());
-            form.add(new AwardAcceptanceItemCountValidator());
-
-        }
+        final Form form = findParent(Form.class);
+        form.add(new OneAwardAcceptedValidator());
+        form.add(new WrongDistinctCountValidator());
+        form.add(new AwardNotificationCountValidator());
     }
 
     @Override
@@ -186,11 +166,10 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
     public void populateCompoundListItem(final ListItem<AwardAcceptanceItem> item) {
         TextFieldBootstrapFormComponent<BigDecimal> acceptedValue = ComponentUtil.addBigDecimalField(
                 item, "acceptedAwardValue");
-        acceptedValue.required().getField()
-                .add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        acceptedValue.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         acceptedValue.setOutputMarkupPlaceholderTag(true);
 
-        ComponentUtil.addDateField(item, "acceptanceDate").required();
+        ComponentUtil.addDateField(item, "acceptanceDate");
 
         final Select2ChoiceBootstrapFormComponent<SupplierResponse> supplierResponse =
                 new Select2ChoiceBootstrapFormComponent<SupplierResponse>(
@@ -203,7 +182,6 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
                         target.add(acceptedValue);
                     }
                 };
-        supplierResponse.required();
         item.add(supplierResponse);
 
         acceptedValue.setVisibilityAllowed(item.getModelObject().isAccepted());
@@ -211,7 +189,6 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
         addSupplierInfo(item);
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
 
@@ -221,7 +198,6 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
                 new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
                         item.getModelObject().getParent().getTenderProcess(), true))
         );
-        awardeeSelector.required();
         awardeeSelector.getField().add(new AwardAcceptanceItemPanel.AwardeeAjaxComponentUpdatingBehavior("change"));
         item.add(awardeeSelector);
 

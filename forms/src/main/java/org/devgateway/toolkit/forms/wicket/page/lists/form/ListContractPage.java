@@ -54,6 +54,7 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
 
     @Override
     protected void onInitialize() {
+        attachFm("contractsList");
         addTenderTitleColumn();
         addFileDownloadColumn();
         addAwardeeColumn();
@@ -118,14 +119,14 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
     @Override
     protected void addFileDownloadColumn() {
         Component trn = this;
-        columns.add(new AbstractColumn<Contract, String>(
+        addFmColumn("downloadFile", new AbstractColumn<Contract, String>(
                 new StringResourceModel("downloadFile", trn)) {
             @Override
             public void populateItem(final Item<ICellPopulator<Contract>> cellItem, final String componentId,
                                      final IModel<Contract> model) {
 
                 if (!ObjectUtils.isEmpty(model.getObject().getContractDocs())) {
-                    cellItem.add(new DownloadPanel(componentId,  model));
+                    cellItem.add(new DownloadPanel(componentId, model));
                 } else {
                     cellItem.add(new Label(componentId));
                 }

@@ -38,8 +38,8 @@ public class PMCMemberPanel extends ListViewSectionPanel<PMCMember, PMCReport> {
 
     @Override
     public void populateCompoundListItem(final ListItem<PMCMember> item) {
-        ComponentUtil.addSelect2ChoiceField(item, "staff", pmcStaffService).required();
-        ComponentUtil.addSelect2ChoiceField(item, "designation", designationService).required();
+        ComponentUtil.addSelect2ChoiceField(item, "staff", pmcStaffService);
+        ComponentUtil.addSelect2ChoiceField(item, "designation", designationService);
     }
 
     @Override

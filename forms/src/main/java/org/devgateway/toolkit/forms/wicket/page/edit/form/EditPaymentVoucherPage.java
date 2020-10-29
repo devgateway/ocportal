@@ -65,6 +65,7 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("paymentVoucherForm");
         super.onInitialize();
 
         Fragment inspectionExtraFields = new Fragment("childExtraFields", "paymentExtraFields", this);

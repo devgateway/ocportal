@@ -45,10 +45,11 @@ public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEn
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("administratorReportForm");
         super.onInitialize();
 
-        ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
+        ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true);
+        ComponentUtil.addDateField(editForm, "approvedDate");
     }
 
     @Override

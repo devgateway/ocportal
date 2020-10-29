@@ -12,6 +12,7 @@
   enabled: yes
   visible: yes
 - name: professionalOpinionForm.items
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: professionalOpinionForm.items.approvedDate

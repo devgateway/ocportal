@@ -30,7 +30,7 @@ public abstract class EditAbstractImplTenderProcessEntityPage<T extends Abstract
 
         editForm.replace(abstractImplExtraFields);
 
-        addFormDocs().required();
+        addFormDocs();
         submitAndNext.setVisibilityAllowed(false);
     }
 

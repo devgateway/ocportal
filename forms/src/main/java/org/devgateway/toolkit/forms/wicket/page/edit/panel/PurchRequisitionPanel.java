@@ -74,11 +74,7 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new PurchRequisitionItemCountValidator());
-        }
+        findParent(Form.class).add(new PurchRequisitionItemCountValidator());
     }
 
     @Override

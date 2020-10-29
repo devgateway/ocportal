@@ -16,6 +16,9 @@ import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -25,7 +28,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
-import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -40,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,11 +57,14 @@ import java.util.Optional;
  */
 
 public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & ListViewItem,
-        PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> implements DgFmComponentSubject {
+        PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> implements
+        DgFmFormComponentSubject {
     private static final Logger logger = LoggerFactory.getLogger(ListViewSectionPanel.class);
 
     @SpringBean
     protected DgFmService fmService;
+
+    private ListItemsValidator listItemsValidator;
 
     @Override
     public DgFmService getFmService() {
@@ -98,6 +105,21 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         }
     }
 
+    protected class ListItemsValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            List<T> bids = ListViewSectionPanel.this.getModelObject();
+            if (bids.size() == 0 && isFmMandatory()) {
+                form.error(getString("atLeastOneItem"), Collections.singletonMap("objectType",
+                        ListViewSectionPanel.this.getClass().getSimpleName()));
+            }
+        }
+    }
 
     protected void addErrorAndRefreshComponents(List<GenericBootstrapFormComponent<?, ?>> components, String key) {
         components.stream().map(GenericBootstrapFormComponent::getField)
@@ -111,11 +133,22 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         listView.forEach(c -> ret.add((GenericBootstrapFormComponent<?, ?>) c.get(name)));
         return ret;
     }
-    
+
+    protected void addMandatoryValidator() {
+        final Form<?> form = findParent(Form.class);
+        listItemsValidator = new ListItemsValidator();
+        form.add(listItemsValidator);
+    }
+
+    protected void removeMandatoryValidator() {
+        final Form<?> form = findParent(Form.class);
+        form.remove(listItemsValidator);
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
+        addMandatoryValidator();
         setOutputMarkupId(true);
         setOutputMarkupPlaceholderTag(true);
 
@@ -304,6 +337,12 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
         showDetailsLink.setDefaultModel(new ResourceModel("showDetailsLink"));
         target.add(showDetailsLink);
+    }
+
+    @Override
+    protected void onRemove() {
+        super.onRemove();
+        removeMandatoryValidator();
     }
 
     /**
