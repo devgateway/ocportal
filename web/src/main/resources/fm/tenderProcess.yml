@@ -44,7 +44,7 @@
   enabled: yes
   visible: yes
 - name: tenderProcessForm.purchRequisitions.purchaseItems.amount
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: tenderProcessForm.purchRequisitions.purchaseItems.description
@@ -55,11 +55,11 @@
   enabled: yes
   visible: yes
 - name: tenderProcessForm.purchRequisitions.purchaseItems.planItem
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: tenderProcessForm.purchRequisitions.purchaseItems.quantity
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: tenderProcessForm.purchRequisitions.purchaseItems.remove

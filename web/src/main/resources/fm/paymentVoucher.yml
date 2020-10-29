@@ -2,9 +2,11 @@
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.administratorReport
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
+  visibleDeps:
+    - administratorReportForm
 - name: paymentVoucherForm.approve
   enabled: yes
   visible: yes
@@ -23,11 +25,13 @@
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.inspectionReport
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
+  visibleDeps:
+    - inspectionReportForm
 - name: paymentVoucherForm.lastPayment
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.newStatusComment
@@ -35,9 +39,11 @@
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.pmcReport
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
+  visibleDeps:
+    - pmcReportForm
 - name: paymentVoucherForm.revertToDraft
   enabled: yes
   visible: yes
@@ -87,6 +93,7 @@
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.totalAmount
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.visibleStatusComments
@@ -96,7 +103,7 @@
   enabled: yes
   visible: yes
 - name: paymentVouchersList.approvedDate
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
   visibleDeps:

@@ -39,6 +39,18 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: inspectionReportForm.privateSectorRequests.remove
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.privateSectorRequests.requestDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.privateSectorRequests.upload
+  mandatory: yes
+  enabled: yes
+  visible: yes
 - name: inspectionReportForm.revertToDraft
   enabled: yes
   visible: yes

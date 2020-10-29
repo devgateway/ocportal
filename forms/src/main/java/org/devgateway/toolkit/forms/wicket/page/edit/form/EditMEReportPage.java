@@ -127,7 +127,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
                 target.add(subwards);
             }
         });
-        subcounties.required();
     }
 
     @Override

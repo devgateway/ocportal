@@ -99,7 +99,7 @@
   enabled: yes
   visible: yes
 - name: meReportForm.subcounties
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: yes
 - name: meReportForm.submitAndNext
