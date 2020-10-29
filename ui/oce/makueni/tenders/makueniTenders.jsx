@@ -236,7 +236,7 @@ linksOrFiles() {
         <div className="row alerts-button subscribe">
           <div className="col-md-12">
             <button className="btn btn-info btn-lg" type="submit"
-                    onClick={() => this.props.onSwitch('smshelp')}>SMS Feedback Help
+                    onClick={() => this.props.onSwitch('smshelp')}>SMS Guide
             </button>
           </div>
         </div>
