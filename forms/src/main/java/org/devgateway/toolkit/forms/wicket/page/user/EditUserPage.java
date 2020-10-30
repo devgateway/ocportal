@@ -206,10 +206,10 @@ public class EditUserPage extends AbstractEditPage<Person> {
         FormSecurityUtil.authorizeRender(roles, ROLE_PMC_ADMIN);
 
         enabled = ComponentUtil.addCheckToggle(editForm, "enabled");
-        MetaDataRoleAuthorizationStrategy.authorize(enabled, Component.RENDER, ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(enabled, Component.RENDER, ROLE_PMC_ADMIN);
 
         changePasswordNextSignIn = ComponentUtil.addCheckToggle(editForm, "changePasswordNextSignIn");
-        MetaDataRoleAuthorizationStrategy.authorize(changePasswordNextSignIn, Component.RENDER, ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(changePasswordNextSignIn, Component.RENDER, ROLE_PMC_ADMIN);
 
         changeProfilePassword = new CheckBoxToggleBootstrapFormComponent("changeProfilePassword") {
             @Override
@@ -235,7 +235,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
         plainPasswordCheck.required().setVisibilityAllowed(false);
         plainPasswordCheck.getField().setResetPassword(false);
 
-        if (FormSecurityUtil.isCurrentUserAdmin() && idPerson.isNull()) {
+        if ((FormSecurityUtil.isCurrentUserAdmin() || FormSecurityUtil.isCurrentUserPmcAdmin()) && idPerson.isNull()) {
             // hide the change password checkbox and set it's model to true
             editForm.getModelObject().setChangeProfilePassword(true);
             changeProfilePassword.setVisibilityAllowed(false);
