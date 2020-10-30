@@ -14,4 +14,6 @@ public interface PMCReportService extends AbstractImplTenderProcessMakueniEntity
     List<PMCReport> getPMCReportsCreatedBy(String username);
 
     PMCReport saveReportAndUpdateTenderProcess(PMCReport entity);
+
+    void onApproved(PMCReport report);
 }

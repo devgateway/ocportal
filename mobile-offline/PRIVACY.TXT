@@ -1,0 +1,59 @@
+PMC Reporter App Data Privacy Policy
+
+1. About this Privacy Policy
+
+The PMC Reporter app is to be used by members of Makueni County Project Management Committee (PMC). It allows members
+to create and submit reports on the status of government funded projects. The data is stored offline and once a report
+is submitted and connected to the internet, the report is sent to the Government of Makueni Open Contracting Portal
+for validation. To receive a login to the app, please contact the government administrators. This tool was developed
+by Development Gateway (DG). DG is committed to keeping data safe, taking a minimalist approach to using data only
+when strictly necessary to fulfil the purpose of users interacting with the app.
+
+The PMC Reporter Data Privacy Policy is consistent with existing laws and policies that govern data protection in
+Kenya. This policy applies to all data processed through the PMC Reporter.
+
+This Privacy Policy was last updated on October 27, 2020.
+
+2. Data Collection
+
+a. The PMC Reporter collects the following data from user in the course of the app’s operations:
+   * Internet Protocol (IP) address of computer being used
+   * Browser, Operating System, and the make of the phone used
+   * URL Path
+   * Date and time
+   * For registered, authenticated users, email, first and last name will be collected.
+
+b. Development Gateway gathers only the data which is necessary and relevant for the operation of the PMC Reporter,
+   for maintenance and to better understand our target audience.
+
+c. Data is collected each time a user accesses the app.
+
+3. Access
+
+a. DG team members (software developers, quality assurance team members, etc.) have access to the data in order to
+   monitor software functionality and maintenance, and add enhancements. Besides the parties listed in 3(a), data
+   collected by the PMC Reporter are not shared with or sold to other parties.
+
+b. Development Gateway will ensure that data collected by the app are stored securely using SSL-secured servers,
+   password protection, and encryption to avoid unauthorised sharing of information.
+
+4. Archival / removal
+
+Data collected, as described in section 2, may be kept for 1 year solely to fix bugs and monitor app performance as
+stated above. Registered user names and emails are stored in the database indefinitely. All other non-essential data
+will be deleted such that it is not retrievable at a later time by unauthorised users.
+
+5. Data Breach
+
+In the event of a breach of security leading to the accidental or unlawful destruction, loss, alteration,
+unauthorised disclosure of, or access to, data, Development Gateway will promptly assess the risk to people’s rights
+and freedoms and will report this to all individuals affected as soon as possible, within 30 days of the incident
+in question.
+
+6. Notices and Contact Information
+
+a. If you have any questions or concerns about how your data are used, please contact Development Gateway at
+   info@developmentgateway.org.
+
+b. If there are major updates to this privacy policy, Development Gateway will provide information via email to those
+   users who are subscribed to newsletters related to the app or have provided their email as an authorised user.
