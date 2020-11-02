@@ -696,6 +696,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 onBeforeSaveApprove(target);
                 setStatusAppendComment(DBConstants.Status.APPROVED);
                 super.onSubmit(target);
+                onApproved();
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
@@ -704,6 +705,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     protected void onBeforeSaveApprove(AjaxRequestTarget target) {
 
+    }
+
+    protected void onApproved() {
     }
 
     protected SaveEditPageButton getRevertToDraftPageButton() {

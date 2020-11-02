@@ -1152,6 +1152,73 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-725-sms-alerts" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY" />
+            <columnExists tableName="CATEGORY" columnName="code" />
+        </preConditions>
+
+        <update tableName="CATEGORY">
+            <column name="code" value="stalled"/>
+            <where>dtype='MEStatus' and label='Stalled'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="delayed"/>
+            <where>dtype='MEStatus' and label='Delayed'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="completedNotInUse"/>
+            <where>dtype='MEStatus' and label='Completed not in use'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="completeInUse"/>
+            <where>dtype='MEStatus' and label='Complete in use'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="ongoing"/>
+            <where>dtype='MEStatus' and label='Ongoing'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="notStarted"/>
+            <where>dtype='MEStatus' and label='Not started'</where>
+        </update>
+
+        <update tableName="CATEGORY">
+            <column name="code" value="atRisk"/>
+            <where>dtype='PMCStatus' and label='At Risk'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="onTrack"/>
+            <where>dtype='PMCStatus' and label='On Track'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="offTrack"/>
+            <where>dtype='PMCStatus' and label='Off Track'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="OCMAKU-725-sms-alerts-2" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="approved_report" />
+        </preConditions>
+        <sql><![CDATA[
+            ALTER TABLE approved_report
+            ADD CONSTRAINT non_null_report
+            CHECK ((me_report_id IS NULL) != (pmc_report_id IS NULL));
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-727-rename" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY" />
+        </preConditions>
+
+        <update tableName="CATEGORY">
+            <column name="label" value="Completed to scope"/>
+            <where>dtype='MEStatus' and label='Completed not in use'</where>
+        </update>
+    </changeSet>
+
     <changeSet id="#325-optlock" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
             <columnExists tableName="ADMIN_SETTINGS" columnName="optlock"/>
