@@ -1423,6 +1423,15 @@
         </update>
     </changeSet>
 
+    <changeSet id="OCNYAN-32-admin-settings" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="admin_settings" columnName="unlock_after_hours"/>
+        </preConditions>
+        <update tableName="admin_settings">
+            <column name="unlock_after_hours" valueNumeric="8"/>
+        </update>
+    </changeSet>
+
 <!--Change Set Placeholder 1-->
 
 <!--Change Set Placeholder 2-->

@@ -40,6 +40,7 @@ import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
 import org.devgateway.toolkit.web.security.SecurityUtil;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 /**
  * @author Octavian Ciubotaru
@@ -66,7 +67,7 @@ public class ListLockPanel extends Panel {
                 new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
         columns.add(new LambdaColumn<>(new StringResourceModel("formType", this),
-                l -> getString(l.getClass().getSimpleName())));
+                l -> getString(HibernateProxyHelper.getClassWithoutInitializingProxy(l).getSimpleName())));
 
         columns.add(new LambdaColumn<>(new StringResourceModel("formLabel", this), Lockable::getLabel));
 
@@ -196,8 +197,9 @@ public class ListLockPanel extends Panel {
             final PageParameters pageParameters = new PageParameters();
             pageParameters.set(WebConstants.PARAM_ID, lockable.getId());
 
-            Class<? extends GenericWebPage<?>> pageClass =
-                    TranslateField.MAP_BEAN_WICKET_PAGE.get(lockable.getClass().getSimpleName());
+            Class<?> entityClass = HibernateProxyHelper.getClassWithoutInitializingProxy(lockable);
+            String entityName = entityClass.getSimpleName();
+            Class<? extends GenericWebPage<?>> pageClass = TranslateField.MAP_BEAN_WICKET_PAGE.get(entityName);
 
             final BootstrapBookmarkablePageLink<?> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", pageClass, pageParameters, Buttons.Type.Primary);

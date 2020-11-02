@@ -22,18 +22,25 @@ import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.AdminSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @Transactional
 public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceResolver {
+
+    @Autowired
+    private AdminSettingsService adminSettingsService;
 
     @Autowired
     private AwardAcceptanceService awardAcceptanceService;
@@ -128,5 +135,16 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
         return serviceMap.values().stream()
                 .flatMap(s -> s.getAllLocked().stream())
                 .collect(toList());
+    }
+
+    @Scheduled(cron = "0 0 * * * *")
+    @Transactional
+    public void releaseLocks() {
+        Integer unlockAfterHours = adminSettingsService.getSettings().getUnlockAfterHours();
+        ZonedDateTime lockedAt = ZonedDateTime.now().minus(Duration.ofHours(unlockAfterHours));
+        getAllLocked().stream()
+                .filter(e -> e.getLastModifiedDate().isPresent()
+                        && e.getLastModifiedDate().get().isBefore(lockedAt))
+                .forEach(e -> e.setOwner(null));
     }
 }

@@ -41,6 +41,8 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     private Boolean emailNotification = false;
 
+    private Integer unlockAfterHours;
+
     @Override
     public AbstractAuditableEntity getParent() {
         return null;
@@ -133,5 +135,13 @@ public class AdminSettings extends AbstractAuditableEntity {
 
     public void setSuperAdminEmail(String superAdminEmail) {
         this.superAdminEmail = superAdminEmail;
+    }
+
+    public Integer getUnlockAfterHours() {
+        return unlockAfterHours;
+    }
+
+    public void setUnlockAfterHours(Integer unlockAfterHours) {
+        this.unlockAfterHours = unlockAfterHours;
     }
 }

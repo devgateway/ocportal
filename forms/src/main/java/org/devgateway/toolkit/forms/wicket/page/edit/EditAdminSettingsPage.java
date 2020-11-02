@@ -134,6 +134,13 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
         editForm.add(superAdminEmail);
         superAdminEmail.required().getField().add(RfcCompliantEmailAddressValidator.getInstance());
 
+        TextFieldBootstrapFormComponent<Integer> unlockAfterHours =
+                new TextFieldBootstrapFormComponent<>("unlockAfterHours");
+        unlockAfterHours.required();
+        unlockAfterHours.integer();
+        unlockAfterHours.getField().add(new RangeValidator<>(1, 100));
+        editForm.add(unlockAfterHours);
+
         addImportToMongoLink();
 
         sendValidatorNotifications();
