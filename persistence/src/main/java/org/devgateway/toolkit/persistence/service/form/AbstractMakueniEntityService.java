@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
@@ -25,4 +26,10 @@ public interface AbstractMakueniEntityService<T extends AbstractMakueniEntity> e
     Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity);
 
     Stream<? extends AbstractMakueniEntity> getAllSubmitted();
+
+    List<T> getAllLocked(Person person);
+
+    List<T> getAllLocked();
+
+    void unlock(Long id);
 }

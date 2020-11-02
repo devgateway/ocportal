@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Labelable;
+import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import java.util.Collection;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @MappedSuperclass
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity
-        implements Labelable, SingleFileMetadatable {
+        implements Labelable, SingleFileMetadatable, Lockable {
     @ExcelExport(useTranslation = true,
             onlyForClass = {ProcurementPlan.class, Project.class, ProfessionalOpinion.class, InspectionReport.class,
                     MEReport.class, AdministratorReport.class})
@@ -40,6 +42,9 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FileMetadata> formDocs = new HashSet<>();
+
+    @ManyToOne
+    private Person owner;
 
     /**
      * Gets direct children of current entity, that is the next form(s) that have to be filled in after this one is done
@@ -87,4 +92,14 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     }
 
     public abstract Department getDepartment();
+
+    @Override
+    public Person getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
 }

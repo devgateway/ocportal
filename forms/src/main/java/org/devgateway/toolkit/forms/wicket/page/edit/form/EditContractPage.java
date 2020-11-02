@@ -66,8 +66,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     protected void onInitialize() {
         super.onInitialize();
 
-        submitAndNext.setVisibilityAllowed(false);
-
         ComponentUtil.addTextField(editForm, "referenceNumber").required();
         ComponentUtil.addBigDecimalField(editForm, "contractValue").required()
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
@@ -89,6 +87,13 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         addSupplierInfo();
 
         editForm.add(new ContractDocumentPanel("contractDocs"));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        submitAndNext.setVisibilityAllowed(false);
     }
 
     @Override

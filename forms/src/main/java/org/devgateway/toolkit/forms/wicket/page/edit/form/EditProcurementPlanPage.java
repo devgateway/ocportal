@@ -60,8 +60,6 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
     protected void onInitialize() {
         super.onInitialize();
 
-        submitAndNext.setVisibilityAllowed(false);
-
         editForm.add(new GenericSleepFormComponent<>("department"));
         editForm.add(new GenericSleepFormComponent<>("fiscalYear"));
         editForm.add(new PlanItemPanel("planItems"));
@@ -72,6 +70,13 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
         editForm.add(formDocs);
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        submitAndNext.setVisibilityAllowed(false);
         saveTerminateButton.setVisibilityAllowed(false);
     }
 

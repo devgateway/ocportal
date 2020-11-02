@@ -32,6 +32,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -337,6 +338,31 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
             add(getCancelButton());
         }
+
+        /**
+         * Returns a model comparator based on identity check.
+         * <p>This allows to overwrite the entity in the model like this:</p>
+         * <pre>{@code
+         * T entity = editForm.getModelObject();
+         * T savedEntity = jpaService.save(entity);
+         * editForm.setModelObject(savedEntity);
+         * }</pre>
+         *
+         * @return
+         */
+        @Override
+        public IModelComparator getModelComparator() {
+            return (IModelComparator) (component, b) -> {
+                final Object a = component.getDefaultModelObject();
+                if (a == null && b == null) {
+                    return true;
+                }
+                if (a == null || b == null) {
+                    return false;
+                }
+                return a == b;
+            };
+        }
     }
 
     protected BootstrapCancelButton getCancelButton() {
@@ -346,8 +372,12 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
+                onCancel(target);
             }
         };
+    }
+
+    protected void onCancel(AjaxRequestTarget target) {
     }
 
 
@@ -374,6 +404,10 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             try {
                 // save the object and go back to the list page
                 final T saveable = editForm.getModelObject();
+
+                if (checkInBeforeSave()) {
+                    checkIn(saveable);
+                }
 
                 beforeSaveEntity(saveable);
 
@@ -426,6 +460,10 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             return null;
         }
 
+        protected boolean checkInBeforeSave() {
+            return true;
+        }
+
         @Override
         protected void onError(final AjaxRequestTarget target) {
             // make all errors visible
@@ -473,6 +511,12 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         public boolean isRedirectToSelf() {
             return redirectToSelf;
         }
+    }
+
+    protected void checkAndSendEventForDisableEditing() {
+    }
+
+    protected void checkIn(T saveable) {
     }
 
     protected void beforeSaveEntity(T saveable) {
@@ -591,6 +635,13 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                     Attributes.addClass(tag, "print-view");
                 }
             }
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                checkAndSendEventForDisableEditing();
+                setButtonsPermissions();
+            }
         };
 
         // use this in order to avoid "ServletRequest does not contain multipart content" error
@@ -603,6 +654,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         // this fragment ensures extra buttons are added below the wicket:child section in child
         final Fragment fragment = new Fragment("extraButtons", "noButtons", this);
         editForm.add(fragment);
+    }
+
+    protected void setButtonsPermissions() {
     }
 
     @Override

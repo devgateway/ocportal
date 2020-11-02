@@ -1,7 +1,10 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
+import static java.util.stream.Collectors.toList;
+
 import com.google.common.collect.ImmutableMap;
+import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AdministratorReport;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
@@ -9,6 +12,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
+import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
@@ -23,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -102,5 +108,25 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
     public <S extends AbstractMakueniEntity> S saveAndFlushMakueniEntity(S entity) {
         AbstractMakueniEntityService<S> service = (AbstractMakueniEntityService<S>) serviceMap.get(entity.getClass());
         return service.saveAndFlush(entity);
+    }
+
+    @Override
+    public void unlock(Lockable entity) {
+        AbstractMakueniEntityService<? extends AbstractMakueniEntity> service = serviceMap.get(entity.getClass());
+        service.unlock(entity.getId());
+    }
+
+    @Override
+    public List<? extends AbstractMakueniEntity> getAllLocked(Person person) {
+        return serviceMap.values().stream()
+                .flatMap(s -> s.getAllLocked(person).stream())
+                .collect(toList());
+    }
+
+    @Override
+    public List<? extends AbstractMakueniEntity> getAllLocked() {
+        return serviceMap.values().stream()
+                .flatMap(s -> s.getAllLocked().stream())
+                .collect(toList());
     }
 }

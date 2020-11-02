@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.AccessType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
@@ -26,7 +28,9 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -469,5 +473,43 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void setPaymentVouchers(Set<PaymentVoucher> paymentVouchers) {
         this.paymentVouchers = paymentVouchers;
+    }
+
+    @AccessType(AccessType.Type.PROPERTY)
+    public ZonedDateTime getLastModifiedDateInclChildren() {
+        return getMax(Arrays.asList(
+                getLastModifiedDate().orElse(null),
+                getMaxLastModifiedDate(pmcReports),
+                getMaxLastModifiedDate(meReports),
+                getMaxLastModifiedDate(inspectionReports),
+                getMaxLastModifiedDate(paymentVouchers),
+                getMaxLastModifiedDate(administratorReports),
+                getMaxLastModifiedDate(awardAcceptance),
+                getMaxLastModifiedDate(awardNotification),
+                getMaxLastModifiedDate(professionalOpinion),
+                getMaxLastModifiedDate(tenderQuotationEvaluation),
+                getMaxLastModifiedDate(tender),
+                getMaxLastModifiedDate(contract)));
+    }
+
+    private ZonedDateTime getMaxLastModifiedDate(Collection<? extends AbstractAuditableEntity> col) {
+        ZonedDateTime max = null;
+        for (AbstractAuditableEntity e : col) {
+            if (e.getLastModifiedDate().isPresent()
+                    && (max == null || max.isBefore(e.getLastModifiedDate().get()))) {
+                max = e.getLastModifiedDate().get();
+            }
+        }
+        return max;
+    }
+
+    private ZonedDateTime getMax(Collection<ZonedDateTime> col) {
+        ZonedDateTime max = null;
+        for (ZonedDateTime e : col) {
+            if (e != null && (max == null || max.isBefore(e))) {
+                max = e;
+            }
+        }
+        return max;
     }
 }
