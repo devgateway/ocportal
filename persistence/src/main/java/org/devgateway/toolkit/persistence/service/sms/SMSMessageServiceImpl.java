@@ -262,7 +262,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
     }
 
     @Override
-    @Scheduled(cron = "0 */10 * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     @Transactional
     public void processAlertsQueue() {
 
