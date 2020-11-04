@@ -380,11 +380,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         "navbar.stafflist", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListPMCStaffPage.class,
+                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListPMCStaffPage.class,
                         "navbar.pmcStaffList", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListDesignationPage.class,
+                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListDesignationPage.class,
                         "navbar.designations", FontAwesomeIconType.certificate
                 );
 
@@ -414,8 +414,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
         };
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_ADMIN);
         MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PMC_ADMIN);
         return metadataMenu;
     }
 
