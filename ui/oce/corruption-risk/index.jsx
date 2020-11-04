@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import URI from 'urijs';
-import { Map, Set } from 'immutable';
+import {Map, Set} from 'immutable';
 import PropTypes from 'prop-types';
-import { fetchJson, debounce, cacheFn, range, pluck, callFunc } from '../tools';
+import {cacheFn, debounce, fetchJson, pluck, range} from '../tools';
 import OverviewPage from './overview-page';
 import CorruptionTypePage from './corruption-type';
 import IndividualIndicatorPage from './individual-indicator';
@@ -16,11 +16,12 @@ import ProcuringEntityPage from './procuring-entities/single';
 import BuyerPage from './buyers/single';
 import Filters from './filters';
 import LandingPopup from './landing-popup';
-import { LOGIN_URL } from './constants';
+import {LOGIN_URL} from './constants';
 // eslint-disable-next-line no-unused-vars
+// noinspection ES6UnusedImports
 import style from './style.less';
 import Sidebar from './sidebar';
-import { filters as CRDFilters } from '../state/oce-state';
+import {filters as CRDFilters} from '../state/oce-state';
 
 // eslint-disable-next-line no-undef
 class CorruptionRiskDashboard extends React.Component {
@@ -262,7 +263,6 @@ class CorruptionRiskDashboard extends React.Component {
     return Object.keys(TRANSLATIONS)
     .map(locale => (
       <a
-        href="javascript:void(0);"
         onClick={() => this.setLocale(locale)}
         className={cn({ active: locale === selectedLocale })}
       >
