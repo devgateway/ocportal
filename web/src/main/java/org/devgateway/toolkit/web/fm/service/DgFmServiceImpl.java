@@ -105,6 +105,12 @@ public class DgFmServiceImpl implements DgFmService {
     }
 
     @Override
+    public List<DgFeature> getFeaturesByPrefix(String prefixName) {
+        return features.keySet().stream().filter(k -> k.startsWith(prefixName))
+                .map(this::getFeature).collect(Collectors.toList());
+    }
+
+    @Override
     public DgFeature getFeature(String featureName) {
         if (!fmActive) {
             return null;

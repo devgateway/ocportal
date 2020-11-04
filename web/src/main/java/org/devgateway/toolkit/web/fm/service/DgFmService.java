@@ -2,10 +2,15 @@ package org.devgateway.toolkit.web.fm.service;
 
 import org.devgateway.toolkit.web.fm.entity.DgFeature;
 
+import java.util.List;
+
 /**
  * @author mpostelnicu
  */
 public interface DgFmService {
+
+    List<DgFeature> getFeaturesByPrefix(String featureName);
+
     DgFeature getFeature(String featureName);
 
     Boolean hasFeature(String featureName);
