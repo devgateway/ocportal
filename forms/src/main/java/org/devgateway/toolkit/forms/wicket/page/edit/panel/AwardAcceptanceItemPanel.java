@@ -84,6 +84,22 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
         }
     }
 
+    protected class AwardAcceptanceItemCountValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            List<AwardAcceptanceItem> items = AwardAcceptanceItemPanel.this.getModelObject();
+            if (items.size() == 0) {
+                form.error(getString("atLeastOneAwardAcceptance"));
+            }
+
+        }
+    }
+
     protected boolean getWrongAwardNotificationCount() {
         AwardAcceptance awardAcceptance = (AwardAcceptance) Form.findForm(AwardAcceptanceItemPanel.this)
                 .getModelObject();
@@ -140,6 +156,8 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
             form.add(new OneAwardAcceptedValidator());
             form.add(new WrongDistinctCountValidator());
             form.add(new AwardNotificationCountValidator());
+            form.add(new AwardAcceptanceItemCountValidator());
+
         }
     }
 

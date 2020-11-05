@@ -1,16 +1,17 @@
 import translatable from '../../translatable';
-import { ppState } from '../procurementPlan/state';
-import { API_ROOT } from '../../state/oce-state';
-import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
+import {ppState} from '../procurementPlan/state';
+import {API_ROOT} from '../../state/oce-state';
+import {FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
+import React from "react";
 
 class FilterItemSingleSelect extends translatable(React.Component) {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       selected: 'all'
     };
-    
+
     this.filterEP = ppState.input({
       name: 'filter' + this.constructor.getName() + 'EP',
       initial: `${API_ROOT}` + this.constructor.getEP(),
@@ -89,8 +90,8 @@ class FilterItemSingleSelect extends translatable(React.Component) {
           <option value="all">All</option>
           {
             data !== undefined
-              ? data.map(item => <option key={item.label} value={item._id}>{item.label}</option>)
-              : null
+                ? data.map(item => <option key={item.label} value={item._id}>{item.label}</option>)
+                : null
           }
         </FormControl>
       </FormGroup>

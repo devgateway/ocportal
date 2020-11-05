@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import cn from 'classnames';
-import { Set } from 'immutable';
+import {Set} from 'immutable';
 import Tab from '../index';
 import TenderLocations from '../../visualizations/map/tender-locations';
-import { debounce } from '../../tools.es6';
+import {debounce} from '../../tools.es6';
 import React from 'react';
 
 class LocationTab extends Tab {
@@ -45,9 +45,9 @@ class LocationTab extends Tab {
           </button>
           <ul className="dropdown-menu">
             {LAYERS.map((layer, index) => <li key={index}>
-                <a href="javascript:void(0)" onClick={e => this.setState({ currentLayer: index })}>
-                  {LAYERS[index].getLayerName(this.t.bind(this))}
-                </a>
+              <a onClick={e => this.setState({currentLayer: index})}>
+                {LAYERS[index].getLayerName(this.t.bind(this))}
+              </a>
               </li>
             )}
           </ul>

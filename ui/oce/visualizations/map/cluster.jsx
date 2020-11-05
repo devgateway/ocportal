@@ -1,4 +1,5 @@
-import {LayerGroup} from "react-leaflet";
+import PropTypes from 'prop-types';
+import {LayerGroup} from 'react-leaflet';
 import {toK} from "../../tools";
 require("leaflet.markercluster");
 require("leaflet.markercluster/dist/MarkerCluster.css");
@@ -48,7 +49,7 @@ class Cluster extends LayerGroup {
 }
 
 Cluster.propTypes = {
-  maxAmount: React.PropTypes.number.isRequired
+  maxAmount: PropTypes.number.isRequired
 };
 
 export default Cluster;
