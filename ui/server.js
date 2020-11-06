@@ -8,16 +8,15 @@ var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
   hot: true,
   historyApiFallback: true,
-  proxy: {
-    "/api": {
-      "target": {
-        "host": "localhost",
-        "protocol": 'http:',
-        "port": 8090
-      },
-      secure: false
-    }
-  }
+  proxy: [{
+    context: ["/api", "/isAuthenticated"],
+    target: {
+      "host": "localhost",
+      "protocol": 'http:',
+      "port": 8090
+    },
+    secure: false
+  }]
 });
 
 server.listen(3000, 'localhost', function (err, result) {

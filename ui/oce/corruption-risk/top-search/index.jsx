@@ -1,7 +1,8 @@
 import translatable from '../../translatable';
-// eslint-disable-next-line no-unused-vars
-import style from './style.less';
 
+// eslint-disable-next-line no-unused-vars
+// noinspection ES6UnusedImports
+import style from './style.less';
 
 class TopSearch extends translatable(React.Component) {
   constructor(props, ...rest) {
@@ -39,7 +40,6 @@ class TopSearch extends translatable(React.Component) {
 
     return (
         <form
-          action="javascript:void(0);"
           className="top-search row"
           onSubmit={() => doSearch(this.convertExactMatch(inputValue))}
         >
