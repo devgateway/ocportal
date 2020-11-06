@@ -1,4 +1,5 @@
 import CatChart from './cat-chart';
+import fmConnect from "../../fm/fm";
 
 class ExpenditureTodateVsBudget extends CatChart {
   static getName(t){return t('charts:expenditureToDateVsBudget:title')}
@@ -22,4 +23,4 @@ ExpenditureTodateVsBudget.endpoint = 'expenditureToDateVsBudget';
 ExpenditureTodateVsBudget.CAT_NAME_FIELD = 'type';
 ExpenditureTodateVsBudget.CAT_VALUE_FIELD = 'amount';
 
-export default ExpenditureTodateVsBudget;
+export default fmConnect(ExpenditureTodateVsBudget, 'viz.me.chart.expenditureToDateVsBudget');

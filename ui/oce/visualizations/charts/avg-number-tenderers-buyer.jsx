@@ -1,4 +1,5 @@
 import CatChart from "./cat-chart";
+import fmConnect from "../../fm/fm";
 
 class AvgTenderersByBuyer extends CatChart{
   // orientation(): * {
@@ -30,4 +31,4 @@ AvgTenderersByBuyer.CAT_NAME_FIELD = "_id";
 AvgTenderersByBuyer.CAT_WRAP_CHARS = 40;
 AvgTenderersByBuyer.CAT_VALUE_FIELD = "numberOfTenderers";
 
-export default AvgTenderersByBuyer;
+export default fmConnect(AvgTenderersByBuyer, 'viz.me.chart.avgTenderersByBuyer');

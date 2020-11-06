@@ -1,4 +1,5 @@
 import CatChart from "./cat-chart";
+import fmConnect from "../../fm/fm";
 
 class ProcurementMethod extends CatChart {
   static getName(t){return t('charts:procurementMethod:title')}
@@ -34,4 +35,4 @@ ProcurementMethod.excelEP = 'procurementMethodExcelChart';
 ProcurementMethod.CAT_NAME_FIELD = 'procurementMethod';
 ProcurementMethod.CAT_VALUE_FIELD = 'totalTenderAmount';
 
-export default ProcurementMethod;
+export default fmConnect(ProcurementMethod, 'viz.me.chart.procurementMethod');

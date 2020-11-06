@@ -1,5 +1,6 @@
 import Table from './index';
 import { pluckImm } from '../../tools';
+import fmConnect from "../../fm/fm";
 
 class Awards extends Table {
   row(entry) {
@@ -43,4 +44,4 @@ class Awards extends Table {
 Awards.getName = t => t('tables:top10awards:title');
 Awards.endpoint = 'topTenLargestAwards';
 
-export default Awards;
+export default fmConnect(Awards, 'viz.me.table.awards');
