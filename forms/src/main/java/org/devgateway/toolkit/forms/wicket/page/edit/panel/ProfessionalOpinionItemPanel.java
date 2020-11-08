@@ -5,7 +5,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
@@ -35,7 +35,7 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Professional Opinion"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newProfessionalOpinion", this));
     }
 
     protected class ProfessionalOpinionItemCountValidator implements IFormValidator {

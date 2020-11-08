@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
@@ -143,7 +143,7 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Award Acceptance"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newAwardAcceptance", this));
     }
 
 

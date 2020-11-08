@@ -72,7 +72,7 @@ public class Select2ChoiceBootstrapFormComponent<TYPE>
     protected void onInitialize() {
         super.onInitialize();
 
-        field.getSettings().setPlaceholder("Click to select");
+        field.getSettings().setPlaceholder(getString("select2.placeholder"));
         field.getSettings().setAllowClear(true);
         field.getSettings().setCloseOnSelect(true);
         field.getSettings().setDropdownAutoWidth(true);
