@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import { Popup } from 'react-leaflet';
 import cn from 'classnames';
-import Marker from '../location/marker';
+import Location from '../location/marker';
 import Component from '../../../pure-render-component';
 import translatable from '../../../translatable';
 import OverviewChart from '../../../visualizations/charts/overview';
@@ -93,7 +93,7 @@ class LocationWrapper extends translatable(Component) {
     const CurrentTab = this.constructor.TABS[currentTab];
     const t = translationKey => this.t(translationKey);
     return (
-      <Marker {...this.props}>
+      <Location {...this.props}>
         <Popup className="tender-locations-popup">
           <div>
             <header>
@@ -150,7 +150,7 @@ class LocationWrapper extends translatable(Component) {
             </div>
           </div>
         </Popup>
-      </Marker>
+      </Location>
     );
   }
 }

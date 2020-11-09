@@ -170,7 +170,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
         // create custom submit button in order to prevent form submission
         final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
-                new Model<>("Submit"), Buttons.Type.Default) {
+                new StringResourceModel("submit", this), Buttons.Type.Default) {
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -374,7 +374,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             add(download);
 
             final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton",
-                    new Model<>("Excel Download"),
+                    new StringResourceModel("excelDownload", this),
                     Buttons.Type.Warning) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target) {

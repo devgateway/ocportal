@@ -147,8 +147,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     protected ButtonContentModal createTerminateModal() {
         ButtonContentModal buttonContentModal = new ButtonContentModal(
                 "terminateModal",
-                Model.of("Are you sure you want to TERMINATE the contracting process?"),
-                Model.of("TERMINATE"), Buttons.Type.Danger);
+                new StringResourceModel("confirmTerminateModal.content", this),
+                new StringResourceModel("confirmTerminateModal.terminate", this), Buttons.Type.Danger);
         return buttonContentModal;
     }
 
@@ -591,6 +591,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 onBeforeSaveApprove(target);
                 setStatusAppendComment(DBConstants.Status.APPROVED);
                 super.onSubmit(target);
+                onApproved();
             }
         };
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
@@ -599,6 +600,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     protected void onBeforeSaveApprove(AjaxRequestTarget target) {
 
+    }
+
+    protected void onApproved() {
     }
 
     protected SaveEditPageButton getRevertToDraftPageButton() {

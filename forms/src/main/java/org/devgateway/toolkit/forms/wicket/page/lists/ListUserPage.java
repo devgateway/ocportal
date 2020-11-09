@@ -12,7 +12,7 @@
 package org.devgateway.toolkit.forms.wicket.page.lists;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -57,10 +57,11 @@ public class ListUserPage extends AbstractListPage<Person> {
 
     @Override
     protected void onInitialize() {
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(new Model<>("Name"), "username", "username"));
+        columns.add(new TextFilteredBootstrapPropertyColumn<>(new StringResourceModel("name", this),
+                "username", "username"));
 
         final List<Department> departments = departmentService.findAll();
-        columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Departments"),
+        columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new StringResourceModel("departments", this),
                 "departments", new ListModel<>(departments), dataTable));
 
         List<Role> roles = null;
@@ -71,7 +72,7 @@ public class ListUserPage extends AbstractListPage<Person> {
                 roles = roleService.findByAuthorityIn(SecurityConstants.Roles.PMC_ROLES);
             }
         }
-        columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new Model<>("Roles"),
+        columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new StringResourceModel("roles", this),
                 "roles", new ListModel<>(roles), dataTable,
                 !FormSecurityUtil.isCurrentUserPmcAdmin()));
 

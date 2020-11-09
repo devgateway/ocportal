@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import cn from 'classnames';
-import { Map } from 'immutable';
+import {Map} from 'immutable';
 import translatable from '../translatable';
 import TotalFlags from './total-flags';
-import { CORRUPTION_TYPES } from './constants';
+import {CORRUPTION_TYPES} from './constants';
 
 // eslint-disable-next-line no-undef
 class Sidebar extends translatable(React.PureComponent) {
@@ -43,7 +43,6 @@ class Sidebar extends translatable(React.PureComponent) {
         <div>
           <section role="navigation" className="row">
             <a
-              href="javascript:void(0);"
               onClick={() => navigate()}
               className={cn('crd-description-link', { active: !page })}>
               <img className="blue" src="assets/icons/blue/overview.svg" alt="Overview icon"/>
@@ -71,7 +70,6 @@ class Sidebar extends translatable(React.PureComponent) {
 
               return (
                 <a
-                  href="javascript:void(0);"
                   onClick={() => navigate('type', slug)}
                   className={cn({ active: slug === corruptionType })}
                   key={slug}
@@ -84,7 +82,6 @@ class Sidebar extends translatable(React.PureComponent) {
               );
             })}
             <a
-              href="javascript:void(0);"
               onClick={() => navigate('suppliers')}
               className={cn('archive-link', { active: page === 'suppliers' || page === 'supplier' })}
               key="suppliers"
@@ -94,7 +91,6 @@ class Sidebar extends translatable(React.PureComponent) {
               {this.t('crd:contracts:baseInfo:suppliers')}
             </a>
             <a
-              href="javascript:void(0);"
               onClick={() => navigate('procuring-entities')}
               className={cn('archive-link', { active: page === 'procuring-entities' || page === 'procuring-entity' })}
               key="procuring-entities"
@@ -106,7 +102,6 @@ class Sidebar extends translatable(React.PureComponent) {
               {this.t('crd:contracts:menu:procuringEntities')}
             </a>
             <a
-              href="javascript:void(0);"
               onClick={() => navigate('buyers')}
               className={cn('archive-link', { active: page === 'buyers' || page === 'buyer' })}
               key="buyers"

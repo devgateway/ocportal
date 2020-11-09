@@ -27,13 +27,14 @@
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <h4>
                 <i class="glyphicon glyphicon-info-sign"></i>
-                The URL introduced is not correct. Please make sure that you are using the exact same URL that was
-                received in the confirmation email.
+                <wicket:message key="verifyEmailError" />
             </h4>
             <br/>
             <h4>
-                Additionally you can try to subscribe again by clicking <a class="verify-error-link"
-                                                                           href="/ui/index.html#!/alerts">here</a>.
+                <wicket:message key="verifyEmailError2">
+                    <a wicket:id="link" class="verify-error-link"
+                       href="/ui/index.html#!/alerts"><wicket:message key="linkText" /></a>
+                </wicket:message>
             </h4>
         </div>
     </div>
@@ -43,12 +44,14 @@
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <h4>
                 <i class="glyphicon glyphicon-info-sign"></i>
-                This email address is already verified!
+                <wicket:message key="verifyEmailSuccess" />
             </h4>
             <br/>
             <h4>
-                You can visit Makueni Public Portal by clicking <a class="verify-error-link"
-                                                                   href="/ui/index.html">here</a>.
+                <wicket:message key="verifyEmailSuccess2">
+                    <a wicket:id="link" class="verify-error-link"
+                       href="/ui/index.html"><wicket:message key="linkText" /></a>
+                </wicket:message>
             </h4>
         </div>
     </div>
