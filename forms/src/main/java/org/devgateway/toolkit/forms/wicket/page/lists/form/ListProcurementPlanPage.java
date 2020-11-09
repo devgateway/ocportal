@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -33,10 +33,10 @@ public class ListProcurementPlanPage extends ListAbstractMakueniEntityPage<Procu
 
     @Override
     protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
                 "department", "department", new ListModel(departments), dataTable));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("fiscalYears", this),
                 "fiscalYear", "fiscalYear", new ListModel(fiscalYears), dataTable));
 
         super.onInitialize();

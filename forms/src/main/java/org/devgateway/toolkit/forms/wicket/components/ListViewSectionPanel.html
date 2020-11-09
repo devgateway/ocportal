@@ -4,15 +4,15 @@
 </head>
 <body>
 <wicket:panel>
-    <div wicket:id="listFilterPanel"></div>
+<!--    <div wicket:id="listFilterPanel"></div>-->
 
     <div class="row list-wrapper" wicket:id="listWrapper">
         <div class="col-md-12">
             <div class="pane title">
                 <h4 wicket:id="panelTitle">[[title]]</h4>
-                <span class="count"><span wicket:id="totalEntries">[[totalEntries]]</span> Total Entries</span>
+                <span class="count"><span wicket:id="totalEntries">[[totalEntries]]</span></span>
                 <a wicket:id="showHideAllEntries">
-                    <span class="show-all">show/hide all entries</span>
+                    <span class="show-all"><wicket:message key="showHideAllEntries" /></span>
                 </a>
             </div>
         </div>
@@ -32,7 +32,7 @@
 
                                     <div class="col-md-1">
                                         <span class="show-all pull-right"
-                                              wicket:id="showDetailsLink">show details</span>
+                                              wicket:id="showDetailsLink">[[show details]]</span>
                                     </div>
                                 </div>
                             </a>
@@ -42,11 +42,11 @@
                     <div wicket:id="hideableContainer" class="panel-body panel-collapse collapse">
                         <div class="row">
                             <div class="col-md-12">
-                                <button wicket:id="edit" type="button" class="btn btn-primary pull-right">Edit</button>
+                                <button wicket:id="edit" type="button" class="btn btn-primary pull-right">[[Edit]]</button>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button wicket:id="remove" type="button" class="btn btn-red pull-right">Remove
+                                    <button wicket:id="remove" type="button" class="btn btn-red pull-right">[[Remove]]
                                     </button>
                                 </div>
                             </div>

@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.page.lists;
 
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
@@ -46,7 +46,7 @@ public abstract class AbstractListStatusEntityPage<T extends AbstractStatusAudit
     }
 
     private void addStatusColumn() {
-        columns.add(1, new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Status"),
+        columns.add(1, new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("status", this),
                 "status", "status", new ListModel(getStatusDropdownValues()), dataTable));
     }
 }

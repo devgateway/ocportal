@@ -1,10 +1,10 @@
 import Chart from '../visualizations/charts/index.jsx';
-import { pluckImm, debounce } from '../tools';
+import {debounce, pluckImm} from '../tools';
 import backendYearFilterable from '../backend-year-filterable';
 import Visualization from '../visualization';
-import { fromJS, Set } from 'immutable';
+import {Set} from 'immutable';
 import translatable from '../translatable';
-import Plotly from 'plotly.js-basic-dist'
+import PropTypes from 'prop-types';
 
 const EMPTY_SET = Set();
 
@@ -93,7 +93,7 @@ class ContractCounter extends Counter {
   }
 }
 ContractCounter.propTypes = {
-  data: React.PropTypes.number,
+  data: PropTypes.number,
 };
 ContractCounter.endpoint = 'ocds/release/count';
 

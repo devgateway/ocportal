@@ -32,8 +32,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -172,7 +170,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal createDeleteModal() {
         final TextContentModal modal = new TextContentModal("deleteModal",
-                Model.of("DELETE is an irreversible operation. Are you sure?"));
+                new StringResourceModel("confirmDeleteModal.content", this));
         modal.addCloseButton();
 
         final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
@@ -186,7 +184,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             }
         };
         deleteButton.setDefaultFormProcessing(false);
-        deleteButton.setLabel(Model.of("DELETE"));
+        deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
         modal.addButton(deleteButton);
 
         return modal;
@@ -194,16 +192,16 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal createDeleteFailedModal() {
         final TextContentModal modal = new TextContentModal("deleteFailedModal",
-                new ResourceModel("delete_error_message"));
-        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+                new StringResourceModel("deleteFailedModal.content", this));
+        final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
             }
         };
-        deleteButton.setDefaultFormProcessing(false);
-        deleteButton.setLabel(Model.of("OK"));
-        modal.addButton(deleteButton);
+        okButton.setDefaultFormProcessing(false);
+        okButton.setLabel(new StringResourceModel("deleteFailedModal.ok", this));
+        modal.addButton(okButton);
 
         modal.add(new AjaxEventBehavior("hidden.bs.modal") {
             @Override

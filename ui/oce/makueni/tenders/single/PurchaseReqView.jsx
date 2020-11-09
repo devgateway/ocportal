@@ -206,7 +206,6 @@ class PurchaseReqView extends CRDPage {
             this.tabs.map(tab => {
               return (<a
                   key={tab.tab}
-                  href="javascript:void(0);"
                   className={cn('', { active: this.isActive(tab.tab) })}
                   onClick={() => this.changeTab(tab.tab)}
                 >

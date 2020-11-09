@@ -3,7 +3,6 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -18,7 +17,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -27,6 +26,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
@@ -138,7 +138,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("purchasereq-header-" + item.getModelObject().getId());
 
-        headerFragment.add(new Label("title", "Tender Process " + (item.getIndex() + 1)));
+        headerFragment.add(new Label("title",
+                new StringResourceModel("tenderProcess").setParameters(item.getIndex() + 1)));
 
         WebMarkupContainer terminatedRequisition = new WebMarkupContainer("terminatedRequisition");
 
@@ -173,7 +174,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel",
                     Collections.singletonList(tenderProcess),
-                    "Purchase Requisition", tp -> Arrays.asList(
+                    tp -> Arrays.asList(
                     tenderProcess.getPurchaseRequestNumber(),
                     tp.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
                             .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
@@ -183,21 +184,20 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             containerFragment.add(requisitionPanel);
 
             final Panel tenderPanel = new TenderDetailPanel<>("tenderPanel", Collections.singletonList(tender),
-                    "Tender Document", t ->
+                    t ->
                     t != null ? (Arrays.asList(t.getTenderTitle(), t.getTenderNumber(), t.getTenderValue())) : null,
                     tenderProcess, EditTenderPage.class, tenderProcess, false);
             containerFragment.add(tenderPanel);
 
             final Panel evaluationPanel = new TenderDetailPanel<>("evaluationPanel",
                     Collections.singletonList(tenderQuotationEvaluation),
-                    "Quotation and Evaluation",
                     qe -> (qe != null && tender != null)
                             ? new ArrayList<>(Arrays.asList(tender.getTenderTitle(), tender.getTenderNumber())) : null,
                     tenderProcess, EditTenderQuotationEvaluationPage.class, tender, false);
             containerFragment.add(evaluationPanel);
 
             final Panel professionalOpinionPanel = new TenderDetailPanel<>("professionalOpinionPanel",
-                    Collections.singletonList(professionalOpinion), "Professional Opinion",
+                    Collections.singletonList(professionalOpinion),
                     po -> po != null ? po.getItems()
                             .stream()
                             .map(Objects::toString)
@@ -208,7 +208,6 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel awardNotificationPanel = new TenderDetailPanel<>("awardNotificationPanel",
                     Collections.singletonList(awardNotification),
-                    "Notification",
                     an -> an != null ? an.getItems()
                             .stream()
                             .map(Objects::toString)
@@ -217,7 +216,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             containerFragment.add(awardNotificationPanel);
 
             final Panel awardAcceptancePanel = new TenderDetailPanel<>("awardAcceptancePanel",
-                    Collections.singletonList(awardAcceptance), "Acceptance",
+                    Collections.singletonList(awardAcceptance),
                     aa -> aa != null ? aa.getItems().stream().map(Objects::toString)
                             .collect(Collectors.toList()) : null,
                     tenderProcess, EditAwardAcceptancePage.class, awardNotification, false
@@ -225,7 +224,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             containerFragment.add(awardAcceptancePanel);
 
             final Panel contractPanel = new TenderDetailPanel<>("contractPanel", Collections.singletonList(contract),
-                    "Contracts", c -> c != null ? new ArrayList<>(Arrays.asList(c.getAwardee(),
+                    c -> c != null ? new ArrayList<>(Arrays.asList(c.getAwardee(),
                     c.getContractValue())) : null, tenderProcess, EditContractPage.class, awardAcceptance, false
             );
             containerFragment.add(contractPanel);
@@ -233,7 +232,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             final Panel administratorReportPanel = new TenderDetailPanel<>("administratorReportPanel",
                     tenderProcess.getAdministratorReports().stream().sorted(
                             Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
-                    "Administrator Report", ar -> Collections.singletonList(ar.getLabel()),
+                    ar -> Collections.singletonList(ar.getLabel()),
                     tenderProcess, EditAdministratorReportPage.class, contract, true
             );
             containerFragment.add(administratorReportPanel);
@@ -241,7 +240,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             final Panel inspectionReportPanel = new TenderDetailPanel<>("inspectionReportPanel",
                     tenderProcess.getInspectionReports().stream().sorted(
                             Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
-                    "Inspection Report", ir -> Collections.singletonList(ir.getLabel()),
+                    ir -> Collections.singletonList(ir.getLabel()),
                     tenderProcess, EditInspectionReportPage.class, contract, true
             );
             containerFragment.add(inspectionReportPanel);
@@ -249,7 +248,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             final Panel pmcReportPanel = new TenderDetailPanel<>("pmcReportPanel",
                     tenderProcess.getPmcReports().stream().sorted(
                             Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
-                    "PMC Report", pmc -> Collections.singletonList(pmc.getLabel()),
+                    pmc -> Collections.singletonList(pmc.getLabel()),
                     tenderProcess, EditPMCReportPage.class, contract, false
             );
             containerFragment.add(pmcReportPanel);
@@ -257,7 +256,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             final Panel meReportPanel = new TenderDetailPanel<>("meReportPanel",
                     tenderProcess.getMeReports().stream().sorted(
                             Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
-                    "M&E Report", me -> Collections.singletonList(me.getLabel()),
+                    me -> Collections.singletonList(me.getLabel()),
                     tenderProcess, EditMEReportPage.class, contract, true
             );
             containerFragment.add(meReportPanel);
@@ -265,7 +264,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             final Panel paymentVoucherPanel = new TenderDetailPanel<>("paymentVoucherPanel",
                     tenderProcess.getPaymentVouchers().stream().sorted(
                             Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
-                    "Payment Voucher", pv -> Collections.singletonList(pv.getLabel()),
+                    pv -> Collections.singletonList(pv.getLabel()),
                     tenderProcess, EditPaymentVoucherPage.class, contract, true
             );
             containerFragment.add(paymentVoucherPanel);
@@ -307,8 +306,6 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     private class TenderDetailPanel<T extends AbstractMakueniEntity> extends GenericPanel<T> {
         private final List<T> entities;
 
-        private final String tenderLabel;
-
         private final SerializableFunction<T, List<Object>> tenderInfo;
 
         private final TenderProcess tenderProcess;
@@ -318,16 +315,15 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
         private boolean multiple;
 
-        TenderDetailPanel(final String id, final List<T> entities, final String tenderLabel,
-                          final SerializableFunction<T, List<Object>> tenderInfo, final TenderProcess tenderProcess,
-                          final Class<? extends AbstractEditPage<?>> editClazz, Statusable previousStep,
-                          boolean multiple) {
+        TenderDetailPanel(final String id, final List<T> entities,
+                final SerializableFunction<T, List<Object>> tenderInfo, final TenderProcess tenderProcess,
+                final Class<? extends AbstractEditPage<?>> editClazz, Statusable previousStep,
+                boolean multiple) {
             super(id);
 
             this.multiple = multiple;
             this.entities = entities;
             this.previousStep = previousStep;
-            this.tenderLabel = tenderLabel;
             this.tenderInfo = tenderInfo;
             this.tenderProcess = tenderProcess;
             this.editClazz = editClazz;
@@ -354,7 +350,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         protected void onInitialize() {
             super.onInitialize();
 
-            add(new Label("tenderLabel", tenderLabel));
+            add(new Label("tenderLabel", new StringResourceModel(getId() + ".tenderLabel")));
 
             add(new ListView<T>("entities", new ListModel<>(entities)) {
                 @Override
@@ -373,17 +369,15 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     }
                     editTender.add(AttributeAppender.append("class", "no-text btn-" + buttonType));
 
-                    editTender.add(new TooltipBehavior(Model.of(canAccessAddNewButtons(editClazz) ? "Edit " : "View "
-                            + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
-                            editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")),
-                            ' '))));
+                    editTender.add(new TooltipBehavior(EditViewResourceModel.of(canAccessAddNewButtons(editClazz),
+                            TenderDetailPanel.this.getId() + ".entity", this)));
 
                     if (item.getModelObject() == null) {
                         editTender.setVisibilityAllowed(canAccessAddNewButtons(editClazz));
                     }
 
                     editTender.setEnabled(canEdit(tenderProcess, item.getModelObject(), previousStep));
-                    
+
                     item.add(editTender);
 
                     item.add(new ListView<Object>("tenderInfo", new ListModel<>(tenderInfo.apply(itemObj))) {
