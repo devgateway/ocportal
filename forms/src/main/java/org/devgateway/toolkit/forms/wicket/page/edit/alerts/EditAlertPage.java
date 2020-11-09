@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.alerts;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
@@ -56,7 +57,8 @@ public class EditAlertPage extends AbstractEditPage<Alert> {
 
             editForm.add(new GenericSleepFormComponent("purchaseReq", new Model(tender.getTenderTitle())));
         } else {
-            editForm.add(new GenericSleepFormComponent("purchaseReq", new Model("No Tender Selected")));
+            editForm.add(new GenericSleepFormComponent("purchaseReq",
+                    new StringResourceModel("noTenderSelected", this)));
         }
 
         ComponentUtil.addSelect2MultiChoiceField(editForm, "departments", departmentService);

@@ -1,17 +1,12 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
-import java.util.Collection;
 import java.util.List;
 
 import org.devgateway.toolkit.persistence.dao.alerts.ApprovedReport;
-import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.Department_;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
-import org.devgateway.toolkit.persistence.dao.form.PMCReport_;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
-import org.devgateway.toolkit.persistence.dao.form.Project_;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.repository.alerts.ApprovedReportRepository;
 import org.devgateway.toolkit.persistence.repository.form.PMCReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -58,11 +53,8 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
     }
 
     @Override
-    public List<PMCReport> getPMCReportsForDepartments(Collection<Department> deps) {
-        return repository.findAll((r, cq, cb) -> cb.and(
-                r.join(PMCReport_.tenderProcess).join(TenderProcess_.project).join(Project_.procurementPlan)
-                        .join(ProcurementPlan_.department).in(deps)
-        ));
+    public List<PMCReport> getPMCReportsCreatedBy(String username) {
+        return repository.findAll((r, cq, cb) -> cb.and(r.get(Department_.createdBy).in(username)));
     }
 
     @Override

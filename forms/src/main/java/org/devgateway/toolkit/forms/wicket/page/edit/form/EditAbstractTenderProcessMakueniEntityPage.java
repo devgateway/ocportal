@@ -4,9 +4,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
@@ -63,7 +63,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         saveTerminateButton.setVisibilityAllowed(!isTerminated()
                 && editForm.getModelObject().getDirectChildrenEntitiesNotNull().isEmpty());
 
-        if (!ObjectUtils.isEmpty(getNextForm())) {
+        if (!ObjectUtils.isEmpty(getNextForm())
+                && getPageParameters().get(WebConstants.PARAM_DELETE_ENABLED).isEmpty()) {
             deleteButton.setVisibilityAllowed(false);
         }
     }
@@ -120,8 +121,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
             revertToDraftModal = new ButtonContentModal(
                     "revertToDraftModal",
-                    new StringResourceModel("reactivateModal", this, null),
-                    Model.of("REACTIVATE"), Buttons.Type.Warning
+                    new StringResourceModel("reactivateModal.content", this),
+                    new StringResourceModel("reactivateModal.reactivate", this), Buttons.Type.Warning
             );
         }
         return revertToDraftModal;

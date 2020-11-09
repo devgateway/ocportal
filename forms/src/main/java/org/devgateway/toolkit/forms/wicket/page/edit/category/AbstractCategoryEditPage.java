@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.page.edit.category;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -42,12 +40,6 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        // just replace the page title with the name of the class
-        // instead of having .properties files only for the page title
-        addOrReplace(new Label("pageTitle",
-                StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
-                        this.getClass().getSimpleName().replaceAll("Page", "")), ' ')));
 
         label = ComponentUtil.addTextField(editForm, "label");
         label.required();

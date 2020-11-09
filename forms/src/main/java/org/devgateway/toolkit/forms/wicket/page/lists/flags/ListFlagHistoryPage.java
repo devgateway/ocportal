@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.ocds.web.spring.ReleaseFlagNotificationService;
@@ -40,11 +41,11 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
     @Override
     protected void onInitialize() {
 
-        columns.add(new SimpleDateProperyColumn<>(new Model<>("Flagged Date"),
+        columns.add(new SimpleDateProperyColumn<>(new StringResourceModel("flaggedDate", this),
                 "flaggedDate", "flaggedDate",
                 ReleaseFlagHistory::getFlaggedDate, "yyyy-MM-dd HH:mm:ss"));
 
-        columns.add(new PropertyColumn<ReleaseFlagHistory, String>(new Model<>("Tender Name"),
+        columns.add(new PropertyColumn<ReleaseFlagHistory, String>(new StringResourceModel("tenderName", this),
                 "releaseId", "releaseId") {
             @Override
             public void populateItem(final Item<ICellPopulator<ReleaseFlagHistory>> item,
@@ -55,8 +56,8 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
             }
         });
 
-        columns.add(new PropertyColumn<>(new Model<>("Tender Code"), "releaseId", "releaseId"));
-        columns.add(new PropertyColumn<>(new Model<>("Flags Set"), "flagged", "flagged"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("tenderCode", this), "releaseId", "releaseId"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("flagsSet", this), "flagged", "flagged"));
 
         super.onInitialize();
 

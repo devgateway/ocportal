@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -21,7 +20,6 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
-import org.devgateway.toolkit.forms.wicket.components.StopEventPropagationBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
@@ -99,7 +97,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
         final PlanItem planItem = item.getModelObject();
-        if (BooleanUtils.isTrue(planItem.getEditable())) {
             ComponentUtil.addSelect2ChoiceField(item, "unitOfIssue", unitService).required();
 
             final TextFieldBootstrapFormComponent<BigDecimal> quantity =
@@ -155,27 +152,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             ComponentUtil.addBigDecimalField(item, "quarter4th")
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        } else {
-            item.add(new GenericSleepFormComponent<>("estimatedCost"));
-            item.add(new GenericSleepFormComponent<>("unitOfIssue"));
-            item.add(new GenericSleepFormComponent<>("quantity"));
-            item.add(new GenericSleepFormComponent<>("totalCost", (IModel<String>) () -> {
-                if (planItem.getQuantity() != null && planItem.getEstimatedCost() != null) {
-                    return ComponentUtil.formatNumber(planItem.getEstimatedCost().multiply(planItem.getQuantity()));
-                }
-                return null;
-            }));
 
-            item.add(new GenericSleepFormComponent<>("procurementMethod"));
-            item.add(new GenericSleepFormComponent<>("sourceOfFunds"));
-            item.add(new GenericSleepFormComponent<>("targetGroup"));
-            item.add(new GenericSleepFormComponent<>("targetGroupValue"));
-
-            item.add(new GenericSleepFormComponent<>("quarter1st"));
-            item.add(new GenericSleepFormComponent<>("quarter2nd"));
-            item.add(new GenericSleepFormComponent<>("quarter3rd"));
-            item.add(new GenericSleepFormComponent<>("quarter4th"));
-        }
     }
 
     @Override
@@ -289,14 +266,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         @Override
         protected void onInitialize() {
             super.onInitialize();
-
-            final PlanItem planItem = getModelObject();
-            if (BooleanUtils.isTrue(planItem.getEditable())) {
-                final Component item = ComponentUtil.addSelect2ChoiceField(this, "item", itemService).required();
-                item.add(new StopEventPropagationBehavior());
-            } else {
-                add(new GenericSleepFormComponent<>("item"));
-            }
+            ComponentUtil.addSelect2ChoiceField(this, "item", itemService).required();
         }
     }
 

@@ -375,8 +375,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
         // set the max file size to 25 Mb
         fileInputConfig.put(new Key<>("maxFileSize"), "10240");
-        fileInputConfig.put(new Key<>("msgSizeTooLarge"), "File \"{name}\" exceeds maximum allowed upload size of "
-                + "<b>10 Mb</b>. Please retry your upload!");
+        fileInputConfig.put(new Key<>("msgSizeTooLarge"), getString("fileSizeTooLarge"));
 
         bootstrapFileInput = new BootstrapFileInput("bootstrapFileInput", internalUploadModel, fileInputConfig) {
             private static final long serialVersionUID = 1L;

@@ -80,6 +80,7 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
     private UserDashboard defaultDashboard;
 
     @ManyToMany(fetch = FetchType.EAGER,  mappedBy = "users")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<UserDashboard> dashboards = new HashSet<>();
 
     @Transient
