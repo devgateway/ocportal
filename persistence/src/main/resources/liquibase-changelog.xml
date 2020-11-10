@@ -1255,7 +1255,7 @@
 
     <changeSet id="OCMAKU-727-rename" author="Octavian Ciubotaru">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="CATEGORY" />
+            <tableExists tableName="CATEGORY"/>
         </preConditions>
 
         <update tableName="CATEGORY">
@@ -1264,4 +1264,21 @@
         </update>
     </changeSet>
 
+    <changeSet id="OCMAKU-770" author="mpostelnicu">
+        <addNotNullConstraint tableName="administrator_report" columnName="status"/>
+        <addNotNullConstraint tableName="award_acceptance" columnName="status"/>
+        <addNotNullConstraint tableName="award_notification" columnName="status"/>
+        <addNotNullConstraint tableName="cabinet_paper" columnName="status"/>
+        <addNotNullConstraint tableName="contract" columnName="status"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="status"/>
+        <addNotNullConstraint tableName="mereport" columnName="status"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="status"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="status"/>
+        <addNotNullConstraint tableName="procurement_plan" columnName="status"/>
+        <addNotNullConstraint tableName="professional_opinion" columnName="status"/>
+        <addNotNullConstraint tableName="project" columnName="status"/>
+        <addNotNullConstraint tableName="tender" columnName="status"/>
+        <addNotNullConstraint tableName="tender_process" columnName="status"/>
+        <addNotNullConstraint tableName="tender_quotation_evaluation" columnName="status"/>
+    </changeSet>
 </databaseChangeLog>

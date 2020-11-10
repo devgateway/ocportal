@@ -58,7 +58,9 @@ import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -129,16 +131,26 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     protected void populateCompoundListItem(final ListItem<TenderProcess> item) {
     }
 
+    @Transactional(readOnly = true)
+    protected Label createValidationLabel(ListItem<TenderProcess> item) {
+        BindingResult validate = tenderProcessService.validate(item.getModelObject(), null);
+        return new Label("validation", validate.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getCode)
+                .collect(Collectors.toSet()).toString());
+    }
+
     @Override
     @Transactional(readOnly = true)
     protected void populateHeader(final String headerFragmentId,
                                   final AjaxLink<Void> header,
                                   final ListItem<TenderProcess> item) {
+
         header.add(AttributeAppender.append("class", "tender"));   // add specific class to tender overview header
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("purchasereq-header-" + item.getModelObject().getId());
 
         headerFragment.add(new Label("title", "Tender Process " + (item.getIndex() + 1)));
+        headerFragment.add(createValidationLabel(item));
 
         WebMarkupContainer terminatedRequisition = new WebMarkupContainer("terminatedRequisition");
 
@@ -300,8 +312,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             return false;
         }
 
-        return previousStep != null && (previousStep.getStatus().equals(DBConstants.Status.SUBMITTED)
-                || previousStep.getStatus().equals(DBConstants.Status.APPROVED));
+        return previousStep != null;
     }
 
     private class TenderDetailPanel<T extends AbstractMakueniEntity> extends GenericPanel<T> {

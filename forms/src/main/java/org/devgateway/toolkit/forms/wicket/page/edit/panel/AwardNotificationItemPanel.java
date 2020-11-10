@@ -98,21 +98,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         }
     }
 
-
-    protected class ProfessionalOpinionCountValidator implements IFormValidator {
-        @Override
-        public FormComponent<?>[] getDependentFormComponents() {
-            return new FormComponent[0];
-        }
-
-        @Override
-        public void validate(Form<?> form) {
-            if (getWrongProfessionalOpinionCount()) {
-                form.error(getString("wrongProfessionalOpinionCount"));
-            }
-        }
-    }
-
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
         return new AddNewChildButton("newButton", Model.of("New Award Notification"));
@@ -125,7 +110,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
 
         final Form form = (Form) getParent();
         if (form != null) {
-            form.add(new ProfessionalOpinionCountValidator());
             form.add(new WrongDistinctCountValidator());
             form.add(new AwardNotificationItemCountValidator());
         }

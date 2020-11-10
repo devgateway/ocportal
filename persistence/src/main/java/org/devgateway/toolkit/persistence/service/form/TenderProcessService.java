@@ -1,9 +1,11 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,5 +21,7 @@ public interface TenderProcessService extends AbstractMakueniEntityService<Tende
     List<TenderProcess> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
 
     Stream<TenderProcess> findAllStream();
+
+    BindingResult validate(TenderProcess tp, AbstractMakueniEntity e);
 }
 
