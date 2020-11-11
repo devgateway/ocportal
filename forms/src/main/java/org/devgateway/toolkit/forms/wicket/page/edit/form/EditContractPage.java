@@ -137,6 +137,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
                 new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
         );
         awardeeSelector.required();
+        awardeeSelector.setEnabled(editForm.getModelObject().isNew());
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         editForm.add(awardeeSelector);
 

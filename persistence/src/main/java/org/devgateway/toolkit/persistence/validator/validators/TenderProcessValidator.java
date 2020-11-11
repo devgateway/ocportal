@@ -50,27 +50,27 @@ public class TenderProcessValidator implements Validator {
                         .equalsIgnoreCase(b.getSupplierResponsiveness())).map(Bid::getSupplier)
                 .collect(Collectors.toSet());
 
-        suppliersMap.put("Quotation Evaluation Passed Bidders", qaPassedSuppliers);
+        suppliersMap.put("Bidders (passed) from Quotation Evaluation Bidders Form", qaPassedSuppliers);
 
         Set<Supplier> piAwardees = nonDraft(tp.getProfessionalOpinion()).flatMap(p -> p.getItems().stream())
                 .map(ProfessionalOpinionItem::getAwardee).collect(Collectors.toSet());
 
-        suppliersMap.put("Professional Opinion Awardees", piAwardees);
+        suppliersMap.put("Awardees from Professional Opinion Form", piAwardees);
 
         Set<Supplier> anAwardee = nonDraft(tp.getAwardNotification())
                 .flatMap(a -> a.getAwardee().stream()).collect(Collectors.toSet());
 
-        suppliersMap.put("Award Notification Suppliers", anAwardee);
+        suppliersMap.put("Suppliers from Award Notification Form", anAwardee);
 
         Set<Supplier> aaAwardees = nonDraft(tp.getAwardAcceptance()).flatMap(a -> a.getAwardee().stream())
                 .collect(Collectors.toSet());
 
-        suppliersMap.put("Award Acceptance Suppliers", aaAwardees);
+        suppliersMap.put("Suppliers from Award Acceptance Form", aaAwardees);
 
         Set<Supplier> aacAwardees = nonDraft(tp.getAwardAcceptance()).map(AwardAcceptance::getAcceptedAcceptance)
                 .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).collect(Collectors.toSet());
 
-        suppliersMap.put("Award Acceptance Accepted Suppliers", aacAwardees);
+        suppliersMap.put("Accepted Suppliers from Award Acceptance Form", aacAwardees);
 
         Set<Supplier> contractSuppliers = nonDraft(tp.getContract()).map(Contract::getAwardee)
                 .collect(Collectors.toSet());
@@ -83,16 +83,13 @@ public class TenderProcessValidator implements Validator {
                 if (key1.equals(key2)) {
                     break;
                 }
-
                 Set<Supplier> suppliers = suppliersMap.get(key1);
                 Set<Supplier> upstreamSuppliers = suppliersMap.get(key2);
                 if (!upstreamSuppliers.containsAll(suppliers)) {
-                    errors.reject(key1 + " not found in a submitted/approved " + key2);
+                    errors.reject(key1 + " not found within the submitted " + key2);
                 }
             }
         }
-
-
     }
 
     public void validatePoCount(TenderProcess tp, Errors errors) {
@@ -103,13 +100,8 @@ public class TenderProcessValidator implements Validator {
 
         if (existsNonDraftPair(tp.getAwardNotification(), tp.getProfessionalOpinion())) {
             if (poCount.get() != anCount.get()) {
-                errors.reject("awardNotificationWrongPoCount");
-            }
-        }
-
-        if (existsNonDraftPair(tp.getAwardAcceptance(), tp.getProfessionalOpinion())) {
-            if (poCount.get() != anCount.get()) {
-                errors.reject("awardNotificationWrongPoCount");
+                errors.reject("The award notifications count must match the professional opinions count in"
+                        + " the previous form!");
             }
         }
     }

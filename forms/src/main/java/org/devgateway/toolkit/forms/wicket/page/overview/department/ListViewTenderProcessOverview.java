@@ -3,6 +3,9 @@ package org.devgateway.toolkit.forms.wicket.page.overview.department;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -132,11 +135,24 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     }
 
     @Transactional(readOnly = true)
-    protected Label createValidationLabel(ListItem<TenderProcess> item) {
-        BindingResult validate = tenderProcessService.validate(item.getModelObject(), null);
-        return new Label("validation", validate.getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getCode)
-                .collect(Collectors.toSet()).toString());
+    protected Icon createValidationLabel(ListItem<TenderProcess> item) {
+        BindingResult validate = tenderProcessService.validate(item.getModelObject());
+
+        Icon validationWarning = new Icon("validationWarning", FontAwesomeIconType.exclamation_triangle);
+        if (validate.getAllErrors().size() > 0) {
+            TooltipConfig tooltipConfig = new TooltipConfig();
+            tooltipConfig.withPlacement(TooltipConfig.Placement.bottom);
+            tooltipConfig.withHtml(true);
+            StringBuilder sb = new StringBuilder("<p/>");
+            validate.getAllErrors().stream().map(DefaultMessageSourceResolvable::getCode).forEach(
+                    c -> sb.append(" - ").append(c).append("<p/>"));
+
+            TooltipBehavior tooltipBehavior = new TooltipBehavior(Model.of(sb.toString()), tooltipConfig);
+            validationWarning.add(tooltipBehavior);
+        }
+
+        validationWarning.setVisibilityAllowed(validate.getAllErrors().size() > 0);
+        return validationWarning;
     }
 
     @Override

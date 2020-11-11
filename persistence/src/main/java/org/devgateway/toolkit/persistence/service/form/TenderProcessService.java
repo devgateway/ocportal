@@ -22,6 +22,8 @@ public interface TenderProcessService extends AbstractMakueniEntityService<Tende
 
     Stream<TenderProcess> findAllStream();
 
+    BindingResult validate(TenderProcess tp);
+
     BindingResult validate(TenderProcess tp, AbstractMakueniEntity e);
 }
 

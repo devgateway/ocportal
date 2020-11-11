@@ -81,6 +81,11 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
         }
     }
 
+    @Override
+    public BindingResult validate(TenderProcess tp) {
+        return validate(tp, null);
+    }
+
     @Transactional
     public <E extends AbstractMakueniEntity> Stream<E> nonDraft(Stream<E> input) {
         return input.filter(i -> !DBConstants.Status.DRAFT.equals(i.getStatus()));
