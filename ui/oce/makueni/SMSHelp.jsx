@@ -39,33 +39,56 @@ class SMSHelp extends CRDPage {
 
         <div className="row">
         <div className="col-md-8 col-md-offset-2">
-          <p>The Government of Makueni County SMS portal is a communication tool to the public on the
-          implementation status of a particular tender -  M&E report and the PMC report status. Users can use the SMS portal to:
-          </p>
+          <p>The Government of Makueni County SMS portal is a communication tool to the public on the implementation status of a particular tender -  M&E report and the PMC report status. Users can use the SMS portal to:</p>
           <p><ol>
+            <li>Subscribe to receiving alerts relevant to your ward or sub-county</li>
             <li>Receive implementation information on a particular contract and;</li>
             <li>Report to the county on any implementation feedback</li>
           </ol>
           </p>
-          The tender code is the code used to request information on a particular tender.
-          This code can be retrieved on the public portal page for each tender shown below:
         </div>
         </div>
         <div className="row">
         <div className="col-md-8 col-md-offset-2">
-          <img src="assets/help/sms-help.png" width="80%"/>
+          <h2>1. Subscribe to receiving alerts relevant to your ward or sub-county</h2>
+          <p>Users can subscribe to receive SMS alerts once the M&E reports and PMC reports status are approved for projects in their sub-county or ward. To subscribe, follow the steps below:</p>
+          <p><ol>
+            <li>Dial <code>*838*3#</code></li>
+            <li><p>Once  you type  in the code above, you will be prompted to select from the 3 options below:</p>
+              <img src="assets/help/ussd-main-menu.jpg" alt="USSD Menu" className="img-fluid"/>
+              <p>
+              <em>
+              The home screen has 3 options:
+              <ul>
+                <li>Subscribe - directs you to select the ward or sub-county to subscribe to</li>
+                <li>View subscriptions or unsubscribe - directs you to view your subscriptions and unsubscribe to all or one of the wards or sub-counties you have subscribed to.</li>
+                <li>Change language - gives you the options to change the language of alerts to English or Kiswahili</li>
+              </ul>
+              </em>
+              </p>
+            </li>
+            <li>
+              <p>To subscribe, select Option <strong>1. Subscribe</strong>, and you will be directed to select the sub-county you would like to subscribe to. Select the sub-county name, by writing the number of the sub-county. For example, I will write 1 to subscribe to Kaiti sub-county below.</p>
+              <img src="assets/help/ussd-select-subcounty.jpg" alt="USSD Menu" className="img-fluid"/>
+            </li>
+            <li>
+              <p>After selecting the sub-county, you will be directed to the sub-county page where you can either select all wards(select 1) in that sub-county or select a particular ward.</p>
+              <img src="assets/help/ussd-select-ward.jpg" alt="USSD Menu" className="img-fluid"/>
+            </li>
+            <li>
+              <p>Once selected ward(s), you will then receive a confirmation of your subscription to the ward or sub-county</p>
+              <img src="assets/help/ussd-subscribed.jpg" alt="USSD Menu" className="img-fluid"/>
+            </li>
+          </ol></p>
         </div>
         </div>
         <div className="row">
         <div className="col-md-8 col-md-offset-2">
-          For those who cannot access the public portal to retrieve the tender code, the County
-          will communicate the code to the public through Project Management Committees and local authority offices.
-        </div>
-        </div>
-        <div className="row">
-        <div className="col-md-8 col-md-offset-2">
-          <h2>1. Requesting information about a specific contract</h2>
-          <p>To receive information on a specific contract, send an SMS to the number 40014 with the following format:</p>
+          <h2>2. Requesting information about a specific contract</h2>
+          <p>The tender code is the code used to request information on a particular tender. This code can be retrieved on the public portal page for each tender shown below.</p>
+          <img src="assets/help/sms-help.png" alt="Public Portal Screenshot" className="img-fluid"/>
+          <p>For those who cannot access the public portal to retrieve the tender code, the County will communicate the code to the public through Project Management Committees and local authority offices.</p>
+          <p>To receive information on a specific contract, send an SMS to the number <strong>40014</strong> with the following format:</p>
           <p><code>CON INFO [Tender code]</code></p>
 
           <p>For example, <kbd>CON INFO 41802</kbd></p>
@@ -82,7 +105,7 @@ class SMSHelp extends CRDPage {
         </div>
         <div className="row">
         <div className="col-md-8 col-md-offset-2">
-          <h2>2. Report to the county on any implementation feedback</h2>
+          <h2>3. Report to the county on any implementation feedback</h2>
           <p>In order to send the county any feedback on a specific tender, send an SMS to the number 40014 with the following format:</p>
           <p><code>CON REPORT [Tender code] [text]</code></p>
 
