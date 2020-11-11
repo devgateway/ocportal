@@ -50,32 +50,32 @@ public class TenderProcessValidator implements Validator {
                         .equalsIgnoreCase(b.getSupplierResponsiveness())).map(Bid::getSupplier)
                 .collect(Collectors.toSet());
 
-        suppliersMap.put("Bidders (passed) from Quotation Evaluation Bidders Form", qaPassedSuppliers);
+        suppliersMap.put("Bidders (passed) from a submitted Quotation Evaluation Bidders Form", qaPassedSuppliers);
 
         Set<Supplier> piAwardees = nonDraft(tp.getProfessionalOpinion()).flatMap(p -> p.getItems().stream())
                 .map(ProfessionalOpinionItem::getAwardee).collect(Collectors.toSet());
 
-        suppliersMap.put("Awardees from Professional Opinion Form", piAwardees);
+        suppliersMap.put("Awardees from a submitted Professional Opinion Form", piAwardees);
 
         Set<Supplier> anAwardee = nonDraft(tp.getAwardNotification())
                 .flatMap(a -> a.getAwardee().stream()).collect(Collectors.toSet());
 
-        suppliersMap.put("Suppliers from Award Notification Form", anAwardee);
+        suppliersMap.put("Suppliers from a submitted Award Notification Form", anAwardee);
 
         Set<Supplier> aaAwardees = nonDraft(tp.getAwardAcceptance()).flatMap(a -> a.getAwardee().stream())
                 .collect(Collectors.toSet());
 
-        suppliersMap.put("Suppliers from Award Acceptance Form", aaAwardees);
+        suppliersMap.put("Suppliers from a submitted Award Acceptance Form", aaAwardees);
 
         Set<Supplier> aacAwardees = nonDraft(tp.getAwardAcceptance()).map(AwardAcceptance::getAcceptedAcceptance)
                 .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).collect(Collectors.toSet());
 
-        suppliersMap.put("Accepted Suppliers from Award Acceptance Form", aacAwardees);
+        suppliersMap.put("Accepted Suppliers from a submitted Award Acceptance Form", aacAwardees);
 
         Set<Supplier> contractSuppliers = nonDraft(tp.getContract()).map(Contract::getAwardee)
                 .collect(Collectors.toSet());
 
-        suppliersMap.put("Contract Suppliers", contractSuppliers);
+        suppliersMap.put("Contract Suppliers from a submitted Contract Form", contractSuppliers);
 
         Set<String> keys = suppliersMap.keySet();
         for (String key1 : keys) {
@@ -86,7 +86,7 @@ public class TenderProcessValidator implements Validator {
                 Set<Supplier> suppliers = suppliersMap.get(key1);
                 Set<Supplier> upstreamSuppliers = suppliersMap.get(key2);
                 if (!upstreamSuppliers.containsAll(suppliers)) {
-                    errors.reject(key1 + " not found within the submitted " + key2);
+                    errors.reject(key1 + " not found within the " + key2);
                 }
             }
         }

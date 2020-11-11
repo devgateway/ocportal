@@ -138,8 +138,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     protected abstract AbstractTenderProcessMakueniEntity getNextForm();
 
     @Override
-    protected ModalSaveEditPageButton getRevertToDraftPageButton() {
-        ModalSaveEditPageButton revertToDraftPageButton = super.getRevertToDraftPageButton();
+    protected SaveEditPageButton getRevertToDraftPageButton() {
+        SaveEditPageButton revertToDraftPageButton = super.getRevertToDraftPageButton();
         if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
             revertToDraftPageButton.setLabel(new StringResourceModel("reactivate", this, null));
         }
