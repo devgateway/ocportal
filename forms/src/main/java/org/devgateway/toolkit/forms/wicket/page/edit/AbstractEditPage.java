@@ -639,8 +639,13 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                checkAndSendEventForDisableEditing();
                 setButtonsPermissions();
+            }
+
+            @Override
+            protected void onBeforeRender() {
+                super.onBeforeRender();
+                checkAndSendEventForDisableEditing();
             }
         };
 
