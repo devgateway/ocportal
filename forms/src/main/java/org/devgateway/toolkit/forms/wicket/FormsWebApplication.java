@@ -43,7 +43,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
-import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
 import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -191,14 +190,13 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getResourceSettings().setCssCompressor(new YuiCssCompressor());
             getResourceSettings().setUseMinifiedResources(true);
 
-            // getFrameworkSettings().setSerializer(new DeflatedJavaSerializer(getApplicationKey()));
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
-
             getMarkupSettings().setStripComments(true);
             getMarkupSettings().setCompressWhitespace(true);
             getMarkupSettings().setStripWicketTags(true);
         }
+
+        FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
+        getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
 
         getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy("-v-",
                 new CachingResourceVersion(new Adler32ResourceVersion())));
