@@ -60,6 +60,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
 import org.devgateway.toolkit.persistence.dao.form.Lockable;
+import org.devgateway.toolkit.persistence.service.LockableService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -325,15 +326,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void onCancel(AjaxRequestTarget target) {
-        T object = editForm.getModelObject();
-        if (object instanceof Lockable) {
-            try {
-                ((Lockable) object).setOwner(null);
-
-                jpaService.save(object);
-            } catch (ObjectOptimisticLockingFailureException e) {
-                // do nothing, we'll exit the form anyway
-            }
+        if (jpaService instanceof LockableService) {
+            ((LockableService<?>) jpaService).unlock(editForm.getModelObject().getId());
         }
     }
 
