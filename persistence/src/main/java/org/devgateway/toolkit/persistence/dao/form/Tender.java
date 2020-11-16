@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethodRationale;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
@@ -43,6 +44,7 @@ import java.util.function.Consumer;
         @Index(columnList = "tenderNumber")}, uniqueConstraints =
 @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable {
     @ExcelExport(useTranslation = true, name = "Tender ID")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)

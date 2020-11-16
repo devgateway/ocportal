@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.PMCStatus;
 import org.devgateway.toolkit.persistence.dao.categories.ProjectClosureHandover;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
@@ -32,6 +33,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")

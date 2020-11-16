@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -31,6 +32,7 @@ import java.util.Collections;
         @Index(columnList = "number"),
         @Index(columnList = "name")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 @Table(indexes = {@Index(columnList = "tender_process_id")}, uniqueConstraints =
 @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
 
     @ExcelExport(name = "Award Acceptances", separateSheet = true)
