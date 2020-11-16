@@ -1,7 +1,7 @@
-package org.devgateway.toolkit.web.fm.service;
+package org.devgateway.toolkit.persistence.fm.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.devgateway.toolkit.web.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

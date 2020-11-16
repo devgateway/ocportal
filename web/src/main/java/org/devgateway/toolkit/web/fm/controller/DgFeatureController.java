@@ -1,8 +1,8 @@
 package org.devgateway.toolkit.web.fm.controller;
 
-import org.devgateway.toolkit.web.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
 import org.devgateway.toolkit.web.fm.request.FmRequestParam;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

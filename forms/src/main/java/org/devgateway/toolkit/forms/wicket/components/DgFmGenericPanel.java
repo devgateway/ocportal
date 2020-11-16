@@ -1,12 +1,10 @@
 package org.devgateway.toolkit.forms.wicket.components;
 
-import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 
 public class DgFmGenericPanel<T> extends GenericPanel<T> implements DgFmComponentSubject {
 

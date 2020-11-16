@@ -6,7 +6,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.Filte
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.GoFilter;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 
 /**
  * @author mpostelnicu

@@ -3,8 +3,9 @@
  */
 package org.devgateway.toolkit.web.fm;
 
+import org.devgateway.toolkit.persistence.fm.FmConstants;
 import org.devgateway.toolkit.web.AbstractWebTest;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.web.fm;
+package org.devgateway.toolkit.persistence.fm;
 
 /**
  * @author mpostelnicu

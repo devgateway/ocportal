@@ -2,8 +2,8 @@ package org.devgateway.toolkit.forms.fm;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
-import org.devgateway.toolkit.web.fm.DgFmSubject;
-import org.devgateway.toolkit.web.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.DgFmSubject;
+import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
 
 /**
  * Interface that can be attached to wicket {@link Component} to provide FM mechanism

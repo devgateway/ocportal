@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.web.spring;
+package org.devgateway.toolkit.persistence.spring;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

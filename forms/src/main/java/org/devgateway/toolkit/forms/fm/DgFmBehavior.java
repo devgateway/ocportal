@@ -3,8 +3,8 @@ package org.devgateway.toolkit.forms.fm;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.util.lang.Args;
-import org.devgateway.toolkit.web.fm.DgFmSubject;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.DgFmSubject;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 
 /**
  * @author mpostelnicu

@@ -1,10 +1,10 @@
-package org.devgateway.toolkit.web.fm.service;
+package org.devgateway.toolkit.persistence.fm.service;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.beanutils.BeanUtils;
-import org.devgateway.toolkit.web.fm.FmConstants;
-import org.devgateway.toolkit.web.fm.entity.DgFeature;
-import org.devgateway.toolkit.web.fm.entity.UnchainedDgFeature;
+import org.devgateway.toolkit.persistence.fm.FmConstants;
+import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

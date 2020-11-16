@@ -1,9 +1,10 @@
-package org.devgateway.toolkit.web.fm;
+package org.devgateway.toolkit.persistence.fm;
 
-import org.danekja.java.util.function.serializable.SerializableBooleanSupplier;
-import org.devgateway.toolkit.web.fm.entity.DgFeature;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.springframework.util.StringUtils;
+
+import java.util.function.BooleanSupplier;
 
 /**
  * Base interface of any java object that needs FM behavior
@@ -53,7 +54,7 @@ public interface DgFmSubject {
      * @param enabledSupplier
      * @return
      */
-    default boolean isFmEnabled(SerializableBooleanSupplier enabledSupplier) {
+    default boolean isFmEnabled(BooleanSupplier enabledSupplier) {
         return enabledSupplier.getAsBoolean() && isFmEnabled();
     }
 
@@ -63,7 +64,7 @@ public interface DgFmSubject {
      * @param visibleSupplier
      * @return
      */
-    default boolean isFmVisible(SerializableBooleanSupplier visibleSupplier) {
+    default boolean isFmVisible(BooleanSupplier visibleSupplier) {
         return visibleSupplier.getAsBoolean() && isFmVisible();
     }
 }

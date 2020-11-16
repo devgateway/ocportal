@@ -59,7 +59,7 @@ import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;

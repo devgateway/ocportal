@@ -28,7 +28,6 @@ import de.agilecoders.wicket.core.util.CssClassNames;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -101,7 +100,7 @@ import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
