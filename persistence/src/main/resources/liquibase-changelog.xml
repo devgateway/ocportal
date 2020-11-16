@@ -1255,13 +1255,31 @@
 
     <changeSet id="OCMAKU-727-rename" author="Octavian Ciubotaru">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="CATEGORY" />
+            <tableExists tableName="CATEGORY"/>
         </preConditions>
 
         <update tableName="CATEGORY">
             <column name="label" value="Completed to scope"/>
             <where>dtype='MEStatus' and label='Completed not in use'</where>
         </update>
+    </changeSet>
+
+    <changeSet id="OCMAKU-776-covid-remove-roads" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender"/>
+            <tableExists tableName="tender_process"/>
+            <tableExists tableName="project"/>
+            <tableExists tableName="procurement_plan"/>
+            <tableExists tableName="category"/>
+        </preConditions>
+        <sql>update tender set procurement_method_rationale_id = null where
+            procurement_method_rationale_id = (select id from category where label='COVID-19' and
+            dtype='ProcurementMethodRationale') and id in (select t.id from tender t, tender_process tp, project p,
+            procurement_plan pp, category c
+            where t.tender_process_id=tp.id and tp.project_id = p.id and p.procurement_plan_id=pp.id and
+            pp.department_id =c.id and c.dtype='Department' and c.label='Roads, Transport, Energy and Public Works')
+        </sql>
+
     </changeSet>
 
 </databaseChangeLog>
