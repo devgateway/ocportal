@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * @author mpostelnicu
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = ValidationAutoConfiguration.class)
 @EnableJpaRepositories(basePackageClasses = { RoleRepository.class, UserDashboardRepository.class })
 @EnableTransactionManagement
 @EntityScan(basePackageClasses = { GenericPersistable.class, UserDashboard.class })
