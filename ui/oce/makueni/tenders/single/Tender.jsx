@@ -1,7 +1,8 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
 import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
 
 class Tender extends React.Component {
   getFeedbackSubject() {
@@ -28,67 +29,70 @@ class Tender extends React.Component {
 
     const tender = data[0];
 
-    const item = (label, value, width = 4) =>
-      <div className={"padding-top-10 col-md-" + width}>
-        <div className="item-label">{label}</div>
-        <div className="item-value">{value}</div>
-      </div>
-
     return (<div>
       <div className="row">
-        {item("Tender Name", tender.tenderTitle)}
+        {<Item label={"Tender Name"} value={tender.tenderTitle} col={4} className="padding-top-10"/>}
 
         {isFeatureVisible("tenderForm.tenderNumber")
-        && item("Tender ID", tender.tenderNumber)}
+        && <Item label={"Tender ID"} value={tender.tenderNumber} col={4} className="padding-top-10"/>}
 
-        {item("Tender Code", prId)}
+        {<Item label={"Tender Code"} value={prId} col={4} className="padding-top-10"/>}
       </div>
 
       <div className="row">
 
         {isFeatureVisible("tenderForm.procurementMethod")
-        && item("Procurement Method", tender.procurementMethod.label)}
+        && <Item label={"Procurement Method"} value={tender.procurementMethod.label}
+                 col={4} className="padding-top-10"/>}
 
         {isFeatureVisible("tenderForm.procurementMethodRationale")
-        && item("Procurement Method Rationale",
-          tender.procurementMethodRationale && tender.procurementMethodRationale.label)}
+        && <Item label={"Procurement Method Rationale"}
+                 value={tender.procurementMethodRationale && tender.procurementMethodRationale.label}
+                 col={4} className="padding-top-10"/>}
 
         {isFeatureVisible("tenderForm.invitationDate")
-        && item("Invitation to Tender Date", formatDate(tender.invitationDate))}
+        && <Item label={"Invitation to Tender Date"} value={formatDate(tender.invitationDate)}
+                 col={4} className="padding-top-10"/>}
       </div>
       <div className="row">
 
         {isFeatureVisible("tenderForm.closingDate")
-        && item("Closing Date", formatDate(tender.closingDate))}
+        && <Item label={"Closing Date"} value={formatDate(tender.closingDate)}
+                 col={4} className="padding-top-10"/>}
 
         {isFeatureVisible("tenderForm.issuedBy")
-        && item("Tender Issued By", tender.issuedBy.label)}
+        && <Item label={"Tender Issued By"} value={tender.issuedBy.label}
+                 col={4} className="padding-top-10"/>}
 
         {isFeatureVisible("tenderForm.issuedBy")
-        && item("Procuring Entity Address", tender.issuedBy.address)}
+        && <Item label={"Procuring Entity Address"} value={tender.issuedBy.address}
+                 col={4} className="padding-top-10"/>}
       </div>
 
       <div className="row">
 
         {isFeatureVisible("tenderForm.issuedBy")
-        &&
-        <div className="padding-top-10 col-md-4">
-          <div className="item-label">Procuring Entity Email</div>
-          <div className="item-value download">
-            <a href={"mailto:"+tender.issuedBy.emailAddress}>{tender.issuedBy.emailAddress}</a></div>
-        </div>}
+        && <Item label={"Procuring Entity Email"}
+                 value={
+                   <a className={"download"} href={"mailto:"+tender.issuedBy.emailAddress}>
+                     {tender.issuedBy.emailAddress}
+                   </a>
+                 }
+                 col={4} className={"padding-top-10"}/>}
 
         {isFeatureVisible("tenderForm.tenderValue")
-        && item("Tender Value", currencyFormatter(tender.tenderValue))}
+        && <Item label={"Tender Value"} value={currencyFormatter(tender.tenderValue)} col={4}
+                 className="padding-top-10"/>}
 
         {isFeatureVisible("tenderForm.targetGroup")
-        && item("Target Group", tender.targetGroup && tender.targetGroup.label)}
+        && <Item label={"Target Group"} value={tender.targetGroup && tender.targetGroup.label} col={4}
+                 className="padding-top-10"/>}
       </div>
 
       <div className="row">
 
         {isFeatureVisible("tenderForm.objective")
-        && item("Tender Objective", tender.objective, 12)}
+        && <Item label={"Tender Objective"} value={tender.objective} col={12} className="padding-top-10"/>}
       </div>
 
       {
@@ -103,23 +107,28 @@ class Tender extends React.Component {
             {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
                 <div className="row">
-                  {item("Item", tenderItem.purchaseItem.planItem.item.label, 6)}
+                  {<Item label={"Item"} value={tenderItem.purchaseItem.planItem.item.label} col={6}
+                         className="padding-top-10"/>}
 
                   {isFeatureVisible("tenderForm.tenderItems.description")
-                  && item("Description", tenderItem.description, 6)}
+                  && <Item label={"Description"} value={tenderItem.description} col={6} className="padding-top-10"/>}
                 </div>
                 <div className="row">
                   {isFeatureVisible("tenderForm.tenderItems.purchaseItem")
-                  && item("Unit of Issue", tenderItem.purchaseItem.planItem.unitOfIssue.label, 3)}
+                  && <Item label={"Unit of Issue"} value={tenderItem.purchaseItem.planItem.unitOfIssue.label} col={3}
+                           className="padding-top-10"/>}
 
                   {isFeatureVisible("tenderForm.tenderItems.quantity")
-                  && item("Quantity", currencyFormatter(tenderItem.quantity), 3)}
+                  && <Item label={"Quantity"} value={currencyFormatter(tenderItem.quantity)} col={3}
+                           className="padding-top-10"/>}
 
                   {isFeatureVisible("tenderForm.tenderItems.unitPrice")
-                  && item("Unit Price", currencyFormatter(tenderItem.unitPrice), 3)}
+                  && <Item label={"Unit Price"} value={currencyFormatter(tenderItem.unitPrice)} col={3}
+                           className="padding-top-10"/>}
 
                   {isFeatureVisible("tenderForm.tenderItems.totalCost")
-                  && item("Total Cost", currencyFormatter(tenderItem.quantity * tenderItem.unitPrice), 3)}
+                  && <Item label={"Total Cost"} value={currencyFormatter(tenderItem.quantity * tenderItem.unitPrice)}
+                           col={3} className="padding-top-10"/>}
                 </div>
               </div>)
             }
@@ -129,38 +138,36 @@ class Tender extends React.Component {
 
       <div className="row">
         {isFeatureVisible("tenderForm.formDocs")
-        && <div className="col-md-6 padding-top-10"
-             data-intro="Download the original hardcopy of the tender document or link to a site
-             where the document can be downloaded.">
-          <div className="item-label">Download Tender</div>
-          {
-            tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>
-              <OverlayTrigger
-                placement="bottom"
-                overlay={
-                  <Tooltip id="download-tooltip">
-                    Click to download the file
-                  </Tooltip>
-                }>
+        && <Item label="Download Tender"
+                 value={
+                   tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>
+                     <OverlayTrigger
+                       placement="bottom"
+                       overlay={
+                         <Tooltip id="download-tooltip">
+                           Click to download the file
+                         </Tooltip>
+                       }>
 
-                <a className="item-value download" href={doc.url} target="_blank">
-                  <i className="glyphicon glyphicon-download"/>
-                  <span>{doc.name}</span>
-                </a>
-              </OverlayTrigger>
-            </div>)
-          }
-        </div>}
+                       <a className="item-value download" href={doc.url} target="_blank">
+                         <i className="glyphicon glyphicon-download"/>
+                         <span>{doc.name}</span>
+                       </a>
+                     </OverlayTrigger>
+                   </div>)
+                 }
+                 col={6} className="padding-top-10"
+                 data-intro="Download the original hardcopy of the tender document or link to a site
+                 where the document can be downloaded." />}
+
         {isFeatureVisible("tenderForm.tenderLink")
-        && <div className="col-md-6 padding-top-10">
-          <div className="item-label">Tender Link</div>
-          <div className="item-value">
-            <a className="item-value download" href={tender.tenderLink} target="_blank">
-              {tender.tenderLink}
-            </a>
-
-          </div>
-        </div>}
+        && <Item label={"Tender Link"}
+                 value={
+                   <a className="item-value download" href={tender.tenderLink} target="_blank">
+                     {tender.tenderLink}
+                   </a>
+                 }
+                 col={6} className="padding-top-10" />}
       </div>
     </div>);
   }
