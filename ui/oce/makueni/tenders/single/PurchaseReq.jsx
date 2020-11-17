@@ -1,6 +1,8 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
 
 class PurchaseReq extends React.Component {
   getFeedbackSubject() {
@@ -16,7 +18,7 @@ class PurchaseReq extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -24,39 +26,35 @@ class PurchaseReq extends React.Component {
     }
 
     return (<div>
-      <div className="row padding-top-10">
-        <div className="col-md-3">
-          <div className="item-label">Purchase Request Number</div>
-          <div className="item-value">{data.purchaseRequestNumber}</div>
-        </div>
+      <div className="row">
+        {isFeatureVisible("tenderProcessForm.purchaseRequestNumber")
+        && <Item label="Purchase Request Number" value={data.purchaseRequestNumber}
+                 col={3} className="padding-top-10" />}
       </div>
 
       {
-        data.purchRequisitions !== undefined
+        data.purchRequisitions !== undefined && isFeatureVisible("tenderProcessForm.purchRequisitions")
           ?
           data.purchRequisitions.map(preq => <div key={preq._id} className="box">
-            <div className="row padding-top-10">
-              <div className="col-md-3">
-                <div className="item-label">Requested By</div>
-                <div className="item-value">{preq.requestedBy.label}</div>
-              </div>
-              <div className="col-md-3">
-                <div className="item-label">Charge Account</div>
-                <div className="item-value">{preq.chargeAccount.label}</div>
-              </div>
-              <div className="col-md-3">
-                <div className="item-label">Request Approval Date</div>
-                <div
-                  className="item-value">{formatDate(preq.requestApprovalDate)}</div>
-              </div>
-              <div className="col-md-3">
-                <div className="item-label">Approved Date</div>
-                <div
-                  className="item-value">{formatDate(preq.approvedDate)}</div>
-              </div>
+            <div className="row">
+              {isFeatureVisible("tenderProcessForm.purchRequisitions.requestedBy")
+              && <Item label="Requested By" value={preq.requestedBy.label}
+                       col={3} className="padding-top-10" />}
+
+              {isFeatureVisible("tenderProcessForm.purchRequisitions.chargeAccount")
+              && <Item label="Charge Account" value={preq.chargeAccount.label}
+                       col={3} className="padding-top-10" />}
+
+              {isFeatureVisible("tenderProcessForm.purchRequisitions.requestApprovalDate")
+              && <Item label="Request Approval Date" value={formatDate(preq.requestApprovalDate)}
+                       col={3} className="padding-top-10" />}
+
+              {isFeatureVisible("tenderProcessForm.purchRequisitions.approvedDate")
+              && <Item label="Approved Date" value={formatDate(preq.approvedDate)}
+                       col={3} className="padding-top-10" />}
             </div>
             {
-              preq.purchaseItems !== undefined
+              preq.purchaseItems !== undefined && isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems")
                 ? <div>
                   <div className="row padding-top-10">
                     <div className="col-md-12 sub-title">Purchase Requisition Items
@@ -66,65 +64,54 @@ class PurchaseReq extends React.Component {
                   {
                     preq.purchaseItems.map(pr => <div key={pr._id} className="box">
                       <div className="row">
-                        <div className="col-md-6">
-                          <div className="item-label">Item</div>
-                          <div className="item-value">{pr.planItem.item.label}</div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="item-label">Description</div>
-                          <div className="item-value">{pr.description}</div>
-                        </div>
+                        {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.planItem")
+                        && <Item label="Item" value={pr.planItem.item.label} col={6} />}
+
+                        {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.description")
+                        && <Item label="Description" value={pr.description} col={6} />}
                       </div>
                       <div className="row">
-                        <div className="col-md-3">
-                          <div className="item-label">Unit of Issue</div>
-                          <div className="item-value">{pr.planItem.unitOfIssue.label}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">Quantity</div>
-                          <div className="item-value">{currencyFormatter(pr.quantity)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">Unit Price</div>
-                          <div className="item-value">{currencyFormatter(pr.amount)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">Total Cost</div>
-                          <div
-                            className="item-value">{currencyFormatter(pr.quantity * pr.amount)}</div>
-                        </div>
+                        {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.planItem")
+                        && <Item label="Unit of Issue" value={pr.planItem.unitOfIssue.label} col={3} />}
+
+                        {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.quantity")
+                        && <Item label="Quantity" value={currencyFormatter(pr.quantity)} col={3} />}
+
+                        {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.amount")
+                        && <Item label="Unit Price" value={currencyFormatter(pr.amount)} col={3} />}
+
+                        {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.totalCost")
+                        && <Item label="Total Cost" value={currencyFormatter(pr.quantity * pr.amount)} col={3} />}
                       </div>
                     </div>)
                   }
                 </div>
                 : null
             }
-              <div className="row padding-top-10">
-                <div className="col-md-6">
-                  <div className="item-label">Purchase Requisition Documents</div>
-                  {
-                    preq.formDocs.map(doc => <div key={doc._id}>
-                      <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                          <Tooltip id="download-tooltip">
-                            Click to download the file
-                          </Tooltip>
-                        }>
+              <div className="row">
+                {isFeatureVisible("tenderProcessForm.purchRequisitions.formDocs")
+                && <Item label="Purchase Requisition Documents" value={
+                  preq.formDocs.map(doc => <div key={doc._id}>
+                    <OverlayTrigger
+                      placement="bottom"
+                      overlay={
+                        <Tooltip id="download-tooltip">
+                          Click to download the file
+                        </Tooltip>
+                      }>
 
-                        <a className="item-value download" href={doc.url} target="_blank">
-                          <i className="glyphicon glyphicon-download"/>
-                          <span>{doc.name}</span>
-                        </a>
-                      </OverlayTrigger>
-                    </div>)
-                  }
-                </div>
-                <div className="col-md-6">
-                  <div className="item-label">Approved Date</div>
-                  <div
-                    className="item-value">{formatDate(preq.approvedDate)}</div>
-                </div>
+                      <a className="download" href={doc.url} target="_blank">
+                        <i className="glyphicon glyphicon-download"/>
+                        <span>{doc.name}</span>
+                      </a>
+                    </OverlayTrigger>
+                  </div>)
+                } col={6} className="padding-top-10" />}
+
+                {isFeatureVisible("tenderProcessForm.purchRequisitions.approvedDate")
+                && <Item label="Approved Date"
+                         value={formatDate(preq.approvedDate)}
+                         col={6} className="padding-top-10" />}
               </div>
           </div>
           )
@@ -135,4 +122,4 @@ class PurchaseReq extends React.Component {
   }
 }
 
-export default PurchaseReq;
+export default fmConnect(PurchaseReq);
