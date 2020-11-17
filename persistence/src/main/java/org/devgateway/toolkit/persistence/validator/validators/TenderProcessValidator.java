@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinionItem;
@@ -92,6 +93,25 @@ public class TenderProcessValidator implements Validator {
         }
     }
 
+    public void validateDates(TenderProcess tp, Errors errors) {
+        if (existsNonDraftPair(tp.getAwardNotification(), tp.getTender())) {
+            if (tp.getAwardNotification().stream().flatMap(a -> a.getItems().stream())
+                    .map(AwardNotificationItem::getAwardDate).anyMatch(
+                            d -> d.before(tp.getSingleTender().getInvitationDate()))) {
+                errors.reject("The award notifications form contains dates that are before the tender "
+                        + "invitation date");
+            }
+        }
+
+        if (existsNonDraftPair(tp.getAwardAcceptance(), tp.getContract())) {
+            if (tp.getContract().stream().map(Contract::getContractDate).anyMatch(
+                    d -> d.before(tp.getSingleAwardAcceptance().getAcceptedAcceptance().getAcceptanceDate()))
+            ) {
+                errors.reject("The contract date is before the award acceptance date");
+            }
+        }
+    }
+
     public void validatePoCount(TenderProcess tp, Errors errors) {
         AtomicInteger poCount = new AtomicInteger();
         nonDraft(tp.getProfessionalOpinion()).findFirst().ifPresent(i -> poCount.set(i.getItems().size()));
@@ -111,5 +131,6 @@ public class TenderProcessValidator implements Validator {
         TenderProcess tp = (TenderProcess) target;
         validateAwardeeLinks(tp, errors);
         validatePoCount(tp, errors);
+        validateDates(tp, errors);
     }
 }
