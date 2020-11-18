@@ -1,6 +1,8 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
 
 class Notification extends React.Component {
   getFeedbackSubject() {
@@ -16,7 +18,7 @@ class Notification extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -28,42 +30,33 @@ class Notification extends React.Component {
     return (<div>
       <div className="row padding-top-10">
         {
-          awardNotification.items !== undefined
+          awardNotification.items !== undefined && isFeatureVisible("awardNotificationForm.items")
             ? awardNotification.items.map(i => <div key={i._id} className="box">
               <div className="row padding-top-10">
-                <div className="col-md-4">
-                  <div className="item-label">Award Value</div>
-                  <div className="item-value">{currencyFormatter(i.awardValue)}</div>
-                </div>
-                <div className="col-md-4">
-                  <div className="item-label">Date</div>
-                  <div className="item-value">{formatDate(i.awardDate)}</div>
-                </div>
-                <div className="col-md-4">
-                  <div className="item-label">Acknowledge Receipt of Award Timeline</div>
-                  <div className="item-value">{i.acknowledgementDays}</div>
-                </div>
+                {isFeatureVisible("awardNotificationForm.items.awardValue")
+                && <Item label="Award Value" value={currencyFormatter(i.awardValue)} col={4} />}
+
+                {isFeatureVisible("awardNotificationForm.items.awardDate")
+                && <Item label="Date" value={formatDate(i.awardDate)} col={4} />}
+
+                {isFeatureVisible("awardNotificationForm.items.acknowledgementDays")
+                && <Item label="Acknowledge Receipt of Award Timeline" value={i.acknowledgementDays} col={4} />}
               </div>
 
-              <div className="row padding-top-10">
-                <div className="col-md-4">
-                  <div className="item-label">Supplier Name</div>
-                  <div className="item-value">{i.awardee.label}</div>
-                </div>
-                <div className="col-md-4">
-                  <div className="item-label">Winning Bid Supplier ID</div>
-                  <div className="item-value">{i.awardee.code}</div>
-                </div>
-                <div className="col-md-4">
-                  <div className="item-label">Supplier Postal Address</div>
-                  <div className="item-value">{i.awardee.address}</div>
-                </div>
-              </div>
+              {isFeatureVisible("awardNotificationForm.items.awardee")
+              && <div className="row padding-top-10">
 
-              <div className="row padding-top-10">
-                <div className="col-md-12">
-                  <div className="item-label">Letter of Notification of Award</div>
+                <Item label="Supplier Name" value={i.awardee.label} col={4} />
 
+                <Item label="Winning Bid Supplier ID" value={i.awardee.code} col={4} />
+
+                <Item label="Supplier Postal Address" value={i.awardee.address} col={4} />
+              </div>}
+
+              {isFeatureVisible("awardNotificationForm.items.formDocs")
+              && <div className="row padding-top-10">
+
+                <Item label="Letter of Notification of Award" col={12}>
                   {
                     i.formDocs.map(doc => <div key={doc._id}>
                       <OverlayTrigger
@@ -74,15 +67,15 @@ class Notification extends React.Component {
                           </Tooltip>
                         }>
 
-                        <a className="item-value download" href={doc.url} target="_blank">
+                        <a className="download" href={doc.url} target="_blank">
                           <i className="glyphicon glyphicon-download"/>
                           <span>{doc.name}</span>
                         </a>
                       </OverlayTrigger>
                     </div>)
                   }
-                </div>
-              </div>
+                </Item>
+              </div>}
 
             </div>
             ) : null
@@ -92,4 +85,4 @@ class Notification extends React.Component {
   }
 }
 
-export default Notification;
+export default fmConnect(Notification);
