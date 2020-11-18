@@ -228,7 +228,7 @@ public class TenderProcessValidator implements Validator {
             if (tp.getAwardNotification().stream().flatMap(a -> a.getItems().stream())
                     .map(AwardNotificationItem::getAwardDate).anyMatch(
                             d -> d.before(tp.getSingleTender().getInvitationDate()))) {
-                errors.reject("At least one Award Notification date is earlier than the tender "
+                errors.reject("At least one Award Notification date is earlier than the Tender "
                         + "invitation date");
             }
         }
@@ -239,7 +239,7 @@ public class TenderProcessValidator implements Validator {
                     .anyMatch(
                             d -> d.before(tp.getSingleAwardAcceptance().getAcceptedAcceptance().getAcceptanceDate()))
             ) {
-                errors.reject("The contract date is earlier the Award Acceptance date");
+                errors.reject("The Contract date is earlier than the Award Acceptance date");
             }
         }
     }
