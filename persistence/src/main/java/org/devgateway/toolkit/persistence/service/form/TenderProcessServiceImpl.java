@@ -70,7 +70,7 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
                 e.setStatus(null);
             }
             DataBinder binder = new DataBinder(tp);
-            binder.setValidator(new TenderProcessValidator());
+            binder.setValidator(new TenderProcessValidator(e != null));
             binder.validate();
             BindingResult results = binder.getBindingResult();
             return results;
