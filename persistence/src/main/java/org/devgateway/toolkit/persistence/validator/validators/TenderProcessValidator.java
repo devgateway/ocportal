@@ -244,15 +244,23 @@ public class TenderProcessValidator implements Validator {
         }
     }
 
-    public void validatePoCount(TenderProcess tp, Errors errors) {
+    public void validateCrossCounts(TenderProcess tp, Errors errors) {
         AtomicInteger poCount = new AtomicInteger();
         nonDraft(tp.getProfessionalOpinion()).findFirst().ifPresent(i -> poCount.set(i.getItems().size()));
         AtomicInteger anCount = new AtomicInteger();
         nonDraft(tp.getAwardNotification()).findFirst().ifPresent(i -> anCount.set(i.getItems().size()));
+        AtomicInteger aaCount = new AtomicInteger();
+        nonDraft(tp.getAwardAcceptance()).findFirst().ifPresent(i -> aaCount.set(i.getItems().size()));
 
         if (existsNonDraftPair(tp.getAwardNotification(), tp.getProfessionalOpinion())) {
             if (poCount.get() != anCount.get()) {
                 errors.reject("The Award Notifications count must match the Professional Opinions count");
+            }
+        }
+
+        if (existsNonDraftPair(tp.getAwardNotification(), tp.getAwardAcceptance())) {
+            if (aaCount.get() != anCount.get()) {
+                errors.reject("The Award Acceptance responses count must match the Award Notifications count");
             }
         }
     }
@@ -264,7 +272,7 @@ public class TenderProcessValidator implements Validator {
             reportDraft(tp, errors);
         }
         validateAwardeeLinks(tp, errors);
-        validatePoCount(tp, errors);
+        validateCrossCounts(tp, errors);
         validateDates(tp, errors);
     }
 }
