@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.validator.validators;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -90,35 +91,35 @@ public class TenderProcessValidator implements Validator {
                     .flatMap(a -> a.getBids().stream()).filter(b -> DBConstants.SupplierResponsiveness.PASS
                             .equalsIgnoreCase(b.getSupplierResponsiveness())).map(Bid::getSupplier)
                     .collect(Collectors.toSet());
-            suppliersMap.put("The Passed Bidders from Quotation Evaluation Form", qaPassedSuppliers);
+            suppliersMap.put("the Passed Bidders from Quotation Evaluation Form", qaPassedSuppliers);
         }
 
         if (existsNonDraft(tp.getProfessionalOpinion())) {
             Set<Supplier> piAwardees = nonDraft(tp.getProfessionalOpinion()).flatMap(p -> p.getItems().stream())
                     .map(ProfessionalOpinionItem::getAwardee).collect(Collectors.toSet());
-            suppliersMap.put("The Awardees from Professional Opinion Form", piAwardees);
+            suppliersMap.put("the Awardees from Professional Opinion Form", piAwardees);
         }
 
         if (existsNonDraft(tp.getAwardNotification())) {
             Set<Supplier> anAwardee = nonDraft(tp.getAwardNotification())
                     .flatMap(a -> a.getAwardee().stream()).collect(Collectors.toSet());
-            suppliersMap.put("The Suppliers from at least an Award Notification Form", anAwardee);
+            suppliersMap.put("the Suppliers from at least one Award Notification Form", anAwardee);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> aaAwardees = nonDraft(tp.getAwardAcceptance()).flatMap(a -> a.getAwardee().stream())
                     .collect(Collectors.toSet());
-            suppliersMap.put("The Suppliers from at least an Award Acceptance Form", aaAwardees);
+            suppliersMap.put("the Suppliers from at least one Award Acceptance Form", aaAwardees);
 
             Set<Supplier> aacAwardees = nonDraft(tp.getAwardAcceptance()).map(AwardAcceptance::getAcceptedAcceptance)
                     .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).collect(Collectors.toSet());
-            suppliersMap.put("The Accepted Suppliers from at least an Award Acceptance Form", aacAwardees);
+            suppliersMap.put("the Accepted Suppliers from at least one Award Acceptance Form", aacAwardees);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> contractSuppliers = nonDraft(tp.getContract()).map(Contract::getAwardee)
                     .collect(Collectors.toSet());
-            suppliersMap.put("The Contract Suppliers from the Contract Form", contractSuppliers);
+            suppliersMap.put("the Contract Suppliers from the Contract Form", contractSuppliers);
         }
 
         LinkedHashMap<String, Set<String>> foundErrors = new LinkedHashMap<>();
@@ -147,7 +148,7 @@ public class TenderProcessValidator implements Validator {
                         Collectors.toSet())));
 
         groupedErrors.forEach((key, value) -> errors.reject(
-                friendlyJoin(value) + " do not match " + friendlyJoin(key)));
+                StringUtils.capitalize(friendlyJoin(value) + " do not match " + friendlyJoin(key))));
     }
 
     public static String friendlyJoin(Set<String> set) {
