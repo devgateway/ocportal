@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.persistence.validator.validators;
 
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -16,8 +15,12 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -72,7 +75,6 @@ public class TenderProcessValidator implements Validator {
                 return nonDraft(col).findFirst().isPresent();
             }
         }
-
     }
 
     public static <E extends AbstractMakueniEntity, F extends AbstractMakueniEntity> Boolean existsNonDraftPair(
@@ -80,63 +82,46 @@ public class TenderProcessValidator implements Validator {
         return existsNonDraft(col1) && existsNonDraft(col2);
     }
 
-
     public void validateAwardeeLinks(TenderProcess tp, Errors errors) {
-
-        LinkedHashMap<String, Pair<Set<Supplier>, Boolean>> suppliersMap = new LinkedHashMap<>();
+        LinkedHashMap<String, Set<Supplier>> suppliersMap = new LinkedHashMap<>();
 
         if (existsNonDraft(tp.getTenderQuotationEvaluation())) {
             Set<Supplier> qaPassedSuppliers = nonDraft(tp.getTenderQuotationEvaluation())
                     .flatMap(a -> a.getBids().stream()).filter(b -> DBConstants.SupplierResponsiveness.PASS
                             .equalsIgnoreCase(b.getSupplierResponsiveness())).map(Bid::getSupplier)
                     .collect(Collectors.toSet());
-
-            suppliersMap.put("The Passed Bidders from Quotation Evaluation Form",
-                    Pair.of(qaPassedSuppliers, existsNonDraftWithNull(tp.getTenderQuotationEvaluation(), submission)));
+            suppliersMap.put("The Passed Bidders from Quotation Evaluation Form", qaPassedSuppliers);
         }
 
         if (existsNonDraft(tp.getProfessionalOpinion())) {
             Set<Supplier> piAwardees = nonDraft(tp.getProfessionalOpinion()).flatMap(p -> p.getItems().stream())
                     .map(ProfessionalOpinionItem::getAwardee).collect(Collectors.toSet());
-
-            suppliersMap.put("The Awardees from Professional Opinion Form",
-                    Pair.of(piAwardees, existsNonDraftWithNull(tp.getProfessionalOpinion(), submission)));
+            suppliersMap.put("The Awardees from Professional Opinion Form", piAwardees);
         }
 
         if (existsNonDraft(tp.getAwardNotification())) {
             Set<Supplier> anAwardee = nonDraft(tp.getAwardNotification())
                     .flatMap(a -> a.getAwardee().stream()).collect(Collectors.toSet());
-
-            suppliersMap.put("The Suppliers from at least an Award Notification Form",
-                    Pair.of(anAwardee, existsNonDraftWithNull(tp.getAwardNotification(), submission)));
+            suppliersMap.put("The Suppliers from at least an Award Notification Form", anAwardee);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> aaAwardees = nonDraft(tp.getAwardAcceptance()).flatMap(a -> a.getAwardee().stream())
                     .collect(Collectors.toSet());
-
-            suppliersMap.put("The Suppliers from at least an Award Acceptance Form",
-                    Pair.of(aaAwardees, existsNonDraftWithNull(tp.getAwardAcceptance(), submission)));
+            suppliersMap.put("The Suppliers from at least an Award Acceptance Form", aaAwardees);
 
             Set<Supplier> aacAwardees = nonDraft(tp.getAwardAcceptance()).map(AwardAcceptance::getAcceptedAcceptance)
                     .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).collect(Collectors.toSet());
-
-            suppliersMap.put("The Accepted Suppliers from at least an Award Acceptance Form",
-                    Pair.of(aacAwardees, existsNonDraftWithNull(tp.getAwardAcceptance(), submission)));
+            suppliersMap.put("The Accepted Suppliers from at least an Award Acceptance Form", aacAwardees);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> contractSuppliers = nonDraft(tp.getContract()).map(Contract::getAwardee)
                     .collect(Collectors.toSet());
-
-            suppliersMap.put("The Contract Suppliers from the Contract Form",
-                    Pair.of(contractSuppliers, existsNonDraftWithNull(tp.getContract(), submission)));
+            suppliersMap.put("The Contract Suppliers from the Contract Form", contractSuppliers);
         }
 
-        Set<String> currentChecks = suppliersMap.entrySet().stream().filter(e -> e.getValue().getRight() == null)
-                .map(Map.Entry::getKey).collect(Collectors.toSet());
-
-        ArrayList<String> orderList = new ArrayList<>(suppliersMap.keySet());
+        LinkedHashMap<String, Set<String>> foundErrors = new LinkedHashMap<>();
 
         Set<String> keys = suppliersMap.keySet();
         for (String key1 : keys) {
@@ -144,21 +129,35 @@ public class TenderProcessValidator implements Validator {
                 if (key1.equals(key2)) {
                     break;
                 }
-                Pair<Set<Supplier>, Boolean> suppliers = suppliersMap.get(key1);
-                Pair<Set<Supplier>, Boolean> upstreamSuppliers = suppliersMap.get(key2);
+                Set<Supplier> suppliers = suppliersMap.get(key1);
+                Set<Supplier> upstreamSuppliers = suppliersMap.get(key2);
 
-                if (submission && upstreamSuppliers.getRight() != null && !upstreamSuppliers.getRight()) {
-                    if (currentChecks.stream().filter(c -> orderList.indexOf(c) < orderList.indexOf(key2))
-                            .count() == currentChecks.size()) {
-                        break;
+                if (!upstreamSuppliers.containsAll(suppliers)) {
+                    if (foundErrors.containsKey(key2)) {
+                        foundErrors.get(key2).add(key1);
+                    } else {
+                        foundErrors.put(key2, new HashSet<>(Arrays.asList(key1)));
                     }
-                }
-
-                if (!upstreamSuppliers.getLeft().containsAll(suppliers.getLeft())) {
-                    errors.reject(key1 + " do not match " + key2 + ". Please check if the form is submitted.");
                 }
             }
         }
+
+        Map<Set<String>, Set<String>> groupedErrors = foundErrors.entrySet().stream()
+                .collect(Collectors.groupingBy(Map.Entry::getValue, Collectors.mapping(Map.Entry::getKey,
+                        Collectors.toSet())));
+
+        groupedErrors.forEach((key, value) -> errors.reject(
+                friendlyJoin(value) + " do not match " + friendlyJoin(key)));
+    }
+
+    public static String friendlyJoin(Set<String> set) {
+        ArrayList<String> elements = new ArrayList<>(set);
+        List<String> tmp = new ArrayList<>(elements);
+        tmp.removeAll(Collections.singleton(null)); //Remove all nulled items
+
+        int size = tmp.size();
+        return size == 0 ? "" : size == 1 ? tmp.get(0) : String.join(", ", tmp.subList(0, --size))
+                .concat(" and ").concat(tmp.get(size));
     }
 
     public void reportDraft(TenderProcess tp, Errors errors) {
