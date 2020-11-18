@@ -1,6 +1,8 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
 
 class ProfessionalOpinion extends React.Component {
   getFeedbackSubject() {
@@ -16,7 +18,7 @@ class ProfessionalOpinion extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -28,29 +30,20 @@ class ProfessionalOpinion extends React.Component {
     return (<div>
       <div className="row padding-top-10">
       {
-        professionalOpinion.items !== undefined
+        professionalOpinion.items !== undefined && isFeatureVisible("professionalOpinionForm.items")
           ? professionalOpinion.items.map(i => <div key={i._id} className="box">
             <div className="row padding-top-10">
-              <div className="col-md-4">
-                <div className="item-label">Professional Opinion Date</div>
-                <div
-                  className="item-value">{formatDate(i.professionalOpinionDate)}</div>
-              </div>
-              <div className="col-md-4">
-                <div className="item-label">Awardee</div>
-                <div className="item-value">{i.awardee.label}</div>
-              </div>
-              <div className="col-md-4">
-                <div className="item-label">Recommended Award Amount</div>
-                <div
-                  className="item-value">{currencyFormatter(i.recommendedAwardAmount)}</div>
-              </div>
+              {isFeatureVisible("professionalOpinionForm.items.professionalOpinionDate")
+              && <Item label="Professional Opinion Date" value={formatDate(i.professionalOpinionDate)} col={4} />}
+              {isFeatureVisible("professionalOpinionForm.items.awardee")
+              && <Item label="Awardee" value={i.awardee.label} col={4} />}
+              {isFeatureVisible("professionalOpinionForm.items.recommendedAwardAmount")
+              && <Item label="Recommended Award Amount" value={currencyFormatter(i.recommendedAwardAmount)} col={4} />}
             </div>
 
             <div className="row padding-top-10">
-              <div className="col-md-6">
-                <div className="item-label">Professional Opinion Documents</div>
-
+              {isFeatureVisible("professionalOpinionForm.items.formDocs")
+              && <Item label="Professional Opinion Documents" col={6}>
                 {
                   i.formDocs.map(doc => <div key={doc._id}>
                     <OverlayTrigger
@@ -61,19 +54,16 @@ class ProfessionalOpinion extends React.Component {
                         </Tooltip>
                       }>
 
-                      <a className="item-value download" href={doc.url} target="_blank">
+                      <a className="download" href={doc.url} target="_blank">
                         <i className="glyphicon glyphicon-download"/>
                         <span>{doc.name}</span>
                       </a>
                     </OverlayTrigger>
                   </div>)
                 }
-              </div>
-              <div className="col-md-6">
-                <div className="item-label">Approved Date</div>
-                <div
-                  className="item-value">{formatDate(i.approvedDate)}</div>
-              </div>
+              </Item>}
+              {isFeatureVisible("professionalOpinionForm.items.approvedDate")
+              && <Item label="Approved Date" value={formatDate(i.approvedDate)} col={6} />}
             </div>
           </div>
           ) : null
@@ -83,4 +73,4 @@ class ProfessionalOpinion extends React.Component {
   }
 }
 
-export default ProfessionalOpinion;
+export default fmConnect(ProfessionalOpinion);
