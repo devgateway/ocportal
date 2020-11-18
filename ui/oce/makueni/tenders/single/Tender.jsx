@@ -72,13 +72,13 @@ class Tender extends React.Component {
       <div className="row">
 
         {isFeatureVisible("tenderForm.issuedBy")
-        && <Item label={"Procuring Entity Email"}
-                 value={
-                   <a className={"download"} href={"mailto:"+tender.issuedBy.emailAddress}>
-                     {tender.issuedBy.emailAddress}
-                   </a>
-                 }
-                 col={4} className={"padding-top-10"}/>}
+        && <Item label={"Procuring Entity Email"} col={4} className={"padding-top-10"}>
+          {
+            <a className={"download"} href={"mailto:"+tender.issuedBy.emailAddress}>
+              {tender.issuedBy.emailAddress}
+            </a>
+          }
+        </Item>}
 
         {isFeatureVisible("tenderForm.tenderValue")
         && <Item label={"Tender Value"} value={currencyFormatter(tender.tenderValue)} col={4}
@@ -138,36 +138,36 @@ class Tender extends React.Component {
 
       <div className="row">
         {isFeatureVisible("tenderForm.formDocs")
-        && <Item label="Download Tender"
-                 value={
-                   tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>
-                     <OverlayTrigger
-                       placement="bottom"
-                       overlay={
-                         <Tooltip id="download-tooltip">
-                           Click to download the file
-                         </Tooltip>
-                       }>
-
-                       <a className="item-value download" href={doc.url} target="_blank">
-                         <i className="glyphicon glyphicon-download"/>
-                         <span>{doc.name}</span>
-                       </a>
-                     </OverlayTrigger>
-                   </div>)
-                 }
-                 col={6} className="padding-top-10"
+        && <Item label="Download Tender" col={6} className="padding-top-10"
                  data-intro="Download the original hardcopy of the tender document or link to a site
-                 where the document can be downloaded." />}
+                 where the document can be downloaded.">
+          {
+            tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip id="download-tooltip">
+                    Click to download the file
+                  </Tooltip>
+                }>
+
+                <a className="item-value download" href={doc.url} target="_blank">
+                  <i className="glyphicon glyphicon-download"/>
+                  <span>{doc.name}</span>
+                </a>
+              </OverlayTrigger>
+            </div>)
+          }
+        </Item>}
 
         {isFeatureVisible("tenderForm.tenderLink")
-        && <Item label={"Tender Link"}
-                 value={
-                   <a className="item-value download" href={tender.tenderLink} target="_blank">
-                     {tender.tenderLink}
-                   </a>
-                 }
-                 col={6} className="padding-top-10" />}
+        && <Item label={"Tender Link"} col={6} className="padding-top-10">
+          {
+            <a className="item-value download" href={tender.tenderLink} target="_blank">
+              {tender.tenderLink}
+            </a>
+          }
+        </Item>}
       </div>
     </div>);
   }

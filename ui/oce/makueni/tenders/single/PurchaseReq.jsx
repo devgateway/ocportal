@@ -90,23 +90,25 @@ class PurchaseReq extends React.Component {
             }
               <div className="row">
                 {isFeatureVisible("tenderProcessForm.purchRequisitions.formDocs")
-                && <Item label="Purchase Requisition Documents" value={
-                  preq.formDocs.map(doc => <div key={doc._id}>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="download-tooltip">
-                          Click to download the file
-                        </Tooltip>
-                      }>
+                && <Item label="Purchase Requisition Documents" col={6} className="padding-top-10">
+                  {
+                    preq.formDocs.map(doc => <div key={doc._id}>
+                      <OverlayTrigger
+                        placement="bottom"
+                        overlay={
+                          <Tooltip id="download-tooltip">
+                            Click to download the file
+                          </Tooltip>
+                        }>
 
-                      <a className="download" href={doc.url} target="_blank">
-                        <i className="glyphicon glyphicon-download"/>
-                        <span>{doc.name}</span>
-                      </a>
-                    </OverlayTrigger>
-                  </div>)
-                } col={6} className="padding-top-10" />}
+                        <a className="download" href={doc.url} target="_blank">
+                          <i className="glyphicon glyphicon-download"/>
+                          <span>{doc.name}</span>
+                        </a>
+                      </OverlayTrigger>
+                    </div>)
+                  }
+                </Item>}
 
                 {isFeatureVisible("tenderProcessForm.purchRequisitions.approvedDate")
                 && <Item label="Approved Date"
