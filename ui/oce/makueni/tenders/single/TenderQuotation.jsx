@@ -1,5 +1,7 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
 
 class TenderQuotation extends React.Component {
   getFeedbackSubject() {
@@ -15,7 +17,7 @@ class TenderQuotation extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -25,16 +27,14 @@ class TenderQuotation extends React.Component {
     const tenderQuotationEvaluation = data[0];
 
     return (<div>
-      <div className="row padding-top-10">
-        <div className="col-md-6">
-          <div className="item-label">Closing Date</div>
-          <div
-            className="item-value">{formatDate(tenderQuotationEvaluation.closingDate)}</div>
-        </div>
+      <div className="row">
+        {isFeatureVisible("tenderQuotationEvaluationForm.closingDate")
+        && <Item label="Closing Date" value={formatDate(tenderQuotationEvaluation.closingDate)}
+                 col={6} className="padding-top-10" />}
       </div>
 
       {
-        tenderQuotationEvaluation.bids !== undefined
+        tenderQuotationEvaluation.bids !== undefined && isFeatureVisible("tenderQuotationEvaluationForm.bids")
           ? <div>
             <div className="row padding-top-10">
               <div className="col-md-12 sub-title">Bids
@@ -44,34 +44,21 @@ class TenderQuotation extends React.Component {
 
             {
               tenderQuotationEvaluation.bids.map(bids => <div key={bids._id} className="box">
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="item-label">Supplier Name</div>
-                    <div className="item-value">{bids.supplier.label}</div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="item-label">Supplier ID</div>
-                    <div className="item-value">{bids.supplier.code}</div>
-                  </div>
-                </div>
+                {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplier")
+                && <div className="row">
+                  <Item label="Supplier Name" value={bids.supplier.label} col={6} />
+                  <Item label="Supplier ID" value={bids.supplier.code} col={6} />
+                </div>}
 
                 <div className="row">
-                  <div className="col-md-3">
-                    <div className="item-label">Supplier Score</div>
-                    <div className="item-value">{bids.supplierScore}</div>
-                  </div>
-                  <div className="col-md-3">
-                    <div className="item-label">Supplier Ranking</div>
-                    <div className="item-value">{bids.supplierRanking}</div>
-                  </div>
-                  <div className="col-md-3">
-                    <div className="item-label">Quoted Price</div>
-                    <div className="item-value">{currencyFormatter(bids.quotedAmount)}</div>
-                  </div>
-                  <div className="col-md-3">
-                    <div className="item-label">Supplier Responsiveness</div>
-                    <div className="item-value">{bids.supplierResponsiveness}</div>
-                  </div>
+                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierScore")
+                  && <Item label="Supplier Score" value={bids.supplierScore} col={3} />}
+                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierRanking")
+                  && <Item label="Supplier Ranking" value={bids.supplierRanking} col={3} />}
+                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.quotedAmount")
+                  && <Item label="Quoted Price" value={currencyFormatter(bids.quotedAmount)} col={3} />}
+                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierResponsiveness")
+                  && <Item label="Supplier Responsiveness" value={bids.supplierResponsiveness} col={3} />}
                 </div>
               </div>)
             }
@@ -80,9 +67,8 @@ class TenderQuotation extends React.Component {
       }
 
       <div className="row padding-top-10">
-        <div className="col-md-12">
-          <div className="item-label">Tender Quotation and Evaluation Documents</div>
-
+        {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierResponsiveness")
+        && <Item label="Tender Quotation and Evaluation Documents" col={12}>
           {
             tenderQuotationEvaluation.formDocs.map(doc => <div key={doc._id}>
               <OverlayTrigger
@@ -93,17 +79,18 @@ class TenderQuotation extends React.Component {
                   </Tooltip>
                 }>
 
-                <a className="item-value download" href={doc.url} target="_blank">
+                <a className="download" href={doc.url} target="_blank">
                   <i className="glyphicon glyphicon-download"/>
                   <span>{doc.name}</span>
                 </a>
               </OverlayTrigger>
             </div>)
           }
-        </div>
+        </Item>
+        }
       </div>
     </div>);
   }
 }
 
-export default TenderQuotation;
+export default fmConnect(TenderQuotation);
