@@ -33,8 +33,8 @@ public class EarlierThanDateFieldValidator extends AbstractEarlierThanDateFieldV
      *
      * @param highDate
      */
-    public EarlierThanDateFieldValidator(final AbstractDateFieldBootstrapFormComponent highDate) {
-        super(highDate);
+    public EarlierThanDateFieldValidator(final AbstractDateFieldBootstrapFormComponent highDate, String fieldName) {
+        super(highDate, fieldName);
     }
 
     protected boolean isBefore(final Date highValue, final Date currentValue) {

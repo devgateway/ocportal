@@ -1,6 +1,6 @@
-import {Marker} from "react-leaflet";
+import { Marker } from 'react-leaflet';
 
-export default class Location extends Marker{
+export default class Location extends Marker {
   componentDidMount(){
     super.componentDidMount();
     this.leafletElement.on('popupopen', e => {

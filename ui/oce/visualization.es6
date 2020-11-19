@@ -3,6 +3,8 @@ import { fromJS } from 'immutable';
 import translatable from './translatable';
 import Component from './pure-render-component';
 import { callFunc, fetchEP } from './tools';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const API_ROOT = '/api';
 
@@ -69,9 +71,9 @@ class Visualization extends translatable(Component) {
 Visualization.comparable = true;
 
 Visualization.propTypes = {
-  filters: React.PropTypes.object.isRequired,
-  data: React.PropTypes.object,
-  requestNewData: React.PropTypes.func.isRequired,
+  filters: PropTypes.object.isRequired,
+  data: PropTypes.object,
+  requestNewData: PropTypes.func.isRequired,
 };
 
 export default Visualization;

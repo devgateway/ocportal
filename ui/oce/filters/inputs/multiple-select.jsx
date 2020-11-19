@@ -1,7 +1,7 @@
-import { fromJS, Set } from 'immutable';
+import {fromJS, Set} from 'immutable';
 import translatable from '../../translatable';
 import Component from '../../pure-render-component';
-import { fetchJson } from '../../tools';
+import {fetchJson} from '../../tools';
 
 class MultipleSelect extends translatable(Component) {
   constructor(props) {
@@ -59,11 +59,11 @@ class MultipleSelect extends translatable(Component) {
           {/*{this.getTitle()} */}Selected
           <span className="count">({this.getSelectedCount()}/{totalOptions})</span>
           <div className="pull-right select-all-none">
-            <a href="javascript:void(0)" onClick={e => this.selectAll()}>
+            <a onClick={e => this.selectAll()}>
               {this.t('filters:multipleSelect:selectAll')}
             </a>
             &nbsp;|&nbsp;
-            <a href="javascript:void(0)" onClick={e => this.selectNone()}>
+            <a onClick={e => this.selectNone()}>
               {this.t('filters:multipleSelect:selectNone')}
             </a>
           </div>

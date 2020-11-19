@@ -1,16 +1,16 @@
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
-import { Alert, ControlLabel, FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
-import { Typeahead } from 'react-bootstrap-typeahead';
+import {Alert, FormControl, FormGroup, ControlLabel, FormText} from 'react-bootstrap';
+import {Typeahead} from 'react-bootstrap-typeahead';
 
 import './alerts.less';
-import { API_ROOT, OCE } from '../state/oce-state';
+import {API_ROOT, OCE} from '../state/oce-state';
 
 class Alerts extends CRDPage {
-  
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
       departments: [],
       fetchedDepartments: [],
@@ -184,17 +184,17 @@ class Alerts extends CRDPage {
                 <FormGroup validationState={this.validateEmail()} bsSize={'large'}>
                   <ControlLabel>Enter your email address</ControlLabel>
                   <FormControl
-                    type="email"
-                    name="email"
-                    value={this.state.email}
-                    placeholder="email address"
-                    onChange={this.handleChange}
+                      type="email"
+                      name="email"
+                      value={this.state.email}
+                      placeholder="email address"
+                      onChange={this.handleChange}
                   />
                   <FormControl.Feedback/>
                   {
                     this.state.emailValid
-                      ? null
-                      : <HelpBlock>Email is invalid</HelpBlock>
+                        ? null
+                        : <FormText>Email is invalid</FormText>
                   }
                 </FormGroup>
               </div>

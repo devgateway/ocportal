@@ -16,6 +16,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
@@ -24,7 +25,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValida
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -32,10 +32,6 @@ import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResol
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-
-import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.DRAFT;
 
 /**
  * @author idobre
@@ -88,19 +84,19 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @Override
     protected void onAfterRevertToDraft(AjaxRequestTarget target) {
-        Collection<? extends AbstractMakueniEntity> allChildrenInHierarchy = getJpaService().getAllChildrenInHierarchy(
-                editForm.getModelObject());
-        allChildrenInHierarchy.stream().filter(c -> !c.getStatus().equals(DRAFT)).forEach(c -> {
-            logger.info("Reverting to DRAFT " + c.getClass().getSimpleName());
-            c.setNewStatusComment("Reverted to DRAFT because of related "
-                    + editForm.getModelObject().getClass().getSimpleName() + " entity was reverted to DRAFT");
-            final StatusChangedComment comment = new StatusChangedComment();
-            comment.setStatus(DRAFT);
-            comment.setComment(c.getNewStatusComment());
-            c.getStatusComments().add(comment);
-            c.setStatus(DRAFT);
-            makeniEntityServiceResolver.saveAndFlushMakueniEntity(c);
-        });
+//       Collection<? extends AbstractMakueniEntity> allChildrenInHierarchy = getJpaService().getAllChildrenInHierarchy(
+//                editForm.getModelObject());
+//        allChildrenInHierarchy.stream().filter(c -> !c.getStatus().equals(DRAFT)).forEach(c -> {
+//            logger.info("Reverting to DRAFT " + c.getClass().getSimpleName());
+//            c.setNewStatusComment("Reverted to DRAFT because of related "
+//                    + editForm.getModelObject().getClass().getSimpleName() + " entity was reverted to DRAFT");
+//            final StatusChangedComment comment = new StatusChangedComment();
+//            comment.setStatus(DRAFT);
+//            comment.setComment(c.getNewStatusComment());
+//            c.getStatusComments().add(comment);
+//            c.setStatus(DRAFT);
+//            makeniEntityServiceResolver.saveAndFlushMakueniEntity(c);
+//        });
     }
 
     protected ButtonContentModal createRevertToDraftModal() {
@@ -122,21 +118,23 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     }
 
     @Override
-    protected ModalSaveEditPageButton getRevertToDraftPageButton() {
-        revertToDraftModal = createRevertToDraftModal();
-        final ModalSaveEditPageButton saveEditPageButton = new ModalSaveEditPageButton("revertToDraft",
-                new StringResourceModel("revertToDraft", this, null), revertToDraftModal) {
+    protected SaveEditPageButton getRevertToDraftPageButton() {
+        final SaveEditPageButton saveEditPageButton = new SaveEditPageButton("revertToDraft",
+                new StringResourceModel("revertToDraft", this, null)) {
+            @Override
+            protected String getOnClickScript() {
+                return WebConstants.DISABLE_FORM_LEAVING_JS;
+            }
 
             @Override
-            public void continueSubmit(AjaxRequestTarget target) {
+            protected void onSubmit(final AjaxRequestTarget target) {
                 onBeforeRevertToDraft(target);
                 setStatusAppendComment(DBConstants.Status.DRAFT);
-                super.continueSubmit(target);
+                super.onSubmit(target);
                 target.add(editForm);
                 onAfterRevertToDraft(target);
             }
         };
-        revertToDraftModal.modalSavePageButton(saveEditPageButton);
         saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
         return saveEditPageButton;
     }
@@ -166,9 +164,9 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
         enableDisableAutosaveFields(null);
 
-        extraStatusEntityButtons = new Fragment("extraStatusEntityButtons", "extraStatusButtons", this);
-        entityButtonsFragment.replace(extraStatusEntityButtons);
-        extraStatusEntityButtons.add(revertToDraftModal);
+//        extraStatusEntityButtons = new Fragment("extraStatusEntityButtons", "extraStatusButtons", this);
+//        entityButtonsFragment.replace(extraStatusEntityButtons);
+//        extraStatusEntityButtons.add(revertToDraftModal);
 
     }
 
