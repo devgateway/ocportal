@@ -1,9 +1,9 @@
-import { API_ROOT } from '../../../state/oce-state';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { mtState } from '../state';
+import {API_ROOT} from '../../../state/oce-state';
+import {mtState} from '../state';
 import React from 'react';
 import {Item} from "./Item";
 import fmConnect from "../../../fm/fm";
+import FileDownloadLinks from "./FileDownloadLinks";
 
 class Project extends React.Component {
   constructor(props) {
@@ -89,25 +89,7 @@ class Project extends React.Component {
 
               {isFeatureVisible("projectForm.cabinetPapers")
               && <Item label="Cabinet Papers" col={6}>
-                {
-                  data.projects.cabinetPapers.map(cp=>
-                    cp.formDocs.map(doc => <div key={doc._id}>
-                      <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                          <Tooltip id="download-tooltip">
-                            Click to download the file
-                          </Tooltip>
-                        }>
-
-                        <a className="download" href={doc.url} target="_blank">
-                          <i className="glyphicon glyphicon-download"/>
-                          <span>{doc.name}</span>
-                        </a>
-                      </OverlayTrigger>
-                    </div>))
-
-                }
+                <FileDownloadLinks files={data.projects.cabinetPapers.flatMap(cp => cp.formDocs)} />
               </Item>}
             </div>
 

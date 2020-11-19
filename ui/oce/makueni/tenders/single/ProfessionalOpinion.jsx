@@ -1,8 +1,8 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
 
 class ProfessionalOpinion extends React.Component {
   getFeedbackSubject() {
@@ -44,23 +44,7 @@ class ProfessionalOpinion extends React.Component {
             <div className="row">
               {isFeatureVisible("professionalOpinionForm.items.formDocs")
               && <Item label="Professional Opinion Documents" col={6}>
-                {
-                  i.formDocs.map(doc => <div key={doc._id}>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="download-tooltip">
-                          Click to download the file
-                        </Tooltip>
-                      }>
-
-                      <a className="download" href={doc.url} target="_blank">
-                        <i className="glyphicon glyphicon-download"/>
-                        <span>{doc.name}</span>
-                      </a>
-                    </OverlayTrigger>
-                  </div>)
-                }
+                <FileDownloadLinks files={i.formDocs} />
               </Item>}
               {isFeatureVisible("professionalOpinionForm.items.approvedDate")
               && <Item label="Approved Date" value={formatDate(i.approvedDate)} col={6} />}

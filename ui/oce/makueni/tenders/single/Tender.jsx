@@ -1,8 +1,8 @@
-import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
 
 class Tender extends React.Component {
   getFeedbackSubject() {
@@ -131,23 +131,7 @@ class Tender extends React.Component {
         && <Item label="Download Tender" col={6}
                  data-intro="Download the original hardcopy of the tender document or link to a site
                  where the document can be downloaded.">
-          {
-            tender.formDocs && tender.formDocs.map(doc => <div key={doc._id}>
-              <OverlayTrigger
-                placement="bottom"
-                overlay={
-                  <Tooltip id="download-tooltip">
-                    Click to download the file
-                  </Tooltip>
-                }>
-
-                <a className="download" href={doc.url} target="_blank">
-                  <i className="glyphicon glyphicon-download"/>
-                  <span>{doc.name}</span>
-                </a>
-              </OverlayTrigger>
-            </div>)
-          }
+          <FileDownloadLinks files={tender.formDocs || []} />
         </Item>}
 
         {isFeatureVisible("tenderForm.tenderLink")

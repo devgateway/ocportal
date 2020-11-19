@@ -1,8 +1,8 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
 
 class Contract extends React.Component {
   getFeedbackSubject() {
@@ -73,23 +73,7 @@ class Contract extends React.Component {
 
                   {isFeatureVisible("contractForm.contractDocs.formDocs")
                   && <Item label="Contract Documents" col={6}>
-                    {
-                      contractDoc.formDocs.map(doc => <div key={doc._id}>
-                        <OverlayTrigger
-                          placement="bottom"
-                          overlay={
-                            <Tooltip id="download-tooltip">
-                              Click to download the file
-                            </Tooltip>
-                          }>
-
-                          <a className="download" href={doc.url} target="_blank">
-                            <i className="glyphicon glyphicon-download"/>
-                            <span>{doc.name}</span>
-                          </a>
-                        </OverlayTrigger>
-                      </div>)
-                    }
+                    <FileDownloadLinks files={contractDoc.formDocs} />
                   </Item>}
                 </div>
               </div>)

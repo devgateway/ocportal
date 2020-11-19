@@ -1,9 +1,9 @@
 import React from 'react';
 import moment from 'moment';
 import AuthImplReport from './AuthImplReport';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
 
 class InspectionReport extends AuthImplReport {
 
@@ -60,23 +60,7 @@ class InspectionReport extends AuthImplReport {
                 <div className="row">
                   {isFeatureVisible("inspectionReportForm.privateSectorRequests.upload")
                   && <Item label="Private Sector Request" col={3}>
-                    {
-                      psr.upload.map(doc => <div key={doc._id}>
-                        <OverlayTrigger
-                          placement="bottom"
-                          overlay={
-                            <Tooltip id="download-tooltip">
-                              Click to download the file
-                            </Tooltip>
-                          }>
-
-                          <a className="download" href={doc.url} target="_blank">
-                            <i className="glyphicon glyphicon-download"/>
-                            <span>{doc.name}</span>
-                          </a>
-                        </OverlayTrigger>
-                      </div>)
-                    }
+                    <FileDownloadLinks files={psr.upload} />
                   </Item>}
 
                   {isFeatureVisible("inspectionReportForm.privateSectorRequests.requestDate")
