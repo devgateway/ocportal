@@ -55,7 +55,6 @@ import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.forms.wicket.page.user.LoginPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.spring.SpringLiquibaseRunner;
-import org.nustaq.serialization.FSTConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +67,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
-import org.wicketstuff.pageserializer.fast2.Fast2WicketSerializer;
 import org.wicketstuff.select2.ApplicationSettings;
 
 import javax.persistence.EntityManagerFactory;
@@ -194,9 +192,6 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getMarkupSettings().setCompressWhitespace(true);
             getMarkupSettings().setStripWicketTags(true);
         }
-
-        FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-        getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
 
         getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy("-v-",
                 new CachingResourceVersion(new Adler32ResourceVersion())));
