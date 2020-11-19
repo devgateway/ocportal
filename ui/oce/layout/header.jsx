@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie';
 import * as introJs from 'intro.js/intro.js';
 import 'intro.js/introjs.css';
 import './header.less';
-import { statsInfo } from './state';
+import {statsInfo} from './state';
 import ReactGA from 'react-ga';
 
 export default class Header extends translatable(React.Component) {
@@ -155,7 +155,6 @@ export default class Header extends translatable(React.Component) {
                 this.tabs.map(tab => {
                   return (<a
                       key={tab.name}
-                      href="javascript:void(0);"
                       className={cn('', { active: this.isActive(tab.name) })}
                       onClick={() => this.changeOption(tab.name)}
                     ><span data-intro={tab.intro} data-step={tab.step}>
@@ -165,7 +164,7 @@ export default class Header extends translatable(React.Component) {
                   );
                 })
               }
-              <a key="HELP" href="javascript:void(0);" onClick={() => {
+              <a key="HELP" onClick={() => {
                 window.addEventListener('scroll', this.noScroll);
                 this.showIntroJs();
               }

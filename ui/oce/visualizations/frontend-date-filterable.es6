@@ -1,5 +1,6 @@
 import { Set } from 'immutable';
 import { cacheFn } from '../tools';
+import PropTypes from 'prop-types';
 
 const frontendDateFilterable = (Class) => {
   class Filterable extends Class {
@@ -35,7 +36,7 @@ const frontendDateFilterable = (Class) => {
   }
 
   Filterable.propTypes = Filterable.propTypes || {};
-  Filterable.propTypes.years = React.PropTypes.object.isRequired;
+  Filterable.propTypes.years = PropTypes.object.isRequired;
 
   Filterable.computeYears = cacheFn((data) => {
     if (!data) return Set();

@@ -1,6 +1,6 @@
 import Table from './index';
 import orgnamesFetching from '../../orgnames-fetching';
-import { pluckImm } from '../../tools';
+import {pluckImm} from '../../tools';
 import React from 'react';
 import ContractsList from '../../makueni/ContractsList';
 
@@ -24,8 +24,7 @@ class TopImplSupplier extends orgnamesFetching(Table) {
     return <tr key={id}>
       <td>{this.getOrgName(id)}</td>
       <td>
-        <a href="javascript:void(0);"
-           onClick={e => this.setContractorId(id)} className="more-details-link">
+        <a onClick={e => this.setContractorId(id)} className="more-details-link">
           {entry.get('count')}</a>
       </td>
     </tr>;

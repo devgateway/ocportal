@@ -1,6 +1,6 @@
 import './makueni.less';
 import React from 'react';
-import { API_ROOT } from '../state/oce-state';
+import {API_ROOT} from '../state/oce-state';
 
 class ContractsList extends React.PureComponent {
 
@@ -47,8 +47,7 @@ class ContractsList extends React.PureComponent {
         </tbody>
       </table>
       <span className="back-text">
-        <a href="javascript:void(0);"
-           onClick={e => resetContractorID()} className="more-details-link">
+        <a onClick={e => resetContractorID()} className="more-details-link">
         Go Back
         </a>
         </span>

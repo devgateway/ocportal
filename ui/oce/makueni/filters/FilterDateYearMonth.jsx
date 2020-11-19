@@ -1,17 +1,17 @@
 import translatable from '../../translatable';
-import { fetchJson, pluck, range } from '../../tools';
+import {fetchJson, pluck, range} from '../../tools';
 import cn from 'classnames';
-import { Set } from 'immutable';
-import { delayUserInput } from '../tenders/state';
+import {Set} from 'immutable';
+import {delayUserInput} from '../tenders/state';
 
 class FilterDateYearMonth extends translatable(React.Component) {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       selectedMonths: range(1, 12),
     };
-    
+
     this.handleChange = this.handleChange.bind(this);
   }
   
@@ -119,7 +119,6 @@ class FilterDateYearMonth extends translatable(React.Component) {
     return range(1, 12)
     .map(month => (<a
       key={month}
-      href="javascript:void(0);"
       className={cn('col-md-3', { active: selectedMonths.includes(month) })}
       onClick={() => {
         let newSelection;
@@ -175,7 +174,6 @@ class FilterDateYearMonth extends translatable(React.Component) {
     .map(year =>
       (<a
         key={year}
-        href="javascript:void(0);"
         className={cn('col-md-3', { active: selectedYears.includes(year) })}
         onDoubleClick={() => toggleOthersYears(year)}
         onClick={e => (e.shiftKey ? toggleOthersYears(year) : toggleYear(year))}

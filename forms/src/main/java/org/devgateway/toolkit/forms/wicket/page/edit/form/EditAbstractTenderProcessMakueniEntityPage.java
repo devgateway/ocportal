@@ -3,10 +3,14 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
@@ -17,9 +21,14 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
+import java.util.List;
 
 /**
  * @author mihai
@@ -28,6 +37,9 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         extends EditAbstractMakueniEntityPage<T> {
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessMakueniEntityPage.class);
 
+
+    @SpringBean
+    private TenderProcessService tenderProcessService;
 
     public EditAbstractTenderProcessMakueniEntityPage(final PageParameters parameters) {
         super(parameters);
@@ -46,13 +58,31 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         }
     }
 
+    protected class TenderProcessFormValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            T obj = (T) form.getModelObject();
+            BindingResult validate = tenderProcessService.validate(obj.getTenderProcess(), obj);
+            objectErrorToWicketError(form, validate.getAllErrors());
+        }
+    }
+
+    protected void objectErrorToWicketError(Form<?> form, List<ObjectError> objectErrors) {
+        objectErrors.forEach(oe -> form.error(oe.getCode()));
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
         editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.department"));
         editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.fiscalYear"));
-
+        editForm.add(new TenderProcessFormValidator());
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);
         }
@@ -108,8 +138,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     protected abstract AbstractTenderProcessMakueniEntity getNextForm();
 
     @Override
-    protected ModalSaveEditPageButton getRevertToDraftPageButton() {
-        ModalSaveEditPageButton revertToDraftPageButton = super.getRevertToDraftPageButton();
+    protected SaveEditPageButton getRevertToDraftPageButton() {
+        SaveEditPageButton revertToDraftPageButton = super.getRevertToDraftPageButton();
         if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
             revertToDraftPageButton.setLabel(new StringResourceModel("reactivate", this, null));
         }
