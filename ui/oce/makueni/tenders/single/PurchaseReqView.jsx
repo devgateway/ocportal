@@ -16,6 +16,7 @@ import InspectionReport from './InspectionReport';
 import PMCReport from './PMCReport';
 import PaymentVoucher from './PaymentVoucher';
 import MEReport from './MEReport';
+import fmConnect from "../../../fm/fm";
 
 class PurchaseReqView extends CRDPage {
   constructor(props) {
@@ -40,46 +41,55 @@ class PurchaseReqView extends CRDPage {
       url: this.prInfoUrl,
     });
 
-    this.tabs = [{
-      name: 'Tender',
-      tab: 1
-    }, {
-      name: 'Purchase Requisitions',
-      tab: 2
-    }, {
-      name: 'Tender Evaluation',
-      tab: 3
-    }, {
-      name: 'Professional Opinion',
-      tab: 4
-    }, {
-      name: 'Notification',
-      tab: 5
-    }, {
-      name: 'Award',
-      tab: 6
-    }, {
-      name: 'Contract',
-      tab: 7
-    }, {
-      name: 'Administrator Reports',
-      tab: 8
-    },
+    this.tabs = [
       {
+        name: 'Tender',
+        tab: 1,
+        fm: 'tenderForm'
+      }, {
+        name: 'Purchase Requisitions',
+        tab: 2,
+        fm: 'tenderProcessForm'
+      }, {
+        name: 'Tender Evaluation',
+        tab: 3,
+        fm: 'tenderQuotationEvaluationForm'
+      }, {
+        name: 'Professional Opinion',
+        tab: 4,
+        fm: 'professionalOpinionForm'
+      }, {
+        name: 'Notification',
+        tab: 5,
+        fm: 'awardNotificationForm'
+      }, {
+        name: 'Award',
+        tab: 6,
+        fm: 'awardAcceptanceForm'
+      }, {
+        name: 'Contract',
+        tab: 7,
+        fm: 'contractForm'
+      }, {
+        name: 'Administrator Reports',
+        tab: 8,
+        fm: 'administratorReportForm'
+      }, {
         name: 'Inspection Reports',
-        tab: 9
-      },
-      {
+        tab: 9,
+        fm: 'inspectionReportForm'
+      }, {
         name: 'PMC Reports',
-        tab: 10
-      },
-      {
+        tab: 10,
+        fm: 'pmcReportForm'
+      }, {
         name: 'M&E Reports',
-        tab: 11
-      },
-      {
+        tab: 11,
+        fm: 'meReportForm'
+      }, {
         name: 'Payment Vouchers',
-        tab: 12
+        tab: 12,
+        fm: 'paymentVoucherForm'
       }
     ];
 
@@ -197,15 +207,20 @@ class PurchaseReqView extends CRDPage {
   }
 
   render() {
-    const { navigate } = this.props;
-    const { data } = this.state;
+    const { navigate, isFeatureVisible } = this.props;
+    const { data, selected } = this.state;
+
+    const visibleTabs = this.tabs.filter(tab => isFeatureVisible(tab.fm));
+    if (!selected && visibleTabs.length > 0) {
+      this.changeTab(visibleTabs[0].tab);
+    }
 
     return (<div className="tender makueni-form">
       <div className="row">
         <div className="col-md-12 navigation-view" data-step="9" data-intro="Click to view and
         download the details and documents related to this tender process.">
           {
-            this.tabs.map(tab => {
+            visibleTabs.map(tab => {
               return (<a
                   key={tab.tab}
                   className={cn('', { active: this.isActive(tab.tab) })}
@@ -255,4 +270,4 @@ class PurchaseReqView extends CRDPage {
   }
 }
 
-export default PurchaseReqView;
+export default fmConnect(PurchaseReqView);

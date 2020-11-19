@@ -213,7 +213,7 @@ linksOrFiles() {
                 />
               </div>
               : navigationPage === 't'
-              ? <PurchaseReqView selected={1} id={id} navigate={navigate}
+              ? <PurchaseReqView id={id} navigate={navigate}
                                  onSwitch={this.props.onSwitch}
                                  translations={this.props.translations}
                                  styling={this.props.styling}/>
