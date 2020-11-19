@@ -1,12 +1,16 @@
 import React from 'react';
 import AuthImplReport from './AuthImplReport';
+import fmConnect from "../../../fm/fm";
 
 class AdministratorReport extends AuthImplReport {
 
-getReportName() {
-   return "Administrator Reports";
+   getReportName() {
+      return "Administrator Reports";
+   }
+
+   getFMPrefix() {
+      return "administratorReportForm"
+   }
 }
 
-}
-
-export default AdministratorReport;
+export default fmConnect(AdministratorReport);

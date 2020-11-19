@@ -151,7 +151,7 @@ class Tender extends React.Component {
                   </Tooltip>
                 }>
 
-                <a className="item-value download" href={doc.url} target="_blank">
+                <a className="download" href={doc.url} target="_blank">
                   <i className="glyphicon glyphicon-download"/>
                   <span>{doc.name}</span>
                 </a>
@@ -163,7 +163,7 @@ class Tender extends React.Component {
         {isFeatureVisible("tenderForm.tenderLink")
         && <Item label={"Tender Link"} col={6} className="padding-top-10">
           {
-            <a className="item-value download" href={tender.tenderLink} target="_blank">
+            <a className="download" href={tender.tenderLink} target="_blank">
               {tender.tenderLink}
             </a>
           }

@@ -11,7 +11,9 @@ const fmEP = fmState.input({
 const fmFilter = fmState.input({
   name: 'fmFilter',
   initial: fromJS({
-    "fmPrefixes": ["viz.", "tenderForm.", "tenderProcessForm."]
+    "fmPrefixes": ["viz.", "tenderForm.", "tenderProcessForm.", "tenderQuotationEvaluationForm.",
+      "professionalOpinionForm.", "awardNotificationForm.", "awardAcceptanceForm.", "contractForm.",
+      "administratorReportForm.", "meReportForm.", "pmcReportForm.", "inspectionReportForm.", "projectForm."]
   })
 });
 

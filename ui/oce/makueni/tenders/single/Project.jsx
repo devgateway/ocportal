@@ -2,6 +2,8 @@ import { API_ROOT } from '../../../state/oce-state';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { mtState } from '../state';
 import React from 'react';
+import {Item} from "./Item";
+import fmConnect from "../../../fm/fm";
 
 class Project extends React.Component {
   constructor(props) {
@@ -55,7 +57,7 @@ class Project extends React.Component {
   }
 
   render() {
-    const { navigate } = this.props;
+    const { navigate, isFeatureVisible } = this.props;
     const { data } = this.state;
 
     const { currencyFormatter, formatDate } = this.props.styling.tables;
@@ -82,12 +84,11 @@ class Project extends React.Component {
         data !== undefined
           ? <div>
             <div className="row">
-              <div className="col-md-6">
-                <div className="item-label">Project Title</div>
-                <div className="item-value">{data.projects.projectTitle}</div>
-              </div>
-              <div className="col-md-6">
-                <div className="item-label">Cabinet Papers</div>
+              {isFeatureVisible("projectForm.projectTitle")
+              && <Item label="Project Title" value={data.projects.projectTitle} col={6} />}
+
+              {isFeatureVisible("projectForm.cabinetPapers")
+              && <Item label="Cabinet Papers" col={6}>
                 {
                   data.projects.cabinetPapers.map(cp=>
                     cp.formDocs.map(doc => <div key={doc._id}>
@@ -99,7 +100,7 @@ class Project extends React.Component {
                           </Tooltip>
                         }>
 
-                        <a className="item-value download" href={doc.url} target="_blank">
+                        <a className="download" href={doc.url} target="_blank">
                           <i className="glyphicon glyphicon-download"/>
                           <span>{doc.name}</span>
                         </a>
@@ -107,36 +108,28 @@ class Project extends React.Component {
                     </div>))
 
                 }
-              </div>
+              </Item>}
             </div>
 
             <div className="row padding-top-10">
-              <div className="col-md-6">
-                <div className="item-label">Amount Budgeted</div>
-                <div className="item-value">{currencyFormatter(data.projects.amountBudgeted)}</div>
-              </div>
-              <div className="col-md-6">
-                <div className="item-label">Amount Requested</div>
-                <div className="item-value">{currencyFormatter(data.projects.amountRequested)}</div>
-              </div>
+              {isFeatureVisible("projectForm.amountBudgeted")
+              && <Item label="Amount Budgeted" value={currencyFormatter(data.projects.amountBudgeted)} col={6} />}
+
+              {isFeatureVisible("projectForm.amountRequested")
+              && <Item label="Amount Requested" value={currencyFormatter(data.projects.amountRequested)} col={6} />}
             </div>
 
             <div className="row padding-top-10">
-              <div className="col-md-6">
-                <div className="item-label">Sub-Counties</div>
-                <div className="item-value">{data.projects.subcounties.map(item => item.label).join(', ')}</div>
-              </div>
-              <div className="col-md-6">
-                <div className="item-label">Wards</div>
-                <div className="item-value">{data.projects.wards && data.projects.wards.map(item => item.label).join(', ')}</div>
-              </div>
+              {isFeatureVisible("projectForm.subcounties")
+              && <Item label="Sub-Counties" value={data.projects.subcounties.map(item => item.label).join(', ')} col={6} />}
+
+              {isFeatureVisible("projectForm.wards")
+              && <Item label="Wards" value={data.projects.wards && data.projects.wards.map(item => item.label).join(', ')} col={6} />}
             </div>
 
             <div className="row padding-top-10">
-              <div className="col-md-6">
-                <div className="item-label">Approved Date</div>
-                <div className="item-value">{formatDate(data.projects.approvedDate)}</div>
-              </div>
+              {isFeatureVisible("projectForm.approvedDate")
+              && <Item label="Approved Date" value={formatDate(data.projects.approvedDate)} col={6} />}
             </div>
           </div>
           : null
@@ -147,4 +140,4 @@ class Project extends React.Component {
 
 }
 
-export default Project;
+export default fmConnect(Project);

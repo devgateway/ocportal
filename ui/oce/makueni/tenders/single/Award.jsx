@@ -1,6 +1,8 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
 
 class Award extends React.Component {
   getFeedbackSubject() {
@@ -16,7 +18,7 @@ class Award extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
 
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
@@ -29,39 +31,31 @@ class Award extends React.Component {
     return (<div>
       <div className="row padding-top-10">
         {
-          awardAcceptance.items !== undefined
+          awardAcceptance.items !== undefined && isFeatureVisible("awardAcceptanceForm.items")
             ? awardAcceptance.items.map(i => <div key={i._id} className="box">
+
+              {isFeatureVisible("awardAcceptanceForm.items.supplierResponse")
+              && <div className="row padding-top-10">
+                <Item label="Supplier Response" value={i.supplierResponse.label} col={3} />
+              </div>}
+
               <div className="row padding-top-10">
-                <div className="col-md-3">
-                  <div className="item-label">Supplier Response</div>
-                <div
-                  className="item-value">{i.supplierResponse.label}</div>
-                </div>
-              </div>
-              <div className="row padding-top-10">
-                <div className="col-md-3">
-                  <div className="item-label">Accepted Award Value</div>
-                  <div
-                    className="item-value">{currencyFormatter(i.acceptedAwardValue)}</div>
-                </div>
-                <div className="col-md-3">
-                  <div className="item-label">Response Date</div>
-                  <div className="item-value">{formatDate(i.acceptanceDate)}</div>
-                </div>
-                <div className="col-md-3">
-                  <div className="item-label">Supplier Name</div>
-                  <div className="item-value">{i.awardee.label}</div>
-                </div>
-                <div className="col-md-3">
-                  <div className="item-label">Supplier ID</div>
-                  <div className="item-value">{i.awardee.code}</div>
-                </div>
+                {isFeatureVisible("awardAcceptanceForm.items.acceptedAwardValue")
+                && <Item label="Accepted Award Value" value={currencyFormatter(i.acceptedAwardValue)} col={3} />}
+
+                {isFeatureVisible("awardAcceptanceForm.items.acceptanceDate")
+                && <Item label="Response Date" value={formatDate(i.acceptanceDate)} col={3} />}
+
+                {isFeatureVisible("awardAcceptanceForm.items.awardee")
+                && <React.Fragment>
+                  <Item label="Supplier Name" value={i.awardee.label} col={3} />
+                  <Item label="Supplier ID" value={i.awardee.code} col={3} />
+                </React.Fragment>}
               </div>
 
               <div className="row padding-top-10">
-                <div className="col-md-12">
-                  <div className="item-label">Letter of Acceptance of Award</div>
-
+                {isFeatureVisible("awardAcceptanceForm.items.formDocs")
+                && <Item label="Letter of Acceptance of Award" col={12}>
                   {
                     i.formDocs.map(doc => <div key={doc._id}>
                       <OverlayTrigger
@@ -72,14 +66,14 @@ class Award extends React.Component {
                           </Tooltip>
                         }>
 
-                        <a className="item-value download" href={doc.url} target="_blank">
+                        <a className="download" href={doc.url} target="_blank">
                           <i className="glyphicon glyphicon-download"/>
                           <span>{doc.name}</span>
                         </a>
                       </OverlayTrigger>
                     </div>)
                   }
-                </div>
+                </Item>}
               </div>
             </div>) : null
         }
@@ -88,4 +82,4 @@ class Award extends React.Component {
   }
 }
 
-export default Award;
+export default fmConnect(Award);
