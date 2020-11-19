@@ -130,14 +130,20 @@
 
     .box {
         background-color: #f1f1f1;
-        padding: 15px;
+        padding: 0 15px 15px 15px;
         border: 1px solid #e3e3e3;
         margin-top: 10px;
-
-        .item-label {
-            padding-top: 0;
-        }
     }
+}
+
+.row.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row.display-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
 }
 
 .makueni-procurement-plan {

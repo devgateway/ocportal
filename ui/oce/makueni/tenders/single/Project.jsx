@@ -83,7 +83,7 @@ class Project extends React.Component {
       {
         data !== undefined
           ? <div>
-            <div className="row">
+            <div className="row display-flex">
               {isFeatureVisible("projectForm.projectTitle")
               && <Item label="Project Title" value={data.projects.projectTitle} col={6} />}
 
@@ -91,25 +91,19 @@ class Project extends React.Component {
               && <Item label="Cabinet Papers" col={6}>
                 <FileDownloadLinks files={data.projects.cabinetPapers.flatMap(cp => cp.formDocs)} />
               </Item>}
-            </div>
 
-            <div className="row">
               {isFeatureVisible("projectForm.amountBudgeted")
               && <Item label="Amount Budgeted" value={currencyFormatter(data.projects.amountBudgeted)} col={6} />}
 
               {isFeatureVisible("projectForm.amountRequested")
               && <Item label="Amount Requested" value={currencyFormatter(data.projects.amountRequested)} col={6} />}
-            </div>
 
-            <div className="row">
               {isFeatureVisible("projectForm.subcounties")
               && <Item label="Sub-Counties" value={data.projects.subcounties.map(item => item.label).join(', ')} col={6} />}
 
               {isFeatureVisible("projectForm.wards")
               && <Item label="Wards" value={data.projects.wards && data.projects.wards.map(item => item.label).join(', ')} col={6} />}
-            </div>
 
-            <div className="row">
               {isFeatureVisible("projectForm.approvedDate")
               && <Item label="Approved Date" value={formatDate(data.projects.approvedDate)} col={6} />}
             </div>

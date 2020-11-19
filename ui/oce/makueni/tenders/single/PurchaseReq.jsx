@@ -63,14 +63,13 @@ class PurchaseReq extends React.Component {
                   </div>
                   {
                     preq.purchaseItems.map(pr => <div key={pr._id} className="box">
-                      <div className="row">
+                      <div className="row display-flex">
                         {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.planItem")
                         && <Item label="Item" value={pr.planItem.item.label} col={6} />}
 
                         {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.description")
                         && <Item label="Description" value={pr.description} col={6} />}
-                      </div>
-                      <div className="row">
+
                         {isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems.planItem")
                         && <Item label="Unit of Issue" value={pr.planItem.unitOfIssue.label} col={3} />}
 

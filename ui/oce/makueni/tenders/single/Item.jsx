@@ -4,8 +4,8 @@ export const ItemLabel = props => <div className="item-label">{props.children}</
 
 export const ItemValue = props => <div className="item-value">{props.children}</div>
 
-export const Item = ({col, className, label, labelComponent, value, children}) => (
-  <div className={"col-md-" + col + " " + className}>
+export const Item = ({col, label, labelComponent, value, children}) => (
+  <div className={"col-md-" + col}>
     {labelComponent || <ItemLabel children={label} />}
     <ItemValue>
       {value || children}

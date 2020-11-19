@@ -13,7 +13,8 @@ const fmFilter = fmState.input({
   initial: fromJS({
     "fmPrefixes": ["viz.", "tenderForm.", "tenderProcessForm.", "tenderQuotationEvaluationForm.",
       "professionalOpinionForm.", "awardNotificationForm.", "awardAcceptanceForm.", "contractForm.",
-      "administratorReportForm.", "meReportForm.", "pmcReportForm.", "inspectionReportForm.", "projectForm."]
+      "administratorReportForm.", "meReportForm.", "pmcReportForm.", "inspectionReportForm.", "projectForm.",
+      "paymentVoucherForm."]
   })
 });
 

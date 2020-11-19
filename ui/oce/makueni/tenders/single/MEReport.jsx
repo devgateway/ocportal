@@ -17,7 +17,7 @@ class MEReport extends ImplReport {
     const { currencyFormatter, formatDate, formatBoolean } = this.props.styling.tables;
     const { isFeatureVisible } = this.props;
     return (<div>
-      <div className="row">
+      <div className="row display-flex">
         {isFeatureVisible("meReportForm.sno")
         && <Item label="SNO" value={i.sno} col={3} />}
 
@@ -29,8 +29,7 @@ class MEReport extends ImplReport {
 
         {isFeatureVisible("meReportForm.subwards")
         && <Item label="Sub-Wards" value={i.subwards && i.subwards.map(item => item.label).join(', ')} col={3} />}
-      </div>
-      <div className="row">
+
         {isFeatureVisible("meReportForm.lpoAmount")
         && <Item label="LPO Amount" value={currencyFormatter(i.lpoAmount)} col={3} />}
 
@@ -43,8 +42,7 @@ class MEReport extends ImplReport {
         {isFeatureVisible("meReportForm.uncommitted")
         && <Item label="Uncommitted Funds / Unabsorbed Funds / Vote Balance"
                  value={currencyFormatter(i.uncommitted)} col={3} />}
-      </div>
-      <div className="row">
+
         {isFeatureVisible("meReportForm.projectScope")
         && <Item label="Project Scope" value={i.projectScope} col={3} />}
 
@@ -56,8 +54,7 @@ class MEReport extends ImplReport {
 
         {isFeatureVisible("meReportForm.projectProgress")
         && <Item label="Project Progress" value={i.projectProgress} col={3} />}
-      </div>
-      <div className="row">
+
         {isFeatureVisible("meReportForm.directBeneficiariesTarget")
         && <Item label="Target number of direct beneficiaries" value={i.directBeneficiariesTarget} col={3} />}
 
@@ -69,8 +66,7 @@ class MEReport extends ImplReport {
 
         {isFeatureVisible("meReportForm.inspected")
         && <Item label="Inspected" value={formatBoolean(i.inspected)} col={3} />}
-      </div>
-      <div className="row">
+
         {isFeatureVisible("meReportForm.invoiced")
         && <Item label="Invoiced" value={formatBoolean(i.invoiced)} col={3} />}
 
@@ -82,8 +78,7 @@ class MEReport extends ImplReport {
 
         {isFeatureVisible("meReportForm.remarks")
         && <Item label="Remarks" value={i.remarks} col={3} />}
-      </div>
-      <div className="row">
+
         {isFeatureVisible("meReportForm.contractorContact")
         && <Item label="Contractor Contact" value={i.contractorContact} col={3} />}
 

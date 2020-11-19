@@ -30,16 +30,13 @@ class Tender extends React.Component {
     const tender = data[0];
 
     return (<div>
-      <div className="row">
+      <div className="row display-flex">
         {<Item label={"Tender Name"} value={tender.tenderTitle} col={4} />}
 
         {isFeatureVisible("tenderForm.tenderNumber")
         && <Item label={"Tender ID"} value={tender.tenderNumber} col={4} />}
 
         {<Item label={"Tender Code"} value={prId} col={4} />}
-      </div>
-
-      <div className="row">
 
         {isFeatureVisible("tenderForm.procurementMethod")
         && <Item label={"Procurement Method"} value={tender.procurementMethod.label} col={4} />}
@@ -51,8 +48,6 @@ class Tender extends React.Component {
 
         {isFeatureVisible("tenderForm.invitationDate")
         && <Item label={"Invitation to Tender Date"} value={formatDate(tender.invitationDate)} col={4} />}
-      </div>
-      <div className="row">
 
         {isFeatureVisible("tenderForm.closingDate")
         && <Item label={"Closing Date"} value={formatDate(tender.closingDate)} col={4} />}
@@ -62,17 +57,12 @@ class Tender extends React.Component {
 
         {isFeatureVisible("tenderForm.issuedBy")
         && <Item label={"Procuring Entity Address"} value={tender.issuedBy.address} col={4} />}
-      </div>
-
-      <div className="row">
 
         {isFeatureVisible("tenderForm.issuedBy")
         && <Item label={"Procuring Entity Email"} col={4}>
-          {
-            <a className={"download"} href={"mailto:"+tender.issuedBy.emailAddress}>
-              {tender.issuedBy.emailAddress}
-            </a>
-          }
+          <a className="download" href={"mailto:"+tender.issuedBy.emailAddress}>
+            {tender.issuedBy.emailAddress}
+          </a>
         </Item>}
 
         {isFeatureVisible("tenderForm.tenderValue")
@@ -80,9 +70,6 @@ class Tender extends React.Component {
 
         {isFeatureVisible("tenderForm.targetGroup")
         && <Item label={"Target Group"} value={tender.targetGroup && tender.targetGroup.label} col={4} />}
-      </div>
-
-      <div className="row">
 
         {isFeatureVisible("tenderForm.objective")
         && <Item label={"Tender Objective"} value={tender.objective} col={12} />}
@@ -99,13 +86,12 @@ class Tender extends React.Component {
 
             {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
-                <div className="row">
+                <div className="row display-flex">
                   {<Item label={"Item"} value={tenderItem.purchaseItem.planItem.item.label} col={6} />}
 
                   {isFeatureVisible("tenderForm.tenderItems.description")
                   && <Item label={"Description"} value={tenderItem.description} col={6} />}
-                </div>
-                <div className="row">
+
                   {isFeatureVisible("tenderForm.tenderItems.purchaseItem")
                   && <Item label={"Unit of Issue"} value={tenderItem.purchaseItem.planItem.unitOfIssue.label}
                            col={3} />}

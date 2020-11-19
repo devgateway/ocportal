@@ -28,7 +28,7 @@ class Contract extends React.Component {
     const contract = data[0];
 
     return (<div>
-      <div className="row">
+      <div className="row display-flex">
         {isFeatureVisible("contractForm.referenceNumber")
         && <Item label="Reference Number" value={contract.referenceNumber} col={4} />}
 
@@ -37,15 +37,13 @@ class Contract extends React.Component {
 
         {isFeatureVisible("contractForm.expiryDate")
         && <Item label="Expiry Date" value={formatDate(contract.expiryDate)} col={4} />}
-      </div>
 
-      {isFeatureVisible("contractForm.awardee")
-      && <div className="row">
-        <Item label="Supplier Name" value={contract.awardee.label} col={6} />
-        <Item label="Supplier Postal Address" value={contract.awardee.address} col={6} />
-      </div>}
+        {isFeatureVisible("contractForm.awardee")
+        && <React.Fragment>
+          <Item label="Supplier Name" value={contract.awardee.label} col={6} />
+          <Item label="Supplier Postal Address" value={contract.awardee.address} col={6} />
+        </React.Fragment>}
 
-      <div className="row">
         {isFeatureVisible("contractForm.procuringEntity")
         && <Item label="Procuring Entity Name" value={contract.procuringEntity.label} col={4} />}
 
