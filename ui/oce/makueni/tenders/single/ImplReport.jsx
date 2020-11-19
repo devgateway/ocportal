@@ -37,7 +37,7 @@ class ImplReport extends React.Component {
         {
           data.sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
               .map(i => <div key={i._id} className="box">
-              <div className="row padding-top-10">
+              <div className="row">
                 <Item label="Tender Title" value={tenderTitle} col={3} />
 
                 {isFeatureVisible(this.getFMPrefix() + ".tenderProcess.singleContract.awardee")
@@ -53,7 +53,7 @@ class ImplReport extends React.Component {
                 }
                 {
                   i.formDocs && isFeatureVisible(this.getFMPrefix() + ".formDocs") ?
-                      <div className="row padding-top-10">
+                      <div className="row">
                         <Item label={this.getReportName() + " Uploads"} col={12}>
                           {
                             i.formDocs.map(doc => <div key={doc._id}>

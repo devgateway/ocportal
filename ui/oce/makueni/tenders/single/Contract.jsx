@@ -28,7 +28,7 @@ class Contract extends React.Component {
     const contract = data[0];
 
     return (<div>
-      <div className="row padding-top-10">
+      <div className="row">
         {isFeatureVisible("contractForm.referenceNumber")
         && <Item label="Reference Number" value={contract.referenceNumber} col={4} />}
 
@@ -40,12 +40,12 @@ class Contract extends React.Component {
       </div>
 
       {isFeatureVisible("contractForm.awardee")
-      && <div className="row padding-top-10">
+      && <div className="row">
         <Item label="Supplier Name" value={contract.awardee.label} col={6} />
         <Item label="Supplier Postal Address" value={contract.awardee.address} col={6} />
       </div>}
 
-      <div className="row padding-top-10">
+      <div className="row">
         {isFeatureVisible("contractForm.procuringEntity")
         && <Item label="Procuring Entity Name" value={contract.procuringEntity.label} col={4} />}
 

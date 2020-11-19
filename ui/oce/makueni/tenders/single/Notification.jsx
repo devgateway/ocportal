@@ -32,7 +32,7 @@ class Notification extends React.Component {
         {
           awardNotification.items !== undefined && isFeatureVisible("awardNotificationForm.items")
             ? awardNotification.items.map(i => <div key={i._id} className="box">
-              <div className="row padding-top-10">
+              <div className="row">
                 {isFeatureVisible("awardNotificationForm.items.awardValue")
                 && <Item label="Award Value" value={currencyFormatter(i.awardValue)} col={4} />}
 
@@ -44,7 +44,7 @@ class Notification extends React.Component {
               </div>
 
               {isFeatureVisible("awardNotificationForm.items.awardee")
-              && <div className="row padding-top-10">
+              && <div className="row">
 
                 <Item label="Supplier Name" value={i.awardee.label} col={4} />
 
@@ -54,7 +54,7 @@ class Notification extends React.Component {
               </div>}
 
               {isFeatureVisible("awardNotificationForm.items.formDocs")
-              && <div className="row padding-top-10">
+              && <div className="row">
 
                 <Item label="Letter of Notification of Award" col={12}>
                   {

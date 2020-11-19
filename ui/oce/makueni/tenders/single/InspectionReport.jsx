@@ -37,7 +37,7 @@ class InspectionReport extends AuthImplReport {
     const { isFeatureVisible } = this.props;
     return [super.childElements(i),
       (<div key="2">
-        <div className="row padding-top-10">
+        <div className="row">
           {isFeatureVisible("inspectionReportForm.comments")
           && <Item label="Comments" value={i.comments} col={6} />}
 
@@ -57,7 +57,7 @@ class InspectionReport extends AuthImplReport {
                 ({i.privateSectorRequests.length})
               </div>
               {i.privateSectorRequests.map(psr => <div key={psr._id} className="box">
-                <div className="row padding-top-10">
+                <div className="row">
                   {isFeatureVisible("inspectionReportForm.privateSectorRequests.upload")
                   && <Item label="Private Sector Request" col={3}>
                     {

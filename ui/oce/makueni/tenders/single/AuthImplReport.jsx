@@ -7,7 +7,7 @@ class AuthImplReport extends ImplReport {
   childElements(i) {
     const { formatBoolean } = this.props.styling.tables;
     const { isFeatureVisible } = this.props;
-    return (<div key="1" className="row padding-top-10">
+    return (<div key="1" className="row">
       {isFeatureVisible(this.getFMPrefix() + ".authorizePayment")
       && <Item label="Authorize Payment" value={formatBoolean(i.authorizePayment)} col={3} />}
 

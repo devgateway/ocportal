@@ -111,7 +111,7 @@ class Project extends React.Component {
               </Item>}
             </div>
 
-            <div className="row padding-top-10">
+            <div className="row">
               {isFeatureVisible("projectForm.amountBudgeted")
               && <Item label="Amount Budgeted" value={currencyFormatter(data.projects.amountBudgeted)} col={6} />}
 
@@ -119,7 +119,7 @@ class Project extends React.Component {
               && <Item label="Amount Requested" value={currencyFormatter(data.projects.amountRequested)} col={6} />}
             </div>
 
-            <div className="row padding-top-10">
+            <div className="row">
               {isFeatureVisible("projectForm.subcounties")
               && <Item label="Sub-Counties" value={data.projects.subcounties.map(item => item.label).join(', ')} col={6} />}
 
@@ -127,7 +127,7 @@ class Project extends React.Component {
               && <Item label="Wards" value={data.projects.wards && data.projects.wards.map(item => item.label).join(', ')} col={6} />}
             </div>
 
-            <div className="row padding-top-10">
+            <div className="row">
               {isFeatureVisible("projectForm.approvedDate")
               && <Item label="Approved Date" value={formatDate(data.projects.approvedDate)} col={6} />}
             </div>

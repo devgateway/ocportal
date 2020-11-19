@@ -17,7 +17,7 @@ class PaymentVoucher extends ImplReport {
     const { currencyFormatter, formatBoolean } = this.props.styling.tables;
     const { isFeatureVisible } = this.props;
     return (<div>
-      <div className="row padding-top-10">
+      <div className="row">
         {isFeatureVisible("paymentVoucherForm.pmcReport")
         && <Item label="PMC Report" value={i.pmcReport.label} col={3} />}
 
@@ -30,7 +30,7 @@ class PaymentVoucher extends ImplReport {
         {isFeatureVisible("paymentVoucherForm.totalAmount")
         && <Item label="Total Amount" value={currencyFormatter(i.totalAmount)} col={3} />}
       </div>
-      <div className="row padding-top-10">
+      <div className="row">
         {isFeatureVisible("paymentVoucherForm.lastPayment")
         && <Item label="Last Payment" value={formatBoolean(i.lastPayment)} col={3} />}
 

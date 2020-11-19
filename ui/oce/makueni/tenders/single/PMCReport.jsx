@@ -32,7 +32,7 @@ class PMCReport extends AuthImplReport {
     const { isFeatureVisible } = this.props;
     return [super.childElements(i),
       <div key="2">
-        <div className="row padding-top-10">
+        <div className="row">
           {isFeatureVisible("pmcReportForm.projectClosureHandover")
           && <Item label="Project Closure and Handover"
                    value={i.projectClosureHandover && i.projectClosureHandover.map(item => item.label).join(', ')}
@@ -46,7 +46,7 @@ class PMCReport extends AuthImplReport {
             </div>
           </div>
           {
-            i.pmcMembers && i.pmcMembers.map(m => <div key={m._id} className="row padding-top-10">
+            i.pmcMembers && i.pmcMembers.map(m => <div key={m._id} className="row">
               {isFeatureVisible("pmcReportForm.pmcMembers.staff")
               && <Item label="PMC Staff" value={m.staff.label} col={3} />}
 
@@ -57,7 +57,7 @@ class PMCReport extends AuthImplReport {
         </React.Fragment>}
       </div>,
       <div key="3">
-        <div className="row padding-top-10">
+        <div className="row">
           {isFeatureVisible("pmcReportForm.socialSafeguards")
           && <Item label="Social Safeguards" value={i.socialSafeguards} col={3} />}
 
@@ -70,7 +70,7 @@ class PMCReport extends AuthImplReport {
       </div>,
       <div key="4">
         {isFeatureVisible("pmcReportForm.pmcNotes")
-        && <div className="row padding-top-10">
+        && <div className="row">
           <Item label="PMC Notes" value={i.pmcNotes && i.pmcNotes.map(item => item.text).join(', ')} col={12} />
         </div>}
       </div>

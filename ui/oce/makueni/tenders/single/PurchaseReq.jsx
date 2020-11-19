@@ -29,7 +29,7 @@ class PurchaseReq extends React.Component {
       <div className="row">
         {isFeatureVisible("tenderProcessForm.purchaseRequestNumber")
         && <Item label="Purchase Request Number" value={data.purchaseRequestNumber}
-                 col={3} className="padding-top-10" />}
+                 col={3} />}
       </div>
 
       {
@@ -39,19 +39,19 @@ class PurchaseReq extends React.Component {
             <div className="row">
               {isFeatureVisible("tenderProcessForm.purchRequisitions.requestedBy")
               && <Item label="Requested By" value={preq.requestedBy.label}
-                       col={3} className="padding-top-10" />}
+                       col={3} />}
 
               {isFeatureVisible("tenderProcessForm.purchRequisitions.chargeAccount")
               && <Item label="Charge Account" value={preq.chargeAccount.label}
-                       col={3} className="padding-top-10" />}
+                       col={3} />}
 
               {isFeatureVisible("tenderProcessForm.purchRequisitions.requestApprovalDate")
               && <Item label="Request Approval Date" value={formatDate(preq.requestApprovalDate)}
-                       col={3} className="padding-top-10" />}
+                       col={3} />}
 
               {isFeatureVisible("tenderProcessForm.purchRequisitions.approvedDate")
               && <Item label="Approved Date" value={formatDate(preq.approvedDate)}
-                       col={3} className="padding-top-10" />}
+                       col={3} />}
             </div>
             {
               preq.purchaseItems !== undefined && isFeatureVisible("tenderProcessForm.purchRequisitions.purchaseItems")
@@ -90,7 +90,7 @@ class PurchaseReq extends React.Component {
             }
               <div className="row">
                 {isFeatureVisible("tenderProcessForm.purchRequisitions.formDocs")
-                && <Item label="Purchase Requisition Documents" col={6} className="padding-top-10">
+                && <Item label="Purchase Requisition Documents" col={6}>
                   {
                     preq.formDocs.map(doc => <div key={doc._id}>
                       <OverlayTrigger
@@ -113,7 +113,7 @@ class PurchaseReq extends React.Component {
                 {isFeatureVisible("tenderProcessForm.purchRequisitions.approvedDate")
                 && <Item label="Approved Date"
                          value={formatDate(preq.approvedDate)}
-                         col={6} className="padding-top-10" />}
+                         col={6} />}
               </div>
           </div>
           )

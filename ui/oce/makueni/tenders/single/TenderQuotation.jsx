@@ -30,7 +30,7 @@ class TenderQuotation extends React.Component {
       <div className="row">
         {isFeatureVisible("tenderQuotationEvaluationForm.closingDate")
         && <Item label="Closing Date" value={formatDate(tenderQuotationEvaluation.closingDate)}
-                 col={6} className="padding-top-10" />}
+                 col={6} />}
       </div>
 
       {
@@ -66,7 +66,7 @@ class TenderQuotation extends React.Component {
           : null
       }
 
-      <div className="row padding-top-10">
+      <div className="row">
         {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierResponsiveness")
         && <Item label="Tender Quotation and Evaluation Documents" col={12}>
           {

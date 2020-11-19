@@ -35,11 +35,11 @@ class Award extends React.Component {
             ? awardAcceptance.items.map(i => <div key={i._id} className="box">
 
               {isFeatureVisible("awardAcceptanceForm.items.supplierResponse")
-              && <div className="row padding-top-10">
+              && <div className="row">
                 <Item label="Supplier Response" value={i.supplierResponse.label} col={3} />
               </div>}
 
-              <div className="row padding-top-10">
+              <div className="row">
                 {isFeatureVisible("awardAcceptanceForm.items.acceptedAwardValue")
                 && <Item label="Accepted Award Value" value={currencyFormatter(i.acceptedAwardValue)} col={3} />}
 
@@ -53,7 +53,7 @@ class Award extends React.Component {
                 </React.Fragment>}
               </div>
 
-              <div className="row padding-top-10">
+              <div className="row">
                 {isFeatureVisible("awardAcceptanceForm.items.formDocs")
                 && <Item label="Letter of Acceptance of Award" col={12}>
                   {

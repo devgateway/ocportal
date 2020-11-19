@@ -32,7 +32,7 @@ class ProfessionalOpinion extends React.Component {
       {
         professionalOpinion.items !== undefined && isFeatureVisible("professionalOpinionForm.items")
           ? professionalOpinion.items.map(i => <div key={i._id} className="box">
-            <div className="row padding-top-10">
+            <div className="row">
               {isFeatureVisible("professionalOpinionForm.items.professionalOpinionDate")
               && <Item label="Professional Opinion Date" value={formatDate(i.professionalOpinionDate)} col={4} />}
               {isFeatureVisible("professionalOpinionForm.items.awardee")
@@ -41,7 +41,7 @@ class ProfessionalOpinion extends React.Component {
               && <Item label="Recommended Award Amount" value={currencyFormatter(i.recommendedAwardAmount)} col={4} />}
             </div>
 
-            <div className="row padding-top-10">
+            <div className="row">
               {isFeatureVisible("professionalOpinionForm.items.formDocs")
               && <Item label="Professional Opinion Documents" col={6}>
                 {
