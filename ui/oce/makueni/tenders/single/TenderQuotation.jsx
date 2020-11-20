@@ -29,13 +29,13 @@ class TenderQuotation extends React.Component {
 
     return (<div>
       <div className="row">
-        {isFeatureVisible("tenderQuotationEvaluationForm.closingDate")
+        {isFeatureVisible("publicView.tenderQuotationEvaluation.closingDate")
         && <Item label="Closing Date" value={formatDate(tenderQuotationEvaluation.closingDate)}
                  col={6} />}
       </div>
 
       {
-        tenderQuotationEvaluation.bids !== undefined && isFeatureVisible("tenderQuotationEvaluationForm.bids")
+        tenderQuotationEvaluation.bids !== undefined && isFeatureVisible("publicView.tenderQuotationEvaluation.bids")
           ? <div>
             <div className="row padding-top-10">
               <div className="col-md-12 sub-title">Bids
@@ -45,20 +45,18 @@ class TenderQuotation extends React.Component {
 
             {
               tenderQuotationEvaluation.bids.map(bids => <div key={bids._id} className="box">
-                {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplier")
-                && <div className="row">
-                  <Item label="Supplier Name" value={bids.supplier.label} col={6} />
-                  <Item label="Supplier ID" value={bids.supplier.code} col={6} />
-                </div>}
-
                 <div className="row">
-                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierScore")
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.label")
+                  && <Item label="Supplier Name" value={bids.supplier.label} col={6} />}
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.code")
+                  && <Item label="Supplier ID" value={bids.supplier.code} col={6} />}
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierScore")
                   && <Item label="Supplier Score" value={bids.supplierScore} col={3} />}
-                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierRanking")
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierRanking")
                   && <Item label="Supplier Ranking" value={bids.supplierRanking} col={3} />}
-                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.quotedAmount")
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.quotedAmount")
                   && <Item label="Quoted Price" value={currencyFormatter(bids.quotedAmount)} col={3} />}
-                  {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierResponsiveness")
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierResponsiveness")
                   && <Item label="Supplier Responsiveness" value={bids.supplierResponsiveness} col={3} />}
                 </div>
               </div>)
@@ -68,7 +66,7 @@ class TenderQuotation extends React.Component {
       }
 
       <div className="row">
-        {isFeatureVisible("tenderQuotationEvaluationForm.bids.supplierResponsiveness")
+        {isFeatureVisible("publicView.tenderQuotationEvaluation.formDocs")
         && <Item label="Tender Quotation and Evaluation Documents" col={12}>
           <FileDownloadLinks files={tenderQuotationEvaluation.formDocs} />
         </Item>

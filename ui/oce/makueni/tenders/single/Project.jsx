@@ -84,27 +84,27 @@ class Project extends React.Component {
         data !== undefined
           ? <div>
             <div className="row display-flex">
-              {isFeatureVisible("projectForm.projectTitle")
+              {isFeatureVisible("publicView.project.projectTitle")
               && <Item label="Project Title" value={data.projects.projectTitle} col={6} />}
 
-              {isFeatureVisible("projectForm.cabinetPapers")
+              {isFeatureVisible("publicView.project.cabinetPapers")
               && <Item label="Cabinet Papers" col={6}>
                 <FileDownloadLinks files={data.projects.cabinetPapers.flatMap(cp => cp.formDocs)} />
               </Item>}
 
-              {isFeatureVisible("projectForm.amountBudgeted")
+              {isFeatureVisible("publicView.project.amountBudgeted")
               && <Item label="Amount Budgeted" value={currencyFormatter(data.projects.amountBudgeted)} col={6} />}
 
-              {isFeatureVisible("projectForm.amountRequested")
+              {isFeatureVisible("publicView.project.amountRequested")
               && <Item label="Amount Requested" value={currencyFormatter(data.projects.amountRequested)} col={6} />}
 
-              {isFeatureVisible("projectForm.subcounties")
+              {isFeatureVisible("publicView.project.subcounties")
               && <Item label="Sub-Counties" value={data.projects.subcounties.map(item => item.label).join(', ')} col={6} />}
 
-              {isFeatureVisible("projectForm.wards")
+              {isFeatureVisible("publicView.project.wards")
               && <Item label="Wards" value={data.projects.wards && data.projects.wards.map(item => item.label).join(', ')} col={6} />}
 
-              {isFeatureVisible("projectForm.approvedDate")
+              {isFeatureVisible("publicView.project.approvedDate")
               && <Item label="Approved Date" value={formatDate(data.projects.approvedDate)} col={6} />}
             </div>
           </div>

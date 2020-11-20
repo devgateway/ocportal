@@ -1,3 +1,4 @@
+# EDIT PAGE
 - name: meReportForm
   enabled: yes
   visible: yes
@@ -165,6 +166,8 @@
   mandatory: yes
   enabled: yes
   visible: yes
+
+# LIST PAGE
 - name: meReportsList
   mandatory: no
   enabled: yes
@@ -195,3 +198,121 @@
     - meReportForm.meStatus
 - name: meReportsList.status
   visible: yes
+
+# PUBLIC VIEW
+- name: publicView.meReport
+  visible: yes
+  visibleDeps:
+    - meReportForm
+- name: publicView.meReport.sno
+  visible: yes
+  visibleDeps:
+    - meReportForm.sno
+- name: publicView.meReport.subcounties
+  visible: yes
+  visibleDeps:
+    - meReportForm.subcounties
+- name: publicView.meReport.wards
+  visible: yes
+  visibleDeps:
+    - meReportForm.wards
+- name: publicView.meReport.subwards
+  visible: yes
+  visibleDeps:
+    - meReportForm.subwards
+- name: publicView.meReport.lpoAmount
+  visible: yes
+  visibleDeps:
+    - meReportForm.lpoAmount
+- name: publicView.meReport.lpoNumber
+  visible: yes
+  visibleDeps:
+    - meReportForm.lpoNumber
+- name: publicView.meReport.expenditure
+  visible: yes
+  visibleDeps:
+    - meReportForm.expenditure
+- name: publicView.meReport.uncommitted
+  visible: yes
+  visibleDeps:
+    - meReportForm.uncommitted
+- name: publicView.meReport.projectScope
+  visible: yes
+  visibleDeps:
+    - meReportForm.projectScope
+- name: publicView.meReport.output
+  visible: yes
+  visibleDeps:
+    - meReportForm.output
+- name: publicView.meReport.outcome
+  visible: yes
+  visibleDeps:
+    - meReportForm.outcome
+- name: publicView.meReport.projectProgress
+  visible: yes
+  visibleDeps:
+    - meReportForm.projectProgress
+- name: publicView.meReport.directBeneficiariesTarget
+  visible: yes
+  visibleDeps:
+    - meReportForm.directBeneficiariesTarget
+- name: publicView.meReport.wayForward
+  visible: yes
+  visibleDeps:
+    - meReportForm.wayForward
+- name: publicView.meReport.byWhen
+  visible: yes
+  visibleDeps:
+    - meReportForm.byWhen
+- name: publicView.meReport.inspected
+  visible: yes
+  visibleDeps:
+    - meReportForm.inspected
+- name: publicView.meReport.invoiced
+  visible: yes
+  visibleDeps:
+    - meReportForm.invoiced
+- name: publicView.meReport.officerResponsible
+  visible: yes
+  visibleDeps:
+    - meReportForm.officerResponsible
+- name: publicView.meReport.meStatus
+  visible: yes
+  visibleDeps:
+    - meReportForm.meStatus
+- name: publicView.meReport.remarks
+  visible: yes
+  visibleDeps:
+    - meReportForm.remarks
+- name: publicView.meReport.contractorContact
+  visible: yes
+  visibleDeps:
+    - meReportForm.contractorContact
+- name: publicView.meReport.contractDate
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.singleContract.contractDate
+- name: publicView.meReport.contractExpiryDate
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.singleContract.expiryDate
+- name: publicView.meReport.amountBudgeted
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.project.amountBudgeted
+- name: publicView.meReport.tenderTitle
+  visible: yes
+- name: publicView.meReport.contractor
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.singleContract.awardee
+- name: publicView.meReport.fiscalYear
+  visible: yes
+- name: publicView.meReport.approvedDate
+  visible: yes
+  visibleDeps:
+    - meReportForm.approvedDate
+- name: publicView.meReport.formDocs
+  visible: yes
+  visibleDeps:
+    - meReportForm.formDocs

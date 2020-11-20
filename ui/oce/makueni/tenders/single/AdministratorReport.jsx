@@ -9,7 +9,7 @@ class AdministratorReport extends AuthImplReport {
    }
 
    getFMPrefix() {
-      return "administratorReportForm"
+      return "publicView.administratorReport"
    }
 }
 

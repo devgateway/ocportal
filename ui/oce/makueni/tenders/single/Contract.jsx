@@ -38,11 +38,11 @@ class Contract extends React.Component {
         {isFeatureVisible("contractForm.expiryDate")
         && <Item label="Expiry Date" value={formatDate(contract.expiryDate)} col={4} />}
 
-        {isFeatureVisible("contractForm.awardee")
-        && <React.Fragment>
-          <Item label="Supplier Name" value={contract.awardee.label} col={6} />
-          <Item label="Supplier Postal Address" value={contract.awardee.address} col={6} />
-        </React.Fragment>}
+        {isFeatureVisible("contractForm.awardee.label")
+        && <Item label="Supplier Name" value={contract.awardee.label} col={6} />}
+
+        {isFeatureVisible("contractForm.awardee.address")
+        && <Item label="Supplier Postal Address" value={contract.awardee.address} col={6} />}
 
         {isFeatureVisible("contractForm.procuringEntity")
         && <Item label="Procuring Entity Name" value={contract.procuringEntity.label} col={4} />}

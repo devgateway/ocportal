@@ -3,12 +3,13 @@ import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
 import FiltersWrapper from '../filters/FiltersWrapper';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Map } from 'immutable';
 import '../makueni.less';
 import ProcurementPlan from './single/procurementPlan';
 import React from 'react';
 import Footer from '../../layout/footer';
+import fmConnect from "../../fm/fm";
+import FileDownloadLinks from "../tenders/single/FileDownloadLinks";
 
 const NAME = 'MakueniPP';
 
@@ -88,35 +89,41 @@ class MakueniProcurementPlans extends CRDPage {
   }
 
   downloadFiles() {
-    return (formDocs) => (<div>
-        {
-          formDocs && formDocs.map(doc => <div key={doc.id}>
-            <OverlayTrigger
-              placement="bottom"
-              overlay={
-                <Tooltip id="download-tooltip">
-                  Click to download the file
-                </Tooltip>
-              }>
-
-              <a data-step={this.showDataStep()?10:""} data-intro={this.showDataStep()?"Click to " +
-                "download a hardcopy of the original procurement plan.":""}
-                 className="download-file" href={doc.url} target="_blank">
-                <i className="glyphicon glyphicon-download"/>
-                <span>{doc.name}</span>
-              </a>
-            </OverlayTrigger>
-          </div>)
-        }
-      </div>
-    );
+    return (formDocs) =>
+      <FileDownloadLinks
+        files={formDocs}
+        data-step={this.showDataStep()?10:""}
+        data-intro={this.showDataStep()?"Click to download a hardcopy of the original procurement plan.":""} />;
   }
 
   render() {
     const { data, count } = this.state;
-    const { navigate, route } = this.props;
+    const { navigate, route, isFeatureVisible } = this.props;
     const [navigationPage, id] = route;
     this.introjsCnt = 0;
+
+    const columns = [{
+      title: 'ID',
+      dataField: 'id',
+      width: '20%',
+      dataFormat: this.ppLink(navigate),
+      fm: 'publicView.procurementPlansList.id'
+    }, {
+      title: 'Department',
+      dataField: 'department',
+      fm: 'publicView.procurementPlansList.department'
+    }, {
+      title: 'Fiscal Year',
+      dataField: 'fiscalYear',
+      fm: 'publicView.procurementPlansList.fiscalYear'
+    }, {
+      title: 'Procurement Plan Files',
+      dataField: 'formDocs',
+      dataFormat: this.downloadFiles(),
+      fm: 'publicView.procurementPlansList.formDocs'
+    }];
+
+    const visibleColumns = columns.filter(c => isFeatureVisible(c.fm));
 
     return (<div className="container-fluid dashboard-default">
 
@@ -149,22 +156,7 @@ class MakueniProcurementPlans extends CRDPage {
                   onPageChange={newPage => page.assign(NAME, newPage)}
                   onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
                   count={count}
-                  columns={[{
-                    title: 'ID',
-                    dataField: 'id',
-                    width: '20%',
-                    dataFormat: this.ppLink(navigate),
-                  }, {
-                    title: 'Department',
-                    dataField: 'department',
-                  }, {
-                    title: 'Fiscal Year',
-                    dataField: 'fiscalYear',
-                  }, {
-                    title: 'Procurement Plan Files',
-                    dataField: 'formDocs',
-                    dataFormat: this.downloadFiles(),
-                  }]}
+                  columns={visibleColumns}
                 />
               </div>
               :
@@ -198,4 +190,4 @@ class MakueniProcurementPlans extends CRDPage {
   }
 }
 
-export default MakueniProcurementPlans;
+export default fmConnect(MakueniProcurementPlans);

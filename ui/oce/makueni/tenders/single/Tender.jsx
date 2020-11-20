@@ -31,52 +31,53 @@ class Tender extends React.Component {
 
     return (<div>
       <div className="row display-flex">
-        {<Item label={"Tender Name"} value={tender.tenderTitle} col={4} />}
+        {isFeatureVisible("publicView.tender.tenderTitle")
+        && <Item label={"Tender Name"} value={tender.tenderTitle} col={4} />}
 
-        {isFeatureVisible("tenderForm.tenderNumber")
+        {isFeatureVisible("publicView.tender.tenderNumber")
         && <Item label={"Tender ID"} value={tender.tenderNumber} col={4} />}
 
-        {<Item label={"Tender Code"} value={prId} col={4} />}
+        {isFeatureVisible("publicView.tender.tenderCode")
+        && <Item label={"Tender Code"} value={prId} col={4} />}
 
-        {isFeatureVisible("tenderForm.procurementMethod")
+        {isFeatureVisible("publicView.tender.procurementMethod")
         && <Item label={"Procurement Method"} value={tender.procurementMethod.label} col={4} />}
 
-        {isFeatureVisible("tenderForm.procurementMethodRationale")
+        {isFeatureVisible("publicView.tender.procurementMethodRationale")
         && <Item label={"Procurement Method Rationale"}
-                 value={tender.procurementMethodRationale && tender.procurementMethodRationale.label}
-                 col={4} />}
+                 value={(tender.procurementMethodRationale || {}).label} col={4} />}
 
-        {isFeatureVisible("tenderForm.invitationDate")
+        {isFeatureVisible("publicView.tender.invitationDate")
         && <Item label={"Invitation to Tender Date"} value={formatDate(tender.invitationDate)} col={4} />}
 
-        {isFeatureVisible("tenderForm.closingDate")
+        {isFeatureVisible("publicView.tender.closingDate")
         && <Item label={"Closing Date"} value={formatDate(tender.closingDate)} col={4} />}
 
-        {isFeatureVisible("tenderForm.issuedBy")
+        {isFeatureVisible("publicView.tender.issuedBy.label")
         && <Item label={"Tender Issued By"} value={tender.issuedBy.label} col={4} />}
 
-        {isFeatureVisible("tenderForm.issuedBy")
+        {isFeatureVisible("publicView.tender.issuedBy.address")
         && <Item label={"Procuring Entity Address"} value={tender.issuedBy.address} col={4} />}
 
-        {isFeatureVisible("tenderForm.issuedBy")
+        {isFeatureVisible("publicView.tender.issuedBy.emailAddress")
         && <Item label={"Procuring Entity Email"} col={4}>
           <a className="download" href={"mailto:"+tender.issuedBy.emailAddress}>
             {tender.issuedBy.emailAddress}
           </a>
         </Item>}
 
-        {isFeatureVisible("tenderForm.tenderValue")
+        {isFeatureVisible("publicView.tender.tenderValue")
         && <Item label={"Tender Value"} value={currencyFormatter(tender.tenderValue)} col={4} />}
 
-        {isFeatureVisible("tenderForm.targetGroup")
+        {isFeatureVisible("publicView.tender.targetGroup")
         && <Item label={"Target Group"} value={tender.targetGroup && tender.targetGroup.label} col={4} />}
 
-        {isFeatureVisible("tenderForm.objective")
+        {isFeatureVisible("publicView.tender.objective")
         && <Item label={"Tender Objective"} value={tender.objective} col={12} />}
       </div>
 
       {
-        tender.tenderItems !== undefined && isFeatureVisible("tenderForm.tenderItems")
+        tender.tenderItems !== undefined && isFeatureVisible("publicView.tender.tenderItems")
           ? <div>
             <div className="row padding-top-10">
               <div className="col-md-12 sub-title">Tender Items
@@ -87,22 +88,23 @@ class Tender extends React.Component {
             {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
                 <div className="row display-flex">
-                  {<Item label={"Item"} value={tenderItem.purchaseItem.planItem.item.label} col={6} />}
+                  {isFeatureVisible("publicView.tender.tenderItems.item")
+                  && <Item label={"Item"} value={tenderItem.purchaseItem.planItem.item.label} col={6} />}
 
-                  {isFeatureVisible("tenderForm.tenderItems.description")
+                  {isFeatureVisible("publicView.tender.tenderItems.description")
                   && <Item label={"Description"} value={tenderItem.description} col={6} />}
 
-                  {isFeatureVisible("tenderForm.tenderItems.purchaseItem")
+                  {isFeatureVisible("publicView.tender.tenderItems.purchaseItem")
                   && <Item label={"Unit of Issue"} value={tenderItem.purchaseItem.planItem.unitOfIssue.label}
                            col={3} />}
 
-                  {isFeatureVisible("tenderForm.tenderItems.quantity")
+                  {isFeatureVisible("publicView.tender.tenderItems.quantity")
                   && <Item label={"Quantity"} value={currencyFormatter(tenderItem.quantity)} col={3} />}
 
-                  {isFeatureVisible("tenderForm.tenderItems.unitPrice")
+                  {isFeatureVisible("publicView.tender.tenderItems.unitPrice")
                   && <Item label={"Unit Price"} value={currencyFormatter(tenderItem.unitPrice)} col={3} />}
 
-                  {isFeatureVisible("tenderForm.tenderItems.totalCost")
+                  {isFeatureVisible("publicView.tender.tenderItems.totalCost")
                   && <Item label={"Total Cost"}
                            value={currencyFormatter(tenderItem.quantity * tenderItem.unitPrice)} col={3} />}
                 </div>
@@ -113,14 +115,14 @@ class Tender extends React.Component {
       }
 
       <div className="row">
-        {isFeatureVisible("tenderForm.formDocs")
+        {isFeatureVisible("publicView.tender.formDocs")
         && <Item label="Download Tender" col={6}
                  data-intro="Download the original hardcopy of the tender document or link to a site
                  where the document can be downloaded.">
           <FileDownloadLinks files={tender.formDocs || []} />
         </Item>}
 
-        {isFeatureVisible("tenderForm.tenderLink")
+        {isFeatureVisible("publicView.tender.tenderLink")
         && <Item label={"Tender Link"} col={6}>
           {
             <a className="download" href={tender.tenderLink} target="_blank">

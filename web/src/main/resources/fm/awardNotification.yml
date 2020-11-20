@@ -1,3 +1,4 @@
+# EDIT PAGE
 - name: awardNotificationForm
   enabled: yes
   visible: yes
@@ -88,6 +89,8 @@
   mandatory: no
   enabled: yes
   visible: yes
+
+# LIST PAGE
 - name: awardNotificationsList
   enabled: yes
   visible: yes
@@ -113,3 +116,41 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.awardNotification
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm
+- name: publicView.awardNotification.items
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items
+- name: publicView.awardNotification.items.awardValue
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardValue
+- name: publicView.awardNotification.items.awardDate
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardDate
+- name: publicView.awardNotification.items.acknowledgementDays
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.acknowledgementDays
+- name: publicView.awardNotification.items.awardee.label
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardee
+- name: publicView.awardNotification.items.awardee.code
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardee
+- name: publicView.awardNotification.items.awardee.address
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardee
+- name: publicView.awardNotification.items.formDocs
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.formDocs

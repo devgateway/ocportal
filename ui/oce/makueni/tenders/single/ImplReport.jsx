@@ -38,12 +38,14 @@ class ImplReport extends React.Component {
           data.sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
               .map(i => <div key={i._id} className="box">
               <div className="row">
-                <Item label="Tender Title" value={tenderTitle} col={3} />
+                {isFeatureVisible(this.getFMPrefix() + ".tenderTitle")
+                && <Item label="Tender Title" value={tenderTitle} col={3} />}
 
-                {isFeatureVisible(this.getFMPrefix() + ".tenderProcess.singleContract.awardee")
+                {isFeatureVisible(this.getFMPrefix() + ".contractor")
                 && <Item label="Contractor" value={i.contract.awardee.label} col={3} />}
 
-                <Item label="Fiscal Year" value={fiscalYear.name} col={3} />
+                {isFeatureVisible(this.getFMPrefix() + ".fiscalYear")
+                && <Item label="Fiscal Year" value={fiscalYear.name} col={3} />}
 
                 {isFeatureVisible(this.getFMPrefix() + ".approvedDate")
                 && <Item label="Report Date" value={formatDate(i.approvedDate)} col={3} />}

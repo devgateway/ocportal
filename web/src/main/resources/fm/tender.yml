@@ -134,6 +134,7 @@
 - name: tenderForm.terminate
   enabled: yes
   visible: yes
+
 # TENDERS LIST PAGE
 - name: tenderForm.visibleStatusComments
   mandatory: no
@@ -165,3 +166,91 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.tender
+  visible: yes
+  visibleDeps:
+    - tenderForm
+- name: publicView.tender.tenderTitle
+  visible: yes
+- name: publicView.tender.tenderNumber
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderNumber
+- name: publicView.tender.tenderCode
+  visible: yes
+- name: publicView.tender.procurementMethod
+  visible: yes
+  visibleDeps:
+    - tenderForm.procurementMethod
+- name: publicView.tender.procurementMethodRationale
+  visible: yes
+  visibleDeps:
+    - tenderForm.procurementMethodRationale
+- name: publicView.tender.invitationDate
+  visible: yes
+  visibleDeps:
+    - tenderForm.invitationDate
+- name: publicView.tender.closingDate
+  visible: yes
+  visibleDeps:
+    - tenderForm.closingDate
+- name: publicView.tender.issuedBy.label
+  visible: yes
+  visibleDeps:
+    - tenderForm.issuedBy
+- name: publicView.tender.issuedBy.address
+  visible: yes
+  visibleDeps:
+    - tenderForm.issuedBy
+- name: publicView.tender.issuedBy.emailAddress
+  visible: yes
+  visibleDeps:
+    - tenderForm.issuedBy
+- name: publicView.tender.tenderValue
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderValue
+- name: publicView.tender.targetGroup
+  visible: yes
+  visibleDeps:
+    - tenderForm.targetGroup
+- name: publicView.tender.objective
+  visible: yes
+  visibleDeps:
+    - tenderForm.objective
+- name: publicView.tender.tenderItems
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems
+- name: publicView.tender.tenderItems.item
+  visible: yes
+- name: publicView.tender.tenderItems.description
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.description
+- name: publicView.tender.tenderItems.purchaseItem
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.purchaseItem
+- name: publicView.tender.tenderItems.quantity
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.quantity
+- name: publicView.tender.tenderItems.unitPrice
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.unitPrice
+- name: publicView.tender.tenderItems.totalCost
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.totalCost
+- name: publicView.tender.formDocs
+  visible: yes
+  visibleDeps:
+    - tenderForm.formDocs
+- name: publicView.tender.tenderLink
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderLink

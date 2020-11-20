@@ -1,3 +1,4 @@
+# EDIT PAGE
 - name: contractForm
   enabled: yes
   visible: yes
@@ -101,6 +102,8 @@
   mandatory: no
   enabled: yes
   visible: yes
+
+# LIST PAGE
 - name: contractsList
   enabled: yes
   visible: yes
@@ -126,3 +129,53 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.contract
+  visible: yes
+  visibleDeps:
+    - contractForm
+- name: publicView.contract.referenceNumber
+  visible: yes
+  visibleDeps:
+    - contractForm.referenceNumber
+- name: publicView.contract.contractDate
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDate
+- name: publicView.contract.expiryDate
+  visible: yes
+  visibleDeps:
+    - contractForm.expiryDate
+- name: publicView.contract.awardee.label
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: publicView.contract.awardee.address
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: publicView.contract.procuringEntity
+  visible: yes
+  visibleDeps:
+    - contractForm.procuringEntity
+- name: publicView.contract.contractValue
+  visible: yes
+  visibleDeps:
+    - contractForm.contractValue
+- name: publicView.contract.contractApprovalDate
+  visible: yes
+  visibleDeps:
+    - contractForm.contractApprovalDate
+- name: publicView.contract.contractDocs
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDocs
+- name: publicView.contract.contractDocs.contractDocumentType
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDocs.contractDocumentType
+- name: publicView.contract.contractDocs.formDocs
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDocs.formDocs

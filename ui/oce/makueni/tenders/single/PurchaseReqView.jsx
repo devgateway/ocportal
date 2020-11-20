@@ -23,7 +23,7 @@ class PurchaseReqView extends CRDPage {
     super(props);
 
     this.state = {
-      selected: props.selected || ''
+      selected: 1
     };
 
     this.prID = mtState.input({
@@ -45,51 +45,51 @@ class PurchaseReqView extends CRDPage {
       {
         name: 'Tender',
         tab: 1,
-        fm: 'tenderForm'
+        fm: 'publicView.tender'
       }, {
         name: 'Purchase Requisitions',
         tab: 2,
-        fm: 'tenderProcessForm'
+        fm: 'publicView.tenderProcess'
       }, {
         name: 'Tender Evaluation',
         tab: 3,
-        fm: 'tenderQuotationEvaluationForm'
+        fm: 'publicView.tenderQuotationEvaluation'
       }, {
         name: 'Professional Opinion',
         tab: 4,
-        fm: 'professionalOpinionForm'
+        fm: 'publicView.professionalOpinions'
       }, {
         name: 'Notification',
         tab: 5,
-        fm: 'awardNotificationForm'
+        fm: 'publicView.awardNotification'
       }, {
         name: 'Award',
         tab: 6,
-        fm: 'awardAcceptanceForm'
+        fm: 'publicView.awardAcceptance'
       }, {
         name: 'Contract',
         tab: 7,
-        fm: 'contractForm'
+        fm: 'publicView.contract'
       }, {
         name: 'Administrator Reports',
         tab: 8,
-        fm: 'administratorReportForm'
+        fm: 'publicView.administratorReport'
       }, {
         name: 'Inspection Reports',
         tab: 9,
-        fm: 'inspectionReportForm'
+        fm: 'publicView.inspectionReport'
       }, {
         name: 'PMC Reports',
         tab: 10,
-        fm: 'pmcReportForm'
+        fm: 'publicView.pmcReport'
       }, {
         name: 'M&E Reports',
         tab: 11,
-        fm: 'meReportForm'
+        fm: 'publicView.meReport'
       }, {
         name: 'Payment Vouchers',
         tab: 12,
-        fm: 'paymentVoucherForm'
+        fm: 'publicView.paymentVoucher'
       }
     ];
 
@@ -121,6 +121,12 @@ class PurchaseReqView extends CRDPage {
         });
       });
     });
+
+    const {selected} = this.state;
+    const visibleTabs = this.getVisibleTabs();
+    if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
+      this.changeTab(visibleTabs[0].tab);
+    }
   }
 
   componentWillUnmount() {
@@ -201,19 +207,15 @@ class PurchaseReqView extends CRDPage {
                           styling={this.props.styling}/>;
 
       default:
-        return <Tender data={data.tender} department={department} tenderTitle={tenderTitle}
-                       fiscalYear={fiscalYear} styling={this.props.styling}/>;
+        throw new Error("Tab not implemented");
     }
   }
 
   render() {
-    const { navigate, isFeatureVisible } = this.props;
-    const { data, selected } = this.state;
+    const { navigate } = this.props;
+    const { data } = this.state;
 
-    const visibleTabs = this.tabs.filter(tab => isFeatureVisible(tab.fm));
-    if (!selected && visibleTabs.length > 0) {
-      this.changeTab(visibleTabs[0].tab);
-    }
+    const visibleTabs = this.getVisibleTabs();
 
     return (<div className="tender makueni-form">
       <div className="row">
@@ -267,6 +269,11 @@ class PurchaseReqView extends CRDPage {
         <FeedbackMessageList department={this.state.department}/>
       </div>
     </div>);
+  }
+
+  getVisibleTabs() {
+    const { isFeatureVisible } = this.props;
+    return this.tabs.filter(tab => isFeatureVisible(tab.fm));
   }
 }
 

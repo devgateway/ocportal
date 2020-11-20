@@ -11,6 +11,8 @@ import PurchaseReqView from './single/PurchaseReqView';
 import FiltersTendersWrapper from '../filters/FiltersTendersWrapper';
 import Footer from '../../layout/footer';
 import React from 'react';
+import fmConnect from "../../fm/fm";
+import FileDownloadLinks from "./single/FileDownloadLinks";
 
 
 const NAME = 'MakueniTenders';
@@ -110,47 +112,67 @@ class MakueniTenders extends CRDPage {
   }
 
   downloadFiles(tender) {
-    return (<div data-step={this.showDataStep()?11:""}
-                 data-intro={this.showDataStep()?"Click to download the tender document " +
-                   "hardcopy.":""}>
-        {
-          tender && tender.formDocs && tender.formDocs.map(doc => <div key={tender._id+'-'+doc._id}>
-            <OverlayTrigger
-              placement="bottom"
-              overlay={
-                <Tooltip id="download-tooltip">
-                  Click to download the file
-                </Tooltip>
-              }>
-
-              <a className="download-file" href={doc.url} target="_blank">
-                <i className="glyphicon glyphicon-download"/>
-                <span>{doc.name}</span>
-              </a>
-            </OverlayTrigger>
-          </div>)
-        }
-      </div>
-    );
+    return <FileDownloadLinks files={(tender || {}).formDocs} />
   }
-linksOrFiles() {
-    return (tender) => tender && tender.formDocs ? this.downloadFiles(tender) : this.downloadLinks(tender);
+
+  linksAndFiles() {
+    const { isFeatureVisible } = this.props;
+    return (tender) => <div data-step={this.showDataStep()?11:""}
+                            data-intro={this.showDataStep()?"Click to download the tender document hardcopy.":""}>
+      {isFeatureVisible('publicView.tendersProcessList.tenderDocs')
+      && this.downloadFiles(tender)}
+
+      {isFeatureVisible('publicView.tendersProcessList.tenderLink')
+      && this.downloadLinks(tender)}
+    </div>;
    }
 
   downloadLinks(tender) {
-    return (<div>
-        {
-          tender && tender.tenderLink && (<a className="download-file" href={tender.tenderLink} target="_blank">
-            {tender.tenderLink}</a>)
-        }
-      </div>
-    );
+    return tender && tender.tenderLink
+      ? (<a className="download-file" href={tender.tenderLink} target="_blank">{tender.tenderLink}</a>)
+      : null;
   }
   render() {
     const { data, count } = this.state;
-    const { navigate, route } = this.props;
+    const { navigate, route, isFeatureVisible } = this.props;
     const [navigationPage, id] = route;
     this.introjsCnt = 0;
+
+    const columns = [{
+      title: 'Tender Title',
+      dataField: 'tender',
+      dataFormat: this.tenderLink(navigate),
+      visible: isFeatureVisible('publicView.tendersProcessList.tenderTitle')
+    }, {
+      title: 'Department',
+      dataField: 'department',
+      visible: isFeatureVisible('publicView.tendersProcessList.department')
+    }, {
+      title: 'Fiscal Year',
+      dataField: 'fiscalYear',
+      visible: isFeatureVisible('publicView.tendersProcessList.fiscalYear')
+    }, {
+      title: 'Closing Date',
+      dataField: 'tender',
+      dataFormat: (cell, row) => cell !== undefined ? new Date(cell.closingDate).toLocaleDateString() : '',
+      visible: isFeatureVisible('publicView.tendersProcessList.closingDate')
+    }, {
+      title: 'Tender Value',
+      dataField: 'tender',
+      dataFormat: (cell, row) => cell !== undefined ? this.props.styling.charts.hoverFormatter(cell.tenderValue) : '',
+      visible: isFeatureVisible('publicView.tendersProcessList.tenderValue')
+    }, {
+      title: 'Project',
+      dataField: 'project',
+      dataFormat: this.projectLink(navigate),
+      visible: isFeatureVisible('publicView.tendersProcessList.project')
+    }, {
+      title: 'Tender Documents',
+      dataField: 'tender',
+      dataFormat: this.linksAndFiles(),
+      visible: isFeatureVisible('publicView.tendersProcessList.tenderLink')
+        || isFeatureVisible('publicView.tendersProcessList.tenderDocs')
+    }];
 
     return (<div className="container-fluid dashboard-default">
 
@@ -183,33 +205,7 @@ linksOrFiles() {
                   onPageChange={newPage => page.assign(NAME, newPage)}
                   onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
                   count={count}
-                  columns={[{
-                    title: 'Tender Title',
-                    dataField: 'tender',
-                    dataFormat: this.tenderLink(navigate),
-                  }, {
-                    title: 'Department',
-                    dataField: 'department',
-                  }, {
-                    title: 'Fiscal Year',
-                    dataField: 'fiscalYear',
-                  }, {
-                    title: 'Closing Date',
-                    dataField: 'tender',
-                    dataFormat: (cell, row) => cell !== undefined ? new Date(cell.closingDate).toLocaleDateString() : ''
-                  }, {
-                    title: 'Tender Value',
-                    dataField: 'tender',
-                    dataFormat: (cell, row) => cell !== undefined ? this.props.styling.charts.hoverFormatter(cell.tenderValue) : ''
-                  }, {
-                    title: 'Project',
-                    dataField: 'project',
-                    dataFormat: this.projectLink(navigate)
-                  }, {
-                    title: 'Tender Documents',
-                    dataField: 'tender',
-                    dataFormat: this.linksOrFiles(),
-                  }]}
+                  columns={columns.filter(c => c.visible)}
                 />
               </div>
               : navigationPage === 't'
@@ -246,4 +242,4 @@ linksOrFiles() {
   }
 }
 
-export default MakueniTenders;
+export default fmConnect(MakueniTenders);

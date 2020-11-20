@@ -1,3 +1,4 @@
+# EDIT PAGE
 - name: administratorReportForm
   enabled: yes
   visible: yes
@@ -69,6 +70,8 @@
   mandatory: no
   enabled: yes
   visible: yes
+
+# LIST PAGE
 - name: administratorReportsList
   enabled: yes
   visible: yes
@@ -102,3 +105,29 @@
   visible: yes
   visibleDeps:
     - administratorReportForm.tenderProcess.singleContract.awardee
+
+# PUBLIC VIEW
+- name: publicView.administratorReport
+  visible: yes
+  visibleDeps:
+    - administratorReportForm
+- name: publicView.administratorReport.authorizePayment
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.authorizePayment
+- name: publicView.administratorReport.tenderTitle
+  visible: yes
+- name: publicView.administratorReport.contractor
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.tenderProcess.singleContract.awardee
+- name: publicView.administratorReport.fiscalYear
+  visible: yes
+- name: publicView.administratorReport.approvedDate
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.approvedDate
+- name: publicView.administratorReport.formDocs
+  visible: yes
+  visibleDeps:
+    - administratorReportForm.formDocs

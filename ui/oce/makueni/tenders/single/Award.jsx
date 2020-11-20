@@ -31,30 +31,28 @@ class Award extends React.Component {
     return (<div>
       <div className="row padding-top-10">
         {
-          awardAcceptance.items !== undefined && isFeatureVisible("awardAcceptanceForm.items")
+          awardAcceptance.items !== undefined && isFeatureVisible("publicView.awardAcceptance.items")
             ? awardAcceptance.items.map(i => <div key={i._id} className="box">
 
-              {isFeatureVisible("awardAcceptanceForm.items.supplierResponse")
+              {isFeatureVisible("publicView.awardAcceptance.items.supplierResponse")
               && <div className="row">
                 <Item label="Supplier Response" value={i.supplierResponse.label} col={3} />
               </div>}
 
               <div className="row">
-                {isFeatureVisible("awardAcceptanceForm.items.acceptedAwardValue")
+                {isFeatureVisible("publicView.awardAcceptance.items.acceptedAwardValue")
                 && <Item label="Accepted Award Value" value={currencyFormatter(i.acceptedAwardValue)} col={3} />}
 
-                {isFeatureVisible("awardAcceptanceForm.items.acceptanceDate")
+                {isFeatureVisible("publicView.awardAcceptance.items.acceptanceDate")
                 && <Item label="Response Date" value={formatDate(i.acceptanceDate)} col={3} />}
 
-                {isFeatureVisible("awardAcceptanceForm.items.awardee")
-                && <React.Fragment>
-                  <Item label="Supplier Name" value={i.awardee.label} col={3} />
-                  <Item label="Supplier ID" value={i.awardee.code} col={3} />
-                </React.Fragment>}
-              </div>
+                {isFeatureVisible("publicView.awardAcceptance.items.awardee.label")
+                && <Item label="Supplier Name" value={i.awardee.label} col={3} />}
 
-              <div className="row">
-                {isFeatureVisible("awardAcceptanceForm.items.formDocs")
+                {isFeatureVisible("publicView.awardAcceptance.items.awardee.code")
+                && <Item label="Supplier ID" value={i.awardee.code} col={3} />}
+
+                {isFeatureVisible("publicView.awardAcceptance.items.formDocs")
                 && <Item label="Letter of Acceptance of Award" col={12}>
                   <FileDownloadLinks files={i.formDocs} />
                 </Item>}

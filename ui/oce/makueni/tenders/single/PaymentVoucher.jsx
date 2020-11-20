@@ -10,7 +10,7 @@ class PaymentVoucher extends ImplReport {
   }
 
   getFMPrefix() {
-    return "paymentVoucherForm"
+    return "publicView.paymentVoucher"
   }
 
   childElements(i) {
@@ -18,22 +18,22 @@ class PaymentVoucher extends ImplReport {
     const { isFeatureVisible } = this.props;
     return (<div>
       <div className="row display-flex">
-        {isFeatureVisible("paymentVoucherForm.pmcReport")
+        {isFeatureVisible("publicView.paymentVoucher.pmcReport")
         && <Item label="PMC Report" value={i.pmcReport.label} col={3} />}
 
-        {isFeatureVisible("paymentVoucherForm.inspectionReport")
+        {isFeatureVisible("publicView.paymentVoucher.inspectionReport")
         && <Item label="Inspection Report" value={i.inspectionReport.label} col={3} />}
 
-        {isFeatureVisible("paymentVoucherForm.administratorReport")
+        {isFeatureVisible("publicView.paymentVoucher.administratorReport")
         && <Item label="Administrator Report" value={i.administratorReport.label} col={3} />}
 
-        {isFeatureVisible("paymentVoucherForm.totalAmount")
+        {isFeatureVisible("publicView.paymentVoucher.totalAmount")
         && <Item label="Total Amount" value={currencyFormatter(i.totalAmount)} col={3} />}
 
-        {isFeatureVisible("paymentVoucherForm.lastPayment")
+        {isFeatureVisible("publicView.paymentVoucher.lastPayment")
         && <Item label="Last Payment" value={formatBoolean(i.lastPayment)} col={3} />}
 
-        {isFeatureVisible("paymentVoucherForm.tenderProcess.singleContract.referenceNumber")
+        {isFeatureVisible("publicView.paymentVoucher.contractRefNum")
         && <Item label="Contract Number" value={currencyFormatter(i.contract.referenceNumber)} col={3} />}
       </div>
     </div>);
