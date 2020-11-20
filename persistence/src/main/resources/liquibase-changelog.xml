@@ -1299,4 +1299,30 @@
         <addNotNullConstraint tableName="tender_process" columnName="status"/>
         <addNotNullConstraint tableName="tender_quotation_evaluation" columnName="status"/>
     </changeSet>
+    <changeSet id="OCMAKU-786" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="administrator_report"/>
+            <tableExists tableName="pmcreport"/>
+            <tableExists tableName="inspection_report"/>
+            <tableExists tableName="mereport"/>
+            <tableExists tableName="payment_voucher"/>
+        </preConditions>
+
+        <sql>update pmcreport as r set contract_id = c.id from contract as c
+            where r.tender_process_id =c.tender_process_id and r.contract_id is null;
+        </sql>
+
+        <addNotNullConstraint tableName="administrator_report" columnName="contract_id"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="contract_id"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="contract_id"/>
+        <addNotNullConstraint tableName="mereport" columnName="contract_id"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="contract_id"/>
+
+        <addNotNullConstraint tableName="administrator_report" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="mereport" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="tender_process_id"/>
+    </changeSet>
+
 </databaseChangeLog>
