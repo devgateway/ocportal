@@ -14,30 +14,15 @@
  */
 package org.devgateway.toolkit.persistence.spring;
 
-import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.validation.ValidatorFactory;
+import org.springframework.context.annotation.Profile;
 
 /**
  * @author mpostelnicu
  *
  */
 @Configuration
-//@Profile("!integration") // TODO check why this setting is needed.
+@Profile("!integration")
 public class DatabaseConfiguration {
 
-    /**
-     * Pass our preconfigured validator factory to Hibernate ORM.
-     *
-     * Important! BeanValidationEventListener will traverse only the fields that were initialized and does not
-     * support cascade validation.
-     */
-    @Bean
-    public HibernatePropertiesCustomizer validationFactoryProperty(ValidatorFactory validatorFactory) {
-        return props -> {
-            props.put("javax.persistence.validation.factory", validatorFactory);
-        };
-    }
 }

@@ -9,7 +9,13 @@ import org.hibernate.validator.spi.group.DefaultGroupSequenceProvider;
 import java.util.List;
 
 /**
- * TODO add javadoc
+ * Conditionally maps Default validation group to the group specified when constructing the provider.
+ *
+ * If the object being validated is part of a form which is in draft state, then this provider will not change the
+ * validation group. This will mean that only constraints for Default group will be used to validate the object.
+ *
+ * Otherwise, if the form is submitted or does not have such status, then the provider will map Default group to the
+ * provided group. Meaning that only constraints for the provided group will be used to validate the object.
  *
  * @author Octavian Ciubotaru
  */
@@ -33,7 +39,7 @@ public abstract class AbstractFMGroupSequenceProvider
 
     @Override
     public List<Class<?>> getValidationGroups(Object object) {
-        if (isGroupRequired(object)) {
+        if (shouldMapTheGroupFor(object)) {
             return ImmutableList.of(group, javaType);
         } else {
             return ImmutableList.of(javaType);
@@ -41,7 +47,7 @@ public abstract class AbstractFMGroupSequenceProvider
     }
 
     // TODO add test for parent null? then return true!
-    private boolean isGroupRequired(Object object) {
+    private boolean shouldMapTheGroupFor(Object object) {
         Object it = object;
         while (it instanceof AbstractChildAuditableEntity) {
             it = ((AbstractChildAuditableEntity<?>) it).getParent();
