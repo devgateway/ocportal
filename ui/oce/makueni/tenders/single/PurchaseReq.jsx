@@ -85,7 +85,7 @@ class PurchaseReq extends React.Component {
               <div className="row">
                 {isFeatureVisible("publicView.tenderProcess.purchRequisitions.formDocs")
                 && <Item label="Purchase Requisition Documents" col={6}>
-                  <FileDownloadLinks files={preq.formDocs} />
+                  <FileDownloadLinks files={preq.formDocs} useDash />
                 </Item>}
               </div>
           </div>

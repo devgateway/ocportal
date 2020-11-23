@@ -52,7 +52,7 @@ class Award extends React.Component {
 
                 {isFeatureVisible("publicView.awardAcceptance.items.formDocs")
                 && <Item label="Letter of Acceptance of Award" col={12}>
-                  <FileDownloadLinks files={i.formDocs} />
+                  <FileDownloadLinks files={i.formDocs} useDash />
                 </Item>}
               </div>
             </div>) : null

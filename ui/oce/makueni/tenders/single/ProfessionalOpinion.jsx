@@ -41,7 +41,7 @@ class ProfessionalOpinion extends React.Component {
               && <Item label="Recommended Award Amount" value={currencyFormatter(i.recommendedAwardAmount)} col={4} />}
               {isFeatureVisible("publicView.professionalOpinions.items.formDocs")
               && <Item label="Professional Opinion Documents" col={4}>
-                <FileDownloadLinks files={i.formDocs} />
+                <FileDownloadLinks files={i.formDocs} useDash />
               </Item>}
               {isFeatureVisible("publicView.professionalOpinions.items.approvedDate")
               && <Item label="Approved Date" value={formatDate(i.approvedDate)} col={4} />}

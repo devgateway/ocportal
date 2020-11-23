@@ -1,8 +1,8 @@
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import React from "react";
 
-const FileDownloadLinks = ({files}) => {
-  if ((files || []).length === 0) {
+const FileDownloadLinks = ({files, useDash}) => {
+  if (useDash && (files || []).length === 0) {
     return "-"
   }
   return (files || []).map(doc => <div key={doc._id || doc.id}>

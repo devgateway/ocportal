@@ -122,7 +122,7 @@ class Tender extends React.Component {
         && <Item label="Download Tender" col={6}
                  data-intro="Download the original hardcopy of the tender document or link to a site
                  where the document can be downloaded.">
-          <FileDownloadLinks files={tender.formDocs || []} />
+          <FileDownloadLinks files={tender.formDocs || []} useDash />
         </Item>}
 
         {isFeatureVisible("publicView.tender.tenderLink")

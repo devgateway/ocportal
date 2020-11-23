@@ -68,7 +68,7 @@ class TenderQuotation extends React.Component {
       <div className="row">
         {isFeatureVisible("publicView.tenderQuotationEvaluation.formDocs")
         && <Item label="Tender Quotation and Evaluation Documents" col={12}>
-          <FileDownloadLinks files={tenderQuotationEvaluation.formDocs} />
+          <FileDownloadLinks files={tenderQuotationEvaluation.formDocs} useDash />
         </Item>
         }
       </div>

@@ -71,7 +71,7 @@ class Contract extends React.Component {
 
                   {isFeatureVisible("publicView.contract.contractDocs.formDocs")
                   && <Item label="Contract Documents" col={6}>
-                    <FileDownloadLinks files={contractDoc.formDocs} />
+                    <FileDownloadLinks files={contractDoc.formDocs} useDash />
                   </Item>}
                 </div>
               </div>)

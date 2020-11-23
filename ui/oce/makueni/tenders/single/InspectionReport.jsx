@@ -60,7 +60,7 @@ class InspectionReport extends AuthImplReport {
                 <div className="row">
                   {isFeatureVisible("publicView.inspectionReport.privateSectorRequests.upload")
                   && <Item label="Private Sector Request" col={3}>
-                    <FileDownloadLinks files={psr.upload} />
+                    <FileDownloadLinks files={psr.upload} useDash />
                   </Item>}
 
                   {isFeatureVisible("publicView.inspectionReport.privateSectorRequests.requestDate")

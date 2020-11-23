@@ -89,7 +89,7 @@ class Project extends React.Component {
 
               {isFeatureVisible("publicView.project.cabinetPapers")
               && <Item label="Cabinet Papers" col={6}>
-                <FileDownloadLinks files={data.projects.cabinetPapers.flatMap(cp => cp.formDocs)} />
+                <FileDownloadLinks files={data.projects.cabinetPapers.flatMap(cp => cp.formDocs)} useDash />
               </Item>}
 
               {isFeatureVisible("publicView.project.amountBudgeted")

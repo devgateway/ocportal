@@ -57,7 +57,7 @@ class ImplReport extends React.Component {
                   i.formDocs && isFeatureVisible(this.getFMPrefix() + ".formDocs") ?
                       <div className="row">
                         <Item label={this.getReportName() + " Uploads"} col={12}>
-                          <FileDownloadLinks files={i.formDocs} />
+                          <FileDownloadLinks files={i.formDocs} useDash />
                         </Item>
                       </div>
                       : null

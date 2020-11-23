@@ -141,7 +141,7 @@ class ProcurementPlan extends FeedbackPage {
                   <div className="row">
                     {isFeatureVisible("publicView.procurementPlan.formDocs")
                     && <Item label="Procurement Plan Documents" col={6}>
-                      <FileDownloadLinks files={data.formDocs || []} />
+                      <FileDownloadLinks files={data.formDocs || []} useDash />
                     </Item>}
                     {isFeatureVisible("publicView.procurementPlan.approvedDate")
                     && <Item label="Approved Date" value={formatDate(data.approvedDate)} col={6} />}

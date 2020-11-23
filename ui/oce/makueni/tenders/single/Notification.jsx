@@ -53,7 +53,7 @@ class Notification extends React.Component {
 
                 {isFeatureVisible("publicView.awardNotification.items.formDocs")
                 && <Item label="Letter of Notification of Award" col={12}>
-                  <FileDownloadLinks files={i.formDocs} />
+                  <FileDownloadLinks files={i.formDocs} useDash />
                 </Item>}
               </div>
 
