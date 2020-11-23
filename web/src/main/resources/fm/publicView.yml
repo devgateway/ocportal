@@ -1,0 +1,16 @@
+- name: publicView.filter.department
+  visible: yes
+- name: publicView.filter.fiscalYear
+  visible: yes
+- name: publicView.filter.titleSearch
+  visible: yes
+- name: publicView.filter.items
+  visible: yes
+- name: publicView.filter.subcounties
+  visible: yes
+- name: publicView.filter.wards
+  visible: yes
+- name: publicView.filter.amount
+  visible: yes
+- name: publicView.filter.date
+  visible: yes

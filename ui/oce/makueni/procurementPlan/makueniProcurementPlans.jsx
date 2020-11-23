@@ -2,7 +2,6 @@ import CRDPage from '../../corruption-risk/page';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
-import FiltersWrapper from '../filters/FiltersWrapper';
 import { Map } from 'immutable';
 import '../makueni.less';
 import ProcurementPlan from './single/procurementPlan';
@@ -10,6 +9,7 @@ import React from 'react';
 import Footer from '../../layout/footer';
 import fmConnect from "../../fm/fm";
 import FileDownloadLinks from "../tenders/single/FileDownloadLinks";
+import FiltersProcurementPlanWrapper from "../filters/FiltersProcurementPlanWrapper";
 
 const NAME = 'MakueniPP';
 
@@ -74,7 +74,8 @@ class MakueniProcurementPlans extends CRDPage {
   }
 
   filters() {
-    return <FiltersWrapper filters={ppFilters} resetPage={this.resetPage.bind(this)} translations={this.props.translations}/>;
+    return <FiltersProcurementPlanWrapper
+      filters={ppFilters} resetPage={this.resetPage.bind(this)} translations={this.props.translations}/>;
   }
 
   ppLink(navigate) {
