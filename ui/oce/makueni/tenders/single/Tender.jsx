@@ -61,9 +61,12 @@ class Tender extends React.Component {
 
         {isFeatureVisible("publicView.tender.issuedBy.emailAddress")
         && <Item label={"Procuring Entity Email"} col={4}>
-          <a className="download" href={"mailto:"+tender.issuedBy.emailAddress}>
-            {tender.issuedBy.emailAddress}
-          </a>
+          {tender.issuedBy.emailAddress
+            ? <a className="download" href={"mailto:"+tender.issuedBy.emailAddress}>
+              {tender.issuedBy.emailAddress}
+            </a>
+            : "-"
+          }
         </Item>}
 
         {isFeatureVisible("publicView.tender.tenderValue")
@@ -124,10 +127,11 @@ class Tender extends React.Component {
 
         {isFeatureVisible("publicView.tender.tenderLink")
         && <Item label={"Tender Link"} col={6}>
-          {
-            <a className="download" href={tender.tenderLink} target="_blank">
+          {tender.tenderLink
+            ? <a className="download" href={tender.tenderLink} target="_blank">
               {tender.tenderLink}
             </a>
+            : "-"
           }
         </Item>}
       </div>

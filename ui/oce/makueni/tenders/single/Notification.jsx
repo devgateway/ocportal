@@ -28,7 +28,7 @@ class Notification extends React.Component {
     const awardNotification = data[0];
 
     return (<div>
-      <div className="row padding-top-10">
+      <div className="padding-top-10">
         {
           awardNotification.items !== undefined && isFeatureVisible("publicView.awardNotification.items")
             ? awardNotification.items.map(i => <div key={i._id} className="box">

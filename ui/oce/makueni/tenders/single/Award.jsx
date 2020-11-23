@@ -29,17 +29,15 @@ class Award extends React.Component {
     const awardAcceptance = data[0];
 
     return (<div>
-      <div className="row padding-top-10">
+      <div className="padding-top-10">
         {
           awardAcceptance.items !== undefined && isFeatureVisible("publicView.awardAcceptance.items")
             ? awardAcceptance.items.map(i => <div key={i._id} className="box">
 
-              {isFeatureVisible("publicView.awardAcceptance.items.supplierResponse")
-              && <div className="row">
-                <Item label="Supplier Response" value={i.supplierResponse.label} col={3} />
-              </div>}
-
               <div className="row">
+                {isFeatureVisible("publicView.awardAcceptance.items.supplierResponse")
+                && <Item label="Supplier Response" value={i.supplierResponse.label} col={3} />}
+
                 {isFeatureVisible("publicView.awardAcceptance.items.acceptedAwardValue")
                 && <Item label="Accepted Award Value" value={currencyFormatter(i.acceptedAwardValue)} col={3} />}
 

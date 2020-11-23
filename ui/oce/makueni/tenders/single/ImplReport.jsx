@@ -33,7 +33,7 @@ class ImplReport extends React.Component {
     }
 
     return (<div>
-      <div className="row padding-top-10">
+      <div className="padding-top-10">
         {
           data.sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
               .map(i => <div key={i._id} className="box">

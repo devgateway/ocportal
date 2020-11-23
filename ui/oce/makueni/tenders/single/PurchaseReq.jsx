@@ -28,8 +28,7 @@ class PurchaseReq extends React.Component {
     return (<div>
       <div className="row">
         {isFeatureVisible("publicView.tenderProcess.purchaseRequestNumber")
-        && <Item label="Purchase Request Number" value={data.purchaseRequestNumber}
-                 col={3} />}
+        && <Item label="Purchase Request Number" value={data.purchaseRequestNumber} col={3} />}
       </div>
 
       {
@@ -38,20 +37,16 @@ class PurchaseReq extends React.Component {
           data.purchRequisitions.map(preq => <div key={preq._id} className="box">
             <div className="row">
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.requestedBy")
-              && <Item label="Requested By" value={preq.requestedBy.label}
-                       col={3} />}
+              && <Item label="Requested By" value={preq.requestedBy.label} col={3} />}
 
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.chargeAccount")
-              && <Item label="Charge Account" value={preq.chargeAccount.label}
-                       col={3} />}
+              && <Item label="Charge Account" value={preq.chargeAccount.label} col={3} />}
 
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.requestApprovalDate")
-              && <Item label="Request Approval Date" value={formatDate(preq.requestApprovalDate)}
-                       col={3} />}
+              && <Item label="Request Approval Date" value={formatDate(preq.requestApprovalDate)} col={3} />}
 
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.approvedDate")
-              && <Item label="Approved Date" value={formatDate(preq.approvedDate)}
-                       col={3} />}
+              && <Item label="Approved Date" value={formatDate(preq.approvedDate)} col={3} />}
             </div>
             {
               preq.purchaseItems !== undefined && isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems")

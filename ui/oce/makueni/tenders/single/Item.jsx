@@ -8,7 +8,7 @@ export const Item = ({col, label, labelComponent, value, children}) => (
   <div className={"col-md-" + col}>
     {labelComponent || <ItemLabel children={label} />}
     <ItemValue>
-      {value || children}
+      {children || value || "-"}
     </ItemValue>
   </div>
 )
