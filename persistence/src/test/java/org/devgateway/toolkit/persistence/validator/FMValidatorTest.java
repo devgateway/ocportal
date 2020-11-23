@@ -25,7 +25,7 @@ import javax.validation.Validator;
 /**
  * @author Octavian Ciubotaru
  */
-public class ConstraintInfoProviderTest extends AbstractPersistenceTest {
+public class FMValidatorTest extends AbstractPersistenceTest {
 
     @MockBean
     private DgFmService dgFmService;
@@ -119,5 +119,16 @@ public class ConstraintInfoProviderTest extends AbstractPersistenceTest {
 
         assertThat(tender.getFormDocs(), emptyIterable());
         assertThat(validator.validate(tender), hasSize(1));
+    }
+
+    @Test
+    public void testDanglingObjectValidation() {
+        given(dgFmService.isFeatureMandatory("tenderForm.tenderItems.description")).willReturn(true);
+
+        Validator validator = createValidator();
+
+        TenderItem tenderItem = new TenderItem();
+
+        assertThat(validator.validate(tenderItem), hasSize(1));
     }
 }

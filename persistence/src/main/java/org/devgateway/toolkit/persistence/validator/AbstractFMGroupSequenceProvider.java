@@ -46,7 +46,6 @@ public abstract class AbstractFMGroupSequenceProvider
         }
     }
 
-    // TODO add test for parent null? then return true!
     private boolean shouldMapTheGroupFor(Object object) {
         Object it = object;
         while (it instanceof AbstractChildAuditableEntity) {
