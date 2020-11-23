@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
         @Index(columnList = "purchaseRequestNumber")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderProcess extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     @org.springframework.data.annotation.Transient
