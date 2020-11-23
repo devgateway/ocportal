@@ -4,7 +4,7 @@ import AuthImplReport from './AuthImplReport';
 class AdministratorReport extends AuthImplReport {
 
 getReportName() {
-   return "Administrator Reports";
+   return this.t("administratorReport:reportName");
 }
 
 }
