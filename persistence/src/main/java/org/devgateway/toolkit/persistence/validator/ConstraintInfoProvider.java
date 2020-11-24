@@ -80,7 +80,7 @@ public class ConstraintInfoProvider {
                 } else if (JPAUtils.isOneToOne(attr)) {
                     collect(prefix + attr.getName() + ".", attr.getJavaType());
                 } else if (!(JPAUtils.isManyToOne(attr) || JPAUtils.isManyToMany(attr) || JPAUtils.isBasic(attr))) {
-                    logger.warn(String.format("Skipping %s.%s",
+                    throw new RuntimeException(String.format("Not implemented case for %s.%s",
                             attr.getDeclaringType().getJavaType().getSimpleName(), attr.getName()));
                 }
             }

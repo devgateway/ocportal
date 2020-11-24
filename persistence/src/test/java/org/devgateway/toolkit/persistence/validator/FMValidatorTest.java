@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 
 import javax.validation.Validator;
+import java.util.HashSet;
 
 
 /**
@@ -96,7 +97,7 @@ public class FMValidatorTest extends AbstractPersistenceTest {
     }
 
     @Test
-    public void testStringFieldShouldBeNotEmpty() {
+    public void testRequireEmptyString() {
         given(dgFmService.isFeatureMandatory("tenderForm.tenderNumber")).willReturn(true);
 
         Validator validator = createValidator();
@@ -109,15 +110,28 @@ public class FMValidatorTest extends AbstractPersistenceTest {
     }
 
     @Test
-    public void testCollectionFieldShouldBeNotEmpty() {
+    public void testRequireNullCollection() {
         given(dgFmService.isFeatureMandatory("tenderForm.formDocs")).willReturn(true);
 
         Validator validator = createValidator();
 
         Tender tender = new Tender();
+        tender.setFormDocs(null);
         tender.setStatus(SUBMITTED);
 
-        assertThat(tender.getFormDocs(), emptyIterable());
+        assertThat(validator.validate(tender), hasSize(1));
+    }
+
+    @Test
+    public void testRequireEmptyCollection() {
+        given(dgFmService.isFeatureMandatory("tenderForm.formDocs")).willReturn(true);
+
+        Validator validator = createValidator();
+
+        Tender tender = new Tender();
+        tender.setFormDocs(new HashSet<>());
+        tender.setStatus(SUBMITTED);
+
         assertThat(validator.validate(tender), hasSize(1));
     }
 
@@ -130,5 +144,13 @@ public class FMValidatorTest extends AbstractPersistenceTest {
         TenderItem tenderItem = new TenderItem();
 
         assertThat(validator.validate(tenderItem), hasSize(1));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testConflictingConstraintsForSharedObjects() {
+        given(dgFmService.isFeatureMandatory("tenderForm.statusComments.comment")).willReturn(true);
+        given(dgFmService.isFeatureMandatory("procurementPlanForm.statusComments.comment")).willReturn(false);
+
+        createValidator();
     }
 }
