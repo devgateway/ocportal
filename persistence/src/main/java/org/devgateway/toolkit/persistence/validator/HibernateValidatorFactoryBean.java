@@ -1,8 +1,10 @@
 package org.devgateway.toolkit.persistence.validator;
 
+import org.devgateway.toolkit.persistence.fm.FmReconfiguredEvent;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -23,6 +25,11 @@ public class HibernateValidatorFactoryBean extends LocalValidatorFactoryBean {
 
     public HibernateValidatorFactoryBean() {
         setProviderClass(HibernateValidator.class);
+    }
+
+    @EventListener
+    public void handleContextStart(FmReconfiguredEvent e) {
+        afterPropertiesSet();
     }
 
     @Override

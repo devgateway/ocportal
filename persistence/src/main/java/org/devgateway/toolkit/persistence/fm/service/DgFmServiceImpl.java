@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.IOUtils;
 import org.devgateway.toolkit.persistence.fm.FmConstants;
+import org.devgateway.toolkit.persistence.fm.FmReconfiguredEvent;
 import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
 import org.devgateway.toolkit.persistence.fm.entity.FeatureConfig;
 import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -47,6 +49,9 @@ public class DgFmServiceImpl implements DgFmService {
 
     @Autowired
     private DgFeatureMarshallerService dgFeatureMarshallerService;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private Map<String, UnchainedDgFeature> unchainedFeatures;
 
@@ -352,6 +357,8 @@ public class DgFmServiceImpl implements DgFmService {
         featureConfigs.add(featureConfig);
 
         init();
+
+        applicationEventPublisher.publishEvent(new FmReconfiguredEvent(this));
     }
 
     private void chainReferences(Map<String, DgFeature> features,
