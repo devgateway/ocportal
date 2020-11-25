@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.validator;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.fm.ConstrainedField;
 import org.devgateway.toolkit.persistence.fm.ConstraintInfo;
+import org.devgateway.toolkit.persistence.fm.Constraints;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.jpa.JPAUtils;
 import org.devgateway.toolkit.persistence.util.StringUtils;
@@ -17,7 +18,9 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Collects all form attributes that are required.
@@ -35,15 +38,17 @@ public class ConstraintInfoProvider {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    public Map<ConstrainedField, ConstraintInfo> getConstraints() {
+    public Constraints getConstraints() {
         Collector collector = new Collector();
 
-        entityManagerFactory.getMetamodel().getEntities().stream()
+        List<Class<?>> roots = entityManagerFactory.getMetamodel().getEntities().stream()
                 .map(Type::getJavaType)
                 .filter(e -> e.isAnnotationPresent(Form.class))
-                .forEach(collector::collect);
+                .collect(Collectors.toList());
 
-        return collector.getFields();
+        roots.forEach(collector::collect);
+
+        return new Constraints(roots, collector.getFields());
     }
 
     /**

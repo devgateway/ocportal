@@ -11,6 +11,7 @@ import javassist.NotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.fm.ConstrainedField;
 import org.devgateway.toolkit.persistence.fm.ConstraintInfo;
+import org.devgateway.toolkit.persistence.fm.Constraints;
 import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 import org.hibernate.validator.HibernateValidatorConfiguration;
 import org.hibernate.validator.cfg.ConstraintDef;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.ElementType;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,13 +69,21 @@ public class FMConstraintsConfigurer {
     public void configure(HibernateValidatorConfiguration configuration) {
         ConstraintMapping constraintMapping = configuration.createConstraintMapping();
 
-        Map<ConstrainedField, ConstraintInfo> constraints = constraintInfoProvider.getConstraints();
+        Constraints constraints = constraintInfoProvider.getConstraints();
 
-        Map<Class<?>, Set<ConstrainedField>> fieldsByDeclaringType = constraints.keySet().stream()
+        Map<Class<?>, Set<ConstrainedField>> fieldsByDeclaringType = constraints.getFieldConstraints().keySet().stream()
                 .collect(groupingBy(ConstrainedField::getDeclaringJavaType, toSet()));
 
-        for (Map.Entry<Class<?>, Set<ConstrainedField>> entry : fieldsByDeclaringType.entrySet()) {
-            addConstraintsForClass(constraintMapping, entry.getKey(), entry.getValue(), constraints);
+        Set<Class<?>> constrainedClasses = new HashSet<>();
+        constrainedClasses.addAll(fieldsByDeclaringType.keySet());
+        constrainedClasses.addAll(constraints.getRoots());
+
+        for (Class<?> constrainedClass : constrainedClasses) {
+            addConstraintsForClass(
+                    constraintMapping,
+                    constrainedClass,
+                    fieldsByDeclaringType.computeIfAbsent(constrainedClass, c -> new HashSet<>()),
+                    constraints.getFieldConstraints());
         }
 
         configuration.addMapping(constraintMapping);
