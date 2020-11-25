@@ -1,8 +1,10 @@
 package org.devgateway.toolkit.persistence.fm.service;
 
 import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.FeatureConfig;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author mpostelnicu
@@ -35,4 +37,8 @@ public interface DgFmService {
      * @return
      */
     String getParentCombinedFmName(String parentFmName, String featureName);
+
+    Set<FeatureConfig> getFeatureConfigs();
+
+    void addOrReplaceFeatureConfig(FeatureConfig featureConfig);
 }

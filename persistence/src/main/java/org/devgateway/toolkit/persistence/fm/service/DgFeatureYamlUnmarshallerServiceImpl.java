@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.fm.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.devgateway.toolkit.persistence.fm.entity.FeatureConfig;
 import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +53,11 @@ public class DgFeatureYamlUnmarshallerServiceImpl implements DgFeatureYamlUnmars
     }
 
     @Override
-    public List<UnchainedDgFeature> unmarshall(String resourceLocation) {
+    public List<UnchainedDgFeature> unmarshall(FeatureConfig featureConfig) {
+        String resourceLocation = featureConfig.getResourceLocation();
         logger.debug(String.format("FM: Unmarshalling resource location %s", resourceLocation));
         try {
-            List<UnchainedDgFeature> features = yamlObjectMapper.readValue(getClass().getClassLoader()
-                            .getResourceAsStream(resourceLocation),
+            List<UnchainedDgFeature> features = yamlObjectMapper.readValue(featureConfig.getContent(),
                     yamlObjectMapper.getTypeFactory().constructCollectionType(List.class, UnchainedDgFeature.class));
             List<UnchainedDgFeature> ret = features.stream().peek(f -> {
                 f.setResourceLocation(resourceLocation);

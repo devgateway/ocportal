@@ -16,6 +16,7 @@ public final class Constants {
     public static class ContentType {
         public static final String XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         public static final String WPS_XLSX = "application/wps-office.xlsx";
+        public static final String YAML_UTF8 = "text/x-yaml; charset=utf-8";
         public static final Set<String> ALL_XLSX = ImmutableSet.of(XLSX, WPS_XLSX);
     }
 }

@@ -2,8 +2,10 @@ package org.devgateway.toolkit.persistence.fm.service;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.IOUtils;
 import org.devgateway.toolkit.persistence.fm.FmConstants;
 import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.FeatureConfig;
 import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +16,18 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -59,6 +65,10 @@ public class DgFmServiceImpl implements DgFmService {
 
     @Value("${fm.defaultsForMissingFeatures:#{true}}")
     private Boolean defaultsForMissingFeatures;
+
+    private final ConcurrentSkipListSet<FeatureConfig> featureConfigs = new ConcurrentSkipListSet<>();
+
+    private final Set<FeatureConfig> unmodifiableFeatureConfigs = Collections.unmodifiableSet(featureConfigs);
 
     public DgFeature createFeatureWithDefaults(String fmName) {
         DgFeature dgFeature = new DgFeature();
@@ -305,7 +315,7 @@ public class DgFmServiceImpl implements DgFmService {
     public void hydrateUnchainedFeatures() {
         logger.debug("FM: Hydrating unchained features");
         Map<String, UnchainedDgFeature> mutableUnchainedFeatures = new ConcurrentHashMap<>();
-        Stream<List<UnchainedDgFeature>> listStream = featureUnmarshallerService.getResources().stream()
+        Stream<List<UnchainedDgFeature>> listStream = getFeatureConfigs().stream()
                 .map(featureUnmarshallerService::unmarshall);
         listStream.flatMap(Collection::stream).forEach(f -> {
             UnchainedDgFeature existingFeature = mutableUnchainedFeatures.get(f.getName());
@@ -318,6 +328,30 @@ public class DgFmServiceImpl implements DgFmService {
         });
         unchainedFeatures = ImmutableMap.copyOf(mutableUnchainedFeatures);
         logger.debug("FM: Hydrated unchained features");
+    }
+
+    @Override
+    public Set<FeatureConfig> getFeatureConfigs() {
+        if (featureConfigs.isEmpty()) {
+            for (String resourceLocation : featureUnmarshallerService.getResources()) {
+                try {
+                    String content = IOUtils.resourceToString(resourceLocation, StandardCharsets.UTF_8,
+                            getClass().getClassLoader());
+                    featureConfigs.add(new FeatureConfig(resourceLocation, content));
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to read feature file: " + resourceLocation, e);
+                }
+            }
+        }
+        return unmodifiableFeatureConfigs;
+    }
+
+    @Override
+    public void addOrReplaceFeatureConfig(FeatureConfig featureConfig) {
+        featureConfigs.remove(featureConfig);
+        featureConfigs.add(featureConfig);
+
+        init();
     }
 
     private void chainReferences(Map<String, DgFeature> features,
