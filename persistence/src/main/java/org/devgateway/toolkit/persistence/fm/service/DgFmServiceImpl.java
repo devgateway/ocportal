@@ -345,10 +345,26 @@ public class DgFmServiceImpl implements DgFmService {
     @Override
     public void addOrReplaceFeatureConfig(FeatureConfig featureConfig) {
         if (fmProperties.isAllowReconfiguration()) {
-            featureConfigs.remove(featureConfig);
+            FeatureConfig oldConfig = featureConfigs.stream()
+                    .filter(c -> c.compareTo(featureConfig) == 0)
+                    .findFirst()
+                    .orElse(null);
+
+            if (oldConfig != null) {
+                featureConfigs.remove(oldConfig);
+            }
             featureConfigs.add(featureConfig);
 
-            init();
+            try {
+                init();
+            } catch (RuntimeException e) {
+                featureConfigs.remove(featureConfig);
+                if (oldConfig != null) {
+                    featureConfigs.add(oldConfig);
+                }
+
+                throw e;
+            }
 
             applicationEventPublisher.publishEvent(new FmReconfiguredEvent(this));
         }
