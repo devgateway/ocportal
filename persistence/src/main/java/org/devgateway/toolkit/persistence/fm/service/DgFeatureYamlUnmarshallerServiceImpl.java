@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -30,14 +29,6 @@ public class DgFeatureYamlUnmarshallerServiceImpl implements DgFeatureYamlUnmars
     @Autowired
     @Qualifier("yamlObjectMapper")
     private ObjectMapper yamlObjectMapper;
-
-    @Value("#{'${fm.resources}'.split(',')}")
-    private List<String> resources;
-
-    @Override
-    public List<String> getResources() {
-        return resources;
-    }
 
     public String createHash(UnchainedDgFeature feature) {
         try {

@@ -28,7 +28,7 @@ public class HibernateValidatorFactoryBean extends LocalValidatorFactoryBean {
     }
 
     @EventListener
-    public void handleContextStart(FmReconfiguredEvent e) {
+    public void handleFmReconfiguration(FmReconfiguredEvent e) {
         afterPropertiesSet();
     }
 

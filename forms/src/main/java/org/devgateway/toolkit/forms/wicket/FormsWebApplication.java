@@ -56,6 +56,7 @@ import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.forms.wicket.page.lists.fm.ListFeatureFilePage;
 import org.devgateway.toolkit.forms.wicket.page.user.LoginPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
+import org.devgateway.toolkit.persistence.fm.DgFmProperties;
 import org.devgateway.toolkit.persistence.spring.SpringLiquibaseRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +103,9 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
     @Autowired
     private SummernoteJpaStorageService summernoteJpaStorageService;
+
+    @Autowired
+    private DgFmProperties fmProperties;
 
     private static final Logger logger = LoggerFactory.getLogger(FormsWebApplication.class);
 
@@ -245,7 +249,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         //this will scan packages for pages with @MountPath annotations and automatically create URLs for them
         new AnnotatedMountScanner().scanPackage(BASE_PACKAGE_FOR_PAGES).mount(this);
 
-        if (usesDevelopmentConfig()) {
+        if (fmProperties.isAllowReconfiguration()) {
             mountPage("ListFeatureFilePage", ListFeatureFilePage.class);
         }
 

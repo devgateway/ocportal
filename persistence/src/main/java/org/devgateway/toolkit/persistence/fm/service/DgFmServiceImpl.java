@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.fm.service;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.IOUtils;
+import org.devgateway.toolkit.persistence.fm.DgFmProperties;
 import org.devgateway.toolkit.persistence.fm.FmConstants;
 import org.devgateway.toolkit.persistence.fm.FmReconfiguredEvent;
 import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
@@ -11,7 +12,6 @@ import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -59,17 +59,8 @@ public class DgFmServiceImpl implements DgFmService {
 
     private Set<String> featuresInUse;
 
-    @Value("${fm.emitProjected:#{false}}")
-    private Boolean emitProjectedFm;
-
-    @Value("${fm.active:#{false}}")
-    private Boolean fmActive;
-
-    @Value("${fm.printFeaturesInUseOnExit:#{false}}")
-    private Boolean printFeaturesInUseOnExit;
-
-    @Value("${fm.defaultsForMissingFeatures:#{true}}")
-    private Boolean defaultsForMissingFeatures;
+    @Autowired
+    private DgFmProperties fmProperties;
 
     private final ConcurrentSkipListSet<FeatureConfig> featureConfigs = new ConcurrentSkipListSet<>();
 
@@ -86,7 +77,7 @@ public class DgFmServiceImpl implements DgFmService {
 
     @PostConstruct
     public void init() {
-        if (fmActive) {
+        if (fmProperties.isActive()) {
             featuresInUse = ConcurrentHashMap.newKeySet();
             hydrateUnchainedFeatures();
             Map<String, DgFeature> mutableChainedFeatures = new ConcurrentHashMap<>();
@@ -101,7 +92,7 @@ public class DgFmServiceImpl implements DgFmService {
     }
 
     private void emitProjectedFm() {
-        if (emitProjectedFm) {
+        if (fmProperties.isEmitProjected()) {
             dgFeatureMarshallerService.marshall("_projectedFm.yml", features.values()
                     .stream().sorted(Comparator.comparing(DgFeature::getName)).collect(Collectors.toList()));
         }
@@ -109,11 +100,11 @@ public class DgFmServiceImpl implements DgFmService {
 
     @PreDestroy
     public void decommission() {
-        if (!fmActive) {
+        if (!fmProperties.isActive()) {
             return;
         }
         emitProjectedFm();
-        if (printFeaturesInUseOnExit) {
+        if (fmProperties.isPrintFeaturesInUseOnExit()) {
             logger.info(String.format("FM: Features that have been used during this session: %s ",
                     featuresInUse.toString()));
         }
@@ -127,7 +118,7 @@ public class DgFmServiceImpl implements DgFmService {
 
     @Override
     public DgFeature getFeature(String featureName) {
-        if (!fmActive) {
+        if (!fmProperties.isActive()) {
             return null;
         }
         if (featureName == null) {
@@ -136,7 +127,7 @@ public class DgFmServiceImpl implements DgFmService {
         logger.debug(String.format("FM: Querying feature %s", featureName));
         DgFeature dgFeature = features.get(featureName);
         if (dgFeature == null) {
-            if (defaultsForMissingFeatures) {
+            if (fmProperties.isDefaultsForMissingFeatures()) {
                 dgFeature = createFeatureWithDefaults(featureName);
                 features.put(featureName, dgFeature);
             } else {
@@ -149,7 +140,7 @@ public class DgFmServiceImpl implements DgFmService {
 
     @Override
     public Boolean hasFeature(String featureName) {
-        if (!fmActive) {
+        if (!fmProperties.isActive()) {
             return null;
         }
         logger.debug(String.format("FM: Checking existence of feature %s", featureName));
@@ -170,12 +161,12 @@ public class DgFmServiceImpl implements DgFmService {
 
     @Override
     public Boolean isFmActive() {
-        return fmActive;
+        return fmProperties.isActive();
     }
 
     @Override
     public int featuresCount() {
-        if (!fmActive) {
+        if (!fmProperties.isActive()) {
             return 0;
         }
         return features.size();
@@ -338,7 +329,7 @@ public class DgFmServiceImpl implements DgFmService {
     @Override
     public Set<FeatureConfig> getFeatureConfigs() {
         if (featureConfigs.isEmpty()) {
-            for (String resourceLocation : featureUnmarshallerService.getResources()) {
+            for (String resourceLocation : fmProperties.getResources()) {
                 try {
                     String content = IOUtils.resourceToString(resourceLocation, StandardCharsets.UTF_8,
                             getClass().getClassLoader());
@@ -353,12 +344,14 @@ public class DgFmServiceImpl implements DgFmService {
 
     @Override
     public void addOrReplaceFeatureConfig(FeatureConfig featureConfig) {
-        featureConfigs.remove(featureConfig);
-        featureConfigs.add(featureConfig);
+        if (fmProperties.isAllowReconfiguration()) {
+            featureConfigs.remove(featureConfig);
+            featureConfigs.add(featureConfig);
 
-        init();
+            init();
 
-        applicationEventPublisher.publishEvent(new FmReconfiguredEvent(this));
+            applicationEventPublisher.publishEvent(new FmReconfiguredEvent(this));
+        }
     }
 
     private void chainReferences(Map<String, DgFeature> features,

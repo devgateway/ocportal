@@ -13,8 +13,6 @@ import java.util.List;
 public interface DgFeatureUnmarshallerService {
     List<UnchainedDgFeature> unmarshall(FeatureConfig featureConfig);
 
-    List<String> getResources();
-
     @Validated
     UnchainedDgFeature validateUnchainedDgFeature(@Valid UnchainedDgFeature unchainedDgFeature);
 }
