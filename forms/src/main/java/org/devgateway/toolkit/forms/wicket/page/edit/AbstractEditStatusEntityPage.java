@@ -286,7 +286,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 T object = editForm.getModelObject();
                 show(object instanceof Lockable
                         && ((Lockable) object).getOwner() == null
-                        && DBConstants.Status.DRAFT.equals(object.getStatus()));
+                        && DBConstants.Status.DRAFT.equals(object.getStatus())
+                        && !isViewMode());
             }
         };
         modal.addCloseButton(new ResourceModel("checkoutModal.view"));
