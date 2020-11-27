@@ -503,6 +503,14 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     private TextAreaFieldBootstrapFormComponent<String> getNewStatusCommentField() {
         final TextAreaFieldBootstrapFormComponent<String> comment =
                 new OptionallyRequiredTextAreaFieldComponent<String>("newStatusComment") {
+
+                    @Override
+                    protected void onConfigure() {
+                        super.onConfigure();
+                        T entity = editForm.getModelObject();
+                        setVisibilityAllowed(!(entity instanceof Lockable) || ((Lockable) entity).getOwner() != null);
+                    }
+
                     @Override
                     public boolean isRequired() {
                         return editForm.getRootForm().findSubmittingButton() == saveTerminateButton;
