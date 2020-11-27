@@ -165,7 +165,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("purchasereq-header-" + item.getModelObject().getId());
 
-        headerFragment.add(new Label("title", "Tender Process " + (item.getIndex() + 1)));
+        headerFragment.add(new Label("title", getTenderProcessTitle((item.getIndex() + 1), item.getModelObject())));
         headerFragment.add(createValidationLabel(item));
 
         WebMarkupContainer terminatedRequisition = new WebMarkupContainer("terminatedRequisition");
@@ -175,6 +175,13 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         headerFragment.add(terminatedRequisition);
 
         header.add(headerFragment);
+    }
+
+    protected String getTenderProcessTitle(int index, TenderProcess tp) {
+        if (tp.getSingleTender() != null && !StringUtils.isEmpty(tp.getSingleTender().getTitle())) {
+            return StringUtils.abbreviate(tp.getSingleTender().getTitle(), 100);
+        }
+        return "Tender Process " + index;
     }
 
     @Override
