@@ -2,12 +2,15 @@ package org.devgateway.toolkit.persistence.fm.service;
 
 import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author mpostelnicu
  */
 public interface DgFmService {
+
+    Collection<DgFeature> getFeatures();
 
     List<DgFeature> getFeaturesByPrefix(String featureName);
 

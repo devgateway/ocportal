@@ -1,0 +1,42 @@
+
+.featuresTable .tooltip-inner {
+    max-width: 100%;
+}
+
+.featuresTable {
+    table-layout: fixed;
+}
+
+.featuresTable td>div, .featuresTable th>a>span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.featuresTable .name {
+    width: 40%;
+}
+.featuresTable .visible {
+    width: 63px;
+}
+.featuresTable .enabled {
+    width: 71px;
+}
+.featuresTable .mandatory {
+    width: 88px;
+}
+.featuresTable .visibleDeps {
+    width: 15%;
+}
+.featuresTable .enabledDeps {
+    width: 15%;
+}
+.featuresTable .mandatoryDeps {
+    width: 15%;
+}
+.featuresTable .mixins {
+    width: 15%;
+}
+.featuresTable .actions {
+    width: 90px;
+}

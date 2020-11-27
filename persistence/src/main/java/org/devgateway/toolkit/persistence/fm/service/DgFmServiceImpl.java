@@ -105,6 +105,11 @@ public class DgFmServiceImpl implements DgFmService {
     }
 
     @Override
+    public Collection<DgFeature> getFeatures() {
+        return features.values();
+    }
+
+    @Override
     public List<DgFeature> getFeaturesByPrefix(String prefixName) {
         return features.keySet().stream().filter(k -> k.startsWith(prefixName))
                 .map(this::getFeature).collect(Collectors.toList());
@@ -201,6 +206,8 @@ public class DgFmServiceImpl implements DgFmService {
         feature.getChainedVisibleDeps().forEach(m -> projectProperties(projectedFeatures, m));
         feature.getChainedMandatoryDeps().forEach(m -> projectProperties(projectedFeatures, m));
         feature.getChainedSoftDeps().forEach(m -> projectProperties(projectedFeatures, m));
+
+        feature.freeze();
 
         logger.debug(String.format("FM: Projecting properties for feature %s", feature));
         projectChainedMixins(feature);
