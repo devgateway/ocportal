@@ -58,6 +58,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,6 +140,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal deleteFailedModal;
 
+    protected IModel<String> saveFailedContentModel;
     protected TextContentModal saveFailedModal;
 
     @SpringBean
@@ -220,10 +222,11 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         return modal;
     }
 
-    protected TextContentModal createSaveFailedModal() {
-        final TextContentModal modal = new TextContentModal("saveFailedModal",
-                new ResourceModel("optimistic_lock_error_message"));
-        modal.header(new ResourceModel("error"));
+    protected void addSaveFailedModal(Form form) {
+        saveFailedContentModel = Model.of("");
+
+        saveFailedModal = new TextContentModal("saveFailedModal", saveFailedContentModel);
+        saveFailedModal.header(new ResourceModel("error"));
         final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -232,16 +235,22 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         };
         okButton.setDefaultFormProcessing(false);
         okButton.setLabel(Model.of("OK"));
-        modal.addButton(okButton);
+        saveFailedModal.addButton(okButton);
 
-        modal.add(new AjaxEventBehavior("hidden.bs.modal") {
+        saveFailedModal.add(new AjaxEventBehavior("hidden.bs.modal") {
             @Override
             protected void onEvent(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
             }
         });
 
-        return modal;
+        form.add(saveFailedModal);
+    }
+
+    protected void showSaveFailedModal(AjaxRequestTarget target, String contentKey) {
+        saveFailedContentModel.setObject(getString(contentKey));
+        saveFailedModal.show(true);
+        target.add(saveFailedModal);
     }
 
     /**
@@ -328,8 +337,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             deleteFailedModal = createDeleteFailedModal();
             add(deleteFailedModal);
 
-            saveFailedModal = createSaveFailedModal();
-            add(saveFailedModal);
+            addSaveFailedModal(this);
 
             // don't display the delete button if we just create a new entity
             if (entityId == null) {
@@ -438,7 +446,11 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 redirect = true;
                 redirectToSelf = false;
             } catch (ObjectOptimisticLockingFailureException e) {
-                saveFailedModal.show(target);
+
+                boolean lockable = editForm.getModelObject() instanceof Lockable;
+
+                showSaveFailedModal(target,
+                        lockable ? "pessmistic_lock_was_lost_error_message" : "optimistic_lock_error_message");
             }
         }
 

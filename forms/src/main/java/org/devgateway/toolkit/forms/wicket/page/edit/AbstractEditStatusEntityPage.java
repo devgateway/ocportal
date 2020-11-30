@@ -321,7 +321,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
             target.add(editForm);
         } catch (ObjectOptimisticLockingFailureException e) {
-            saveFailedModal.show(target);
+            showSaveFailedModal(target, "optimistic_lock_error_message");
         }
     }
 
