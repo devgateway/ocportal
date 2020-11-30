@@ -1264,7 +1264,8 @@
         </update>
     </changeSet>
 
-    <changeSet id="#325-optlock" author="mpostelnicu">
+    <changeSet id="#325-optlock" author="mpostelnicu" runAlways="true">
+        <validCheckSum>8:45de24e13021a27bb14c55c7a4b66591</validCheckSum>
         <preConditions onFail="CONTINUE">
             <columnExists tableName="ADMIN_SETTINGS" columnName="optlock"/>
             <columnExists tableName="CATEGORY" columnName="optlock"/>
@@ -1279,34 +1280,44 @@
 
         <update tableName="ADMIN_SETTINGS">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="CATEGORY">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="FILE_CONTENT">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="FILE_METADATA">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="PERSON">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="ROLE">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="STATUS_CHANGED_COMMENT">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="TEST_FORM">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="TEST_FORM_CHILD">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
     </changeSet>
 
-    <changeSet id="OCNYAN-32" author="Octavian Ciubotaru">
+    <changeSet id="OCNYAN-32" author="Octavian Ciubotaru" runAlways="true">
+        <validCheckSum>8:9a55c64ac8f916155d5865d7651985d5</validCheckSum>
         <preConditions onFail="CONTINUE">
             <columnExists tableName="release_flag_history" columnName="optlock"/>
             <columnExists tableName="alerts_statistics" columnName="optlock"/>
@@ -1351,120 +1362,159 @@
 
         <update tableName="release_flag_history">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="alerts_statistics">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="color_indicator_pair">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="feedback_message">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="fiscal_year">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="fiscal_year_budget">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="procurement_plan">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="cabinet_paper">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="plan_item">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="project">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="release_flag_history">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="smsmessage">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="status_changed_comment">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="tender_process">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="alert">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="award_acceptance">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="award_acceptance_item">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="award_notification">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="award_notification_item">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="contract">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="administrator_report">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="contract_document">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="inspection_report">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="mereport">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="pmcreport">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="payment_voucher">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="pmcmember">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="pmcnotes">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="private_sector_request">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="professional_opinion">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="professional_opinion_item">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="purch_requisition">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="purchase_item">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="tender_quotation_evaluation">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="bid">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="user_dashboard">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="tender">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="tender_item">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
         <update tableName="alerts_subscription">
             <column name="optlock" valueNumeric="0"/>
+            <where>optlock is null</where>
         </update>
     </changeSet>
 
