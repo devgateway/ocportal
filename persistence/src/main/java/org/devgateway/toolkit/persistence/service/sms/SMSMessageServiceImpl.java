@@ -60,7 +60,7 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.SMSCommands.REP
 @Transactional
 public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implements SMSMessageService {
 
-    @Value("${infobip.key}")
+    @Value("${infobip.key:#{null}}")
     private String infobipKey;
 
     private static final Logger logger = LoggerFactory.getLogger(SMSMessageServiceImpl.class);

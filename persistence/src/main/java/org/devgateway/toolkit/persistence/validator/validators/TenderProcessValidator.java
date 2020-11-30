@@ -42,15 +42,20 @@ public class TenderProcessValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return TenderProcess.class.equals(clazz);
+        return TenderProcess.class.isAssignableFrom(clazz);
+    }
+
+    public static <E extends AbstractMakueniEntity> boolean existsNonDraft(E e) {
+        return e != null && !DBConstants.Status.TERMINATED.equals(e.getStatus())
+                && !DBConstants.Status.DRAFT.equals(e.getStatus());
     }
 
     public static <E extends AbstractMakueniEntity> Stream<E> nonDraft(Collection<E> col) {
-        return col.stream().filter(e -> !DBConstants.Status.DRAFT.equals(e.getStatus()));
+        return col.stream().filter(TenderProcessValidator::existsNonDraft);
     }
 
     public static <E extends AbstractMakueniEntity> Boolean existsDraft(Collection<E> col) {
-        return col.stream().anyMatch(e -> DBConstants.Status.DRAFT.equals(e.getStatus()));
+        return col.stream().anyMatch(TenderProcessValidator::existsDraft);
     }
 
     public static <E extends AbstractMakueniEntity> Boolean isStatusNull(Collection<E> col) {
@@ -161,62 +166,99 @@ public class TenderProcessValidator implements Validator {
                 .concat(" and ").concat(tmp.get(size));
     }
 
+    public List<AbstractMakueniEntity> createAllFormsList(TenderProcess tp) {
+        List<AbstractMakueniEntity> allForms = new ArrayList<>();
+        allForms.add(tp.getProcurementPlan());
+        allForms.add(tp.getProject());
+        allForms.add(tp);
+        allForms.add(tp.getSingleTender());
+        allForms.add(tp.getSingleTenderQuotationEvaluation());
+        allForms.add(tp.getSingleProfessionalOpinion());
+        allForms.add(tp.getSingleAwardNotification());
+        allForms.add(tp.getSingleAwardAcceptance());
+        allForms.add(tp.getSingleContract());
+        allForms.addAll(tp.getAdministratorReports());
+        allForms.addAll(tp.getInspectionReports());
+        allForms.addAll(tp.getPmcReports());
+        allForms.addAll(tp.getMeReports());
+        allForms.addAll(tp.getPaymentVouchers());
+        return allForms;
+    }
+
+    public boolean existsLowerFormsInDraft(List<AbstractMakueniEntity> allForms, AbstractMakueniEntity f) {
+        int i = allForms.indexOf(f);
+        for (int x = 0; x < allForms.size(); x++) {
+            if (x <= i) {
+                continue;
+            }
+            if (existsNonDraft(allForms.get(x))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean existsDraftWithLowerFormsDraft(List<AbstractMakueniEntity> allForms, AbstractMakueniEntity f) {
+        return existsDraft(f) && existsLowerFormsInDraft(allForms, f);
+    }
+
     public void reportDraft(TenderProcess tp, Errors errors) {
+        List<AbstractMakueniEntity> allForms = createAllFormsList(tp);
         ArrayList<String> draftForms = new ArrayList<>();
-        if (existsDraft(tp.getProcurementPlan())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getProcurementPlan())) {
             draftForms.add("Procurement Plan");
         }
-        if (existsDraft(tp.getProject())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getProject())) {
             draftForms.add("Project");
         }
 
-        if (existsDraft(tp)) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp)) {
             draftForms.add("Purchase Requisition");
         }
 
-        if (existsDraft(tp.getTender())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleTender())) {
             draftForms.add("Tender");
         }
 
-        if (existsDraft(tp.getTenderQuotationEvaluation())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleTenderQuotationEvaluation())) {
             draftForms.add("Quotation and Evaluation");
         }
 
-        if (existsDraft(tp.getProfessionalOpinion())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleProfessionalOpinion())) {
             draftForms.add("Professional Opinion");
         }
 
-        if (existsDraft(tp.getAwardNotification())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleAwardNotification())) {
             draftForms.add("Award Notification");
         }
 
-        if (existsDraft(tp.getAwardAcceptance())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleAwardAcceptance())) {
             draftForms.add("Award Acceptance");
         }
 
-        if (existsDraft(tp.getContract())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleContract())) {
             draftForms.add("Contract");
         }
 
-        if (existsDraft(tp.getAdministratorReports())) {
-            draftForms.add("Administrator Reports");
+        if (existsDraft(tp.getAdministratorReports()) && existsNonDraft(tp.getPaymentVouchers())) {
+            draftForms.add("Administrator Report");
         }
 
-        if (existsDraft(tp.getInspectionReports())) {
-            draftForms.add("Inspection Reports");
+        if (existsDraft(tp.getInspectionReports()) && existsNonDraft(tp.getPaymentVouchers())) {
+            draftForms.add("Inspection Report");
         }
 
-        if (existsDraft(tp.getPmcReports())) {
-            draftForms.add("PMC Reports");
+        if (existsDraft(tp.getPmcReports()) && existsNonDraft(tp.getPaymentVouchers())) {
+            draftForms.add("PMC Report");
         }
 
-        if (existsDraft(tp.getMeReports())) {
-            draftForms.add("M&E Reports");
-        }
+//        if (existsDraft(tp.getMeReports())) {
+//            draftForms.add("M&E Reports");
+//        }
 
-        if (existsDraft(tp.getPaymentVouchers())) {
-            draftForms.add("Payment Vouchers");
-        }
+//        if (existsDraft(tp.getPaymentVouchers())) {
+//            draftForms.add("Payment Vouchers");
+//        }
 
         if (!draftForms.isEmpty()) {
             errors.reject("The following forms are in draft: " + String.join(", ", draftForms));
