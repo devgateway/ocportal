@@ -285,6 +285,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
                 T object = editForm.getModelObject();
                 show(object instanceof Lockable
+                        && !object.isNew()
                         && ((Lockable) object).getOwner() == null
                         && DBConstants.Status.DRAFT.equals(object.getStatus())
                         && !isViewMode());
@@ -327,9 +328,18 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected void onCancel(AjaxRequestTarget target) {
-        if (jpaService instanceof LockableService) {
+        if (jpaService instanceof LockableService && !editForm.getModelObject().isNew()) {
             ((LockableService<?>) jpaService).unlock(editForm.getModelObject().getId());
         }
+    }
+
+    @Override
+    protected T newInstance() {
+        T newEntity = super.newInstance();
+        if (newEntity instanceof Lockable) {
+            ((Lockable) newEntity).setOwner(SecurityUtil.getCurrentAuthenticatedPerson());
+        }
+        return newEntity;
     }
 
     @Override
