@@ -283,12 +283,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             protected void onConfigure() {
                 super.onConfigure();
 
-                T object = editForm.getModelObject();
-                show(object instanceof Lockable
-                        && !object.isNew()
-                        && ((Lockable) object).getOwner() == null
-                        && DBConstants.Status.DRAFT.equals(object.getStatus())
-                        && !isViewMode());
+                show(isCheckoutModalVisible());
             }
         };
         modal.addCloseButton(new ResourceModel("checkoutModal.view"));
@@ -310,6 +305,15 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         modal.setFadeIn(false);
 
         return modal;
+    }
+
+    protected boolean isCheckoutModalVisible() {
+        T object = editForm.getModelObject();
+        return object instanceof Lockable
+                && !object.isNew()
+                && ((Lockable) object).getOwner() == null
+                && DBConstants.Status.DRAFT.equals(object.getStatus())
+                && !isViewMode();
     }
 
     private void checkout(AjaxRequestTarget target) {
