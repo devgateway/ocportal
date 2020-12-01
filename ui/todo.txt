@@ -1,0 +1,30 @@
+DONE:
+  moved all sources to /src
+  moved assets, htmls and translations to /public
+  renamed .es6 files to .js
+  moved all devDeps to deps
+  use bootstrap's HelpBlock in ui/src/oce/alerts/Alerts.jsx
+  use new eslint config
+  imported React in tons of places
+  replaced location with window.location (new lint rule)
+  imported leaflet.markercluster in a weird way to avoid lint errors
+  converted and renamed less files to scss
+  refer to assets using process.env.PUBLIC_URL
+  removed .babelrc
+
+
+TO DO:
+see what to do with .eslintrc
+
+what is .flowconfig ?
+
+remove .babelrc
+
+finish pom.xml
+
+solve duplicate translations in UI and WEB modules
+
+verify that flow works!
+
+NOTES:
+  react-leaflet requires leaflet

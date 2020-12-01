@@ -24,59 +24,32 @@
         <version>1.13.2-SNAPSHOT</version>
     </parent>
 
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>npm-dev</id>-->
+<!--            <properties>-->
+<!--                <npmArgs>&#45;&#45;prefer-offline &#45;&#45;no-audit &#45;&#45;progress=false install</npmArgs>-->
+<!--                <npmScript>build-dev</npmScript>-->
+<!--            </properties>-->
+<!--        </profile>-->
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-        </dependency>
-    </dependencies>
-
-    <profiles>
-        <profile>
-            <id>npm-dev</id>
-            <properties>
-                <npmArgs>--prefer-offline --no-audit --progress=false install</npmArgs>
-                <npmScript>build-dev</npmScript>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>npm-dll</id>
-            <properties>
-                <npmArgs>--no-audit --progress=false install</npmArgs>
-                <npmScript>build-dll</npmScript>
-            </properties>
-        </profile>
-    </profiles>
+<!--        <profile>-->
+<!--            <id>npm-dll</id>-->
+<!--            <properties>-->
+<!--                <npmArgs>&#45;&#45;no-audit &#45;&#45;progress=false install</npmArgs>-->
+<!--                <npmScript>build-dll</npmScript>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--    </profiles>-->
 
 
     <build>
         <resources>
             <resource>
-                <filtering>true</filtering>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-
-            <resource>
                 <filtering>false</filtering>
                 <directory>${project.basedir}</directory>
                 <includes>
-                    <include>public/**</include>
+                    <include>build/**</include>
                 </includes>
                 <excludes>
                     <exclude>public/index.js</exclude>
@@ -92,7 +65,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>public</directory>
+                            <directory>build</directory>
                             <includes>
                                 <include>**/*</include>
                             </includes>
@@ -165,22 +138,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.version}</version>
-                <configuration>
-                    <classifier>exec</classifier>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- This will ensure a fat jar is created, will include all jar dependencies inside a /lib folder within this jar -->
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
         </plugins>
     </build>
 
