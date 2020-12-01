@@ -140,7 +140,7 @@ class OCEMakueni extends OCApp {
             </div>
           </div>
         </div>
-        <Footer/>
+        <Footer translations={this.props.translations}/>
       </div>
     );
   }

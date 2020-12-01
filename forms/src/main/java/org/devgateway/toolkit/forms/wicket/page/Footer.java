@@ -14,6 +14,7 @@ package org.devgateway.toolkit.forms.wicket.page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,9 @@ public class Footer extends Panel {
             e.printStackTrace();
         }
 
-        add(new Label("makueni-version", Model.of(prop.getProperty("makueni.version"))));
+        add(new Label("makueni-version",
+                new StringResourceModel("version", this)
+                        .setParameters(prop.getProperty("makueni.version"))));
         add(new Label("makueni-branch", Model.of(prop.getProperty("makueni.branch"))));
     }
 }

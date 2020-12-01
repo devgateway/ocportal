@@ -4,23 +4,23 @@ import AuthImplReport from './AuthImplReport';
 class PMCReport extends AuthImplReport {
 
   getReportName() {
-    return 'PMC Reports';
+    return this.t("pmcReport:label");
   }
 
   authChildren(i) {
     return (<div>
         <div className="col-md-3">
-          <div className="item-label">Sub-Counties</div>
+          <div className="item-label">{this.t("pmcReport:subcounties")}</div>
           <div className="item-value">{i.subcounties.map(item => item.label)
             .join(', ')}</div>
         </div>
         <div className="col-md-3">
-          <div className="item-label">Wards</div>
+          <div className="item-label">{this.t("pmcReport:wards")}</div>
           <div className="item-value">{i.wards.map(item => item.label)
             .join(', ')}</div>
         </div>
         <div className="col-md-3">
-          <div className="item-label">PMC Status</div>
+          <div className="item-label">{this.t("pmcReport:pmcStatus")}</div>
           <div className="item-value">{i.pmcStatus.label}</div>
         </div>
       </div>
@@ -32,24 +32,24 @@ class PMCReport extends AuthImplReport {
       <div key="2">
         <div className="row padding-top-10">
           <div className="col-md-3">
-            <div className="item-label">Project Closure and Handover</div>
+            <div className="item-label">{this.t("pmcReport:projectClosureAndHandover")}</div>
             <div className="item-value">{i.projectClosureHandover && i.projectClosureHandover.map(item => item.label)
                 .join(', ')}</div>
           </div>
         </div>
         <div className="row padding-top-10">
           <div className="col-md-10">
-            <div className="item-label">PMC MEMBERS:</div>
+            <div className="item-label">{this.t("pmcReport:members")}</div>
           </div>
         </div>
         {
           i.pmcMembers && i.pmcMembers.map(m => <div key={m._id} className="row padding-top-10">
             <div className="col-md-3">
-              <div className="item-label">PMC Staff</div>
+              <div className="item-label">{this.t("pmcReport:staff")}</div>
               <div className="item-value">{m.staff.label}</div>
             </div>
             <div className="col-md-3">
-              <div className="item-label">PMC Designation</div>
+              <div className="item-label">{this.t("pmcReport:designation")}</div>
               <div className="item-value">{m.designation.label}</div>
             </div>
           </div>)

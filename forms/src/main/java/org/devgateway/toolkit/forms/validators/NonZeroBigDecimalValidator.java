@@ -14,8 +14,8 @@ public class NonZeroBigDecimalValidator extends BigDecimalValidator {
     public void validate(final IValidatable<BigDecimal> validatable) {
         super.validate(validatable);
         if (BigDecimal.ZERO.equals(validatable.getValue())) {
-            final ValidationError error = new ValidationError("Zero is not an allowed value for this field. "
-                    + "Please leave blank if you do not have data.");
+            final ValidationError error = new ValidationError();
+            error.addKey("NonZeroBigDecimalValidator");
             validatable.error(error);
         }
     }

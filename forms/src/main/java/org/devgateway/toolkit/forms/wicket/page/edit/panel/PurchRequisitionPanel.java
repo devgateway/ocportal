@@ -10,8 +10,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
@@ -67,7 +67,7 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     }
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Purchase Requisition"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newPurchaseRequisition", this));
     }
 
 

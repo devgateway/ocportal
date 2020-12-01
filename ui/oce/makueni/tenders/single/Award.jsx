@@ -1,8 +1,9 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import translatable from "../../../translatable";
 
-class Award extends React.Component {
+class Award extends translatable(React.Component) {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -12,7 +13,7 @@ class Award extends React.Component {
         + ' - ' + department.label
         + ' - ' + fiscalYear.name;
     }
-    return escape('Award' + metadata);
+    return escape(this.t("award:subject") + metadata);
   }
 
   render() {
@@ -21,7 +22,7 @@ class Award extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     const awardAcceptance = data[0];
@@ -33,34 +34,32 @@ class Award extends React.Component {
             ? awardAcceptance.items.map(i => <div key={i._id} className="box">
               <div className="row padding-top-10">
                 <div className="col-md-3">
-                  <div className="item-label">Supplier Response</div>
-                <div
-                  className="item-value">{i.supplierResponse.label}</div>
+                  <div className="item-label">{this.t("award:supplierResponse")}</div>
+                  <div className="item-value">{i.supplierResponse.label}</div>
                 </div>
               </div>
               <div className="row padding-top-10">
                 <div className="col-md-3">
-                  <div className="item-label">Accepted Award Value</div>
-                  <div
-                    className="item-value">{currencyFormatter(i.acceptedAwardValue)}</div>
+                  <div className="item-label">{this.t("award:acceptedAwardValue")}</div>
+                  <div className="item-value">{currencyFormatter(i.acceptedAwardValue)}</div>
                 </div>
                 <div className="col-md-3">
-                  <div className="item-label">Response Date</div>
+                  <div className="item-label">{this.t("award:acceptanceDate")}</div>
                   <div className="item-value">{formatDate(i.acceptanceDate)}</div>
                 </div>
                 <div className="col-md-3">
-                  <div className="item-label">Supplier Name</div>
+                  <div className="item-label">{this.t("award:awardeeLabel")}</div>
                   <div className="item-value">{i.awardee.label}</div>
                 </div>
                 <div className="col-md-3">
-                  <div className="item-label">Supplier ID</div>
+                  <div className="item-label">{this.t("award:awardeeCode")}</div>
                   <div className="item-value">{i.awardee.code}</div>
                 </div>
               </div>
 
               <div className="row padding-top-10">
                 <div className="col-md-12">
-                  <div className="item-label">Letter of Acceptance of Award</div>
+                  <div className="item-label">{this.t("award:letterOfAcceptanceOfAward")}</div>
 
                   {
                     i.formDocs.map(doc => <div key={doc._id}>
@@ -68,7 +67,7 @@ class Award extends React.Component {
                         placement="bottom"
                         overlay={
                           <Tooltip id="download-tooltip">
-                            Click to download the file
+                            {this.t("general:downloadFile:tooltip")}
                           </Tooltip>
                         }>
 

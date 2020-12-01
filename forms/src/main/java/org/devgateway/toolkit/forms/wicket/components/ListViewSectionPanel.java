@@ -25,6 +25,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
@@ -161,7 +162,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         listWrapper.add(new Label("panelTitle", title));
 
         listWrapper.add(new Label("totalEntries",
-                (IModel<Integer>) () -> ListViewSectionPanel.this.getModel().getObject().size()));
+                new StringResourceModel("totalEntries", this).setParameters(
+                        (IModel<Integer>) () -> ListViewSectionPanel.this.getModel().getObject().size())));
 
         final AjaxLink<Void> showHideAllEntries = new AjaxLink<Void>("showHideAllEntries") {
             @Override
