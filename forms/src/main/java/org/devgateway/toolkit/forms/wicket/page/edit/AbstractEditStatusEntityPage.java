@@ -517,8 +517,11 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                     @Override
                     protected void onConfigure() {
                         super.onConfigure();
-                        T entity = editForm.getModelObject();
-                        setVisibilityAllowed(!(entity instanceof Lockable) || ((Lockable) entity).getOwner() != null);
+
+                        T object = editForm.getModelObject();
+                        setVisibilityAllowed(!(object instanceof Lockable)
+                                || (object.getStatus().equals(DBConstants.Status.DRAFT) && isCheckedOutByPrincipal())
+                                || !object.getStatus().equals(DBConstants.Status.DRAFT));
                     }
 
                     @Override
