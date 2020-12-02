@@ -76,9 +76,6 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <environmentVariables>
-                                <PUBLIC_URL>/ui</PUBLIC_URL>
-                            </environmentVariables>
                             <arguments>run build</arguments>
                         </configuration>
                     </execution>
