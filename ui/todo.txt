@@ -20,8 +20,6 @@ what is .flowconfig ?
 
 remove .babelrc
 
-finish pom.xml
-
 solve duplicate translations in UI and WEB modules
 
 verify that flow works!

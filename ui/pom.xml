@@ -10,12 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <start-class>org.devgateway.toolkit.ui.UIWebApplication</start-class>
         <skip.frontend.build>false</skip.frontend.build>
         <checkstyle.skip>true</checkstyle.skip>
-        <npmArgs>install</npmArgs>
-        <npmScript>build</npmScript>
     </properties>
 
     <parent>
@@ -24,37 +20,12 @@
         <version>1.13.2-SNAPSHOT</version>
     </parent>
 
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>npm-dev</id>-->
-<!--            <properties>-->
-<!--                <npmArgs>&#45;&#45;prefer-offline &#45;&#45;no-audit &#45;&#45;progress=false install</npmArgs>-->
-<!--                <npmScript>build-dev</npmScript>-->
-<!--            </properties>-->
-<!--        </profile>-->
-
-<!--        <profile>-->
-<!--            <id>npm-dll</id>-->
-<!--            <properties>-->
-<!--                <npmArgs>&#45;&#45;no-audit &#45;&#45;progress=false install</npmArgs>-->
-<!--                <npmScript>build-dll</npmScript>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--    </profiles>-->
-
-
     <build>
         <resources>
             <resource>
                 <filtering>false</filtering>
-                <directory>${project.basedir}</directory>
-                <includes>
-                    <include>build/**</include>
-                </includes>
-                <excludes>
-                    <exclude>public/index.js</exclude>
-                    <exclude>public/index.js.map</exclude>
-                </excludes>
+                <directory>${project.basedir}/build</directory>
+                <targetPath>public/ui</targetPath>
             </resource>
         </resources>
         <plugins>
@@ -66,9 +37,6 @@
                     <filesets>
                         <fileset>
                             <directory>build</directory>
-                            <includes>
-                                <include>**/*</include>
-                            </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
                     </filesets>
@@ -78,7 +46,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.8.0</version>
+                <version>1.10.4</version>
 
                 <executions>
                     <execution>
@@ -86,7 +54,6 @@
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
-                        <phase>generate-resources</phase>
                         <configuration>
                             <nodeVersion>v11.15.0</nodeVersion>
                             <npmVersion>6.13.1</npmVersion>
@@ -98,14 +65,8 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
-                        <!-- Optional configuration which provides for running any npm command -->
                         <configuration>
-                            <environmentVariables>
-                                <npmArgs>${npmArgs}</npmArgs>
-                                <npmScript>${npmScript}</npmScript>
-                            </environmentVariables>
-
-                            <arguments>${npmArgs}</arguments>
+                            <arguments><![CDATA[--no-audit --progress=false install]]></arguments>
                         </configuration>
                     </execution>
 
@@ -114,45 +75,17 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
-                        <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>run ${npmScript}</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
-
-                    <!--
-                    This is not needed as npm invokes gulp.
-                    Uncomment if you plan to run gulp separately for some reason
-                        <execution>
-                            <id>gulp build</id>
-                            <goals>
-                                <goal>gulp</goal>
-                            </goals>
-                            <phase>generate-resources</phase>
-                        </execution>
-                    -->
                 </executions>
 
                 <configuration>
                     <skip>${skip.frontend.build}</skip>
                 </configuration>
             </plugin>
-
-
         </plugins>
     </build>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <!-- Import dependency management from Spring Boot without messing messing up the project parent -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
 </project>
