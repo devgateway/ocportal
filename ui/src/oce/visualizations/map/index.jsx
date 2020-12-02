@@ -9,7 +9,7 @@ import style from './style.scss';
 import Control from 'react-leaflet-control';
 import backendFilterable from '../../backend-year-filterable';
 import React from "react";
-import * as L from "leaflet.markercluster";
+import L from "leaflet";
 
 const swap = ([a, b]) => [b, a];
 

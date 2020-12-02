@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import {LayerGroup} from 'react-leaflet';
 import {toK} from "../../tools";
-import * as L from "leaflet.markercluster";
-require("leaflet.markercluster/dist/MarkerCluster.css");
-require("leaflet.markercluster/dist/MarkerCluster.Default.css");
+import L from "leaflet";
+import "leaflet.markercluster/dist/leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 function clusterIcon(cluster, maxAmount){
   var {count, amount} = cluster.getAllChildMarkers().reduce((sum, marker) => {
