@@ -1,7 +1,0 @@
-
-TO DO:
-see what to do with .eslintrc
-
-remove .babelrc
-
-solve duplicate translations in UI and WEB modules
