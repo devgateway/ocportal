@@ -1,8 +1,9 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import translatable from "../../../translatable";
 
-class PurchaseReq extends React.Component {
+class PurchaseReq extends translatable(React.Component) {
   getFeedbackSubject() {
     const { data, department, fiscalYear } = this.props;
 
@@ -12,7 +13,7 @@ class PurchaseReq extends React.Component {
         + " - " + department.label
         + " - " + fiscalYear.name;
     }
-    return escape("Tender Process" + metadata);
+    return escape(this.t("purchaseReq:label") + metadata);
   }
 
   render() {
@@ -20,13 +21,13 @@ class PurchaseReq extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     return (<div>
       <div className="row padding-top-10">
         <div className="col-md-3">
-          <div className="item-label">Purchase Request Number</div>
+          <div className="item-label">{this.t("purchaseReq:purchaseRequestNumber")}</div>
           <div className="item-value">{data.purchaseRequestNumber}</div>
         </div>
       </div>
@@ -37,20 +38,20 @@ class PurchaseReq extends React.Component {
           data.purchRequisitions.map(preq => <div key={preq._id} className="box">
             <div className="row padding-top-10">
               <div className="col-md-3">
-                <div className="item-label">Requested By</div>
+                <div className="item-label">{this.t("purchaseReq:requestedBy")}</div>
                 <div className="item-value">{preq.requestedBy.label}</div>
               </div>
               <div className="col-md-3">
-                <div className="item-label">Charge Account</div>
+                <div className="item-label">{this.t("purchaseReq:chargeAccount")}</div>
                 <div className="item-value">{preq.chargeAccount.label}</div>
               </div>
               <div className="col-md-3">
-                <div className="item-label">Request Approval Date</div>
+                <div className="item-label">{this.t("purchaseReq:requestApprovalDate")}</div>
                 <div
                   className="item-value">{formatDate(preq.requestApprovalDate)}</div>
               </div>
               <div className="col-md-3">
-                <div className="item-label">Approved Date</div>
+                <div className="item-label">{this.t("purchaseReq:approvedDate")}</div>
                 <div
                   className="item-value">{formatDate(preq.approvedDate)}</div>
               </div>
@@ -59,7 +60,7 @@ class PurchaseReq extends React.Component {
               preq.purchaseItems !== undefined
                 ? <div>
                   <div className="row padding-top-10">
-                    <div className="col-md-12 sub-title">Purchase Requisition Items
+                    <div className="col-md-12 sub-title">{this.t("purchaseReq:items")}
                       ({preq.purchaseItems.length})
                     </div>
                   </div>
@@ -67,29 +68,29 @@ class PurchaseReq extends React.Component {
                     preq.purchaseItems.map(pr => <div key={pr._id} className="box">
                       <div className="row">
                         <div className="col-md-6">
-                          <div className="item-label">Item</div>
+                          <div className="item-label">{this.t("purchaseReq:items:item")}</div>
                           <div className="item-value">{pr.planItem.item.label}</div>
                         </div>
                         <div className="col-md-6">
-                          <div className="item-label">Description</div>
+                          <div className="item-label">{this.t("purchaseReq:items:description")}</div>
                           <div className="item-value">{pr.description}</div>
                         </div>
                       </div>
                       <div className="row">
                         <div className="col-md-3">
-                          <div className="item-label">Unit of Issue</div>
+                          <div className="item-label">{this.t("purchaseReq:items:unitOfIssue")}</div>
                           <div className="item-value">{pr.planItem.unitOfIssue.label}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Quantity</div>
+                          <div className="item-label">{this.t("purchaseReq:items:quantity")}</div>
                           <div className="item-value">{currencyFormatter(pr.quantity)}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Unit Price</div>
+                          <div className="item-label">{this.t("purchaseReq:items:amount")}</div>
                           <div className="item-value">{currencyFormatter(pr.amount)}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Total Cost</div>
+                          <div className="item-label">{this.t("purchaseReq:items:totalCost")}</div>
                           <div
                             className="item-value">{currencyFormatter(pr.quantity * pr.amount)}</div>
                         </div>
@@ -101,14 +102,14 @@ class PurchaseReq extends React.Component {
             }
               <div className="row padding-top-10">
                 <div className="col-md-6">
-                  <div className="item-label">Purchase Requisition Documents</div>
+                  <div className="item-label">{this.t("purchaseReq:docs")}</div>
                   {
                     preq.formDocs.map(doc => <div key={doc._id}>
                       <OverlayTrigger
                         placement="bottom"
                         overlay={
                           <Tooltip id="download-tooltip">
-                            Click to download the file
+                            {this.t("general:downloadFile:tooltip")}
                           </Tooltip>
                         }>
 
@@ -121,7 +122,7 @@ class PurchaseReq extends React.Component {
                   }
                 </div>
                 <div className="col-md-6">
-                  <div className="item-label">Approved Date</div>
+                  <div className="item-label">{this.t("purchaseReq:approvedDate")}</div>
                   <div
                     className="item-value">{formatDate(preq.approvedDate)}</div>
                 </div>

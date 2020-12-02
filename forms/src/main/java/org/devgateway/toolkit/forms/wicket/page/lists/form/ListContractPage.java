@@ -109,7 +109,7 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
                 }
             };
 
-            downloadLink.add(new Label("downloadText", "Download documents"));
+            downloadLink.add(new Label("downloadText", new StringResourceModel("downloadDocuments", this)));
             downloadLink.add(new TooltipBehavior(
                     new StringResourceModel("downloadUploadedFileTooltip", ListContractPage.this, null)));
             add(downloadLink);

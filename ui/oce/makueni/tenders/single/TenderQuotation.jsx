@@ -1,7 +1,8 @@
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
+import translatable from "../../../translatable";
 
-class TenderQuotation extends React.Component {
+class TenderQuotation extends translatable(React.Component) {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -11,7 +12,7 @@ class TenderQuotation extends React.Component {
         + " - " + department.label
         + " - " + fiscalYear.name;
     }
-    return escape("Tender Evaluation" + metadata);
+    return escape(this.t("tenderQuotation:subject") + metadata);
   }
 
   render() {
@@ -19,7 +20,7 @@ class TenderQuotation extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     const tenderQuotationEvaluation = data[0];
@@ -27,7 +28,7 @@ class TenderQuotation extends React.Component {
     return (<div>
       <div className="row padding-top-10">
         <div className="col-md-6">
-          <div className="item-label">Closing Date</div>
+          <div className="item-label">{this.t("tenderQuotation:closingDate")}</div>
           <div
             className="item-value">{formatDate(tenderQuotationEvaluation.closingDate)}</div>
         </div>
@@ -37,7 +38,7 @@ class TenderQuotation extends React.Component {
         tenderQuotationEvaluation.bids !== undefined
           ? <div>
             <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">Bids
+              <div className="col-md-12 sub-title">{this.t("tenderQuotation:bids")}
                 ({tenderQuotationEvaluation.bids.length})
               </div>
             </div>
@@ -46,30 +47,30 @@ class TenderQuotation extends React.Component {
               tenderQuotationEvaluation.bids.map(bids => <div key={bids._id} className="box">
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="item-label">Supplier Name</div>
+                    <div className="item-label">{this.t("tenderQuotation:bids:supplierLabel")}</div>
                     <div className="item-value">{bids.supplier.label}</div>
                   </div>
                   <div className="col-md-6">
-                    <div className="item-label">Supplier ID</div>
+                    <div className="item-label">{this.t("tenderQuotation:bids:supplierCode")}</div>
                     <div className="item-value">{bids.supplier.code}</div>
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="col-md-3">
-                    <div className="item-label">Supplier Score</div>
+                    <div className="item-label">{this.t("tenderQuotation:bids:supplierScore")}</div>
                     <div className="item-value">{bids.supplierScore}</div>
                   </div>
                   <div className="col-md-3">
-                    <div className="item-label">Supplier Ranking</div>
+                    <div className="item-label">{this.t("tenderQuotation:bids:supplierRanking")}</div>
                     <div className="item-value">{bids.supplierRanking}</div>
                   </div>
                   <div className="col-md-3">
-                    <div className="item-label">Quoted Price</div>
+                    <div className="item-label">{this.t("tenderQuotation:bids:quotedAmount")}</div>
                     <div className="item-value">{currencyFormatter(bids.quotedAmount)}</div>
                   </div>
                   <div className="col-md-3">
-                    <div className="item-label">Supplier Responsiveness</div>
+                    <div className="item-label">{this.t("tenderQuotation:bids:supplierResponsiveness")}</div>
                     <div className="item-value">{bids.supplierResponsiveness}</div>
                   </div>
                 </div>
@@ -81,7 +82,7 @@ class TenderQuotation extends React.Component {
 
       <div className="row padding-top-10">
         <div className="col-md-12">
-          <div className="item-label">Tender Quotation and Evaluation Documents</div>
+          <div className="item-label">{this.t("tenderQuotation:docs")}</div>
 
           {
             tenderQuotationEvaluation.formDocs.map(doc => <div key={doc._id}>
@@ -89,7 +90,7 @@ class TenderQuotation extends React.Component {
                 placement="bottom"
                 overlay={
                   <Tooltip id="download-tooltip">
-                    Click to download the file
+                    {this.t("general:downloadFile:tooltip")}
                   </Tooltip>
                 }>
 

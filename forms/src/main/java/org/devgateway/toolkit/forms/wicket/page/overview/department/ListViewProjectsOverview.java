@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -24,6 +23,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
@@ -146,8 +146,8 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 setResponsePage(EditProjectPage.class, pageParameters);
             }
         };
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProjectPage.class) ? "Edit" : "View")
-                + " Project")));
+        button.add(new TooltipBehavior(
+                EditViewResourceModel.of(canAccessAddNewButtons(EditProjectPage.class), "project", this)));
         headerFragment.add(button);
 
         header.add(headerFragment);

@@ -49,7 +49,7 @@ class ProcurementPlan extends FeedbackPage {
     if (data !== undefined) {
       metadata = " - " + data.department.label + " - " + data.fiscalYear.name;
     }
-    return escape("Procurement Plan" + metadata);
+    return escape(this.t("procurementPlan:feedbackSubject") + metadata);
   }
 
   render() {
@@ -65,14 +65,14 @@ class ProcurementPlan extends FeedbackPage {
           <span className="previous">&#8249;</span>
         </span>
           <span className="back-text">
-          Go Back
+            {this.t("general:goBack")}
         </span>
         </a>
       </div>
 
       <div className="row padding-top-10">
         <div className="col-md-12">
-          <h1 className="page-title">Procurement Plan</h1>
+          <h1 className="page-title">{this.t("procurementPlan:title")}</h1>
         </div>
       </div>
 
@@ -81,11 +81,11 @@ class ProcurementPlan extends FeedbackPage {
           ? <div>
             <div className="row">
               <div className="col-md-8">
-                <div className="item-label">Department</div>
+                <div className="item-label">{this.t("procurementPlan:department")}</div>
                 <div className="item-value">{data.department.label}</div>
               </div>
               <div className="col-md-4">
-                <div className="item-label">Fiscal Year</div>
+                <div className="item-label">{this.t("procurementPlan:fiscalYear")}</div>
                 <div className="item-value">{data.fiscalYear.name}</div>
               </div>
             </div>
@@ -94,8 +94,8 @@ class ProcurementPlan extends FeedbackPage {
               data.planItems !== undefined
                 ? <div>
                   <div className="row padding-top-10">
-                    <div className="col-md-12 sub-title">Procurement Plan Item
-                      ({data.planItems.length})
+                    <div className="col-md-12 sub-title">
+                      {this.t("procurementPlan:item:caption").replace("$#$", data.planItems.length)}
                     </div>
                   </div>
 
@@ -111,34 +111,34 @@ class ProcurementPlan extends FeedbackPage {
 
                       <div className="row padding-top-10">
                         <div className="col-md-3">
-                          <div className="item-label">Unit Of Issue</div>
+                          <div className="item-label">{this.t("procurementPlan:item:unitOfIssue")}</div>
                           <div className="item-value">{planItem.unitOfIssue.label}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Quantity</div>
+                          <div className="item-label">{this.t("procurementPlan:item:quantity")}</div>
                           <div className="item-value">{currencyFormatter(planItem.quantity)}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Estimated Cost per Unit</div>
+                          <div className="item-label">{this.t("procurementPlan:item:estimatedCost")}</div>
                           <div className="item-value">{currencyFormatter(planItem.estimatedCost)}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Total Cost</div>
+                          <div className="item-label">{this.t("procurementPlan:item:totalCost")}</div>
                           <div className="item-value">{currencyFormatter(planItem.quantity * planItem.estimatedCost)}</div>
                         </div>
                       </div>
 
                       <div className="row padding-top-10">
                         <div className="col-md-3">
-                          <div className="item-label">Procurement Method</div>
+                          <div className="item-label">{this.t("procurementPlan:item:procurementMethod")}</div>
                           <div className="item-value">{planItem.procurementMethod.label}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Account</div>
+                          <div className="item-label">{this.t("procurementPlan:item:sourceOfFunds")}</div>
                           <div className="item-value">{planItem.sourceOfFunds}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">Target Group</div>
+                          <div className="item-label">{this.t("procurementPlan:item:targetGroup")}</div>
                           {
                             planItem.targetGroup !== undefined
                               ? <div className="item-value">{planItem.targetGroup.label}</div>
@@ -147,7 +147,7 @@ class ProcurementPlan extends FeedbackPage {
                         </div>
                         <div className="col-md-3">
                           <div className="item-label">
-                            Target Group Value
+                            {this.t("procurementPlan:item:targetGroupValue")}
                           </div>
                           <div
                             className="item-value">{currencyFormatter(planItem.targetGroupValue)}</div>
@@ -155,21 +155,21 @@ class ProcurementPlan extends FeedbackPage {
                       </div>
 
                       <div className="row padding-top-10">
-                        <h4 className="col-md-12">Timing of activities (quarterly basis)</h4>
+                        <h4 className="col-md-12">{this.t("procurementPlan:item:timingOfActivities")}</h4>
                         <div className="col-md-3">
-                          <div className="item-label">1st Quarter</div>
+                          <div className="item-label">{this.t("procurementPlan:item:quarter1st")}</div>
                           <div className="item-value">{currencyFormatter(planItem.quarter1st)}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">2nd Quarter</div>
+                          <div className="item-label">{this.t("procurementPlan:item:quarter2nd")}</div>
                           <div className="item-value">{currencyFormatter(planItem.quarter2nd)}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">3rd Quarter</div>
+                          <div className="item-label">{this.t("procurementPlan:item:quarter3rd")}</div>
                           <div className="item-value">{currencyFormatter(planItem.quarter3rd)}</div>
                         </div>
                         <div className="col-md-3">
-                          <div className="item-label">4th Quarter</div>
+                          <div className="item-label">{this.t("procurementPlan:item:quarter4th")}</div>
                           <div className="item-value">{currencyFormatter(planItem.quarter4th)}</div>
                         </div>
                       </div>
@@ -178,7 +178,7 @@ class ProcurementPlan extends FeedbackPage {
 
                   <div className="row padding-top-10">
                     <div className="col-md-6">
-                      <div className="item-label">Procurement Plan Documents</div>
+                      <div className="item-label">{this.t("procurementPlan:item:ppDocs")}</div>
 
                       {
                         data.formDocs && data.formDocs.map(doc => <div key={doc.id}>
@@ -186,7 +186,7 @@ class ProcurementPlan extends FeedbackPage {
                             placement="bottom"
                             overlay={
                               <Tooltip id="download-tooltip">
-                                Click to download the file
+                                {this.t("general:downloadFile:tooltip")}
                               </Tooltip>
                             }>
 
@@ -199,7 +199,7 @@ class ProcurementPlan extends FeedbackPage {
                       }
                     </div>
                     <div className="col-md-6">
-                      <div className="item-label">Approved Date</div>
+                      <div className="item-label">{this.t("procurementPlan:item:approvedDate")}</div>
                       <div
                         className="item-value">{formatDate(data.approvedDate)}</div>
                     </div>

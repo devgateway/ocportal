@@ -6,14 +6,14 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 class InspectionReport extends AuthImplReport {
 
   getReportName() {
-    return 'Inspection Reports';
+    return this.t("inspectionReport:label");
   }
 
   authChildren(i) {
     const { currencyFormatter } = this.props.styling.tables;
     return (<div>
         <div className="col-md-3">
-          <div className="item-label">Contract Sum</div>
+          <div className="item-label">{this.t("inspectionReport:contractValue")}</div>
           <div className="item-value">{currencyFormatter(i.contract.contractValue)}</div>
         </div>
       </div>
@@ -33,14 +33,14 @@ class InspectionReport extends AuthImplReport {
       (<div key="2">
         <div className="row padding-top-10">
           <div className="col-md-6">
-            <div className="item-label">Comments</div>
+            <div className="item-label">{this.t("inspectionReport:comments")}</div>
             <div className="item-value">{i.comments}</div>
 
           </div>
           {
             i.privateSectorRequests !== undefined ?
               <div className="col-md-6">
-                <div className="item-label">No of days for the inspection report to be done</div>
+                <div className="item-label">{this.t("inspectionReport:daysUntilReport")}</div>
                 <div
                   className="item-value">{this.getNearestRequestDate(i)}</div>
               </div> : null
@@ -49,20 +49,20 @@ class InspectionReport extends AuthImplReport {
         {
           i.privateSectorRequests !== undefined ?
             <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">Private Sector Requests
+              <div className="col-md-12 sub-title">{this.t("inspectionReport:privateSectorRequest:pl")}
                 ({i.privateSectorRequests.length})
               </div>
               {i.privateSectorRequests.map(psr => <div key={psr._id} className="box">
                 <div className="row padding-top-10">
                   <div className="col-md-3">
-                    <div className="item-label">Private Sector Request</div>
+                    <div className="item-label">{this.t("inspectionReport:privateSectorRequest:sg")}</div>
                     {
                       psr.upload.map(doc => <div key={doc._id}>
                         <OverlayTrigger
                           placement="bottom"
                           overlay={
                             <Tooltip id="download-tooltip">
-                              Click to download the file
+                              {this.t("general:downloadFile:tooltip")}
                             </Tooltip>
                           }>
 
@@ -75,7 +75,7 @@ class InspectionReport extends AuthImplReport {
                     }
                   </div>
                   <div className="col-md-3">
-                    <div className="item-label">Request Date</div>
+                    <div className="item-label">{this.t("inspectionReport:privateSectorRequest:requestDate")}</div>
                     <div className="item-value">{formatDate(psr.requestDate)}</div>
                   </div>
                 </div>
