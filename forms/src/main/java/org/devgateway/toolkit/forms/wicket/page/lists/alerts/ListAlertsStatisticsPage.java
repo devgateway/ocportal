@@ -33,6 +33,8 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
     @Override
     protected void onInitialize() {
 
+        hasNewPage = false;
+
         columns.add(new SimpleDateProperyColumn<>(new StringResourceModel("sendingDate", this),
                 "createdDate", "createdDate",
                 t -> t.getLastModifiedDate().orElse(null), "yyyy-MM-dd HH:mm:ss"));
