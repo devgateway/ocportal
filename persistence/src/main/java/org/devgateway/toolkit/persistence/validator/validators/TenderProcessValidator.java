@@ -95,35 +95,37 @@ public class TenderProcessValidator implements Validator {
             Set<Supplier> qaPassedSuppliers = nonDraft(tp.getTenderQuotationEvaluation())
                     .flatMap(a -> a.getBids().stream()).filter(b -> DBConstants.SupplierResponsiveness.PASS
                             .equalsIgnoreCase(b.getSupplierResponsiveness())).map(Bid::getSupplier)
-                    .collect(Collectors.toSet());
+                    .filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Passed Bidders from Quotation Evaluation Form", qaPassedSuppliers);
         }
 
         if (existsNonDraft(tp.getProfessionalOpinion())) {
             Set<Supplier> piAwardees = nonDraft(tp.getProfessionalOpinion()).flatMap(p -> p.getItems().stream())
-                    .map(ProfessionalOpinionItem::getAwardee).collect(Collectors.toSet());
+                    .map(ProfessionalOpinionItem::getAwardee).
+                            filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Awardees from Professional Opinion Form", piAwardees);
         }
 
         if (existsNonDraft(tp.getAwardNotification())) {
             Set<Supplier> anAwardee = nonDraft(tp.getAwardNotification())
-                    .flatMap(a -> a.getAwardee().stream()).collect(Collectors.toSet());
+                    .flatMap(a -> a.getAwardee().stream()).filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Suppliers from at least one Award Notification Form", anAwardee);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> aaAwardees = nonDraft(tp.getAwardAcceptance()).flatMap(a -> a.getAwardee().stream())
-                    .collect(Collectors.toSet());
+                    .filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Suppliers from at least one Award Acceptance Form", aaAwardees);
 
             Set<Supplier> aacAwardees = nonDraft(tp.getAwardAcceptance()).map(AwardAcceptance::getAcceptedAcceptance)
-                    .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).collect(Collectors.toSet());
+                    .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).
+                            filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Accepted Suppliers from at least one Award Acceptance Form", aacAwardees);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> contractSuppliers = nonDraft(tp.getContract()).map(Contract::getAwardee)
-                    .collect(Collectors.toSet());
+                    .filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Contract Suppliers from the Contract Form", contractSuppliers);
         }
 
