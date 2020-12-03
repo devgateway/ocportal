@@ -47,6 +47,7 @@ public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilter
                 new Select2ChoiceBootstrapFormComponent<>(componentId,
                         new GenericChoiceProvider<>((List<Y>) getFilterChoices().getObject()),
                         getFilterModel(form));
+        selectorField.fmNoAutoAttach();
         selectorField.hideLabel();
         if (disableFilter) {
             selectorField.setEnabled(false);

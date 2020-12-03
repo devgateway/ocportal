@@ -35,6 +35,7 @@ public class TextFilteredIntegerBootstrapPropertyColumn<T, F, S> extends TextFil
         final TextFieldBootstrapFormComponent<F> textField =
                 new TextFieldBootstrapFormComponent<>(componentId, getFilterModel(form));
         textField.integer();
+        textField.fmNoAutoAttach();
         textField.hideLabel();
         return textField;
     }

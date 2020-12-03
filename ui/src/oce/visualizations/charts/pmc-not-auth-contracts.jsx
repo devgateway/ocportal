@@ -1,5 +1,6 @@
 import FrontendDateFilterableChart from "./frontend-date-filterable";
 import {pluckImm} from "../../tools";
+import fmConnect from "../../fm/fm";
 
 
 class PmcNotAuthContracts extends FrontendDateFilterableChart{
@@ -80,4 +81,4 @@ PmcNotAuthContracts.horizontal = true;
 //BidPeriod.getFillerDatum = seed => Map(seed).set('tender', 0).set('award', 0);
 //BidPeriod.getMaxField = imm => imm.get('tender', 0) + imm.get('award', 0);
 
-export default PmcNotAuthContracts;
+export default fmConnect(PmcNotAuthContracts, 'viz.me.chart.pmcNotAuthContracts');

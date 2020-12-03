@@ -1,6 +1,7 @@
 import FrontendDateFilterableChart from "./frontend-date-filterable";
 import {pluckImm} from "../../tools";
 import {Map} from "immutable";
+import fmConnect from "../../fm/fm";
 
 class CancelledContracts extends FrontendDateFilterableChart{
   getData(){
@@ -44,4 +45,4 @@ CancelledContracts.endpoint = 'cancelledContracts';
 CancelledContracts.getName = t => t('charts:cancelledContracts:title');
 //CancelledContracts.getFillerDatum = seed => Map(seed).set('averageNoTenderers', 0);
 
-export default CancelledContracts;
+export default fmConnect(CancelledContracts, 'viz.me.chart.cancelledContracts');

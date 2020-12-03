@@ -1,5 +1,6 @@
 import Map from "../index.jsx";
 import Location from './location';
+import fmConnect from "../../../fm/fm";
 
 class TenderLocations extends Map {
   getData(){
@@ -26,4 +27,4 @@ class TenderLocations extends Map {
 TenderLocations.endpoint = 'fundingByTenderLocation';
 TenderLocations.Location = Location;
 
-export default TenderLocations;
+export default fmConnect(TenderLocations, 'viz.me.map.tenderLocations');

@@ -1,5 +1,6 @@
 import FrontendDateFilterableChart from "./frontend-date-filterable";
 import {pluckImm} from "../../tools";
+import fmConnect from "../../fm/fm";
 
 class NrCancelled extends FrontendDateFilterableChart{
   static getName(t){return t('charts:nrCancelled:title')};
@@ -45,6 +46,4 @@ NrCancelled.endpoint = 'percentTendersCancelled';
 NrCancelled.excelEP = 'numberCancelledFundingExcelChart';
 NrCancelled.getMaxField = imm => imm.get('totalCancelled');
 
-export default NrCancelled;
-
-
+export default fmConnect(NrCancelled, 'viz.me.chart.nrCancelled');

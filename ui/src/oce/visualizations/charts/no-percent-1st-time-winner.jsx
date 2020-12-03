@@ -1,6 +1,7 @@
 import FrontendDateFilterableChart from "./frontend-date-filterable";
 import { asPercent, pluckImm } from '../../tools';
 import {Map} from "immutable";
+import fmConnect from "../../fm/fm";
 
 class NoPercent1StTimeWinner extends FrontendDateFilterableChart{
   getData(){
@@ -49,4 +50,4 @@ NoPercent1StTimeWinner.endpoint = 'numberPercentFirstTimeWinners';
 NoPercent1StTimeWinner.getName = t => t('charts:noPercent1stTimeWinner:title');
 //NoPercent1StTimeWinner.getFillerDatum = seed => Map(seed).set('averageNoTenderers', 0);
 
-export default NoPercent1StTimeWinner;
+export default fmConnect(NoPercent1StTimeWinner, 'viz.me.chart.noPercent1StTimeWinner');

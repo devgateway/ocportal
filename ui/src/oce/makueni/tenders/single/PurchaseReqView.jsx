@@ -16,13 +16,14 @@ import InspectionReport from './InspectionReport';
 import PMCReport from './PMCReport';
 import PaymentVoucher from './PaymentVoucher';
 import MEReport from './MEReport';
+import fmConnect from "../../../fm/fm";
 
 class PurchaseReqView extends CRDPage {
   constructor(props) {
     super(props);
 
     this.state = {
-      selected: props.selected || ''
+      selected: 1
     };
 
     this.prID = mtState.input({
@@ -39,46 +40,55 @@ class PurchaseReqView extends CRDPage {
       name: 'prInfo',
       url: this.prInfoUrl,
     });
-    this.tabs = [{
-      name: this.t("purchaseReq:tabs:tender"),
-      tab: 1
-    }, {
-      name: this.t("purchaseReq:tabs:purchaseReqs"),
-      tab: 2
-    }, {
-      name: this.t("purchaseReq:tabs:tenderEvaluation"),
-      tab: 3
-    }, {
-      name: this.t("purchaseReq:tabs:professionalOpinion"),
-      tab: 4
-    }, {
-      name: this.t("purchaseReq:tabs:notification"),
-      tab: 5
-    }, {
-      name: this.t("purchaseReq:tabs:award"),
-      tab: 6
-    }, {
-      name: this.t("purchaseReq:tabs:contract"),
-      tab: 7
-    }, {
-      name: this.t("purchaseReq:tabs:adminReports"),
-      tab: 8
-    },
+    this.tabs = [
       {
+        name: this.t("purchaseReq:tabs:tender"),
+        tab: 1,
+        fm: 'publicView.tender'
+      }, {
+        name: this.t("purchaseReq:tabs:purchaseReqs"),
+        tab: 2,
+        fm: 'publicView.tenderProcess'
+      }, {
+        name: this.t("purchaseReq:tabs:tenderEvaluation"),
+        tab: 3,
+        fm: 'publicView.tenderQuotationEvaluation'
+      }, {
+        name: this.t("purchaseReq:tabs:professionalOpinion"),
+        tab: 4,
+        fm: 'publicView.professionalOpinions'
+      }, {
+        name: this.t("purchaseReq:tabs:notification"),
+        tab: 5,
+        fm: 'publicView.awardNotification'
+      }, {
+        name: this.t("purchaseReq:tabs:award"),
+        tab: 6,
+        fm: 'publicView.awardAcceptance'
+      }, {
+        name: this.t("purchaseReq:tabs:contract"),
+        tab: 7,
+        fm: 'publicView.contract'
+      }, {
+        name: this.t("purchaseReq:tabs:adminReports"),
+        tab: 8,
+        fm: 'publicView.administratorReport'
+      }, {
         name: this.t("purchaseReq:tabs:inspectionReports"),
-        tab: 9
-      },
-      {
+        tab: 9,
+        fm: 'publicView.inspectionReport'
+      }, {
         name: this.t("purchaseReq:tabs:pmcReports"),
-        tab: 10
-      },
-      {
+        tab: 10,
+        fm: 'publicView.pmcReport'
+      }, {
         name: this.t("purchaseReq:tabs:meReports"),
-        tab: 11
-      },
-      {
+        tab: 11,
+        fm: 'publicView.meReport'
+      }, {
         name: this.t("purchaseReq:tabs:paymentVouchers"),
-        tab: 12
+        tab: 12,
+        fm: 'publicView.paymentVoucher'
       }
     ];
 
@@ -110,6 +120,12 @@ class PurchaseReqView extends CRDPage {
         });
       });
     });
+
+    const {selected} = this.state;
+    const visibleTabs = this.getVisibleTabs();
+    if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
+      this.changeTab(visibleTabs[0].tab);
+    }
   }
 
   componentWillUnmount() {
@@ -190,8 +206,7 @@ class PurchaseReqView extends CRDPage {
                           styling={this.props.styling} translations={this.props.translations}/>;
 
       default:
-        return <Tender data={data.tender} department={department} tenderTitle={tenderTitle}
-                       fiscalYear={fiscalYear} styling={this.props.styling} translations={this.props.translations}/>;
+        throw new Error("Tab not implemented");
     }
   }
 
@@ -199,11 +214,13 @@ class PurchaseReqView extends CRDPage {
     const { navigate } = this.props;
     const { data } = this.state;
 
+    const visibleTabs = this.getVisibleTabs();
+
     return (<div className="tender makueni-form">
       <div className="row">
         <div className="col-md-12 navigation-view" data-step="9" data-intro={this.t("purchaseReq:nav:dataIntro")}>
           {
-            this.tabs.map(tab => {
+            visibleTabs.map(tab => {
               return (<a
                   key={tab.tab}
                   className={cn('', { active: this.isActive(tab.tab) })}
@@ -250,6 +267,11 @@ class PurchaseReqView extends CRDPage {
       </div>
     </div>);
   }
+
+  getVisibleTabs() {
+    const { isFeatureVisible } = this.props;
+    return this.tabs.filter(tab => isFeatureVisible(tab.fm));
+  }
 }
 
-export default PurchaseReqView;
+export default fmConnect(PurchaseReqView);

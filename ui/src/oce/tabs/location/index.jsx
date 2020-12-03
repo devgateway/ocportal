@@ -1,9 +1,7 @@
-import ReactDOM from 'react-dom';
 import cn from 'classnames';
 import {Set} from 'immutable';
 import Tab from '../index';
 import TenderLocations from '../../visualizations/map/tender-locations';
-import {debounce} from '../../tools';
 import React from 'react';
 
 class LocationTab extends Tab {
@@ -59,9 +57,6 @@ class LocationTab extends Tab {
   componentDidMount() {
     super.componentDidMount();
     const zoom = document.querySelector('.leaflet-control-zoom');
-    this.recalcHeight();
-    this.windowResizeListener = debounce(this.recalcHeight.bind(this));
-    window.addEventListener('resize', this.windowResizeListener);
 
     this.setState({
       switcherPos: {
@@ -69,20 +64,6 @@ class LocationTab extends Tab {
          // left: zoom.offsetLeft + zoom.offsetWidth + 10
       }
     });
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.windowResizeListener);
-  }
-
-  getHeight() {
-    const TOP_OFFSET = 64;
-    const BOTTOM_OFFSET = 66;
-    return window.innerHeight - TOP_OFFSET - BOTTOM_OFFSET;
-  }
-
-  recalcHeight() {
-    ReactDOM.findDOMNode(this.refs.the_layer).style.height = this.getHeight() + 'px';
   }
 
   render() {
@@ -105,7 +86,6 @@ class LocationTab extends Tab {
           styling={styling}
           center={CENTER}
           zoom={ZOOM}
-          ref="the_layer"
         />
       </div>
     );

@@ -1,5 +1,7 @@
 import React from 'react';
 import AuthImplReport from './AuthImplReport';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
 
 class PMCReport extends AuthImplReport {
 
@@ -7,86 +9,74 @@ class PMCReport extends AuthImplReport {
     return this.t("pmcReport:label");
   }
 
+  getFMPrefix() {
+    return "publicView.pmcReport"
+  }
+
   authChildren(i) {
+    const { isFeatureVisible } = this.props;
     return (<div>
-        <div className="col-md-3">
-          <div className="item-label">{this.t("pmcReport:subcounties")}</div>
-          <div className="item-value">{i.subcounties.map(item => item.label)
-            .join(', ')}</div>
-        </div>
-        <div className="col-md-3">
-          <div className="item-label">{this.t("pmcReport:wards")}</div>
-          <div className="item-value">{i.wards.map(item => item.label)
-            .join(', ')}</div>
-        </div>
-        <div className="col-md-3">
-          <div className="item-label">{this.t("pmcReport:pmcStatus")}</div>
-          <div className="item-value">{i.pmcStatus.label}</div>
-        </div>
+        {isFeatureVisible("publicView.pmcReport.subcounties")
+        && <Item label={this.t("pmcReport:subcounties")} value={i.subcounties.map(item => item.label).join(', ')} col={3} />}
+
+        {isFeatureVisible("publicView.pmcReport.wards")
+        && <Item label={this.t("pmcReport:wards")} value={i.wards.map(item => item.label).join(', ')} col={3} />}
+
+        {isFeatureVisible("publicView.pmcReport.pmcStatus")
+        && <Item label={this.t("pmcReport:pmcStatus")} value={i.pmcStatus.label} col={3} />}
       </div>
     );
   }
 
   childElements(i) {
+    const { isFeatureVisible } = this.props;
     return [super.childElements(i),
       <div key="2">
-        <div className="row padding-top-10">
-          <div className="col-md-3">
-            <div className="item-label">{this.t("pmcReport:projectClosureAndHandover")}</div>
-            <div className="item-value">{i.projectClosureHandover && i.projectClosureHandover.map(item => item.label)
-                .join(', ')}</div>
-          </div>
+        <div className="row">
+          {isFeatureVisible("publicView.pmcReport.projectClosureHandover")
+          && <Item label={this.t("pmcReport:projectClosureAndHandover")}
+                   value={i.projectClosureHandover && i.projectClosureHandover.map(item => item.label).join(', ')}
+                   col={3} />}
         </div>
-        <div className="row padding-top-10">
-          <div className="col-md-10">
+        {isFeatureVisible("publicView.pmcReport.pmcMembers")
+        && <React.Fragment>
+          <div className="row padding-top-10">
+            <div className="col-md-10">
             <div className="item-label">{this.t("pmcReport:members")}</div>
+            </div>
           </div>
-        </div>
-        {
-          i.pmcMembers && i.pmcMembers.map(m => <div key={m._id} className="row padding-top-10">
-            <div className="col-md-3">
-              <div className="item-label">{this.t("pmcReport:staff")}</div>
-              <div className="item-value">{m.staff.label}</div>
-            </div>
-            <div className="col-md-3">
-              <div className="item-label">{this.t("pmcReport:designation")}</div>
-              <div className="item-value">{m.designation.label}</div>
-            </div>
-          </div>)
-        }
+          {
+            i.pmcMembers && i.pmcMembers.map(m => <div key={m._id} className="row">
+              {isFeatureVisible("publicView.pmcReport.pmcMembers.staff")
+              && <Item label={this.t("pmcReport:staff")} value={m.staff.label} col={3} />}
+
+              {isFeatureVisible("publicView.pmcReport.pmcMembers.designation")
+              && <Item label={this.t("pmcReport:designation")} value={m.designation.label} col={3} />}
+            </div>)
+          }
+        </React.Fragment>}
       </div>,
       <div key="3">
-        <div className="row padding-top-10">
-          <div className="col-md-3">
-            <div className="item-label">Social Safeguards</div>
-            <div
-                className="item-value">{i.socialSafeguards}</div>
-          </div>
-          <div className="col-md-3">
-            <div className="item-label">Emerging Complaints</div>
-            <div
-                className="item-value">{i.emergingComplaints}</div>
-          </div>
-          <div className="col-md-3">
-            <div className="item-label">PMC Challenges</div>
-            <div
-                className="item-value">{i.pmcChallenges}</div>
-          </div>
-        </div>
+        <div className="row">
+          {isFeatureVisible("publicView.pmcReport.socialSafeguards")
+          && <Item label={this.t("pmcReport:socialSafeguards")} value={i.socialSafeguards} col={3} />}
 
+          {isFeatureVisible("publicView.pmcReport.emergingComplaints")
+          && <Item label={this.t("pmcReport:emergingComplaints")} value={i.emergingComplaints} col={3} />}
+
+          {isFeatureVisible("publicView.pmcReport.pmcChallenges")
+          && <Item label={this.t("pmcReport:pmcChallenges")} value={i.pmcChallenges} col={3} />}
+        </div>
       </div>,
       <div key="4">
-        <div className="row padding-top-10">
-          <div className="col-md-12">
-            <div className="item-label">PMC Notes</div>
-            <div className="item-value">{i.pmcNotes && i.pmcNotes.map(item => item.text)
-                .join(', ')}</div>
-          </div>
-        </div>
-
+        {isFeatureVisible("publicView.pmcReport.pmcNotes")
+        && <div className="row">
+          <Item label={this.t("pmcReport:pmcNotes")}
+                value={i.pmcNotes && i.pmcNotes.map(item => item.text).join(', ')} col={12} />
+        </div>}
       </div>
     ];
   }
 }
 
-export default PMCReport;
+export default fmConnect(PMCReport);

@@ -29,9 +29,9 @@ public class ListPMCReportPage extends ListAbstractImplTenderProcessMakueniEntit
 
     @Override
     protected void onInitialize() {
+        attachFm("pmcReportsList");
         addTenderTitleColumn();
         addAuthorizePaymentColumn();
-
         super.onInitialize();
     }
 

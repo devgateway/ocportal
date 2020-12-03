@@ -1,0 +1,195 @@
+# FORM PAGE
+- name: paymentVoucherForm
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.administratorReport
+  mandatory: yes
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - administratorReportForm
+- name: paymentVoucherForm.approve
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.approvedDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.cancel
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.delete
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.formDocs
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.inspectionReport
+  mandatory: yes
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm
+- name: paymentVoucherForm.lastPayment
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.pmcReport
+  mandatory: yes
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - pmcReportForm
+- name: paymentVoucherForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.save
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.tenderProcess.project.procurementPlan.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: paymentVoucherForm.tenderProcess.project.procurementPlan.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: paymentVoucherForm.tenderProcess.singleContract.awardee
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: paymentVoucherForm.tenderProcess.singleContract.referenceNumber
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.referenceNumber
+- name: paymentVoucherForm.tenderProcess.tender.iterator.next.tenderTitle
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: paymentVoucherForm.terminate
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.totalAmount
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: paymentVoucherForm.visibleStatusComments
+  enabled: yes
+  visible: yes
+
+# LIST PAGE
+- name: paymentVouchersList
+  enabled: yes
+  visible: yes
+- name: paymentVouchersList.approvedDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.approvedDate
+- name: paymentVouchersList.awardee
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.tenderProcess.singleContract.awardee
+- name: paymentVouchersList.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.tenderProcess.project.procurementPlan.department
+- name: paymentVouchersList.filterToolbar
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: paymentVouchersList.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: paymentVouchersList.lastModifiedDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: paymentVouchersList.status
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: paymentVouchersList.tenderTitle
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.tenderProcess.tender.iterator.next.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.paymentVoucher
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm
+- name: publicView.paymentVoucher.pmcReport
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.pmcReport
+- name: publicView.paymentVoucher.inspectionReport
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.inspectionReport
+- name: publicView.paymentVoucher.administratorReport
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.administratorReport
+- name: publicView.paymentVoucher.totalAmount
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.totalAmount
+- name: publicView.paymentVoucher.lastPayment
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.lastPayment
+- name: publicView.paymentVoucher.contractRefNum
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.tenderProcess.singleContract.referenceNumber
+- name: publicView.paymentVoucher.tenderTitle
+  visible: yes
+- name: publicView.paymentVoucher.contractor
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.tenderProcess.singleContract.awardee
+- name: publicView.paymentVoucher.fiscalYear
+  visible: yes
+- name: publicView.paymentVoucher.approvedDate
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.approvedDate
+- name: publicView.paymentVoucher.formDocs
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.formDocs

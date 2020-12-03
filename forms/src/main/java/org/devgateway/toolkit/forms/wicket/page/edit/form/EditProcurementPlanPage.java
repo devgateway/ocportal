@@ -58,6 +58,7 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("procurementPlanForm");
         super.onInitialize();
 
         submitAndNext.setVisibilityAllowed(false);
@@ -68,10 +69,9 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
 
         final FileInputBootstrapFormComponent formDocs =
                 new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         editForm.add(formDocs);
 
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
+        ComponentUtil.addDateField(editForm, "approvedDate");
         saveTerminateButton.setVisibilityAllowed(false);
     }
 

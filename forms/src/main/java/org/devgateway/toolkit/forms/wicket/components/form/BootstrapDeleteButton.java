@@ -31,7 +31,7 @@ import org.json.JSONObject;
  * @author mpostelnicu
  * 
  */
-public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
+public abstract class BootstrapDeleteButton extends DgFmLaddaAjaxButton {
 
     private static final long serialVersionUID = 8306451874943978003L;
 

@@ -2,6 +2,7 @@ import backendYearFilterable from "../../backend-year-filterable";
 import Chart from './index';
 import { pluckImm } from '../../tools';
 import Plotly from 'plotly.js-basic-dist'
+import fmConnect from "../../fm/fm";
 
 class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
 
@@ -47,4 +48,4 @@ ShareProcAwardedAgpo.getName = t => t('charts:shareProcAwardedAgpo:title');
 ShareProcAwardedAgpo.endpoint = 'shareProcurementsAwardedAgpo';
 
 
-export default ShareProcAwardedAgpo;
+export default fmConnect(ShareProcAwardedAgpo, 'viz.me.chart.shareProcAwardedAgpo');

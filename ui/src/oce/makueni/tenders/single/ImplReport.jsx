@@ -1,6 +1,7 @@
-import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
 import translatable from "../../../translatable";
 
 class ImplReport extends translatable(React.Component) {
@@ -20,8 +21,12 @@ class ImplReport extends translatable(React.Component) {
 
   }
 
+  getFMPrefix() {
+    throw new Error("you must implement this method")
+  }
+
   render() {
-    const { fiscalYear, data, tenderTitle } = this.props;
+    const { fiscalYear, data, tenderTitle, isFeatureVisible } = this.props;
     const { formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -29,59 +34,36 @@ class ImplReport extends translatable(React.Component) {
     }
 
     return (<div>
-      <div className="row padding-top-10">
+      <div className="padding-top-10">
         {
-          data !== undefined
-            ? data.sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
+          data.sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
               .map(i => <div key={i._id} className="box">
-              <div className="row padding-top-10">
-                <div className="col-md-3">
-                  <div className="item-label">{this.t("report:tenderTitle")}</div>
-                  <div className="item-value">{tenderTitle}</div>
-                </div>
-                <div className="col-md-3">
-                  <div className="item-label">{this.t("report:awardee:label")}</div>
-                  <div className="item-value">{i.contract.awardee.label}</div>
-                </div>
-                <div className="col-md-3">
-                  <div className="item-label">{this.t("report:fiscalYear")}</div>
-                  <div className="item-value">{fiscalYear.name}</div>
-                </div>
-                <div className="col-md-3">
-                  <div className="item-label">{this.t("report:approvedDate")}</div>
-                  <div className="item-value">{formatDate(i.approvedDate)}</div>
-                </div>
+              <div className="row">
+                {isFeatureVisible(this.getFMPrefix() + ".tenderTitle")
+                && <Item label={this.t("report:tenderTitle")} value={tenderTitle} col={3} />}
+
+                {isFeatureVisible(this.getFMPrefix() + ".contractor")
+                && <Item label={this.t("report:awardee:label")} value={i.contract.awardee.label} col={3} />}
+
+                {isFeatureVisible(this.getFMPrefix() + ".fiscalYear")
+                && <Item label={this.t("report:fiscalYear")} value={fiscalYear.name} col={3} />}
+
+                {isFeatureVisible(this.getFMPrefix() + ".approvedDate")
+                && <Item label={this.t("report:approvedDate")} value={formatDate(i.approvedDate)} col={3} />}
               </div>
                 {
                   this.childElements(i)
                 }
                 {
-                  i.formDocs ?
-                      <div className="row padding-top-10">
-                        <div className="col-md-12">
-                          <div className="item-label">{this.t("report:uploads").replace("$#$", this.getReportName())}</div>
-                          {
-                            i.formDocs.map(doc => <div key={doc._id}>
-                              <OverlayTrigger
-                                  placement="bottom"
-                                  overlay={
-                                    <Tooltip id="download-tooltip">
-                            {this.t("general:downloadFile:tooltip")}
-                                    </Tooltip>
-                                  }>
-
-                                <a className="item-value download" href={doc.url} target="_blank">
-                                  <i className="glyphicon glyphicon-download"/>
-                                  <span>{doc.name}</span>
-                                </a>
-                              </OverlayTrigger>
-                            </div>)
-                          }
-                        </div>
+                  i.formDocs && isFeatureVisible(this.getFMPrefix() + ".formDocs") ?
+                      <div className="row">
+                        <Item label={this.t("report:uploads").replace("$#$", this.getReportName())} col={12}>
+                          <FileDownloadLinks files={i.formDocs} useDash />
+                        </Item>
                       </div>
                       : null
                 }
-              </div>) : null
+              </div>)
         }
       </div>
     </div>);

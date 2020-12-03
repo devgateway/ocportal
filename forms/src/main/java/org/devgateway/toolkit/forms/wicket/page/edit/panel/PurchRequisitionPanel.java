@@ -74,11 +74,7 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new PurchRequisitionItemCountValidator());
-        }
+        findParent(Form.class).add(new PurchRequisitionItemCountValidator());
     }
 
     @Override
@@ -121,13 +117,12 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
 
     @Override
     public void populateCompoundListItem(final ListItem<PurchRequisition> item) {
-        ComponentUtil.addDateField(item, "requestApprovalDate").required();
+        ComponentUtil.addDateField(item, "requestApprovalDate");
         item.add(new PurchaseItemPanel("purchaseItems"));
 
-        ComponentUtil.addDateField(item, "approvedDate").required();
+        ComponentUtil.addDateField(item, "approvedDate");
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
 
@@ -153,12 +148,12 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
             GenericBootstrapFormComponent<Staff, Select2Choice<Staff>> requestedBy =
                     ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "requestedBy",
                             staffService
-                    ).required();
+                    );
             requestedBy.add(new StopEventPropagationBehavior());
             GenericBootstrapFormComponent<ChargeAccount, Select2Choice<ChargeAccount>> chargeAccount =
                     ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "chargeAccount",
                             chargeAccountService
-                    ).required();
+                    );
             chargeAccount.add(new StopEventPropagationBehavior());
         }
     }

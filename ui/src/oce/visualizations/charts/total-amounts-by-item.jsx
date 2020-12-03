@@ -1,4 +1,5 @@
 import PieChart from './pie-chart';
+import fmConnect from "../../fm/fm";
 
 class TotalAmountsByItem extends PieChart {
 
@@ -13,4 +14,4 @@ TotalAmountsByItem.endpoint = 'totalAmountByItem';
 TotalAmountsByItem.LABEL_FIELD = 'description';
 TotalAmountsByItem.VALUE_FIELD = 'totalAmount';
 
-export default TotalAmountsByItem;
+export default fmConnect(TotalAmountsByItem, 'viz.me.chart.totalAmountsByItem');

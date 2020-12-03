@@ -65,6 +65,7 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("paymentVoucherForm");
         super.onInitialize();
 
         Fragment inspectionExtraFields = new Fragment("childExtraFields", "paymentExtraFields", this);
@@ -72,20 +73,17 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.referenceNumber"));
 
 
-        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "totalAmount").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "totalAmount");
 
 
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcReport",
-                submittedAndWithinTenderProcessProvider(pmcReportService)
-        ).required();
+                submittedAndWithinTenderProcessProvider(pmcReportService));
         ComponentUtil.addSelect2ChoiceField(editForm, "inspectionReport",
-                submittedAndWithinTenderProcessProvider(inspectionReportService)
-        ).required();
+                submittedAndWithinTenderProcessProvider(inspectionReportService));
         ComponentUtil.addSelect2ChoiceField(editForm, "administratorReport",
-                submittedAndWithinTenderProcessProvider(administratorReportService)
-        ).required();
-        ComponentUtil.addYesNoToggle(editForm, "lastPayment", true).required();
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
+                submittedAndWithinTenderProcessProvider(administratorReportService));
+        ComponentUtil.addYesNoToggle(editForm, "lastPayment", true);
+        ComponentUtil.addDateField(editForm, "approvedDate");
 
         formDocs.maxFiles(1);
 

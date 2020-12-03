@@ -1,6 +1,7 @@
 import Table from './index';
 import { pluckImm } from '../../tools';
 import orgnamesFetching from '../../orgnames-fetching';
+import fmConnect from "../../fm/fm";
 
 class Suppliers extends orgnamesFetching(Table) {
   getOrgsWithoutNamesIds() {
@@ -43,4 +44,4 @@ class Suppliers extends orgnamesFetching(Table) {
 Suppliers.getName = t => t('tables:top10suppliers:title');
 Suppliers.endpoint = 'topTenSuppliers';
 
-export default Suppliers;
+export default fmConnect(Suppliers, 'viz.me.table.suppliers');

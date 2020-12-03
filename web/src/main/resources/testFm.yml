@@ -1,0 +1,28 @@
+- name: testField
+  mixins:
+    - field
+    - tenderField
+  mandatory: yes
+  enabled: yes
+
+- name: field
+  visible: no
+  mandatory: no
+  enabled: no
+
+- name: tender
+
+- name: tenderField
+  visible: yes
+  enabled: yes
+  hardDeps:
+    - tender
+  softDeps:
+    - tender
+
+- name: tenderChart
+  hardDeps:
+    - tenderField
+    - tender
+  softDeps:
+    - tender

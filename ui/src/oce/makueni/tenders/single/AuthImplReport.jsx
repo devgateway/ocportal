@@ -1,15 +1,16 @@
 import React from 'react';
 import ImplReport from './ImplReport';
+import {Item} from "./Item";
 
 class AuthImplReport extends ImplReport {
 
   childElements(i) {
     const { formatBoolean } = this.props.styling.tables;
-    return (<div key="1" className="row padding-top-10">
-      <div className="col-md-3">
-        <div className="item-label">{this.t("authImplReport:authorizePayment")}</div>
-        <div className="item-value">{formatBoolean(i.authorizePayment)}</div>
-      </div>
+    const { isFeatureVisible } = this.props;
+    return (<div key="1" className="row">
+      {isFeatureVisible(this.getFMPrefix() + ".authorizePayment")
+      && <Item label={this.t("authImplReport:authorizePayment")} value={formatBoolean(i.authorizePayment)} col={3} />}
+
       {
         this.authChildren(i)
       }

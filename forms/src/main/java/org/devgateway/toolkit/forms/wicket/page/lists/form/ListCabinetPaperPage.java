@@ -39,18 +39,19 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
 
     @Override
     protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
+        attachFm("cabinetPapersList");
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
                 "procurementPlan.department", "procurementPlan.department",
                 new ListModel(departments), dataTable,
                 isPreselected() && !FormSecurityUtil.isCurrentUserAdmin()
         ));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("fiscalYears", this),
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("fiscalYears", this),
                 "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable
         ));
 
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(
+        addFmColumn("number", new TextFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("number", this), "number",
                 "number"
         ));

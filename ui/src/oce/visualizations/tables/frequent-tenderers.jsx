@@ -3,6 +3,7 @@ import URI from 'urijs';
 import Table from './index';
 import orgNamesFetching from '../../orgnames-fetching';
 import { send, callFunc } from '../../tools';
+import fmConnect from "../../fm/fm";
 
 const maybeSlice = (flag, list) => (flag ? list.slice(0, 10) : list);
 
@@ -108,4 +109,4 @@ class FrequentTenderers extends orgNamesFetching(Table) {
 FrequentTenderers.getName = t => t('tables:frequentTenderers:title');
 FrequentTenderers.endpoint = 'frequentTenderers';
 
-export default FrequentTenderers;
+export default fmConnect(FrequentTenderers, 'viz.me.table.frequentTenderers');

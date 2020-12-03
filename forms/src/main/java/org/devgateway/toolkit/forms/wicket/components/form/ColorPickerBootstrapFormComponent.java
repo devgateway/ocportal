@@ -41,6 +41,11 @@ public class ColorPickerBootstrapFormComponent extends GenericBootstrapFormCompo
 
     @Override
     protected ColorPickerTextField inputField(final String id, final IModel<String> model) {
-        return new ColorPickerTextField(id, initFieldModel());
+        return new ColorPickerTextField(id, initFieldModel()) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
     }
 }

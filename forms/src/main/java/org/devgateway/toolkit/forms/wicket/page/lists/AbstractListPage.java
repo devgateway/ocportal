@@ -23,7 +23,6 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.GoAndClearFilter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -103,6 +102,18 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
+
+    protected void addFmColumn(String fmName, IColumn<T, String> column) {
+        if (getFmService().isFeatureVisible(getParentCombinedFmName(this, fmName))) {
+            columns.add(column);
+        }
+    }
+
+    protected void addFmColumn(String fmName, int i, IColumn<T, String> column) {
+        if (getFmService().isFeatureVisible(getParentCombinedFmName(this, fmName))) {
+            columns.add(i, column);
+        }
+    }
 
     public AbstractListPage(final PageParameters parameters) {
         super(parameters);
@@ -188,9 +199,10 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
         if (hasFilteredColumns()) {
             GoAndClearFilter go = new BootstrapGoClearFilter("go", filterForm);
-            FilterToolbar filterToolbar = new GoFilterToolbar(dataTable, go, filterForm);
+            GoFilterToolbar filterToolbar = new GoFilterToolbar(dataTable, go, filterForm);
             filterToolbar.setVisibilityAllowed(filterGoReset);
             dataTable.addTopToolbar(filterToolbar);
+            filterToolbar.attachWithParentFm("filterToolbar");
         }
 
         if (hasNewPage) {

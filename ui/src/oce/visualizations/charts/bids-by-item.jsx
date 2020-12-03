@@ -1,4 +1,5 @@
 import PieChart from './pie-chart';
+import fmConnect from "../../fm/fm";
 
 class BidsByItem extends PieChart{
   static getName(t){return t('charts:bidsByItem:title')}
@@ -13,4 +14,4 @@ BidsByItem.endpoint = 'tendersByItemClassification';
 BidsByItem.LABEL_FIELD = 'description';
 BidsByItem.VALUE_FIELD = 'tenderCount';
 
-export default BidsByItem;
+export default fmConnect(BidsByItem, 'viz.me.chart.bidsByItem');

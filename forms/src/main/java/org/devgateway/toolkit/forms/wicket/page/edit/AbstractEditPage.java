@@ -42,6 +42,7 @@ import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.exceptions.NullListPageClassException;
+import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
 import org.devgateway.toolkit.forms.util.MarkupCacheService;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
@@ -56,6 +57,7 @@ import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
+import org.devgateway.toolkit.web.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -261,8 +263,26 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
 
-    public class EditForm extends BootstrapForm<T> {
+    public class EditForm extends BootstrapForm<T> implements DgFmComponentSubject {
         private static final long serialVersionUID = -9127043819229346784L;
+
+        @SpringBean
+        protected DgFmService fmService;
+
+        @Override
+        public DgFmService getFmService() {
+            return fmService;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isFmEnabled(super::isEnabled);
+        }
+
+        @Override
+        public boolean isVisible() {
+            return isFmVisible(super::isVisible);
+        }
 
         /**
          * wrap the model with a {@link CompoundPropertyModel} to ease editing

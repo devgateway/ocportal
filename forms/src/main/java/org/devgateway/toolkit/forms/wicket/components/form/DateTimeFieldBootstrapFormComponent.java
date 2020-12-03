@@ -57,7 +57,12 @@ public class DateTimeFieldBootstrapFormComponent extends GenericBootstrapFormCom
     @Override
     protected DatetimePicker inputField(final String id, final IModel<Date> model) {
         final DatetimePickerConfig config = new DatetimePickerConfig().withFormat(DEFAULT_FORMAT);
-        return new DatetimePicker("field", initFieldModel(), config);
+        return new DatetimePicker("field", initFieldModel(), config) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
     }
 
     @Override

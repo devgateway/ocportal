@@ -1,4 +1,5 @@
 import CatChart from "./cat-chart";
+import fmConnect from "../../fm/fm";
 
 class SmallRepetitiveDirectAwardsBuyer extends CatChart{
   static getName(t){return t('charts:smallRepetitiveDirectAwardsByBuyer:title')}
@@ -25,4 +26,4 @@ SmallRepetitiveDirectAwardsBuyer.CAT_NAME_FIELD = "_id";
 SmallRepetitiveDirectAwardsBuyer.CAT_VALUE_FIELD = "cnt";
 SmallRepetitiveDirectAwardsBuyer.CAT_WRAP_CHARS = 40;
 
-export default SmallRepetitiveDirectAwardsBuyer;
+export default fmConnect(SmallRepetitiveDirectAwardsBuyer, 'viz.me.chart.smallRepetitiveDirectAwardsBuyer');

@@ -42,6 +42,7 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("awardNotificationForm");
         super.onInitialize();
 
         AwardNotificationItemPanel items = new AwardNotificationItemPanel("items");

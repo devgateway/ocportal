@@ -82,22 +82,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         }
     }
 
-    protected class AwardNotificationItemCountValidator implements IFormValidator {
-        @Override
-        public FormComponent<?>[] getDependentFormComponents() {
-            return new FormComponent[0];
-        }
-
-        @Override
-        public void validate(Form<?> form) {
-            List<AwardNotificationItem> items = AwardNotificationItemPanel.this.getModelObject();
-            if (items.size() == 0) {
-                form.error(getString("atLeastOneAwardNotification"));
-            }
-
-        }
-    }
-
 
     protected class ProfessionalOpinionCountValidator implements IFormValidator {
         @Override
@@ -122,13 +106,9 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new ProfessionalOpinionCountValidator());
-            form.add(new WrongDistinctCountValidator());
-            form.add(new AwardNotificationItemCountValidator());
-        }
+        final Form<?> form = findParent(Form.class);
+        form.add(new ProfessionalOpinionCountValidator());
+        form.add(new WrongDistinctCountValidator());
     }
 
     @Override
@@ -154,11 +134,10 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
 
     @Override
     public void populateCompoundListItem(final ListItem<AwardNotificationItem> item) {
-        ComponentUtil.addBigDecimalField(item, "awardValue").required()
+        ComponentUtil.addBigDecimalField(item, "awardValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         final DateFieldBootstrapFormComponent awardDate = ComponentUtil.addDateField(item, "awardDate");
-        awardDate.required();
         final Tender tender = item.getModelObject().getParent().getTenderProcess().getSingleTender();
         if (tender != null && tender.getInvitationDate() != null) {
             awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
@@ -170,7 +149,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         addSupplierInfo(item);
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
 
@@ -181,7 +159,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
                         ComponentUtil.getSuppliersInTenderQuotation(
                                 item.getModelObject().getParent().getTenderProcess(), true))
         );
-        awardeeSelector.required();
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         item.add(awardeeSelector);
 

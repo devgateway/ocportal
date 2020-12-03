@@ -1,6 +1,7 @@
 import FrontendDateFilterableChart from "./frontend-date-filterable";
 import {pluckImm} from "../../tools";
 import {Map} from "immutable";
+import fmConnect from "../../fm/fm";
 
 class AvgNrBids extends FrontendDateFilterableChart{
   getData(){
@@ -43,4 +44,4 @@ AvgNrBids.excelEP = 'averageNumberBidsExcelChart';
 AvgNrBids.getName = t => t('charts:avgNrBids:title');
 AvgNrBids.getFillerDatum = seed => Map(seed).set('averageNoTenderers', 0);
 
-export default AvgNrBids;
+export default fmConnect(AvgNrBids, 'viz.me.chart.avgNrBids');

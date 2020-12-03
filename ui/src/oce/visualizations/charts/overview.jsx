@@ -1,5 +1,6 @@
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { yearlyResponse2obj, monthlyResponse2obj, pluckImm } from '../../tools';
+import fmConnect from "../../fm/fm";
 
 class OverviewChart extends FrontendDateFilterableChart {
   transform([tendersResponse, awardsResponse]) {
@@ -79,4 +80,4 @@ OverviewChart.excelEP = 'procurementActivityExcelChart';
 
 OverviewChart.getName = t => t('charts:overview:title');
 
-export default OverviewChart;
+export default fmConnect(OverviewChart, 'viz.me.chart.overview');

@@ -1,6 +1,7 @@
 import FrontendDateFilterableChart from "./frontend-date-filterable";
 import {pluckImm, yearlyResponse2obj, monthlyResponse2obj} from "../../tools";
 import {Map} from "immutable";
+import fmConnect from "../../fm/fm";
 
 let ensureNonNegative = a => a < 0 ? 0 : a;
 
@@ -93,4 +94,4 @@ BidPeriod.horizontal = true;
 BidPeriod.getFillerDatum = seed => Map(seed).set('tender', 0).set('award', 0);
 BidPeriod.getMaxField = imm => imm.get('tender', 0) + imm.get('award', 0);
 
-export default BidPeriod;
+export default fmConnect(BidPeriod, 'viz.me.chart.bidPeriod');

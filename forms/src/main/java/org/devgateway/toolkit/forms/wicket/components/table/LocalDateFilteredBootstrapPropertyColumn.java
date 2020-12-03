@@ -28,6 +28,7 @@ public class LocalDateFilteredBootstrapPropertyColumn<T, S> extends TextFiltered
         final LocalDateFieldBootstrapFormComponent dateField =
                 new LocalDateFieldBootstrapFormComponent(componentId, getFilterModel(form));
         dateField.hideLabel();
+        dateField.fmNoAutoAttach();
         dateField.getField().add(AttributeModifier.replace("onchange", "this.form.submit();"));
         return dateField;
     }

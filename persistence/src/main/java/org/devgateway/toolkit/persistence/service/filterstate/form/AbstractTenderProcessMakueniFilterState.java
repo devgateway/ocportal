@@ -32,6 +32,8 @@ public abstract class AbstractTenderProcessMakueniFilterState<T extends Abstract
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
+            predicates.add(root.get(AbstractTenderProcessMakueniEntity_.tenderProcess).isNotNull());
+            
             if (StringUtils.isNotBlank(tenderTitle)) {
                 predicates.add(cb.like(
                         cb.lower(root.join(AbstractTenderProcessMakueniEntity_.tenderProcess)

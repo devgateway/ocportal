@@ -499,6 +499,10 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
         requireAtLeastOneItem = true;
     }
 
+    public boolean getRequireAtLeastOneItem() {
+        return requireAtLeastOneItem;
+    }
+    
     @Override
     public boolean checkRequired() {
         if (requireAtLeastOneItem) {

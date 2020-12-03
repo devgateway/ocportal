@@ -1,42 +1,43 @@
 import Visualization from '../visualization';
 import { List, Set } from 'immutable';
 import DefaultComparison from '../comparison';
-import Chart from '../visualizations/charts/index';
 import { download } from '../tools';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 class Tab extends Visualization {
-  maybeWrap(Component, index, rendered) {
+  maybeWrap(Component, ref) {
     let { dontWrap, getName } = Component;
     let { filters, years, months } = this.props;
-    let ref = `section${index}`;
-    let exportable = Component.prototype instanceof Chart;
-    return dontWrap ? rendered : <section key={index} ref={ref}>
-      <h4 className="page-header">
-        {getName(this.t.bind(this))}
-        {exportable && Component.excelEP && false && <img
+    let exportable = Component.isChart;
+    return dontWrap ? null : rendered => (
+      <section>
+        <h4 className="page-header">
+          {getName(this.t.bind(this))}
+          {exportable && Component.excelEP && false && <img
           src={process.env.PUBLIC_URL + "/icons/export-black.svg"}
-          width="16"
-          height="16"
-          className="chart-export-icon"
-          onClick={e => download({
-            ep: Component.excelEP,
-            filters,
-            years,
-            months,
-            t: this.t.bind(this)
-          })}
-        />}
-        {exportable && <img
+            width="16"
+            height="16"
+            className="chart-export-icon"
+            onClick={e => download({
+              ep: Component.excelEP,
+              filters,
+              years,
+              months,
+              t: this.t.bind(this)
+            })}
+          />}
+          {exportable && <img
           src={process.env.PUBLIC_URL + "/icons/camera.svg"}
-          className="chart-export-icon"
-          onClick={e => this.refs[ref].querySelector('.modebar-btn:first-child')
-          .click()}
-        />}
-      </h4>
-      {rendered}
-    </section>;
+            className="chart-export-icon"
+            onClick={e => {
+              ref.current.querySelector('.modebar-btn:first-child').click()
+            }}
+          />}
+        </h4>
+        {rendered}
+      </section>
+    );
   }
 
   compare(Component, index) {
@@ -67,11 +68,11 @@ class Tab extends Visualization {
   render() {
     let { filters, compareBy, requestNewData, data, years, months, monthly, width, translations, styling, navigate } = this.props;
     return <div className="col-sm-12">
-      {this.constructor.visualizations.map((Component, index) =>
-        compareBy && Component.comparable ? this.compare(Component, index) :
-          this.maybeWrap(Component, index,
+      {this.constructor.visualizations.map((Component, index) => {
+        const ref = React.createRef();
+        return compareBy && Component.comparable ? this.compare(Component, index) :
+          <div key={index} ref={ref}>
             <Component
-              key={index}
               filters={filters}
               requestNewData={(_, data) => requestNewData([index], data)}
               data={data.get(index)}
@@ -82,9 +83,11 @@ class Tab extends Visualization {
               navigate={navigate}
               translations={translations}
               styling={styling}
+              wrapRendered={this.maybeWrap(Component, ref)}
               margin={{ t: 10, l: 100, b: 80, r: 20, pad: 20 }}
             />
-          )
+          </div>
+        }
       )}
     </div>;
   }

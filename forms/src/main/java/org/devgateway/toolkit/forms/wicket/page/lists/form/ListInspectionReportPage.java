@@ -29,6 +29,7 @@ public class ListInspectionReportPage extends ListAbstractImplTenderProcessMakue
 
     @Override
     protected void onInitialize() {
+        attachFm("inspectionReportsList");
 
 //        columns.add(new TextFilteredBootstrapPropertyColumn<>(
 //                new Model<>((new StringResourceModel("title", ListAdministratorReportPage.this)).getString()),

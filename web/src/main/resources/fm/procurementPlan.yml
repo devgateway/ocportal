@@ -1,0 +1,222 @@
+# PROCUREMENT PLAN FORM PAGE
+- name: procurementPlanForm
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.approve
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.approvedDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.cancel
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.delete
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.estimatedCost
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.item
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.newButton
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.procurementMethod
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.quantity
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.quarter1st
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.quarter2nd
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.quarter3rd
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.quarter4th
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.remove
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.sourceOfFunds
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.targetGroup
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.targetGroupValue
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.planItems.totalCost
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quantity
+    - procurementPlanForm.planItems.estimatedCost
+- name: procurementPlanForm.planItems.unitOfIssue
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.save
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.terminate
+  enabled: yes
+  visible: yes
+- name: procurementPlanForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+# PROCUREMENT PLAN LIST PAGE
+- name: procurementPlansList
+  enabled: yes
+  visible: yes
+- name: procurementPlansList.department
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: procurementPlansList.filterToolbar
+  visible: yes
+- name: procurementPlansList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: procurementPlansList.status
+  visible: yes
+
+# PUBLIC VIEW
+- name: publicView.procurementPlansList.id
+  visible: yes
+- name: publicView.procurementPlansList.department
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: publicView.procurementPlansList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: publicView.procurementPlansList.formDocs
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.formDocs
+
+- name: publicView.procurementPlan.department
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: publicView.procurementPlan.fiscalYear
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: publicView.procurementPlan.planItems
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems
+- name: publicView.procurementPlan.planItems.label
+  visible: yes
+- name: publicView.procurementPlan.planItems.unitOfIssue
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.unitOfIssue
+- name: publicView.procurementPlan.planItems.quantity
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quantity
+- name: publicView.procurementPlan.planItems.estimatedCost
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.estimatedCost
+- name: publicView.procurementPlan.planItems.totalCost
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.totalCost
+- name: publicView.procurementPlan.planItems.procurementMethod
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.procurementMethod
+- name: publicView.procurementPlan.planItems.sourceOfFunds
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.sourceOfFunds
+- name: publicView.procurementPlan.planItems.targetGroup
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.targetGroup
+- name: publicView.procurementPlan.planItems.targetGroupValue
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.targetGroupValue
+- name: publicView.procurementPlan.planItems.quarter1st
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter1st
+- name: publicView.procurementPlan.planItems.quarter2nd
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter2nd
+- name: publicView.procurementPlan.planItems.quarter3rd
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter3rd
+- name: publicView.procurementPlan.planItems.quarter4th
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter4th
+- name: publicView.procurementPlan.formDocs
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.formDocs
+- name: publicView.procurementPlan.approvedDate
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.approvedDate

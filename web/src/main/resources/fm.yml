@@ -1,0 +1,110 @@
+- name: testForm
+  mixins:
+    - form
+    - statusForm
+    - lockingForm
+  mandatory: yes
+  enabled: yes
+  softDeps:
+    - testForm/textField
+
+- name: testForm/textField
+  mandatory: yes
+  enabled: no
+  mixins:
+    - field
+
+- name: field
+  visible: yes
+  enabled: yes
+
+- name: form
+
+- name: formButton
+
+- name: testForm/textArea
+  mandatory: yes
+  mixins:
+    - field
+
+- name: lockingForm/removeLock
+
+- name: lockingForm
+
+- name: statusForm
+
+- name: testForm/summernote
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/entitySelect
+  mandatory: no
+  mixins:
+    - field
+
+- name: testForm/entityMultiSelect
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/checkbox
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/checkboxPicker
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/checkboxToggle
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/date
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/dateTime
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/fileInput
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/colorPicker
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/testFormChildren/header
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/testFormChildren/value
+  mandatory: yes
+  mixins:
+    - field
+
+- name: testForm/testFormChildren/remove
+  enabled: no
+  mixins:
+    - formButton
+
+- name: testForm/testFormChildren/newButton
+  enabled: no
+  mixins:
+    - formButton
+
+- name: testForm/testFormChildren
+  mandatory: yes
+  visible: yes
+  mixins:
+    - field

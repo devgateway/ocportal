@@ -24,3 +24,4 @@ rebel.xml
 /derby.log
 /LOG_DIR_IS_UNDEFINED/
 /ehcache-diskstore/
+/_projectedFm.yml

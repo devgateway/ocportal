@@ -1,9 +1,7 @@
 import translatable from '../../translatable';
 import Component from '../../pure-render-component';
 import cn from 'classnames';
-import FilterItemDep from './FilterItemDep';
 import { Map } from 'immutable';
-import FilterItemFY from './FilterItemFY';
 
 class FiltersWrapper extends translatable(Component) {
   constructor(props) {
@@ -45,9 +43,11 @@ class FiltersWrapper extends translatable(Component) {
 
   listItems() {
     const { expanded } = this.state;
-    const { translations } = this.props;
+    const { translations, isFeatureVisible } = this.props;
 
-    return this.constructor.ITEMS.map((Item, index) => <div
+    return this.constructor.ITEMS
+      .filter((Item, index) => isFeatureVisible(this.constructor.FM[index]))
+      .map((Item, index) => <div
         key={index}
         className={'row filter ' + this.constructor.CLASS[index]}>
         <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
@@ -83,8 +83,5 @@ class FiltersWrapper extends translatable(Component) {
     </div>;
   }
 }
-
-FiltersWrapper.ITEMS = [FilterItemDep, FilterItemFY];
-FiltersWrapper.CLASS = ['department', 'fiscal-year'];
 
 export default FiltersWrapper;
