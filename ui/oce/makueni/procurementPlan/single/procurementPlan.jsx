@@ -102,7 +102,7 @@ class ProcurementPlan extends FeedbackPage {
                     data.planItems.map(planItem => <div key={planItem.id} className="box">
                       {isFeatureVisible("publicView.procurementPlan.planItems.label")
                       && <div className="row">
-                        <Item label="Item" value={planItem.item.label} col={12} />
+                        <Item label={this.t("procurementPlan:item:item")} value={planItem.item.label} col={12} />
                       </div>}
 
                       <div className="row display-flex">

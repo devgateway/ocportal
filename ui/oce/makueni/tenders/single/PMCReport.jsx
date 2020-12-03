@@ -59,19 +59,20 @@ class PMCReport extends AuthImplReport {
       <div key="3">
         <div className="row">
           {isFeatureVisible("publicView.pmcReport.socialSafeguards")
-          && <Item label="Social Safeguards" value={i.socialSafeguards} col={3} />}
+          && <Item label={this.t("pmcReport:socialSafeguards")} value={i.socialSafeguards} col={3} />}
 
           {isFeatureVisible("publicView.pmcReport.emergingComplaints")
-          && <Item label="Emerging Complaints" value={i.emergingComplaints} col={3} />}
+          && <Item label={this.t("pmcReport:emergingComplaints")} value={i.emergingComplaints} col={3} />}
 
           {isFeatureVisible("publicView.pmcReport.pmcChallenges")
-          && <Item label="PMC Challenges" value={i.pmcChallenges} col={3} />}
+          && <Item label={this.t("pmcReport:pmcChallenges")} value={i.pmcChallenges} col={3} />}
         </div>
       </div>,
       <div key="4">
         {isFeatureVisible("publicView.pmcReport.pmcNotes")
         && <div className="row">
-          <Item label="PMC Notes" value={i.pmcNotes && i.pmcNotes.map(item => item.text).join(', ')} col={12} />
+          <Item label={this.t("pmcReport:pmcNotes")}
+                value={i.pmcNotes && i.pmcNotes.map(item => item.text).join(', ')} col={12} />
         </div>}
       </div>
     ];
