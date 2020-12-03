@@ -50,7 +50,7 @@ public class FileInputBootstrapFormComponent extends GenericBootstrapFormCompone
      * @param model
      */
     public FileInputBootstrapFormComponent(final String id, final IModel<String> labelModel,
-            final IModel<Collection<FileMetadata>> model) {
+                                           final IModel<Collection<FileMetadata>> model) {
         super(id, labelModel, model);
     }
 
@@ -85,7 +85,11 @@ public class FileInputBootstrapFormComponent extends GenericBootstrapFormCompone
                 id, initFieldModel()) {
             @Override
             public boolean isRequired() {
-                return isFmMandatory(super::isRequired);
+                boolean fmMandatory = isFmMandatory(super::isRequired);
+                if (fmMandatory && !getRequireAtLeastOneItem()) {
+                    requireAtLeastOneItem();
+                }
+                return fmMandatory;
             }
         };
 
