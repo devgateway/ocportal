@@ -9,7 +9,7 @@ class AuthImplReport extends ImplReport {
     const { isFeatureVisible } = this.props;
     return (<div key="1" className="row">
       {isFeatureVisible(this.getFMPrefix() + ".authorizePayment")
-      && <Item label="Authorize Payment" value={formatBoolean(i.authorizePayment)} col={3} />}
+      && <Item label={this.t("authImplReport:authorizePayment")} value={formatBoolean(i.authorizePayment)} col={3} />}
 
       {
         this.authChildren(i)

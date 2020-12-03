@@ -6,7 +6,7 @@ import {Item} from "./Item";
 class PaymentVoucher extends ImplReport {
 
   getReportName() {
-    return 'Payment Vouchers';
+    return this.t("paymentVoucher:label");
   }
 
   getFMPrefix() {
@@ -19,22 +19,22 @@ class PaymentVoucher extends ImplReport {
     return (<div>
       <div className="row display-flex">
         {isFeatureVisible("publicView.paymentVoucher.pmcReport")
-        && <Item label="PMC Report" value={i.pmcReport.label} col={3} />}
+        && <Item label={this.t("paymentVoucher:pmcReport")} value={i.pmcReport.label} col={3} />}
 
         {isFeatureVisible("publicView.paymentVoucher.inspectionReport")
-        && <Item label="Inspection Report" value={i.inspectionReport.label} col={3} />}
+        && <Item label={this.t("paymentVoucher:inspectionReport")} value={i.inspectionReport.label} col={3} />}
 
         {isFeatureVisible("publicView.paymentVoucher.administratorReport")
-        && <Item label="Administrator Report" value={i.administratorReport.label} col={3} />}
+        && <Item label={this.t("paymentVoucher:administratorReport")} value={i.administratorReport.label} col={3} />}
 
         {isFeatureVisible("publicView.paymentVoucher.totalAmount")
-        && <Item label="Total Amount" value={currencyFormatter(i.totalAmount)} col={3} />}
+        && <Item label={this.t("paymentVoucher:totalAmount")} value={currencyFormatter(i.totalAmount)} col={3} />}
 
         {isFeatureVisible("publicView.paymentVoucher.lastPayment")
-        && <Item label="Last Payment" value={formatBoolean(i.lastPayment)} col={3} />}
+        && <Item label={this.t("paymentVoucher:lastPayment")} value={formatBoolean(i.lastPayment)} col={3} />}
 
         {isFeatureVisible("publicView.paymentVoucher.contractRefNum")
-        && <Item label="Contract Number" value={currencyFormatter(i.contract.referenceNumber)} col={3} />}
+        && <Item label={this.t("paymentVoucher:contractNumber")} value={currencyFormatter(i.contract.referenceNumber)} col={3} />}
       </div>
     </div>);
   }

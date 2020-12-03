@@ -3,8 +3,9 @@ import React from 'react';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
+import translatable from "../../../translatable";
 
-class PurchaseReq extends React.Component {
+class PurchaseReq extends translatable(React.Component) {
   getFeedbackSubject() {
     const { data, department, fiscalYear } = this.props;
 
@@ -14,7 +15,7 @@ class PurchaseReq extends React.Component {
         + " - " + department.label
         + " - " + fiscalYear.name;
     }
-    return escape("Tender Process" + metadata);
+    return escape(this.t("purchaseReq:label") + metadata);
   }
 
   render() {
@@ -22,13 +23,13 @@ class PurchaseReq extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     return (<div>
       <div className="row">
         {isFeatureVisible("publicView.tenderProcess.purchaseRequestNumber")
-        && <Item label="Purchase Request Number" value={data.purchaseRequestNumber} col={3} />}
+        && <Item label={this.t("purchaseReq:purchaseRequestNumber")} value={data.purchaseRequestNumber} col={3} />}
       </div>
 
       {
@@ -37,22 +38,23 @@ class PurchaseReq extends React.Component {
           data.purchRequisitions.map(preq => <div key={preq._id} className="box">
             <div className="row">
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.requestedBy")
-              && <Item label="Requested By" value={preq.requestedBy.label} col={3} />}
+              && <Item label={this.t("purchaseReq:requestedBy")} value={preq.requestedBy.label} col={3} />}
 
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.chargeAccount")
-              && <Item label="Charge Account" value={preq.chargeAccount.label} col={3} />}
+              && <Item label={this.t("purchaseReq:chargeAccount")} value={preq.chargeAccount.label} col={3} />}
 
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.requestApprovalDate")
-              && <Item label="Request Approval Date" value={formatDate(preq.requestApprovalDate)} col={3} />}
+              && <Item label={this.t("purchaseReq:requestApprovalDate")}
+                       value={formatDate(preq.requestApprovalDate)} col={3} />}
 
               {isFeatureVisible("publicView.tenderProcess.purchRequisitions.approvedDate")
-              && <Item label="Approved Date" value={formatDate(preq.approvedDate)} col={3} />}
+              && <Item label={this.t("purchaseReq:approvedDate")} value={formatDate(preq.approvedDate)} col={3} />}
             </div>
             {
               preq.purchaseItems !== undefined && isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems")
                 ? <div>
                   <div className="row padding-top-10">
-                    <div className="col-md-12 sub-title">Purchase Requisition Items
+                    <div className="col-md-12 sub-title">{this.t("purchaseReq:items")}
                       ({preq.purchaseItems.length})
                     </div>
                   </div>
@@ -60,22 +62,22 @@ class PurchaseReq extends React.Component {
                     preq.purchaseItems.map(pr => <div key={pr._id} className="box">
                       <div className="row display-flex">
                         {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.label")
-                        && <Item label="Item" value={pr.planItem.item.label} col={6} />}
+                        && <Item label={this.t("purchaseReq:items:item")} value={pr.planItem.item.label} col={6} />}
 
                         {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.description")
-                        && <Item label="Description" value={pr.description} col={6} />}
+                        && <Item label={this.t("purchaseReq:items:description")} value={pr.description} col={6} />}
 
                         {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.unitOfIssue")
-                        && <Item label="Unit of Issue" value={pr.planItem.unitOfIssue.label} col={3} />}
+                        && <Item label={this.t("purchaseReq:items:unitOfIssue")} value={pr.planItem.unitOfIssue.label} col={3} />}
 
                         {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.quantity")
-                        && <Item label="Quantity" value={currencyFormatter(pr.quantity)} col={3} />}
+                        && <Item label={this.t("purchaseReq:items:quantity")} value={currencyFormatter(pr.quantity)} col={3} />}
 
                         {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.amount")
-                        && <Item label="Unit Price" value={currencyFormatter(pr.amount)} col={3} />}
+                        && <Item label={this.t("purchaseReq:items:amount")} value={currencyFormatter(pr.amount)} col={3} />}
 
                         {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.totalCost")
-                        && <Item label="Total Cost" value={currencyFormatter(pr.quantity * pr.amount)} col={3} />}
+                        && <Item label={this.t("purchaseReq:items:totalCost")} value={currencyFormatter(pr.quantity * pr.amount)} col={3} />}
                       </div>
                     </div>)
                   }
@@ -84,7 +86,7 @@ class PurchaseReq extends React.Component {
             }
               <div className="row">
                 {isFeatureVisible("publicView.tenderProcess.purchRequisitions.formDocs")
-                && <Item label="Purchase Requisition Documents" col={6}>
+                && <Item label={this.t("purchaseReq:docs")} col={6}>
                   <FileDownloadLinks files={preq.formDocs} useDash />
                 </Item>}
               </div>

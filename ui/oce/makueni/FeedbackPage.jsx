@@ -1,17 +1,17 @@
 import React from 'react';
+import translatable from '../translatable';
 
-class FeedbackPage extends React.Component {
+class FeedbackPage extends translatable(React.Component) {
   getFeedbackSubject() {
-    return escape("Makueni Public Portal Feedback");
+    return escape(this.t("feedbackPage:subject"));
   }
 
   getFeedbackMessage() {
     return (<div className="row feedback-section" >
       <a href={"mailto:opencontracting@makueni.go.ke?Subject=" + this.getFeedbackSubject()} target="_top">
-        <div className="col-md-offset-8 col-md-4" data-intro="Send questions or
-        feedback on this project to the government.">
+        <div className="col-md-offset-8 col-md-4" data-intro={this.t("feedbackPage:link:dataIntro")}>
           <div className="pull-right">
-            <span>Questions or Feedback</span>
+            <span>{this.t("feedbackPage:link:label")}</span>
             <img className="feedback-icon" src="assets/icons/feedback.svg" alt="feedback"/>
           </div>
         </div>

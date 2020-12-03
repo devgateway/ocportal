@@ -8,7 +8,7 @@ import FileDownloadLinks from "./FileDownloadLinks";
 class InspectionReport extends AuthImplReport {
 
   getReportName() {
-    return 'Inspection Reports';
+    return this.t("inspectionReport:label");
   }
 
   getFMPrefix() {
@@ -20,7 +20,8 @@ class InspectionReport extends AuthImplReport {
     const { isFeatureVisible } = this.props;
     return (<div>
         {isFeatureVisible("publicView.inspectionReport.contractValue")
-        && <Item label="Contract Sum" value={currencyFormatter(i.contract.contractValue)} col={3} />}
+        && <Item label={this.t("inspectionReport:contractValue")}
+                 value={currencyFormatter(i.contract.contractValue)} col={3} />}
       </div>
     );
   }
@@ -39,13 +40,13 @@ class InspectionReport extends AuthImplReport {
       (<div key="2">
         <div className="row">
           {isFeatureVisible("publicView.inspectionReport.comments")
-          && <Item label="Comments" value={i.comments} col={6} />}
+          && <Item label={this.t("inspectionReport:comments")} value={i.comments} col={6} />}
 
           {
             i.privateSectorRequests !== undefined
             && isFeatureVisible("publicView.inspectionReport.privateSectorRequests")
             && isFeatureVisible("publicView.inspectionReport.privateSectorRequests.requestDate") ?
-              <Item label="No of days for the inspection report to be done"
+              <Item label={this.t("inspectionReport:daysUntilReport")}
                     value={this.getNearestRequestDate(i)} col={6} />
               : null
           }
@@ -53,18 +54,18 @@ class InspectionReport extends AuthImplReport {
         {
           i.privateSectorRequests !== undefined && isFeatureVisible("publicView.inspectionReport.privateSectorRequests") ?
             <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">Private Sector Requests
+              <div className="col-md-12 sub-title">{this.t("inspectionReport:privateSectorRequest:pl")}
                 ({i.privateSectorRequests.length})
               </div>
               {i.privateSectorRequests.map(psr => <div key={psr._id} className="box">
                 <div className="row">
                   {isFeatureVisible("publicView.inspectionReport.privateSectorRequests.upload")
-                  && <Item label="Private Sector Request" col={3}>
+                  && <Item label={this.t("inspectionReport:privateSectorRequest:sg")} col={3}>
                     <FileDownloadLinks files={psr.upload} useDash />
                   </Item>}
 
                   {isFeatureVisible("publicView.inspectionReport.privateSectorRequests.requestDate")
-                  && <Item label="Request Date" value={formatDate(psr.requestDate)} col={3} />}
+                  && <Item label={this.t("inspectionReport:privateSectorRequest:requestDate")} value={formatDate(psr.requestDate)} col={3} />}
                 </div>
               </div>)
               }

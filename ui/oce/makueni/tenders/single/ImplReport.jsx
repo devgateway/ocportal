@@ -2,8 +2,9 @@ import NoDataMessage from './NoData';
 import React from 'react';
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
+import translatable from "../../../translatable";
 
-class ImplReport extends React.Component {
+class ImplReport extends translatable(React.Component) {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -29,7 +30,7 @@ class ImplReport extends React.Component {
     const { formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     return (<div>
@@ -39,16 +40,16 @@ class ImplReport extends React.Component {
               .map(i => <div key={i._id} className="box">
               <div className="row">
                 {isFeatureVisible(this.getFMPrefix() + ".tenderTitle")
-                && <Item label="Tender Title" value={tenderTitle} col={3} />}
+                && <Item label={this.t("report:tenderTitle")} value={tenderTitle} col={3} />}
 
                 {isFeatureVisible(this.getFMPrefix() + ".contractor")
-                && <Item label="Contractor" value={i.contract.awardee.label} col={3} />}
+                && <Item label={this.t("report:awardee:label")} value={i.contract.awardee.label} col={3} />}
 
                 {isFeatureVisible(this.getFMPrefix() + ".fiscalYear")
-                && <Item label="Fiscal Year" value={fiscalYear.name} col={3} />}
+                && <Item label={this.t("report:fiscalYear")} value={fiscalYear.name} col={3} />}
 
                 {isFeatureVisible(this.getFMPrefix() + ".approvedDate")
-                && <Item label="Report Date" value={formatDate(i.approvedDate)} col={3} />}
+                && <Item label={this.t("report:approvedDate")} value={formatDate(i.approvedDate)} col={3} />}
               </div>
                 {
                   this.childElements(i)
@@ -56,7 +57,7 @@ class ImplReport extends React.Component {
                 {
                   i.formDocs && isFeatureVisible(this.getFMPrefix() + ".formDocs") ?
                       <div className="row">
-                        <Item label={this.getReportName() + " Uploads"} col={12}>
+                        <Item label={this.t("report:uploads").replace("$#$", this.getReportName())} col={12}>
                           <FileDownloadLinks files={i.formDocs} useDash />
                         </Item>
                       </div>

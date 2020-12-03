@@ -4,8 +4,9 @@ import React from 'react';
 import {Item} from "./Item";
 import fmConnect from "../../../fm/fm";
 import FileDownloadLinks from "./FileDownloadLinks";
+import translatable from "../../../translatable";
 
-class Project extends React.Component {
+class Project extends translatable(React.Component) {
   constructor(props) {
     super(props);
 
@@ -53,7 +54,7 @@ class Project extends React.Component {
         + " - " + data.department.label
         + " - " + data.fiscalYear.name;
     }
-    return escape("Project" + metadata);
+    return escape(this.t("project:feedbackSubject") + metadata);
   }
 
   render() {
@@ -69,14 +70,14 @@ class Project extends React.Component {
           <span className="previous">&#8249;</span>
         </span>
           <span className="back-text">
-          Go Back
+            {this.t("general:goBack")}
         </span>
         </a>
       </div>
 
       <div className="row padding-top-10">
         <div className="col-md-12">
-          <h1 className="page-title">Project</h1>
+          <h1 className="page-title">{this.t("project:pageTitle")}</h1>
         </div>
       </div>
 
@@ -85,27 +86,27 @@ class Project extends React.Component {
           ? <div>
             <div className="row display-flex">
               {isFeatureVisible("publicView.project.projectTitle")
-              && <Item label="Project Title" value={data.projects.projectTitle} col={6} />}
+              && <Item label={this.t("project:title")} value={data.projects.projectTitle} col={6} />}
 
               {isFeatureVisible("publicView.project.cabinetPapers")
-              && <Item label="Cabinet Papers" col={6}>
+              && <Item label={this.t("project:title")} col={6}>
                 <FileDownloadLinks files={data.projects.cabinetPapers.flatMap(cp => cp.formDocs)} useDash />
               </Item>}
 
               {isFeatureVisible("publicView.project.amountBudgeted")
-              && <Item label="Amount Budgeted" value={currencyFormatter(data.projects.amountBudgeted)} col={6} />}
+              && <Item label={this.t("project:amountBudgeted")} value={currencyFormatter(data.projects.amountBudgeted)} col={6} />}
 
               {isFeatureVisible("publicView.project.amountRequested")
-              && <Item label="Amount Requested" value={currencyFormatter(data.projects.amountRequested)} col={6} />}
+              && <Item label={this.t("project:amountRequested")} value={currencyFormatter(data.projects.amountRequested)} col={6} />}
 
               {isFeatureVisible("publicView.project.subcounties")
-              && <Item label="Sub-Counties" value={data.projects.subcounties.map(item => item.label).join(', ')} col={6} />}
+              && <Item label={this.t("project:subcounties")} value={data.projects.subcounties.map(item => item.label).join(', ')} col={6} />}
 
               {isFeatureVisible("publicView.project.wards")
-              && <Item label="Wards" value={data.projects.wards && data.projects.wards.map(item => item.label).join(', ')} col={6} />}
+              && <Item label={this.t("project:wards")} value={data.projects.wards && data.projects.wards.map(item => item.label).join(', ')} col={6} />}
 
               {isFeatureVisible("publicView.project.approvedDate")
-              && <Item label="Approved Date" value={formatDate(data.projects.approvedDate)} col={6} />}
+              && <Item label={this.t("project:approvedDate")} value={formatDate(data.projects.approvedDate)} col={6} />}
             </div>
           </div>
           : null

@@ -81,16 +81,14 @@ class MakueniTenders extends CRDPage {
 
   tenderLink(navigate) {
     return (tender) => (<div className="tender-title" data-step={this.showDataStep()?9:""}
-    data-intro={this.showDataStep()?"Click on the Tender Title to view the tender details," +
-    " purchase requisition, tender quotation, professional opinion, notification, award and " +
-    "contract for each tender process.":""}>
+    data-intro={this.showDataStep()?this.t("tables:tenderLink:dataIntro"):""}>
       {
         tender !== undefined
           ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
                onClick={() => navigate('t', tender.purchaseReqId)} className="more-details-link">
             {tender.tenderTitle && tender.tenderTitle.toUpperCase()}
           </a>
-          : 'No Tender'
+          : this.t("tables:tenderLink:noTender")
       }
     </div>);
   }
@@ -98,15 +96,14 @@ class MakueniTenders extends CRDPage {
   projectLink(navigate) {
     return (project) => (<div data-step={this.showDataStep()?10:""}
                               data-intro=
-                                {this.showDataStep()?"Click the Project Title to view project " +
-                                  "details outlined in the approved cabinet paper.":""}>
+                                {this.showDataStep()?this.t("tables:projectLink:dataIntro"):""}>
       {
         project !== undefined
           ? <a href={`#!/tender/p/${project._id}`} onClick={() => navigate('p', project._id)}
                className="more-details-link">
             {project.projectTitle && project.projectTitle.toUpperCase()}
           </a>
-          : 'No Project'
+          : this.t("tables:projectLink:noProject")
       }
     </div>);
   }
@@ -139,35 +136,35 @@ class MakueniTenders extends CRDPage {
     this.introjsCnt = 0;
 
     const columns = [{
-      title: 'Tender Title',
+      title: this.t("tables:tenders:col:title"),
       dataField: 'tender',
       dataFormat: this.tenderLink(navigate),
       visible: isFeatureVisible('publicView.tendersProcessList.tenderTitle')
     }, {
-      title: 'Department',
+      title: this.t("tables:tenders:col:department"),
       dataField: 'department',
       visible: isFeatureVisible('publicView.tendersProcessList.department')
     }, {
-      title: 'Fiscal Year',
+      title: this.t("tables:tenders:col:fiscalYear"),
       dataField: 'fiscalYear',
       visible: isFeatureVisible('publicView.tendersProcessList.fiscalYear')
     }, {
-      title: 'Closing Date',
+      title: this.t("tables:tenders:col:closingDate"),
       dataField: 'tender',
       dataFormat: (cell, row) => cell !== undefined ? new Date(cell.closingDate).toLocaleDateString() : '',
       visible: isFeatureVisible('publicView.tendersProcessList.closingDate')
     }, {
-      title: 'Tender Value',
+      title: this.t("tables:tenders:col:tenderValue"),
       dataField: 'tender',
       dataFormat: (cell, row) => cell !== undefined ? this.props.styling.charts.hoverFormatter(cell.tenderValue) : '',
       visible: isFeatureVisible('publicView.tendersProcessList.tenderValue')
     }, {
-      title: 'Project',
+      title: this.t("tables:tenders:col:project"),
       dataField: 'project',
       dataFormat: this.projectLink(navigate),
       visible: isFeatureVisible('publicView.tendersProcessList.project')
     }, {
-      title: 'Tender Documents',
+      title: this.t("tables:tenders:col:documents"),
       dataField: 'tender',
       dataFormat: this.linksAndFiles(),
       visible: isFeatureVisible('publicView.tendersProcessList.tenderLink')
@@ -181,9 +178,7 @@ class MakueniTenders extends CRDPage {
 
       <div className="makueni-tenders content row" >
         <div className="col-md-3 col-sm-12 filters">
-          <div className="row" data-intro="On each page there is a set of filters that allows you to
-           limit what information is shown on the page by selected metrics, such as a specific
-           location or department." data-step="8">
+          <div className="row" data-intro={this.t("tables:tenders:filters:dataIntro")} data-step="8">
             <div className="filters-hint col-md-12">
               {this.t('filters:hint')}
             </div>
@@ -195,7 +190,7 @@ class MakueniTenders extends CRDPage {
           {
             navigationPage === undefined
               ? <div>
-                <h1>Makueni Tenders</h1>
+                <h1>{this.t("tables:tenders:title")}</h1>
 
                 <BootstrapTableWrapper
                   bordered
@@ -223,7 +218,7 @@ class MakueniTenders extends CRDPage {
         <div className="row alerts-button subscribe">
           <div className="col-md-12">
             <button className="btn btn-info btn-lg" type="submit"
-                    onClick={() => this.props.onSwitch('alerts')}>Subscribe to Email Alerts
+                    onClick={() => this.props.onSwitch('alerts')}>{this.t("general:subscribeToEmailAlerts")}
             </button>
           </div>
         </div>
@@ -232,12 +227,12 @@ class MakueniTenders extends CRDPage {
         <div className="row alerts-button subscribe">
           <div className="col-md-12">
             <button className="btn btn-info btn-lg" type="submit"
-                    onClick={() => this.props.onSwitch('smshelp')}>SMS Guide
+                    onClick={() => this.props.onSwitch('smshelp')}>{this.t("general:smsFeedbackHelp")}
             </button>
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer translations={this.props.translations}/>
     </div>);
   }
 }

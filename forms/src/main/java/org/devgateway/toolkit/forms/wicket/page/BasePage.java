@@ -335,7 +335,8 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
     private NavbarButton<Homepage> newHomeMenu() {
         // home
-        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class, Model.of("Home"));
+        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class,
+                new StringResourceModel("navbar.home", this));
         homeMenu.setIconType(FontAwesomeIconType.home);
         MetaDataRoleAuthorizationStrategy.authorize(homeMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
         return homeMenu;

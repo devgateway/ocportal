@@ -40,54 +40,53 @@ class PurchaseReqView extends CRDPage {
       name: 'prInfo',
       url: this.prInfoUrl,
     });
-
     this.tabs = [
       {
-        name: 'Tender',
+        name: this.t("purchaseReq:tabs:tender"),
         tab: 1,
         fm: 'publicView.tender'
       }, {
-        name: 'Purchase Requisitions',
+        name: this.t("purchaseReq:tabs:purchaseReqs"),
         tab: 2,
         fm: 'publicView.tenderProcess'
       }, {
-        name: 'Tender Evaluation',
+        name: this.t("purchaseReq:tabs:tenderEvaluation"),
         tab: 3,
         fm: 'publicView.tenderQuotationEvaluation'
       }, {
-        name: 'Professional Opinion',
+        name: this.t("purchaseReq:tabs:professionalOpinion"),
         tab: 4,
         fm: 'publicView.professionalOpinions'
       }, {
-        name: 'Notification',
+        name: this.t("purchaseReq:tabs:notification"),
         tab: 5,
         fm: 'publicView.awardNotification'
       }, {
-        name: 'Award',
+        name: this.t("purchaseReq:tabs:award"),
         tab: 6,
         fm: 'publicView.awardAcceptance'
       }, {
-        name: 'Contract',
+        name: this.t("purchaseReq:tabs:contract"),
         tab: 7,
         fm: 'publicView.contract'
       }, {
-        name: 'Administrator Reports',
+        name: this.t("purchaseReq:tabs:adminReports"),
         tab: 8,
         fm: 'publicView.administratorReport'
       }, {
-        name: 'Inspection Reports',
+        name: this.t("purchaseReq:tabs:inspectionReports"),
         tab: 9,
         fm: 'publicView.inspectionReport'
       }, {
-        name: 'PMC Reports',
+        name: this.t("purchaseReq:tabs:pmcReports"),
         tab: 10,
         fm: 'publicView.pmcReport'
       }, {
-        name: 'M&E Reports',
+        name: this.t("purchaseReq:tabs:meReports"),
         tab: 11,
         fm: 'publicView.meReport'
       }, {
-        name: 'Payment Vouchers',
+        name: this.t("purchaseReq:tabs:paymentVouchers"),
         tab: 12,
         fm: 'publicView.paymentVoucher'
       }
@@ -152,59 +151,59 @@ class PurchaseReqView extends CRDPage {
     switch (selected) {
       case 1:
         return <Tender data={data.tender} prId={data._id} department={department} fiscalYear={fiscalYear}
-                       styling={this.props.styling}/>;
+                       styling={this.props.styling} translations={this.props.translations}/>;
 
       case 2:
         return <PurchaseReq data={data} department={department} fiscalYear={fiscalYear}
-                            styling={this.props.styling}/>;
+                            styling={this.props.styling} translations={this.props.translations}/>;
 
       case 3:
         return <TenderQuotation data={data.tenderQuotationEvaluation} tenderTitle={tenderTitle}
                                 department={department} fiscalYear={fiscalYear}
-                                styling={this.props.styling}/>;
+                                styling={this.props.styling} translations={this.props.translations}/>;
 
       case 4:
         return <ProfessionalOpinion data={data.professionalOpinion} tenderTitle={tenderTitle}
                                     department={department} fiscalYear={fiscalYear}
-                                    styling={this.props.styling}/>;
+                                    styling={this.props.styling} translations={this.props.translations}/>;
 
       case 5:
         return <Notification data={data.awardNotification} tenderTitle={tenderTitle}
                              department={department} fiscalYear={fiscalYear}
-                             styling={this.props.styling}/>;
+                             styling={this.props.styling} translations={this.props.translations}/>;
 
       case 6:
         return <Award data={data.awardAcceptance} department={department} tenderTitle={tenderTitle}
-                      fiscalYear={fiscalYear} styling={this.props.styling}/>;
+                      fiscalYear={fiscalYear} styling={this.props.styling} translations={this.props.translations}/>;
 
       case 7:
         return <Contract data={data.contract} department={department} tenderTitle={tenderTitle}
-                         fiscalYear={fiscalYear} styling={this.props.styling}/>;
+                         fiscalYear={fiscalYear} styling={this.props.styling} translations={this.props.translations}/>;
 
       case 8:
         return <AdministratorReport data={data.administratorReports} department={department}
                                      tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                                     styling={this.props.styling}/>;
+                                     styling={this.props.styling} translations={this.props.translations}/>;
 
       case 9:
         return <InspectionReport data={data.inspectionReports} department={department}
                                      tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                                     styling={this.props.styling}/>;
+                                     styling={this.props.styling} translations={this.props.translations}/>;
 
       case 10:
         return <PMCReport data={data.pmcReports} department={department}
                                  tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                                 styling={this.props.styling}/>;
+                                 styling={this.props.styling} translations={this.props.translations}/>;
 
       case 11:
         return <MEReport data={data.meReports} department={department}
                          tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                         styling={this.props.styling}/>;
+                         styling={this.props.styling} translations={this.props.translations}/>;
 
       case 12:
         return <PaymentVoucher data={data.paymentVouchers} department={department}
                           tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                          styling={this.props.styling}/>;
+                          styling={this.props.styling} translations={this.props.translations}/>;
 
       default:
         throw new Error("Tab not implemented");
@@ -219,8 +218,7 @@ class PurchaseReqView extends CRDPage {
 
     return (<div className="tender makueni-form">
       <div className="row">
-        <div className="col-md-12 navigation-view" data-step="9" data-intro="Click to view and
-        download the details and documents related to this tender process.">
+        <div className="col-md-12 navigation-view" data-step="9" data-intro={this.t("purchaseReq:nav:dataIntro")}>
           {
             visibleTabs.map(tab => {
               return (<a
@@ -242,17 +240,16 @@ class PurchaseReqView extends CRDPage {
           <span className="previous">&#8249;</span>
         </span>
           <span>
-          Go Back
+            {this.t("general:goBack")}
         </span>
         </a>
 
           <div className="col-md-offset-5 col-md-4">
             <button className="btn btn-subscribe pull-right" type="submit"
                     data-step="11"
-                    data-intro="Click this button to receive email alerts on any data updates
-                    to this tender."
+                    data-intro={this.t("purchaseReq:receiveAlerts:dataIntro")}
                     onClick={() => this.props.onSwitch('alerts', data._id, data.tender[0].tenderTitle)}>
-              Receive Alerts For This Tender
+              {this.t("purchaseReq:receiveAlerts:caption")}
             </button>
           </div>
       </div>

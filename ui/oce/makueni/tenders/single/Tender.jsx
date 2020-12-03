@@ -3,8 +3,9 @@ import React from 'react';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
+import translatable from "../../../translatable";
 
-class Tender extends React.Component {
+class Tender extends translatable(React.Component) {
   getFeedbackSubject() {
     const { data, department, fiscalYear } = this.props;
 
@@ -16,7 +17,7 @@ class Tender extends React.Component {
         + ' - ' + department.label
         + ' - ' + fiscalYear.name;
     }
-    return escape('Tender' + metadata);
+    return escape(this.t("tender:label") + metadata);
   }
 
   render() {
@@ -24,7 +25,7 @@ class Tender extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     const tender = data[0];
@@ -32,35 +33,35 @@ class Tender extends React.Component {
     return (<div>
       <div className="row display-flex">
         {isFeatureVisible("publicView.tender.tenderTitle")
-        && <Item label={"Tender Name"} value={tender.tenderTitle} col={4} />}
+        && <Item label={this.t("tender:title")} value={tender.tenderTitle} col={4} />}
 
         {isFeatureVisible("publicView.tender.tenderNumber")
-        && <Item label={"Tender ID"} value={tender.tenderNumber} col={4} />}
+        && <Item label={this.t("tender:number")} value={tender.tenderNumber} col={4} />}
 
         {isFeatureVisible("publicView.tender.tenderCode")
-        && <Item label={"Tender Code"} value={prId} col={4} />}
+        && <Item label={this.t("tender:code")} value={prId} col={4} />}
 
         {isFeatureVisible("publicView.tender.procurementMethod")
-        && <Item label={"Procurement Method"} value={tender.procurementMethod.label} col={4} />}
+        && <Item label={this.t("tender:procurementMethod")} value={tender.procurementMethod.label} col={4} />}
 
         {isFeatureVisible("publicView.tender.procurementMethodRationale")
-        && <Item label={"Procurement Method Rationale"}
+        && <Item label={this.t("tender:procurementMethodRationale")}
                  value={(tender.procurementMethodRationale || {}).label} col={4} />}
 
         {isFeatureVisible("publicView.tender.invitationDate")
-        && <Item label={"Invitation to Tender Date"} value={formatDate(tender.invitationDate)} col={4} />}
+        && <Item label={this.t("tender:invitationDate")} value={formatDate(tender.invitationDate)} col={4} />}
 
         {isFeatureVisible("publicView.tender.closingDate")
-        && <Item label={"Closing Date"} value={formatDate(tender.closingDate)} col={4} />}
+        && <Item label={this.t("tender:closingDate")} value={formatDate(tender.closingDate)} col={4} />}
 
         {isFeatureVisible("publicView.tender.issuedBy.label")
-        && <Item label={"Tender Issued By"} value={tender.issuedBy.label} col={4} />}
+        && <Item label={this.t("tender:issuedBy:label")} value={tender.issuedBy.label} col={4} />}
 
         {isFeatureVisible("publicView.tender.issuedBy.address")
-        && <Item label={"Procuring Entity Address"} value={tender.issuedBy.address} col={4} />}
+        && <Item label={this.t("tender:issuedBy:address")} value={tender.issuedBy.address} col={4} />}
 
         {isFeatureVisible("publicView.tender.issuedBy.emailAddress")
-        && <Item label={"Procuring Entity Email"} col={4}>
+        && <Item label={this.t("tender:issuedBy:email")} col={4}>
           {tender.issuedBy.emailAddress
             ? <a className="download" href={"mailto:"+tender.issuedBy.emailAddress}>
               {tender.issuedBy.emailAddress}
@@ -70,20 +71,20 @@ class Tender extends React.Component {
         </Item>}
 
         {isFeatureVisible("publicView.tender.tenderValue")
-        && <Item label={"Tender Value"} value={currencyFormatter(tender.tenderValue)} col={4} />}
+        && <Item label={this.t("tender:value")} value={currencyFormatter(tender.tenderValue)} col={4} />}
 
         {isFeatureVisible("publicView.tender.targetGroup")
-        && <Item label={"Target Group"} value={tender.targetGroup && tender.targetGroup.label} col={4} />}
+        && <Item label={this.t("tender:targetGroup")} value={tender.targetGroup && tender.targetGroup.label} col={4} />}
 
         {isFeatureVisible("publicView.tender.objective")
-        && <Item label={"Tender Objective"} value={tender.objective} col={12} />}
+        && <Item label={this.t("tender:objective")} value={tender.objective} col={12} />}
       </div>
 
       {
         tender.tenderItems !== undefined && isFeatureVisible("publicView.tender.tenderItems")
           ? <div>
             <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">Tender Items
+              <div className="col-md-12 sub-title">{this.t("tender:tenderItems")}
                 ({tender.tenderItems.length})
               </div>
             </div>
@@ -92,23 +93,23 @@ class Tender extends React.Component {
               tender.tenderItems.map(tenderItem => <div key={tenderItem._id} className="box">
                 <div className="row display-flex">
                   {isFeatureVisible("publicView.tender.tenderItems.item")
-                  && <Item label={"Item"} value={tenderItem.purchaseItem.planItem.item.label} col={6} />}
+                  && <Item label={this.t("tender:item")} value={tenderItem.purchaseItem.planItem.item.label} col={6} />}
 
                   {isFeatureVisible("publicView.tender.tenderItems.description")
-                  && <Item label={"Description"} value={tenderItem.description} col={6} />}
+                  && <Item label={this.t("tender:item:description")} value={tenderItem.description} col={6} />}
 
                   {isFeatureVisible("publicView.tender.tenderItems.purchaseItem")
-                  && <Item label={"Unit of Issue"} value={tenderItem.purchaseItem.planItem.unitOfIssue.label}
+                  && <Item label={this.t("tender:item:unitOfIssue")} value={tenderItem.purchaseItem.planItem.unitOfIssue.label}
                            col={3} />}
 
                   {isFeatureVisible("publicView.tender.tenderItems.quantity")
-                  && <Item label={"Quantity"} value={currencyFormatter(tenderItem.quantity)} col={3} />}
+                  && <Item label={this.t("tender:item:quantity")} value={currencyFormatter(tenderItem.quantity)} col={3} />}
 
                   {isFeatureVisible("publicView.tender.tenderItems.unitPrice")
-                  && <Item label={"Unit Price"} value={currencyFormatter(tenderItem.unitPrice)} col={3} />}
+                  && <Item label={this.t("tender:item:unitPrice")} value={currencyFormatter(tenderItem.unitPrice)} col={3} />}
 
                   {isFeatureVisible("publicView.tender.tenderItems.totalCost")
-                  && <Item label={"Total Cost"}
+                  && <Item label={this.t("tender:item:totalCost")}
                            value={currencyFormatter(tenderItem.quantity * tenderItem.unitPrice)} col={3} />}
                 </div>
               </div>)
@@ -119,14 +120,13 @@ class Tender extends React.Component {
 
       <div className="row">
         {isFeatureVisible("publicView.tender.formDocs")
-        && <Item label="Download Tender" col={6}
-                 data-intro="Download the original hardcopy of the tender document or link to a site
-                 where the document can be downloaded.">
+        && <Item label={this.t("tender:item:dlTender")} col={6}
+                 data-intro={this.t("tender:item:dlTender:dataIntro")}>
           <FileDownloadLinks files={tender.formDocs || []} useDash />
         </Item>}
 
         {isFeatureVisible("publicView.tender.tenderLink")
-        && <Item label={"Tender Link"} col={6}>
+        && <Item label={this.t("tender:item:tenderLink")} col={6}>
           {tender.tenderLink
             ? <a className="download" href={tender.tenderLink} target="_blank">
               {tender.tenderLink}

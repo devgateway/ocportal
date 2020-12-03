@@ -8,7 +8,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 /**
  * @author idobre
@@ -65,12 +65,12 @@ public class CheckBoxYesNoToggleBootstrapFormComponent
 
             @Override
             protected IModel<String> getOffLabel() {
-                return Model.of("No");
+                return new StringResourceModel("no", this);
             }
 
             @Override
             protected IModel<String> getOnLabel() {
-                return Model.of("Yes");
+                return new StringResourceModel("yes", this);
             }
 
             @Override

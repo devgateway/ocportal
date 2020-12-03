@@ -3,8 +3,9 @@ import React from 'react';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
+import translatable from "../../../translatable";
 
-class Award extends React.Component {
+class Award extends translatable(React.Component) {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -14,7 +15,7 @@ class Award extends React.Component {
         + ' - ' + department.label
         + ' - ' + fiscalYear.name;
     }
-    return escape('Award' + metadata);
+    return escape(this.t("award:subject") + metadata);
   }
 
   render() {
@@ -23,7 +24,7 @@ class Award extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     const awardAcceptance = data[0];
@@ -36,22 +37,22 @@ class Award extends React.Component {
 
               <div className="row">
                 {isFeatureVisible("publicView.awardAcceptance.items.supplierResponse")
-                && <Item label="Supplier Response" value={i.supplierResponse.label} col={3} />}
+                && <Item label={this.t("award:supplierResponse")} value={i.supplierResponse.label} col={3} />}
 
                 {isFeatureVisible("publicView.awardAcceptance.items.acceptedAwardValue")
-                && <Item label="Accepted Award Value" value={currencyFormatter(i.acceptedAwardValue)} col={3} />}
+                && <Item label={this.t("award:acceptedAwardValue")} value={currencyFormatter(i.acceptedAwardValue)} col={3} />}
 
                 {isFeatureVisible("publicView.awardAcceptance.items.acceptanceDate")
-                && <Item label="Response Date" value={formatDate(i.acceptanceDate)} col={3} />}
+                && <Item label={this.t("award:acceptanceDate")} value={formatDate(i.acceptanceDate)} col={3} />}
 
                 {isFeatureVisible("publicView.awardAcceptance.items.awardee.label")
-                && <Item label="Supplier Name" value={i.awardee.label} col={3} />}
+                && <Item label={this.t("award:awardeeLabel")} value={i.awardee.label} col={3} />}
 
                 {isFeatureVisible("publicView.awardAcceptance.items.awardee.code")
-                && <Item label="Supplier ID" value={i.awardee.code} col={3} />}
+                && <Item label={this.t("award:awardeeCode")} value={i.awardee.code} col={3} />}
 
                 {isFeatureVisible("publicView.awardAcceptance.items.formDocs")
-                && <Item label="Letter of Acceptance of Award" col={12}>
+                && <Item label={this.t("award:letterOfAcceptanceOfAward")} col={12}>
                   <FileDownloadLinks files={i.formDocs} useDash />
                 </Item>}
               </div>

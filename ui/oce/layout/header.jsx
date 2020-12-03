@@ -21,30 +21,27 @@ export default class Header extends translatable(React.Component) {
     this.tabs = [
       {
         name: 'tender',
-        title: 'Tenders',
+        title: this.t("header:tender"),
         step:2,
-        intro: "The portal opens by default on the Tender page. It shows all the tenders for each " +
-          "financial year for each department in the County Government of Makueni.",
+        intro: this.t("header:tender:intro"),
       },
       {
         name: 'procurement-plan',
-        title: 'Procurement Plan',
+        title: this.t("header:procurementPlan"),
         step:3,
-        intro: "Click to view all the procurement plans for each financial year for each department in" +
-          " the County Government of Makueni.",
+        intro: this.t("header:procurementPlan:intro"),
       },
       {
         name: 'm-and-e',
-        title: 'Charts',
+        title: this.t("header:me"),
         step:4,
-        intro: "Click the charts button to view charts that provide an overview of the procurement " +
-          "process, and highlight the competitiveness, and efficiency of the procurement process.",
+        intro: this.t("header:me:intro"),
       },
       {
         name: 'docs',
-        title: 'Resources',
+        title: this.t("header:docs"),
         step:5,
-        intro: "API, source code and documentation"
+        intro: this.t("header:docs:intro")
       }
     ];
 
@@ -116,10 +113,8 @@ export default class Header extends translatable(React.Component) {
     const jsonURL = new URI('/api/ocds/package/all');
 
     return (<div>
-        <span className="download-title" data-step="7" data-intro="Download the data in either XLS,
-        which uses the standard government terminology, or in JSON which uses the Open Contracting
-         Data Standard.">
-          Download the Data
+        <span className="download-title" data-step="7" data-intro={this.t("header:export:intro")}>
+          {this.t("header:export")}
         </span>
         <div className="export-btn">
           <a href={excelURL} download="export.zip">
@@ -142,9 +137,8 @@ export default class Header extends translatable(React.Component) {
         <div className="col-md-6 col-sm-6 col-xs-12">
           <a className="portal-logo-wrapper" href="#!/">
               <img src="assets/makueni-logo.png" alt="Makueni"/>
-              <span data-step="1" data-intro="Welcome to the Government of Makueni County Open Contracting Portal.
-              The procurement data has been provided and validated by the Government of Makueni county.">
-                Government of Makueni County Open Contracting Portal</span>
+              <span data-step="1" data-intro={this.t("header:title:intro")}>
+                {this.t("header:title")}</span>
           </a>
         </div>
 
@@ -169,7 +163,7 @@ export default class Header extends translatable(React.Component) {
                 this.showIntroJs();
               }
               }>
-                <span data-intro="HELP" data-step="6">HELP</span>
+                <span data-intro={this.t("header:help:intro")} data-step="6">{this.t("header:help")}</span>
               </a>
             </div>
           </div>
@@ -180,16 +174,14 @@ export default class Header extends translatable(React.Component) {
         {
           data !== undefined
             ? <div>
-              <div className="col-lg-3 col-md-3 col-sm-6 total-item" data-step="5" data-intro="This
-              shows the total number of tenders that have been contracted that are published on the
-               portal." data-position="right">
-                <span className="total-label">Total Contracts</span>
+              <div className="col-lg-3 col-md-3 col-sm-6 total-item" data-step="5" data-intro={this.t("header:totalContracts:intro")} data-position="right">
+                <span className="total-label">{this.t("header:totalContracts")}</span>
                 <span className="total-number">{data.count}</span>
               </div>
               <div className="col-lg-5 col-md-5 col-sm-6 total-item" data-step="6"
-                   data-intro="This shows the total contracted amount."
+                   data-intro={this.t("header:totalContractsAmount:intro")}
                    data-position="right">
-                <span className="total-label">Total Contract Amount</span>
+                <span className="total-label">{this.t("header:totalContractsAmount")}</span>
                 <span className="total-number">{currencyFormatter(data.value)}</span>
               </div>
             </div>

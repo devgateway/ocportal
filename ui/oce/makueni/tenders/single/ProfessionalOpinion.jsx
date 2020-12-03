@@ -3,8 +3,9 @@ import React from 'react';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
+import translatable from "../../../translatable";
 
-class ProfessionalOpinion extends React.Component {
+class ProfessionalOpinion extends translatable(React.Component) {
   getFeedbackSubject() {
     const { tenderTitle, department, fiscalYear } = this.props;
 
@@ -14,7 +15,7 @@ class ProfessionalOpinion extends React.Component {
         + " - " + department.label
         + " - " + fiscalYear.name;
     }
-    return escape("Professional Opinion" + metadata);
+    return escape(this.t("professionalOpinion:label") + metadata);
   }
 
   render() {
@@ -22,7 +23,7 @@ class ProfessionalOpinion extends React.Component {
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
-      return (<NoDataMessage/>);
+      return (<NoDataMessage translations={this.props.translations}/>);
     }
 
     const professionalOpinion = data[0];
@@ -34,17 +35,20 @@ class ProfessionalOpinion extends React.Component {
           ? professionalOpinion.items.map(i => <div key={i._id} className="box">
             <div className="row">
               {isFeatureVisible("publicView.professionalOpinions.items.professionalOpinionDate")
-              && <Item label="Professional Opinion Date" value={formatDate(i.professionalOpinionDate)} col={4} />}
+              && <Item label={this.t("professionalOpinion:professionalOpinionDate")}
+                       value={formatDate(i.professionalOpinionDate)} col={4} />}
               {isFeatureVisible("publicView.professionalOpinions.items.awardee")
-              && <Item label="Awardee" value={i.awardee.label} col={4} />}
+              && <Item label={this.t("professionalOpinion:awardee")} value={i.awardee.label} col={4} />}
               {isFeatureVisible("publicView.professionalOpinions.items.recommendedAwardAmount")
-              && <Item label="Recommended Award Amount" value={currencyFormatter(i.recommendedAwardAmount)} col={4} />}
+              && <Item label={this.t("professionalOpinion:recommendedAwardAmount")}
+                       value={currencyFormatter(i.recommendedAwardAmount)} col={4} />}
               {isFeatureVisible("publicView.professionalOpinions.items.formDocs")
-              && <Item label="Professional Opinion Documents" col={4}>
+              && <Item label={this.t("professionalOpinion:docs")} col={4}>
                 <FileDownloadLinks files={i.formDocs} useDash />
               </Item>}
               {isFeatureVisible("publicView.professionalOpinions.items.approvedDate")
-              && <Item label="Approved Date" value={formatDate(i.approvedDate)} col={4} />}
+              && <Item label={this.t("professionalOpinion:approvedDate")}
+                       value={formatDate(i.approvedDate)} col={4} />}
             </div>
           </div>
           ) : null

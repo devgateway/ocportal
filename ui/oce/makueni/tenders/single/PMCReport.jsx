@@ -6,7 +6,7 @@ import {Item} from "./Item";
 class PMCReport extends AuthImplReport {
 
   getReportName() {
-    return 'PMC Reports';
+    return this.t("pmcReport:label");
   }
 
   getFMPrefix() {
@@ -17,13 +17,13 @@ class PMCReport extends AuthImplReport {
     const { isFeatureVisible } = this.props;
     return (<div>
         {isFeatureVisible("publicView.pmcReport.subcounties")
-        && <Item label="Sub-Counties" value={i.subcounties.map(item => item.label).join(', ')} col={3} />}
+        && <Item label={this.t("pmcReport:subcounties")} value={i.subcounties.map(item => item.label).join(', ')} col={3} />}
 
         {isFeatureVisible("publicView.pmcReport.wards")
-        && <Item label="Wards" value={i.wards.map(item => item.label).join(', ')} col={3} />}
+        && <Item label={this.t("pmcReport:wards")} value={i.wards.map(item => item.label).join(', ')} col={3} />}
 
         {isFeatureVisible("publicView.pmcReport.pmcStatus")
-        && <Item label="PMC Status" value={i.pmcStatus.label} col={3} />}
+        && <Item label={this.t("pmcReport:pmcStatus")} value={i.pmcStatus.label} col={3} />}
       </div>
     );
   }
@@ -34,7 +34,7 @@ class PMCReport extends AuthImplReport {
       <div key="2">
         <div className="row">
           {isFeatureVisible("publicView.pmcReport.projectClosureHandover")
-          && <Item label="Project Closure and Handover"
+          && <Item label={this.t("pmcReport:projectClosureAndHandover")}
                    value={i.projectClosureHandover && i.projectClosureHandover.map(item => item.label).join(', ')}
                    col={3} />}
         </div>
@@ -42,16 +42,16 @@ class PMCReport extends AuthImplReport {
         && <React.Fragment>
           <div className="row padding-top-10">
             <div className="col-md-10">
-              <div className="item-label">PMC MEMBERS:</div>
+            <div className="item-label">{this.t("pmcReport:members")}</div>
             </div>
           </div>
           {
             i.pmcMembers && i.pmcMembers.map(m => <div key={m._id} className="row">
               {isFeatureVisible("publicView.pmcReport.pmcMembers.staff")
-              && <Item label="PMC Staff" value={m.staff.label} col={3} />}
+              && <Item label={this.t("pmcReport:staff")} value={m.staff.label} col={3} />}
 
               {isFeatureVisible("publicView.pmcReport.pmcMembers.designation")
-              && <Item label="PMC Designation" value={m.designation.label} col={3} />}
+              && <Item label={this.t("pmcReport:designation")} value={m.designation.label} col={3} />}
             </div>)
           }
         </React.Fragment>}

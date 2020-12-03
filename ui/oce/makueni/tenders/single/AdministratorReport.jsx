@@ -5,7 +5,7 @@ import fmConnect from "../../../fm/fm";
 class AdministratorReport extends AuthImplReport {
 
    getReportName() {
-      return "Administrator Reports";
+      return this.t("administratorReport:reportName");
    }
 
    getFMPrefix() {
