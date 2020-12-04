@@ -1,15 +1,8 @@
+import React from "react";
 import FilterItemSingleSelect from './FilterItemSingleSelect';
 
-class FilterItemFY extends FilterItemSingleSelect {
-  
-  constructor(props) {
-    super(props);
-    
-  }
+const FilterItemFY = ({ep, ...otherProps}) => {
+  return <FilterItemSingleSelect ep='/makueni/filters/fiscalYears' {...otherProps} />
 }
-
-FilterItemFY.getName = () => 'Fiscal Year';
-FilterItemFY.getProperty = () => 'fiscalYear';
-FilterItemFY.getEP = () => '/makueni/filters/fiscalYears';
 
 export default FilterItemFY;

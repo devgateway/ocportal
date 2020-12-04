@@ -5,21 +5,22 @@ const FileDownloadLinks = ({files, useDash}) => {
   if (useDash && (files || []).length === 0) {
     return "-"
   }
-  return (files || []).map(doc => <div key={doc._id || doc.id}>
-      <OverlayTrigger
-        placement="bottom"
-        overlay={
-          <Tooltip id="download-tooltip">
-            Click to download the file
-          </Tooltip>
-        }>
+  return (files || []).map(doc =>
+    <OverlayTrigger
+      key={doc._id || doc.id}
+      placement="bottom"
+      overlay={
+        <Tooltip id="download-tooltip">
+          Click to download the file
+        </Tooltip>
+      }>
 
-        <a className="download-file" href={doc.url} target="_blank">
-          <i className="glyphicon glyphicon-download"/>
-          <span>{doc.name}</span>
-        </a>
-      </OverlayTrigger>
-    </div>)
+      <a className="download-file" href={doc.url} target="_blank">
+        <i className="glyphicon glyphicon-download"/>
+        <span>{doc.name}</span>
+      </a>
+    </OverlayTrigger>
+  )
 }
 
 export default FileDownloadLinks

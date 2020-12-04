@@ -84,9 +84,6 @@ OCEMakueni.TRANSLATIONS = translations;
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
 CorruptionRickDashboard.STYLING.charts.traceColors = ['#3371b1', '#2b9ff6', '#5db7fb', '#86cafd', '#bbe2ff'];
 
-MakueniTenders.STYLING = styling;
-MakueniProcurementPlans.STYLING = styling;
-
 class OceSwitcher extends ViewSwitcher {
 }
 

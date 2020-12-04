@@ -1,87 +1,82 @@
-import translatable from '../../translatable';
-import Component from '../../pure-render-component';
+import React, {useState} from "react";
+import {tCreator} from '../../translatable';
 import cn from 'classnames';
-import { Map } from 'immutable';
+import fmConnect from "../../fm/fm";
 
-class FiltersWrapper extends translatable(Component) {
-  constructor(props) {
-    super(props);
+const FiltersWrapper = props => {
 
-    this.state = {
-      expanded: new Set(),
-      localFilters: Map()
-    };
-  }
+  const [expanded, setExpanded] = useState(new Set());
 
-  toggleItem(index) {
-    const expanded = new Set(this.state.expanded);
-    if (expanded.has(index)) {
-      expanded.delete(index);
+  const [localFilters, setLocalFilters] = useState(props.filters);
+
+  const toggleItem = index => {
+    const expandedVar = new Set(expanded);
+    if (expandedVar.has(index)) {
+      expandedVar.delete(index);
     } else {
-      expanded.add(index);
+      expandedVar.add(index);
     }
 
-    this.setState({ expanded: expanded });
+    setExpanded(expandedVar);
   }
 
-  reset() {
-    this.resetPage();
-    this.props.filters.assign('[[FiltersWrapper]]', Map());
-    this.setState({
-      localFilters: Map()
-    });
+  const reset = () => {
+    props.applyFilters({});
+    setLocalFilters({});
   }
 
-  resetPage() {
-    this.props.resetPage && this.props.resetPage();
+  const apply = () => {
+    props.applyFilters(localFilters);
   }
 
-  apply() {
-    this.resetPage();
-    this.props.filters.assign('[[FiltersWrapper]]', this.state.localFilters);
+  const t = tCreator(props.translations);
+
+  const listItems = () => {
+    const { translations, isFeatureVisible } = props;
+
+    return props.items
+      .filter((item) => isFeatureVisible(item.fm))
+      .map((item, index) => {
+          return (<div
+            key={index}
+            className={'row filter ' + item.className}>
+            <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
+                 onClick={_ => toggleItem(index)}>
+              <div className="pull-left title">{item.name}</div>
+              <div className={'pull-right toggler ' + (expanded.has(index) ? 'up' : 'down')} />
+            </div>
+
+            <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
+              {item.render({
+                filters: localFilters,
+                onChange: filters => {
+                  const newFilters = {
+                    ...localFilters,
+                    ...filters
+                  };
+                  setLocalFilters(newFilters);
+                },
+                translations: translations
+              })}
+
+              <section className="buttons">
+                <button className="btn btn-apply pull-right" onClick={apply}>
+                  {t('filters:apply')}
+                </button>
+                <button className="btn btn-reset pull-right" onClick={reset}>
+                  {t('filters:reset')}
+                </button>
+              </section>
+            </div>
+          </div>)
+        });
   }
 
-  listItems() {
-    const { expanded } = this.state;
-    const { translations, isFeatureVisible } = this.props;
-
-    return this.constructor.ITEMS
-      .filter((Item, index) => isFeatureVisible(this.constructor.FM[index]))
-      .map((Item, index) => <div
-        key={index}
-        className={'row filter ' + this.constructor.CLASS[index]}>
-        <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
-             onClick={_ => this.toggleItem(index)}>
-          <div className="pull-left title">{Item.getName(this.t.bind(this))}</div>
-          <div className={'pull-right toggler ' + (expanded.has(index) ? 'up' : 'down')}></div>
-        </div>
-
-        <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
-          <Item translations={translations} filters={this.props.filters}
-                localFilters={this.state.localFilters}
-                onUpdate={(key, update) => {
-                  this.setState({ localFilters: this.state.localFilters.set(key, update) }) }
-                }
-          />
-
-          <section className="buttons">
-            <button className="btn btn-apply pull-right" onClick={e => this.apply()}>
-              {this.t('filters:apply')}
-            </button>
-            <button className="btn btn-reset pull-right" onClick={e => this.reset()}>
-              {this.t('filters:reset')}
-            </button>
-          </section>
-        </div>
-      </div>
-    );
-  }
-
-  render() {
-    return <div className={cn('filters', 'col-md-12')}>
-      {this.listItems()}
-    </div>;
-  }
+  return (
+    <div className={cn('filters', 'col-md-12')}>
+      {listItems()}
+    </div>
+  );
 }
 
-export default FiltersWrapper;
+export default fmConnect(FiltersWrapper);

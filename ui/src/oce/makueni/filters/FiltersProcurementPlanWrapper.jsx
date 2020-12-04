@@ -1,17 +1,37 @@
+import React from "react";
 import FilterItemDep from './FilterItemDep';
 import FilterItemFY from './FilterItemFY';
 import FiltersWrapper from './FiltersWrapper';
-import fmConnect from "../../fm/fm";
+
+const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
+  <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
+
+const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
+
+const fyRenderer = singlePropertyRendererCreator(FilterItemFY, 'fiscalYear');
 
 /**
  * Filter used for the Procurement Plan table.
  */
-class FiltersProcurementPlanWrapper extends FiltersWrapper {
+const FiltersProcurementPlanWrapper = props => {
 
+  let items = [
+    {
+      render: departmentRenderer,
+      name: 'Departments',
+      className: 'department',
+      fm: 'publicView.filter.department'
+    },
+    {
+      render: fyRenderer,
+      name: 'Fiscal Year',
+      className: 'fiscal-year',
+      fm: 'publicView.filter.fiscalYear'
+    }
+  ];
+
+  return <FiltersWrapper
+    items={items} filters={props.filters} applyFilters={props.applyFilters} translations={props.translations} />
 }
 
-FiltersProcurementPlanWrapper.ITEMS = [FilterItemDep, FilterItemFY];
-FiltersProcurementPlanWrapper.CLASS = ['department', 'fiscal-year'];
-FiltersProcurementPlanWrapper.FM = ['publicView.filter.department', 'publicView.filter.fiscalYear'];
-
-export default fmConnect(FiltersProcurementPlanWrapper);
+export default FiltersProcurementPlanWrapper;

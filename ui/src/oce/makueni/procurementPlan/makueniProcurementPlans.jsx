@@ -1,194 +1,169 @@
-import CRDPage from '../../corruption-risk/page';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
-import { page, pageSize, ppCountRemote, ppData, ppFilters } from './state';
-import { Map } from 'immutable';
 import '../makueni.scss';
 import ProcurementPlan from './single/procurementPlan';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Footer from '../../layout/footer';
 import fmConnect from "../../fm/fm";
 import FileDownloadLinks from "../tenders/single/FileDownloadLinks";
 import FiltersProcurementPlanWrapper from "../filters/FiltersProcurementPlanWrapper";
+import {tCreator} from "../../translatable";
+import {getProcurementPlans} from "../../api/Api";
+import PropTypes from "prop-types";
 
-const NAME = 'MakueniPP';
+const MakueniProcurementPlans = props => {
 
-class MakueniProcurementPlans extends CRDPage {
+  useEffect(() => window.scrollTo(0, 0));
 
-  constructor(props) {
-    super(props);
-    this.introjsCnt = 0;
+  const [state, setState] = useState({
+    filters: {},
+    page: 1,
+    pageSize: 20,
+    data: [],
+    count: undefined
+  });
 
-    this.state = {
-      data: []
+  const setPage = page => setState({...state, page});
+
+  const setPageSize = pageSize => setState({...state, pageSize});
+
+  const setFilters = filters => setState({
+    ...state,
+    filters: filters,
+    page: 1
+  });
+
+  useEffect(() => {
+    const params = {
+      ...state.filters,
+      pageSize: state.pageSize,
+      pageNumber: state.page - 1
     };
-  }
 
-  showDataStep() {
-    return this.introjsCnt++ < 4;
-  }
-
-  componentDidMount() {
-    super.componentDidMount();
-
-    ppData.addListener(NAME, () => this.updateBindings());
-    page.addListener(NAME, () => this.updateBindings());
-    pageSize.addListener(NAME, () => this.updateBindings());
-    ppCountRemote.addListener(NAME, () => this.updateBindings());
-  }
-
-  componentWillUnmount() {
-    // reset all filters when we unmount this component
-    ppFilters.assign('NAME', Map());
-
-    ppData.removeListener(NAME);
-    page.removeListener(NAME);
-    pageSize.removeListener(NAME);
-    ppCountRemote.removeListener(NAME);
-  }
-
-  updateBindings() {
-    Promise.all([
-      ppData.getState(NAME),
-      page.getState(NAME),
-      pageSize.getState(NAME),
-      ppCountRemote.getState(NAME),
-    ])
-    .then(([data, page, pageSize, ppCount]) => {
-      this.setState({
-        data,
-        page,
-        pageSize,
-        count: ppCount,
-      });
+    getProcurementPlans(params).then(result => {
+      setState(s => ({
+        ...s,
+        data: result.data,
+        count: result.count
+      }));
     });
-  }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return JSON.stringify(this.state) !== JSON.stringify(nextState)
-      || JSON.stringify(this.props) !== JSON.stringify(nextProps);
-  }
+  }, [state.filters, state.page, state.pageSize]);
 
-  resetPage() {
-    page.assign(NAME, 1);
-  }
+  const filters = () =>
+    <FiltersProcurementPlanWrapper
+      filters={state.filters} applyFilters={setFilters} translations={props.translations}/>;
 
-  filters() {
-    return <FiltersProcurementPlanWrapper
-      filters={ppFilters} resetPage={this.resetPage.bind(this)} translations={this.props.translations}/>;
-  }
+  const t = tCreator(props.translations);
 
-  ppLink(navigate) {
-    return (ppId) => (
-      <a data-intro={this.showDataStep()? this.t("tables:procurementPlans:clickForDetails"):""}
-         data-step={this.showDataStep()?9:""}
-         href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
-         className="more-details-link">
-        {this.t("tables:procurementPlans:moreDetails")}
-      </a>
-    );
-  }
+  const ppLink = navigate => (ppId, data, formatExtraData, r) =>
+    (<a data-intro={r === 0 ? t("tables:procurementPlans:clickForDetails") : ""}
+        data-step={r === 0 ? 9 : ""}
+        href={`#!/procurement-plan/pp/${ppId}`} onClick={() => navigate('pp', ppId)}
+        className="more-details-link">
+      {t("tables:procurementPlans:moreDetails")}
+    </a>);
 
-  downloadFiles() {
-    return (formDocs) =>
-      <FileDownloadLinks
-        files={formDocs}
-        data-step={this.showDataStep()?10:""}
-        data-intro={this.showDataStep()?this.t("tables:procurementPlans:downloadFile:dataIntro"):""} />;
-  }
+  const downloadFiles = () => (formDocs, data, formatExtraData, r) =>
+    <div
+      data-step={r === 0 ? 10 : ""}
+      data-intro={r === 0 ? t("tables:procurementPlans:downloadFile:dataIntro") : ""}>
 
-  render() {
-    const { data, count } = this.state;
-    const { navigate, route, isFeatureVisible } = this.props;
-    const [navigationPage, id] = route;
-    this.introjsCnt = 0;
+      <FileDownloadLinks files={formDocs} />
+    </div>;
 
-    const columns = [{
-      title: this.t("tables:procurementPlans:col:id"),
-      dataField: 'id',
-      width: '20%',
-      dataFormat: this.ppLink(navigate),
-      fm: 'publicView.procurementPlansList.id'
-    }, {
-      title: this.t("tables:procurementPlans:col:dpt"),
-      dataField: 'department',
-      fm: 'publicView.procurementPlansList.department'
-    }, {
-      title: this.t("tables:procurementPlans:col:fy"),
-      dataField: 'fiscalYear',
-      fm: 'publicView.procurementPlansList.fiscalYear'
-    }, {
-      title: this.t("tables:procurementPlans:col:ppf"),
-      dataField: 'formDocs',
-      dataFormat: this.downloadFiles(),
-      fm: 'publicView.procurementPlansList.formDocs'
-    }];
+  const {navigate, route, isFeatureVisible} = props;
+  const [navigationPage, id] = route;
 
-    const visibleColumns = columns.filter(c => isFeatureVisible(c.fm));
+  const columns = [{
+    title: t("tables:procurementPlans:col:id"),
+    dataField: 'id',
+    width: '20%',
+    dataFormat: ppLink(navigate),
+    fm: 'publicView.procurementPlansList.id'
+  }, {
+    title: t("tables:procurementPlans:col:dpt"),
+    dataField: 'department',
+    fm: 'publicView.procurementPlansList.department'
+  }, {
+    title: t("tables:procurementPlans:col:fy"),
+    dataField: 'fiscalYear',
+    fm: 'publicView.procurementPlansList.fiscalYear'
+  }, {
+    title: t("tables:procurementPlans:col:ppf"),
+    dataField: 'formDocs',
+    dataFormat: downloadFiles(),
+    fm: 'publicView.procurementPlansList.formDocs'
+  }];
 
-    return (<div className="container-fluid dashboard-default">
+  const visibleColumns = columns.filter(c => isFeatureVisible(c.fm));
 
-      <Header translations={this.props.translations} onSwitch={this.props.onSwitch}
-              styling={this.props.styling} selected="procurement-plan"/>
+  return (<div className="container-fluid dashboard-default">
 
-      <div className="makueni-procurement-plan content row">
-        <div className="col-md-3 col-sm-3 filters">
-          <div className="row" data-intro={this.t("tables:procurementPlans:dataIntro")} data-step="8">
-            <div className="filters-hint col-md-12">
-              {this.t('filters:hint')}
+    <Header translations={props.translations} onSwitch={props.onSwitch}
+            styling={props.styling} selected="procurement-plan"/>
+
+    <div className="makueni-procurement-plan content row">
+      <div className="col-md-3 col-sm-3 filters">
+        <div className="row" data-intro={t("tables:procurementPlans:dataIntro")} data-step="8">
+          <div className="filters-hint col-md-12">
+            {t('filters:hint')}
+          </div>
+          {filters()}
+        </div>
+      </div>
+
+      <div className="col-md-9 col-sm-9 col-main-content">
+        {
+          navigationPage === undefined
+            ? <div>
+              <h1>{t("tables:procurementPlans:title")}</h1>
+
+              <BootstrapTableWrapper
+                bordered
+                data={state.data}
+                page={state.page}
+                pageSize={state.pageSize}
+                onPageChange={setPage}
+                onSizePerPageList={setPageSize}
+                count={state.count}
+                columns={visibleColumns}
+              />
             </div>
-            {this.filters()}
-          </div>
-        </div>
+            :
+            <ProcurementPlan id={id} navigate={navigate} translations={props.translations}
+                             styling={props.styling}/>
+        }
+      </div>
+    </div>
 
-        <div className="col-md-9 col-sm-9 col-main-content">
-          {
-            navigationPage === undefined
-              ? <div>
-                <h1>{this.t("tables:procurementPlans:title")}</h1>
-
-                <BootstrapTableWrapper
-                  bordered
-                  data={data}
-                  page={this.state.page}
-                  pageSize={this.state.pageSize}
-                  onPageChange={newPage => page.assign(NAME, newPage)}
-                  onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
-                  count={count}
-                  columns={visibleColumns}
-                />
-              </div>
-              :
-              <ProcurementPlan id={id} navigate={navigate} translations={this.props.translations}
-                               styling={this.props.styling}/>
-          }
+    <div className="alerts-container">
+      <div className="row alerts-button subscribe">
+        <div className="col-md-12">
+          <button className="btn btn-info btn-lg" type="submit"
+                  onClick={() => props.onSwitch('alerts')}>
+            {t("general:subscribeToEmailAlerts")}
+          </button>
         </div>
       </div>
+    </div>
 
-      <div className="alerts-container">
-        <div className="row alerts-button subscribe">
-          <div className="col-md-12">
-            <button className="btn btn-info btn-lg" type="submit"
-                    onClick={() => this.props.onSwitch('alerts')}>
-              {this.t("general:subscribeToEmailAlerts")}
-            </button>
-          </div>
+    <div className="smshelp-container">
+      <div className="row alerts-button subscribe">
+        <div className="col-md-12">
+          <button className="btn btn-info btn-lg" type="submit"
+                  onClick={() => props.onSwitch('smshelp')}>
+            {t("general:smsFeedbackHelp")}
+          </button>
         </div>
       </div>
-
-      <div className="smshelp-container">
-        <div className="row alerts-button subscribe">
-          <div className="col-md-12">
-            <button className="btn btn-info btn-lg" type="submit"
-                    onClick={() => this.props.onSwitch('smshelp')}>
-              {this.t("general:smsFeedbackHelp")}
-            </button>
-          </div>
-        </div>
-      </div>
-      <Footer translations={this.props.translations}/>
-    </div>);
-  }
+    </div>
+    <Footer translations={props.translations}/>
+  </div>);
 }
+
+MakueniProcurementPlans.propTypes = {
+  styling: PropTypes.object.isRequired
+};
 
 export default fmConnect(MakueniProcurementPlans);
