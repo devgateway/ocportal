@@ -1,105 +1,62 @@
 {
   "name": "oc-explorer",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node server.js",
-    "test": "jest",
-    "build": "gulp",
-    "build-dev": "gulp --gulpfile gulpfile-dev.js",
-    "extract-translatables": "extract-gettext -o languages/en_US.json components/",
-    "lint": "eslint index.jsx",
-    "build-dll": "webpack --config webpack.dll.config.js",
-    "flow": "flow"
-  },
-  "jest": {
-    "scriptPreprocessor": "./node_modules/babel-jest",
-    "testFileExtensions": [
-      "es6",
-      "jsx"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "es6",
-      "jsx",
-      "less"
-    ],
-    "unmockedModulePathPatterns": [
-      "react"
-    ]
-  },
-  "author": "Development Gateway",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/devgateway/oc-explorer.git"
-  },
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
+    "@reduxjs/toolkit": "^1.5.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.1",
     "bootstrap": "^3.3.5",
-    "leaflet": "^1.3.4",
-    "react-bootstrap-typeahead": "3.4.6",
-    "react-string-replace": "^0.4.4"
-  },
-  "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-jest": "^13.0.0",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-react": "^6.5.0",
     "classnames": "^2.2.3",
-    "css-loader": "^0.17.0",
-    "d3": "^3.5.13",
     "debug": "^3.1.0",
-    "eslint": "^6.7.1",
-    "word-wrap": "^1.2.3",
-    "eslint-config-airbnb": "^15.0.2",
-    "eslint-import-resolver-webpack": "^0.11.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.1.0",
-    "exports-loader": "^0.6.2",
-    "flow-bin": "^0.60.1",
-    "gulp": "^3.9.1",
-    "moment": "^2.27.0",
-    "gulp-npm-files": "^0.1.3",
-    "gulp-util": "^3.0.8",
-    "gulp-rename": "^2.0.0",
+    "http-proxy-middleware": "^1.0.6",
     "immutable": "^3.8.1",
-    "imports-loader": "^0.6.5",
-    "jest-cli": "^25.1.0",
-    "json-loader": "^0.5.4",
-    "keymirror": "^0.1.1",
+    "intro.js": "^2.9.3",
+    "leaflet": "^1.3.4",
     "leaflet.markercluster": "^1.4.1",
-    "less": "^2.5.1",
-    "less-loader": "^2.2.0",
+    "moment": "^2.27.0",
+    "node-sass": "^4.14.1",
     "plotly.js-basic-dist": "^1.51.3",
     "prop-types": "^15.7.2",
-    "universal-cookie": "^4.0.2",
     "rc-slider": "^7.0.3",
     "react": "^16.12.0",
-    "react-addons-test-utils": "^16.0.0-alpha.3",
     "react-bootstrap": "^0.33.1",
     "react-bootstrap-table": "^4.3.1",
+    "react-bootstrap-typeahead": "3.4.6",
     "react-dom": "^16.12.0",
     "react-ga": "^3.1.2",
-    "react-hot-loader": "^4.12.21",
-    "react-immutable-proptypes": "^2.2.0",
+    "react-google-recaptcha": "^0.14.2",
     "react-leaflet": "^1.8.2",
     "react-leaflet-control": "^1.4.1",
-    "axios": "^0.19.1",
-    "react-google-recaptcha": "^0.14.2",
+    "react-redux": "^7.2.2",
+    "react-scripts": "4.0.1",
+    "react-string-replace": "^0.4.4",
     "recharts": "1.0.0-beta.10",
-    "style-loader": "^0.23.1",
-    "transit-immutable-js": "^0.6.0",
-    "transit-js": "^0.8.846",
+    "universal-cookie": "^4.0.2",
     "urijs": "^1.17.1",
-    "webpack": "^3.12.0",
-    "webpack-dev-server": "^2.11.5",
-    "whatwg-fetch": "^2.0.4",
-    "intro.js": "^2.9.3"
+    "word-wrap": "^1.2.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
