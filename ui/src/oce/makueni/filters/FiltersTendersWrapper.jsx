@@ -1,21 +1,49 @@
 import React from "react";
-// import FilterItemDep from './FilterItemDep';
-// import FilterItemFY from './FilterItemFY';
+import FilterItemDep from './FilterItemDep';
+import FilterItemFY from './FilterItemFY';
 // import FilterItems from './FilterItems';
 import FiltersWrapper from './FiltersWrapper';
 // import FilterSubcounties from './FilterSubcounties';
 // import FilterWards from './FilterWards';
 // import FilterAmount from './FilterAmount';
-// import FilterTitle from './FilterTitle';
+import FilterTitle from './FilterTitle';
 // import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
+import FilterInput from "./FilterInput";
 
-/**
- * FIXME Disabled temporarily!
- * Filter used for the Tender table.
- */
+const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
+    <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
+
+const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
+
+const fyRenderer = singlePropertyRendererCreator(FilterItemFY, 'fiscalYear');
+
+const titleRenderer = singlePropertyRendererCreator(FilterInput, 'text');
+
 const FiltersTendersWrapper = props => {
-  return <FiltersWrapper items={[]} applyFilter={props.applyFilters} translations={props.translations} />
+  let items = [
+    {
+      render: departmentRenderer,
+      name: 'Departments',
+      className: 'department',
+      fm: 'publicView.filter.department'
+    },
+    {
+      render: fyRenderer,
+      name: 'Fiscal Year',
+      className: 'fiscal-year',
+      fm: 'publicView.filter.fiscalYear'
+    }
+    // {
+    //   render: titleRenderer,
+    //   name: 'Text Search',
+    //   className: 'title-search',
+    //   fm: 'publicView.filter.titleSearch'
+    // }
+  ];
+
+  return <FiltersWrapper
+      items={items} filters={props.filters} applyFilters={props.applyFilters} translations={props.translations} />
 }
 
 // FiltersTendersWrapper.ITEMS = [FilterTitle, FilterItemDep, FilterItemFY, FilterItems,
