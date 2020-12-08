@@ -1,15 +1,8 @@
 import FilterItemTypeAhead from './FilterItemTypeAhead';
+import React from "react";
 
-class FilterItems extends FilterItemTypeAhead {
-  
-  constructor(props) {
-    super(props);
-    
-  }
+const FilterItems = ({ep, ...otherProps}) => {
+  return <FilterItemTypeAhead ep='/makueni/filters/items' {...otherProps} />
 }
-
-FilterItems.getName = () => 'Items';
-FilterItems.getProperty = () => 'item';
-FilterItems.getEP = () => '/makueni/filters/items';
 
 export default FilterItems;

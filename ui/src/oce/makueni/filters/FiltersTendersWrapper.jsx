@@ -9,15 +9,19 @@ import FiltersWrapper from './FiltersWrapper';
 // import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
+import FilterItems from "./FilterItems";
 
 const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
-    <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
+    <FilterItem value={filters[property]}
+                property={property} onChange={value => onChange({[property]: value})} {...props} />;
 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
 
 const fyRenderer = singlePropertyRendererCreator(FilterItemFY, 'fiscalYear');
 
 const titleRenderer = singlePropertyRendererCreator(FilterInput, 'text');
+
+const itemRenderer = singlePropertyRendererCreator(FilterItems, 'item');
 
 const FiltersTendersWrapper = props => {
   let items = [
@@ -38,6 +42,12 @@ const FiltersTendersWrapper = props => {
       name: 'Text Search',
       className: 'title-search',
       fm: 'publicView.filter.titleSearch'
+    },
+    {
+      render: itemRenderer,
+      name: 'Items',
+      className: 'items',
+      fm: 'publicView.filter.items'
     }
   ];
 
