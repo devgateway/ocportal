@@ -7,7 +7,6 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
@@ -55,6 +54,11 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);
         }
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
 
         saveTerminateButton.setVisibilityAllowed(!isTerminated()
                 && editForm.getModelObject().getDirectChildrenEntitiesNotNull().isEmpty());
@@ -93,15 +97,11 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     }
 
     @Override
-    protected BootstrapCancelButton getCancelButton() {
-        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                final T saveable = editForm.getModelObject();
-                afterSaveEntity(saveable);
-                setResponsePage(listPageClass);
-            }
-        };
+    protected void onCancel(AjaxRequestTarget target) {
+        super.onCancel(target);
+
+        final T saveable = editForm.getModelObject();
+        afterSaveEntity(saveable);
     }
 
     protected abstract AbstractTenderProcessMakueniEntity getNextForm();

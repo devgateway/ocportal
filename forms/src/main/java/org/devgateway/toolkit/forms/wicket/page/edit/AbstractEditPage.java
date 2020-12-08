@@ -18,13 +18,13 @@ import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -32,6 +32,9 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IModelComparator;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -55,10 +58,12 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -135,6 +140,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal deleteFailedModal;
 
+    protected IModel<String> saveFailedContentModel;
+    protected TextContentModal saveFailedModal;
+
     @SpringBean
     private EntityManager entityManager;
 
@@ -193,6 +201,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected TextContentModal createDeleteFailedModal() {
         final TextContentModal modal = new TextContentModal("deleteFailedModal",
                 new StringResourceModel("deleteFailedModal.content", this));
+        modal.header(new ResourceModel("error"));
         final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -211,6 +220,37 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         });
 
         return modal;
+    }
+
+    protected void addSaveFailedModal(Form form) {
+        saveFailedContentModel = Model.of("");
+
+        saveFailedModal = new TextContentModal("saveFailedModal", saveFailedContentModel);
+        saveFailedModal.header(new ResourceModel("error"));
+        final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                setResponsePage(listPageClass);
+            }
+        };
+        okButton.setDefaultFormProcessing(false);
+        okButton.setLabel(Model.of("OK"));
+        saveFailedModal.addButton(okButton);
+
+        saveFailedModal.add(new AjaxEventBehavior("hidden.bs.modal") {
+            @Override
+            protected void onEvent(final AjaxRequestTarget target) {
+                setResponsePage(listPageClass);
+            }
+        });
+
+        form.add(saveFailedModal);
+    }
+
+    protected void showSaveFailedModal(AjaxRequestTarget target, String contentKey) {
+        saveFailedContentModel.setObject(getString(contentKey));
+        saveFailedModal.show(true);
+        target.add(saveFailedModal);
     }
 
     /**
@@ -297,12 +337,39 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             deleteFailedModal = createDeleteFailedModal();
             add(deleteFailedModal);
 
+            addSaveFailedModal(this);
+
             // don't display the delete button if we just create a new entity
             if (entityId == null) {
                 deleteButton.setVisibilityAllowed(false);
             }
 
             add(getCancelButton());
+        }
+
+        /**
+         * Returns a model comparator based on identity check.
+         * <p>This allows to overwrite the entity in the model like this:</p>
+         * <pre>{@code
+         * T entity = editForm.getModelObject();
+         * T savedEntity = jpaService.save(entity);
+         * editForm.setModelObject(savedEntity);
+         * }</pre>
+         *
+         * @return
+         */
+        @Override
+        public IModelComparator getModelComparator() {
+            return (IModelComparator) (component, b) -> {
+                final Object a = component.getDefaultModelObject();
+                if (a == null && b == null) {
+                    return true;
+                }
+                if (a == null || b == null) {
+                    return false;
+                }
+                return a == b;
+            };
         }
     }
 
@@ -313,13 +380,18 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
+                onCancel(target);
             }
         };
     }
 
+    protected void onCancel(AjaxRequestTarget target) {
+    }
+
 
     /**
-     * Generic functionality for the save page button, this can be extended further by subclasses.
+     * Generic functionality for the save page button, this can be extended
+     * further by subclasses
      *
      * @author mpostelnicu
      */
@@ -337,37 +409,49 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
-            // save the object and go back to the list page
-            final T saveable = editForm.getModelObject();
+            try {
+                // save the object and go back to the list page
+                final T saveable = editForm.getModelObject();
 
-            beforeSaveEntity(saveable);
+                if (checkInBeforeSave()) {
+                    checkIn(saveable);
+                }
 
-            // saves the entity and flushes the changes
-            jpaService.saveAndFlush(saveable);
-            getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
+                beforeSaveEntity(saveable);
 
-            // clears session and detaches all entities that are currently
-            // attached
-            entityManager.clear();
+                // saves the entity and flushes the changes
+                jpaService.saveAndFlush(saveable);
+                getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
 
-            // we flush the mondrian/wicket/reports cache to ensure it gets
-            // rebuilt
-            flushReportingCaches();
+                // clears session and detaches all entities that are currently
+                // attached
+                entityManager.clear();
 
-            afterSaveEntity(saveable);
+                // we flush the mondrian/wicket/reports cache to ensure it gets
+                // rebuilt
+                flushReportingCaches();
 
-            // only redirect if redirect is true
-            if (redirectToSelf) {
+                afterSaveEntity(saveable);
+
+                // only redirect if redirect is true
+                if (redirectToSelf) {
                 // we need to close the blockUI if it's opened and enable all the buttons
-                target.appendJavaScript("$.unblockUI();");
-                target.appendJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', false);");
-            } else if (redirect) {
-                setResponsePage(getResponsePage(), getParameterPage());
-            }
+                    target.appendJavaScript("$.unblockUI();");
+                    target.appendJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', false);");
+                } else if (redirect) {
+                    setResponsePage(getResponsePage(), getParameterPage());
+                }
 
-            // redirect is set back to true, which is the default behavior
-            redirect = true;
-            redirectToSelf = false;
+                // redirect is set back to true, which is the default behavior
+                redirect = true;
+                redirectToSelf = false;
+            } catch (ObjectOptimisticLockingFailureException e) {
+
+                boolean lockable = editForm.getModelObject() instanceof Lockable;
+
+                showSaveFailedModal(target,
+                        lockable ? "pessmistic_lock_was_lost_error_message" : "optimistic_lock_error_message");
+            }
         }
 
         /**
@@ -375,7 +459,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
          *
          * @return
          */
-        protected Class<? extends GenericWebPage<Void>> getResponsePage() {
+        protected Class<? extends Page> getResponsePage() {
             return listPageClass;
         }
 
@@ -386,6 +470,10 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
          */
         protected PageParameters getParameterPage() {
             return null;
+        }
+
+        protected boolean checkInBeforeSave() {
+            return true;
         }
 
         @Override
@@ -435,6 +523,12 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         public boolean isRedirectToSelf() {
             return redirectToSelf;
         }
+    }
+
+    protected void checkAndSendEventForDisableEditing() {
+    }
+
+    protected void checkIn(T saveable) {
     }
 
     protected void beforeSaveEntity(T saveable) {
@@ -553,6 +647,18 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                     Attributes.addClass(tag, "print-view");
                 }
             }
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setButtonsPermissions();
+            }
+
+            @Override
+            protected void onBeforeRender() {
+                super.onBeforeRender();
+                checkAndSendEventForDisableEditing();
+            }
         };
 
         // use this in order to avoid "ServletRequest does not contain multipart content" error
@@ -565,6 +671,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         // this fragment ensures extra buttons are added below the wicket:child section in child
         final Fragment fragment = new Fragment("extraButtons", "noButtons", this);
         editForm.add(fragment);
+    }
+
+    protected void setButtonsPermissions() {
     }
 
     @Override

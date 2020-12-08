@@ -96,6 +96,11 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
 //        editForm.add(new PurchaseItemPanel("purchaseItems"));
 
         editForm.add(new PurchRequisitionPanel("purchRequisitions"));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
 
         saveTerminateButton.setVisibilityAllowed(false);
     }

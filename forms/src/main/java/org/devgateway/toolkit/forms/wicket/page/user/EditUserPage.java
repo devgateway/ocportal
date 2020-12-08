@@ -14,6 +14,7 @@ package org.devgateway.toolkit.forms.wicket.page.user;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -288,8 +289,6 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
-                super.onSubmit(target);
-
                 final Person person = editForm.getModelObject();
                 // encode the password
                 if (person.getChangeProfilePassword()) {
@@ -301,22 +300,34 @@ public class EditUserPage extends AbstractEditPage<Person> {
                     person.setChangePasswordNextSignIn(false);
                 }
 
-                Person saved = jpaService.save(person);
-                updateCurrentAuthenticatedUserData(saved);
+                super.onSubmit(target);
+            }
 
-                // Is this a new user? Send a notification email.
-                if (entityId == null) {
-                    sendEmailService.sendNewAccountNotification(person, plainPassword.getField().getModelObject());
-                }
-
-
-                if (!FormSecurityUtil.isCurrentUserAdmin()) {
-                    setResponsePage(Homepage.class);
-                } else {
-                    setResponsePage(listPageClass);
-                }
+            @Override
+            protected Class<? extends Page> getResponsePage() {
+                return EditUserPage.this.getResponsePage();
             }
         };
+    }
+
+    private Class<? extends Page> getResponsePage() {
+        if (!FormSecurityUtil.isCurrentUserAdmin()) {
+            return Homepage.class;
+        } else {
+            return listPageClass;
+        }
+    }
+
+    @Override
+    protected void afterSaveEntity(Person person) {
+        super.afterSaveEntity(person);
+
+        updateCurrentAuthenticatedUserData(person);
+
+        // Is this a new user? Send a notification email.
+        if (entityId == null) {
+            sendEmailService.sendNewAccountNotification(person, plainPassword.getField().getModelObject());
+        }
     }
 
     /**

@@ -62,3 +62,18 @@ This module is packaged as a fat jar. For testing purposes, the default configur
  `java -Dspring.profiles.active=dev -jar target/forms-0.0.1-SNAPSHOT.jar`
 
  This will start everything, including an embedded Tomcat Web server and all the services attached it.
+
+# Using Spring Boot Developer Tools
+
+This spring add-on allows automatic context reload of beans when resource changes detected 
+(classes recompiled, other files in classpath changed). This means you do not have to restart your
+application when you recompile classes, nor you need paid tools like jrebel for it.
+
+Read more about it [here](https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/using-boot-devtools.html)
+A good howto can be found [here](https://www.baeldung.com/spring-boot-devtools)
+
+To enable devtools you need to start the application using java startup property
+`spring.devtools.restart.enabled=true`
+
+Wicket integration is done according to section [20.2.6](https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/using-boot-devtools.html#using-boot-devtools-customizing-classload)
+of the documentation.
