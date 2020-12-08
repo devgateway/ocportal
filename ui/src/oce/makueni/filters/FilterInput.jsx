@@ -18,7 +18,8 @@ const FilterInput = props => {
 
 FilterInput.propTypes = {
     translations: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.string
 };
 
 export default FilterInput;
