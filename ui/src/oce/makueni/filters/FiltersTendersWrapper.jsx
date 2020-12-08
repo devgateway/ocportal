@@ -6,7 +6,6 @@ import FiltersWrapper from './FiltersWrapper';
 // import FilterSubcounties from './FilterSubcounties';
 // import FilterWards from './FilterWards';
 // import FilterAmount from './FilterAmount';
-import FilterTitle from './FilterTitle';
 // import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
@@ -33,13 +32,13 @@ const FiltersTendersWrapper = props => {
       name: 'Fiscal Year',
       className: 'fiscal-year',
       fm: 'publicView.filter.fiscalYear'
+    },
+    {
+      render: titleRenderer,
+      name: 'Text Search',
+      className: 'title-search',
+      fm: 'publicView.filter.titleSearch'
     }
-    // {
-    //   render: titleRenderer,
-    //   name: 'Text Search',
-    //   className: 'title-search',
-    //   fm: 'publicView.filter.titleSearch'
-    // }
   ];
 
   return <FiltersWrapper
