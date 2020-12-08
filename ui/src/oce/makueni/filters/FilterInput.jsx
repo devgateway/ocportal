@@ -1,25 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {FormControl, FormGroup} from 'react-bootstrap';
 import PropTypes from "prop-types";
 
 const FilterInput = props => {
-    const [data, setData] = useState(props.value);
-
-    useEffect(() => {
-        setData(props.value === undefined ? '' : props.value);
-    }, [props.value]);
-
-    const handleChange = e => {
-        const {onChange} = props;
-        const inputValue = e.target.value;
-        onChange(inputValue);
-        setData(inputValue);
-    }
+    const value = props.value || '';
+    const handleChange = e => props.onChange(e.target.value);
 
     return (<FormGroup>
         <FormControl
             type="text"
-            value={data}
+            value={value}
             placeholder="Enter search term"
             onChange={handleChange}
         />
@@ -30,6 +20,5 @@ FilterInput.propTypes = {
     translations: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired
 };
-
 
 export default FilterInput;
