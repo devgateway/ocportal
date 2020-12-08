@@ -10,6 +10,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinionItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.springframework.validation.Errors;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,6 +54,10 @@ public class TenderProcessValidator implements Validator {
 
     public static <E extends AbstractMakueniEntity> Stream<E> nonDraft(Collection<E> col) {
         return col.stream().filter(TenderProcessValidator::existsNonDraft);
+    }
+
+    public static <E extends AbstractMakueniEntity> Stream<E> draft(Collection<E> col) {
+        return col.stream().filter(TenderProcessValidator::existsDraft);
     }
 
     public static <E extends AbstractMakueniEntity> Boolean existsDraft(Collection<E> col) {
@@ -204,6 +210,15 @@ public class TenderProcessValidator implements Validator {
         return existsDraft(f) && existsLowerFormsInDraft(allForms, f);
     }
 
+    public <E extends AbstractMakueniEntity> boolean draftLinkedPaymentVouchers(Set<PaymentVoucher> paymentVouchers,
+                                                                                Set<E> linkedSet,
+                                                                                Function<? super PaymentVoucher,
+                                                                                        ? extends E>
+                                                                                        linkedGetter) {
+        return existsDraft(linkedSet) && nonDraft(paymentVouchers)
+                .map(linkedGetter).filter(Objects::nonNull).anyMatch(r -> draft(linkedSet).anyMatch(d -> d.equals(r)));
+    }
+
     public void reportDraft(TenderProcess tp, Errors errors) {
         List<AbstractMakueniEntity> allForms = createAllFormsList(tp);
         ArrayList<String> draftForms = new ArrayList<>();
@@ -242,15 +257,18 @@ public class TenderProcessValidator implements Validator {
             draftForms.add("Contract");
         }
 
-        if (existsDraft(tp.getAdministratorReports()) && existsNonDraft(tp.getPaymentVouchers())) {
+        if (draftLinkedPaymentVouchers(tp.getPaymentVouchers(), tp.getAdministratorReports(),
+                PaymentVoucher::getAdministratorReport)) {
             draftForms.add("Administrator Report");
         }
 
-        if (existsDraft(tp.getInspectionReports()) && existsNonDraft(tp.getPaymentVouchers())) {
+        if (draftLinkedPaymentVouchers(tp.getPaymentVouchers(), tp.getInspectionReports(),
+                PaymentVoucher::getInspectionReport)) {
             draftForms.add("Inspection Report");
         }
 
-        if (existsDraft(tp.getPmcReports()) && existsNonDraft(tp.getPaymentVouchers())) {
+        if (draftLinkedPaymentVouchers(tp.getPaymentVouchers(), tp.getPmcReports(),
+                PaymentVoucher::getPmcReport)) {
             draftForms.add("PMC Report");
         }
 
