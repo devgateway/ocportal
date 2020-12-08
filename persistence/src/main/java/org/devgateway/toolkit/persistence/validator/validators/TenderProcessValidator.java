@@ -10,6 +10,7 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinionItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.springframework.validation.Errors;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,15 +44,24 @@ public class TenderProcessValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return TenderProcess.class.equals(clazz);
+        return TenderProcess.class.isAssignableFrom(clazz);
+    }
+
+    public static <E extends AbstractMakueniEntity> boolean existsNonDraft(E e) {
+        return e != null && !DBConstants.Status.TERMINATED.equals(e.getStatus())
+                && !DBConstants.Status.DRAFT.equals(e.getStatus());
     }
 
     public static <E extends AbstractMakueniEntity> Stream<E> nonDraft(Collection<E> col) {
-        return col.stream().filter(e -> !DBConstants.Status.DRAFT.equals(e.getStatus()));
+        return col.stream().filter(TenderProcessValidator::existsNonDraft);
+    }
+
+    public static <E extends AbstractMakueniEntity> Stream<E> draft(Collection<E> col) {
+        return col.stream().filter(TenderProcessValidator::existsDraft);
     }
 
     public static <E extends AbstractMakueniEntity> Boolean existsDraft(Collection<E> col) {
-        return col.stream().anyMatch(e -> DBConstants.Status.DRAFT.equals(e.getStatus()));
+        return col.stream().anyMatch(TenderProcessValidator::existsDraft);
     }
 
     public static <E extends AbstractMakueniEntity> Boolean isStatusNull(Collection<E> col) {
@@ -90,35 +101,37 @@ public class TenderProcessValidator implements Validator {
             Set<Supplier> qaPassedSuppliers = nonDraft(tp.getTenderQuotationEvaluation())
                     .flatMap(a -> a.getBids().stream()).filter(b -> DBConstants.SupplierResponsiveness.PASS
                             .equalsIgnoreCase(b.getSupplierResponsiveness())).map(Bid::getSupplier)
-                    .collect(Collectors.toSet());
+                    .filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Passed Bidders from Quotation Evaluation Form", qaPassedSuppliers);
         }
 
         if (existsNonDraft(tp.getProfessionalOpinion())) {
             Set<Supplier> piAwardees = nonDraft(tp.getProfessionalOpinion()).flatMap(p -> p.getItems().stream())
-                    .map(ProfessionalOpinionItem::getAwardee).collect(Collectors.toSet());
+                    .map(ProfessionalOpinionItem::getAwardee).
+                            filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Awardees from Professional Opinion Form", piAwardees);
         }
 
         if (existsNonDraft(tp.getAwardNotification())) {
             Set<Supplier> anAwardee = nonDraft(tp.getAwardNotification())
-                    .flatMap(a -> a.getAwardee().stream()).collect(Collectors.toSet());
+                    .flatMap(a -> a.getAwardee().stream()).filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Suppliers from at least one Award Notification Form", anAwardee);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> aaAwardees = nonDraft(tp.getAwardAcceptance()).flatMap(a -> a.getAwardee().stream())
-                    .collect(Collectors.toSet());
+                    .filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Suppliers from at least one Award Acceptance Form", aaAwardees);
 
             Set<Supplier> aacAwardees = nonDraft(tp.getAwardAcceptance()).map(AwardAcceptance::getAcceptedAcceptance)
-                    .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).collect(Collectors.toSet());
+                    .filter(Objects::nonNull).map(AwardAcceptanceItem::getAwardee).
+                            filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Accepted Suppliers from at least one Award Acceptance Form", aacAwardees);
         }
 
         if (existsNonDraft(tp.getAwardAcceptance())) {
             Set<Supplier> contractSuppliers = nonDraft(tp.getContract()).map(Contract::getAwardee)
-                    .collect(Collectors.toSet());
+                    .filter(Objects::nonNull).collect(Collectors.toSet());
             suppliersMap.put("the Contract Suppliers from the Contract Form", contractSuppliers);
         }
 
@@ -161,62 +174,111 @@ public class TenderProcessValidator implements Validator {
                 .concat(" and ").concat(tmp.get(size));
     }
 
+    public List<AbstractMakueniEntity> createAllFormsList(TenderProcess tp) {
+        List<AbstractMakueniEntity> allForms = new ArrayList<>();
+        allForms.add(tp.getProcurementPlan());
+        allForms.add(tp.getProject());
+        allForms.add(tp);
+        allForms.add(tp.getSingleTender());
+        allForms.add(tp.getSingleTenderQuotationEvaluation());
+        allForms.add(tp.getSingleProfessionalOpinion());
+        allForms.add(tp.getSingleAwardNotification());
+        allForms.add(tp.getSingleAwardAcceptance());
+        allForms.add(tp.getSingleContract());
+        allForms.addAll(tp.getAdministratorReports());
+        allForms.addAll(tp.getInspectionReports());
+        allForms.addAll(tp.getPmcReports());
+        allForms.addAll(tp.getMeReports());
+        allForms.addAll(tp.getPaymentVouchers());
+        return allForms;
+    }
+
+    public boolean existsLowerFormsInDraft(List<AbstractMakueniEntity> allForms, AbstractMakueniEntity f) {
+        int i = allForms.indexOf(f);
+        for (int x = 0; x < allForms.size(); x++) {
+            if (x <= i) {
+                continue;
+            }
+            if (existsNonDraft(allForms.get(x))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean existsDraftWithLowerFormsDraft(List<AbstractMakueniEntity> allForms, AbstractMakueniEntity f) {
+        return existsDraft(f) && existsLowerFormsInDraft(allForms, f);
+    }
+
+    public <E extends AbstractMakueniEntity> boolean draftLinkedPaymentVouchers(Set<PaymentVoucher> paymentVouchers,
+                                                                                Set<E> linkedSet,
+                                                                                Function<? super PaymentVoucher,
+                                                                                        ? extends E>
+                                                                                        linkedGetter) {
+        return existsDraft(linkedSet) && nonDraft(paymentVouchers)
+                .map(linkedGetter).filter(Objects::nonNull).anyMatch(r -> draft(linkedSet).anyMatch(d -> d.equals(r)));
+    }
+
     public void reportDraft(TenderProcess tp, Errors errors) {
+        List<AbstractMakueniEntity> allForms = createAllFormsList(tp);
         ArrayList<String> draftForms = new ArrayList<>();
-        if (existsDraft(tp.getProcurementPlan())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getProcurementPlan())) {
             draftForms.add("Procurement Plan");
         }
-        if (existsDraft(tp.getProject())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getProject())) {
             draftForms.add("Project");
         }
 
-        if (existsDraft(tp)) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp)) {
             draftForms.add("Purchase Requisition");
         }
 
-        if (existsDraft(tp.getTender())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleTender())) {
             draftForms.add("Tender");
         }
 
-        if (existsDraft(tp.getTenderQuotationEvaluation())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleTenderQuotationEvaluation())) {
             draftForms.add("Quotation and Evaluation");
         }
 
-        if (existsDraft(tp.getProfessionalOpinion())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleProfessionalOpinion())) {
             draftForms.add("Professional Opinion");
         }
 
-        if (existsDraft(tp.getAwardNotification())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleAwardNotification())) {
             draftForms.add("Award Notification");
         }
 
-        if (existsDraft(tp.getAwardAcceptance())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleAwardAcceptance())) {
             draftForms.add("Award Acceptance");
         }
 
-        if (existsDraft(tp.getContract())) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSingleContract())) {
             draftForms.add("Contract");
         }
 
-        if (existsDraft(tp.getAdministratorReports())) {
-            draftForms.add("Administrator Reports");
+        if (draftLinkedPaymentVouchers(tp.getPaymentVouchers(), tp.getAdministratorReports(),
+                PaymentVoucher::getAdministratorReport)) {
+            draftForms.add("Administrator Report");
         }
 
-        if (existsDraft(tp.getInspectionReports())) {
-            draftForms.add("Inspection Reports");
+        if (draftLinkedPaymentVouchers(tp.getPaymentVouchers(), tp.getInspectionReports(),
+                PaymentVoucher::getInspectionReport)) {
+            draftForms.add("Inspection Report");
         }
 
-        if (existsDraft(tp.getPmcReports())) {
-            draftForms.add("PMC Reports");
+        if (draftLinkedPaymentVouchers(tp.getPaymentVouchers(), tp.getPmcReports(),
+                PaymentVoucher::getPmcReport)) {
+            draftForms.add("PMC Report");
         }
 
-        if (existsDraft(tp.getMeReports())) {
-            draftForms.add("M&E Reports");
-        }
+//        if (existsDraft(tp.getMeReports())) {
+//            draftForms.add("M&E Reports");
+//        }
 
-        if (existsDraft(tp.getPaymentVouchers())) {
-            draftForms.add("Payment Vouchers");
-        }
+//        if (existsDraft(tp.getPaymentVouchers())) {
+//            draftForms.add("Payment Vouchers");
+//        }
 
         if (!draftForms.isEmpty()) {
             errors.reject("The following forms are in draft: " + String.join(", ", draftForms));
