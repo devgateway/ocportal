@@ -3,11 +3,12 @@ package org.devgateway.toolkit.forms.fm;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.devgateway.toolkit.persistence.fm.DgFmSubject;
 
 /**
  * Visitor that can be added into a {@link DgFmComponentSubject} that was previously attached, and that
  * contains unattached {@link DgFmComponentSubject}S as children. These children will be automatically
- * attached to the Feature Manager. see {@link org.devgateway.toolkit.web.fm.DgFmSubject#attachFm(String)}
+ * attached to the Feature Manager. see {@link DgFmSubject#attachFm(String)}
  *
  * @author mihai 
  * 

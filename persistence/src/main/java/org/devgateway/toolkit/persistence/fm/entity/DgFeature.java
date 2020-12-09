@@ -1,7 +1,7 @@
-package org.devgateway.toolkit.web.fm.entity;
+package org.devgateway.toolkit.persistence.fm.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.toolkit.web.fm.DgFmSubject;
+import org.devgateway.toolkit.persistence.fm.DgFmSubject;
 
 import javax.validation.constraints.NotNull;
 import java.util.Set;

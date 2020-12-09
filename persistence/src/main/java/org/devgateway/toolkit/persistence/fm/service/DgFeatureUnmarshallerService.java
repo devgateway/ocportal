@@ -1,6 +1,6 @@
-package org.devgateway.toolkit.web.fm.service;
+package org.devgateway.toolkit.persistence.fm.service;
 
-import org.devgateway.toolkit.web.fm.entity.UnchainedDgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;

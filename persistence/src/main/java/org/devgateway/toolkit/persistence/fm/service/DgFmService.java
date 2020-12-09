@@ -1,6 +1,6 @@
-package org.devgateway.toolkit.web.fm.service;
+package org.devgateway.toolkit.persistence.fm.service;
 
-import org.devgateway.toolkit.web.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
 
 import java.util.List;
 

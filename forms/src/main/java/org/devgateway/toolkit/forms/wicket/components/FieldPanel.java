@@ -18,8 +18,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
-import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
-import org.devgateway.toolkit.web.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 
 /**
  * @author mpostelnicu

@@ -114,11 +114,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
@@ -271,7 +266,6 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.properties</include>
-                    <include>**/*.yml</include>
                     <include>**/*.sql</include>
                     <include>**/*.xml</include>
                     <include>**/*.html</include>
@@ -291,7 +285,6 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.properties</include>
-                    <include>**/*.yml</include>
                     <include>**/*.sql</include>
                     <include>**/*.xml</include>
                     <include>**/*.html</include>
