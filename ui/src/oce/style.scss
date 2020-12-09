@@ -63,6 +63,15 @@
     color: white;
 }
 
+.filters .control-label {
+    display: block;
+    font-weight: normal;
+}
+
+.filters .filter-content {
+    padding-top: 15px;
+}
+
 .language-switcher {
     a {
         text-decoration: none !important;

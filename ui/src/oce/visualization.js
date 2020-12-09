@@ -17,7 +17,7 @@ class Visualization extends translatable(Component) {
 
   buildUrl(ep) {
     const { filters } = this.props;
-    return new URI(`${API_ROOT}/${ep}`).addSearch(filters.toJS());
+    return new URI(`${API_ROOT}/${ep}`).addSearch(filters);
   }
 
   fetch() {

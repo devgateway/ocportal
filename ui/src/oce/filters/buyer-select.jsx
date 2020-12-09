@@ -1,11 +1,12 @@
-import SingleSelect from './inputs/single-select';
+import React from "react";
+import FilterItemSingleSelect from "../makueni/filters/FilterItemSingleSelect";
 
-class BuyerSelect extends SingleSelect {
-  getTitle() {
-    return this.t('filters:buyer:title');
-  }
-}
-
-BuyerSelect.ENDPOINT = '/api/ocds/organization/buyer/all';
+const BuyerSelect = props =>
+  <FilterItemSingleSelect
+    labelKey='filters:buyer:title'
+    ep='/ocds/organization/buyer/all'
+    itemValueKey='id'
+    itemLabelKey='name'
+    {...props} />
 
 export default BuyerSelect;

@@ -2,6 +2,7 @@ import {FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {fetch} from "../../api/Api";
+import {tCreator} from "../../translatable";
 
 const FilterItemSingleSelect = props => {
 
@@ -17,13 +18,19 @@ const FilterItemSingleSelect = props => {
     fetch(props.ep).then(data => setData(data));
   }, [props.ep]);
 
+  const t = tCreator(props.translations);
+
+  const label = props.labelKey ? t(props.labelKey) : 'Select a Value';
+
+  const {itemValueKey = '_id', itemLabelKey = 'label'} = props;
+
   return (
     <FormGroup>
-      <ControlLabel>Select a Value</ControlLabel>
+      <ControlLabel>{label}</ControlLabel>
       <FormControl componentClass="select" placeholder="select" onChange={handleChange} value={value}>
         <option value="all">All</option>
         {
-          data.map(item => <option key={item.label} value={item._id}>{item.label}</option>)
+          data.map(item => <option key={item[itemValueKey]} value={item[itemValueKey]}>{item[itemLabelKey]}</option>)
         }
       </FormControl>
     </FormGroup>

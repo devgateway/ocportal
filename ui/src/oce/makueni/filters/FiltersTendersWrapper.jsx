@@ -15,7 +15,7 @@ import fmConnect from "../../fm/fm";
  * Filter used for the Tender table.
  */
 const FiltersTendersWrapper = props => {
-  return <FiltersWrapper items={[]} applyFilter={props.applyFilters} translations={props.translations} />
+  return <FiltersWrapper groups={[]} applyFilter={props.applyFilters} translations={props.translations} />
 }
 
 // FiltersTendersWrapper.ITEMS = [FilterTitle, FilterItemDep, FilterItemFY, FilterItems,

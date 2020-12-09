@@ -1,27 +1,14 @@
+import React from "react";
 import FilterBox from "./box";
 import TenderPrice from "../../filters/tender-price";
 import AwardValue from "../../filters/award-value";
-import {Map} from "immutable";
-import {fetchJson} from "../../tools";
 
-class FlaggedTenderPrice extends TenderPrice{
-  componentDidMount(){
-    fetchJson('/api/tenderValueInterval?flagged=true')
-      .then(([{minTenderValue, maxTenderValue}]) => this.setState({
-        min: Math.floor(minTenderValue),
-        max: Math.ceil(maxTenderValue)
-      }))
-  }
+const FlaggedTenderPrice = props => {
+  return <TenderPrice ep='/tenderValueInterval?flagged=true' {...props} />;
 };
 
-class FlaggedAwardValue extends AwardValue{
-  componentDidMount(){
-    fetchJson('/api/awardValueInterval?flagged=true')
-      .then(([{minAwardValue, maxAwardValue}]) => this.setState({
-        min: Math.floor(minAwardValue),
-        max: Math.ceil(maxAwardValue)
-      }))
-  }
+const FlaggedAwardValue = props => {
+  return <AwardValue ep='/awardValueInterval?flagged=true' {...props} />;
 };
 
 class ValueAmount extends FilterBox {
@@ -65,6 +52,8 @@ class ValueAmount extends FilterBox {
             translations={translations}
             minValue={minValue}
             maxValue={maxValue}
+            minProperty={'min' + slug}
+            maxProperty={'max' + slug}
             onUpdate={this.update.bind(this, slug)}
         />
     )

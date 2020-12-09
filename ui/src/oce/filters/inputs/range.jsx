@@ -1,81 +1,109 @@
-import React from "react";
-import translatable from '../../translatable';
-import Component from '../../pure-render-component';
+import React, {useEffect, useState} from "react";
+import PropTypes from 'prop-types';
+import {tCreator} from '../../translatable';
 import RCRange from 'rc-slider/lib/Range';
 import 'rc-slider/assets/index.css';
+import {fetch} from '../../api/Api';
+import {Col, ControlLabel, FormControl, FormGroup, Row} from "react-bootstrap";
 
-export class FormattedNumberInput extends React.Component {
-  getFormattedValue() {
-    const { value } = this.props;
-    return value && value.toLocaleString();
-  }
+const FormattedNumberInput = ({value, onChange, ...otherProps}) => {
 
-  sendUnformattedValue(e) {
+  const formattedValue = value && value.toLocaleString();
+
+  const handleChange = e => {
     const value = parseFloat(e.target.value.replace(/,/g, ''));
-    this.props.onChange(value);
+    onChange(value);
+  };
+
+  return (
+    <input
+      {...otherProps}
+      value={formattedValue}
+      onChange={handleChange}
+    />
+  );
+};
+
+const Range = ({titleKey, min, max, minValue, maxValue, translations, onChange}) => {
+  if (!min && !max) {
+    return null;
   }
 
-  render() {
-    const { value, onChange } = this.props;
-    return (
-      <input
-        {...this.props}
-        value={this.getFormattedValue()}
-        onChange={this.sendUnformattedValue.bind(this)}
-      />
-    );
-  }
-}
+  const actualMinValue = minValue || min;
+  const actualMaxValue = maxValue || max;
+  const t = tCreator(translations);
 
-class Range extends translatable(Component) {
-  render() {
-    if (!this.state) return null;
-    const { min, max } = this.state;
-    const { onUpdate } = this.props;
-    const minValue = this.props.minValue || min;
-    const maxValue = this.props.maxValue || max;
-    return (
-      <section className="field">
-        <header>
-          {this.getTitle()}
-        </header>
-        <section className="options range">
-          <RCRange
-            allowCross={false}
-            min={min}
-            max={max}
-            defaultValue={[min, max]}
-            value={[minValue, maxValue]}
-            onChange={([minValue, maxValue]) => onUpdate({ min: minValue, max: maxValue }, {
-              min,
-              max
-            })}
-          />
-        </section>
+  const handleOnChange = ({minValue, maxValue}) =>
+    onChange({
+      minValue: minValue === min ? undefined : minValue,
+      maxValue: maxValue === max ? undefined : maxValue
+    });
 
-        <div className="range-inputs row">
-          <div className="col-md-4">
-            {this.t('general:range:min')}
-            &nbsp;
-            <FormattedNumberInput
-              className="form-control input-sm"
-              value={minValue}
-              onChange={value => onUpdate({ min: value, max: maxValue }, { min, max })}
-            />
-          </div>
-          <div className="col-md-4">
-            {this.t('general:range:max')}
-            &nbsp;
-            <FormattedNumberInput
-              className="form-control input-sm"
-              value={maxValue}
-              onChange={value => onUpdate({ min: minValue, max: value }, { min, max })}
-            />
-          </div>
-        </div>
-      </section>
-    );
-  }
-}
+  return (
+    <>
+      <FormGroup>
+        <ControlLabel>{t(titleKey)}</ControlLabel>
+        <RCRange
+          allowCross={false}
+          min={min}
+          max={max}
+          defaultValue={[min, max]}
+          value={[actualMinValue, actualMaxValue]}
+          onChange={([minValue, maxValue]) => handleOnChange({minValue, maxValue})}/>
+      </FormGroup>
 
-export default Range;
+      <Row className="range-inputs">
+        <Col md={4}>
+          <FormGroup>
+            <ControlLabel>{t('general:range:min')}</ControlLabel>
+            <FormControl
+              componentClass={FormattedNumberInput}
+              bsSize='sm'
+              value={actualMinValue}
+              onChange={value => handleOnChange({ minValue: value, maxValue })} />
+          </FormGroup>
+        </Col>
+
+        <Col md={4}>
+          <FormGroup>
+            <ControlLabel>{t('general:range:max')}</ControlLabel>
+            <FormControl
+              componentClass={FormattedNumberInput}
+              bsSize='sm'
+              value={actualMaxValue}
+              onChange={value => handleOnChange({ minValue, maxValue: value })} />
+          </FormGroup>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+Range.propTypes = {
+  titleKey: PropTypes.string.isRequired,
+  translations: PropTypes.object.isRequired
+};
+
+export const RemoteRange = ({ep, minProperty, maxProperty, ...otherProps}) => {
+
+  const [state, setState] = useState({});
+
+  useEffect(() => {
+    fetch(ep)
+      .then(([{ [minProperty]: min, [maxProperty]: max }]) =>
+        setState({
+          min: Math.floor(min),
+          max: Math.ceil(max)
+        }));
+  }, [minProperty, maxProperty, ep]);
+
+  return <Range min={state.min} max={state.max} {...otherProps} />;
+};
+
+RemoteRange.propTypes = {
+  ep: PropTypes.string.isRequired,
+  titleKey: PropTypes.string.isRequired,
+  translations: PropTypes.object.isRequired
+};
+
+export default RemoteRange;

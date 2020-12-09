@@ -1,11 +1,12 @@
-import SingleSelect from './inputs/single-select';
+import React from "react";
+import FilterItemSingleSelect from "../makueni/filters/FilterItemSingleSelect";
 
-class SupplierSelect extends SingleSelect {
-  getTitle() {
-    return this.t('filters:supplier:title');
-  }
-}
-
-SupplierSelect.ENDPOINT = '/api/ocds/organization/supplier/all';
+const SupplierSelect = props =>
+  <FilterItemSingleSelect
+    labelKey='filters:supplier:title'
+    ep='/ocds/organization/supplier/all'
+    itemValueKey='id'
+    itemLabelKey='name'
+    {...props} />
 
 export default SupplierSelect;

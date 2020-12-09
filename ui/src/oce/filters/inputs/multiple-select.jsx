@@ -1,90 +1,64 @@
-import {fromJS, Set} from 'immutable';
-import translatable from '../../translatable';
-import Component from '../../pure-render-component';
-import {fetchJson} from '../../tools';
+import {tCreator} from '../../translatable';
+import React, {useEffect, useState} from "react";
+import {fetch} from "../../api/Api";
+import {Checkbox, ControlLabel, FormGroup} from "react-bootstrap";
 
-class MultipleSelect extends translatable(Component) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      options: fromJS([]),
-    };
-  }
+const MultipleSelect = props => {
 
-  getOptions() {
-    return this.state.options;
-  }
+  const {ep, value = [], onChange} = props;
+  const [options, setOptions] = useState([]);
+  const selected = new window.Set(value);
 
-  getSelectedCount() {
-    return this.getOptions()
-    .filter(
-      (option, key) => this.props.selected.has(this.getId(option, key)),
-    )
-    .count();
-  }
+  const getId = el => el._id;
 
-  transform(datum) {
-    return datum;
-  }
+  const getLabel = getId;
 
-  componentDidMount() {
-    const { ENDPOINT } = this.constructor;
-    if (ENDPOINT) {
-      fetchJson(ENDPOINT)
-      .then(data => this.setState({ options: fromJS(this.transform(data)) }));
+  useEffect(() => {
+    fetch(ep).then(data => setOptions(data.filter(el => !!getId(el))));
+  }, [ep]);
+
+  const selectAll = () => onChange(options.map(getId));
+
+  const selectNone = () => onChange([]);
+
+  const totalOptions = options.length;
+  const selectedCount = options.filter((option, key) => selected.has(getId(option, key))).length;
+
+  const t = tCreator(props.translations);
+
+  const onToggle = id => {
+    if (selected.has(id)) {
+      onChange(value.filter(el => el !== id));
+    } else {
+      onChange(value.concat(id));
     }
-  }
+  };
 
-  selectAll() {
-    this.props.onUpdateAll(
-      Set(
-        this.getOptions()
-        .map(this.getId)
-        .toArray(),
-      ),
-    );
-  }
-
-  selectNone() {
-    this.props.onUpdateAll(Set());
-  }
-
-  render() {
-    const options = this.getOptions();
-    const { selected, onToggle } = this.props;
-    const totalOptions = options.count();
-    return (
-      <section className="field">
-        <header>
-          {/*{this.getTitle()} */}Selected
-          <span className="count">({this.getSelectedCount()}/{totalOptions})</span>
-          <div className="pull-right select-all-none">
-            <a onClick={e => this.selectAll()}>
-              {this.t('filters:multipleSelect:selectAll')}
-            </a>
-            &nbsp;|&nbsp;
-            <a onClick={e => this.selectNone()}>
-              {this.t('filters:multipleSelect:selectNone')}
-            </a>
-          </div>
-        </header>
-        <section className="options">
-          {options.map((option, key) => (
-            <div className="checkbox" key={this.getId(option, key)}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={selected.has(this.getId(option, key))}
-                  onChange={() => onToggle(this.getId(option, key))}
-                /> {this.getLabel(option)}
-              </label>
-            </div>
-          ))
-          .toArray()}
-        </section>
-      </section>
-    );
-  }
+  return (
+    <FormGroup>
+      <ControlLabel>
+        Selected
+        <span className="count">({selectedCount}/{totalOptions})</span>
+        <div className="pull-right select-all-none">
+          <a onClick={selectAll}>
+            {t('filters:multipleSelect:selectAll')}
+          </a>
+          &nbsp;|&nbsp;
+          <a onClick={selectNone}>
+            {t('filters:multipleSelect:selectNone')}
+          </a>
+        </div>
+      </ControlLabel>
+      {options.map((option, key) => {
+        const id = getId(option, key);
+        return (
+          <Checkbox key={id} onChange={() => onToggle(id)} checked={selected.has(id)}>
+            {getLabel(option, key)}
+          </Checkbox>
+        );
+      })}
+    </FormGroup>
+  );
 }
 
 export default MultipleSelect;

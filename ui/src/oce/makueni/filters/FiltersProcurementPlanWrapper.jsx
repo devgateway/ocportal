@@ -3,8 +3,22 @@ import FilterItemDep from './FilterItemDep';
 import FilterItemFY from './FilterItemFY';
 import FiltersWrapper from './FiltersWrapper';
 
-const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
+// TODO move
+export const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
   <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
+
+// TODO move
+export const minMaxPropertyRendererCreator = (FilterItem, suffix) => ({filters, onChange, ...props}) => {
+  const minProperty = `min${suffix}`;
+  const maxProperty = `max${suffix}`;
+  return <FilterItem
+    minValue={filters[minProperty]}
+    maxValue={filters[maxProperty]}
+    minProperty={minProperty}
+    maxProperty={maxProperty}
+    onChange={({minValue, maxValue}) => onChange({[minProperty]: minValue, [maxProperty]: maxValue})}
+    {...props} />;
+}
 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
 
@@ -15,23 +29,31 @@ const fyRenderer = singlePropertyRendererCreator(FilterItemFY, 'fiscalYear');
  */
 const FiltersProcurementPlanWrapper = props => {
 
-  let items = [
+  let groups = [
     {
-      render: departmentRenderer,
       name: 'Departments',
       className: 'department',
-      fm: 'publicView.filter.department'
+      fm: 'publicView.filter.department',
+      filters: [
+        {
+          render: departmentRenderer
+        }
+      ]
     },
     {
-      render: fyRenderer,
       name: 'Fiscal Year',
       className: 'fiscal-year',
-      fm: 'publicView.filter.fiscalYear'
+      fm: 'publicView.filter.fiscalYear',
+      filters: [
+        {
+          render: fyRenderer
+        }
+      ]
     }
   ];
 
   return <FiltersWrapper
-    items={items} filters={props.filters} applyFilters={props.applyFilters} translations={props.translations} />
+    groups={groups} filters={props.filters} applyFilters={props.applyFilters} translations={props.translations} />
 }
 
 export default FiltersProcurementPlanWrapper;
