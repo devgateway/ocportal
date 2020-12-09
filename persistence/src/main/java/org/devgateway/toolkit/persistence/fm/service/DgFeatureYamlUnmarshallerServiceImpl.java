@@ -57,7 +57,7 @@ public class DgFeatureYamlUnmarshallerServiceImpl implements DgFeatureYamlUnmars
             logger.debug(String.format("FM: Unmarshalled resource location %s", resourceLocation));
             return ret;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to read from classpath:" + resourceLocation, e);
         }
     }
 }
