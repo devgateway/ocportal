@@ -3,12 +3,12 @@ package org.devgateway.toolkit.persistence.fm.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.devgateway.toolkit.persistence.fm.entity.FeatureConfig;
 import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -30,14 +30,6 @@ public class DgFeatureYamlUnmarshallerServiceImpl implements DgFeatureYamlUnmars
     @Qualifier("yamlObjectMapper")
     private ObjectMapper yamlObjectMapper;
 
-    @Value("#{'${fm.resources}'.split(',')}")
-    private List<String> resources;
-
-    @Override
-    public List<String> getResources() {
-        return resources;
-    }
-
     public String createHash(UnchainedDgFeature feature) {
         try {
             return DigestUtils.md5Hex(yamlObjectMapper.writeValueAsString(feature));
@@ -52,11 +44,11 @@ public class DgFeatureYamlUnmarshallerServiceImpl implements DgFeatureYamlUnmars
     }
 
     @Override
-    public List<UnchainedDgFeature> unmarshall(String resourceLocation) {
+    public List<UnchainedDgFeature> unmarshall(FeatureConfig featureConfig) {
+        String resourceLocation = featureConfig.getResourceLocation();
         logger.debug(String.format("FM: Unmarshalling resource location %s", resourceLocation));
         try {
-            List<UnchainedDgFeature> features = yamlObjectMapper.readValue(getClass().getClassLoader()
-                            .getResourceAsStream(resourceLocation),
+            List<UnchainedDgFeature> features = yamlObjectMapper.readValue(featureConfig.getContent(),
                     yamlObjectMapper.getTypeFactory().constructCollectionType(List.class, UnchainedDgFeature.class));
             List<UnchainedDgFeature> ret = features.stream().peek(f -> {
                 f.setResourceLocation(resourceLocation);

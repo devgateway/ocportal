@@ -41,6 +41,7 @@
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <swagger.version>2.9.2</swagger.version>
         <jdk-serializable-functional.version>1.8.6</jdk-serializable-functional.version>
+        <commons-io.version>2.6</commons-io.version>
     </properties>
 
     <modules>
@@ -118,6 +119,12 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${pg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

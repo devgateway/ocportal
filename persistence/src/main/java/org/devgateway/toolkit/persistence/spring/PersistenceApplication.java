@@ -15,6 +15,7 @@ import org.devgateway.ocds.persistence.dao.UserDashboard;
 import org.devgateway.ocds.persistence.repository.UserDashboardRepository;
 import org.apache.catalina.startup.Tomcat;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.fm.DgFmProperties;
 import org.devgateway.toolkit.persistence.repository.RoleRepository;
 import org.devgateway.toolkit.persistence.service.sms.OnfonMediaProperties;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan(basePackageClasses = { GenericPersistable.class, UserDashboard.class })
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/application.properties")
 @ComponentScan("org.devgateway.toolkit")
-@EnableConfigurationProperties(OnfonMediaProperties.class)
+@EnableConfigurationProperties({OnfonMediaProperties.class, DgFmProperties.class})
 public class PersistenceApplication {
     private static final Logger logger = LoggerFactory.getLogger(PersistenceApplication.class);
 
