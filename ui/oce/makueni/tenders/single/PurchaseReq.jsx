@@ -1,6 +1,8 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
 import translatable from "../../../translatable";
 
 class PurchaseReq extends translatable(React.Component) {
@@ -17,7 +19,7 @@ class PurchaseReq extends translatable(React.Component) {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -25,39 +27,31 @@ class PurchaseReq extends translatable(React.Component) {
     }
 
     return (<div>
-      <div className="row padding-top-10">
-        <div className="col-md-3">
-          <div className="item-label">{this.t("purchaseReq:purchaseRequestNumber")}</div>
-          <div className="item-value">{data.purchaseRequestNumber}</div>
-        </div>
+      <div className="row">
+        {isFeatureVisible("publicView.tenderProcess.purchaseRequestNumber")
+        && <Item label={this.t("purchaseReq:purchaseRequestNumber")} value={data.purchaseRequestNumber} col={3} />}
       </div>
 
       {
-        data.purchRequisitions !== undefined
+        data.purchRequisitions !== undefined && isFeatureVisible("publicView.tenderProcess.purchRequisitions")
           ?
           data.purchRequisitions.map(preq => <div key={preq._id} className="box">
-            <div className="row padding-top-10">
-              <div className="col-md-3">
-                <div className="item-label">{this.t("purchaseReq:requestedBy")}</div>
-                <div className="item-value">{preq.requestedBy.label}</div>
-              </div>
-              <div className="col-md-3">
-                <div className="item-label">{this.t("purchaseReq:chargeAccount")}</div>
-                <div className="item-value">{preq.chargeAccount.label}</div>
-              </div>
-              <div className="col-md-3">
-                <div className="item-label">{this.t("purchaseReq:requestApprovalDate")}</div>
-                <div
-                  className="item-value">{formatDate(preq.requestApprovalDate)}</div>
-              </div>
-              <div className="col-md-3">
-                <div className="item-label">{this.t("purchaseReq:approvedDate")}</div>
-                <div
-                  className="item-value">{formatDate(preq.approvedDate)}</div>
-              </div>
+            <div className="row">
+              {isFeatureVisible("publicView.tenderProcess.purchRequisitions.requestedBy")
+              && <Item label={this.t("purchaseReq:requestedBy")} value={preq.requestedBy.label} col={3} />}
+
+              {isFeatureVisible("publicView.tenderProcess.purchRequisitions.chargeAccount")
+              && <Item label={this.t("purchaseReq:chargeAccount")} value={preq.chargeAccount.label} col={3} />}
+
+              {isFeatureVisible("publicView.tenderProcess.purchRequisitions.requestApprovalDate")
+              && <Item label={this.t("purchaseReq:requestApprovalDate")}
+                       value={formatDate(preq.requestApprovalDate)} col={3} />}
+
+              {isFeatureVisible("publicView.tenderProcess.purchRequisitions.approvedDate")
+              && <Item label={this.t("purchaseReq:approvedDate")} value={formatDate(preq.approvedDate)} col={3} />}
             </div>
             {
-              preq.purchaseItems !== undefined
+              preq.purchaseItems !== undefined && isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems")
                 ? <div>
                   <div className="row padding-top-10">
                     <div className="col-md-12 sub-title">{this.t("purchaseReq:items")}
@@ -66,66 +60,35 @@ class PurchaseReq extends translatable(React.Component) {
                   </div>
                   {
                     preq.purchaseItems.map(pr => <div key={pr._id} className="box">
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="item-label">{this.t("purchaseReq:items:item")}</div>
-                          <div className="item-value">{pr.planItem.item.label}</div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="item-label">{this.t("purchaseReq:items:description")}</div>
-                          <div className="item-value">{pr.description}</div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("purchaseReq:items:unitOfIssue")}</div>
-                          <div className="item-value">{pr.planItem.unitOfIssue.label}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("purchaseReq:items:quantity")}</div>
-                          <div className="item-value">{currencyFormatter(pr.quantity)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("purchaseReq:items:amount")}</div>
-                          <div className="item-value">{currencyFormatter(pr.amount)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("purchaseReq:items:totalCost")}</div>
-                          <div
-                            className="item-value">{currencyFormatter(pr.quantity * pr.amount)}</div>
-                        </div>
+                      <div className="row display-flex">
+                        {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.label")
+                        && <Item label={this.t("purchaseReq:items:item")} value={pr.planItem.item.label} col={6} />}
+
+                        {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.description")
+                        && <Item label={this.t("purchaseReq:items:description")} value={pr.description} col={6} />}
+
+                        {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.unitOfIssue")
+                        && <Item label={this.t("purchaseReq:items:unitOfIssue")} value={pr.planItem.unitOfIssue.label} col={3} />}
+
+                        {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.quantity")
+                        && <Item label={this.t("purchaseReq:items:quantity")} value={currencyFormatter(pr.quantity)} col={3} />}
+
+                        {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.amount")
+                        && <Item label={this.t("purchaseReq:items:amount")} value={currencyFormatter(pr.amount)} col={3} />}
+
+                        {isFeatureVisible("publicView.tenderProcess.purchRequisitions.purchaseItems.totalCost")
+                        && <Item label={this.t("purchaseReq:items:totalCost")} value={currencyFormatter(pr.quantity * pr.amount)} col={3} />}
                       </div>
                     </div>)
                   }
                 </div>
                 : null
             }
-              <div className="row padding-top-10">
-                <div className="col-md-6">
-                  <div className="item-label">{this.t("purchaseReq:docs")}</div>
-                  {
-                    preq.formDocs.map(doc => <div key={doc._id}>
-                      <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                          <Tooltip id="download-tooltip">
-                            {this.t("general:downloadFile:tooltip")}
-                          </Tooltip>
-                        }>
-
-                        <a className="item-value download" href={doc.url} target="_blank">
-                          <i className="glyphicon glyphicon-download"/>
-                          <span>{doc.name}</span>
-                        </a>
-                      </OverlayTrigger>
-                    </div>)
-                  }
-                </div>
-                <div className="col-md-6">
-                  <div className="item-label">{this.t("purchaseReq:approvedDate")}</div>
-                  <div
-                    className="item-value">{formatDate(preq.approvedDate)}</div>
-                </div>
+              <div className="row">
+                {isFeatureVisible("publicView.tenderProcess.purchRequisitions.formDocs")
+                && <Item label={this.t("purchaseReq:docs")} col={6}>
+                  <FileDownloadLinks files={preq.formDocs} useDash />
+                </Item>}
               </div>
           </div>
           )
@@ -136,4 +99,4 @@ class PurchaseReq extends translatable(React.Component) {
   }
 }
 
-export default PurchaseReq;
+export default fmConnect(PurchaseReq);

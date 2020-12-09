@@ -1,4 +1,5 @@
 import Table from './index';
+import fmConnect from "../../fm/fm";
 
 //safely gets the date from the data and formats it
 const getDate = (obj/*tender obj*/, key/*date key*/) => obj.hasIn(['tenderPeriod', key]) ?
@@ -49,4 +50,4 @@ class Tenders extends Table {
 Tenders.getName = t => t('tables:top10tenders:title');
 Tenders.endpoint = 'topTenLargestTenders';
 
-export default Tenders;
+export default fmConnect(Tenders, 'viz.me.table.tenders');

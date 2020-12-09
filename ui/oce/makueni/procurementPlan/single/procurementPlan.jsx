@@ -1,7 +1,10 @@
+import React from "react";
 import { ppState } from '../state';
 import { API_ROOT } from '../../../state/oce-state';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import FeedbackPage from '../../FeedbackPage';
+import {Item} from "../../tenders/single/Item";
+import FileDownloadLinks from "../../tenders/single/FileDownloadLinks";
+import fmConnect from "../../../fm/fm";
 
 class ProcurementPlan extends FeedbackPage {
   constructor(props) {
@@ -53,7 +56,7 @@ class ProcurementPlan extends FeedbackPage {
   }
 
   render() {
-    const { navigate } = this.props;
+    const { navigate, isFeatureVisible } = this.props;
     const { data } = this.state;
 
     const { currencyFormatter, formatDate } = this.props.styling.tables;
@@ -80,18 +83,14 @@ class ProcurementPlan extends FeedbackPage {
         data !== undefined
           ? <div>
             <div className="row">
-              <div className="col-md-8">
-                <div className="item-label">{this.t("procurementPlan:department")}</div>
-                <div className="item-value">{data.department.label}</div>
-              </div>
-              <div className="col-md-4">
-                <div className="item-label">{this.t("procurementPlan:fiscalYear")}</div>
-                <div className="item-value">{data.fiscalYear.name}</div>
-              </div>
+              {isFeatureVisible("publicView.procurementPlan.department")
+              && <Item label={this.t("procurementPlan:department")} value={data.department.label} col={8} />}
+              {isFeatureVisible("publicView.procurementPlan.fiscalYear")
+              && <Item label={this.t("procurementPlan:fiscalYear")} value={data.fiscalYear.name} col={4} />}
             </div>
 
             {
-              data.planItems !== undefined
+              data.planItems !== undefined && isFeatureVisible("publicView.procurementPlan.planItems")
                 ? <div>
                   <div className="row padding-top-10">
                     <div className="col-md-12 sub-title">
@@ -101,108 +100,63 @@ class ProcurementPlan extends FeedbackPage {
 
                   {
                     data.planItems.map(planItem => <div key={planItem.id} className="box">
+                      {isFeatureVisible("publicView.procurementPlan.planItems.label")
+                      && <div className="row">
+                        <Item label={this.t("procurementPlan:item:item")} value={planItem.item.label} col={12} />
+                      </div>}
+
+                      <div className="row display-flex">
+                        {isFeatureVisible("publicView.procurementPlan.planItems.unitOfIssue")
+                        && <Item label={this.t("procurementPlan:item:unitOfIssue")}
+                                 value={planItem.unitOfIssue.label} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.quantity")
+                        && <Item label={this.t("procurementPlan:item:quantity")}
+                                 value={currencyFormatter(planItem.quantity)} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.estimatedCost")
+                        && <Item label={this.t("procurementPlan:item:estimatedCost")}
+                                 value={currencyFormatter(planItem.estimatedCost)} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.totalCost")
+                        && <Item label={this.t("procurementPlan:item:totalCost")}
+                                 value={currencyFormatter(planItem.quantity * planItem.estimatedCost)} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.procurementMethod")
+                        && <Item label={this.t("procurementPlan:item:procurementMethod")}
+                                 value={planItem.procurementMethod.label} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.sourceOfFunds")
+                        && <Item label={this.t("procurementPlan:item:sourceOfFunds")}
+                                 value={planItem.sourceOfFunds} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.targetGroup")
+                        && <Item label={this.t("procurementPlan:item:targetGroup")}
+                                 value={(planItem.targetGroup || {}).label} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.targetGroupValue")
+                        && <Item label={this.t("procurementPlan:item:targetGroupValue")}
+                                 value={currencyFormatter(planItem.targetGroupValue)} col={3} />}
+                      </div>
+
                       <div className="row">
-                        <div className="col-md-12">
-                          <div className="item-label">Item</div>
-                          <div className="item-value">{planItem.item.label}</div>
-                        </div>
-                      </div>
-
-
-                      <div className="row padding-top-10">
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:unitOfIssue")}</div>
-                          <div className="item-value">{planItem.unitOfIssue.label}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:quantity")}</div>
-                          <div className="item-value">{currencyFormatter(planItem.quantity)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:estimatedCost")}</div>
-                          <div className="item-value">{currencyFormatter(planItem.estimatedCost)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:totalCost")}</div>
-                          <div className="item-value">{currencyFormatter(planItem.quantity * planItem.estimatedCost)}</div>
-                        </div>
-                      </div>
-
-                      <div className="row padding-top-10">
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:procurementMethod")}</div>
-                          <div className="item-value">{planItem.procurementMethod.label}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:sourceOfFunds")}</div>
-                          <div className="item-value">{planItem.sourceOfFunds}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:targetGroup")}</div>
-                          {
-                            planItem.targetGroup !== undefined
-                              ? <div className="item-value">{planItem.targetGroup.label}</div>
-                              : null
-                          }
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">
-                            {this.t("procurementPlan:item:targetGroupValue")}
-                          </div>
-                          <div
-                            className="item-value">{currencyFormatter(planItem.targetGroupValue)}</div>
-                        </div>
-                      </div>
-
-                      <div className="row padding-top-10">
                         <h4 className="col-md-12">{this.t("procurementPlan:item:timingOfActivities")}</h4>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:quarter1st")}</div>
-                          <div className="item-value">{currencyFormatter(planItem.quarter1st)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:quarter2nd")}</div>
-                          <div className="item-value">{currencyFormatter(planItem.quarter2nd)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:quarter3rd")}</div>
-                          <div className="item-value">{currencyFormatter(planItem.quarter3rd)}</div>
-                        </div>
-                        <div className="col-md-3">
-                          <div className="item-label">{this.t("procurementPlan:item:quarter4th")}</div>
-                          <div className="item-value">{currencyFormatter(planItem.quarter4th)}</div>
-                        </div>
+                        {isFeatureVisible("publicView.procurementPlan.planItems.quarter1st")
+                        && <Item label={this.t("procurementPlan:item:quarter1st")}
+                                 value={currencyFormatter(planItem.quarter1st)} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.quarter2nd")
+                        && <Item label={this.t("procurementPlan:item:quarter2nd")}
+                                 value={currencyFormatter(planItem.quarter2nd)} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.quarter3rd")
+                        && <Item label={this.t("procurementPlan:item:quarter3rd")}
+                                 value={currencyFormatter(planItem.quarter3rd)} col={3} />}
+                        {isFeatureVisible("publicView.procurementPlan.planItems.quarter4th")
+                        && <Item label={this.t("procurementPlan:item:quarter4th")}
+                                 value={currencyFormatter(planItem.quarter4th)} col={3} />}
                       </div>
                     </div>)
                   }
 
-                  <div className="row padding-top-10">
-                    <div className="col-md-6">
-                      <div className="item-label">{this.t("procurementPlan:item:ppDocs")}</div>
-
-                      {
-                        data.formDocs && data.formDocs.map(doc => <div key={doc.id}>
-                          <OverlayTrigger
-                            placement="bottom"
-                            overlay={
-                              <Tooltip id="download-tooltip">
-                                {this.t("general:downloadFile:tooltip")}
-                              </Tooltip>
-                            }>
-
-                            <a className="item-value download" href={doc.url} target="_blank">
-                              <i className="glyphicon glyphicon-download"/>
-                              <span>{doc.name}</span>
-                            </a>
-                          </OverlayTrigger>
-                        </div>)
-                      }
-                    </div>
-                    <div className="col-md-6">
-                      <div className="item-label">{this.t("procurementPlan:item:approvedDate")}</div>
-                      <div
-                        className="item-value">{formatDate(data.approvedDate)}</div>
-                    </div>
+                  <div className="row">
+                    {isFeatureVisible("publicView.procurementPlan.formDocs")
+                    && <Item label={this.t("procurementPlan:item:ppDocs")} col={6}>
+                      <FileDownloadLinks files={data.formDocs || []} useDash />
+                    </Item>}
+                    {isFeatureVisible("publicView.procurementPlan.approvedDate")
+                    && <Item label={this.t("procurementPlan:item:approvedDate")} value={formatDate(data.approvedDate)} col={6} />}
                   </div>
                 </div>
                 : null
@@ -216,4 +170,4 @@ class ProcurementPlan extends FeedbackPage {
   }
 }
 
-export default ProcurementPlan;
+export default fmConnect(ProcurementPlan);

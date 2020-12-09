@@ -1,5 +1,6 @@
 import FrontendDateFilterableChart from "./frontend-date-filterable";
 import {Map} from "immutable";
+import fmConnect from "../../fm/fm";
 
 class CostEffectiveness extends FrontendDateFilterableChart{
   mkTrace(name, colorIndex){
@@ -71,4 +72,4 @@ CostEffectiveness.getFillerDatum = seed => Map(seed).set('totalTenderAmount', 0)
 
 CostEffectiveness.getMaxField = imm => imm.get('totalTenderAmount') + imm.get('diffTenderAwardAmount');
 
-export default CostEffectiveness;
+export default fmConnect(CostEffectiveness, 'viz.me.chart.costEffectiveness');

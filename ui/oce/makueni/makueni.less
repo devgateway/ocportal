@@ -113,6 +113,7 @@
     .item-label {
         color: #a5a4a5;
         font-size: 16px;
+        padding-top: 10px;
     }
 
     .item-value {
@@ -129,10 +130,20 @@
 
     .box {
         background-color: #f1f1f1;
-        padding: 15px;
-        border: 2px solid #eeeeee;
+        padding: 0 15px 15px 15px;
+        border: 1px solid #e3e3e3;
         margin-top: 10px;
     }
+}
+
+.row.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row.display-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
 }
 
 .makueni-procurement-plan {

@@ -1,6 +1,8 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
 import React from 'react';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
 import translatable from "../../../translatable";
 
 class Contract extends translatable(React.Component) {
@@ -17,7 +19,7 @@ class Contract extends translatable(React.Component) {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -27,49 +29,34 @@ class Contract extends translatable(React.Component) {
     const contract = data[0];
 
     return (<div>
-      <div className="row padding-top-10">
-        <div className="col-md-4">
-          <div className="item-label">{this.t("contract:referenceNumber")}</div>
-          <div className="item-value">{contract.referenceNumber}</div>
-        </div>
-        <div className="col-md-4">
-          <div className="item-label">{this.t("contract:contractDate")}</div>
-          <div className="item-value">{formatDate(contract.contractDate)}</div>
-        </div>
-        <div className="col-md-4">
-          <div className="item-label">{this.t("contract:expiryDate")}</div>
-          <div className="item-value">{formatDate(contract.expiryDate)}</div>
-        </div>
-      </div>
+      <div className="row display-flex">
+        {isFeatureVisible("publicView.contract.referenceNumber")
+        && <Item label={this.t("contract:referenceNumber")} value={contract.referenceNumber} col={4} />}
 
-      <div className="row padding-top-10">
-        <div className="col-md-6">
-          <div className="item-label">{this.t("contract:awardee:label")}</div>
-          <div className="item-value">{contract.awardee.label}</div>
-        </div>
-        <div className="col-md-6">
-          <div className="item-label">{this.t("contract:awardee:address")}</div>
-          <div className="item-value">{contract.awardee.address}</div>
-        </div>
-      </div>
+        {isFeatureVisible("publicView.contract.contractDate")
+        && <Item label={this.t("contract:contractDate")} value={formatDate(contract.contractDate)} col={4} />}
 
-      <div className="row padding-top-10">
-        <div className="col-md-4">
-          <div className="item-label">{this.t("contract:procuringEntity:label")}</div>
-          <div className="item-value">{contract.procuringEntity.label}</div>
-        </div>
-        <div className="col-md-4">
-          <div className="item-label">{this.t("contract:contractValue")}</div>
-          <div className="item-value">{currencyFormatter(contract.contractValue)}</div>
-        </div>
-        <div className="col-md-4">
-          <div className="item-label">{this.t("contract:contractApprovalDate")}</div>
-          <div className="item-value">{formatDate(contract.contractApprovalDate)}</div>
-        </div>
+        {isFeatureVisible("publicView.contract.expiryDate")
+        && <Item label={this.t("contract:expiryDate")} value={formatDate(contract.expiryDate)} col={4} />}
+
+        {isFeatureVisible("publicView.contract.awardee.label")
+        && <Item label={this.t("contract:awardee:label")} value={contract.awardee.label} col={6} />}
+
+        {isFeatureVisible("publicView.contract.awardee.address")
+        && <Item label={this.t("contract:awardee:address")} value={contract.awardee.address} col={6} />}
+
+        {isFeatureVisible("publicView.contract.procuringEntity")
+        && <Item label={this.t("contract:procuringEntity:label")} value={contract.procuringEntity.label} col={4} />}
+
+        {isFeatureVisible("publicView.contract.contractValue")
+        && <Item label={this.t("contract:contractValue")} value={currencyFormatter(contract.contractValue)} col={4} />}
+
+        {isFeatureVisible("publicView.contract.contractApprovalDate")
+        && <Item label={this.t("contract:contractApprovalDate")} value={formatDate(contract.contractApprovalDate)} col={4} />}
       </div>
 
       {
-        contract.contractDocs !== undefined
+        contract.contractDocs !== undefined && isFeatureVisible("publicView.contract.contractDocs")
           ? <div>
             <div className="row padding-top-10">
               <div className="col-md-12 sub-title">{this.t("contract:contractDocs")}
@@ -80,31 +67,13 @@ class Contract extends translatable(React.Component) {
             {
               contract.contractDocs.map(contractDoc => <div key={contractDoc._id} className="box">
                 <div className="row">
-                  <div className="col-md-6">
-                    <div className="item-label">{this.t("contract:contractDocs:type")}</div>
-                    <div className="item-value">{contractDoc.contractDocumentType.label}</div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="item-label">{this.t("contract:contractDocs")}</div>
+                  {isFeatureVisible("publicView.contract.contractDocs.contractDocumentType")
+                  && <Item label={this.t("contract:contractDocs:type")} value={contractDoc.contractDocumentType.label} col={6} />}
 
-                    {
-                      contractDoc.formDocs.map(doc => <div key={doc._id}>
-                        <OverlayTrigger
-                          placement="bottom"
-                          overlay={
-                            <Tooltip id="download-tooltip">
-                              {this.t("general:downloadFile:tooltip")}
-                            </Tooltip>
-                          }>
-
-                          <a className="item-value download" href={doc.url} target="_blank">
-                            <i className="glyphicon glyphicon-download"/>
-                            <span>{doc.name}</span>
-                          </a>
-                        </OverlayTrigger>
-                      </div>)
-                    }
-                  </div>
+                  {isFeatureVisible("publicView.contract.contractDocs.formDocs")
+                  && <Item label={this.t("contract:contractDocs")} col={6}>
+                    <FileDownloadLinks files={contractDoc.formDocs} useDash />
+                  </Item>}
                 </div>
               </div>)
             }
@@ -115,4 +84,4 @@ class Contract extends translatable(React.Component) {
   }
 }
 
-export default Contract;
+export default fmConnect(Contract);

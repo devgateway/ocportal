@@ -1,3 +1,4 @@
+# EDIT PAGE
 - name: awardAcceptanceForm
   enabled: yes
   visible: yes
@@ -94,6 +95,8 @@
   mandatory: no
   enabled: yes
   visible: yes
+
+# LIST PAGE
 - name: awardAcceptanceList
   enabled: yes
   visible: yes
@@ -119,3 +122,37 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.awardAcceptance
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm
+- name: publicView.awardAcceptance.items
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items
+- name: publicView.awardAcceptance.items.supplierResponse
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.supplierResponse
+- name: publicView.awardAcceptance.items.acceptedAwardValue
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.acceptedAwardValue
+- name: publicView.awardAcceptance.items.acceptanceDate
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.acceptanceDate
+- name: publicView.awardAcceptance.items.awardee.label
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.awardee
+- name: publicView.awardAcceptance.items.awardee.code
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.awardee
+- name: publicView.awardAcceptance.items.formDocs
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.formDocs

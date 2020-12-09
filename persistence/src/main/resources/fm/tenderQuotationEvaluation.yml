@@ -22,6 +22,14 @@
   mandatory: yes
   enabled: yes
   visible: yes
+- name: tenderQuotationEvaluationForm.bids.supplierScore
+  mandatory: no
+  enabled: no
+  visible: no
+- name: tenderQuotationEvaluationForm.bids.supplierRanking
+  mandatory: no
+  enabled: no
+  visible: no
 - name: tenderQuotationEvaluationForm.bids.supplierID
   mandatory: no
   enabled: yes
@@ -103,3 +111,45 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.tenderQuotationEvaluation
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm
+- name: publicView.tenderQuotationEvaluation.closingDate
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.closingDate
+- name: publicView.tenderQuotationEvaluation.bids
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids
+- name: publicView.tenderQuotationEvaluation.bids.supplier.label
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplier
+- name: publicView.tenderQuotationEvaluation.bids.supplier.code
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplier
+- name: publicView.tenderQuotationEvaluation.bids.supplierScore
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplierScore
+- name: publicView.tenderQuotationEvaluation.bids.supplierRanking
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplierRanking
+- name: publicView.tenderQuotationEvaluation.bids.quotedAmount
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.quotedAmount
+- name: publicView.tenderQuotationEvaluation.bids.supplierResponsiveness
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplierResponsiveness
+- name: publicView.tenderQuotationEvaluation.formDocs
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.formDocs

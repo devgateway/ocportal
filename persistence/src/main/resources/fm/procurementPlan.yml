@@ -133,3 +133,90 @@
     - procurementPlanForm.fiscalYear
 - name: procurementPlansList.status
   visible: yes
+
+# PUBLIC VIEW
+- name: publicView.procurementPlansList.id
+  visible: yes
+- name: publicView.procurementPlansList.department
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: publicView.procurementPlansList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: publicView.procurementPlansList.formDocs
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.formDocs
+
+- name: publicView.procurementPlan.department
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: publicView.procurementPlan.fiscalYear
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: publicView.procurementPlan.planItems
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems
+- name: publicView.procurementPlan.planItems.label
+  visible: yes
+- name: publicView.procurementPlan.planItems.unitOfIssue
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.unitOfIssue
+- name: publicView.procurementPlan.planItems.quantity
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quantity
+- name: publicView.procurementPlan.planItems.estimatedCost
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.estimatedCost
+- name: publicView.procurementPlan.planItems.totalCost
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.totalCost
+- name: publicView.procurementPlan.planItems.procurementMethod
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.procurementMethod
+- name: publicView.procurementPlan.planItems.sourceOfFunds
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.sourceOfFunds
+- name: publicView.procurementPlan.planItems.targetGroup
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.targetGroup
+- name: publicView.procurementPlan.planItems.targetGroupValue
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.targetGroupValue
+- name: publicView.procurementPlan.planItems.quarter1st
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter1st
+- name: publicView.procurementPlan.planItems.quarter2nd
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter2nd
+- name: publicView.procurementPlan.planItems.quarter3rd
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter3rd
+- name: publicView.procurementPlan.planItems.quarter4th
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.planItems.quarter4th
+- name: publicView.procurementPlan.formDocs
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.formDocs
+- name: publicView.procurementPlan.approvedDate
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.approvedDate

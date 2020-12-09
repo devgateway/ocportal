@@ -9,9 +9,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -30,12 +29,10 @@ public class DgFeatureController {
     @Autowired
     private DgFmService fmService;
 
-    @RequestMapping(value = "/api/fm/featureProperties",
-            method = {RequestMethod.POST, RequestMethod.GET},
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/api/fm/featureProperties", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @Validated
     @Cacheable(key = "#fmParameters.fmNames.toString() + #fmParameters.fmPrefixes.toString()")
-    public List<DgFeature> featureProperties(@Valid @RequestBody FmRequestParam fmParameters) {
+    public List<DgFeature> featureProperties(@Valid @ModelAttribute FmRequestParam fmParameters) {
         if (!ObjectUtils.isEmpty(fmParameters.getFmNames())) {
             return fmParameters.getFmNames().stream().map(fmService::getFeature).collect(Collectors.toList());
         }

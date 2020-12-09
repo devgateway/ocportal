@@ -76,6 +76,7 @@
     - projectForm.subcounties
   enabledDeps:
     - projectForm.subcounties
+
 # PROJECT LIST PAGE
 - name: projectList
   enabled: yes
@@ -98,3 +99,37 @@
     - projectForm.projectTitle
 - name: projectList.status
   visible: yes
+
+# PUBLIC VIEW
+- name: publicView.project
+  visible: yes
+  visibleDeps:
+    - projectForm
+- name: publicView.project.projectTitle
+  visible: yes
+  visibleDeps:
+    - projectForm.projectTitle
+- name: publicView.project.cabinetPapers
+  visible: yes
+  visibleDeps:
+    - projectForm.cabinetPapers
+- name: publicView.project.amountBudgeted
+  visible: yes
+  visibleDeps:
+    - projectForm.amountBudgeted
+- name: publicView.project.amountRequested
+  visible: yes
+  visibleDeps:
+    - projectForm.amountRequested
+- name: publicView.project.subcounties
+  visible: yes
+  visibleDeps:
+    - projectForm.subcounties
+- name: publicView.project.wards
+  visible: yes
+  visibleDeps:
+    - projectForm.wards
+- name: publicView.project.approvedDate
+  visible: yes
+  visibleDeps:
+    - projectForm.approvedDate

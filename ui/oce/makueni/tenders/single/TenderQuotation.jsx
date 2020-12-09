@@ -1,5 +1,8 @@
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import NoDataMessage from './NoData';
+import fmConnect from "../../../fm/fm";
+import {Item} from "./Item";
+import FileDownloadLinks from "./FileDownloadLinks";
+import React from "react";
 import translatable from "../../../translatable";
 
 class TenderQuotation extends translatable(React.Component) {
@@ -16,7 +19,7 @@ class TenderQuotation extends translatable(React.Component) {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, isFeatureVisible } = this.props;
     const { currencyFormatter, formatDate } = this.props.styling.tables;
 
     if (data === undefined) {
@@ -26,16 +29,14 @@ class TenderQuotation extends translatable(React.Component) {
     const tenderQuotationEvaluation = data[0];
 
     return (<div>
-      <div className="row padding-top-10">
-        <div className="col-md-6">
-          <div className="item-label">{this.t("tenderQuotation:closingDate")}</div>
-          <div
-            className="item-value">{formatDate(tenderQuotationEvaluation.closingDate)}</div>
-        </div>
+      <div className="row">
+        {isFeatureVisible("publicView.tenderQuotationEvaluation.closingDate")
+        && <Item label={this.t("tenderQuotation:closingDate")} value={formatDate(tenderQuotationEvaluation.closingDate)}
+                 col={6} />}
       </div>
 
       {
-        tenderQuotationEvaluation.bids !== undefined
+        tenderQuotationEvaluation.bids !== undefined && isFeatureVisible("publicView.tenderQuotationEvaluation.bids")
           ? <div>
             <div className="row padding-top-10">
               <div className="col-md-12 sub-title">{this.t("tenderQuotation:bids")}
@@ -46,33 +47,18 @@ class TenderQuotation extends translatable(React.Component) {
             {
               tenderQuotationEvaluation.bids.map(bids => <div key={bids._id} className="box">
                 <div className="row">
-                  <div className="col-md-6">
-                    <div className="item-label">{this.t("tenderQuotation:bids:supplierLabel")}</div>
-                    <div className="item-value">{bids.supplier.label}</div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="item-label">{this.t("tenderQuotation:bids:supplierCode")}</div>
-                    <div className="item-value">{bids.supplier.code}</div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-3">
-                    <div className="item-label">{this.t("tenderQuotation:bids:supplierScore")}</div>
-                    <div className="item-value">{bids.supplierScore}</div>
-                  </div>
-                  <div className="col-md-3">
-                    <div className="item-label">{this.t("tenderQuotation:bids:supplierRanking")}</div>
-                    <div className="item-value">{bids.supplierRanking}</div>
-                  </div>
-                  <div className="col-md-3">
-                    <div className="item-label">{this.t("tenderQuotation:bids:quotedAmount")}</div>
-                    <div className="item-value">{currencyFormatter(bids.quotedAmount)}</div>
-                  </div>
-                  <div className="col-md-3">
-                    <div className="item-label">{this.t("tenderQuotation:bids:supplierResponsiveness")}</div>
-                    <div className="item-value">{bids.supplierResponsiveness}</div>
-                  </div>
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.label")
+                  && <Item label={this.t("tenderQuotation:bids:supplierLabel")} value={bids.supplier.label} col={6} />}
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.code")
+                  && <Item label={this.t("tenderQuotation:bids:supplierCode")} value={bids.supplier.code} col={6} />}
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierScore")
+                  && <Item label={this.t("tenderQuotation:bids:supplierScore")} value={bids.supplierScore} col={3} />}
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierRanking")
+                  && <Item label={this.t("tenderQuotation:bids:supplierRanking")} value={bids.supplierRanking} col={3} />}
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.quotedAmount")
+                  && <Item label={this.t("tenderQuotation:bids:quotedAmount")} value={currencyFormatter(bids.quotedAmount)} col={3} />}
+                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierResponsiveness")
+                  && <Item label={this.t("tenderQuotation:bids:supplierResponsiveness")} value={bids.supplierResponsiveness} col={3} />}
                 </div>
               </div>)
             }
@@ -80,31 +66,15 @@ class TenderQuotation extends translatable(React.Component) {
           : null
       }
 
-      <div className="row padding-top-10">
-        <div className="col-md-12">
-          <div className="item-label">{this.t("tenderQuotation:docs")}</div>
-
-          {
-            tenderQuotationEvaluation.formDocs.map(doc => <div key={doc._id}>
-              <OverlayTrigger
-                placement="bottom"
-                overlay={
-                  <Tooltip id="download-tooltip">
-                    {this.t("general:downloadFile:tooltip")}
-                  </Tooltip>
-                }>
-
-                <a className="item-value download" href={doc.url} target="_blank">
-                  <i className="glyphicon glyphicon-download"/>
-                  <span>{doc.name}</span>
-                </a>
-              </OverlayTrigger>
-            </div>)
-          }
-        </div>
+      <div className="row">
+        {isFeatureVisible("publicView.tenderQuotationEvaluation.formDocs")
+        && <Item label={this.t("tenderQuotation:docs")} col={12}>
+          <FileDownloadLinks files={tenderQuotationEvaluation.formDocs} useDash />
+        </Item>
+        }
       </div>
     </div>);
   }
 }
 
-export default TenderQuotation;
+export default fmConnect(TenderQuotation);

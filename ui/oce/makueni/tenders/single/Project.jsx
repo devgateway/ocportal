@@ -1,7 +1,9 @@
-import { API_ROOT } from '../../../state/oce-state';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { mtState } from '../state';
+import {API_ROOT} from '../../../state/oce-state';
+import {mtState} from '../state';
 import React from 'react';
+import {Item} from "./Item";
+import fmConnect from "../../../fm/fm";
+import FileDownloadLinks from "./FileDownloadLinks";
 import translatable from "../../../translatable";
 
 class Project extends translatable(React.Component) {
@@ -56,7 +58,7 @@ class Project extends translatable(React.Component) {
   }
 
   render() {
-    const { navigate } = this.props;
+    const { navigate, isFeatureVisible } = this.props;
     const { data } = this.state;
 
     const { currencyFormatter, formatDate } = this.props.styling.tables;
@@ -82,62 +84,29 @@ class Project extends translatable(React.Component) {
       {
         data !== undefined
           ? <div>
-            <div className="row">
-              <div className="col-md-6">
-                <div className="item-label">{this.t("project:title")}</div>
-                <div className="item-value">{data.projects.projectTitle}</div>
-              </div>
-              <div className="col-md-6">
-                <div className="item-label">{this.t("project:title")}</div>
-                {
-                  data.projects.cabinetPapers.map(cp=>
-                    cp.formDocs.map(doc => <div key={doc._id}>
-                      <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                          <Tooltip id="download-tooltip">
-                            {this.t("general:downloadFile:tooltip")}
-                          </Tooltip>
-                        }>
+            <div className="row display-flex">
+              {isFeatureVisible("publicView.project.projectTitle")
+              && <Item label={this.t("project:title")} value={data.projects.projectTitle} col={6} />}
 
-                        <a className="item-value download" href={doc.url} target="_blank">
-                          <i className="glyphicon glyphicon-download"/>
-                          <span>{doc.name}</span>
-                        </a>
-                      </OverlayTrigger>
-                    </div>))
+              {isFeatureVisible("publicView.project.cabinetPapers")
+              && <Item label={this.t("project:title")} col={6}>
+                <FileDownloadLinks files={data.projects.cabinetPapers.flatMap(cp => cp.formDocs)} useDash />
+              </Item>}
 
-                }
-              </div>
-            </div>
+              {isFeatureVisible("publicView.project.amountBudgeted")
+              && <Item label={this.t("project:amountBudgeted")} value={currencyFormatter(data.projects.amountBudgeted)} col={6} />}
 
-            <div className="row padding-top-10">
-              <div className="col-md-6">
-                <div className="item-label">{this.t("project:amountBudgeted")}</div>
-                <div className="item-value">{currencyFormatter(data.projects.amountBudgeted)}</div>
-              </div>
-              <div className="col-md-6">
-                <div className="item-label">{this.t("project:amountRequested")}</div>
-                <div className="item-value">{currencyFormatter(data.projects.amountRequested)}</div>
-              </div>
-            </div>
+              {isFeatureVisible("publicView.project.amountRequested")
+              && <Item label={this.t("project:amountRequested")} value={currencyFormatter(data.projects.amountRequested)} col={6} />}
 
-            <div className="row padding-top-10">
-              <div className="col-md-6">
-                <div className="item-label">{this.t("project:subcounties")}</div>
-                <div className="item-value">{data.projects.subcounties.map(item => item.label).join(', ')}</div>
-              </div>
-              <div className="col-md-6">
-                <div className="item-label">{this.t("project:wards")}</div>
-                <div className="item-value">{data.projects.wards && data.projects.wards.map(item => item.label).join(', ')}</div>
-              </div>
-            </div>
+              {isFeatureVisible("publicView.project.subcounties")
+              && <Item label={this.t("project:subcounties")} value={data.projects.subcounties.map(item => item.label).join(', ')} col={6} />}
 
-            <div className="row padding-top-10">
-              <div className="col-md-6">
-                <div className="item-label">{this.t("project:approvedDate")}</div>
-                <div className="item-value">{formatDate(data.projects.approvedDate)}</div>
-              </div>
+              {isFeatureVisible("publicView.project.wards")
+              && <Item label={this.t("project:wards")} value={data.projects.wards && data.projects.wards.map(item => item.label).join(', ')} col={6} />}
+
+              {isFeatureVisible("publicView.project.approvedDate")
+              && <Item label={this.t("project:approvedDate")} value={formatDate(data.projects.approvedDate)} col={6} />}
             </div>
           </div>
           : null
@@ -148,4 +117,4 @@ class Project extends translatable(React.Component) {
 
 }
 
-export default Project;
+export default fmConnect(Project);

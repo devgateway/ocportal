@@ -88,6 +88,8 @@ class Chart extends Visualization {
   }
 }
 
+Chart.isChart = true;
+
 Chart.getFillerDatum = seed => Map(seed);
 
 Chart.getMaxField = data => data.flatten()
