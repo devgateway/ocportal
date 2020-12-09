@@ -79,6 +79,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.fm.ListFeaturesPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
@@ -670,6 +671,16 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                         ).setIconType(FontAwesomeIconType.mail_reply_all);
                 MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
                 list.add(alertsStatistics);
+
+                if (WebApplication.get().usesDevelopmentConfig()) {
+                    BootstrapBookmarkablePageLink<ListFeaturesPage> features =
+                            new MenuBookmarkablePageLink<ListFeaturesPage>(ListFeaturesPage.class,
+                                    new StringResourceModel("navbar.features", BasePage.this, null)
+                            ).setIconType(FontAwesomeIconType.list);
+                    MetaDataRoleAuthorizationStrategy.authorize(features, Component.RENDER, ROLE_ADMIN);
+                    list.add(features);
+                }
+
                 return list;
             }
         };
