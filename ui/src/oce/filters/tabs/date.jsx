@@ -1,28 +1,27 @@
 import FilterDateYearMonth from '../../makueni/filters/FilterDateYearMonth';
 import Tab from './index';
+import React from "react";
 
-class FilterChartsDate extends FilterDateYearMonth {
-
+//TODO: do we still need this ?
+const FilterChartsDate = ({ep, ...otherProps}) => {
+  return <FilterDateYearMonth ep='/api/tendersAwardsYears' {...otherProps} />
 }
-
-FilterChartsDate.getName = () => 'Charts Date';
-FilterChartsDate.getEP = () => '/api/tendersAwardsYears';
 
 class FilterChartsTab extends Tab {
   renderChild(Component, slug) {
-    const { state, onUpdate, translations } = this.props;
-    
+    const {state, onUpdate, translations} = this.props;
+
     return <Component
-      translations={translations}
-      onUpdate={onUpdate}
-      state={state}
+        translations={translations}
+        onUpdate={onUpdate}
+        state={state}
     />;
   }
   
   render() {
     return (
       <div>
-        {this.renderChild(FilterChartsDate, 'date')}
+        {/*{this.renderChild(FilterChartsDate, 'date')}*/}
       </div>
     );
   }

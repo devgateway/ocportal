@@ -6,14 +6,23 @@ import FiltersWrapper from './FiltersWrapper';
 // import FilterSubcounties from './FilterSubcounties';
 // import FilterWards from './FilterWards';
 // import FilterAmount from './FilterAmount';
-// import FilterTenderDate from './FilterTenderDate';
+import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
 import FilterItems from "./FilterItems";
 
 const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
     <FilterItem value={filters[property]}
-                property={property} onChange={value => onChange({[property]: value})} {...props} />;
+                onChange={value => onChange({[property]: value})} {...props} />;
+
+const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
+    <FilterItem year={filters['year']} month={filters['month']}
+                onChange={value => onChange(value.year.length === 1 ? {
+                      year: value.year, month: value.month,
+                      monthly: true
+                    } :
+                    {year: value.year})
+                } {...props} />;
 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
 
@@ -22,6 +31,8 @@ const fyRenderer = singlePropertyRendererCreator(FilterItemFY, 'fiscalYear');
 const titleRenderer = singlePropertyRendererCreator(FilterInput, 'text');
 
 const itemRenderer = singlePropertyRendererCreator(FilterItems, 'item');
+
+const tenderCloseDateRenderer = dateRendererCreator(FilterTenderDate);
 
 const FiltersTendersWrapper = props => {
   let items = [
@@ -47,6 +58,12 @@ const FiltersTendersWrapper = props => {
       render: itemRenderer,
       name: 'Items',
       className: 'items',
+      fm: 'publicView.filter.items'
+    },
+    {
+      render: tenderCloseDateRenderer,
+      name: 'Tender Close Date',
+      className: 'date',
       fm: 'publicView.filter.items'
     }
   ];

@@ -75,7 +75,6 @@ const FilterItemTypeAhead = props => {
 
 FilterItemTypeAhead.propTypes = {
   translations: PropTypes.object.isRequired,
-  property: PropTypes.string.isRequired,
   ep: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   idFunc: PropTypes.func,
