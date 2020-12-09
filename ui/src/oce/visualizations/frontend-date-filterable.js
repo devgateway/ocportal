@@ -18,7 +18,7 @@ const frontendDateFilterable = (Class) => {
       if (!data) return data;
       if (monthly) {
         return this.constructor.filterDataByMonth(data, months);
-      } else if (years.count()) {
+      } else if (years.size) { // TODO may need fixing
         return this.constructor.filterDataByYears(data, years);
       }
       return data;

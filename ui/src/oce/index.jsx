@@ -15,6 +15,8 @@ if (process.env.NODE_ENV === 'development') {
 
 const ROLE_ADMIN = 'ROLE_ADMIN';
 
+const EMPTY_SET = new window.Set();// TODO remove window. when immutable is removed
+
 // eslint-disable-next-line no-undef
 class OCApp extends React.Component {
   constructor(props) {
@@ -30,7 +32,7 @@ class OCApp extends React.Component {
       comparisonCriteriaValues: [],
       selectedYears: Set(),
       selectedMonths: Set(range(1, 12)),
-      filters: fromJS({}),
+      filters: {},
       data: fromJS({}),
       comparisonData: fromJS({}),
       bidTypes: fromJS({}),
@@ -135,9 +137,9 @@ class OCApp extends React.Component {
       }
       data={this.state.data.get(currentTab) || fromJS({})}
       comparisonData={this.state.comparisonData.get(currentTab) || fromJS({})}
-      monthly={filters.get('monthly')}
-      years={filters.get('selectedYears') !== undefined ? filters.get('selectedYears') : new Set()}
-      months={filters.get('selectedMonths') !== undefined ? filters.get('selectedMonths') : new Set()}
+      monthly={filters['monthly']}
+      years={filters['selectedYears'] || EMPTY_SET}
+      months={filters['selectedMonths'] || EMPTY_SET}
       bidTypes={bidTypes}
       width={width}
       navigate={navigate}
@@ -326,7 +328,7 @@ class OCApp extends React.Component {
   exportBtn() {
     const { filters, selectedYears, locale, selectedMonths } = this.state;
     let url = new URI('/api/ocds/excelExport')
-    .addSearch(filters.toJS())
+    .addSearch(filters)
     .addSearch('year', selectedYears.toArray())
     .addSearch('language', locale);
 

@@ -1,16 +1,8 @@
-import Range from './inputs/range';
-import { fetchJson } from '../tools';
+import React from "react";
+import RemoteRange from "./inputs/range";
 
-class AwardValue extends Range {
-  componentDidMount() {
-    fetchJson('/api/awardValueInterval')
-    .then(([{ minAwardValue: min, maxAwardValue: max }]) => this.setState({ min, max }));
-    
-  }
-  
-  getTitle() {
-    return this.t('filters:awardValue:title');
-  }
+const AwardValue = ({ep = '/awardValueInterval', ...otherProps}) => {
+  return <RemoteRange ep={ep} titleKey='filters:awardValue:title' {...otherProps} />;
 }
 
 export default AwardValue;

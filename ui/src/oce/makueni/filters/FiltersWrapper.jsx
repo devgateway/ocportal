@@ -34,30 +34,35 @@ const FiltersWrapper = props => {
   const listItems = () => {
     const { translations, isFeatureVisible } = props;
 
-    return props.items
-      .filter((item) => isFeatureVisible(item.fm))
-      .map((item, index) => {
+    return props.groups
+      .filter(group => !group.fm || isFeatureVisible(group.fm))
+      .map((group, index) => {
           return (<div
             key={index}
-            className={'row filter ' + item.className}>
+            className={'row filter ' + group.className}>
             <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
                  onClick={_ => toggleItem(index)}>
-              <div className="pull-left title">{item.name}</div>
+              <div className="pull-left title">{group.name}</div>
               <div className={'pull-right toggler ' + (expanded.has(index) ? 'up' : 'down')} />
             </div>
 
+            {expanded.has(index) &&
             <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
-              {item.render({
-                filters: localFilters,
-                onChange: filters => {
-                  const newFilters = {
-                    ...localFilters,
-                    ...filters
-                  };
-                  setLocalFilters(newFilters);
-                },
-                translations: translations
-              })}
+              {group.filters.map((filter, fIdx) =>
+                <React.Fragment key={fIdx}>
+                  {filter.render({
+                    filters: localFilters,
+                    onChange: filters => {
+                      const newFilters = {
+                        ...localFilters,
+                        ...filters
+                      };
+                      setLocalFilters(newFilters);
+                    },
+                    translations: translations
+                  })}
+                </React.Fragment>
+              )}
 
               <section className="buttons">
                 <button className="btn btn-apply pull-right" onClick={apply}>
@@ -67,7 +72,7 @@ const FiltersWrapper = props => {
                   {t('filters:reset')}
                 </button>
               </section>
-            </div>
+            </div>}
           </div>)
         });
   }

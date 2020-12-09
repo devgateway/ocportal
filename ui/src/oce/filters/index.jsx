@@ -1,97 +1,84 @@
-import Component from '../pure-render-component';
-import translatable from '../translatable';
-import cn from 'classnames';
-import Organizations from './tabs/organizations';
-import ProcurementMethodRules from './tabs/procurement-method.jsx';
-import Amounts from './tabs/amounts';
-import { Map } from 'immutable';
-import URI from 'urijs';
-import FilterChartsTab from './tabs/date';
-import PlanningRules from './tabs/planning-rules';
-import ProcurementMethodRationaleRules from './tabs/procurement-method-rationale';
+import {tCreator} from '../translatable';
+import FiltersWrapper from "../makueni/filters/FiltersWrapper";
+import React from "react";
+import ProcuringEntitySelect from "./procuring-entity-select";
+import BuyerSelect from "./buyer-select";
+import SupplierSelect from "./supplier-select";
+import {
+  minMaxPropertyRendererCreator,
+  singlePropertyRendererCreator
+} from "../makueni/filters/FiltersProcurementPlanWrapper";
+import ProcurementMethod from "./procurement-method";
+import ProcurementMethodRationale from "./procurement-method-rationale";
+import FiscalYear from "./fiscal-year";
+import TenderPrice from "./tender-price";
+import AwardValue from "./award-value";
 
-const dashboardId = new URI(window.location).search(true).dashboardId;
+const Filters = props => {
 
-class Filters extends translatable(Component) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      expanded: new Set(),
-      state: Map(),
-    };
-  }
+  const t = tCreator(props.translations);
 
-  toggleTab(index) {
-    const expanded = new Set(this.state.expanded);
-    if (expanded.has(index)) {
-      expanded.delete(index);
-    } else {
-      expanded.add(index);
-    }
+  // TODO add last filter group: FilterChartsTab from './tabs/date' with className='date'
 
-    this.setState({ expanded: expanded });
-  }
-
-  reset() {
-    let { filters } = this.props;
-    //will always retain locationType property. This is not supposed to be reset because it is
-    //never selected by the filter panel, but by the map button.
-    let newState = Map().set('locationType',filters.get('locationType'));
-    this.setState({
-      state: newState
-    });
-
-    this.props.onUpdate(newState);
-  }
-
-  listTabs() {
-    const { expanded } = this.state;
-    return this.constructor.TABS.map((Tab, index) => <div
-        key={index}
-        className={"row filter " + this.constructor.CLASS[index]}>
-        <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
-             onClick={_ => this.toggleTab(index)}>
-          <div className="pull-left title">{Tab.getName(this.t.bind(this))}</div>
-          <div className={'pull-right toggler ' + (expanded.has(index) ? 'up' : 'down')}></div>
-        </div>
-
-        {expanded.has(index)
-          ? <div className="col-md-12">{this.content(index)}</div>
-          : null
+  const groups = [
+    {
+      name: t('filters:tabs:organizations:title'),
+      className: 'organizations',
+      filters: [
+        {
+          render: singlePropertyRendererCreator(ProcuringEntitySelect, 'procuringEntityId')
+        },
+        {
+          render: singlePropertyRendererCreator(BuyerSelect, 'buyerId')
+        },
+        {
+          render: singlePropertyRendererCreator(SupplierSelect, 'supplierId')
         }
-      </div>
-    );
-  }
+      ]
+    },
+    {
+      name: t('filters:tabs:procurementMethod:title'),
+      className: 'procurement-method',
+      filters: [
+        {
+          render: singlePropertyRendererCreator(ProcurementMethod, 'procurementMethod')
+        }
+      ]
+    },
+    {
+      name: t('filters:tabs:procurementMethodRationale:title'),
+      className: 'procurement-method-rationale',
+      filters: [
+        {
+          render: singlePropertyRendererCreator(ProcurementMethodRationale, 'procurementMethodRationale')
+        }
+      ]
+    },
+    {
+      name: t('filters:tabs:fiscalYear:title'),
+      className: 'procurement-method-rationale',
+      filters: [
+        {
+          render: singlePropertyRendererCreator(FiscalYear, 'fiscalYear')
+        }
+      ]
+    },
+    {
+      name: t('filters:tabs:amounts:title'),
+      className: 'amounts',
+      filters: [
+        {
+          render: minMaxPropertyRendererCreator(TenderPrice, 'TenderValue')
+        },
+        {
+          render: minMaxPropertyRendererCreator(AwardValue, 'AwardValue')
+        }
+      ]
+    }
+  ];
 
-  content(tabIndex) {
-    let { state } = this.state;
-    let { onUpdate, bidTypes, translations } = this.props;
-    let Component = this.constructor.TABS[tabIndex];
-    return (<div>
-      <Component
-        state={state}
-        onUpdate={(key, update) => this.setState({ state: this.state.state.set(key, update) })}
-        bidTypes={bidTypes}
-        translations={translations}/>
-      <section className="buttons">
-        <button className="btn btn-apply pull-right" onClick={e => onUpdate(this.state.state)}>
-          {this.t('filters:apply')}
-        </button>
-        <button className="btn btn-reset pull-right" onClick={e => this.reset()}>
-          {this.t('filters:reset')}
-        </button>
-      </section>
-    </div>);
-  }
-
-  render() {
-    return <div className={cn('filters', 'col-md-12')}>
-      {this.listTabs()}
-    </div>;
-  }
-}
-
-Filters.TABS = [Organizations, ProcurementMethodRules, ProcurementMethodRationaleRules, PlanningRules, Amounts, FilterChartsTab];
-Filters.CLASS = ['organizations', 'procurement-method', 'procurement-method-rationale', 'fiscal-year', 'amounts', 'date'];
+  return <FiltersWrapper
+    groups={groups} filters={props.filters} applyFilters={props.onUpdate} translations={props.translations} />
+};
 
 export default Filters;
