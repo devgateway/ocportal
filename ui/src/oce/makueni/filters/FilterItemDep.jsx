@@ -1,15 +1,8 @@
+import React from "react";
 import FilterItemSingleSelect from './FilterItemSingleSelect';
 
-class FilterItemDep extends FilterItemSingleSelect {
-  
-  constructor(props) {
-    super(props);
-    
-  }
+const FilterItemDep = ({ep, ...otherProps}) => {
+  return <FilterItemSingleSelect ep='/makueni/filters/departments' {...otherProps} />
 }
-
-FilterItemDep.getName = () => 'Departments';
-FilterItemDep.getProperty = () => 'department';
-FilterItemDep.getEP = () => '/makueni/filters/departments';
 
 export default FilterItemDep;

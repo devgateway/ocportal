@@ -27,3 +27,9 @@ var translatable = Class => class Translatable extends Class {
 };
 
 export default translatable;
+
+export const tCreator = translations => key => {
+  if(!translations) console.error('Missing translations', this.constructor.name);
+  if(!translations[key]) console.error('Missing translation for key', key);
+  return translations[key];
+}
