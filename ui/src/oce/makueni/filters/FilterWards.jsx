@@ -1,16 +1,10 @@
 import FilterItemTypeAhead from './FilterItemTypeAhead';
+import React from "react";
 
-class FilterWards extends FilterItemTypeAhead {
-  
-  constructor(props) {
-    super(props);
-    
-    this.state.multiple = true;
-  }
+
+const FilterWards = ({ep, ...otherProps}) => {
+  return <FilterItemTypeAhead ep='/makueni/filters/wards' {...otherProps}
+                              idFunc={(obj) => obj.id} multiple={true}/>
 }
-
-FilterWards.getName = () => 'Wards';
-FilterWards.getProperty = () => 'ward';
-FilterWards.getEP = () => '/makueni/filters/wards';
 
 export default FilterWards;

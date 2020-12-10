@@ -1,16 +1,9 @@
 import FilterItemTypeAhead from './FilterItemTypeAhead';
+import React from "react";
 
-class FilterSubcounties extends FilterItemTypeAhead {
-  
-  constructor(props) {
-    super(props);
-  
-    this.state.multiple = true;
-  }
+const FilterSubcounties = ({ep, ...otherProps}) => {
+  return <FilterItemTypeAhead ep='/makueni/filters/subcounties' {...otherProps}
+                              idFunc={(obj) => obj.id} multiple={true}/>
 }
-
-FilterSubcounties.getName = () => 'Sub-Counties';
-FilterSubcounties.getProperty = () => 'subcounty';
-FilterSubcounties.getEP = () => '/makueni/filters/subcounties';
 
 export default FilterSubcounties;

@@ -1,15 +1,14 @@
 import React from "react";
 import FilterItemDep from './FilterItemDep';
 import FilterItemFY from './FilterItemFY';
-// import FilterItems from './FilterItems';
 import FiltersWrapper from './FiltersWrapper';
-// import FilterSubcounties from './FilterSubcounties';
-// import FilterWards from './FilterWards';
+import FilterSubcounties from './FilterSubcounties';
 // import FilterAmount from './FilterAmount';
 import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
 import FilterItems from "./FilterItems";
+import FilterWards from "./FilterWards";
 
 const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
     <FilterItem value={filters[property]}
@@ -33,6 +32,10 @@ const titleRenderer = singlePropertyRendererCreator(FilterInput, 'text');
 const itemRenderer = singlePropertyRendererCreator(FilterItems, 'item');
 
 const tenderCloseDateRenderer = dateRendererCreator(FilterTenderDate);
+
+const subcountiesRenderer = singlePropertyRendererCreator(FilterSubcounties, 'subcounty');
+
+const wardsRenderer = singlePropertyRendererCreator(FilterWards, 'ward');
 
 const FiltersTendersWrapper = props => {
   let groups = [
@@ -73,6 +76,26 @@ const FiltersTendersWrapper = props => {
       filters: [
         {
           render: itemRenderer
+        }
+      ]
+    },
+    {
+      name: 'Sub-Counties',
+      className: 'subcounty',
+      fm: 'publicView.filter.subcounties',
+      filters: [
+        {
+          render: subcountiesRenderer
+        }
+      ]
+    },
+    {
+      name: 'Wards',
+      className: 'ward',
+      fm: 'publicView.filter.wards',
+      filters: [
+        {
+          render: wardsRenderer
         }
       ]
     },
