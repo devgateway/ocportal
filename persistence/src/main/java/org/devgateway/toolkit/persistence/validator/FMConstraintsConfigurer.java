@@ -7,6 +7,7 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
+import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.fm.ConstrainedField;
@@ -51,7 +52,7 @@ public class FMConstraintsConfigurer {
     /**
      * Private class pool for the generated classes.
      */
-    private static final ClassPool CLASS_POOL = new ClassPool(true);
+    private final ClassPool classPool;
 
     /**
      * Caching generated classes to avoid generating duplicates.
@@ -62,6 +63,11 @@ public class FMConstraintsConfigurer {
      * Caching generated classes to avoid generating duplicates.
      */
     private static final Map<Class<?>, Class<?>> GROUP_SEQUENCE_PROVIDER_CACHE = new HashMap<>();
+
+    public FMConstraintsConfigurer() {
+        classPool = new ClassPool();
+        classPool.appendClassPath(new LoaderClassPath(getClass().getClassLoader()));
+    }
 
     /**
      * Configure programmatically the constraints.
@@ -181,8 +187,8 @@ public class FMConstraintsConfigurer {
                 logger.debug("Defining a new group {}", groupClassName);
             }
 
-            CtClass ndClass = CLASS_POOL.get(NonDraft.class.getName());
-            CtClass cc = CLASS_POOL.makeInterface(groupClassName, ndClass);
+            CtClass ndClass = classPool.get(NonDraft.class.getName());
+            CtClass cc = classPool.makeInterface(groupClassName, ndClass);
             return cc.toClass();
         } catch (NotFoundException | CannotCompileException e) {
             throw new RuntimeException("Failed to create a bean validation group for " + javaType, e);
@@ -215,7 +221,7 @@ public class FMConstraintsConfigurer {
                 logger.debug("Defining a new group sequence provider {}", gspName);
             }
 
-            CtClass cc = CLASS_POOL.makeClass(gspName, CLASS_POOL.get(AbstractFMGroupSequenceProvider.class.getName()));
+            CtClass cc = classPool.makeClass(gspName, classPool.get(AbstractFMGroupSequenceProvider.class.getName()));
             CtConstructor c = new CtConstructor(new CtClass[0], cc);
             c.setBody(String.format("super(%s.class, %s.class);",
                     getGroupForClass(javaType).getName(), javaType.getName()));
