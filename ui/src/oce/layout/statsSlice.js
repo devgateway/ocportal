@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {fetch} from "../api/Api";
 
-const NOT_INITIALIZED = 'not-initialized';
-const LOADED = 'loaded';
-const LOADING = 'loading';
+export const NOT_INITIALIZED = 'not-initialized';
+export const LOADED = 'loaded';
+export const LOADING = 'loading';
 
 export const loadStats = createAsyncThunk(
   'stats/load',

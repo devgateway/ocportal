@@ -8,7 +8,7 @@ import 'intro.js/introjs.css';
 import './header.scss';
 import ReactGA from 'react-ga';
 import {useDispatch, useSelector} from "react-redux";
-import {loadStats, selectStats} from "./statsSlice";
+import {LOADED, loadStats, selectStats} from "./statsSlice";
 import PropTypes from 'prop-types';
 
 const initGA = () => {
@@ -154,7 +154,7 @@ const Header = props => {
 
       <div className="header-tools row">
         {
-          stats.status === 'loaded'
+          stats.status === LOADED
             ? <div>
               <div className="col-lg-3 col-md-3 col-sm-6 total-item" data-step="5" data-intro={t("header:totalContracts:intro")} data-position="right">
                 <span className="total-label">{t("header:totalContracts")}</span>
