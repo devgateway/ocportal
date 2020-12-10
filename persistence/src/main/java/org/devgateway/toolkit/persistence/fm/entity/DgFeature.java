@@ -135,11 +135,11 @@ public class DgFeature extends UnchainedDgFeature {
 
         private boolean grayed;
 
-        public Writer() {
+        Writer() {
             lines = new ArrayList<>();
         }
 
-        public Writer(boolean grayed, Writer target) {
+        Writer(boolean grayed, Writer target) {
             this.grayed = grayed;
             this.target = target;
         }
