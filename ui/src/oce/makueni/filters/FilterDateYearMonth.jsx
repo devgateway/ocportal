@@ -60,7 +60,7 @@ const FilterDateYearMonth = props => {
             className={cn('col-md-3', {active: selectedMonths.includes(month)})}
             onClick={() => {
                 selectedMonths.includes(month) ? setSelectedMonths(selectedMonths.filter(item => item !== month))
-                    : setSelectedMonths({...selectedMonths, month});
+                    : setSelectedMonths([...selectedMonths, month]);
             }}
         >
             <i className="glyphicon glyphicon-ok-circle"/> {t(`general:months:${month}`)}
@@ -70,7 +70,7 @@ const FilterDateYearMonth = props => {
     const yearsBar = () => {
         const toggleYear = year => {
             selectedYears.includes(year) ? setSelectedYears(selectedYears.filter(item => item !== year))
-                : setSelectedYears({...selectedYears, year});
+                : setSelectedYears([...selectedYears, year]);
         };
 
         const toggleOthersYears = year => {

@@ -81,7 +81,7 @@ const FiltersTendersWrapper = props => {
     },
     {
       name: 'Sub-Counties',
-      className: 'subcounty',
+      className: 'subcounties',
       fm: 'publicView.filter.subcounties',
       filters: [
         {
@@ -91,7 +91,7 @@ const FiltersTendersWrapper = props => {
     },
     {
       name: 'Wards',
-      className: 'ward',
+      className: 'wards',
       fm: 'publicView.filter.wards',
       filters: [
         {
