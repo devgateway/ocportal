@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 /**
  * @author Octavian Ciubotaru
  */
-class FeaturesDataProvider extends SortableDataProvider<DgFeature, String> {
+public class FeaturesDataProvider extends SortableDataProvider<DgFeature, String> {
 
     private static final Map<String, Function<DgFeature, Comparable>> KEY_EXTRACTORS =
-            ImmutableMap.<String, Function<DgFeature, Comparable>> builder()
+            ImmutableMap.<String, Function<DgFeature, Comparable>>builder()
                     .put("name", DgFeature::getName)
                     .put("visible", DgFeature::getVisible)
                     .put("enabled", DgFeature::getEnabled)

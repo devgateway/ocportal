@@ -138,11 +138,11 @@ public class ListFeaturesPage extends BasePage {
 
     private static class Column<T, S> extends StyledLambdaColumn<T, S> {
 
-        public Column(Component component, String name, SerializableFunction<T, ?> function) {
+        Column(Component component, String name, SerializableFunction<T, ?> function) {
             super(new StringResourceModel(name, component), name, function);
         }
 
-        public Column(Component component, String name, S sortProperty, SerializableFunction<T, ?> function) {
+        Column(Component component, String name, S sortProperty, SerializableFunction<T, ?> function) {
             super(new StringResourceModel(name, component), name, sortProperty, function);
         }
 
