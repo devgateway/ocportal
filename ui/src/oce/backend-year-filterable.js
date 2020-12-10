@@ -1,9 +1,9 @@
 let backendFilterable = Class => class extends Class{
   buildUrl(ep){
     const {years, months, monthly} = this.props;
-    const yearDecoratedUrl = super.buildUrl(ep).addSearch('year', Array.from(years)); // TODO may need fixing
+    const yearDecoratedUrl = super.buildUrl(ep).addSearch('year', years);
     return monthly ?
-        yearDecoratedUrl.addSearch('monthly', true).addSearch('month', Array.from(months)) : // TODO may need fixing
+        yearDecoratedUrl.addSearch('monthly', true).addSearch('month', months) :
         yearDecoratedUrl;
   }
 

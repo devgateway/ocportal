@@ -9,12 +9,9 @@ import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
 import FilterItems from "./FilterItems";
 import FilterWards from "./FilterWards";
+import {singlePropertyRendererCreator} from "./FiltersProcurementPlanWrapper";
 
-const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
-    <FilterItem value={filters[property]}
-                onChange={value => onChange({[property]: value})} {...props} />;
-
-const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
+export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
     <FilterItem year={filters['year']} month={filters['month']}
                 onChange={value => onChange(value.year.length === 1 ? {
                       year: value.year, month: value.month,

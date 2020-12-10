@@ -33,7 +33,7 @@ class OverviewChart extends FrontendDateFilterableChart {
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly ?
       data.map(pluckImm('month'))
-        .map(month => this.tMonth(month, years)) // TODO may need fixing!
+        .map(month => this.tMonth(month, years))
       .toArray() :
       data.map(pluckImm('year'))
       .toArray();
