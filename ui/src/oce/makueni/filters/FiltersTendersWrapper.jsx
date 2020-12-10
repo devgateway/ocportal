@@ -20,7 +20,7 @@ const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
                       year: value.year, month: value.month,
                       monthly: true
                     } :
-                    {year: value.year})
+                    {year: value.year, month: [], monthly: false})
                 } {...props} />;
 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');

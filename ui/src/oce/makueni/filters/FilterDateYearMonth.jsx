@@ -43,7 +43,7 @@ const FilterDateYearMonth = props => {
         if (selectedYears.length === 1) {
             props.onChange({month: selectedMonths, year: selectedYears});
         } else {
-            props.onChange({year: selectedYears});
+            props.onChange({month: [], year: selectedYears});
         }
     }, [selectedYears, selectedMonths]);
 
