@@ -1,21 +1,8 @@
+import React from "react";
 import MultipleSelect from './inputs/multiple-select';
 
-export default class FiscalYear extends MultipleSelect {
-  getTitle() {
-    return this.t('filters:tabs:fiscalYear:title');
-  }
-
-  getId(option) {
-    return option.get('_id');
-  }
-
-  getLabel(option) {
-    return option.get('_id');
-  }
-
-  transform(data) {
-    return data.filter(({ _id }) => !!_id);
-  }
+const FiscalYear = props => {
+  return <MultipleSelect ep='/ocds/fiscalYear/all' {...props} />
 }
 
-FiscalYear.ENDPOINT = '/api/ocds/fiscalYear/all';
+export default FiscalYear;

@@ -81,7 +81,7 @@ export const isIE = navigator.appName === 'Microsoft Internet Explorer' || !!(na
 
 export const download = ({ ep, filters, years, months, t }) => {
   let url = new URI(`/api/ocds/${ep}`)
-    .addSearch(filters.toJS())
+    .addSearch(filters)
     .addSearch('year', years.toArray())
     // this sin shall be atoned for in the future
     .addSearch('language', localStorage.oceLocale || 'en_US');

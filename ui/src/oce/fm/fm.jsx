@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
+import {useSelector, useDispatch} from 'react-redux';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-import {fmList} from "./state";
+import {LOADED, loadFM, selectFM} from "./fmSlice";
 
 /**
  * Render the WrappedComponent after FM entries were loaded.
@@ -19,15 +20,16 @@ import {fmList} from "./state";
 const fmConnect = (WrappedComponent, fmName) => {
 
   const FmComponent = props => {
-    const [entries, setEntries] = useState(null)
+    const dispatch = useDispatch();
+    const fm = useSelector(selectFM);
 
     useEffect(() => {
-      fmList.getState('FmComponent').then(setEntries)
-    })
+      dispatch(loadFM());
+    }, [dispatch]);
 
-    const isFeatureVisible = name => entries.indexOf(name) >= 0
+    const isFeatureVisible = name => fm.list.indexOf(name) >= 0
 
-    if (entries !== null && (fmName === undefined || isFeatureVisible(fmName))) {
+    if (fm.status === LOADED && (fmName === undefined || isFeatureVisible(fmName))) {
       const {wrapRendered, ...nextProps} = props
       return wrapMaybe(wrapRendered,
         <WrappedComponent

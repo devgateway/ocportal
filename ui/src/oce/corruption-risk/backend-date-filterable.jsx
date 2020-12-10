@@ -1,5 +1,4 @@
 import React from "react";
-import { Map, Set } from 'immutable';
 import { cloneChild } from './tools';
 
 class BackendDateFilterable extends React.PureComponent {
@@ -11,11 +10,12 @@ class BackendDateFilterable extends React.PureComponent {
 
   decorateFilters({ filters, years, months }) {
     const monthly = years.count() === 1;
-    return filters
-      .set('year', years)
-      .set('monthly', monthly)
-      .set('month', monthly && months.count() != 12 ? months : Set())
-    ;
+    return {
+      ...filters,
+      year: years,
+      monthly: monthly,
+      month: monthly && months.count() !== 12 ? months : new Set()
+    };
   }
 
   componentWillUpdate(nextProps) {

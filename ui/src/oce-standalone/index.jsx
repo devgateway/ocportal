@@ -1,4 +1,5 @@
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import ViewSwitcher from '../oce/switcher.jsx';
 import './style.scss';
 import OCEMakueni from './oceMakueni';
@@ -13,6 +14,8 @@ import PublicationPolicy from '../oce/makueni/PublicationPolicy';
 import ContractsList from '../oce/makueni/ContractsList';
 import SMSHelp from '../oce/makueni/SMSHelp';
 import PortalVideos from '../oce/makueni/PortalVideos';
+
+import store from '../oce/app/store';
 
 const translations = {
   en_US: require('../languages/en_US.json'),
@@ -98,7 +101,10 @@ OceSwitcher.views['alerts'] = Alerts;
 OceSwitcher.views['m-and-e'] = OCEMakueni;
 OceSwitcher.views.crd = CorruptionRickDashboard;
 
-ReactDOM.render(<OceSwitcher
-  translations={translations.en_US}
-  styling={styling}
-/>, document.getElementById('dg-container'));
+ReactDOM.render(
+  <Provider store={store}>
+    <OceSwitcher
+      translations={translations.en_US}
+      styling={styling} />
+  </Provider>,
+  document.getElementById('dg-container'));

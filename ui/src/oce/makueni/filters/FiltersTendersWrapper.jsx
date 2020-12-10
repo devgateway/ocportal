@@ -35,41 +35,61 @@ const itemRenderer = singlePropertyRendererCreator(FilterItems, 'item');
 const tenderCloseDateRenderer = dateRendererCreator(FilterTenderDate);
 
 const FiltersTendersWrapper = props => {
-  let items = [
+  let groups = [
     {
-      render: departmentRenderer,
       name: 'Departments',
       className: 'department',
-      fm: 'publicView.filter.department'
+      fm: 'publicView.filter.department',
+      filters: [
+        {
+          render: departmentRenderer
+        }
+      ]
     },
     {
-      render: fyRenderer,
       name: 'Fiscal Year',
       className: 'fiscal-year',
-      fm: 'publicView.filter.fiscalYear'
+      fm: 'publicView.filter.fiscalYear',
+      filters: [
+        {
+          render: fyRenderer
+        }
+      ]
     },
     {
-      render: titleRenderer,
       name: 'Text Search',
       className: 'title-search',
-      fm: 'publicView.filter.titleSearch'
+      fm: 'publicView.filter.titleSearch',
+      filters: [
+        {
+          render: titleRenderer
+        }
+      ]
     },
     {
-      render: itemRenderer,
       name: 'Items',
       className: 'items',
-      fm: 'publicView.filter.items'
+      fm: 'publicView.filter.items',
+      filters: [
+        {
+          render: itemRenderer
+        }
+      ]
     },
     {
-      render: tenderCloseDateRenderer,
       name: 'Tender Close Date',
       className: 'date',
-      fm: 'publicView.filter.items'
+      fm: 'publicView.filter.date',
+      filters: [
+        {
+          render: tenderCloseDateRenderer
+        }
+      ]
     }
   ];
 
   return <FiltersWrapper
-      items={items} filters={props.filters} applyFilters={props.applyFilters} translations={props.translations} />
+      groups={groups} filters={props.filters} applyFilters={props.applyFilters} translations={props.translations} />
 }
 
 // FiltersTendersWrapper.ITEMS = [FilterTitle, FilterItemDep, FilterItemFY, FilterItems,
