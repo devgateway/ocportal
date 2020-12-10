@@ -4,30 +4,19 @@ import PropTypes from "prop-types";
 import {fetch} from "../../api/Api";
 
 const FilterItemTypeAhead = props => {
-
   const [options, setOptions] = useState([]);
-  const [selected, setSelected] = useState([]);
   const idProp = (obj) => props.idFunc ? props.idFunc(obj) : obj._id;
 
   useEffect(() => {
     fetch(props.ep).then(data => setOptions(data));
   }, [props.ep]);
 
-  useEffect(() => {
-    if (props.value) {
-      setSelected(options.filter(o => Array.isArray(props.value) ?
-          props.value.includes(idProp(o)) : props.value === idProp(o)))
-    } else {
-      setSelected([]);
-    }
-  }, [props.value, props.ep]);
-
   const handleChange = filterVal => {
     {
       const onChange = props.onChange;
       if (props.multiple) {
         const ids = filterVal.map(item => idProp(item));
-        onChange(ids);  //TODO: implement this
+        onChange(ids);
       } else {
         const id = filterVal.length === 0 ? undefined : idProp(filterVal[0]);
         onChange(id);
@@ -41,7 +30,8 @@ const FilterItemTypeAhead = props => {
                  options={options === undefined ? [] : options}
                  clearButton={true}
                  placeholder={'Make a selection'}
-                 selected={selected}
+                 selected={props.value ? (options.filter(o => Array.isArray(props.value) ?
+                     props.value.includes(idProp(o)) : props.value === idProp(o))) : []}
                  multiple={props.multiple}
       />
   );
