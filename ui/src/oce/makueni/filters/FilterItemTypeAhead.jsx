@@ -7,6 +7,7 @@ const FilterItemTypeAhead = props => {
 
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
+  const idProp = (obj) => props.idFunc ? props.idFunc(obj) : obj._id;
 
   useEffect(() => {
     fetch(props.ep).then(data => setOptions(data));
@@ -14,40 +15,13 @@ const FilterItemTypeAhead = props => {
 
   useEffect(() => {
     if (props.value) {
-      setSelected(options.filter(o => o._id === props.value))
+      setSelected(options.filter(o => Array.isArray(props.value) ?
+          props.value.includes(idProp(o)) : props.value === idProp(o)))
     } else {
       setSelected([]);
     }
   }, [props.value, props.ep]);
 
-  const idProp = (obj) => props.idFunc ? props.idFunc(obj) : obj._id;
-
-  // componentWillReceiveProps(nextProps)
-  // {
-  //   // filter wards based on selected sub-counties
-  //   if (this.constructor.getProperty() === 'ward') {
-  //     const newSubcounties = nextProps.localFilters.get('subcounty');
-  //     const oldSubcounties = this.props.localFilters.get('subcounty');
-  //
-  //     if (JSON.stringify(newSubcounties) !== JSON.stringify(oldSubcounties)) {
-  //       if (this.state.initialData === undefined) {
-  //         this.setState({initialData: this.state.data});
-  //       }
-  //
-  //       if (newSubcounties !== undefined) {
-  //         const newData = this.state.initialData !== undefined
-  //           ? this.state.initialData.filter(item => newSubcounties.includes(item.subcountyId))
-  //           : this.state.data.filter(item => newSubcounties.includes(item.subcountyId));
-  //         this.setState({ data: newData });
-  //       } else {
-  //         this.setState({ data: this.state.initialData });
-  //       }
-  //
-  //       this.setState({ selected: [] });
-  //     }
-  //   }
-  // }
-  //
   const handleChange = filterVal => {
     {
       const onChange = props.onChange;
@@ -77,6 +51,7 @@ FilterItemTypeAhead.propTypes = {
   translations: PropTypes.object.isRequired,
   ep: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  multiple: PropTypes.bool,
   idFunc: PropTypes.func,
   value: PropTypes.oneOfType([
     PropTypes.array,
