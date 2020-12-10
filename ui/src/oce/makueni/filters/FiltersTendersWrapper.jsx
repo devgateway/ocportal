@@ -1,10 +1,8 @@
 import React from "react";
 import FilterItemDep from './FilterItemDep';
 import FilterItemFY from './FilterItemFY';
-// import FilterItems from './FilterItems';
 import FiltersWrapper from './FiltersWrapper';
 import FilterSubcounties from './FilterSubcounties';
-// import FilterWards from './FilterWards';
 // import FilterAmount from './FilterAmount';
 import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
