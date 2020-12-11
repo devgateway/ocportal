@@ -15,7 +15,10 @@ import AmountBudgeted from '../../charts/amount-budgeted';
 import React from 'react';
 
 const addTenderDeliveryLocationId = cacheFn(
-  (filters, id) => filters.set('tenderLoc', id),
+  (filters, id) => ({
+    ...filters,
+    tenderLoc: id
+  })
 );
 
 class Tab extends translatable(Component) {}

@@ -1,24 +1,7 @@
 import React from "react";
 import FilterItemDep from './FilterItemDep';
 import FilterItemFY from './FilterItemFY';
-import FiltersWrapper from './FiltersWrapper';
-
-// TODO move
-export const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
-  <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
-
-// TODO move
-export const minMaxPropertyRendererCreator = (FilterItem, suffix) => ({filters, onChange, ...props}) => {
-  const minProperty = `min${suffix}`;
-  const maxProperty = `max${suffix}`;
-  return <FilterItem
-    minValue={filters[minProperty]}
-    maxValue={filters[maxProperty]}
-    minProperty={minProperty}
-    maxProperty={maxProperty}
-    onChange={({minValue, maxValue}) => onChange({[minProperty]: minValue, [maxProperty]: maxValue})}
-    {...props} />;
-}
+import FiltersWrapper, {singlePropertyRendererCreator} from './FiltersWrapper';
 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
 

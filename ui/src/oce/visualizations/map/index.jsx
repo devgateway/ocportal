@@ -35,13 +35,11 @@ class MapVisual extends backendFilterable(Visualization) {
   }
 
   componentDidMount() {
-    const { filters, onUpdate } = this.props;
-    onUpdate(filters.set('locationType',['subcounty']));
+    this.handleUpdate(['subcounty']);
   }
 
   componentWillUnmount() {
-    const { filters, onUpdate } = this.props;
-    onUpdate(filters.set('locationType',[]));
+    this.handleUpdate([]);
   }
 
   computeLocationButtonClass(locationType, buttonType) {
@@ -49,9 +47,16 @@ class MapVisual extends backendFilterable(Visualization) {
   }
 
   updateLocationButtonState(buttonType) {
-    const { filters, onUpdate } = this.props;
     this.setState({'locationType' : buttonType});
-    onUpdate(filters.set('locationType', [buttonType]));
+    this.handleUpdate([buttonType]);
+  }
+
+  handleUpdate(locationTypeValue) {
+    const { filters, onUpdate } = this.props;
+    onUpdate({
+      ...filters,
+      locationType: locationTypeValue
+    });
   }
 
   render() {

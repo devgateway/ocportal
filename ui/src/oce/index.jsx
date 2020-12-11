@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const ROLE_ADMIN = 'ROLE_ADMIN';
 
-const EMPTY_SET = new window.Set();// TODO remove window. when immutable is removed
+const EMPTY_ARRAY = [];
 
 // eslint-disable-next-line no-undef
 class OCApp extends React.Component {
@@ -138,8 +138,8 @@ class OCApp extends React.Component {
       data={this.state.data.get(currentTab) || fromJS({})}
       comparisonData={this.state.comparisonData.get(currentTab) || fromJS({})}
       monthly={filters['monthly']}
-      years={filters['selectedYears'] || EMPTY_SET}
-      months={filters['selectedMonths'] || EMPTY_SET}
+      years={filters['year'] || EMPTY_ARRAY}
+      months={filters['month'] || EMPTY_ARRAY}
       bidTypes={bidTypes}
       width={width}
       navigate={navigate}

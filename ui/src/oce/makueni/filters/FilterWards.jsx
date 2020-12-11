@@ -1,16 +1,18 @@
 import FilterItemTypeAhead from './FilterItemTypeAhead';
+import React from "react";
+import PropTypes from "prop-types";
 
-class FilterWards extends FilterItemTypeAhead {
-  
-  constructor(props) {
-    super(props);
-    
-    this.state.multiple = true;
-  }
+const FilterWards = ({subcounty, ...otherProps}) => {
+
+  return <FilterItemTypeAhead ep='/makueni/filters/wards'
+                              epParams={subcounty ? {subcountyIds: subcounty} : {}} {...otherProps}
+                              idFunc={(obj) => obj.id} multiple={true}/>
 }
 
-FilterWards.getName = () => 'Wards';
-FilterWards.getProperty = () => 'ward';
-FilterWards.getEP = () => '/makueni/filters/wards';
+FilterWards.propTypes = {
+  subcounty: PropTypes.array,
+  onChange: PropTypes.func.isRequired,
+  translations: PropTypes.object.isRequired
+};
 
 export default FilterWards;

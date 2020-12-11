@@ -1,24 +1,23 @@
 import {tCreator} from '../translatable';
-import FiltersWrapper from "../makueni/filters/FiltersWrapper";
+import FiltersWrapper, {
+  minMaxPropertyRendererCreator,
+  singlePropertyRendererCreator,
+  dateRendererCreator
+} from "../makueni/filters/FiltersWrapper";
 import React from "react";
 import ProcuringEntitySelect from "./procuring-entity-select";
 import BuyerSelect from "./buyer-select";
 import SupplierSelect from "./supplier-select";
-import {
-  minMaxPropertyRendererCreator,
-  singlePropertyRendererCreator
-} from "../makueni/filters/FiltersProcurementPlanWrapper";
 import ProcurementMethod from "./procurement-method";
 import ProcurementMethodRationale from "./procurement-method-rationale";
 import FiscalYear from "./fiscal-year";
 import TenderPrice from "./tender-price";
 import AwardValue from "./award-value";
+import FilterTenderDate from "../makueni/filters/FilterTenderDate";
 
 const Filters = props => {
 
   const t = tCreator(props.translations);
-
-  // TODO add last filter group: FilterChartsTab from './tabs/date' with className='date'
 
   const groups = [
     {
@@ -56,7 +55,7 @@ const Filters = props => {
     },
     {
       name: t('filters:tabs:fiscalYear:title'),
-      className: 'procurement-method-rationale',
+      className: 'fiscal-year',
       filters: [
         {
           render: singlePropertyRendererCreator(FiscalYear, 'fiscalYear')
@@ -72,6 +71,15 @@ const Filters = props => {
         },
         {
           render: minMaxPropertyRendererCreator(AwardValue, 'AwardValue')
+        }
+      ]
+    },
+    {
+      name: t('filters:tabs:date:title'),
+      className: 'date',
+      filters: [
+        {
+          render: dateRendererCreator(FilterTenderDate)
         }
       ]
     }

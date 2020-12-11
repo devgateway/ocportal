@@ -1,10 +1,8 @@
 import FilterDateYearMonth from './FilterDateYearMonth';
+import React from "react";
 
-class FilterTenderDate extends FilterDateYearMonth {
-
+const FilterTenderDate = ({...otherProps}) => {
+    return <FilterDateYearMonth ep='/tendersAwardsYears' {...otherProps} />
 }
-
-FilterTenderDate.getName = () => 'Tender Close Date';
-FilterTenderDate.getEP = () => '/api/tendersAwardsYears';
 
 export default FilterTenderDate;

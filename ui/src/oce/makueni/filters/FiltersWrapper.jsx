@@ -3,6 +3,29 @@ import {tCreator} from '../../translatable';
 import cn from 'classnames';
 import fmConnect from "../../fm/fm";
 
+export const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
+  <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
+
+export const minMaxPropertyRendererCreator = (FilterItem, suffix) => ({filters, onChange, ...props}) => {
+  const minProperty = `min${suffix}`;
+  const maxProperty = `max${suffix}`;
+  return <FilterItem
+    minValue={filters[minProperty]}
+    maxValue={filters[maxProperty]}
+    minProperty={minProperty}
+    maxProperty={maxProperty}
+    onChange={({minValue, maxValue}) => onChange({[minProperty]: minValue, [maxProperty]: maxValue})}
+    {...props} />;
+}
+
+export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
+  <FilterItem year={filters['year']} month={filters['month']}
+              onChange={value => onChange(value.year.length === 1 ? {
+                year: value.year, month: value.month,
+                monthly: true
+              } : {year: value.year, month: [], monthly: false})
+              } {...props} />;
+
 const FiltersWrapper = props => {
 
   const [expanded, setExpanded] = useState(new Set());

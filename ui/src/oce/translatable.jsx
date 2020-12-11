@@ -18,7 +18,7 @@ var translatable = Class => class Translatable extends Class {
   }
 
   tMonth(month, years) {
-    return this.t(`general:months:${month}`) + ' ' + years.toArray()[0];
+    return this.t(`general:months:${month}`) + ' ' + years[0];
   }
 
   t_n(sg, pl, n) {

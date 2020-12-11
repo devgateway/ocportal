@@ -8,7 +8,7 @@ const frontendDateFilterable = (Class) => {
       const url = super.buildUrl(...args);
       return this.props.monthly ?
         url.addSearch('monthly', true)
-        .addSearch('year', this.props.years.toArray()) :
+        .addSearch('year', this.props.years) :
         url;
     }
 
@@ -18,7 +18,7 @@ const frontendDateFilterable = (Class) => {
       if (!data) return data;
       if (monthly) {
         return this.constructor.filterDataByMonth(data, months);
-      } else if (years.size) { // TODO may need fixing
+      } else if (years.length) {
         return this.constructor.filterDataByYears(data, years);
       }
       return data;
@@ -36,7 +36,7 @@ const frontendDateFilterable = (Class) => {
   }
 
   Filterable.propTypes = Filterable.propTypes || {};
-  Filterable.propTypes.years = PropTypes.object.isRequired;
+  Filterable.propTypes.years = PropTypes.array.isRequired;
 
   Filterable.computeYears = cacheFn((data) => {
     if (!data) return Set();
@@ -44,7 +44,7 @@ const frontendDateFilterable = (Class) => {
   });
 
   const filterDataByDate = (field, data, dates) =>
-    data.filter(datum => dates.has(+datum.get(field)))
+    data.filter(datum => dates.includes(+datum.get(field)))
     .sortBy(datum => +datum.get(field));
 
   Filterable.filterDataByMonth = cacheFn(filterDataByDate.bind(null, 'month'));
