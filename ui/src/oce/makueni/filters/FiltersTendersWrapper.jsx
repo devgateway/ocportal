@@ -3,13 +3,13 @@ import FilterItemDep from './FilterItemDep';
 import FilterItemFY from './FilterItemFY';
 import FiltersWrapper from './FiltersWrapper';
 import FilterSubcounties from './FilterSubcounties';
-// import FilterAmount from './FilterAmount';
 import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
 import FilterItems from "./FilterItems";
 import {singlePropertyRendererCreator} from "./FiltersProcurementPlanWrapper";
 import FilterWards from "./FilterWards";
+import FilterTenderAmount from "./FilterTenderAmount";
 
 export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
     <FilterItem year={filters['year']} month={filters['month']}
@@ -22,6 +22,10 @@ export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props
 const wardsRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
     <FilterItem value={filters['ward']} subcounty={filters['subcounty']}
                 onChange={value => onChange({['ward']: value})} {...props} />;
+
+const amountRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
+    <FilterItem minValue={filters['min']} maxValue={filters['max']}
+                onChange={({minValue, maxValue}) => onChange({min: minValue, max: maxValue})} {...props} />;
 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
 
@@ -36,6 +40,8 @@ const tenderCloseDateRenderer = dateRendererCreator(FilterTenderDate);
 const subcountiesRenderer = singlePropertyRendererCreator(FilterSubcounties, 'subcounty');
 
 const wardsRenderer = wardsRendererCreator(FilterWards);
+
+const amountsRenderer = amountRendererCreator(FilterTenderAmount);
 
 const FiltersTendersWrapper = props => {
   let groups = [
@@ -100,6 +106,16 @@ const FiltersTendersWrapper = props => {
       ]
     },
     {
+      name: 'Amounts',
+      className: 'amount',
+      fm: 'publicView.filter.amount',
+      filters: [
+        {
+          render: amountsRenderer
+        }
+      ]
+    },
+    {
       name: 'Tender Close Date',
       className: 'date',
       fm: 'publicView.filter.date',
@@ -114,15 +130,5 @@ const FiltersTendersWrapper = props => {
   return <FiltersWrapper
       groups={groups} filters={props.filters} applyFilters={props.applyFilters} translations={props.translations} />
 }
-
-// FiltersTendersWrapper.ITEMS = [FilterTitle, FilterItemDep, FilterItemFY, FilterItems,
-//   FilterSubcounties, FilterWards, FilterAmount, FilterTenderDate];
-//
-// FiltersTendersWrapper.CLASS = ['title-search', 'department', 'fiscal-year', 'items',
-//   'subcounties', 'wards', 'amount', 'date'];
-//
-// FiltersTendersWrapper.FM = ['publicView.filter.titleSearch', 'publicView.filter.department',
-//   'publicView.filter.fiscalYear', 'publicView.filter.items', 'publicView.filter.subcounties',
-//   'publicView.filter.wards', 'publicView.filter.amount', 'publicView.filter.date'];
 
 export default fmConnect(FiltersTendersWrapper);
