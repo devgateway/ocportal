@@ -1,23 +1,14 @@
 import React from "react";
 import FilterItemDep from './FilterItemDep';
 import FilterItemFY from './FilterItemFY';
-import FiltersWrapper from './FiltersWrapper';
+import FiltersWrapper, {dateRendererCreator, singlePropertyRendererCreator} from './FiltersWrapper';
 import FilterSubcounties from './FilterSubcounties';
 // import FilterAmount from './FilterAmount';
 import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
 import FilterItems from "./FilterItems";
-import {singlePropertyRendererCreator} from "./FiltersProcurementPlanWrapper";
 import FilterWards from "./FilterWards";
-
-export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
-    <FilterItem year={filters['year']} month={filters['month']}
-                onChange={value => onChange(value.year.length === 1 ? {
-                  year: value.year, month: value.month,
-                  monthly: true
-                } : {year: value.year, month: [], monthly: false})
-                } {...props} />;
 
 const wardsRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
     <FilterItem value={filters['ward']} subcounty={filters['subcounty']}
