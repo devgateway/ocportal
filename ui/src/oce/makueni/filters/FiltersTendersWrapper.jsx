@@ -8,17 +8,20 @@ import FilterTenderDate from './FilterTenderDate';
 import fmConnect from "../../fm/fm";
 import FilterInput from "./FilterInput";
 import FilterItems from "./FilterItems";
-import FilterWards from "./FilterWards";
 import {singlePropertyRendererCreator} from "./FiltersProcurementPlanWrapper";
+import FilterWards from "./FilterWards";
 
 export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
     <FilterItem year={filters['year']} month={filters['month']}
                 onChange={value => onChange(value.year.length === 1 ? {
-                      year: value.year, month: value.month,
-                      monthly: true
-                    } :
-                    {year: value.year, month: [], monthly: false})
+                  year: value.year, month: value.month,
+                  monthly: true
+                } : {year: value.year, month: [], monthly: false})
                 } {...props} />;
+
+const wardsRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
+    <FilterItem value={filters['ward']} subcounty={filters['subcounty']}
+                onChange={value => onChange({['ward']: value})} {...props} />;
 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
 
@@ -32,7 +35,7 @@ const tenderCloseDateRenderer = dateRendererCreator(FilterTenderDate);
 
 const subcountiesRenderer = singlePropertyRendererCreator(FilterSubcounties, 'subcounty');
 
-const wardsRenderer = singlePropertyRendererCreator(FilterWards, 'ward');
+const wardsRenderer = wardsRendererCreator(FilterWards);
 
 const FiltersTendersWrapper = props => {
   let groups = [
