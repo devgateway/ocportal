@@ -2,7 +2,6 @@ import FilterItemTypeAhead from './FilterItemTypeAhead';
 import React from "react";
 import PropTypes from "prop-types";
 
-
 const FilterWards = ({subcounty, ...otherProps}) => {
 
   return <FilterItemTypeAhead ep='/makueni/filters/wards'
@@ -11,7 +10,9 @@ const FilterWards = ({subcounty, ...otherProps}) => {
 }
 
 FilterWards.propTypes = {
-  subcounty: PropTypes.array
+  subcounty: PropTypes.array,
+  onChange: PropTypes.func.isRequired,
+  translations: PropTypes.object.isRequired
 };
 
 export default FilterWards;

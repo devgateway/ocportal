@@ -24,7 +24,7 @@ const FormattedNumberInput = ({value, onChange, ...otherProps}) => {
   );
 };
 
-const Range = ({titleKey, min, max, minValue, maxValue, translations, onChange}) => {
+export const Range = ({titleKey, min, max, minValue, maxValue, translations, onChange}) => {
   if (!min && !max) {
     return null;
   }
@@ -34,10 +34,10 @@ const Range = ({titleKey, min, max, minValue, maxValue, translations, onChange})
   const t = tCreator(translations);
 
   const handleOnChange = ({minValue, maxValue}) =>
-    onChange({
-      minValue: minValue === min ? undefined : minValue,
-      maxValue: maxValue === max ? undefined : maxValue
-    });
+      onChange({
+        minValue: minValue === min ? undefined : minValue,
+        maxValue: maxValue === max ? undefined : maxValue
+      });
 
   return (
     <>
@@ -81,7 +81,11 @@ const Range = ({titleKey, min, max, minValue, maxValue, translations, onChange})
 
 Range.propTypes = {
   titleKey: PropTypes.string.isRequired,
-  translations: PropTypes.object.isRequired
+  translations: PropTypes.object.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  minValue: PropTypes.number,
+  maxValue: PropTypes.number,
 };
 
 export const RemoteRange = ({ep, minProperty, maxProperty, ...otherProps}) => {
