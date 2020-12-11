@@ -4,6 +4,7 @@ import {Typeahead} from 'react-bootstrap-typeahead';
 import './alerts.scss';
 import {useEffect, useState} from "react";
 import {fetch, subscribeToAlerts} from "../api/Api";
+import PropTypes from 'prop-types';
 
 const emailPattern = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
 
@@ -237,8 +238,13 @@ const Alerts = props => {
       </div>
     </div>
   );
-
-  return null;
 }
+
+Alerts.propTypes = {
+  route: PropTypes.arrayOf(PropTypes.string),
+  translations: PropTypes.object.isRequired,
+  styling: PropTypes.object.isRequired,
+  onSwitch: PropTypes.func.isRequired
+};
 
 export default Alerts;

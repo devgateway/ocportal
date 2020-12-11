@@ -1,19 +1,18 @@
 import {tCreator} from '../translatable';
-import FiltersWrapper from "../makueni/filters/FiltersWrapper";
+import FiltersWrapper, {
+  minMaxPropertyRendererCreator,
+  singlePropertyRendererCreator,
+  dateRendererCreator
+} from "../makueni/filters/FiltersWrapper";
 import React from "react";
 import ProcuringEntitySelect from "./procuring-entity-select";
 import BuyerSelect from "./buyer-select";
 import SupplierSelect from "./supplier-select";
-import {
-  minMaxPropertyRendererCreator,
-  singlePropertyRendererCreator
-} from "../makueni/filters/FiltersProcurementPlanWrapper";
 import ProcurementMethod from "./procurement-method";
 import ProcurementMethodRationale from "./procurement-method-rationale";
 import FiscalYear from "./fiscal-year";
 import TenderPrice from "./tender-price";
 import AwardValue from "./award-value";
-import {dateRendererCreator} from "../makueni/filters/FiltersTendersWrapper";
 import FilterTenderDate from "../makueni/filters/FilterTenderDate";
 
 const Filters = props => {
