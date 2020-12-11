@@ -8,8 +8,8 @@ const FilterItemTypeAhead = props => {
   const idProp = (obj) => props.idFunc ? props.idFunc(obj) : obj._id;
 
   useEffect(() => {
-    fetch(props.ep).then(data => setOptions(data));
-  }, [props.ep]);
+    fetch(props.ep, props.epParams).then(data => setOptions(data));
+  }, [props.ep, props.epParams]);
 
   const handleChange = filterVal => {
     {
@@ -43,6 +43,7 @@ FilterItemTypeAhead.propTypes = {
   onChange: PropTypes.func.isRequired,
   multiple: PropTypes.bool,
   idFunc: PropTypes.func,
+  epParams: PropTypes.object,
   value: PropTypes.oneOfType([
     PropTypes.array,
     PropTypes.number
