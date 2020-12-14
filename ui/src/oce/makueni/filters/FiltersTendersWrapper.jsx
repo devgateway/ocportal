@@ -37,6 +37,16 @@ const amountsRenderer = amountRendererCreator(FilterTenderAmount);
 const FiltersTendersWrapper = props => {
   let groups = [
     {
+      name: 'Text Search',
+      className: 'title-search',
+      fm: 'publicView.filter.titleSearch',
+      filters: [
+        {
+          render: titleRenderer
+        }
+      ]
+    },
+    {
       name: 'Departments',
       className: 'department',
       fm: 'publicView.filter.department',
@@ -53,16 +63,6 @@ const FiltersTendersWrapper = props => {
       filters: [
         {
           render: fyRenderer
-        }
-      ]
-    },
-    {
-      name: 'Text Search',
-      className: 'title-search',
-      fm: 'publicView.filter.titleSearch',
-      filters: [
-        {
-          render: titleRenderer
         }
       ]
     },
