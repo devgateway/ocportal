@@ -34,8 +34,8 @@ const FilterDateYearMonth = props => {
     };
 
     const handleOnChange = (years, months) => props.onChange({
-        year: sameArray(years, allYears) ? [] : years,
-        month: (years.length > 1 || sameArray(months, monthRange)) ? [] : months
+        years: sameArray(years, allYears) ? [] : years,
+        months: (years.length > 1 || sameArray(months, monthRange)) ? [] : months
     });
 
     const monthsBar = () => {
