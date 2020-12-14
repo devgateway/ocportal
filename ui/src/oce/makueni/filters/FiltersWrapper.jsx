@@ -20,11 +20,14 @@ export const minMaxPropertyRendererCreator = (FilterItem, suffix) => ({filters, 
 
 export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
   <FilterItem year={filters['year']} month={filters['month']}
-              onChange={value => onChange(value.year.length === 1 ? {
-                year: value.year, month: value.month,
-                monthly: true
-              } : {year: value.year, month: [], monthly: false})
-              } {...props} />;
+              onChange={
+                value => onChange({
+                  year: value.years,
+                  month: value.months,
+                  monthly: value.years.length === 1
+                })
+              }
+              {...props} />;
 
 const FiltersWrapper = props => {
 

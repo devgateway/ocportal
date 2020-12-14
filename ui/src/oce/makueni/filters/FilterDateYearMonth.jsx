@@ -4,98 +4,81 @@ import cn from 'classnames';
 import {fetch} from "../../api/Api";
 import {tCreator} from "../../translatable";
 import PropTypes from "prop-types";
+import _ from 'lodash';
+
+const sameArray = (array1, array2) =>
+  array1.length === array2.length
+  && _.difference(array1, array2).length === 0
 
 const FilterDateYearMonth = props => {
     const monthRange = range(1, 12);
-    const [selectedMonths, setSelectedMonths] = useState(monthRange);
-    const [years, setYears] = useState([]);
-    const [selectedYears, setSelectedYears] = useState([]);
+    const [allYears, setAllYears] = useState([]);
     const t = tCreator(props.translations);
 
+    const {ep} = props;
+    const years = (props.years && props.years.length > 0) ? props.years : allYears;
+    const months = (props.months && props.months.length > 0) ? props.months : monthRange;
+
     /**
-     * When loading endpoint, set years and selected years
+     * Retrieve allYears from the API.
      */
     useEffect(() => {
-        fetch(props.ep).then(data => {
-            const years = data.map(pluck('_id'));
-            setYears(years);
-            setSelectedYears(years);
+        fetch(ep).then(data => {
+            const years = data.map(pluck('_id')).sort();
+            setAllYears(years);
         });
-    }, [props.ep]);
-
-    /**
-     * When resetting year, reset both selected years and months
-     */
-    useEffect(() => {
-        if (props.year === undefined) {
-            setSelectedYears(years);
-            setSelectedMonths(monthRange);
-        }
-    }, [props.year, props.month, props.ep]);
-
-    /**
-     * When selection of years/months change, invoke onChange on parent
-     */
-    useEffect(() => {
-        if (selectedYears.length === 0) {
-            return;
-        }
-        if (selectedYears.length === 1) {
-            props.onChange({month: selectedMonths, year: selectedYears});
-        } else {
-            props.onChange({month: [], year: selectedYears});
-        }
-    }, [selectedYears, selectedMonths]);
+    }, [ep]);
 
     const showMonths = () => {
-        if (years === undefined) {
-            return false;
-        }
-        return selectedYears.filter(x => years.includes(x)).length === 1;
-    }
+        return years.filter(x => allYears.includes(x)).length === 1;
+    };
+
+    const handleOnChange = (years, months) => props.onChange({
+        year: sameArray(years, allYears) ? [] : years,
+        month: (years.length > 1 || sameArray(months, monthRange)) ? [] : months
+    });
 
     const monthsBar = () => {
-        return monthRange.map(month => (<a
-            key={month}
-            className={cn('col-md-3', {active: selectedMonths.includes(month)})}
-            onClick={() => {
-                selectedMonths.includes(month) ? setSelectedMonths(selectedMonths.filter(item => item !== month))
-                    : setSelectedMonths([...selectedMonths, month]);
-            }}
-        >
-            <i className="glyphicon glyphicon-ok-circle"/> {t(`general:months:${month}`)}
-        </a>));
-    }
+        return monthRange.map(month => {
+            const included = months.includes(month);
+            return (<a
+              key={month}
+              className={cn('col-md-3', {active: included})}
+              onClick={() => handleOnChange(
+                  years,
+                  included
+                    ? months.filter(item => item !== month)
+                    : [...months, month]
+              )}>
+                <i className="glyphicon glyphicon-ok-circle"/> {t(`general:months:${month}`)}
+            </a>)
+        });
+    };
 
     const yearsBar = () => {
-        const toggleYear = year => {
-            selectedYears.includes(year) ? setSelectedYears(selectedYears.filter(item => item !== year))
-                : setSelectedYears([...selectedYears, year]);
-        };
+        const toggleYear = year => handleOnChange(
+            years.includes(year)
+              ? years.filter(item => item !== year)
+              : [...years, year],
+            months
+        );
 
-        const toggleOthersYears = year => {
-            setSelectedYears(selectedYears.length === 1 && selectedYears.includes(year) ? years : [year]);
-        };
+        const toggleOthersYears = year => handleOnChange(
+            years.length === 1 && years.includes(year) ? [] : [year],
+            months
+        );
 
-        return years.sort()
+        return allYears
             .map(year =>
                 (<a
                     key={year}
-                    className={cn('col-md-3', {active: selectedYears.includes(year)})}
+                    className={cn('col-md-3', {active: years.includes(year)})}
                     onDoubleClick={() => toggleOthersYears(year)}
                     onClick={e => (e.shiftKey ? toggleOthersYears(year) : toggleYear(year))}
                 >
                     <i className="glyphicon glyphicon-ok-circle"/> {year}
-                </a>))
-            .reduce((arr, item) => {
-                arr.push(item);
-                return arr;
-            }, []);
-    }
-
-    if (years === undefined) {
-        return null;
-    }
+                </a>));
+    };
 
     return (<div className="date-filter">
         <div className="row years-bar" role="navigation">
@@ -115,7 +98,7 @@ const FilterDateYearMonth = props => {
             : null
         }
     </div>);
-}
+};
 
 FilterDateYearMonth.propTypes = {
     translations: PropTypes.object.isRequired,
