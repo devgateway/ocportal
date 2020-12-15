@@ -315,6 +315,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
         Tender tender = tenderUpdates.getTender();
 
         text.add(String.format("%s: %s", getMessage(locale, "tenderName"), tender.getTitle()));
+        text.add(String.format("%s: %s", getMessage(locale, "tenderId"), tender.getTenderNumber()));
 
         SimpleDateFormat sdf = new SimpleDateFormat(DBConstants.DATE_FORMAT);
 
