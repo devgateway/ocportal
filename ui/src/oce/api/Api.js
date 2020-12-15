@@ -3,7 +3,19 @@ import {API_ROOT} from "../state/oce-state";
 import {fetchEP} from "../tools";
 
 export const getProject = async params => {
-  const rawData = await fetch('/makueni/project/id/' + params.id);
+  return await fetch('/makueni/project/id/' + params.id);
+}
+
+export const getFeedback = async page => {
+  return await fetch('/feedback?page=' + page);
+}
+
+export const postFeedback = async postData => {
+  return await fetch('/postFeedback', postData);
+}
+
+export const getPurchaseRequisition = async params => {
+  const rawData = await fetch('/makueni/purchaseReq/id/' + params.id);
   return rawData;
 }
 
