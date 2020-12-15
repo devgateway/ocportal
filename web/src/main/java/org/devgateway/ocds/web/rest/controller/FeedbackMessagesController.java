@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -127,10 +126,9 @@ public class FeedbackMessagesController {
         }
     }
 
-    @PostMapping(value = "/api/postFeedback",
-            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/postFeedback", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<?> postFeedback(@RequestBody FeedbackMessageSubmitWrapper message) {
+    public ResponseEntity<?> postFeedback(FeedbackMessageSubmitWrapper message) {
 
         FeedbackMessage fm;
 

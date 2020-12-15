@@ -2,6 +2,23 @@ import URI from "urijs";
 import {API_ROOT} from "../state/oce-state";
 import {fetchEP} from "../tools";
 
+export const getProject = async params => {
+  return await fetch('/makueni/project/id/' + params.id);
+}
+
+export const getFeedback = async page => {
+  return await fetch('/feedback?page=' + page);
+}
+
+export const postFeedback = async postData => {
+  return await fetch('/postFeedback', postData);
+}
+
+export const getPurchaseRequisition = async params => {
+  const rawData = await fetch('/makueni/purchaseReq/id/' + params.id);
+  return rawData;
+}
+
 export const getTenders = async params => {
   const rawData = await fetch('/makueni/tenders', params);
   const data = rawData.map(datum => {
@@ -9,7 +26,7 @@ export const getTenders = async params => {
         tender;
     if (datum.projects !== undefined && datum.projects.tenderProcesses !== undefined
         && datum.projects.tenderProcesses.tender !== undefined) {
-      tender = { purchaseReqId: datum.projects.tenderProcesses._id, ...datum.projects.tenderProcesses.tender[0] };
+      tender = {purchaseReqId: datum.projects.tenderProcesses._id, ...datum.projects.tenderProcesses.tender[0]};
     }
     if (datum.projects !== undefined) {
       project = {

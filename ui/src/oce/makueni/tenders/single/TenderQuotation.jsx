@@ -3,78 +3,78 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import React from "react";
-import translatable from "../../../translatable";
+import {tCreator} from "../../../translatable";
 
-class TenderQuotation extends translatable(React.Component) {
-  getFeedbackSubject() {
-    const { tenderTitle, department, fiscalYear } = this.props;
+const TenderQuotation = (props) => {
+
+  const {data, isFeatureVisible} = props;
+  const t = tCreator(props.translations);
+  const {currencyFormatter, formatDate} = props.styling.tables;
+
+  const getFeedbackSubject = () => {
+    const {tenderTitle, department, fiscalYear} = props;
 
     let metadata;
     if (department !== undefined) {
       metadata = " - " + tenderTitle
-        + " - " + department.label
-        + " - " + fiscalYear.name;
+          + " - " + department.label
+          + " - " + fiscalYear.name;
     }
-    return escape(this.t("tenderQuotation:subject") + metadata);
+    return escape(t("tenderQuotation:subject") + metadata);
   }
 
-  render() {
-    const { data, isFeatureVisible } = this.props;
-    const { currencyFormatter, formatDate } = this.props.styling.tables;
-
-    if (data === undefined) {
-      return (<NoDataMessage translations={this.props.translations}/>);
-    }
-
-    const tenderQuotationEvaluation = data[0];
-
+  const getQuotationView = (tenderQuotationEvaluation) => {
     return (<div>
       <div className="row">
         {isFeatureVisible("publicView.tenderQuotationEvaluation.closingDate")
-        && <Item label={this.t("tenderQuotation:closingDate")} value={formatDate(tenderQuotationEvaluation.closingDate)}
-                 col={6} />}
+        && <Item label={t("tenderQuotation:closingDate")} value={formatDate(tenderQuotationEvaluation.closingDate)}
+                 col={6}/>}
       </div>
 
       {
         tenderQuotationEvaluation.bids !== undefined && isFeatureVisible("publicView.tenderQuotationEvaluation.bids")
-          ? <div>
-            <div className="row padding-top-10">
-              <div className="col-md-12 sub-title">{this.t("tenderQuotation:bids")}
-                ({tenderQuotationEvaluation.bids.length})
-              </div>
-            </div>
-
-            {
-              tenderQuotationEvaluation.bids.map(bids => <div key={bids._id} className="box">
-                <div className="row">
-                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.label")
-                  && <Item label={this.t("tenderQuotation:bids:supplierLabel")} value={bids.supplier.label} col={6} />}
-                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.code")
-                  && <Item label={this.t("tenderQuotation:bids:supplierCode")} value={bids.supplier.code} col={6} />}
-                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierScore")
-                  && <Item label={this.t("tenderQuotation:bids:supplierScore")} value={bids.supplierScore} col={3} />}
-                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierRanking")
-                  && <Item label={this.t("tenderQuotation:bids:supplierRanking")} value={bids.supplierRanking} col={3} />}
-                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.quotedAmount")
-                  && <Item label={this.t("tenderQuotation:bids:quotedAmount")} value={currencyFormatter(bids.quotedAmount)} col={3} />}
-                  {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierResponsiveness")
-                  && <Item label={this.t("tenderQuotation:bids:supplierResponsiveness")} value={bids.supplierResponsiveness} col={3} />}
+            ? <div>
+              <div className="row padding-top-10">
+                <div className="col-md-12 sub-title">{t("tenderQuotation:bids")}
+                  ({tenderQuotationEvaluation.bids.length})
                 </div>
-              </div>)
-            }
-          </div>
-          : null
+              </div>
+
+              {
+                tenderQuotationEvaluation.bids.map(bids => <div key={bids._id} className="box">
+                  <div className="row">
+                    {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.label")
+                    && <Item label={t("tenderQuotation:bids:supplierLabel")} value={bids.supplier.label} col={6}/>}
+                    {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplier.code")
+                    && <Item label={t("tenderQuotation:bids:supplierCode")} value={bids.supplier.code} col={6}/>}
+                    {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierScore")
+                    && <Item label={t("tenderQuotation:bids:supplierScore")} value={bids.supplierScore} col={3}/>}
+                    {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierRanking")
+                    && <Item label={t("tenderQuotation:bids:supplierRanking")} value={bids.supplierRanking} col={3}/>}
+                    {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.quotedAmount")
+                    && <Item label={t("tenderQuotation:bids:quotedAmount")} value={currencyFormatter(bids.quotedAmount)}
+                             col={3}/>}
+                    {isFeatureVisible("publicView.tenderQuotationEvaluation.bids.supplierResponsiveness")
+                    && <Item label={t("tenderQuotation:bids:supplierResponsiveness")} value={bids.supplierResponsiveness}
+                             col={3}/>}
+                  </div>
+                </div>)
+              }
+            </div>
+            : null
       }
 
       <div className="row">
         {isFeatureVisible("publicView.tenderQuotationEvaluation.formDocs")
-        && <Item label={this.t("tenderQuotation:docs")} col={12}>
-          <FileDownloadLinks files={tenderQuotationEvaluation.formDocs} useDash />
+        && <Item label={t("tenderQuotation:docs")} col={12}>
+          <FileDownloadLinks files={tenderQuotationEvaluation.formDocs} useDash/>
         </Item>
         }
       </div>
     </div>);
   }
+
+  return (data === undefined ? <NoDataMessage translations={props.translations}/> : getQuotationView(data[0]));
 }
 
 export default fmConnect(TenderQuotation);
