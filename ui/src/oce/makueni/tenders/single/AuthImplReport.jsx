@@ -3,6 +3,7 @@ import {Item} from "./Item";
 import ImplReport from "./ImplReport";
 import PropTypes from "prop-types";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const AuthImplReport = (props) => {
 
@@ -25,16 +26,12 @@ const AuthImplReport = (props) => {
 }
 
 AuthImplReport.propTypes = {
+  ...defaultSingleTenderTabTypes,
   childElements: PropTypes.func,
-  styling: PropTypes.object.isRequired,
-  fiscalYear: PropTypes.object.isRequired,
-  department: PropTypes.object.isRequired,
   reportName: PropTypes.string.isRequired,
   fmPrefix: PropTypes.string.isRequired,
-  translations: PropTypes.object.isRequired,
-  data: PropTypes.array,
-  isFeatureVisible: PropTypes.func.isRequired,
-  tenderTitle: PropTypes.string.isRequired,
   authChildren: PropTypes.func,
 };
+
+
 export default AuthImplReport;

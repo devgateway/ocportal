@@ -3,6 +3,7 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import ImplReport from "./ImplReport";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const PaymentVoucher = (props) => {
 
@@ -39,5 +40,7 @@ const PaymentVoucher = (props) => {
                       childElements={childElements}/>);
 
 }
+
+PaymentVoucher.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(PaymentVoucher);

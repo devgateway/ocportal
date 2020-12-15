@@ -4,6 +4,7 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const Contract = (props) => {
 
@@ -83,5 +84,8 @@ const Contract = (props) => {
 
   return (data === undefined ? <NoDataMessage translations={props.translations}/> : getContract(data[0]));
 }
+
+
+Contract.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(Contract);

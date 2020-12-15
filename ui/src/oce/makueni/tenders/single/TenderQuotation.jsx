@@ -4,6 +4,7 @@ import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import React from "react";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const TenderQuotation = (props) => {
 
@@ -76,5 +77,7 @@ const TenderQuotation = (props) => {
 
   return (data === undefined ? <NoDataMessage translations={props.translations}/> : getQuotationView(data[0]));
 }
+
+TenderQuotation.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(TenderQuotation);

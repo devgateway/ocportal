@@ -4,6 +4,7 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const PurchaseReq = (props) => {
   const {data, isFeatureVisible} = props;
@@ -101,5 +102,7 @@ const PurchaseReq = (props) => {
 
   return (data === undefined ? <NoDataMessage translations={this.props.translations}/> : getPurchaseReq());
 }
+
+PurchaseReq.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(PurchaseReq);

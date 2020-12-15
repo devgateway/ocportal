@@ -5,6 +5,7 @@ import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import AuthImplReport from "./AuthImplReport";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const InspectionReport = (props) => {
 
@@ -73,5 +74,8 @@ const InspectionReport = (props) => {
                           fmPrefix={"publicView.inspectionReport"} authChildren={authChildren}
                           childElements={childElements}/>);
 }
+
+
+InspectionReport.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(InspectionReport);

@@ -16,6 +16,7 @@ import InspectionReport from "./InspectionReport";
 import PMCReport from "./PMCReport";
 import MEReport from "./MEReport";
 import PaymentVoucher from "./PaymentVoucher";
+import PropTypes from "prop-types";
 
 const PurchaseReqView = (props) => {
 
@@ -223,6 +224,15 @@ const PurchaseReqView = (props) => {
     </div>
   </div>);
 
+}
+
+PurchaseReqView.propTypes = {
+  id: PropTypes.number.isRequired,
+  navigate: PropTypes.func.isRequired,
+  isFeatureVisible: PropTypes.func.isRequired,
+  styling: PropTypes.object.isRequired,
+  translations: PropTypes.object.isRequired,
+  onSwitch: PropTypes.func.isRequired
 }
 
 export default fmConnect(PurchaseReqView);

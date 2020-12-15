@@ -4,6 +4,7 @@ import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
 import PropTypes from "prop-types";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const ImplReport = (props) => {
   const {department, reportName, fmPrefix, childElements} = props;
@@ -62,16 +63,10 @@ const ImplReport = (props) => {
 }
 
 ImplReport.propTypes = {
-  styling: PropTypes.object.isRequired,
-  fiscalYear: PropTypes.object.isRequired,
-  department: PropTypes.object.isRequired,
+  ...defaultSingleTenderTabTypes,
   reportName: PropTypes.string.isRequired,
   fmPrefix: PropTypes.string.isRequired,
   childElements: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired,
-  data: PropTypes.array,
-  isFeatureVisible: PropTypes.func.isRequired,
-  tenderTitle: PropTypes.string.isRequired
 };
 
 export default ImplReport;
