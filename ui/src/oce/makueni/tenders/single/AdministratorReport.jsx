@@ -1,16 +1,14 @@
 import React from 'react';
-import AuthImplReport from './AuthImplReport';
+import AuthImplReport from "./AuthImplReport";
+import {tCreator} from "../../../translatable";
 import fmConnect from "../../../fm/fm";
 
-class AdministratorReport extends AuthImplReport {
+const AdministratorReport = (props) => {
 
-   getReportName() {
-      return this.t("administratorReport:reportName");
-   }
+   const t = tCreator(props.translations);
 
-   getFMPrefix() {
-      return "publicView.administratorReport"
-   }
+   return (<AuthImplReport {...props} reportName={t("administratorReport:reportName")}
+                           fmPrefix={"publicView.administratorReport"}/>);
 }
 
 export default fmConnect(AdministratorReport);
