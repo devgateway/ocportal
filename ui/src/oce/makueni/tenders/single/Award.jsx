@@ -4,6 +4,7 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const Award = (props) => {
   const {tenderTitle, department, fiscalYear} = props;
@@ -59,5 +60,7 @@ const Award = (props) => {
 
   return (data === undefined ? <NoDataMessage translations={props.translations}/> : getAward(data[0]));
 }
+
+Award.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(Award);

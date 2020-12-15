@@ -4,6 +4,7 @@ import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
 import NoDataMessage from "./NoData";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const ProfessionalOpinion = (props) => {
   const t = tCreator(props.translations);
@@ -56,5 +57,7 @@ const ProfessionalOpinion = (props) => {
 
   return (data === undefined ? <NoDataMessage translations={props.translations}/> : getProfessionalOpinion(data[0]));
 }
+
+ProfessionalOpinion.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(ProfessionalOpinion);

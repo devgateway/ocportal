@@ -4,6 +4,7 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const Notification = (props) => {
   const t = tCreator(props.translations);
@@ -61,5 +62,7 @@ const Notification = (props) => {
 
   return (data === undefined ? <NoDataMessage translations={props.translations}/> : getNotification(data[0]))
 }
+
+Notification.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(Notification);

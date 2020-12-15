@@ -4,6 +4,7 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const Tender = (props) => {
   const getFeedbackSubject = () => {
@@ -139,5 +140,7 @@ const Tender = (props) => {
       <NoDataMessage translations={this.props.translations}/> : getTenderView(data[0]));
 
 }
+
+Tender.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(Tender);

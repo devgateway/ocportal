@@ -3,7 +3,7 @@ import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import {tCreator} from "../../../translatable";
 import AuthImplReport from "./AuthImplReport";
-import PropTypes from "prop-types";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const PMCReport = (props) => {
 
@@ -78,14 +78,6 @@ const PMCReport = (props) => {
                           childElements={childElements}/>);
 }
 
-PMCReport.propTypes = {
-  styling: PropTypes.object.isRequired,
-  fiscalYear: PropTypes.object.isRequired,
-  department: PropTypes.object.isRequired,
-  translations: PropTypes.object.isRequired,
-  data: PropTypes.array,
-  isFeatureVisible: PropTypes.func.isRequired,
-  tenderTitle: PropTypes.string.isRequired,
-};
+PMCReport.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(PMCReport);

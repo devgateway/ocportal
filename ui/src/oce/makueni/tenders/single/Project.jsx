@@ -4,6 +4,7 @@ import fmConnect from "../../../fm/fm";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {getProject} from "../../../api/Api";
 import {tCreator} from "../../../translatable";
+import PropTypes from "prop-types";
 
 const Project = (props) => {
 
@@ -80,8 +81,16 @@ const Project = (props) => {
             </div>
           </div>
           : null
-      }
-    </div>);
+    }
+  </div>);
+}
+
+Project.propTypes = {
+  id: PropTypes.number.isRequired,
+  navigate: PropTypes.func.isRequired,
+  isFeatureVisible: PropTypes.func.isRequired,
+  styling: PropTypes.object.isRequired,
+  translations: PropTypes.object.isRequired,
 }
 
 export default fmConnect(Project);

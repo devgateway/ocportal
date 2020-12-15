@@ -3,6 +3,7 @@ import ImplReport from './ImplReport';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import {tCreator} from "../../../translatable";
+import defaultSingleTenderTabTypes from "./singleUtil";
 
 const MEReport = (props) => {
 
@@ -94,5 +95,7 @@ const MEReport = (props) => {
                       childElements={childElements}/>);
 
 }
+
+MEReport.propTypes = defaultSingleTenderTabTypes;
 
 export default fmConnect(MEReport);
