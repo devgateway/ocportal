@@ -14,19 +14,19 @@ class PaginatedTable extends Visualization {
     const { dataEP, countEP, filters, years, months } = this.props;
 
     let data = new URI(dataEP)
-      .addSearch(filters.toJS())
+      .addSearch(filters)
       .addSearch('pageSize', pageSize)
       .addSearch('pageNumber', page - 1);
 
-    let count = new URI(countEP).addSearch(filters.toJS());
+    let count = new URI(countEP).addSearch(filters);
 
     if(years) {
-      data = data.addSearch('year', years.toArray());
-      count = count.addSearch('year', years.toArray());
+      data = data.addSearch('year', years);
+      count = count.addSearch('year', years);
     }
     if(months) {
-      data.addSearch('month', months.toArray())
-      count = count.addSearch('month', months.toArray());
+      data.addSearch('month', months)
+      count = count.addSearch('month', months);
     }
 
     return [

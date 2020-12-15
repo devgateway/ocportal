@@ -2,6 +2,7 @@ import {tCreator} from '../../translatable';
 import React, {useEffect, useState} from "react";
 import {fetch} from "../../api/Api";
 import {Checkbox, ControlLabel, FormGroup} from "react-bootstrap";
+import './styles.css';
 
 const MultipleSelect = props => {
 
@@ -36,7 +37,7 @@ const MultipleSelect = props => {
 
   return (
     <FormGroup>
-      <ControlLabel>
+      <ControlLabel className={'multiple-select-label'}>
         Selected
         <span className="count">({selectedCount}/{totalOptions})</span>
         <div className="pull-right select-all-none">

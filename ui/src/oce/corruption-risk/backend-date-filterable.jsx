@@ -9,12 +9,12 @@ class BackendDateFilterable extends React.PureComponent {
   }
 
   decorateFilters({ filters, years, months }) {
-    const monthly = years.count() === 1;
+    const monthly = years.length === 1;
     return {
       ...filters,
       year: years,
       monthly: monthly,
-      month: monthly && months.count() !== 12 ? months : new Set()
+      month: monthly && months.length !== 12 ? months : []
     };
   }
 

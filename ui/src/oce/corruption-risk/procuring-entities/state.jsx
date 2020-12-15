@@ -1,4 +1,3 @@
-import { Set } from 'immutable';
 import { CRD, datefulFilters, API_ROOT } from '../../state/oce-state';
 
 export const PEIds = CRD.input({
@@ -8,8 +7,10 @@ export const PEIds = CRD.input({
 export const PEsFilters = CRD.mapping({
   name: 'PEsFilters',
   deps: [datefulFilters, PEIds],
-  mapper: (filters, PEId) =>
-    filters.update('procuringEntityId', Set(), PEIds => PEIds.add(PEId))
+  mapper: (filters, PEId) => ({
+    ...filters,
+    procuringEntityId: (filters.procuringEntityId || []).concat(PEId)
+  })
 });
 
 const TendersCountEP = CRD.input({

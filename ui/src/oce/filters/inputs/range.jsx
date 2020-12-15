@@ -101,7 +101,11 @@ export const RemoteRange = ({ep, minProperty, maxProperty, ...otherProps}) => {
         }));
   }, [minProperty, maxProperty, ep]);
 
-  return <Range min={state.min} max={state.max} {...otherProps} />;
+  if (state.min !== undefined && state.max !== undefined) {
+    return <Range min={state.min} max={state.max} {...otherProps} />;
+  } else {
+    return null;
+  }
 };
 
 RemoteRange.propTypes = {

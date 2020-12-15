@@ -1,9 +1,9 @@
 import React from "react";
 import cn from 'classnames';
 import URI from 'urijs';
-import {Map, Set} from 'immutable';
+import {Map} from 'immutable';
 import PropTypes from 'prop-types';
-import {cacheFn, debounce, fetchJson, pluck, range} from '../tools';
+import {cacheFn, debounce, fetchJson, range} from '../tools';
 import OverviewPage from './overview-page';
 import CorruptionTypePage from './corruption-type';
 import IndividualIndicatorPage from './individual-indicator';
@@ -18,9 +18,7 @@ import BuyerPage from './buyers/single';
 import Filters from './filters';
 import LandingPopup from './landing-popup';
 import {LOGIN_URL} from './constants';
-// eslint-disable-next-line no-unused-vars
-// noinspection ES6UnusedImports
-import style from './style.scss';
+import './style.scss';
 import Sidebar from './sidebar';
 import {filters as CRDFilters} from '../state/oce-state';
 
@@ -34,11 +32,8 @@ class CorruptionRiskDashboard extends React.Component {
         isAdmin: false,
       },
       indicatorTypesMapping: {},
-      currentFiltersState: Map(),
-      appliedFilters: Map(),
+      filters: {},
       filterBoxIndex: null,
-      allMonths: range(1, 12),
-      allYears: [],
       width: 0,
       data: Map(),
       showLandingPopup: !localStorage.alreadyVisited,
@@ -52,18 +47,16 @@ class CorruptionRiskDashboard extends React.Component {
 
     localStorage.alreadyVisited = true;
 
-    this.destructFilters = cacheFn(filters => ({
-      filters: filters.delete('years')
-      .delete('months'),
-      years: filters.get('years', Set()),
-      months: filters.get('months', Set()),
+    this.destructFilters = cacheFn(({year, month, ...otherFilters}) => ({
+      datelessFilters: otherFilters,
+      years: year || [],
+      months: (month == null || month.length === 0) ? range(1,12) : month
     }));
   }
 
   componentDidMount() {
     this.fetchUserInfo();
     this.fetchIndicatorTypesMapping();
-    this.fetchYears();
 
     // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({
@@ -175,21 +168,17 @@ class CorruptionRiskDashboard extends React.Component {
   wireProps(_slug) {
     const slug = Array.isArray(_slug) ? _slug : [_slug];
     const translations = this.getTranslations();
-    const { appliedFilters, allYears, width } = this.state;
-    const { filters, years: selectedYears, months } = this.destructFilters(appliedFilters);
-    const years = Set(allYears)
-    .equals(selectedYears) ?
-      Set() :
-      selectedYears;
+    const { filters, width } = this.state;
+    const { datelessFilters, years, months } = this.destructFilters(filters);
 
     return {
       translations,
       data: this.state.data.getIn(slug, Map()),
       requestNewData: (path, newData) =>
         this.setState({ data: this.state.data.setIn(slug.concat(path), newData) }),
-      filters,
+      filters: datelessFilters,
       years,
-      monthly: years.count() === 1,
+      monthly: years.length === 1,
       months,
       width,
     };
@@ -218,23 +207,6 @@ class CorruptionRiskDashboard extends React.Component {
   fetchIndicatorTypesMapping() {
     fetchJson('/api/indicatorTypesMapping')
     .then(data => this.setState({ indicatorTypesMapping: data }));
-  }
-
-  fetchYears() {
-    fetchJson('/api/tendersAwardsYears')
-    .then((data) => {
-      const years = data.map(pluck('_id'));
-      const { allMonths, currentFiltersState, appliedFilters } = this.state;
-      this.setState({
-        currentFiltersState: currentFiltersState
-        .set('years', Set(years))
-        .set('months', Set(allMonths)),
-        appliedFilters: appliedFilters
-        .set('years', Set(years))
-        .set('months', Set(allMonths)),
-        allYears: years,
-      });
-    });
   }
 
   loginBox() {
@@ -305,8 +277,8 @@ class CorruptionRiskDashboard extends React.Component {
 
   render() {
     const {
-      filterBoxIndex, currentFiltersState, appliedFilters, data,
-      indicatorTypesMapping, allYears, allMonths, showLandingPopup,
+      filterBoxIndex, filters, data,
+      indicatorTypesMapping, showLandingPopup,
       disabledApiSecurity
     } = this.state;
 
@@ -342,22 +314,17 @@ class CorruptionRiskDashboard extends React.Component {
         </header>
 
         <Filters
-          onUpdate={newState => this.setState({ currentFiltersState: newState })}
-          onApply={filtersToApply => {
+          onChange={filtersToApply => {
             CRDFilters.assign('CRD Dash', filtersToApply);
             this.setState({
               filterBoxIndex: null,
-              appliedFilters: filtersToApply,
-              currentFiltersState: filtersToApply,
+              filters: filtersToApply
             });
           }}
           translations={translations}
           currentBoxIndex={filterBoxIndex}
           requestNewBox={index => this.setState({ filterBoxIndex: index })}
-          state={currentFiltersState}
-          appliedFilters={appliedFilters}
-          allYears={allYears}
-          allMonths={allMonths}
+          filters={filters}
         />
 
         <Sidebar
@@ -369,7 +336,6 @@ class CorruptionRiskDashboard extends React.Component {
           data={data}
           requestNewData={(path, newData) =>
             this.setState({ data: this.state.data.setIn(path, newData) })}
-          allYears={allYears}
           styling={this.props.styling}
         />
         <div className="col-sm-offset-3 col-md-9 col-sm-10 content">

@@ -150,9 +150,9 @@ class CorruptionType extends translatable(CRDPage){
       <div className="page-corruption-type">
         <h2 className="page-header">{this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}</h2>
         <p className="introduction" dangerouslySetInnerHTML={{__html: this.t(`crd:corruptionType:${corruptionType}:introduction`)}}/>
-        {groupBy3(indicators).map(row => {
+        {groupBy3(indicators).map((row, index) => {
            return (
-             <div className="row">
+             <div className="row" key={index}>
                {row.map(indicator => {
                   const indicatorName = this.t(`crd:indicators:${indicator}:name`);
                   const indicatorDescription = this.t(`crd:indicators:${indicator}:shortDescription`);
@@ -188,6 +188,7 @@ class CorruptionType extends translatable(CRDPage){
           </h3>
           <p className="introduction">{this.t(`crd:corruptionType:${corruptionType}:crosstab`)}</p>
           <Crosstab
+            styling={styling}
             filters={filters}
             years={years}
             monthly={monthly}

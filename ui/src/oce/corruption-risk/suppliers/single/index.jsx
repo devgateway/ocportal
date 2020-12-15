@@ -148,11 +148,17 @@ class Supplier extends CRDPage {
     this.state = this.state || {};
 
     this.injectSupplierFilter = cacheFn((filters, supplierId) => {
-      return filters.update('supplierId', Set(), supplierIds => supplierIds.add(supplierId));
+      return {
+        ...filters,
+        supplierId: (filters.supplierId || []).concat(supplierId)
+      };
     });
 
-    this.injectBidderFilter = cacheFn((filters, supplierId) => {
-      return filters.update('bidderId', Set(), supplierIds => supplierIds.add(supplierId));
+    this.injectBidderFilter = cacheFn((filters, bidderId) => {
+      return {
+        ...filters,
+        bidderId: (filters.bidderId || []).concat(bidderId)
+      };
     });
 
     this.groupIndicators = cacheFn((indicatorTypesMapping) => {

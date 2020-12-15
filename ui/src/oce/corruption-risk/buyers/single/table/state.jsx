@@ -23,10 +23,11 @@ export const pageSize = PEState.input({
 const filters = PEState.mapping({
   name: 'filters',
   deps: [PEFilters, page, pageSize],
-  mapper: (PEFilters, page, pageSize) =>
-    PEFilters
-      .set('pageSize', pageSize)
-      .set('pageNumber', page - 1)
+  mapper: (PEFilters, page, pageSize) => ({
+    ...PEFilters,
+    pageSize,
+    pageNumber: page - 1
+  })
 });
 
 const procurementsRaw = PEState.remote({

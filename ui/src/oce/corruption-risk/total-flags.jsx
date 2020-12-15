@@ -7,8 +7,6 @@ import {Set} from 'immutable';
 import translatable from '../translatable';
 import PropTypes from 'prop-types';
 
-const EMPTY_SET = Set();
-
 class TotalFlagsChart extends backendYearFilterable(Chart) {
   getData() {
     const data = super.getData();
@@ -120,7 +118,7 @@ class TotalFlags extends translatable(React.Component) {
   }
 
   render() {
-    const { data, requestNewData, translations, filters, years, months, monthly, allYears } = this.props;
+    const { data, requestNewData, translations, filters, years, months, monthly } = this.props;
     const { width } = this.state;
 
     if (!width) return null;
@@ -131,8 +129,7 @@ class TotalFlags extends translatable(React.Component) {
           requestNewData={(_, data) => requestNewData(['contractCounter'], data)}
           translations={translations}
           filters={filters}
-          years={Set(allYears)
-          .equals(years) ? EMPTY_SET : years}
+          years={years}
           months={months}
           monthly={monthly}
           styling={this.props.styling}

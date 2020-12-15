@@ -1,38 +1,34 @@
-import FilterTab from '../../filters/tabs';
+import React from "react";
 import cn from 'classnames';
+import {tCreator} from "../../translatable";
 
-class FilterBox extends FilterTab {
-  isActive() {
-    console.warn(`Implement an "isActive" method for ${this.getTitle()}`);
-  }
-  
-  reset() {
-    console.warn(`Implement an "reset" method for ${this.getTitle()}`);
-  }
-  
-  render() {
-    const { open, onClick, onApply, state } = this.props;
-    return (
-      <div onClick={onClick} className={cn('filter', { open, active: this.isActive() })}>
-        <span className="box-title">
-          {this.getTitle()}
-        </span>
-        <i className="glyphicon glyphicon-menu-down"></i>
-        {open &&
-        <div className="dropdown" onClick={e => e.stopPropagation()}>
-          {this.getBox()}
-          <div className="controls">
-            <button className="btn btn-reset"
-                    onClick={this.reset.bind(this)}>{this.t('filters:reset')}</button>
-            &nbsp;
-            <button className="btn btn-apply"
-                    onClick={e => onApply(state)}>{this.t('filters:apply')}</button>
-          </div>
+const FilterBox = props => {
+  const { title, open, active, onClick, onApply, onReset, translations } = props;
+
+  const t = tCreator(translations);
+
+  return (
+    <div onClick={onClick} className={cn('filter', { open, active: active })}>
+      <span className="box-title">
+        {title}
+      </span>
+      <i className="glyphicon glyphicon-menu-down" />
+      {open &&
+      <div className="dropdown" onClick={e => e.stopPropagation()}>
+        <div className="box-content">
+          {props.children}
         </div>
-        }
+        <div className="controls">
+          <button className="btn btn-reset"
+                  onClick={onReset}>{t('filters:reset')}</button>
+          &nbsp;
+          <button className="btn btn-apply"
+                  onClick={onApply}>{t('filters:apply')}</button>
+        </div>
       </div>
-    );
-  }
-}
+      }
+    </div>
+  );
+};
 
 export default FilterBox;

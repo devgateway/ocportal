@@ -6,7 +6,7 @@ const FilterWards = ({subcounty, ...otherProps}) => {
 
   return <FilterItemTypeAhead ep='/makueni/filters/wards'
                               epParams={subcounty ? {subcountyIds: subcounty} : {}} {...otherProps}
-                              idFunc={(obj) => obj.id} multiple={true}/>
+                              mapper={obj => ({_id: obj.id, label: obj.label})} multiple={true}/>
 }
 
 FilterWards.propTypes = {

@@ -66,6 +66,7 @@ class BuyerList extends PaginatedTable {
         this.props.data
           .get('data', List())
           .map(datum => datum.get('buyerId'))
+          .toArray()
       );
     }
   }

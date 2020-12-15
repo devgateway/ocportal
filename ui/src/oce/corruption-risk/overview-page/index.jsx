@@ -54,17 +54,15 @@ class CorruptionType extends CustomPopupChart {
       let dates = [];
       if (monthly) {
         dates = range(1, 12)
-        .filter(month => months.has(month))
+        .filter(month => months.includes(month))
         .map(month => this.tMonth(month, years));
 
         values = dates.map(month => (dataForType[month] ? dataForType[month].flaggedCount : 0));
-      } else if (years.count()) {
-        dates = years.sort()
-        .toArray();
+      } else if (years.length) {
+        dates = Array.from(years).sort();
         values = dates.map(year => (dataForType[year] ? dataForType[year].flaggedCount : 0));
       } else {
-        dates = Array.from(commonYears)
-        .sort();
+        dates = Array.from(commonYears).sort();
         values = dates.map(year => dataForType[year] ? dataForType[year].flaggedCount : 0);
       }
 

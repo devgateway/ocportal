@@ -207,7 +207,10 @@ export default class Contract extends CRDPage {
     };
 
     this.injectOcidFilter = cacheFn((filters, ocid) => {
-      return filters.update('ocid', Set(), ocids => ocids.add(ocid));
+      return {
+        ...filters,
+        ocid: (filters.ocid || []).concat(ocid)
+      };
     });
   }
 

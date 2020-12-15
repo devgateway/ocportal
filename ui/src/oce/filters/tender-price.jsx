@@ -6,3 +6,7 @@ const TenderPrice = ({ep = '/tenderValueInterval', ...otherProps}) => {
 }
 
 export default TenderPrice;
+
+export const FlaggedTenderPrice = props => {
+  return <TenderPrice ep='/tenderValueInterval?flagged=true' {...props} />;
+};

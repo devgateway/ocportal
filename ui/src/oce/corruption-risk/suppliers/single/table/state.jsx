@@ -23,10 +23,11 @@ export const pageSize = SupplierTableState.input({
 const filters = SupplierTableState.mapping({
   name: 'filters',
   deps: [supplierFilters, page, pageSize],
-  mapper: (supplierFilters, page, pageSize) =>
-    supplierFilters
-      .set('pageSize', pageSize)
-      .set('pageNumber', page - 1)
+  mapper: (supplierFilters, page, pageSize) => ({
+    ...supplierFilters,
+    pageSize,
+    pageNumber: page - 1
+  })
 });
 
 const supplierProcurementsRaw = SupplierTableState.remote({

@@ -13,12 +13,10 @@ export const PEId = PEState.input({
 export const PEFilters = PEState.mapping({
   name: 'PEFilters',
   deps: [datefulFilters, PEId],
-  mapper: (filters, PEId) =>
-    filters.update(
-      'buyerId',
-      Set(),
-      PEIds => PEIds.add(PEId)
-    )
+  mapper: (filters, PEId) => ({
+    ...filters,
+    buyerId: (filters.buyerId || []).concat(PEId)
+  })
 });
 
 const PEInfoUrl = PEState.mapping({

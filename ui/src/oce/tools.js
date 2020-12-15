@@ -1,4 +1,6 @@
 import URI from 'urijs';
+import _ from "lodash";
+
 /**
  * Returns a function that will invoke `funcName` property on its argument
  * @param {Function} funcName
@@ -132,3 +134,7 @@ export const fetchEP = url => fetch(url.clone().query(''), {
   credentials: 'same-origin',
   body: url.query(),
 }).then(callFunc('json'));
+
+export const sameArray = (array1, array2) =>
+  array1.length === array2.length
+  && _.difference(array1, array2).length === 0;

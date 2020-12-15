@@ -10,7 +10,7 @@ export class FlaggedNrMapping extends Mapping {
       mapper: (indicatorIds, filters, indicatorTypesMapping) => Promise.all(
         indicatorIds.map(indicatorId =>
           fetchEP(
-            new URI(`${API_ROOT}/flags/${indicatorId}/count`).addSearch(filters.toJS())
+            new URI(`${API_ROOT}/flags/${indicatorId}/count`).addSearch(filters)
           ).then(data => {
             if (!data[0]) return null;
             return {

@@ -8,8 +8,10 @@ export const BuyersIds = CRD.input({
 export const BuyersFilters = CRD.mapping({
   name: 'BuyersFilters',
   deps: [datefulFilters, BuyersIds],
-  mapper: (filters, PEId) =>
-    filters.update('buyerId', Set(), PEIds => PEIds.add(PEId))
+  mapper: (filters, PEId) => ({
+    ...filters,
+    buyerId: (filters.buyerId || []).concat(PEId)
+  })
 });
 
 const BuyersTendersCountEP = CRD.input({

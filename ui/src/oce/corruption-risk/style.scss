@@ -219,7 +219,7 @@ $borderColor: #eeeeee;
                     margin-top: 3px;
                     margin-left: -430px;
                     width: $boxWidth;
-                    height: 400px;
+                    min-height: 400px;
                     border: 2px $borderColor solid;
                     background-color: white;
                     @media (max-width: 768px) {

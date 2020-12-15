@@ -71,6 +71,7 @@ class PEList extends PaginatedTable {
         this.props.data
           .get('data', List())
           .map(datum => datum.get('procuringEntityId'))
+          .toArray()
       );
     }
   }

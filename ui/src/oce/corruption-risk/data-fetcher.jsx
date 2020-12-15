@@ -19,13 +19,13 @@ class DataFetcher extends React.PureComponent {
   fetch() {
     const { filters, endpoint, endpoints, requestNewData } = this.props;
     if (endpoint) {
-      const uri = new URI(`${API_ROOT}/${endpoint}`).addSearch(filters.toJS());
+      const uri = new URI(`${API_ROOT}/${endpoint}`).addSearch(filters);
       fetchEP(uri).then(requestNewData.bind(null, []));
     } else if (endpoints) {
       Promise.all(
         endpoints.map(endpoint =>
           fetchEP(
-            new URI(`${API_ROOT}/${endpoint}`).addSearch(filters.toJS())
+            new URI(`${API_ROOT}/${endpoint}`).addSearch(filters)
           )
         )
       ).then(requestNewData.bind(null, []));

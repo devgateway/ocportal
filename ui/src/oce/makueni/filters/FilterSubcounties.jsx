@@ -1,14 +1,13 @@
 import FilterItemTypeAhead from './FilterItemTypeAhead';
 import React from "react";
 import PropTypes from "prop-types";
-import FilterItems from "./FilterItems";
 
 const FilterSubcounties = ({...otherProps}) => {
   return <FilterItemTypeAhead ep='/makueni/filters/subcounties' {...otherProps}
-                              idFunc={(obj) => obj.id} multiple={true}/>
+                              mapper={obj => ({_id: obj.id, label: obj.label})} multiple={true}/>
 }
 
-FilterItems.propTypes = {
+FilterSubcounties.propTypes = {
   onChange: PropTypes.func.isRequired,
   translations: PropTypes.object.isRequired
 };

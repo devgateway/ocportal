@@ -6,3 +6,8 @@ const AwardValue = ({ep = '/awardValueInterval', ...otherProps}) => {
 }
 
 export default AwardValue;
+
+export const FlaggedAwardValue = props => {
+  return <AwardValue ep='/awardValueInterval?flagged=true' {...props} />;
+};
+

@@ -1,14 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {pluck, range} from '../../tools';
+import {pluck, range, sameArray} from '../../tools';
 import cn from 'classnames';
 import {fetch} from "../../api/Api";
 import {tCreator} from "../../translatable";
 import PropTypes from "prop-types";
-import _ from 'lodash';
-
-const sameArray = (array1, array2) =>
-  array1.length === array2.length
-  && _.difference(array1, array2).length === 0
 
 const FilterDateYearMonth = props => {
     const monthRange = range(1, 12);
@@ -81,7 +76,7 @@ const FilterDateYearMonth = props => {
     };
 
     return (<div className="date-filter">
-        <div className="row years-bar" role="navigation">
+        <div className="years-bar" role="navigation">
             {yearsBar()}
         </div>
 
@@ -92,7 +87,7 @@ const FilterDateYearMonth = props => {
         </div>
 
         {showMonths() === true
-            ? <div className="row months-bar" role="navigation">
+            ? <div className="months-bar" role="navigation">
                 {monthsBar()}
             </div>
             : null
