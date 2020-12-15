@@ -1,7 +1,4 @@
-import CRDPage from '../../../corruption-risk/page';
-import {mtState} from '../state';
 import cn from 'classnames';
-import {API_ROOT} from '../../../state/oce-state';
 import Tender from './Tender';
 import PurchaseReq from './PurchaseReq';
 import TenderQuotation from './TenderQuotation';
@@ -9,269 +6,223 @@ import ProfessionalOpinion from './ProfessionalOpinion';
 import Notification from './Notification';
 import Award from './Award';
 import Contract from './Contract';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import FeedbackMessageList from '../../../feedback/feedbackList';
 import AdministratorReport from './AdministratorReport';
-import InspectionReport from './InspectionReport';
-import PMCReport from './PMCReport';
-import PaymentVoucher from './PaymentVoucher';
-import MEReport from './MEReport';
 import fmConnect from "../../../fm/fm";
+import {tCreator} from "../../../translatable";
+import {getPurchaseRequisition} from "../../../api/Api";
+import InspectionReport from "./InspectionReport";
+import PMCReport from "./PMCReport";
+import MEReport from "./MEReport";
+import PaymentVoucher from "./PaymentVoucher";
 
-class PurchaseReqView extends CRDPage {
-  constructor(props) {
-    super(props);
+const PurchaseReqView = (props) => {
 
-    this.state = {
-      selected: 1
-    };
+  const [selected, setSelected] = useState(1);
+  const [visibleTabs, setVisibleTabs] = useState([]);
 
-    this.prID = mtState.input({
-      name: 'prID',
-    });
+  const [data, setData] = useState(undefined);
+  const {id, navigate, isFeatureVisible} = props;
+  const t = tCreator(props.translations);
 
-    this.prInfoUrl = mtState.mapping({
-      name: 'prInfoUrl',
-      deps: [this.prID],
-      mapper: id => `${API_ROOT}/makueni/purchaseReq/id/${id}`,
-    });
-
-    this.prInfo = mtState.remote({
-      name: 'prInfo',
-      url: this.prInfoUrl,
-    });
-    this.tabs = [
-      {
-        name: this.t("purchaseReq:tabs:tender"),
-        tab: 1,
-        fm: 'publicView.tender'
-      }, {
-        name: this.t("purchaseReq:tabs:purchaseReqs"),
-        tab: 2,
-        fm: 'publicView.tenderProcess'
-      }, {
-        name: this.t("purchaseReq:tabs:tenderEvaluation"),
-        tab: 3,
-        fm: 'publicView.tenderQuotationEvaluation'
-      }, {
-        name: this.t("purchaseReq:tabs:professionalOpinion"),
-        tab: 4,
-        fm: 'publicView.professionalOpinions'
-      }, {
-        name: this.t("purchaseReq:tabs:notification"),
-        tab: 5,
-        fm: 'publicView.awardNotification'
-      }, {
-        name: this.t("purchaseReq:tabs:award"),
-        tab: 6,
-        fm: 'publicView.awardAcceptance'
-      }, {
-        name: this.t("purchaseReq:tabs:contract"),
-        tab: 7,
-        fm: 'publicView.contract'
-      }, {
-        name: this.t("purchaseReq:tabs:adminReports"),
-        tab: 8,
-        fm: 'publicView.administratorReport'
-      }, {
-        name: this.t("purchaseReq:tabs:inspectionReports"),
-        tab: 9,
-        fm: 'publicView.inspectionReport'
-      }, {
-        name: this.t("purchaseReq:tabs:pmcReports"),
-        tab: 10,
-        fm: 'publicView.pmcReport'
-      }, {
-        name: this.t("purchaseReq:tabs:meReports"),
-        tab: 11,
-        fm: 'publicView.meReport'
-      }, {
-        name: this.t("purchaseReq:tabs:paymentVouchers"),
-        tab: 12,
-        fm: 'publicView.paymentVoucher'
-      }
-    ];
-
-    this.isActive = this.isActive.bind(this);
-    this.changeTab = this.changeTab.bind(this);
-  }
-
-  maybeTrimOcidPrefix(id) {
+  const maybeTrimOcidPrefix = (id) => {
     if (id.includes("ocds-muq5cl-")) {
       return id.replace("ocds-muq5cl-", "");
     }
     return id;
   }
 
-  componentDidMount() {
-    super.componentDidMount();
-
-    const {id} = this.props;
-
-    this.prID.assign('PR', this.maybeTrimOcidPrefix(id));
-
-    this.prInfo.addListener('PR', () => {
-      this.prInfo.getState()
-      .then(data => {
-        this.setState({
-          data: data.tenderProcesses,
-          department: data.department,
-          fiscalYear: data.fiscalYear
+  useEffect(() => {
+        getPurchaseRequisition({id: maybeTrimOcidPrefix(id)}).then(result => {
+          setData(result);
         });
-      });
-    });
+        setVisibleTabs(tabs.filter(tab => isFeatureVisible(tab.fm)));
+        if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
+          changeTab(visibleTabs[0].tab);
+        }
+      }, [id, isFeatureVisible]
+  );
 
-    const {selected} = this.state;
-    const visibleTabs = this.getVisibleTabs();
-    if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
-      this.changeTab(visibleTabs[0].tab);
+  const tabs = [
+    {
+      name: t("purchaseReq:tabs:tender"),
+      tab: 1,
+      fm: 'publicView.tender'
+    }, {
+      name: t("purchaseReq:tabs:purchaseReqs"),
+      tab: 2,
+      fm: 'publicView.tenderProcess'
+    }, {
+      name: t("purchaseReq:tabs:tenderEvaluation"),
+      tab: 3,
+      fm: 'publicView.tenderQuotationEvaluation'
+    }, {
+      name: t("purchaseReq:tabs:professionalOpinion"),
+      tab: 4,
+      fm: 'publicView.professionalOpinions'
+    }, {
+      name: t("purchaseReq:tabs:notification"),
+      tab: 5,
+      fm: 'publicView.awardNotification'
+    }, {
+      name: t("purchaseReq:tabs:award"),
+      tab: 6,
+      fm: 'publicView.awardAcceptance'
+    }, {
+      name: t("purchaseReq:tabs:contract"),
+      tab: 7,
+      fm: 'publicView.contract'
+    }, {
+      name: t("purchaseReq:tabs:adminReports"),
+      tab: 8,
+      fm: 'publicView.administratorReport'
+    }, {
+      name: t("purchaseReq:tabs:inspectionReports"),
+      tab: 9,
+      fm: 'publicView.inspectionReport'
+    }, {
+      name: t("purchaseReq:tabs:pmcReports"),
+      tab: 10,
+      fm: 'publicView.pmcReport'
+    }, {
+      name: t("purchaseReq:tabs:meReports"),
+      tab: 11,
+      fm: 'publicView.meReport'
+    }, {
+      name: t("purchaseReq:tabs:paymentVouchers"),
+      tab: 12,
+      fm: 'publicView.paymentVoucher'
     }
+  ];
+
+
+  const changeTab = (option) => {
+    setSelected(option);
   }
 
-  componentWillUnmount() {
-    this.prInfo.removeListener('PR');
-  }
 
-  isActive(option) {
-    const { selected } = this.state;
+  const isActive = (option) => {
     if (selected === undefined || selected === '') {
       return false;
     }
     return selected === option;
   }
 
-  changeTab(option) {
-    this.setState({ selected: option });
-  }
-
-  displayTab() {
-    const { selected, data, department, fiscalYear } = this.state;
-    const tenderTitle = data.tender[0].tenderTitle;
+  const displayTab = () => {
+    const tenderTitle = data.tenderProcesses.tender[0].tenderTitle;
 
     switch (selected) {
       case 1:
-        return <Tender data={data.tender} prId={data._id} department={department} fiscalYear={fiscalYear}
-                       styling={this.props.styling} translations={this.props.translations}/>;
+        return <Tender data={data.tenderProcesses.tender} prId={data._id} department={data.department}
+                       fiscalYear={data.fiscalYear}
+                       styling={props.styling} translations={props.translations}/>;
 
       case 2:
-        return <PurchaseReq data={data} department={department} fiscalYear={fiscalYear}
-                            styling={this.props.styling} translations={this.props.translations}/>;
+        return <PurchaseReq data={data.tenderProcesses} department={data.department} fiscalYear={data.fiscalYear}
+                            styling={props.styling} translations={props.translations}/>;
 
       case 3:
-        return <TenderQuotation data={data.tenderQuotationEvaluation} tenderTitle={tenderTitle}
-                                department={department} fiscalYear={fiscalYear}
-                                styling={this.props.styling} translations={this.props.translations}/>;
+        return <TenderQuotation data={data.tenderProcesses.tenderQuotationEvaluation} tenderTitle={tenderTitle}
+                                department={data.department} fiscalYear={data.fiscalYear}
+                                styling={props.styling} translations={props.translations}/>;
 
       case 4:
-        return <ProfessionalOpinion data={data.professionalOpinion} tenderTitle={tenderTitle}
-                                    department={department} fiscalYear={fiscalYear}
-                                    styling={this.props.styling} translations={this.props.translations}/>;
+        return <ProfessionalOpinion data={data.tenderProcesses.professionalOpinion} tenderTitle={tenderTitle}
+                                    department={data.department} fiscalYear={data.fiscalYear}
+                                    styling={props.styling} translations={props.translations}/>;
 
       case 5:
-        return <Notification data={data.awardNotification} tenderTitle={tenderTitle}
-                             department={department} fiscalYear={fiscalYear}
-                             styling={this.props.styling} translations={this.props.translations}/>;
+        return <Notification data={data.tenderProcesses.awardNotification} tenderTitle={tenderTitle}
+                             department={data.department} fiscalYear={data.fiscalYear}
+                             styling={props.styling} translations={props.translations}/>;
 
       case 6:
-        return <Award data={data.awardAcceptance} department={department} tenderTitle={tenderTitle}
-                      fiscalYear={fiscalYear} styling={this.props.styling} translations={this.props.translations}/>;
+        return <Award data={data.tenderProcesses.awardAcceptance} department={data.department} tenderTitle={tenderTitle}
+                      fiscalYear={data.fiscalYear} styling={props.styling} translations={props.translations}/>;
 
       case 7:
-        return <Contract data={data.contract} department={department} tenderTitle={tenderTitle}
-                         fiscalYear={fiscalYear} styling={this.props.styling} translations={this.props.translations}/>;
+        return <Contract data={data.tenderProcesses.contract} department={data.department} tenderTitle={tenderTitle}
+                         fiscalYear={data.fiscalYear} styling={props.styling} translations={props.translations}/>;
 
       case 8:
-        return <AdministratorReport data={data.administratorReports} department={department}
-                                     tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                                     styling={this.props.styling} translations={this.props.translations}/>;
+        return <AdministratorReport data={data.tenderProcesses.administratorReports} department={data.department}
+                                    tenderTitle={tenderTitle} fiscalYear={data.fiscalYear}
+                                    styling={props.styling} translations={props.translations}/>;
 
       case 9:
-        return <InspectionReport data={data.inspectionReports} department={department}
-                                     tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                                     styling={this.props.styling} translations={this.props.translations}/>;
+        return <InspectionReport data={data.tenderProcesses.inspectionReports} department={data.department}
+                                 tenderTitle={tenderTitle} fiscalYear={data.fiscalYear}
+                                 styling={props.styling} translations={props.translations}/>;
 
       case 10:
-        return <PMCReport data={data.pmcReports} department={department}
-                                 tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                                 styling={this.props.styling} translations={this.props.translations}/>;
+        return <PMCReport data={data.tenderProcesses.pmcReports} department={data.department}
+                          tenderTitle={tenderTitle} fiscalYear={data.fiscalYear}
+                          styling={props.styling} translations={props.translations}/>;
 
       case 11:
-        return <MEReport data={data.meReports} department={department}
-                         tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                         styling={this.props.styling} translations={this.props.translations}/>;
+        return <MEReport data={data.tenderProcesses.meReports} department={data.department}
+                         tenderTitle={tenderTitle} fiscalYear={data.fiscalYear}
+                         styling={props.styling} translations={props.translations}/>;
 
       case 12:
-        return <PaymentVoucher data={data.paymentVouchers} department={department}
-                          tenderTitle={tenderTitle} fiscalYear={fiscalYear}
-                          styling={this.props.styling} translations={this.props.translations}/>;
+        return <PaymentVoucher data={data.tenderProcesses.paymentVouchers} department={data.department}
+                               tenderTitle={tenderTitle} fiscalYear={data.fiscalYear}
+                               styling={props.styling} translations={props.translations}/>;
 
       default:
         throw new Error("Tab not implemented");
     }
   }
 
-  render() {
-    const { navigate } = this.props;
-    const { data } = this.state;
 
-    const visibleTabs = this.getVisibleTabs();
-
-    return (<div className="tender makueni-form">
-      <div className="row">
-        <div className="col-md-12 navigation-view" data-step="9" data-intro={this.t("purchaseReq:nav:dataIntro")}>
-          {
-            visibleTabs.map(tab => {
-              return (<a
-                  key={tab.tab}
-                  className={cn('', { active: this.isActive(tab.tab) })}
-                  onClick={() => this.changeTab(tab.tab)}
+  return (data !== undefined && <div className="tender makueni-form">
+    <div className="row">
+      <div className="col-md-12 navigation-view" data-step="9" data-intro={t("purchaseReq:nav:dataIntro")}>
+        {
+          visibleTabs.map(tab => {
+            return (<a
+                    key={tab.tab}
+                    className={cn('', {active: isActive(tab.tab)})}
+                    onClick={() => changeTab(tab.tab)}
                 >
                   {tab.name}
                 </a>
-              );
-            })
-          }
-        </div>
+            );
+          })
+        }
       </div>
+    </div>
 
-      <div className="row">
-        <a href="#!/tender" onClick={() => navigate()} className="back-link col-md-3">
+    <div className="row">
+      <a href="#!/tender" onClick={() => navigate()} className="back-link col-md-3">
         <span className="back-icon">
           <span className="previous">&#8249;</span>
         </span>
-          <span>
-            {this.t("general:goBack")}
+        <span>
+            {t("general:goBack")}
         </span>
-        </a>
+      </a>
 
-          <div className="col-md-offset-5 col-md-4">
-            <button className="btn btn-subscribe pull-right" type="submit"
-                    data-step="11"
-                    data-intro={this.t("purchaseReq:receiveAlerts:dataIntro")}
-                    onClick={() => this.props.onSwitch('alerts', data._id, data.tender[0].tenderTitle)}>
-              {this.t("purchaseReq:receiveAlerts:caption")}
-            </button>
-          </div>
+      <div className="col-md-offset-5 col-md-4">
+        <button className="btn btn-subscribe pull-right" type="submit"
+                data-step="11"
+                data-intro={t("purchaseReq:receiveAlerts:dataIntro")}
+                onClick={() => props.onSwitch('alerts', data._id, data.tenderProcesses.tender[0].tenderTitle)}>
+          {t("purchaseReq:receiveAlerts:caption")}
+        </button>
       </div>
+    </div>
+    {
+      displayTab()
+    }
 
+    <div className="row">
+      <p/>
+      <FeedbackMessageList department={data.department}/>
+    </div>
+  </div>);
 
-      {
-        data !== undefined
-          ? this.displayTab()
-          : null
-      }
-
-      <div className="row">
-        <p/>
-        <FeedbackMessageList department={this.state.department}/>
-      </div>
-    </div>);
-  }
-
-  getVisibleTabs() {
-    const { isFeatureVisible } = this.props;
-    return this.tabs.filter(tab => isFeatureVisible(tab.fm));
-  }
 }
 
 export default fmConnect(PurchaseReqView);
