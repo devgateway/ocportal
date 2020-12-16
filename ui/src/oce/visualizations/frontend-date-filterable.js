@@ -35,8 +35,10 @@ const frontendDateFilterable = (Class) => {
     }
   }
 
-  Filterable.propTypes = Filterable.propTypes || {};
-  Filterable.propTypes.years = PropTypes.array.isRequired;
+  Filterable.propTypes = {
+    ...Filterable.propTypes,
+    years: PropTypes.array.isRequired
+  };
 
   Filterable.computeYears = cacheFn((data) => {
     if (!data) return Set();

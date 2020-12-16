@@ -98,12 +98,15 @@ Chart.getMaxField = data => data.flatten()
 
 Chart.UPDATABLE_FIELDS = ['data'];
 
-Chart.propTypes.styling = PropTypes.shape({
-  charts: PropTypes.shape({
-    axisLabelColor: PropTypes.string.isRequired,
-    traceColors: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }).isRequired,
-}).isRequired;
+Chart.propTypes = {
+  ...Chart.propTypes,
+  styling: PropTypes.shape({
+    charts: PropTypes.shape({
+      axisLabelColor: PropTypes.string.isRequired,
+      traceColors: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }).isRequired,
+  }).isRequired
+};
 
 Chart.defaultProps = {
   legend: 'h',
