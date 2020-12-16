@@ -7,12 +7,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
@@ -86,6 +84,11 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);
         }
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
 
         saveTerminateButton.setVisibilityAllowed(!isTerminated()
                 && editForm.getModelObject().getDirectChildrenEntitiesNotNull().isEmpty());
@@ -124,15 +127,11 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     }
 
     @Override
-    protected BootstrapCancelButton getCancelButton() {
-        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                final T saveable = editForm.getModelObject();
-                afterSaveEntity(saveable);
-                setResponsePage(listPageClass);
-            }
-        };
+    protected void onCancel(AjaxRequestTarget target) {
+        super.onCancel(target);
+
+        final T saveable = editForm.getModelObject();
+        afterSaveEntity(saveable);
     }
 
     protected abstract AbstractTenderProcessMakueniEntity getNextForm();
@@ -152,8 +151,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
             revertToDraftModal = new ButtonContentModal(
                     "revertToDraftModal",
-                    new StringResourceModel("reactivateModal", this, null),
-                    Model.of("REACTIVATE"), Buttons.Type.Warning
+                    new StringResourceModel("reactivateModal.content", this),
+                    new StringResourceModel("reactivateModal.reactivate", this), Buttons.Type.Warning
             );
         }
         return revertToDraftModal;

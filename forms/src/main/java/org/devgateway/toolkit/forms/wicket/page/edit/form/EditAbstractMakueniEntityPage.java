@@ -9,12 +9,10 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
@@ -78,11 +76,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     }
 
     @Override
-    public boolean isDisableEditingEvent() {
-        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
-    }
-
-    @Override
     protected void onAfterRevertToDraft(AjaxRequestTarget target) {
 //       Collection<? extends AbstractMakueniEntity> allChildrenInHierarchy = getJpaService().getAllChildrenInHierarchy(
 //                editForm.getModelObject());
@@ -102,9 +95,8 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected ButtonContentModal createRevertToDraftModal() {
         ButtonContentModal buttonContentModal = new ButtonContentModal(
                 "revertToDraftModal",
-                Model.of("Rejecting to draft this entity will result in rejecting to draft"
-                        + " any other entities downstream. Proceed?"),
-                Model.of("REJECT TO DRAFT"), Buttons.Type.Warning);
+                new StringResourceModel("confirmRevertToDraftModal.content", this),
+                new StringResourceModel("confirmRevertToDraftModal.rejectToDraft", this), Buttons.Type.Warning);
         return buttonContentModal;
     }
 
@@ -162,7 +154,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         alertTerminated.setVisibilityAllowed(false);
         editForm.add(alertTerminated);
 
-        enableDisableAutosaveFields(null);
+        enableDisableAutosaveFields();
 
 //        extraStatusEntityButtons = new Fragment("extraStatusEntityButtons", "extraStatusButtons", this);
 //        entityButtonsFragment.replace(extraStatusEntityButtons);
@@ -174,8 +166,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected void addSaveButtonsPermissions(final Component button) {
         addDefaultAllButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getCommaCombinedRoles());
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+        button.setVisibilityAllowed(!isDisableEditingEvent());
     }
 
     @Override

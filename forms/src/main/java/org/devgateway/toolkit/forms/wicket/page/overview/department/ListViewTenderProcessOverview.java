@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -30,6 +30,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAwardAcceptancePage;
@@ -181,7 +182,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         if (tp.getSingleTender() != null && !StringUtils.isEmpty(tp.getSingleTender().getTitle())) {
             return StringUtils.abbreviate(tp.getSingleTender().getTitle(), 100);
         }
-        return "Tender Process " + index;
+        return new StringResourceModel("tenderProcess").setParameters(item.getIndex() + 1));
     }
 
     @Override
@@ -341,8 +342,6 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     private class TenderDetailPanel<T extends AbstractMakueniEntity> extends GenericPanel<T> {
         private final List<T> entities;
 
-        private final String tenderLabel;
-
         private final SerializableFunction<T, List<Object>> tenderInfo;
 
         private final TenderProcess tenderProcess;
@@ -352,16 +351,15 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
         private boolean multiple;
 
-        TenderDetailPanel(final String id, final List<T> entities, final String tenderLabel,
-                          final SerializableFunction<T, List<Object>> tenderInfo, final TenderProcess tenderProcess,
-                          final Class<? extends AbstractEditPage<?>> editClazz, Statusable previousStep,
-                          boolean multiple) {
+        TenderDetailPanel(final String id, final List<T> entities,
+                final SerializableFunction<T, List<Object>> tenderInfo, final TenderProcess tenderProcess,
+                final Class<? extends AbstractEditPage<?>> editClazz, Statusable previousStep,
+                boolean multiple) {
             super(id);
 
             this.multiple = multiple;
             this.entities = entities;
             this.previousStep = previousStep;
-            this.tenderLabel = tenderLabel;
             this.tenderInfo = tenderInfo;
             this.tenderProcess = tenderProcess;
             this.editClazz = editClazz;
@@ -388,7 +386,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         protected void onInitialize() {
             super.onInitialize();
 
-            add(new Label("tenderLabel", tenderLabel));
+            add(new Label("tenderLabel", new StringResourceModel(getId() + ".tenderLabel")));
 
             add(new ListView<T>("entities", new ListModel<>(entities)) {
                 @Override
@@ -407,17 +405,15 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     }
                     editTender.add(AttributeAppender.append("class", "no-text btn-" + buttonType));
 
-                    editTender.add(new TooltipBehavior(Model.of(canAccessAddNewButtons(editClazz) ? "Edit " : "View "
-                            + StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
-                            editClazz.getSimpleName().replaceAll("Edit", "").replaceAll("Page", "")),
-                            ' '))));
+                    editTender.add(new TooltipBehavior(EditViewResourceModel.of(canAccessAddNewButtons(editClazz),
+                            TenderDetailPanel.this.getId() + ".entity", this)));
 
                     if (item.getModelObject() == null) {
                         editTender.setVisibilityAllowed(canAccessAddNewButtons(editClazz));
                     }
 
                     editTender.setEnabled(canEdit(tenderProcess, item.getModelObject(), previousStep));
-                    
+
                     item.add(editTender);
 
                     item.add(new ListView<Object>("tenderInfo", new ListModel<>(tenderInfo.apply(itemObj))) {

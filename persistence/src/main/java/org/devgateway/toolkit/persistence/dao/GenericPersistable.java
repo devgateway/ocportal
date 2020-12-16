@@ -14,15 +14,18 @@
  */
 package org.devgateway.toolkit.persistence.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import javax.persistence.MappedSuperclass;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
  * @author mpostelnicu
@@ -30,6 +33,10 @@ import java.io.Serializable;
 @JsonIgnoreProperties(value = {"new"})
 @MappedSuperclass
 public class GenericPersistable extends AbstractPersistable<Long> implements Serializable {
+
+    @Version
+    @Column(name = "optlock")
+    private Integer version;
 
     /**
      * Custom serialization for id is needed since Spring Data JPA 2.x AbstractPersistable no longer implements
@@ -50,5 +57,9 @@ public class GenericPersistable extends AbstractPersistable<Long> implements Ser
         }
 
         in.defaultReadObject();
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 }

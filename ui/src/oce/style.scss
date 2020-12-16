@@ -1,0 +1,95 @@
+
+#dg-container {
+    font-family: "Source Sans Pro", Arial, sans-serif;
+}
+.introjs-overlay{
+    text-decoration: none;
+    font-family: "Source Sans Pro", Arial, sans-serif;
+}
+.introjs-button{
+    text-shadow: none;
+    border:1px solid #eeeeee;
+    background-color: #eeeeee;
+}
+.introjs-tooltip {
+    font-family: "Source Sans Pro", Arial, sans-serif;
+    padding: 20px;
+}
+
+.chart-export-icon {
+    fill: #333;
+    float: right;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.chart-container .modebar {
+    display: none !important;
+}
+
+.comparison .chart-toolbar {
+    position: absolute;
+    right: 20px;
+    top: 32px;
+}
+
+.map-chart .chart-toolbar {
+    width: 50px;
+
+    .btn {
+        margin-top: 5px;
+    }
+}
+
+.field.type-ahead {
+    margin-bottom: 10px;
+}
+
+.options.range {
+    margin: 10px auto 15px auto;
+}
+
+.range-inputs {
+    margin-bottom: 10px;
+
+    input {
+        min-width: 120px;
+        display: inline-block;
+    }
+}
+
+.filters a.export-link {
+    text-decoration: none;
+    color: white;
+}
+
+.language-switcher {
+    a {
+        text-decoration: none !important;
+        font-weight: bolder;
+        display: block;
+        margin-right: 5px;
+        font-size: 1.5em;
+        padding: 0 5px;
+        border: 1px solid transparent;
+
+        &.active {
+            border: 1px solid;
+        }
+    }
+}
+
+.dashboard-default {
+    .form-control {
+        border: 2px solid #eeeeee;
+        box-shadow: none;
+    }
+
+    a {
+        color: white;
+    }
+}
+
+.exact-match {
+    font-family: Montserrat;
+}

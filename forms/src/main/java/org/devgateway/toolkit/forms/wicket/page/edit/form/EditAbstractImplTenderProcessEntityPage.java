@@ -31,6 +31,12 @@ public abstract class EditAbstractImplTenderProcessEntityPage<T extends Abstract
         editForm.replace(abstractImplExtraFields);
 
         addFormDocs().required();
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
         submitAndNext.setVisibilityAllowed(false);
     }
 }

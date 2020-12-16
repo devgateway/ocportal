@@ -2,7 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.lists.alerts;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.table.SimpleDateProperyColumn;
@@ -33,14 +33,20 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
     @Override
     protected void onInitialize() {
 
-        columns.add(new SimpleDateProperyColumn<>(new Model<>("Sending Date"),
+        hasNewPage = false;
+
+        columns.add(new SimpleDateProperyColumn<>(new StringResourceModel("sendingDate", this),
                 "createdDate", "createdDate",
                 t -> t.getLastModifiedDate().orElse(null), "yyyy-MM-dd HH:mm:ss"));
 
-        columns.add(new PropertyColumn<>(new Model<>("# Alerts Send"), "numberSentAlerts", "numberSentAlerts"));
-        columns.add(new PropertyColumn<>(new Model<>("# Errors"), "numberErrors", "numberErrors"));
-        columns.add(new PropertyColumn<>(new Model<>("DB Time in Sec"), "dbTime", "dbTime"));
-        columns.add(new PropertyColumn<>(new Model<>("Sending Time in Sec"), "sendingTime", "sendingTime"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("numAlertsSent", this),
+                "numberSentAlerts", "numberSentAlerts"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("numErrors", this),
+                "numberErrors", "numberErrors"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("dbTimeInSec", this),
+                "dbTime", "dbTime"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("sendingTimeInSec", this),
+                "sendingTime", "sendingTime"));
 
         super.onInitialize();
 
