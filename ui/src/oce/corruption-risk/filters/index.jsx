@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import PropTypes from 'prop-types';
 import {tCreator} from '../../translatable';
 import {
@@ -77,23 +77,46 @@ const groups = [
   }
 ];
 
-const Filters = ({translations, currentBoxIndex, requestNewBox, filters, onChange}) => {
+const Filters = ({translations, filters, onChange}) => {
   const t = tCreator(translations);
 
   const [localFilters, setLocalFilters] = useState(filters);
 
+  const [currentBoxIndex, setCurrentBoxIndex] = useState();
+
   const handleApply = () => {
+    setCurrentBoxIndex(null);
     onChange(localFilters);
   };
 
   const handleReset = () => {
     const newFilters = {};
     setLocalFilters(newFilters);
+    setCurrentBoxIndex(null);
     onChange(newFilters);
   };
 
+  const ref = useRef();
+
+  const handleMouseDown = e => {
+    if (ref.current && !ref.current.contains(e.target)) {
+      setCurrentBoxIndex(null);
+    }
+  };
+
+  useEffect(() => {
+    // attaching to dg-container instead of document because dropdowns used in filters are appended to document
+    const dgContainer = document.getElementById('dg-container');
+
+    dgContainer.addEventListener("mousedown", handleMouseDown);
+
+    return () => {
+      dgContainer.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, []);
+
   return (
-    <div className="row filters-bar" onMouseDown={e => e.stopPropagation()}>
+    <div className="row filters-bar" ref={ref}>
       <div className="col-md-12 crd-horizontal-filters">
         <div className="crd-filter-title">
           <div className="title">{t('filters:hint')}</div>
@@ -105,7 +128,7 @@ const Filters = ({translations, currentBoxIndex, requestNewBox, filters, onChang
             open={currentBoxIndex === index}
             active={group.active(filters)}
             translations={translations}
-            onClick={() => requestNewBox(currentBoxIndex === index ? null : index)}
+            onClick={() => setCurrentBoxIndex(currentBoxIndex === index ? null : index)}
             onApply={handleApply}
             onReset={handleReset}>
 

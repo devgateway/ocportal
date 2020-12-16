@@ -33,7 +33,6 @@ class CorruptionRiskDashboard extends React.Component {
       },
       indicatorTypesMapping: {},
       filters: {},
-      filterBoxIndex: null,
       width: 0,
       data: Map(),
       showLandingPopup: !localStorage.alreadyVisited,
@@ -277,7 +276,7 @@ class CorruptionRiskDashboard extends React.Component {
 
   render() {
     const {
-      filterBoxIndex, filters, data,
+      filters, data,
       indicatorTypesMapping, showLandingPopup,
       disabledApiSecurity
     } = this.state;
@@ -287,10 +286,7 @@ class CorruptionRiskDashboard extends React.Component {
     const [page] = route;
 
     return (
-      <div
-        className="container-fluid dashboard-corruption-risk"
-        onMouseDown={() => this.setState({ filterBoxIndex: null })}
-      >
+      <div className="container-fluid dashboard-corruption-risk">
         {showLandingPopup &&
         <LandingPopup
           redirectToLogin={!disabledApiSecurity}
@@ -317,13 +313,10 @@ class CorruptionRiskDashboard extends React.Component {
           onChange={filtersToApply => {
             CRDFilters.assign('CRD Dash', filtersToApply);
             this.setState({
-              filterBoxIndex: null,
               filters: filtersToApply
             });
           }}
           translations={translations}
-          currentBoxIndex={filterBoxIndex}
-          requestNewBox={index => this.setState({ filterBoxIndex: index })}
           filters={filters}
         />
 
