@@ -11,10 +11,10 @@ export const filters = CRD.input({
   initial: Map(),
 });
 
-export const datelessFilters = CRD.mapping({
+const datelessFilters = CRD.mapping({
   name: 'datelessFilters',
   deps: [filters],
-  mapper: ({years:_1, months:_2, datelessFilters}) => datelessFilters,
+  mapper: ({year:_1, month:_2, datelessFilters}) => datelessFilters,
 });
 
 export const datefulFilters = CRD.mapping({
