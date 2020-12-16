@@ -1255,13 +1255,74 @@
 
     <changeSet id="OCMAKU-727-rename" author="Octavian Ciubotaru">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="CATEGORY" />
+            <tableExists tableName="CATEGORY"/>
         </preConditions>
 
         <update tableName="CATEGORY">
             <column name="label" value="Completed to scope"/>
             <where>dtype='MEStatus' and label='Completed not in use'</where>
         </update>
+    </changeSet>
+
+    <changeSet id="OCMAKU-776-covid-remove-roads" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender"/>
+            <tableExists tableName="tender_process"/>
+            <tableExists tableName="project"/>
+            <tableExists tableName="procurement_plan"/>
+            <tableExists tableName="category"/>
+        </preConditions>
+        <sql>update tender set procurement_method_rationale_id = null where
+            procurement_method_rationale_id = (select id from category where label='COVID-19' and
+            dtype='ProcurementMethodRationale') and id in (select t.id from tender t, tender_process tp, project p,
+            procurement_plan pp, category c
+            where t.tender_process_id=tp.id and tp.project_id = p.id and p.procurement_plan_id=pp.id and
+            pp.department_id =c.id and c.dtype='Department' and c.label='Roads, Transport, Energy and Public Works')
+        </sql>
+
+    </changeSet>
+
+    <changeSet id="OCMAKU-770" author="mpostelnicu">
+        <addNotNullConstraint tableName="administrator_report" columnName="status"/>
+        <addNotNullConstraint tableName="award_acceptance" columnName="status"/>
+        <addNotNullConstraint tableName="award_notification" columnName="status"/>
+        <addNotNullConstraint tableName="cabinet_paper" columnName="status"/>
+        <addNotNullConstraint tableName="contract" columnName="status"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="status"/>
+        <addNotNullConstraint tableName="mereport" columnName="status"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="status"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="status"/>
+        <addNotNullConstraint tableName="procurement_plan" columnName="status"/>
+        <addNotNullConstraint tableName="professional_opinion" columnName="status"/>
+        <addNotNullConstraint tableName="project" columnName="status"/>
+        <addNotNullConstraint tableName="tender" columnName="status"/>
+        <addNotNullConstraint tableName="tender_process" columnName="status"/>
+        <addNotNullConstraint tableName="tender_quotation_evaluation" columnName="status"/>
+    </changeSet>
+    <changeSet id="OCMAKU-786" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="administrator_report"/>
+            <tableExists tableName="pmcreport"/>
+            <tableExists tableName="inspection_report"/>
+            <tableExists tableName="mereport"/>
+            <tableExists tableName="payment_voucher"/>
+        </preConditions>
+
+        <sql>update pmcreport as r set contract_id = c.id from contract as c
+            where r.tender_process_id =c.tender_process_id and r.contract_id is null;
+        </sql>
+
+        <addNotNullConstraint tableName="administrator_report" columnName="contract_id"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="contract_id"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="contract_id"/>
+        <addNotNullConstraint tableName="mereport" columnName="contract_id"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="contract_id"/>
+
+        <addNotNullConstraint tableName="administrator_report" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="mereport" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="tender_process_id"/>
     </changeSet>
 
     <changeSet id="#325-optlock" author="mpostelnicu" runAlways="true">

@@ -8,6 +8,7 @@ import org.hibernate.annotations.OptimisticLock;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
@@ -21,6 +22,7 @@ import java.util.List;
 public abstract class AbstractStatusAuditableEntity extends AbstractAuditableEntity implements Statusable {
     @NotNull
     @Audited
+    @Column(nullable = false)
     private String status = DBConstants.Status.DRAFT;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

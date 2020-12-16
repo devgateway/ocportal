@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author gmutuhu
- *
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,7 +29,7 @@ public class TenderServiceImpl extends AbstractMakueniEntityServiceImpl<Tender> 
     public TextSearchableRepository<Tender, Long> textRepository() {
         return tenderRepository;
     }
-    
+
     @Override
     public Tender newInstance() {
         return new Tender();

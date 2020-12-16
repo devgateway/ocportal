@@ -5,6 +5,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,5 +14,5 @@ import java.util.List;
  */
 @Transactional
 public interface TenderItemRepository extends BaseJpaRepository<TenderItem, Long> {
-    List<TenderItem> findByPurchaseItem(PurchaseItem purchaseItem);
+    List<TenderItem> findByPurchaseItemIn(Collection<PurchaseItem> purchaseItem);
 }

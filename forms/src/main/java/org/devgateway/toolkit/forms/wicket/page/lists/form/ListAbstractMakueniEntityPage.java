@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -113,8 +114,20 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     }
 
+    protected void autoPageTitle() {
+        addOrReplace(new Label("pageTitle",
+                StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
+                        this.getClass().getSimpleName().replaceAll("List", "").replaceAll("Page", "")), ' ')
+                        + " List"));
+    }
+
+
     @Override
     protected void onInitialize() {
+        // just replace the page title with the name of the class
+        // instead of having .properties files only for the page title
+        autoPageTitle();
+
         super.onInitialize();
 
         // don't allow users to add new entities from the listing pages for AbstractMakueniEntity.

@@ -37,6 +37,7 @@ import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -132,7 +133,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
             protected void onSubmit(final AjaxRequestTarget target) {
                 List<TenderItem> tenderItems = null;
                 if (!item.isNew()) {
-                    tenderItems = tenderItemService.findByPurchaseItem(item);
+                    tenderItems = tenderItemService.findByPurchaseItemIn(Arrays.asList(item));
                 }
 
                 if (!ObjectUtils.isEmpty(tenderItems)) {
