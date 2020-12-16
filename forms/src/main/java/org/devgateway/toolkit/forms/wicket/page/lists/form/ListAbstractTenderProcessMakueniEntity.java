@@ -44,17 +44,20 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
 
     @Override
     protected void onInitialize() {
-        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
                 "tenderProcess.project.procurementPlan.department",
                 "tenderProcess.project.procurementPlan.department",
                 new ListModel(departments), dataTable));
 
-        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("fiscalYear", this),
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYear", this),
                 "tenderProcess.project.procurementPlan.fiscalYear",
                 "tenderProcess.project.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));
 
-        addFmColumn("lastModifiedDate", new PropertyColumn<T, String>(new StringResourceModel("lastUpdatedDate", this),
+        addFmColumn("lastModifiedDate", new PropertyColumn<T, String>(
+                new StringResourceModel("lastUpdatedDate", this),
                 "lastModifiedDate", "lastModifiedDate") {
             @Override
             public void populateItem(final Item<ICellPopulator<T>> item,

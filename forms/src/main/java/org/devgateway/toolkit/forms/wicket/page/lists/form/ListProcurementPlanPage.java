@@ -34,10 +34,12 @@ public class ListProcurementPlanPage extends ListAbstractMakueniEntityPage<Procu
     @Override
     protected void onInitialize() {
         attachFm("procurementPlansList");
-        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
                 "department", "department", new ListModel(departments), dataTable));
 
-        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("fiscalYears", this),
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYears", this),
                 "fiscalYear", "fiscalYear", new ListModel(fiscalYears), dataTable));
 
         super.onInitialize();
