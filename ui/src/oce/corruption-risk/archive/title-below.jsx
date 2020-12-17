@@ -6,10 +6,13 @@ const TitleBelow = ({ title, children, filters, ...props }) => (
       React.Children.only(children)
       , props)}
     <h4 className="title">
-      <button className="btn btn-default btn-sm zoom-button">
-        <i className="glyphicon glyphicon-fullscreen" style={{ pointerEvents: 'none' }}/>
-      </button>
-      &nbsp;
+      {props.zoomed ||
+      <>
+        <button className="btn btn-default btn-sm zoom-button">
+          <i className="glyphicon glyphicon-fullscreen" style={{pointerEvents: 'none'}}/>
+        </button>
+        &nbsp;
+      </>}
       {title}
     </h4>
   </div>

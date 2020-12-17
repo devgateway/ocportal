@@ -4,7 +4,7 @@ import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import { wireProps } from '../tools';
-import { BuyersIds, BuyersTendersCount, BuyersAwardsCount } from './state';
+import {getBuyersTenderAndAwardCounts} from "./api.js";
 
 const mkLink = navigate => (content, { id }) => (
   <a href={`#!/crd/buyer/${id}`} onClick={() => navigate('buyer', id)}>{content}</a>
@@ -26,31 +26,6 @@ class BuyerList extends PaginatedTable {
       eps;
   }
 
-  componentWillMount() {
-    BuyersTendersCount.addListener(
-      'BuyerList',
-      this.updateBindings.bind(this),
-    );
-    BuyersAwardsCount.addListener(
-      'BuyerList',
-      this.updateBindings.bind(this),
-    );
-  }
-
-  updateBindings() {
-    Promise.all([
-      BuyersTendersCount.getState(),
-      BuyersAwardsCount.getState(),
-    ]).then(([tenders, awards]) => {
-      this.setState({ tenders, awards });
-    });
-  }
-
-  componentWillUnmount() {
-    BuyersTendersCount.removeListener('BuyerList');
-    BuyersAwardsCount.removeListener('BuyerList');
-  }
-
   componentDidUpdate(prevProps, prevState) {
     const propsChanged = ['filters', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
     if (propsChanged) {
@@ -61,14 +36,29 @@ class BuyerList extends PaginatedTable {
 
     const { data } = this.props;
     if (prevProps.data !== data) {
-      BuyersIds.assign(
-        'BuyersIds',
-        this.props.data
-          .get('data', List())
-          .map(datum => datum.get('buyerId'))
-          .toArray()
-      );
+      this.fetchCounts();
     }
+  }
+
+  fetchCounts() {
+    const {filters, years, months, data} = this.props;
+
+    const buyerIds = data
+      .get('data', List())
+      .map(datum => datum.get('buyerId'))
+      .toArray();
+
+    const buyerFilters = {
+      ...filters,
+      year: years,
+      month: months,
+      buyerId: buyerIds
+    };
+
+    getBuyersTenderAndAwardCounts(buyerFilters)
+      .then(
+        ([tenders, awards]) => this.setState({tenders, awards}),
+        _ => this.setState({tenders: {}, awards: {}}));
   }
 
   render() {
