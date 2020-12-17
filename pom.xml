@@ -11,15 +11,16 @@
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devgateway.toolkit</groupId>
+    <groupId>org.devgateway.makueni</groupId>
     <artifactId>makueni</artifactId>
-    <version>1.13.2-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>Makueni</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
 
     <properties>
+        <revision>1.13.2-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <liquibase.version>3.8.5</liquibase.version>
@@ -118,6 +119,31 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${pg.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devgateway.makueni</groupId>
+                <artifactId>persistence</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devgateway.makueni</groupId>
+                <artifactId>persistence-mongodb</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devgateway.makueni</groupId>
+                <artifactId>ui</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devgateway.makueni</groupId>
+                <artifactId>web</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.devgateway.makueni</groupId>
+                <artifactId>forms</artifactId>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

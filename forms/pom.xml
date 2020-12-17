@@ -21,9 +21,9 @@
     <description>Makueni Forms</description>
 
     <parent>
-        <groupId>org.devgateway.toolkit</groupId>
+        <groupId>org.devgateway.makueni</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.13.2-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <properties>
@@ -42,9 +42,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -54,15 +53,18 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
-            <artifactId>persistence-mongodb</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
+            <groupId>org.devgateway.makueni</groupId>
+            <artifactId>web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
+            <artifactId>persistence-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>ui</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -103,12 +105,6 @@
             </exclusions>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
-            <artifactId>web</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

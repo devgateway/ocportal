@@ -15,9 +15,9 @@
     </properties>
 
     <parent>
-        <groupId>org.devgateway.toolkit</groupId>
+        <groupId>org.devgateway.makueni</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.13.2-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <build>
@@ -55,8 +55,8 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v11.15.0</nodeVersion>
-                            <npmVersion>6.13.1</npmVersion>
+                            <nodeVersion>v14.15.2</nodeVersion>
+                            <npmVersion>6.14.9</npmVersion>
                         </configuration>
                     </execution>
 

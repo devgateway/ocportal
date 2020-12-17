@@ -23,9 +23,9 @@
     </properties>
 
     <parent>
-        <groupId>org.devgateway.toolkit</groupId>
+        <groupId>org.devgateway.makueni</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.13.2-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <dependencies>
@@ -169,9 +169,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
 
@@ -195,9 +194,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence-mongodb</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
