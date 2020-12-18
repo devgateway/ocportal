@@ -142,8 +142,8 @@ export const sameArray = (array1, array2) =>
 
 /**
  * wrapper for useImmer update call, that receives as imput the update function and also the input value
- * it always replaces the wrapped immer object with the input value. To be used with privities or small
- * state objects that do not need draft destructuring.
+ * it always replaces the wrapped immer object with the input value. To be used with primitives or small
+ * state objects that do not need partial updates.
  *
  * @param updateFunc
  * @returns {function(*): *}

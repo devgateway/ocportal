@@ -2,7 +2,7 @@ import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import '../makueni.scss';
 import ProcurementPlan from './single/procurementPlan';
-import React, {useEffect, useState} from 'react';
+import React, {useEffects} from 'react';
 import Footer from '../../layout/footer';
 import fmConnect from "../../fm/fm";
 import FileDownloadLinks from "../tenders/single/FileDownloadLinks";

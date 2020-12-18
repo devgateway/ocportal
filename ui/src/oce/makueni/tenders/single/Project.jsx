@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Item} from "./Item";
 import fmConnect from "../../../fm/fm";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {getProject} from "../../../api/Api";
 import {tCreator} from "../../../translatable";
 import PropTypes from "prop-types";
+import {useImmer} from "use-immer";
+import {setImmer} from "../../../tools";
 
 const Project = (props) => {
 
-  const [data, setData] = useState(undefined);
+  const [data, updateData] = useImmer(undefined);
   const {navigate, isFeatureVisible} = props;
   const {currencyFormatter, formatDate} = props.styling.tables;
   const t = tCreator(props.translations);
 
   useEffect(() => {
-    getProject({id: props.id}).then(result => {
-      setData(result);
-    });
+    getProject({id: props.id}).then(setImmer(updateData));
   });
 
   const getFeedbackSubject = () => {

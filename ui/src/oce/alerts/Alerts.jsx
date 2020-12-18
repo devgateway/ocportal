@@ -5,16 +5,18 @@ import './alerts.scss';
 import {useEffect, useState} from "react";
 import {fetch, subscribeToAlerts} from "../api/Api";
 import PropTypes from 'prop-types';
+import {useImmer} from "use-immer";
+import {setImmer} from "../tools";
 
 const emailPattern = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
 
 const Alerts = props => {
 
-  const [fetchedDepartments, setFetchedDepartments] = useState([]);
-  const [fetchedItems, setFetchedItems] = useState([]);
+  const [fetchedDepartments, updateFetchedDepartments] = useImmer([]);
+  const [fetchedItems, updateFetchedItems] = useImmer([]);
   const [serverResponse, setServerResponse] = useState();
   const [showFormErrors, setShowFormErrors] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useImmer({
     email: '',
     departments: [],
     items: []
@@ -26,10 +28,10 @@ const Alerts = props => {
   useEffect(() => {
     if (!purchaseReqId) {
       fetch('/makueni/filters/departments/all')
-        .then(data => setFetchedDepartments(data));
+        .then(setImmer(updateFetchedDepartments));
 
       fetch('/makueni/filters/items/all')
-        .then(data => setFetchedItems(data));
+        .then(setImmer(updateFetchedItems));
     }
 
     window.scrollTo(0, 0);
@@ -37,10 +39,9 @@ const Alerts = props => {
 
   const handleChange = e => {
     const {name, value} = e.target;
-    setFormData(formData => ({
-      ...formData,
-      [name]: value
-    }));
+    setFormData(draft => {
+      draft[name] = value;
+    });
     setShowFormErrors(false);
   };
 

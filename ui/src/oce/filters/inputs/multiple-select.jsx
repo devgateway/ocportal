@@ -1,13 +1,14 @@
 import {tCreator} from '../../translatable';
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {fetch} from "../../api/Api";
 import {Checkbox, ControlLabel, FormGroup} from "react-bootstrap";
 import './styles.css';
+import {useImmer} from "use-immer";
 
 const MultipleSelect = props => {
 
   const {ep, value = [], onChange} = props;
-  const [options, setOptions] = useState([]);
+  const [options, updateOptions] = useImmer([]);
   const selected = new window.Set(value);
 
   const getId = el => el._id;
@@ -15,7 +16,7 @@ const MultipleSelect = props => {
   const getLabel = getId;
 
   useEffect(() => {
-    fetch(ep).then(data => setOptions(data.filter(el => !!getId(el))));
+    fetch(ep).then(data => updateOptions(() => data.filter(el => !!getId(el))));
   }, [ep]);
 
   const selectAll = () => onChange(options.map(getId));

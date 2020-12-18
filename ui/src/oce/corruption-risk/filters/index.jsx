@@ -13,6 +13,7 @@ import ProcurementMethodRationale from "../../filters/procurement-method-rationa
 import {FlaggedTenderPrice} from "../../filters/tender-price";
 import {FlaggedAwardValue} from "../../filters/award-value";
 import {Buyer, ProcuringEntity, Supplier} from "../../filters/organizations";
+import {useImmer} from "use-immer";
 
 const isActiveForFields = (...fields) => filters =>
   fields.map(field => filters[field]).some(value =>
@@ -80,7 +81,7 @@ const groups = [
 const Filters = ({translations, filters, onChange}) => {
   const t = tCreator(translations);
 
-  const [localFilters, setLocalFilters] = useState(filters);
+  const [localFilters, updateLocalFilters] = useImmer(filters);
 
   const [currentBoxIndex, setCurrentBoxIndex] = useState();
 
@@ -91,7 +92,7 @@ const Filters = ({translations, filters, onChange}) => {
 
   const handleReset = () => {
     const newFilters = {};
-    setLocalFilters(newFilters);
+    updateLocalFilters(() => newFilters);
     setCurrentBoxIndex(null);
     onChange(newFilters);
   };
@@ -136,13 +137,7 @@ const Filters = ({translations, filters, onChange}) => {
               <React.Fragment key={fIdx}>
                 {filter.render({
                   filters: localFilters,
-                  onChange: filters => {
-                    const newFilters = {
-                      ...localFilters,
-                      ...filters
-                    };
-                    setLocalFilters(newFilters);
-                  },
+                  onChange: filters => updateLocalFilters((draft) => ({...draft, ...filters})),
                   translations: translations
                 })}
               </React.Fragment>
