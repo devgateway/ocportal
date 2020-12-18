@@ -3,7 +3,7 @@ import { CRD, datefulFilters, API_ROOT } from '../../../state/oce-state';
 import { FlaggedNrMapping } from '../../archive/state';
 
 export const PEState = CRD.substate({
-  name: 'PEState',
+  name: 'BuyersState',
 });
 
 export const PEId = PEState.input({
@@ -49,17 +49,6 @@ export const PEFlagsCount = PEState.mapping({
   mapper: data => data.length === 0 ? 0 : data[0].flaggedCount
 });
 
-const contractsUrl = PEState.input({
-  name: 'contractsUrl',
-  initial: `${API_ROOT}/flaggedRelease/all`
-});
-
-const associatedContracts = PEState.remote({
-  name: 'associatedContracts',
-  url: contractsUrl,
-  params: PEFilters,
-});
-
 const associatedPrsURL = PEState.input({
   name: 'associatedPrsURL',
   initial: `${API_ROOT}/procuringEntitiesForBuyers`
@@ -91,11 +80,6 @@ export const associatedUnflaggedContractsCount = PEState.remote({
   name: 'associatedUnflaggedContractsCount',
   url: unflaggedContractsCountUrl,
   params: PEFilters,
-});
-
-const associatedSuppliers = PEState.mapping({
-  name: 'associatedSuppliers',
-  deps: ['associatedContracts'],
 });
 
 export const PEFlaggedNrData = new FlaggedNrMapping({
