@@ -49,4 +49,10 @@ public class MEReportServiceImpl extends AbstractImplTenderProcessMakueniEntityS
 
         approvedReportRepository.save(approvedReport);
     }
+
+    @Override
+    public void delete(MEReport report) {
+        approvedReportRepository.deleteByMeReport(report);
+        super.delete(report);
+    }
 }
