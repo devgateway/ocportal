@@ -1,78 +1,78 @@
 import TopSearch from '../../top-search';
-import translatable from '../../../translatable';
+import {tCreator} from '../../../translatable';
 import Info from './info';
-import {
-  PEId,
-  PEFlaggedNrData,
-  winsAndFlagsData,
-  procurementsByStatusData,
-  procurementsByMethodData,
-  PEInfo,
-  max2ndRowCommonDataLength
-} from './state';
 import Zoomable from '../../zoomable';
 import TitleBelow from '../../archive/title-below';
 import WinsAndFlags from '../../bars/wins-and-flags';
 import FlaggedNr from '../../bars/flagged-nr';
-import ProcurementsByStatus from './general/by-status';
-import ProcurementsByMethod from './general/by-method';
-import ProcurementsTable from './table';
-import style from './style.scss';
-import CRDPage from '../../page';
+import ProcurementsByStatus from '../../bars/by-status';
+import ProcurementsByMethod from '../../bars/by-method';
+import ProcurementsTable from '../../table/procurements';
+import './style.scss';
+import React, {useEffect, useState} from "react";
+import PropTypes from "prop-types";
+import {createSelector} from "@reduxjs/toolkit";
+import {fetchAllInfo} from "./api";
 
-const NAME = 'ProcuringEntitySingle';
+const procuringEntityFiltersSelector = createSelector(
+  [ props => props.id, props => props.filters, props => props.years, props => props.months ],
+  (id, filters, years, months) => ({
+    ...filters,
+    year: years,
+    month: months,
+    procuringEntityId: id
+  }));
 
-class ProcuringEntity extends CRDPage {
-  constructor(...args){
-    super(...args);
-    this.state = this.state || {};
-  }
+const ProcuringEntity = ({ translations, doSearch, width, navigate, ...otherProps }) => {
 
-  componentWillMount() {
-    const { id } = this.props;
-    PEId.assign('PESingleComponent', id);
-    PEInfo.addListener(NAME, () => {
-      PEInfo.getState().then(PEInfo => {
-        this.setState({ PEName: PEInfo.name })
-      });
-    });
-  }
+  useEffect(() => window.scrollTo(0, 0), []);
 
-  componentDidUpdate() {
-    const { id } = this.props;
-    PEId.assign('PESingleComponent', id);
-  }
+  const [state, setState] = useState();
 
-  componentWillUnmount() {
-    PEInfo.removeListener(NAME);
-  }
+  const peFilters = procuringEntityFiltersSelector(otherProps);
 
-  render() {
-    const { translations, doSearch, width, navigate } = this.props;
-    const { PEName } = this.state;
-    
-    return (
-      <div className="pe-page single-page">
-        <TopSearch
-          translations={translations}
-          doSearch={doSearch}
-          placeholder={this.t('crd:procuringEntities:top-search')}
-        />
-        <Info translations={translations} />
+  useEffect(() => {
+    fetchAllInfo(peFilters)
+      .then(
+        state => setState({
+          ...state,
+          maxCommonDataLength: Math.min(5,
+            Math.max(state.procurementsByStatusData.length, state.procurementsByMethodData.length)),
+          max2ndRowCommonDataLength: Math.min(5,
+            Math.max(state.winsAndFlagsData.length, state.flaggedNrData.length))
+        }),
+        _ => setState(null));
+  }, [peFilters]);
+
+  const t = tCreator(translations);
+
+  return (
+    <div className="pe-page single-page">
+      <TopSearch
+        translations={translations}
+        doSearch={doSearch}
+        placeholder={t('crd:procuringEntities:top-search')}
+      />
+      {state &&
+      <>
+        <Info info={state.info} flagsCount={state.flagsCount} buyers={state.buyers} contractsCount={state.contractsCount}
+              unflaggedContractsCount={state.unflaggedContractsCount} translations={translations} />
         <section className="pe-general-statistics">
-          <h2>{this.t('crd:procuringEntities:generalStatistics')}</h2>
+          <h2>{t('crd:procuringEntities:generalStatistics')}</h2>
           <div className="row">
             <div className="col-sm-6">
-              <Zoomable zoomedWidth={width} data={procurementsByStatusData}>
-                <TitleBelow title={this.t('crd:procuringEntities:byStatus:title')}>
-                  <ProcurementsByStatus translations={translations} />
+              <Zoomable zoomedWidth={width}>
+                <TitleBelow title={t('crd:procuringEntities:byStatus:title')}>
+                  <ProcurementsByStatus data={state.procurementsByStatusData} length={state.maxCommonDataLength}
+                                        translations={translations} />
                 </TitleBelow>
               </Zoomable>
             </div>
             <div className="col-sm-6">
-              <Zoomable zoomedWidth={width} data={procurementsByMethodData}>
-                <TitleBelow title={this.t('crd:procuringEntities:byMethod:title')}>
-                  <ProcurementsByMethod translations={translations} />
+              <Zoomable zoomedWidth={width}>
+                <TitleBelow title={t('crd:procuringEntities:byMethod:title')}>
+                  <ProcurementsByMethod data={state.procurementsByMethodData} length={state.maxCommonDataLength}
+                                        translations={translations} />
                 </TitleBelow>
               </Zoomable>
             </div>
@@ -80,33 +80,45 @@ class ProcuringEntity extends CRDPage {
         </section>
         <section className="flag-analysis">
           <h2>
-            {this.t('crd:contracts:flagAnalysis')}
+            {t('crd:contracts:flagAnalysis')}
           </h2>
           <div className="row">
             <div className="col-sm-6">
-              <Zoomable zoomedWidth={width} data={winsAndFlagsData} length={max2ndRowCommonDataLength}>
-                <TitleBelow title={this.t('crd:procuringEntity:winsAndFlags:title')}>
-                  <WinsAndFlags translations={translations} />
+              <Zoomable zoomedWidth={width}>
+                <TitleBelow title={t('crd:procuringEntity:winsAndFlags:title')}>
+                  <WinsAndFlags data={state.winsAndFlagsData} length={state.max2ndRowCommonDataLength}
+                                translations={translations} />
                 </TitleBelow>
               </Zoomable>
             </div>
             <div className="col-sm-6">
-              <Zoomable zoomedWidth={width} data={PEFlaggedNrData} length={max2ndRowCommonDataLength}>
-                <TitleBelow title={this.t('crd:procuringEntity:flaggedNr:title')}>
-                  <FlaggedNr translations={translations} />
+              <Zoomable zoomedWidth={width}>
+                <TitleBelow title={t('crd:procuringEntity:flaggedNr:title')}>
+                  <FlaggedNr data={state.flaggedNrData} length={state.max2ndRowCommonDataLength}
+                             translations={translations} />
                 </TitleBelow>
               </Zoomable>
             </div>
           </div>
-          <h2>Procurements by {PEName}</h2>
-          <ProcurementsTable
-            translations={translations}
-            navigate={navigate}
-          />
         </section>
-      </div>
-    );
-  }
-}
+      </>}
+      <section>
+        {state && <h2>Procurements by {state.info.name}</h2>}
+        <ProcurementsTable
+          filters={peFilters}
+          translations={translations}
+          navigate={navigate}
+        />
+      </section>
+    </div>
+  );
+};
+
+ProcuringEntity.propTypes = {
+  id: PropTypes.string.isRequired,
+  filters: PropTypes.object,
+  years: PropTypes.array,
+  months: PropTypes.array
+};
 
 export default ProcuringEntity;

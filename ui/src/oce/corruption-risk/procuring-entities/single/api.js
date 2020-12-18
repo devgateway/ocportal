@@ -8,41 +8,41 @@ import {
   procurementMapper
 } from "../../api";
 
-const getInfo = filters => fetch(`/ocds/organization/buyer/id/${filters.buyerId}`);
+const getInfo = filters => fetch(`/ocds/organization/procuringEntity/id/${filters.procuringEntityId}`);
 
-const getPrs = filters => fetch('/procuringEntitiesForBuyers', filters);
+const getBuyers = filters => fetch('/buyersForProcuringEntities', filters);
 
-const getWinsAndFlagsData = filters => fetch('/supplierWinsPerBuyer', filters)
+const getWinsAndFlagsData = filters => fetch('/supplierWinsPerProcuringEntity', filters)
   .then(mapWinsAndFlags);
 
 const getProcurementsByStatusData = filters =>
-  fetch('/procurementsByTenderStatusBuyer', filters)
+  fetch('/procurementsByTenderStatus', filters)
     .then(procurementMapper);
 
 const getProcurementsByMethodData = filters =>
-  fetch('/procurementsByProcurementMethodBuyer', filters)
+  fetch('/procurementsByProcurementMethod', filters)
     .then(procurementMapper);
 
 export const fetchAllInfo = filters =>
   Promise.all([
     getInfo(filters),
     getFlagsCount(filters),
-    getPrs(filters),
+    getBuyers(filters),
     getContractsCount(filters),
     getUnflaggedContractsCount(filters),
     getFlaggedNrData(filters),
     getWinsAndFlagsData(filters),
     getProcurementsByStatusData(filters),
     getProcurementsByMethodData(filters)
-  ]).then(([info, flagsCount, prs, contractsCount, unflaggedContractsCount, flaggedNrData, winsAndFlagsData,
+  ]).then(([info, flagsCount, buyers, contractsCount, unflaggedContractsCount, flaggedNrData, winsAndFlagsData,
       procurementsByStatusData, procurementsByMethodData]) => ({
     info,
     flagsCount,
-    prs,
+    buyers,
     contractsCount,
     unflaggedContractsCount,
     flaggedNrData,
     winsAndFlagsData,
     procurementsByStatusData,
-    procurementsByMethodData,
+    procurementsByMethodData
   }));

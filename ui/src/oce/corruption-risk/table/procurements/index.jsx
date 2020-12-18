@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {tCreator} from '../../../../translatable';
-import BootstrapTableWrapper from '../../../archive/bootstrap-table-wrapper';
-import { mkContractLink } from '../../../tools';
+import {tCreator} from '../../../translatable';
+import BootstrapTableWrapper from '../../archive/bootstrap-table-wrapper';
+import { mkContractLink } from '../../tools';
 import {getFlaggedReleases} from "./api";
 
 const Table = ({filters, navigate, translations}) => {
@@ -80,6 +80,6 @@ const Table = ({filters, navigate, translations}) => {
       }]}
     />
   );
-}
+};
 
 export default Table;

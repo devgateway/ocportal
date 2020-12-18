@@ -13,8 +13,6 @@ import {tCreator} from '../../../translatable';
 import Popup from './popup';
 import { renderTopLeftLabel } from '../../archive/tools';
 
-// TODO move up!
-
 const WinsAndFlags = ({ translations, zoomed, data, length }) => {
 
   let height = 350;

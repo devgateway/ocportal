@@ -4,7 +4,7 @@ import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import { wireProps } from '../tools';
-import { PEIds, TendersCount, AwardsCount } from './state';
+import {getTenderAndAwardCounts} from "./api";
 
 export const mkLink = navigate => (content, { id }) => (
   <a
@@ -31,31 +31,6 @@ class PEList extends PaginatedTable {
       eps;
   }
 
-  componentWillMount() {
-    TendersCount.addListener(
-      'PEList',
-      this.updateBindings.bind(this),
-    );
-    AwardsCount.addListener(
-      'PEList',
-      this.updateBindings.bind(this),
-    );
-  }
-
-  updateBindings() {
-    Promise.all([
-      TendersCount.getState(),
-      AwardsCount.getState(),
-    ]).then(([tenders, awards]) => {
-      this.setState({ tenders, awards });
-    });
-  }
-
-  componentWillUnmount() {
-    TendersCount.removeListener('PEList');
-    AwardsCount.removeListener('PEList');
-  }
-
   componentDidUpdate(prevProps, prevState) {
     const propsChanged = ['filters', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
     if (propsChanged) {
@@ -66,14 +41,29 @@ class PEList extends PaginatedTable {
 
     const { data } = this.props;
     if (prevProps.data !== data) {
-      PEIds.assign(
-        'PEList',
-        this.props.data
-          .get('data', List())
-          .map(datum => datum.get('procuringEntityId'))
-          .toArray()
-      );
+      this.fetchCounts();
     }
+  }
+
+  fetchCounts() {
+    const {filters, years, months, data} = this.props;
+
+    const ids = data
+      .get('data', List())
+      .map(datum => datum.get('procuringEntityId'))
+      .toArray();
+
+    const peFilters = {
+      ...filters,
+      year: years,
+      month: months,
+      procuringEntityId: ids
+    };
+
+    getTenderAndAwardCounts(peFilters)
+      .then(
+        ([tenders, awards]) => this.setState({tenders, awards}),
+        _ => this.setState({tenders: {}, awards: {}}));
   }
 
   render() {
