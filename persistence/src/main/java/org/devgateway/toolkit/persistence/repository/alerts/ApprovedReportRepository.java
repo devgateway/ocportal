@@ -6,8 +6,6 @@ import org.devgateway.toolkit.persistence.dao.alerts.ApprovedReport;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 /**
  * @author Octavian Ciubotaru
