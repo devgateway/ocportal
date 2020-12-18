@@ -1,106 +1,85 @@
-import React from "react";
-import translatable from '../../../../translatable';
+import React, {useEffect, useState} from "react";
+import {tCreator} from '../../../../translatable';
 import BootstrapTableWrapper from '../../../archive/bootstrap-table-wrapper';
-import { procurementsData, page, pageSize, procurementsCount } from './state';
 import { mkContractLink } from '../../../tools';
+import {getFlaggedReleases} from "./api";
 
-const NAME = 'PEProcurementsComponent';
+const Table = ({filters, navigate, translations}) => {
 
-class Table extends translatable(React.PureComponent) {
-  constructor(...args){
-    super(...args);
-    this.state = this.state || {};
-    this.state.data = [];
-  }
+  const t = tCreator(translations);
 
-  componentDidMount() {
-    procurementsData.addListener(NAME, () => this.updateBindings());
-    page.addListener(NAME, () => this.updateBindings());
-    pageSize.addListener(NAME, () => this.updateBindings());
-    procurementsCount.addListener(NAME, () => this.updateBindings());
-  }
-
-  updateBindings() {
-    Promise.all([
-      procurementsData.getState(NAME),
-      page.getState(NAME),
-      pageSize.getState(NAME),
-      procurementsCount.getState(NAME),
-    ]).then(([data, page, pageSize, procurementsCount]) => {
-      this.setState({
-        data,
-        page,
-        pageSize,
-        count: procurementsCount,
-      })
-    })
-  }
-
-  componentWillUnmount() {
-    procurementsData.removeListener(NAME);
-    page.removeListener(NAME);
-    pageSize.removeListener(NAME);
-    procurementsCount.removeListener(NAME);
-  }
-
-  formatFlags(data) {
+  const formatFlags = (data) => {
     return (
       <div>
         {data.map(indicator => (
           <div>
-            &#9679; {this.t(`crd:indicators:${indicator}:name`)}
+            &#9679; {t(`crd:indicators:${indicator}:name`)}
           </div>
         ))}
       </div>
     );
-  }
+  };
 
-  render() {
-    const { data, count } = this.state;
-    const { navigate } = this.props;
-  
-    return (
-      <BootstrapTableWrapper
-        bordered
-        data={data}
-        page={this.state.page}
-        pageSize={this.state.pageSize}
-        onPageChange={newPage => page.assign(NAME, newPage)}
-        onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
-        count={count}
-        columns={[{
-            title: 'Tender name',
-            dataField: 'name',
-            width: '20%',
-            dataFormat: mkContractLink(navigate),
-        }, {
-            title: 'OCID',
-            dataField: 'id',
-            dataFormat: mkContractLink(navigate),
-        }, {
-            title: 'Award status',
-            dataField: 'awardStatus',
-        }, {
-            title: 'Tender amount',
-            dataField: 'tenderAmount',
-        }, {
-            title: this.t('crd:contracts:list:awardAmount'),
-            dataField: 'awardAmount',
-        }, {
-            title: 'Number of bidders',
-            dataField: 'nrBidders',
-        }, {
-            title: 'Number of flags',
-            dataField: 'nrFlags',
-        }, {
-            title: this.t('crd:supplier:table:flagName'),
-            dataField: 'flags',
-            dataFormat: this.formatFlags.bind(this),
-            width: '20%',
-        }]}
-      />
-    );
-  }
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const params = {
+      ...filters,
+      pageNumber: page - 1,
+      pageSize
+    };
+    getFlaggedReleases(params)
+      .then(([data, count]) => {
+        setData(data);
+        setCount(count);
+      });
+  }, [filters, page, pageSize]);
+
+  return (
+    <BootstrapTableWrapper
+      bordered
+      data={data}
+      page={page}
+      pageSize={pageSize}
+      onPageChange={newPage => setPage(newPage)}
+      onSizePerPageList={newPageSize => setPageSize(newPageSize)}
+      count={count}
+      columns={[{
+        title: 'Tender name',
+        dataField: 'name',
+        width: '20%',
+        dataFormat: mkContractLink(navigate),
+      }, {
+        title: 'OCID',
+        dataField: 'id',
+        dataFormat: mkContractLink(navigate),
+      }, {
+        title: 'Award status',
+        dataField: 'awardStatus',
+      }, {
+        title: 'Tender amount',
+        dataField: 'tenderAmount',
+      }, {
+        title: t('crd:contracts:list:awardAmount'),
+        dataField: 'awardAmount',
+      }, {
+        title: 'Number of bidders',
+        dataField: 'nrBidders',
+      }, {
+        title: 'Number of flags',
+        dataField: 'nrFlags',
+      }, {
+        title: t('crd:supplier:table:flagName'),
+        dataField: 'flags',
+        dataFormat: formatFlags,
+        width: '20%',
+      }]}
+    />
+  );
 }
 
 export default Table;

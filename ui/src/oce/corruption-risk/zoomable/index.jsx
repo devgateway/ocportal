@@ -40,20 +40,19 @@ class Zoomable extends React.PureComponent {
   }
 
   interceptClicks({ target }) {
-    if (target.className.indexOf('zoom-button') > -1) {
+    if (typeof target.className === 'string' && target.className.indexOf('zoom-button') > -1) {
       this.setState({ zoomed: true });
     }
   }
 
   render() {
     const { zoomed } = this.state;
-    const { data, children, ...props } = this.props;
+    const { children, ...props } = this.props;
     return (
       <div className="zoomable" onClick={this.interceptClicks.bind(this)}>
         {this.maybeGetZoomed()}
         {!zoomed && cloneChild(this, {
-           ...props,
-           data
+           ...props
         })}
       </div>
     )

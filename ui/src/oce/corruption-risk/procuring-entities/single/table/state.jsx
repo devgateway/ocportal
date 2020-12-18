@@ -56,6 +56,7 @@ function getTenderAmount(datum) {
   }
 }
 
+// FIXME duplicate code, search for mapFlaggedReleases.
 export const procurementsData = PEState.mapping({
   name: 'procurementsData',
   deps: [procurementsRaw],

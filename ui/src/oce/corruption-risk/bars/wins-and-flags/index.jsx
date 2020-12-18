@@ -6,21 +6,21 @@ import {
   YAxis,
   LabelList,
   ResponsiveContainer,
+  Legend,
   Tooltip
 } from 'recharts';
-import {tCreator} from '../../../../../translatable';
+import {tCreator} from '../../../translatable';
 import Popup from './popup';
-import { renderTopLeftLabel } from '../../../../archive/tools';
+import { renderTopLeftLabel } from '../../archive/tools';
 
-const ProcurementsByMethod = ({ data, length, translations, zoomed }) => {
+// TODO move up!
 
-  const t = tCreator(translations);
+const WinsAndFlags = ({ translations, zoomed, data, length }) => {
 
   let height = 350;
-  let slicedData;
+  let slicedData = data;
   if (zoomed) {
-    slicedData = data;
-    height = Math.max(height, slicedData.length * 50);
+    height = Math.max(height, data.length * 50);
   } else {
     slicedData = data.slice(0, length);
     if (slicedData.length < length) {
@@ -28,8 +28,11 @@ const ProcurementsByMethod = ({ data, length, translations, zoomed }) => {
         slicedData.unshift({});
       }
     }
-    height = length * 80;
+
+    height = Math.max(length * 70, 200);
   }
+
+  const t = tCreator(translations);
 
   return (
     <div className="oce-chart">
@@ -45,24 +48,33 @@ const ProcurementsByMethod = ({ data, length, translations, zoomed }) => {
           <BarChart
             layout="vertical"
             data={slicedData}
-            barSize={zoomed ? 10 : 20}
+            barSize={zoomed ? 5 : 10}
             barGap={0}
             barCategoryGap={15}>
             <XAxis type="number"/>
-            <YAxis type="category" hide dataKey="status"/>
+            <YAxis type="category" hide dataKey="name"/>
             <Tooltip content={<Popup/>} translations={translations} cursor={false}/>
+            <Legend
+              align="left"
+              verticalAlign="top"
+              height={30}
+              iconType="square"/>
             <Bar
-              name={t('crd:procuringEntities:byMethod:title')}
-              dataKey="count"
+              name={t('crd:suppliers:wins')}
+              dataKey="wins"
               fill="#289df4"
               minPointSize={3}
               isAnimationActive={false}>
               <LabelList
-                dataKey="status"
+                dataKey="name"
                 position="insideTopLeft"
-                content={renderTopLeftLabel}
-              />
+                content={renderTopLeftLabel}/>
             </Bar>
+            <Bar
+              name={t('crd:contracts:baseInfo:flag:pl')}
+              dataKey="flags"
+              fill="#ce4747"
+              minPointSize={3}/>
           </BarChart>
         </ResponsiveContainer>
       }
@@ -70,4 +82,4 @@ const ProcurementsByMethod = ({ data, length, translations, zoomed }) => {
   );
 }
 
-export default ProcurementsByMethod;
+export default WinsAndFlags;

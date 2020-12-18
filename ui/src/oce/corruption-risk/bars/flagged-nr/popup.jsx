@@ -1,5 +1,5 @@
 import React from "react";
-import translatable from '../../../../../translatable';
+import translatable from '../../../translatable';
 
 class Popup extends translatable(React.PureComponent) {
   render() {
