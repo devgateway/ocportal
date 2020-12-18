@@ -9,8 +9,8 @@ import {
   LabelList,
   Tooltip
 } from 'recharts';
-import translatable, {tCreator} from '../../../../../translatable';
-import { renderTopLeftLabel } from '../../../../archive/tools';
+import translatable, {tCreator} from '../../../translatable';
+import { renderTopLeftLabel } from '../../archive/tools';
 import Popup from './popup';
 
 const corruptionTypeColors = {

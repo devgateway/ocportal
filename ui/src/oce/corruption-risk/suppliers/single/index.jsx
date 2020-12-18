@@ -13,10 +13,10 @@ import { cacheFn, pluckImm } from '../../../tools';
 import Zoomable from '../../zoomable';
 import Crosstab from '../../clickable-crosstab';
 import { CORRUPTION_TYPES } from '../../constants';
-import FlaggedNr from './bars/flagged-nr';
+import FlaggedNr from '../../bars/flagged-nr';
 import BackendDateFilterable from '../../backend-date-filterable';
 import { supplierId, supplierFlaggedNrData, winsAndFlagsData, maxCommonDataLength } from './state';
-import WinsAndFlags from './bars/wins-and-flags/index';
+import WinsAndFlags from '../../bars/wins-and-flags/index';
 import SupplierTable from './table';
 import TitleBelow from '../../archive/title-below';
 

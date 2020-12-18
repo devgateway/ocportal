@@ -9,9 +9,9 @@ import {
   Legend,
   Tooltip
 } from 'recharts';
-import {tCreator} from '../../../../../translatable';
+import {tCreator} from '../../../translatable';
 import Popup from './popup';
-import { renderTopLeftLabel } from '../../../../archive/tools';
+import { renderTopLeftLabel } from '../../archive/tools';
 
 // TODO move up!
 

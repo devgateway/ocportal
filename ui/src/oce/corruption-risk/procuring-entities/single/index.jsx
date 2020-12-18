@@ -12,8 +12,8 @@ import {
 } from './state';
 import Zoomable from '../../zoomable';
 import TitleBelow from '../../archive/title-below';
-import WinsAndFlags from '../../suppliers/single/bars/wins-and-flags';
-import FlaggedNr from '../../suppliers/single/bars/flagged-nr';
+import WinsAndFlags from '../../bars/wins-and-flags';
+import FlaggedNr from '../../bars/flagged-nr';
 import ProcurementsByStatus from './general/by-status';
 import ProcurementsByMethod from './general/by-method';
 import ProcurementsTable from './table';
