@@ -10,12 +10,13 @@ import FiltersProcurementPlanWrapper from "../filters/FiltersProcurementPlanWrap
 import {tCreator} from "../../translatable";
 import {getProcurementPlans} from "../../api/Api";
 import PropTypes from "prop-types";
+import {useImmer} from "use-immer";
 
 const MakueniProcurementPlans = props => {
 
   useEffect(() => window.scrollTo(0, 0));
 
-  const [state, setState] = useState({
+  const [state, updateState] = useImmer({
     filters: {},
     page: 1,
     pageSize: 20,
@@ -23,14 +24,17 @@ const MakueniProcurementPlans = props => {
     count: undefined
   });
 
-  const setPage = page => setState({...state, page});
+  const setPage = page => updateState(draft => {
+    draft.page = page;
+  });
 
-  const setPageSize = pageSize => setState({...state, pageSize});
+  const setPageSize = pageSize => updateState(draft => {
+    draft.pageSize = pageSize
+  });
 
-  const setFilters = filters => setState({
-    ...state,
-    filters: filters,
-    page: 1
+  const setFilters = filters => updateState(draft => {
+    draft.filters = filters;
+    draft.page = 1;
   });
 
   useEffect(() => {
@@ -41,11 +45,10 @@ const MakueniProcurementPlans = props => {
     };
 
     getProcurementPlans(params).then(result => {
-      setState(s => ({
-        ...s,
-        data: result.data,
-        count: result.count
-      }));
+      updateState(draft => {
+        draft.data =  result.data;
+        draft.count = result.count;
+      });
     });
 
   }, [state.filters, state.page, state.pageSize]);

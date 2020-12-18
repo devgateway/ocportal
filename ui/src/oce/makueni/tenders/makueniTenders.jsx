@@ -6,41 +6,44 @@ import Project from './single/Project';
 import PurchaseReqView from './single/PurchaseReqView';
 import FiltersTendersWrapper from '../filters/FiltersTendersWrapper';
 import Footer from '../../layout/footer';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import fmConnect from "../../fm/fm";
 import FileDownloadLinks from "./single/FileDownloadLinks";
 import { getTenders} from "../../api/Api";
 import PropTypes from "prop-types";
 import {tCreator} from "../../translatable";
+import {useImmer} from "use-immer";
+import {setImmer} from "../../tools";
 
 const MakueniTenders = props =>  {
 
   useEffect(() => window.scrollTo(0, 0));
 
-  const [filters, setFilters] = useState({});
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
-  const [dataWithCount, setDataWithCount] = useState({data:[], count:undefined})
+  const [filters, updateFilters] = useImmer({});
+  const [page, updatePage] = useImmer(1);
+  const [pageSize, updatePageSize] = useImmer(20);
+  const [dataWithCount, updateDataWithCount] = useImmer({data:[], count:undefined})
+
 
   useEffect(() => {
     getTenders({...filters, pageSize: pageSize, pageNumber: page - 1}).then(result => {
-      setDataWithCount({
-        data: result.data,
-        count: result.count
+      updateDataWithCount(draft => {
+        draft.data = result.data;
+        draft.count =  result.count;
       });
     });
 
   }, [filters, page, pageSize]);
 
   useEffect(() => {
-    setPage(1);
+    updatePage(() => 1);
   }, [filters]);
 
   let introJsCount = 0; //this should not be part of the state
 
   const filtersWrapper = () =>
       <FiltersTendersWrapper
-          filters={filters} applyFilters={setFilters} translations={props.translations}/>;
+          filters={filters} applyFilters={setImmer(updateFilters)} translations={props.translations}/>;
 
   const t = tCreator(props.translations);
 
@@ -161,8 +164,8 @@ const MakueniTenders = props =>  {
                   data={dataWithCount.data}
                   page={page}
                   pageSize={pageSize}
-                  onPageChange={setPage}
-                  onSizePerPageList={setPageSize}
+                  onPageChange={setImmer(updatePage)}
+                  onSizePerPageList={setImmer(updatePageSize)}
                   count={dataWithCount.count}
                   columns={visibleColumns}
                 />

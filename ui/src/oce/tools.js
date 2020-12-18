@@ -138,3 +138,14 @@ export const fetchEP = url => fetch(url.clone().query(''), {
 export const sameArray = (array1, array2) =>
   array1.length === array2.length
   && _.difference(array1, array2).length === 0;
+
+
+/**
+ * wrapper for useImmer update call, that receives as imput the update function and also the input value
+ * it always replaces the wrapped immer object with the input value. To be used with privities or small
+ * state objects that do not need draft destructuring.
+ *
+ * @param updateFunc
+ * @returns {function(*): *}
+ */
+export const setImmer = (updateFunc) => (p) => updateFunc(() => p);

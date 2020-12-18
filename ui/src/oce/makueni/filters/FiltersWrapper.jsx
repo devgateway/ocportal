@@ -44,7 +44,7 @@ const FiltersWrapper = props => {
 
   const reset = () => {
     props.applyFilters({});
-    updateLocalFilters(draft => ({}));
+    updateLocalFilters(() => ({}));
   }
 
   const apply = () => {

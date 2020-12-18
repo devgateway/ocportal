@@ -17,13 +17,15 @@ import PMCReport from "./PMCReport";
 import MEReport from "./MEReport";
 import PaymentVoucher from "./PaymentVoucher";
 import PropTypes from "prop-types";
+import {setImmer} from "../../../tools";
+import {useImmer} from "use-immer";
 
 const PurchaseReqView = (props) => {
 
   const [selected, setSelected] = useState(1);
   const [visibleTabs, setVisibleTabs] = useState([]);
 
-  const [data, setData] = useState(undefined);
+  const [data, updateData] = useImmer(undefined);
   const {id, navigate, isFeatureVisible} = props;
   const t = tCreator(props.translations);
 
@@ -35,9 +37,7 @@ const PurchaseReqView = (props) => {
   }
 
   useEffect(() => {
-        getPurchaseRequisition({id: maybeTrimOcidPrefix(id)}).then(result => {
-          setData(result);
-        });
+        getPurchaseRequisition({id: maybeTrimOcidPrefix(id)}).then(setImmer(updateData));
         setVisibleTabs(tabs.filter(tab => isFeatureVisible(tab.fm)));
         if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
           changeTab(visibleTabs[0].tab);
