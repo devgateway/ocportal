@@ -1,4 +1,5 @@
 import React from "react";
+import cn from 'classnames';
 import {tCreator} from '../../../translatable';
 
 class Cell extends React.PureComponent {
@@ -22,10 +23,12 @@ const Info = ({ info, flagsCount, prs, contractsCount, unflaggedContractsCount, 
 
   const t = tCreator(translations);
 
+  const showBottomTable = address || contactPoint;
+
   return (
     <div className="pe-page">
       <section className="info">
-        <table className="table join-bottom table-bordered info-table">
+        <table className={cn('table', 'table-bordered', 'info-table', {'join-bottom': showBottomTable})}>
           <tbody>
           <tr>
             <Cell title={t('crd:contracts:baseInfo:buyerName')}>
@@ -58,6 +61,7 @@ const Info = ({ info, flagsCount, prs, contractsCount, unflaggedContractsCount, 
           }
           </tbody>
         </table>
+        {showBottomTable &&
         <table className="table table-bordered info-table">
           <tbody>
           <tr>
@@ -69,7 +73,7 @@ const Info = ({ info, flagsCount, prs, contractsCount, unflaggedContractsCount, 
               {address.postalCode} /
               &nbsp;
               {address.countryName}
-            </Cell> }
+            </Cell>}
             {contactPoint &&
             <Cell title="Contacts" colSpan="2" dlClassName="smaller">
               {contactPoint.name}<br/>
@@ -79,7 +83,7 @@ const Info = ({ info, flagsCount, prs, contractsCount, unflaggedContractsCount, 
             }
           </tr>
           </tbody>
-        </table>
+        </table>}
       </section>
     </div>
   );
