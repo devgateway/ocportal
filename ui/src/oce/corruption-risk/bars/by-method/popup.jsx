@@ -1,5 +1,5 @@
 import React from "react";
-import translatable from '../../../../../translatable';
+import translatable from '../../../translatable';
 
 class Popup extends translatable(React.PureComponent) {
   render() {
@@ -8,14 +8,14 @@ class Popup extends translatable(React.PureComponent) {
 
     const { status, count } = payload[0].payload;
 
-    const POPUP_HEIGHT = 55;
+    let POPUP_HEIGHT = 55;
 
     const style = {
       left: 0,
       top: coordinate.y - POPUP_HEIGHT - viewBox.top - 4,
       width: 300,
       height: POPUP_HEIGHT,
-    };
+    }
 
     return (
       <div>

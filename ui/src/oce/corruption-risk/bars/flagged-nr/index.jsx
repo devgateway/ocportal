@@ -84,8 +84,6 @@ class TaggedBar extends translatable(Bar) {
   }
 }
 
-// TODO move up!
-
 const FlaggedNr = ({ data, length, zoomed, translations }) => {
 
   let height = 350;

@@ -1,10 +1,18 @@
 import React from "react";
-import { BarChart, Bar, XAxis, YAxis, LabelList, ResponsiveContainer, Tooltip } from 'recharts';
-import {tCreator} from '../../../../../translatable';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  LabelList,
+  ResponsiveContainer,
+  Tooltip
+} from 'recharts';
+import {tCreator} from '../../../translatable';
 import Popup from './popup';
-import { renderTopLeftLabel } from '../../../../archive/tools';
+import { renderTopLeftLabel } from '../../archive/tools';
 
-const ProcurementsByStatus = ({ data, length, translations, zoomed }) => {
+const ProcurementsByMethod = ({ data, length, translations, zoomed }) => {
 
   const t = tCreator(translations);
 
@@ -14,7 +22,7 @@ const ProcurementsByStatus = ({ data, length, translations, zoomed }) => {
     slicedData = data;
     height = Math.max(height, slicedData.length * 50);
   } else {
-    slicedData = data.slice(0, 5);
+    slicedData = data.slice(0, length);
     if (slicedData.length < length) {
       for (let counter = slicedData.length; counter < length; counter++) {
         slicedData.unshift({});
@@ -39,18 +47,16 @@ const ProcurementsByStatus = ({ data, length, translations, zoomed }) => {
             data={slicedData}
             barSize={zoomed ? 10 : 20}
             barGap={0}
-            barCategoryGap={15}
-          >
+            barCategoryGap={15}>
             <XAxis type="number"/>
             <YAxis type="category" hide dataKey="status"/>
             <Tooltip content={<Popup/>} translations={translations} cursor={false}/>
             <Bar
-              name={t('crd:procuringEntities:byStatus:title')}
+              name={t('crd:procuringEntities:byMethod:title')}
               dataKey="count"
               fill="#289df4"
               minPointSize={3}
-              isAnimationActive={false}
-            >
+              isAnimationActive={false}>
               <LabelList
                 dataKey="status"
                 position="insideTopLeft"
@@ -64,4 +70,4 @@ const ProcurementsByStatus = ({ data, length, translations, zoomed }) => {
   );
 }
 
-export default ProcurementsByStatus;
+export default ProcurementsByMethod;
