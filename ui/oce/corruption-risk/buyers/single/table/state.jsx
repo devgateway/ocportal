@@ -41,6 +41,7 @@ const findActiveAward = awards =>
   );
 
 function getAwardAmount(awards) {
+  if (!awards) return 0;
   const award = findActiveAward(awards);
   if (!award) return 0;
   const { value } = award;
