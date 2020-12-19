@@ -4,7 +4,7 @@ import BootstrapTableWrapper from '../../archive/bootstrap-table-wrapper';
 import { mkContractLink } from '../../tools';
 import {getFlaggedReleases} from "./api";
 import {useImmer} from "use-immer";
-import {setImmer} from "../../../../tools";
+import {setImmer} from "../../../tools";
 
 const Table = ({filters, navigate, translations}) => {
 
