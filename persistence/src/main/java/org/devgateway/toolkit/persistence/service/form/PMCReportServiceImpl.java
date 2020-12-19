@@ -72,4 +72,10 @@ public class PMCReportServiceImpl extends AbstractImplTenderProcessMakueniEntity
 
         approvedReportRepository.save(approvedReport);
     }
+
+    @Override
+    public void delete(PMCReport report) {
+        approvedReportRepository.deleteByPmcReport(report);
+        super.delete(report);
+    }
 }
