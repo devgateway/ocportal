@@ -1,8 +1,7 @@
 import {FormControl, FormGroup, ControlLabel, HelpBlock, InputGroup} from 'react-bootstrap';
 import React from 'react';
-import {getFeedbackUrlPart} from './feedbackList';
+import {getFeedbackUrlPart} from './util';
 import ReCAPTCHA from 'react-google-recaptcha';
-
 
 class FeedbackMessageForm extends React.PureComponent {
 

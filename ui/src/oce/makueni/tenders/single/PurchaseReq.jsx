@@ -100,7 +100,7 @@ const PurchaseReq = (props) => {
     </div>);
   }
 
-  return (data === undefined ? <NoDataMessage translations={this.props.translations}/> : getPurchaseReq());
+  return (data === undefined ? <NoDataMessage translations={props.translations}/> : getPurchaseReq());
 }
 
 PurchaseReq.propTypes = defaultSingleTenderTabTypes;

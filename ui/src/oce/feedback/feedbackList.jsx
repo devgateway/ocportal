@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import FeedbackMessageForm from './feedback';
 import {getFeedback, postFeedback} from "../api/Api";
-
-export const getFeedbackUrlPart = () => {
-    return window.location.hash.substr(3);
-};
+import {getFeedbackUrlPart} from "./util";
 
 const FeedbackMessageList = (props) => {
 

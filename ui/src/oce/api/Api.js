@@ -3,17 +3,11 @@ import {fetchEP} from "../tools";
 
 export const API_ROOT = '/api';
 
-export const getProject = async params => {
-  return await fetch('/makueni/project/id/' + params.id);
-}
+export const getProject = (params) => fetch('/makueni/project/id/' + params.id);
 
-export const getFeedback = async page => {
-  return await fetch('/feedback?page=' + page);
-}
+export const getFeedback = (page) => fetch('/feedback?page=' + page);
 
-export const postFeedback = async postData => {
-  return await fetch('/postFeedback', postData);
-}
+export const postFeedback = (postData) => fetch('/postFeedback', postData);
 
 export const getPurchaseRequisition = async params => {
   const rawData = await fetch('/makueni/purchaseReq/id/' + params.id);
@@ -76,4 +70,4 @@ export const fetch = (ep, params) => {
     uri.addSearch(params);
   }
   return fetchEP(uri);
-}
+};

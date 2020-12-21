@@ -137,7 +137,7 @@ const Tender = (props) => {
   }
 
   return (data === undefined ?
-      <NoDataMessage translations={this.props.translations}/> : getTenderView(data[0]));
+      <NoDataMessage translations={props.translations}/> : getTenderView(data[0]));
 
 }
 
