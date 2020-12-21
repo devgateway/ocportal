@@ -1,24 +1,23 @@
-import React from "react";
-import { Map, Set, List } from 'immutable';
+import React, {useEffect, useState} from "react";
+import { List } from 'immutable';
 import TopSearch from '../../top-search';
-import translatable from '../../../translatable';
+import translatable, {tCreator} from '../../../translatable';
 import Visualization from '../../../visualization';
-import CRDPage from '../../page';
-import { wireProps } from '../../tools';
+import {wirePropsPlain} from '../../tools';
 import NrLostVsWon from './donuts/nr-lost-vs-won';
 import AmountLostVsWon from './donuts/amount-lost-vs-won';
 import NrFlags from './donuts/nr-flags';
-import styles from './style.scss';
-import { cacheFn, pluckImm } from '../../../tools';
+import './style.scss';
+import { cacheFn } from '../../../tools';
 import Zoomable from '../../zoomable';
 import Crosstab from '../../clickable-crosstab';
 import { CORRUPTION_TYPES } from '../../constants';
 import FlaggedNr from '../../bars/flagged-nr';
 import BackendDateFilterable from '../../backend-date-filterable';
-import { supplierId, supplierFlaggedNrData, winsAndFlagsData, maxCommonDataLength } from './state';
 import WinsAndFlags from '../../bars/wins-and-flags/index';
 import SupplierTable from './table';
 import TitleBelow from '../../archive/title-below';
+import {fetchAllInfo} from "./api";
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
   render() {
@@ -34,6 +33,11 @@ class CrosstabExplanation extends translatable(React.PureComponent) {
 }
 
 class Info extends translatable(Visualization) {
+
+  constructor(...args) {
+    super(...args);
+  }
+
   getCustomEP() {
     const { id } = this.props;
     return [
@@ -142,52 +146,71 @@ class Info extends translatable(Visualization) {
   }
 }
 
-class Supplier extends CRDPage {
-  constructor(...args) {
-    super(...args);
-    this.state = this.state || {};
+const injectSupplierFilter = cacheFn((filters, supplierId) => {
+  return {
+    ...filters,
+    supplierId: (filters.supplierId || []).concat(supplierId)
+  };
+});
 
-    this.injectSupplierFilter = cacheFn((filters, supplierId) => {
-      return {
-        ...filters,
-        supplierId: (filters.supplierId || []).concat(supplierId)
-      };
-    });
+const injectDatefulFilter = cacheFn((filters, years, months) => ({
+  ...filters,
+  year: years,
+  month: months
+}));
 
-    this.injectBidderFilter = cacheFn((filters, bidderId) => {
-      return {
-        ...filters,
-        bidderId: (filters.bidderId || []).concat(bidderId)
-      };
-    });
+const injectBidderFilter = cacheFn((filters, bidderId) => {
+  return {
+    ...filters,
+    bidderId: (filters.bidderId || []).concat(bidderId)
+  };
+});
 
-    this.groupIndicators = cacheFn((indicatorTypesMapping) => {
-      const result = {};
-      CORRUPTION_TYPES.forEach((corruptionType) => { result[corruptionType] = []; });
-      if (indicatorTypesMapping) {
-        Object.keys(indicatorTypesMapping).forEach((indicatorName) => {
-          const indicator = indicatorTypesMapping[indicatorName];
-          indicator.types.forEach(type => result[type].push(indicatorName));
-        });
-      }
-      return result;
+const groupIndicators = cacheFn((indicatorTypesMapping) => {
+  const result = {};
+  CORRUPTION_TYPES.forEach((corruptionType) => { result[corruptionType] = []; });
+  if (indicatorTypesMapping) {
+    Object.keys(indicatorTypesMapping).forEach((indicatorName) => {
+      const indicator = indicatorTypesMapping[indicatorName];
+      indicator.types.forEach(type => result[type].push(indicatorName));
     });
   }
+  return result;
+});
 
-  componentDidMount(...args) {
-    super.componentDidMount(...args);
-    supplierId.assign('Supplier single', this.props.id);
-  }
+const Supplier = props => {
 
-  componentWillReceiveProps(nextProps) {
-    const { id } = this.props;
-    if (id != nextProps.id) {
-      supplierId.assign('supplierId', id);
+  useEffect(() => window.scrollTo(0, 0), []);
+
+  const { translations, doSearch, id, filters, years, months, data } = props;
+
+  const t = tCreator(translations);
+
+  const totalFlags = data.getIn(['info', 'totalFlags']);
+
+  const supplierFilter = injectSupplierFilter(filters, id);
+
+  const supplierDatefulFilter = injectDatefulFilter(supplierFilter, years, months);
+
+  const [flagRowState, setFlagRowState] = useState();
+
+  useEffect(() => {
+    if (!!totalFlags) {
+      fetchAllInfo(supplierDatefulFilter)
+        .then(
+          s => setFlagRowState({
+            ...s,
+            maxCommonDataLength: Math.min(5,
+              Math.max(s.winsAndFlagsData.length, s.flaggedNrData.length))
+          }),
+          _ => setFlagRowState(null));
+    } else {
+      setFlagRowState(null);
     }
-  }
+  }, [totalFlags, supplierDatefulFilter]);
 
-  maybeGetFlagAnalysis() {
-    const { indicatorTypesMapping, id, data, filters, translations, requestNewData } = this.props;
+  const maybeGetFlagAnalysis = () => {
+    const { indicatorTypesMapping, id, data, filters, translations, requestNewData } = props;
 
     const nrFlagsByCorruptionType = {};
     CORRUPTION_TYPES.forEach((corruptionType) => { nrFlagsByCorruptionType[corruptionType] = 0; });
@@ -195,7 +218,7 @@ class Supplier extends CRDPage {
       nrFlagsByCorruptionType[corruptionType.get('type')] = corruptionType.get('indicatorCount');
     });
 
-    const indicators = this.groupIndicators(indicatorTypesMapping);
+    const indicators = groupIndicators(indicatorTypesMapping);
     const noIndicators = Object
       .keys(nrFlagsByCorruptionType)
       .every(key => nrFlagsByCorruptionType[key] === 0);
@@ -217,7 +240,7 @@ class Supplier extends CRDPage {
             return (
               <div>
                 <h3>
-                  {this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}
+                  {t(`crd:corruptionType:${corruptionType}:pageTitle`)}
                 </h3>
                 <CrosstabExplanation
                   translations={translations}
@@ -225,8 +248,8 @@ class Supplier extends CRDPage {
                   nrFlags={nrFlagsByCorruptionType[corruptionType]}
                 />
                 <Crosstab
-                  {...wireProps(this, ['crosstab', corruptionType])}
-                  filters={this.injectSupplierFilter(filters, id)}
+                  {...wirePropsPlain(props, ['crosstab', corruptionType])}
+                  filters={injectSupplierFilter(filters, id)}
                   requestNewData={(path, newData) => {
                     const toRemove = newData.filter(row => row.every(cell => cell.get('count') === 0)).keySeq();
                     requestNewData(path.concat(['crosstab', corruptionType]),
@@ -246,95 +269,92 @@ class Supplier extends CRDPage {
               </div>
             );
           })}
-        <h2>{this.t('crd:supplier:table:procurementsWon')}</h2>
-        <SupplierTable translations={translations} />
+        <h2>{t('crd:supplier:table:procurementsWon')}</h2>
+        <SupplierTable translations={translations} filters={supplierDatefulFilter} />
       </section>
     );
   }
 
-  render() {
-    const { translations, doSearch, id, data } = this.props;
-    const totalFlags = data.getIn(['info', 'totalFlags']);
-
-    return (
-      <div className="supplier-page">
-        <TopSearch
-          translations={translations}
-          doSearch={doSearch}
-          placeholder={this.t('crd:suppliers:top-search')}
-        />
-        <BackendDateFilterable
-          {...wireProps(this, 'info')}
-        >
-          <Info
-            id={id}
-          />
-        </BackendDateFilterable>
-
-        {totalFlags === 0 && <section className="flag-analysis">
-          <h2>{this.t('crd:contracts:flagAnalysis')}</h2>
-          <h4>This supplier has no flags</h4>
-        </section>}
-
-        {!!totalFlags && this.maybeGetSections()}
-      </div>
-    );
-  }
-
-  maybeGetSections() {
-    const { width, id, filters, styling, indicatorTypesMapping, translations } = this.props;
+  const maybeGetSections = () => {
+    const { width, id, filters, styling, translations } = props;
     const donutSize = width / 3 - window.innerWidth / 20;
-    const barChartWidth = width / 2 - 100;
     return (
       <div>
         <section className="supplier-general-statistics">
-          <h2>{this.t('crd:supplier:generalStatistics')}</h2>
+          <h2>{t('crd:supplier:generalStatistics')}</h2>
           <div className="col-sm-4">
             <NrLostVsWon
-              {...wireProps(this, 'nr-lost-vs-won')}
-              filters={this.injectBidderFilter(filters, id)}
+              {...wirePropsPlain(props, 'nr-lost-vs-won')}
+              filters={injectBidderFilter(filters, id)}
               width={donutSize}
             />
           </div>
           <div className="col-sm-4">
             <AmountLostVsWon
-              {...wireProps(this, 'amount-lost-vs-won')}
-              filters={this.injectBidderFilter(filters, id)}
+              {...wirePropsPlain(props, 'amount-lost-vs-won')}
+              filters={injectBidderFilter(filters, id)}
               width={donutSize}
               styling={styling}
             />
           </div>
           <div className="col-sm-4">
             <NrFlags
-              {...wireProps(this, 'nr-flags')}
-              filters={this.injectSupplierFilter(filters, id)}
+              {...wirePropsPlain(props, 'nr-flags')}
+              filters={injectSupplierFilter(filters, id)}
               width={donutSize}
             />
           </div>
         </section>
+        {flagRowState &&
         <section className="flag-analysis">
           <h2>
-            {this.t('crd:contracts:flagAnalysis')}
+            {t('crd:contracts:flagAnalysis')}
           </h2>
           <div className="col-sm-6">
-            <Zoomable zoomedWidth={width} data={winsAndFlagsData} length={maxCommonDataLength}>
-              <TitleBelow title={this.t('crd:supplier:winsAndLosses:title')}>
-                <WinsAndFlags translations={translations} />
+            <Zoomable zoomedWidth={width}>
+              <TitleBelow title={t('crd:supplier:winsAndLosses:title')}>
+                <WinsAndFlags translations={translations}
+                              data={flagRowState.winsAndFlagsData} length={flagRowState.maxCommonDataLength} />
               </TitleBelow>
             </Zoomable>
           </div>
           <div className="col-sm-6">
-            <Zoomable zoomedWidth={width} data={supplierFlaggedNrData} length={maxCommonDataLength}>
-              <TitleBelow title={this.t('crd:supplier:flaggedNr:title')}>
-                <FlaggedNr translations={translations} />
+            <Zoomable zoomedWidth={width}>
+              <TitleBelow title={t('crd:supplier:flaggedNr:title')}>
+                <FlaggedNr translations={translations}
+                           data={flagRowState.flaggedNrData} length={flagRowState.maxCommonDataLength} />
               </TitleBelow>
             </Zoomable>
           </div>
-        </section>
-        {this.maybeGetFlagAnalysis()}
+        </section>}
+        {maybeGetFlagAnalysis()}
       </div>
     );
-  }
+  };
+
+  return (
+    <div className="supplier-page">
+      <TopSearch
+        translations={translations}
+        doSearch={doSearch}
+        placeholder={t('crd:suppliers:top-search')}
+      />
+      <BackendDateFilterable
+        {...wirePropsPlain(props, 'info')}
+      >
+        <Info
+          id={id}
+        />
+      </BackendDateFilterable>
+
+      {totalFlags === 0 && <section className="flag-analysis">
+        <h2>{t('crd:contracts:flagAnalysis')}</h2>
+        <h4>This supplier has no flags</h4>
+      </section>}
+
+      {!!totalFlags && maybeGetSections()}
+    </div>
+  );
 }
 
 export default Supplier;

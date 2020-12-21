@@ -1,126 +1,106 @@
-import React from "react";
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import translatable from '../../../../translatable';
-import { supplierProcurementsData, page, pageSize, supplierProcurementsCount } from './state';
+import React, {useEffect, useState} from "react";
+import {tCreator} from '../../../../translatable';
 import BootstrapTableWrapper from '../../../archive/bootstrap-table-wrapper';
-import style from './style.scss';
+import {getFlaggedReleases} from "./api";
+import './style.scss';
 
-const NAME = 'supplierProcurementsComponent';
+const Table = ({filters, translations}) => {
 
-export default class Table extends translatable(React.PureComponent) {
-  constructor(...args){
-    super(...args);
-    this.state = this.state || {};
-    this.state.data = [];
-  }
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
 
-  componentDidMount() {
-    supplierProcurementsData.addListener(NAME, () => this.updateBindings());
-    page.addListener(NAME, () => this.updateBindings());
-    pageSize.addListener(NAME, () => this.updateBindings());
-    supplierProcurementsCount.addListener(NAME, () => this.updateBindings());
-  }
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
 
-  componentWillUnmount() {
-    supplierProcurementsData.removeListener(NAME);
-    page.removeListener(NAME);
-    pageSize.removeListener(NAME);
-    supplierProcurementsCount.removeListener(NAME);
-  }
+  useEffect(() => {
+    const params = {
+      ...filters,
+      pageSize,
+      pageNumber: page - 1
+    };
+    getFlaggedReleases(params).then(([data, count]) => {
+      setData(data);
+      setCount(count);
+    });
+  }, [filters, pageSize, page]);
 
-  updateBindings() {
-    Promise.all([
-      supplierProcurementsData.getState(NAME),
-      page.getState(NAME),
-      pageSize.getState(NAME),
-      supplierProcurementsCount.getState(NAME),
-    ]).then(([data, page, pageSize, count]) => {
-      this.setState({
-        data,
-        page,
-        pageSize,
-        count,
-      })
-    })
-  }
+  const t = tCreator(translations);
 
-  formatTypes(data) {
+  const formatTypes = data => {
     return (
       <div>
         {data.map(datum => {
-          const translated = this.t(`crd:corruptionType:${datum.type}:name`);
+          const translated = t(`crd:corruptionType:${datum.type}:name`);
           return <div>{translated}: {datum.count}</div>;
         })}
       </div>
     );
-  }
+  };
 
-  formatFlags(data) {
+  const formatFlags = (data) => {
     return (
       <div>
         {data.map(indicator => (
           <div>
-           {this.t(`crd:indicators:${indicator}:name`)}
+           {t(`crd:indicators:${indicator}:name`)}
           </div>
         ))}
       </div>
     );
-  }
+  };
 
-  formatDate(date) {
+  const formatDate = (date) => {
     return new Date(date).toLocaleDateString();
-  }
+  };
 
-  formatPE(PEName, { PEId }) {
+  const formatPE = (PEName, { PEId }) => {
     return (
       <a href={`#!/crd/procuring-entity/${PEId}`}>
         {PEName}
       </a>
     );
-  }
+  };
 
-  render() {
-    const { data, count } = this.state;
-    return (
-      <BootstrapTableWrapper
-        data={data}
-        bordered
-        page={this.state.page}
-        pageSize={this.state.pageSize}
-        onPageChange={newPage => page.assign(NAME, newPage)}
-        onSizePerPageList={newPageSize => pageSize.assign(NAME, newPageSize)}
-        count={count}
-        containerClass="supplier-procurements-table"
-        columns={[{
-            title: this.t('crd:contracts:baseInfo:procuringEntityName'),
-            dataField: 'PEName',
-            className: 'pe-name',
-            columnClassName: 'pe-name',
-            dataFormat: this.formatPE.bind(this),
-        }, {
-            title: this.t('crd:contracts:list:awardAmount'),
-            dataField: 'awardAmount',
-        }, {
-            title: this.t('crd:contracts:baseInfo:awardDate'),
-            dataField: 'awardDate',
-            dataFormat: this.formatDate.bind(this),
-        }, {
-            title: this.t('crd:supplier:table:nrBidders'),
-            dataField: 'nrBidders',
-            width: '10%',
-        }, {
-            title: this.t('crd:procurementsTable:noOfFlags'),
-            dataField: 'types',
-            dataFormat: this.formatTypes.bind(this),
-            width: '25%',
-        }, {
-            title: this.t('crd:supplier:table:flagName'),
-            dataField: 'flags',
-            dataFormat: this.formatFlags.bind(this),
-            width: '25%',
-        }]}
-      />
-    )
-  }
-}
+  return (
+    <BootstrapTableWrapper
+      data={data}
+      bordered
+      page={page}
+      pageSize={pageSize}
+      onPageChange={newPage => setPage(newPage)}
+      onSizePerPageList={newPageSize => setPageSize(newPageSize)}
+      count={count}
+      containerClass="supplier-procurements-table"
+      columns={[{
+          title: t('crd:contracts:baseInfo:procuringEntityName'),
+          dataField: 'PEName',
+          className: 'pe-name',
+          columnClassName: 'pe-name',
+          dataFormat: formatPE,
+      }, {
+          title: t('crd:contracts:list:awardAmount'),
+          dataField: 'awardAmount',
+      }, {
+          title: t('crd:contracts:baseInfo:awardDate'),
+          dataField: 'awardDate',
+          dataFormat: formatDate,
+      }, {
+          title: t('crd:supplier:table:nrBidders'),
+          dataField: 'nrBidders',
+          width: '10%',
+      }, {
+          title: t('crd:procurementsTable:noOfFlags'),
+          dataField: 'types',
+          dataFormat: formatTypes,
+          width: '25%',
+      }, {
+          title: t('crd:supplier:table:flagName'),
+          dataField: 'flags',
+          dataFormat: formatFlags,
+          width: '25%',
+      }]}
+    />
+  );
+};
 
+export default Table;

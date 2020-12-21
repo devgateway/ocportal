@@ -60,9 +60,9 @@ class Chart extends Visualization {
       prevProps[prop] !== this.props[prop]) || this.props.translations !== prevProps.translations) {
       this.chartContainer.data = this.getData();
       this.chartContainer.layout = this.getDecoratedLayout();
-      setTimeout(() => Plotly.redraw(this.chartContainer));
+      setTimeout(() => this.chartContainer && Plotly.redraw(this.chartContainer));
     } else if (['title', 'width', 'xAxisRange', 'yAxisRange'].some(prop => prevProps[prop] !== this.props[prop])) {
-      setTimeout(() => Plotly.relayout(this.chartContainer, this.getDecoratedLayout()));
+      setTimeout(() => this.chartContainer && Plotly.relayout(this.chartContainer, this.getDecoratedLayout()));
     }
   }
 

@@ -1,4 +1,4 @@
-import {fetch} from "../../../api/Api";
+import {fetch} from "../../../../api/Api";
 
 const findActiveAward = awards =>
   awards.find(
@@ -6,30 +6,25 @@ const findActiveAward = awards =>
   );
 
 const getAwardAmount = awards => {
-  if (!awards) return 0;
   const award = findActiveAward(awards);
-  if (!award) return 0;
-  const {value} = award;
+  const { value } = award;
   return `${value.amount} ${value.currency}`;
-};
+}
 
-const getTenderAmount = datum => {
-  try {
-    return `${datum.tender.value.amount} ${datum.tender.value.currency}`;
-  } catch (whatever) {
-    return 0;
-  }
+const getAwardDate = awards => {
+  const award = findActiveAward(awards);
+  return award.date;
 };
 
 const mapFlaggedReleases = data => data.map(datum => {
   return {
-    id: datum.ocid,
-    name: datum.tender.title || 'N/A',
-    awardStatus: getAwardAmount(datum.awards) ? 'active' : 'unsuccessful',
-    tenderAmount: getTenderAmount(datum),
+    id: datum.id,
+    PEName: datum.tender.procuringEntity.name,
+    PEId: datum.tender.procuringEntity.id,
     awardAmount: getAwardAmount(datum.awards),
-    nrBidders: datum.tender.numberOfTenderers || 0,
-    nrFlags: datum.flags.totalFlagged,
+    awardDate: getAwardDate(datum.awards),
+    nrBidders: datum.tender.numberOfTenderers,
+    types: datum.flags.flaggedStats,
     flags: Object.keys(datum.flags).filter(key => datum.flags[key].value),
   }
 });

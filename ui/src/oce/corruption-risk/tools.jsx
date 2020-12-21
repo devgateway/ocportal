@@ -55,6 +55,10 @@ export function cherrypickProps(keys, source) {
 
 export function wireProps(parent, _prefix) {
   const { props: parentProps } = parent;
+  return wirePropsPlain(parentProps);
+}
+
+export function wirePropsPlain(parentProps, _prefix) {
   const props = cherrypickProps(ROUTINE_PROPS, parentProps);
   if (_prefix) {
     const prefix = Array.isArray(_prefix) ? _prefix : [_prefix];

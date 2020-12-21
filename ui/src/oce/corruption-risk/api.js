@@ -24,9 +24,9 @@ export const procurementMapper = data => data.map(
   })
 ).sort((a, b) => b.count - a.count);
 
-export const mapWinsAndFlags = data => data.map(datum => {
+export const mapWinsAndFlags = prop => data => data.map(datum => {
   return {
-    name: datum.supplierName,
+    name: datum[prop],
     wins: datum.count,
     flags: datum.countFlags,
   }

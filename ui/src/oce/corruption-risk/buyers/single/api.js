@@ -13,7 +13,7 @@ const getInfo = filters => fetch(`/ocds/organization/buyer/id/${filters.buyerId}
 const getPrs = filters => fetch('/procuringEntitiesForBuyers', filters);
 
 const getWinsAndFlagsData = filters => fetch('/supplierWinsPerBuyer', filters)
-  .then(mapWinsAndFlags);
+  .then(mapWinsAndFlags('supplierName'));
 
 const getProcurementsByStatusData = filters =>
   fetch('/procurementsByTenderStatusBuyer', filters)
