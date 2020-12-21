@@ -20,7 +20,6 @@ import LandingPopup from './landing-popup';
 import {LOGIN_URL} from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
-import {filters as CRDFilters} from '../state/oce-state';
 
 // eslint-disable-next-line no-undef
 class CorruptionRiskDashboard extends React.Component {
@@ -311,7 +310,6 @@ class CorruptionRiskDashboard extends React.Component {
 
         <Filters
           onChange={filtersToApply => {
-            CRDFilters.assign('CRD Dash', filtersToApply);
             this.setState({
               filters: filtersToApply
             });

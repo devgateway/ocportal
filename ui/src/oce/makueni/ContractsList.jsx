@@ -1,6 +1,6 @@
 import './makueni.scss';
 import React from 'react';
-import {API_ROOT} from '../state/oce-state';
+import {API_ROOT} from "../api/Api";
 
 class ContractsList extends React.PureComponent {
 

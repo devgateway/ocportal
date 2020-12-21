@@ -1,6 +1,7 @@
 import URI from "urijs";
-import {API_ROOT} from "../state/oce-state";
 import {fetchEP} from "../tools";
+
+export const API_ROOT = '/api';
 
 export const getProject = async params => {
   return await fetch('/makueni/project/id/' + params.id);
