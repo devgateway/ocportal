@@ -9,10 +9,11 @@ import ProcurementsByStatus from '../../bars/by-status';
 import ProcurementsByMethod from '../../bars/by-method';
 import ProcurementsTable from '../../table/procurements';
 import './style.scss';
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 import {createSelector} from "@reduxjs/toolkit";
 import {fetchAllInfo} from "./api";
+import {useImmer} from "use-immer";
 
 const buyerFiltersSelector = createSelector(
   [ props => props.id, props => props.filters, props => props.years, props => props.months ],
@@ -27,21 +28,23 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  const [state, setState] = useState();
+  const [state, updateState] = useImmer({});
 
   const buyerFilters = buyerFiltersSelector(otherProps);
 
   useEffect(() => {
     fetchAllInfo(buyerFilters)
-      .then(
-        state => setState({
-          ...state,
-          maxCommonDataLength: Math.min(5,
-            Math.max(state.procurementsByStatusData.length, state.procurementsByMethodData.length)),
-          max2ndRowCommonDataLength: Math.min(5,
-            Math.max(state.winsAndFlagsData.length, state.flaggedNrData.length))
-        }),
-        _ => setState(null));
+        .then(
+            data => {
+              updateState(() => ({
+                ...data,
+                maxCommonDataLength: Math.min(5,
+                    Math.max(data.procurementsByStatusData.length, data.procurementsByMethodData.length)),
+                max2ndRowCommonDataLength: Math.min(5,
+                    Math.max(data.winsAndFlagsData.length, data.flaggedNrData.length))
+              }))
+            },
+            _ => updateState(() => undefined));
   }, [buyerFilters]);
 
   const t = tCreator(translations);

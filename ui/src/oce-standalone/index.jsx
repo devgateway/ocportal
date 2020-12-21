@@ -1,11 +1,12 @@
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import ViewSwitcher from '../oce/switcher.jsx';
 import './style.scss';
 import OCEMakueni from './oceMakueni';
 import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
 import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
+import {enableMapSet} from 'immer';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
@@ -23,10 +24,12 @@ const translations = {
   fr_FR: require('../languages/fr_FR.json'),
 };
 
+enableMapSet();
+
 const BILLION = 1000000000;
 const MILLION = 1000000;
 const THOUSAND = 1000;
-const formatNumber = number => number === undefined ? number : number.toLocaleString(undefined, { maximumFractionDigits: 3 });
+const formatNumber = number => number === undefined ? number : number.toLocaleString(undefined, {maximumFractionDigits: 3});
 
 const formatDate = stringDate => {
   if (stringDate === undefined) {

@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React from "react";
+import {useImmer} from "use-immer";
 import {tCreator} from '../../translatable';
 import cn from 'classnames';
 import fmConnect from "../../fm/fm";
 
 export const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
-  <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
+    <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
 
 export const minMaxPropertyRendererCreator = (FilterItem, suffix) => ({filters, onChange, ...props}) => {
   const minProperty = `min${suffix}`;
@@ -31,24 +32,19 @@ export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props
 
 const FiltersWrapper = props => {
 
-  const [expanded, setExpanded] = useState(new Set());
+  const [expanded, updateExpanded] = useImmer(new Set());
 
-  const [localFilters, setLocalFilters] = useState(props.filters);
+  const [localFilters, updateLocalFilters] = useImmer(props.filters);
 
   const toggleItem = index => {
-    const expandedVar = new Set(expanded);
-    if (expandedVar.has(index)) {
-      expandedVar.delete(index);
-    } else {
-      expandedVar.add(index);
-    }
-
-    setExpanded(expandedVar);
+    updateExpanded(draft => {
+      draft.has(index) ? draft.delete(index) : draft.add(index);
+    });
   }
 
   const reset = () => {
     props.applyFilters({});
-    setLocalFilters({});
+    updateLocalFilters(() => ({}));
   }
 
   const apply = () => {
@@ -78,13 +74,7 @@ const FiltersWrapper = props => {
                 <React.Fragment key={fIdx}>
                   {filter.render({
                     filters: localFilters,
-                    onChange: filters => {
-                      const newFilters = {
-                        ...localFilters,
-                        ...filters
-                      };
-                      setLocalFilters(newFilters);
-                    },
+                    onChange: filters => updateLocalFilters((draft) => ({...draft, ...filters})),
                     translations: translations
                   })}
                 </React.Fragment>

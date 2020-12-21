@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Item} from "../../tenders/single/Item";
 import FileDownloadLinks from "../../tenders/single/FileDownloadLinks";
 import fmConnect from "../../../fm/fm";
 import {tCreator} from "../../../translatable";
 import {getProcurementPlan} from "../../../api/Api";
 import PropTypes from "prop-types";
+import {useImmer} from "use-immer";
+import {setImmer} from "../../../tools";
 
 const ProcurementPlan = props => {
 
@@ -12,7 +14,7 @@ const ProcurementPlan = props => {
 
   const t = tCreator(translations);
 
-  const [data, setData] = useState();
+  const [data, updateData] = useImmer(undefined);
 
   const getFeedbackSubject = () => {
     let metadata;
@@ -36,8 +38,7 @@ const ProcurementPlan = props => {
   }
 
   useEffect(() => {
-    getProcurementPlan(id)
-      .then(data => setData(data));
+    getProcurementPlan(id).then(setImmer(updateData));
   }, [id]);
 
   const { currencyFormatter, formatDate } = props.styling.tables;
@@ -81,13 +82,13 @@ const ProcurementPlan = props => {
 
                 {
                   data.planItems.map(planItem => <div key={planItem.id} className="box">
-                    {isFeatureVisible("publicView.procurementPlan.planItems.label")
+                    {planItem.item && isFeatureVisible("publicView.procurementPlan.planItems.label")
                     && <div className="row">
                       <Item label={t("procurementPlan:item:item")} value={planItem.item.label} col={12} />
                     </div>}
 
                     <div className="row display-flex">
-                      {isFeatureVisible("publicView.procurementPlan.planItems.unitOfIssue")
+                      {planItem.unitOfIssue && isFeatureVisible("publicView.procurementPlan.planItems.unitOfIssue")
                       && <Item label={t("procurementPlan:item:unitOfIssue")}
                                value={planItem.unitOfIssue.label} col={3} />}
                       {isFeatureVisible("publicView.procurementPlan.planItems.quantity")
@@ -96,16 +97,16 @@ const ProcurementPlan = props => {
                       {isFeatureVisible("publicView.procurementPlan.planItems.estimatedCost")
                       && <Item label={t("procurementPlan:item:estimatedCost")}
                                value={currencyFormatter(planItem.estimatedCost)} col={3} />}
-                      {isFeatureVisible("publicView.procurementPlan.planItems.totalCost")
+                      {planItem.quantity && planItem.estimatedCost && isFeatureVisible("publicView.procurementPlan.planItems.totalCost")
                       && <Item label={t("procurementPlan:item:totalCost")}
                                value={currencyFormatter(planItem.quantity * planItem.estimatedCost)} col={3} />}
-                      {isFeatureVisible("publicView.procurementPlan.planItems.procurementMethod")
+                      {planItem.procurementMethod && isFeatureVisible("publicView.procurementPlan.planItems.procurementMethod")
                       && <Item label={t("procurementPlan:item:procurementMethod")}
                                value={planItem.procurementMethod.label} col={3} />}
                       {isFeatureVisible("publicView.procurementPlan.planItems.sourceOfFunds")
                       && <Item label={t("procurementPlan:item:sourceOfFunds")}
                                value={planItem.sourceOfFunds} col={3} />}
-                      {isFeatureVisible("publicView.procurementPlan.planItems.targetGroup")
+                      {planItem.targetGroup && isFeatureVisible("publicView.procurementPlan.planItems.targetGroup")
                       && <Item label={t("procurementPlan:item:targetGroup")}
                                value={(planItem.targetGroup || {}).label} col={3} />}
                       {isFeatureVisible("publicView.procurementPlan.planItems.targetGroupValue")

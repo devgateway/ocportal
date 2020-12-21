@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {tCreator} from '../../../translatable';
 import BootstrapTableWrapper from '../../archive/bootstrap-table-wrapper';
 import { mkContractLink } from '../../tools';
 import {getFlaggedReleases} from "./api";
+import {useImmer} from "use-immer";
+import {setImmer} from "../../../tools";
 
 const Table = ({filters, navigate, translations}) => {
 
@@ -20,11 +22,11 @@ const Table = ({filters, navigate, translations}) => {
     );
   };
 
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [page, updatePage] = useImmer(1);
+  const [pageSize, updatePageSize] = useImmer(20);
 
-  const [data, setData] = useState([]);
-  const [count, setCount] = useState(0);
+  const [data, updateData] = useImmer([]);
+  const [count, updateCount] = useImmer(0);
 
   useEffect(() => {
     const params = {
@@ -32,11 +34,11 @@ const Table = ({filters, navigate, translations}) => {
       pageNumber: page - 1,
       pageSize
     };
-    getFlaggedReleases(params)
-      .then(([data, count]) => {
-        setData(data);
-        setCount(count);
-      });
+      getFlaggedReleases(params)
+          .then(([data, count]) => {
+              updateData(() => data);
+              updateCount(() => count);
+          });
   }, [filters, page, pageSize]);
 
   return (
@@ -45,8 +47,8 @@ const Table = ({filters, navigate, translations}) => {
       data={data}
       page={page}
       pageSize={pageSize}
-      onPageChange={newPage => setPage(newPage)}
-      onSizePerPageList={newPageSize => setPageSize(newPageSize)}
+      onPageChange={setImmer(updatePage)}
+      onSizePerPageList={setImmer(updatePageSize)}
       count={count}
       columns={[{
         title: 'Tender name',

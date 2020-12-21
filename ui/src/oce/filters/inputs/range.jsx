@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import PropTypes from 'prop-types';
 import {tCreator} from '../../translatable';
 import RCRange from 'rc-slider/lib/Range';
 import 'rc-slider/assets/index.css';
 import {fetch} from '../../api/Api';
 import {Col, ControlLabel, FormControl, FormGroup, Row} from "react-bootstrap";
+import {useImmer} from "use-immer";
 
 const FormattedNumberInput = ({value, onChange, ...otherProps}) => {
 
@@ -90,15 +91,15 @@ Range.propTypes = {
 
 export const RemoteRange = ({ep, minProperty, maxProperty, ...otherProps}) => {
 
-  const [state, setState] = useState({});
+  const [state, updateState] = useImmer({});
 
   useEffect(() => {
     fetch(ep)
       .then(([{ [minProperty]: min, [maxProperty]: max }]) =>
-        setState({
+        updateState(() => ({
           min: Math.floor(min),
           max: Math.ceil(max)
-        }));
+        })));
   }, [minProperty, maxProperty, ep]);
 
   if (state.min !== undefined && state.max !== undefined) {
