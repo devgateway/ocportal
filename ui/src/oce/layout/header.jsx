@@ -10,6 +10,7 @@ import ReactGA from 'react-ga';
 import {useDispatch, useSelector} from "react-redux";
 import {LOADED, loadStats, selectStats} from "./statsSlice";
 import PropTypes from 'prop-types';
+import reportWebVitals, {sendToGoogleAnalytics} from "../../reportWebVitals";
 
 const initGA = () => {
   ReactGA.initialize('UA-154640611-1');
@@ -80,6 +81,7 @@ const Header = props => {
 
   useEffect(() => {
     initGA();
+    reportWebVitals(sendToGoogleAnalytics);
     handleIntroJS();
     dispatch(loadStats());
   }, [dispatch]);
