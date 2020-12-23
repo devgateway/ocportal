@@ -227,7 +227,7 @@ const PurchaseReqView = (props) => {
 }
 
 PurchaseReqView.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   navigate: PropTypes.func.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,

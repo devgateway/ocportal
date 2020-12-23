@@ -54,6 +54,7 @@ class DonutWrapper extends React.PureComponent {
             endpoint={this.props.endpoint}
             margin={{ b: 0, t: 0, r: 0, l: 0, pad: 0 }}
             height={300}
+            styling={styling}
           />
           <CenterText
             data={data}
@@ -63,7 +64,13 @@ class DonutWrapper extends React.PureComponent {
         </div>
         <h4 className="title">
           {title}
-          {subtitle && [<br />, <small>{subtitle}</small>]}
+          {subtitle
+          && (
+            <>
+              <br />
+              <small>{subtitle}</small>
+            </>
+          )}
         </h4>
       </div>
     );

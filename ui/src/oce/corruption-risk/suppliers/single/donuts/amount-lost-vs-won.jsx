@@ -6,10 +6,12 @@ import translatable from '../../../../translatable';
 class CenterText extends translatable(React.PureComponent) {
   format(number) {
     const formatted = this.props.styling.charts.hoverFormatter(number) || '';
-    return [
-      formatted.slice(0, -1),
-      <span className="multiplier">{formatted.slice(-1)}</span>
-    ];
+    return (
+      <>
+        {formatted.slice(0, -1)}
+        <span className="multiplier">{formatted.slice(-1)}</span>
+      </>
+    );
   }
 
   render() {

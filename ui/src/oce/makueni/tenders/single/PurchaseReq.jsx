@@ -1,10 +1,11 @@
-import NoDataMessage from './NoData';
+import PropTypes from 'prop-types';
 import React from 'react';
+import NoDataMessage from './NoData';
 import fmConnect from "../../../fm/fm";
 import {Item} from "./Item";
 import FileDownloadLinks from "./FileDownloadLinks";
 import {tCreator} from "../../../translatable";
-import defaultSingleTenderTabTypes from "./singleUtil";
+import { commonTenderTabTypes } from './singleUtil';
 
 const PurchaseReq = (props) => {
   const {data, isFeatureVisible} = props;
@@ -103,6 +104,9 @@ const PurchaseReq = (props) => {
   return (data === undefined ? <NoDataMessage translations={props.translations}/> : getPurchaseReq());
 }
 
-PurchaseReq.propTypes = defaultSingleTenderTabTypes;
+PurchaseReq.propTypes = {
+  ...commonTenderTabTypes,
+  data: PropTypes.object,
+};
 
 export default fmConnect(PurchaseReq);
