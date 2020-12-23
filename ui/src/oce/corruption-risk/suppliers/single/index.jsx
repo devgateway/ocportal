@@ -238,7 +238,7 @@ const Supplier = props => {
           .filter(corruptionType => nrFlagsByCorruptionType[corruptionType])
           .map((corruptionType) => {
             return (
-              <div>
+              <div key={corruptionType}>
                 <h3>
                   {t(`crd:corruptionType:${corruptionType}:pageTitle`)}
                 </h3>
@@ -287,6 +287,7 @@ const Supplier = props => {
               {...wirePropsPlain(props, 'nr-lost-vs-won')}
               filters={injectBidderFilter(filters, id)}
               width={donutSize}
+              styling={styling}
             />
           </div>
           <div className="col-sm-4">
@@ -302,6 +303,7 @@ const Supplier = props => {
               {...wirePropsPlain(props, 'nr-flags')}
               filters={injectSupplierFilter(filters, id)}
               width={donutSize}
+              styling={styling}
             />
           </div>
         </section>
@@ -344,6 +346,8 @@ const Supplier = props => {
       >
         <Info
           id={id}
+          filters={{}}
+          requestNewData={() => { }}
         />
       </BackendDateFilterable>
 

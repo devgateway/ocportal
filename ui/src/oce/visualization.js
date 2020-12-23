@@ -72,7 +72,7 @@ Visualization.comparable = true;
 
 Visualization.propTypes = {
   filters: PropTypes.object.isRequired,
-  data: PropTypes.object,
+  data: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
   requestNewData: PropTypes.func.isRequired,
 };
 

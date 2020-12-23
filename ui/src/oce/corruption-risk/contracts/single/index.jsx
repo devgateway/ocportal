@@ -265,7 +265,7 @@ export default class Contract extends CRDPage {
         {Object.keys(indicators).map(corruptionType => {
            const nrFlags = indicators[corruptionType].length;
            return (
-             <div>
+             <div key={corruptionType}>
                <h3>
                  {this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}
                </h3>
@@ -300,7 +300,7 @@ export default class Contract extends CRDPage {
   render() {
     const { contract } = this.state;
 
-    const { id, translations, doSearch, filters, width, gotoSupplier } = this.props;
+    const { id, translations, doSearch, filters, width, gotoSupplier, styling } = this.props;
 
     if (!contract) return null;
 
@@ -342,6 +342,7 @@ export default class Contract extends CRDPage {
               Popup={DonutPopup}
               Chart={NrOfBidders}
               width={donutSize}
+              styling={styling}
             />
           </div>
           <div className="col-sm-4">
@@ -353,6 +354,7 @@ export default class Contract extends CRDPage {
                 Popup={DonutPopup}
                 Chart={NrOfContractsWithThisPE}
                 width={donutSize}
+                styling={styling}
               />
             }
           </div>
@@ -365,6 +367,7 @@ export default class Contract extends CRDPage {
                 Popup={PercentPESpendingPopup}
                 Chart={PercentPESpending}
                 width={donutSize}
+                styling={styling}
               />
             }
           </div>
