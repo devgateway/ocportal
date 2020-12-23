@@ -164,6 +164,7 @@ $lightest-grey: #f9f9f9;
     }
 
     a.download-file {
+        display: block;
         color: $active-text-color;
         cursor: pointer;
         text-decoration: none;
@@ -499,6 +500,7 @@ $lightest-grey: #f9f9f9;
     }
 
     a.download-file {
+        display: block;
         color: $active-text-color;
         cursor: pointer;
         text-decoration: none;
@@ -590,11 +592,6 @@ a.more-details-link:hover::before {
     @media screen and (max-width: 767px) {
         width: 300%;
     }
-}
-
-.react-bs-table-bordered {
-    border-radius: 0;
-    border: 1px solid transparent;
 }
 
 .table-bordered,

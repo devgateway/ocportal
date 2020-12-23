@@ -17,12 +17,12 @@ import {setImmer} from "../../tools";
 
 const MakueniTenders = props =>  {
 
-  useEffect(() => window.scrollTo(0, 0));
+  useEffect(() => window.scrollTo(0, 0), []);
 
   const [filters, updateFilters] = useImmer({});
   const [page, updatePage] = useImmer(1);
   const [pageSize, updatePageSize] = useImmer(20);
-  const [dataWithCount, updateDataWithCount] = useImmer({data:[], count:undefined})
+  const [dataWithCount, updateDataWithCount] = useImmer({data:[], count:0})
 
 
   useEffect(() => {
@@ -49,14 +49,14 @@ const MakueniTenders = props =>  {
 
   const showDataStep = () => introJsCount++ < 6;
 
-  const tenderLink = navigate => {
-    return (tender) => (<div className="tender-title" data-step={showDataStep()?9:""}
+  const tenderLink = (navigate) => {
+    return (tenderTitle, row) => (<div className="tender-title" data-step={showDataStep()?9:""}
     data-intro={showDataStep()?t("tables:tenderLink:dataIntro"):""}>
       {
-        tender !== undefined
-          ? <a href={`#!/tender/t/${tender.purchaseReqId}`}
-               onClick={() => navigate('t', tender.purchaseReqId)} className="more-details-link">
-            {tender.tenderTitle && tender.tenderTitle.toUpperCase()}
+        row.tender !== undefined
+          ? <a href={`#!/tender/t/${row.tender.purchaseReqId}`}
+               onClick={() => navigate('t', row.tender.purchaseReqId)} className="more-details-link">
+            {tenderTitle && tenderTitle.toUpperCase()}
           </a> : t("tables:tenderLink:noTender")
       }
     </div>);
@@ -101,37 +101,37 @@ const MakueniTenders = props =>  {
     const [navigationPage, id] = route;
 
     const columns = [{
-      title: t("tables:tenders:col:title"),
-      dataField: 'tender',
-      dataFormat: tenderLink(navigate),
+      text: t("tables:tenders:col:title"),
+      dataField: 'tender.tenderTitle',
+      formatter: tenderLink(navigate),
       visible: isFeatureVisible('publicView.tendersProcessList.tenderTitle')
     }, {
-      title: t("tables:tenders:col:department"),
+      text: t("tables:tenders:col:department"),
       dataField: 'department',
       visible: isFeatureVisible('publicView.tendersProcessList.department')
     }, {
-      title: t("tables:tenders:col:fiscalYear"),
+      text: t("tables:tenders:col:fiscalYear"),
       dataField: 'fiscalYear',
       visible: isFeatureVisible('publicView.tendersProcessList.fiscalYear')
     }, {
-      title: t("tables:tenders:col:closingDate"),
-      dataField: 'tender',
-      dataFormat: (cell, row) => cell !== undefined ? new Date(cell.closingDate).toLocaleDateString() : '',
+      text: t("tables:tenders:col:closingDate"),
+      dataField: 'tender.closingDate',
+      formatter: (closingDate) => (closingDate !== undefined ? new Date(closingDate).toLocaleDateString() : ''),
       visible: isFeatureVisible('publicView.tendersProcessList.closingDate')
     }, {
-      title: t("tables:tenders:col:tenderValue"),
-      dataField: 'tender',
-      dataFormat: (cell, row) => cell !== undefined ? props.styling.charts.hoverFormatter(cell.tenderValue) : '',
+      text: t("tables:tenders:col:tenderValue"),
+      dataField: 'tender.tenderValue',
+      formatter: (tenderValue) => (tenderValue !== undefined ? props.styling.charts.hoverFormatter(tenderValue) : ''),
       visible: isFeatureVisible('publicView.tendersProcessList.tenderValue')
     }, {
-      title: t("tables:tenders:col:project"),
+      text: t("tables:tenders:col:project"),
       dataField: 'project',
-      dataFormat: projectLink(navigate),
+      formatter: projectLink(navigate),
       visible: isFeatureVisible('publicView.tendersProcessList.project')
     }, {
-      title: t("tables:tenders:col:documents"),
+      text: t("tables:tenders:col:documents"),
       dataField: 'tender',
-      dataFormat: linksAndFiles(),
+      formatter: linksAndFiles(),
       visible: isFeatureVisible('publicView.tendersProcessList.tenderLink')
         || isFeatureVisible('publicView.tendersProcessList.tenderDocs')
     }];
@@ -160,7 +160,6 @@ const MakueniTenders = props =>  {
                 <h1>{t("tables:tenders:title")}</h1>
 
                 <BootstrapTableWrapper
-                  bordered
                   data={dataWithCount.data}
                   page={page}
                   pageSize={pageSize}

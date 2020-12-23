@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { List } from 'immutable';
 import translatable from '../../translatable';
 import { POPUP_HEIGHT } from '../constants';
 import { getAwardAmount, mkContractLink, _3LineText } from '../tools';
 import PaginatedTable from '../paginated-table';
+import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 // eslint-disable-next-line no-undef
 class Popup extends translatable(React.Component) {
@@ -129,64 +129,56 @@ class ProcurementsTable extends PaginatedTable {
     });
 
     return (
-      <BootstrapTable
+      <BootstrapTableWrapper
         data={jsData}
-        striped
-        pagination
-        remote
-        fetchInfo={{
-          dataTotalSize: count,
-        }}
-        options={{
-          page,
-          onPageChange: newPage => this.setState({ page: newPage }),
-          sizePerPage: pageSize,
-          sizePerPageList: [20, 50, 100, 200].map(value => ({ text: value, value })),
-          onSizePerPageList: newPageSize => this.setState({ pageSize: newPageSize }),
-          paginationPosition: 'both',
-        }}
-      >
-        <TableHeaderColumn dataField="status">
-          {this.t('crd:procurementsTable:status')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn isKey dataField="id" dataFormat={mkContractLink(navigate)}>
-          {this.t('crd:procurementsTable:contractID')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="title" dataFormat={mkContractLink(navigate)}>
-          {this.t('crd:procurementsTable:title')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="PEName" dataFormat={_3LineText}>
-          {this.t('crd:procurementsTable:procuringEntity')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="tenderAmount">
-          {this.t('crd:procurementsTable:tenderAmount')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="awardsAmount">
-          {this.t('crd:procurementsTable:awardsAmount')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn
-          dataField="tenderDate"
-          columnClassName="tender-date"
-        >
-          {this.t('crd:procurementsTable:tenderDate')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn
-          dataFormat={(_, popupData) => this.renderPopup(popupData)}
-          columnClassName="hoverable popup-left"
-        >
-          {this.t('crd:procurementsTable:individualIndicator:noOfFlags').replace(
-             '$#$',
-              this.t(`crd:corruptionType:${corruptionType}:name`)
-          )}
-        </TableHeaderColumn>
-      </BootstrapTable>
+        count={count}
+        page={page}
+        onPageChange={(newPage) => this.setState({ page: newPage })}
+        pageSize={pageSize}
+        onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
+        columns={[
+          {
+            text: this.t('crd:procurementsTable:status'),
+            dataField: 'status',
+          },
+          {
+            text: this.t('crd:procurementsTable:contractID'),
+            dataField: 'id',
+            formatter: mkContractLink(navigate),
+          },
+          {
+            text: this.t('crd:procurementsTable:title'),
+            dataField: 'title',
+            formatter: mkContractLink(navigate),
+          },
+          {
+            text: this.t('crd:procurementsTable:procuringEntity'),
+            dataField: 'PEName',
+            formatter: _3LineText,
+          },
+          {
+            text: this.t('crd:procurementsTable:tenderAmount'),
+            dataField: 'tenderAmount',
+          },
+          {
+            text: this.t('crd:procurementsTable:awardsAmount'),
+            dataField: 'awardsAmount',
+          },
+          {
+            text: this.t('crd:procurementsTable:tenderDate'),
+            dataField: 'tenderDate',
+          },
+          {
+            text: this.t('crd:procurementsTable:individualIndicator:noOfFlags').replace(
+              '$#$',
+              this.t(`crd:corruptionType:${corruptionType}:name`),
+            ),
+            dataField: 'dummy1',
+            formatter: (_, popupData) => this.renderPopup(popupData),
+            classes: 'hoverable popup-left',
+          },
+        ]}
+      />
     );
   }
 }

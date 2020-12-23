@@ -14,7 +14,7 @@ const Table = ({filters, navigate, translations}) => {
     return (
       <div>
         {data.map(indicator => (
-          <div>
+          <div key={indicator}>
             &#9679; {t(`crd:indicators:${indicator}:name`)}
           </div>
         ))}
@@ -43,7 +43,6 @@ const Table = ({filters, navigate, translations}) => {
 
   return (
     <BootstrapTableWrapper
-      bordered
       data={data}
       page={page}
       pageSize={pageSize}
@@ -51,34 +50,38 @@ const Table = ({filters, navigate, translations}) => {
       onSizePerPageList={setImmer(updatePageSize)}
       count={count}
       columns={[{
-        title: 'Tender name',
+        text: 'Tender name',
         dataField: 'name',
-        width: '20%',
-        dataFormat: mkContractLink(navigate),
+        formatter: mkContractLink(navigate),
+        headerStyle: {
+          width: '20%',
+        },
       }, {
-        title: 'OCID',
+        text: 'OCID',
         dataField: 'id',
-        dataFormat: mkContractLink(navigate),
+        formatter: mkContractLink(navigate),
       }, {
-        title: 'Award status',
+        text: 'Award status',
         dataField: 'awardStatus',
       }, {
-        title: 'Tender amount',
+        text: 'Tender amount',
         dataField: 'tenderAmount',
       }, {
-        title: t('crd:contracts:list:awardAmount'),
+        text: t('crd:contracts:list:awardAmount'),
         dataField: 'awardAmount',
       }, {
-        title: 'Number of bidders',
+        text: 'Number of bidders',
         dataField: 'nrBidders',
       }, {
-        title: 'Number of flags',
+        text: 'Number of flags',
         dataField: 'nrFlags',
       }, {
-        title: t('crd:supplier:table:flagName'),
+        text: t('crd:supplier:table:flagName'),
         dataField: 'flags',
-        dataFormat: formatFlags,
-        width: '20%',
+        formatter: formatFlags,
+        headerStyle: {
+          width: '20%',
+        },
       }]}
     />
   );

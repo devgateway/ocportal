@@ -1,12 +1,11 @@
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import React from 'react';
 import { List } from 'immutable';
-// eslint-disable-next-line no-unused-vars
-import rbtStyles from 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import CRDPage from '../page';
 import { getAwardAmount, mkContractLink, wireProps, _3LineText } from '../tools';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import BackendDateFilterable from '../backend-date-filterable';
+import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 class CList extends PaginatedTable {
   getCustomEP() {
@@ -63,65 +62,59 @@ class CList extends PaginatedTable {
     }).toJS();
 
     return (
-      <BootstrapTable
+      <BootstrapTableWrapper
         data={jsData}
-        striped
-        pagination
-        remote
-        fetchInfo={{
-          dataTotalSize: count,
-        }}
-        options={{
-          page,
-          onPageChange: newPage => this.setState({ page: newPage }),
-          sizePerPage: pageSize,
-          sizePerPageList: [20, 50, 100, 200].map(value => ({ text: value, value })),
-          onSizePerPageList: newPageSize => this.setState({ pageSize: newPageSize }),
-          paginationPosition: 'both',
-        }}
-      >
-        <TableHeaderColumn dataField="status">
-          {this.t('crd:contracts:baseInfo:status')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn
-          isKey
-          dataField="id"
-          dataFormat={mkContractLink(navigate)}
-          className="ocid"
-          columnClassName="ocid"
-        >
-          {this.t('crd:procurementsTable:contractID')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="title" dataFormat={mkContractLink(navigate)}>
-          {this.t('crd:general:contract:title')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="PEName" dataFormat={_3LineText}>
-          {this.t('crd:contracts:list:procuringEntity')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="tenderAmount">
-          {this.t('crd:procurementsTable:tenderAmount')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="awardAmount">
-          {this.t('crd:contracts:list:awardAmount')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="startDate" className="date" columnClassName="date">
-          {this.t('crd:procurementsTable:tenderDate')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="flagTypes">
-          {this.t('crd:procurementsTable:flagType')}
-        </TableHeaderColumn>
-
-        <TableHeaderColumn dataField="nrFlags">
-          {this.t('crd:procurementsTable:noOfFlags')}
-        </TableHeaderColumn>
-      </BootstrapTable>
+        count={count}
+        page={page}
+        onPageChange={(newPage) => this.setState({ page: newPage })}
+        pageSize={pageSize}
+        onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
+        columns={[
+          {
+            text: this.t('crd:contracts:baseInfo:status'),
+            dataField: 'status',
+          },
+          {
+            text: this.t('crd:procurementsTable:contractID'),
+            dataField: 'id',
+            formatter: mkContractLink(navigate),
+            classes: 'ocid',
+            headerClasses: 'ocid',
+          },
+          {
+            text: this.t('crd:general:contract:title'),
+            dataField: 'title',
+            formatter: mkContractLink(navigate),
+          },
+          {
+            text: this.t('crd:contracts:list:procuringEntity'),
+            dataField: 'PEName',
+            formatter: _3LineText,
+          },
+          {
+            text: this.t('crd:procurementsTable:tenderAmount'),
+            dataField: 'tenderAmount',
+          },
+          {
+            text: this.t('crd:contracts:list:awardAmount'),
+            dataField: 'awardAmount',
+          },
+          {
+            text: this.t('crd:procurementsTable:tenderDate'),
+            dataField: 'startDate',
+            classes: 'date',
+            headerClasses: 'date',
+          },
+          {
+            text: this.t('crd:procurementsTable:flagType'),
+            dataField: 'flagTypes',
+          },
+          {
+            text: this.t('crd:procurementsTable:noOfFlags'),
+            dataField: 'nrFlags',
+          },
+        ]}
+      />
     );
   }
 }

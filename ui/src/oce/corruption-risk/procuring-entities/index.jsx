@@ -1,10 +1,11 @@
+import React from 'react';
 import { List } from 'immutable';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import { wireProps } from '../tools';
 import {getTenderAndAwardCounts} from "./api";
+import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 export const mkLink = navigate => (content, { id }) => (
   <a
@@ -85,39 +86,38 @@ class PEList extends PaginatedTable {
     }).toJS();
 
     return (
-      <BootstrapTable
+      <BootstrapTableWrapper
         data={jsData}
-        striped
-        pagination
-        remote
-        fetchInfo={{
-          dataTotalSize: count,
-        }}
-        options={{
-          page,
-          onPageChange: newPage => this.setState({ page: newPage }),
-          sizePerPage: pageSize,
-          sizePerPageList: [20, 50, 100, 200].map(value => ({ text: value, value })),
-          onSizePerPageList: newPageSize => this.setState({ pageSize: newPageSize }),
-          paginationPosition: 'both',
-        }}
-      >
-        <TableHeaderColumn dataField='id' isKey dataFormat={mkLink(navigate)}>
-          {this.t('crd:suppliers:ID')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField='name' dataFormat={mkLink(navigate)}>
-          {this.t('crd:suppliers:name')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField='nrTenders'>
-          {this.t('crd:procuringEntities:noOfTenders')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField='nrAwards'>
-          {this.t('crd:procuringEntities:noOfAwards')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField='nrFlags'>
-          {this.t('crd:procurementsTable:noOfFlags')}
-        </TableHeaderColumn>
-      </BootstrapTable>
+        count={count}
+        page={page}
+        onPageChange={(newPage) => this.setState({ page: newPage })}
+        pageSize={pageSize}
+        onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
+        columns={[
+          {
+            text: this.t('crd:suppliers:ID'),
+            dataField: 'id',
+            formatter: mkLink(navigate),
+          },
+          {
+            text: this.t('crd:suppliers:name'),
+            dataField: 'name',
+            formatter: mkLink(navigate),
+          },
+          {
+            text: this.t('crd:procuringEntities:noOfTenders'),
+            dataField: 'nrTenders',
+          },
+          {
+            text: this.t('crd:procuringEntities:noOfAwards'),
+            dataField: 'nrAwards',
+          },
+          {
+            text: this.t('crd:procurementsTable:noOfFlags'),
+            dataField: 'nrFlags',
+          },
+        ]}
+      />
     );
   }
 }

@@ -26,28 +26,25 @@ const Table = ({filters, translations}) => {
 
   const t = tCreator(translations);
 
-  const formatTypes = data => {
-    return (
-      <div>
-        {data.map(datum => {
-          const translated = t(`crd:corruptionType:${datum.type}:name`);
-          return <div>{translated}: {datum.count}</div>;
-        })}
-      </div>
-    );
-  };
+  const formatTypes = (_, row) => (
+    <div>
+      {row.types.map((datum) => {
+        const translated = t(`crd:corruptionType:${datum.type}:name`);
+        const line = `${translated}: ${datum.count}`;
+        return <div key={datum.type}>{line}</div>;
+      })}
+    </div>
+  );
 
-  const formatFlags = (data) => {
-    return (
-      <div>
-        {data.map(indicator => (
-          <div>
-           {t(`crd:indicators:${indicator}:name`)}
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const formatFlags = (_, row) => (
+    <div>
+      {row.flags.map((indicator) => (
+        <div key={indicator}>
+          {t(`crd:indicators:${indicator}:name`)}
+        </div>
+      ))}
+    </div>
+  );
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString();
@@ -64,40 +61,48 @@ const Table = ({filters, translations}) => {
   return (
     <BootstrapTableWrapper
       data={data}
-      bordered
       page={page}
       pageSize={pageSize}
-      onPageChange={newPage => setPage(newPage)}
-      onSizePerPageList={newPageSize => setPageSize(newPageSize)}
+      onPageChange={(newPage) => setPage(newPage)}
+      onSizePerPageList={(newPageSize) => setPageSize(newPageSize)}
       count={count}
       containerClass="supplier-procurements-table"
       columns={[{
-          title: t('crd:contracts:baseInfo:procuringEntityName'),
-          dataField: 'PEName',
-          className: 'pe-name',
-          columnClassName: 'pe-name',
-          dataFormat: formatPE,
+        text: t('crd:contracts:baseInfo:procuringEntityName'),
+        dataField: 'PEName',
+        className: 'pe-name',
+        columnClassName: 'pe-name',
+        formatter: formatPE,
+        headerStyle: {
+          width: '20%',
+        },
       }, {
-          title: t('crd:contracts:list:awardAmount'),
-          dataField: 'awardAmount',
+        text: t('crd:contracts:list:awardAmount'),
+        dataField: 'awardAmount',
       }, {
-          title: t('crd:contracts:baseInfo:awardDate'),
-          dataField: 'awardDate',
-          dataFormat: formatDate,
+        text: t('crd:contracts:baseInfo:awardDate'),
+        dataField: 'awardDate',
+        formatter: formatDate,
       }, {
-          title: t('crd:supplier:table:nrBidders'),
-          dataField: 'nrBidders',
+        text: t('crd:supplier:table:nrBidders'),
+        dataField: 'nrBidders',
+        headerStyle: {
           width: '10%',
+        },
       }, {
-          title: t('crd:procurementsTable:noOfFlags'),
-          dataField: 'types',
-          dataFormat: formatTypes,
+        text: t('crd:procurementsTable:noOfFlags'),
+        dataField: 'dummy1',
+        formatter: formatTypes,
+        headerStyle: {
           width: '25%',
+        },
       }, {
-          title: t('crd:supplier:table:flagName'),
-          dataField: 'flags',
-          dataFormat: formatFlags,
+        text: t('crd:supplier:table:flagName'),
+        dataField: 'dummy2',
+        formatter: formatFlags,
+        headerStyle: {
           width: '25%',
+        },
       }]}
     />
   );

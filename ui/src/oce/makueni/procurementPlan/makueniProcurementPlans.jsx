@@ -14,14 +14,14 @@ import {useImmer} from "use-immer";
 
 const MakueniProcurementPlans = props => {
 
-  useEffect(() => window.scrollTo(0, 0));
+  useEffect(() => window.scrollTo(0, 0), []);
 
   const [state, updateState] = useImmer({
     filters: {},
     page: 1,
     pageSize: 20,
     data: [],
-    count: undefined
+    count: 0,
   });
 
   const setPage = page => updateState(draft => {
@@ -79,23 +79,25 @@ const MakueniProcurementPlans = props => {
   const [navigationPage, id] = route;
 
   const columns = [{
-    title: t("tables:procurementPlans:col:id"),
+    text: t("tables:procurementPlans:col:id"),
     dataField: 'id',
-    width: '20%',
-    dataFormat: ppLink(navigate),
+    headerStyle: {
+      width: '20%',
+    },
+    formatter: ppLink(navigate),
     fm: 'publicView.procurementPlansList.id'
   }, {
-    title: t("tables:procurementPlans:col:dpt"),
+    text: t("tables:procurementPlans:col:dpt"),
     dataField: 'department',
     fm: 'publicView.procurementPlansList.department'
   }, {
-    title: t("tables:procurementPlans:col:fy"),
+    text: t("tables:procurementPlans:col:fy"),
     dataField: 'fiscalYear',
     fm: 'publicView.procurementPlansList.fiscalYear'
   }, {
-    title: t("tables:procurementPlans:col:ppf"),
+    text: t("tables:procurementPlans:col:ppf"),
     dataField: 'formDocs',
-    dataFormat: downloadFiles(),
+    formatter: downloadFiles(),
     fm: 'publicView.procurementPlansList.formDocs'
   }];
 
@@ -123,7 +125,6 @@ const MakueniProcurementPlans = props => {
               <h1>{t("tables:procurementPlans:title")}</h1>
 
               <BootstrapTableWrapper
-                bordered
                 data={state.data}
                 page={state.page}
                 pageSize={state.pageSize}

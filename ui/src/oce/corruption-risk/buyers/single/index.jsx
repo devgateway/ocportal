@@ -28,7 +28,7 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  const [state, updateState] = useImmer({});
+  const [state, updateState] = useImmer();
 
   const buyerFilters = buyerFiltersSelector(otherProps);
 

@@ -1,12 +1,13 @@
+import React from 'react';
 import URI from 'urijs';
 import { List, Map } from 'immutable';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import { wireProps } from '../tools';
 import { fetchEP, pluckImm, cacheFn } from '../../tools';
 import BackendDateFilterable from '../backend-date-filterable';
+import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 export const mkLink = navigate => (content, { id }) => (
   <a
@@ -54,42 +55,42 @@ class SList extends PaginatedTable {
     }).toJS();
 
     return (
-      <BootstrapTable
+      <BootstrapTableWrapper
         data={jsData}
-        striped
-        pagination
-        remote
-        fetchInfo={{
-          dataTotalSize: count,
-        }}
-        options={{
-          page,
-          onPageChange: newPage => this.setState({ page: newPage }),
-          sizePerPage: pageSize,
-          sizePerPageList: [20, 50, 100, 200].map(value => ({ text: value, value })),
-          onSizePerPageList: newPageSize => this.setState({ pageSize: newPageSize }),
-          paginationPosition: 'both',
-        }}
-      >
-        <TableHeaderColumn dataField="name" dataFormat={mkLink(navigate)}>
-          {this.t('crd:suppliers:name')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="id" isKey dataFormat={mkLink(navigate)}>
-          {this.t('crd:suppliers:ID')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="wins">
-          {this.t('crd:suppliers:wins')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="losses">
-          {this.t('crd:suppliers:losses')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="winAmount">
-          {this.t('crd:suppliers:totalWon')}
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField='flags'>
-          {this.t('crd:suppliers:nrFlags')}
-        </TableHeaderColumn>
-      </BootstrapTable>
+        count={count}
+        page={page}
+        onPageChange={(newPage) => this.setState({ page: newPage })}
+        pageSize={pageSize}
+        onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
+        columns={[
+          {
+            text: this.t('crd:suppliers:name'),
+            dataField: 'name',
+            formatter: mkLink(navigate),
+          },
+          {
+            text: this.t('crd:suppliers:ID'),
+            dataField: 'id',
+            formatter: mkLink(navigate),
+          },
+          {
+            text: this.t('crd:suppliers:wins'),
+            dataField: 'wins',
+          },
+          {
+            text: this.t('crd:suppliers:losses'),
+            dataField: 'losses',
+          },
+          {
+            text: this.t('crd:suppliers:totalWon'),
+            dataField: 'winAmount',
+          },
+          {
+            text: this.t('crd:suppliers:nrFlags'),
+            dataField: 'flags',
+          },
+        ]}
+      />
     );
   }
 }

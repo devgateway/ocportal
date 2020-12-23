@@ -31,7 +31,7 @@ export const getTenders = async params => {
     }
 
     return {
-      id: datum._id,
+      id: `${datum._id}-${(tender || {})._id}-${(project || {})._id}`,
       department: datum.department.label,
       fiscalYear: datum.fiscalYear.name,
       tender: tender !== undefined ? tender : undefined,
