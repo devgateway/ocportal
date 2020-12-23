@@ -42,7 +42,8 @@
     "universal-cookie": "^4.0.2",
     "urijs": "^1.17.1",
     "use-immer": "^0.4.2",
-    "word-wrap": "^1.2.3"
+    "word-wrap": "^1.2.3",
+    "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
