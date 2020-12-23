@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {LOADED, loadStats, selectStats} from "./statsSlice";
 import PropTypes from 'prop-types';
 import reportWebVitals, {sendToGoogleAnalytics} from "../../reportWebVitals";
+import makueniLogo from '../resources/makueni-logo.png';
 
 const initGA = () => {
   ReactGA.initialize('UA-154640611-1');
@@ -120,7 +121,7 @@ const Header = props => {
       <header className="branding row">
         <div className="col-md-6 col-sm-6 col-xs-12">
           <a className="portal-logo-wrapper" href="#!/">
-            <img src={process.env.PUBLIC_URL + "/makueni-logo.png"} alt="Makueni"/>
+            <img src={makueniLogo} alt="Makueni"/>
             <span data-step="1" data-intro={t("header:title:intro")}>
                 {t("header:title")}</span>
           </a>

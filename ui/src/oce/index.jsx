@@ -6,10 +6,20 @@ import PropTypes from 'prop-types';
 import {download, fetchJson, pluck, range} from './tools';
 import Filters from './filters';
 import './style.scss';
+import enFlag from './resources/flags/en_US.png';
+import esFlag from './resources/flags/es_ES.png';
+import frFlag from './resources/flags/fr_FR.png';
+import exportIcon from './resources/icons/export.svg';
 
 const ROLE_ADMIN = 'ROLE_ADMIN';
 
 const EMPTY_ARRAY = [];
+
+const localeFlags = {
+  en_US: enFlag,
+  es_ES: esFlag,
+  fr_FR: frFlag,
+};
 
 // eslint-disable-next-line no-undef
 class OCApp extends React.Component {
@@ -296,7 +306,7 @@ class OCApp extends React.Component {
     .map(locale =>
       (<img
         className="icon"
-        src={`${process.env.PUBLIC_URL}/flags/${locale}.png`}
+        src={localeFlags[locale]}
         alt={`${locale} flag`}
         onClick={() => this.setLocale(locale)}
         key={locale}
@@ -336,7 +346,7 @@ class OCApp extends React.Component {
         <a className="export-link" href={url} download="export.zip">
           <img
             className="top-nav-icon"
-            src={process.env.PUBLIC_URL + "/icons/export.svg"}
+            src={exportIcon}
             width="100%"
             height="100%"
             alt="export"

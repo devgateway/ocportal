@@ -2,6 +2,7 @@ import cn from 'classnames';
 import Chart from '../visualizations/charts/frontend-date-filterable';
 import ReactIgnore from '../react-ignore.jsx';
 import { POPUP_HEIGHT, POPUP_WIDTH } from './constants';
+import loadingBubbles from '../resources/loading-bubbles.svg';
 
 class CustomPopupChart extends Chart {
   constructor(...args) {
@@ -79,7 +80,7 @@ class CustomPopupChart extends Chart {
         {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
         {loading && <div className="message">
           Loading...<br />
-          <img src={process.env.PUBLIC_URL + "/loading-bubbles.svg"} alt="" />
+          <img src={loadingBubbles} alt="" />
         </div>}
 
         {popup.show && this.getPopup()}

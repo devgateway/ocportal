@@ -20,6 +20,7 @@ import LandingPopup from './landing-popup';
 import {LOGIN_URL} from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
+import makueniLogo from '../resources/makueni-logo.png';
 
 // eslint-disable-next-line no-undef
 class CorruptionRiskDashboard extends React.Component {
@@ -296,7 +297,7 @@ class CorruptionRiskDashboard extends React.Component {
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
             <a className="portal-logo-wrapper" href="#!/crd/">
-              <img src={process.env.PUBLIC_URL + "/makueni-logo.png"} alt="Makueni"/>
+              <img src={makueniLogo} alt="Makueni"/>
               <span>Corruption Risk Dashboard</span>
             </a>
           </div>

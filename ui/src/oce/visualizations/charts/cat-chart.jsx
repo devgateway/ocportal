@@ -4,6 +4,8 @@ import {Map} from "immutable";
 import Comparison from "../../comparison";
 import {download} from "../../tools";
 import wrap from 'word-wrap';
+import exportBlack from '../../resources/icons/export-black.svg';
+import camera from '../../resources/icons/camera.svg';
 
 class CatChart extends backendYearFilterable(Chart) {
   static getCatName(datum){
@@ -126,11 +128,11 @@ class CatChartComparison extends Comparison{
         />
         <div className="chart-toolbar">
           <div className="btn btn-default" onClick={downloadExcel}>
-            <img src={process.env.PUBLIC_URL + "/icons/export-black.svg"} width="16" height="16"/>
+            <img src={exportBlack} width="16" height="16"/>
           </div>
 
           <div className="btn btn-default" onClick={e => this.refs[ref].querySelector(".modebar-btn:first-child").click()}>
-            <img src={process.env.PUBLIC_URL + "/icons/camera.svg"}/>
+            <img src={camera}/>
           </div>
         </div>
       </div>

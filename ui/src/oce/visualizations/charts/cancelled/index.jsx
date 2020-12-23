@@ -4,7 +4,7 @@ import translatable from "../../../translatable";
 import {Set} from "immutable";
 import Comparison from "../../../comparison";
 import ReactDOM from "react-dom";
-import {download} from "../../../tools";
+import camera from '../../../resources/icons/camera.svg';
 
 class Cancelled extends translatable(React.Component){
   constructor(props){
@@ -42,7 +42,7 @@ class Cancelled extends translatable(React.Component){
         {/*/>*/}
 
         <img
-            src={process.env.PUBLIC_URL + "/icons/camera.svg"}
+            src={camera}
             className="chart-export-icon"
             onClick={e => ReactDOM.findDOMNode(this).querySelector(".modebar-btn:first-child").click()}
         />

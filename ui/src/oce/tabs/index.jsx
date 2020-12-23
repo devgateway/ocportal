@@ -4,6 +4,8 @@ import DefaultComparison from '../comparison';
 import { download } from '../tools';
 import React from 'react';
 import PropTypes from 'prop-types';
+import exportBlack from '../resources/icons/export-black.svg';
+import camera from '../resources/icons/camera.svg';
 
 class Tab extends Visualization {
   maybeWrap(Component, ref) {
@@ -15,7 +17,7 @@ class Tab extends Visualization {
         <h4 className="page-header">
           {getName(this.t.bind(this))}
           {exportable && Component.excelEP && false && <img
-          src={process.env.PUBLIC_URL + "/icons/export-black.svg"}
+          src={exportBlack}
             width="16"
             height="16"
             className="chart-export-icon"
@@ -28,7 +30,7 @@ class Tab extends Visualization {
             })}
           />}
           {exportable && <img
-          src={process.env.PUBLIC_URL + "/icons/camera.svg"}
+          src={camera}
             className="chart-export-icon"
             onClick={e => {
               ref.current.querySelector('.modebar-btn:first-child').click()

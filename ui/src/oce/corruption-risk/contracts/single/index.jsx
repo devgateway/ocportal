@@ -16,6 +16,7 @@ import { wireProps } from '../../tools';
 import styles from '../style.scss';
 import DataFetcher from '../../data-fetcher';
 import { cacheFn } from '../../../tools';
+import flag from '../../../resources/icons/flag.svg';
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
   render() {
@@ -69,7 +70,7 @@ class Info extends translatable(Visualization) {
             <dd><span className="contract-value">{data.get('tag', []).join(', ')}</span></dd>
           </dl>
           <div className="col-md-4 flags">
-            <img src={process.env.PUBLIC_URL + "/icons/flag.svg"} alt="Flag icon" className="flag-icon" />
+            <img src={flag} alt="Flag icon" className="flag-icon" />
             &nbsp;
             <span className="count">
               {flagCount}

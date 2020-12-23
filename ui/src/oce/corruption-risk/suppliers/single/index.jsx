@@ -18,6 +18,7 @@ import WinsAndFlags from '../../bars/wins-and-flags/index';
 import SupplierTable from './table';
 import TitleBelow from '../../archive/title-below';
 import {fetchAllInfo} from "./api";
+import flag from '../../../resources/icons/flag.svg';
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
   render() {
@@ -90,7 +91,7 @@ class Info extends translatable(Visualization) {
                 </dl>
               </td>
               <td className="flags">
-                <img src={process.env.PUBLIC_URL + "/icons/flag.svg"} alt="Flag icon" className="flag-icon" />
+                <img src={flag} alt="Flag icon" className="flag-icon" />
                 &nbsp;
                 <span className="count">
                   {flagCount}

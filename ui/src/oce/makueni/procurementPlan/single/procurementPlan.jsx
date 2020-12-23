@@ -7,6 +7,7 @@ import {getProcurementPlan} from "../../../api/Api";
 import PropTypes from "prop-types";
 import {useImmer} from "use-immer";
 import {setImmer} from "../../../tools";
+import feedback from '../../../resources/icons/feedback.svg';
 
 const ProcurementPlan = props => {
 
@@ -30,7 +31,7 @@ const ProcurementPlan = props => {
         <div className="col-md-offset-8 col-md-4" data-intro={t("feedbackPage:link:dataIntro")}>
           <div className="pull-right">
             <span>{t("feedbackPage:link:label")}</span>
-            <img className="feedback-icon" src={process.env.PUBLIC_URL + "/icons/feedback.svg"} alt="feedback"/>
+            <img className="feedback-icon" src={feedback} alt="feedback"/>
           </div>
         </div>
       </a>

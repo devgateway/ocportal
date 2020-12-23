@@ -3,6 +3,7 @@ import Header from '../layout/header';
 import './makueni.scss';
 import React from 'react';
 import Footer from '../layout/footer';
+import smsHelp from '../resources/help/sms-help.png';
 
 class SMSHelp extends CRDPage {
 
@@ -53,7 +54,7 @@ class SMSHelp extends CRDPage {
         </div>
         <div className="row">
         <div className="col-md-8 col-md-offset-2">
-          <img src={process.env.PUBLIC_URL + "/help/sms-help.png"} width="80%"/>
+          <img src={smsHelp} width="80%"/>
         </div>
         </div>
         <div className="row">

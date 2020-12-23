@@ -3,6 +3,8 @@ import translatable from "./translatable";
 import {max, cacheFn, download} from "./tools";
 import {List, Set, Map} from "immutable";
 import orgNamesFetching from "./orgnames-fetching";
+import exportBlack from './resources/icons/export-black.svg';
+import camera from './resources/icons/camera.svg';
 
 class Comparison extends orgNamesFetching(translatable(PureRenderCompoent)){
   getComponent(){
@@ -87,11 +89,11 @@ class Comparison extends orgNamesFetching(translatable(PureRenderCompoent)){
         />
         <div className="chart-toolbar">
           {Component.excelEP && <div className="btn btn-default" onClick={downloadExcel}>
-            <img src={process.env.PUBLIC_URL + "/icons/export-black.svg"} width="16" height="16"/>
+            <img src={exportBlack} width="16" height="16"/>
           </div>}
 
           <div className="btn btn-default" onClick={e => this.refs[ref].querySelector(".modebar-btn:first-child").click()}>
-            <img src={process.env.PUBLIC_URL + "/icons/camera.svg"}/>
+            <img src={camera}/>
           </div>
         </div>
       </div>

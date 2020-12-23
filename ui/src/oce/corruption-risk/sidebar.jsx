@@ -5,6 +5,27 @@ import {Map} from 'immutable';
 import translatable from '../translatable';
 import TotalFlags from './total-flags';
 import {CORRUPTION_TYPES} from './constants';
+import overviewBlue from '../resources/icons/blue/overview.svg';
+import overviewWhite from '../resources/icons/white/overview.svg';
+import suppliersBlue from '../resources/icons/blue/suppliers.svg';
+import suppliersWhite from '../resources/icons/white/suppliers.svg';
+import peBlue from '../resources/icons/blue/procuring-entities.svg';
+import peWhite from '../resources/icons/white/procuring-entities.svg';
+import buyersBlue from '../resources/icons/blue/buyers.svg';
+import buyersWhite from '../resources/icons/white/buyers.svg';
+import contractsBlue from '../resources/icons/blue/contracts.svg';
+import contractsWhite from '../resources/icons/white/contracts.svg';
+import fraudBlue from '../resources/icons/blue/FRAUD.svg';
+import fraudWhite from '../resources/icons/white/FRAUD.svg';
+import riggingBlue from '../resources/icons/blue/RIGGING.svg';
+import riggingWhite from '../resources/icons/white/RIGGING.svg';
+import collusionBlue from '../resources/icons/blue/COLLUSION.svg';
+import collusionWhite from '../resources/icons/white/COLLUSION.svg';
+
+const corruptionTypeIcons = {
+  blue: { FRAUD: fraudBlue, RIGGING: riggingBlue, COLLUSION: collusionBlue },
+  white: { FRAUD: fraudWhite, RIGGING: riggingWhite, COLLUSION: collusionWhite },
+};
 
 // eslint-disable-next-line no-undef
 class Sidebar extends translatable(React.PureComponent) {
@@ -46,8 +67,8 @@ class Sidebar extends translatable(React.PureComponent) {
             <a
               onClick={() => navigate()}
               className={cn('crd-description-link', { active: !page })}>
-              <img className="blue" src={process.env.PUBLIC_URL + "/icons/blue/overview.svg"} alt="Overview icon"/>
-              <img className="white" src={process.env.PUBLIC_URL + "/icons/white/overview.svg"} alt="Overview icon"/>
+              <img className="blue" src={overviewBlue} alt="Overview icon"/>
+              <img className="white" src={overviewWhite} alt="Overview icon"/>
               {this.t('tabs:overview:title')}
             </a>
 
@@ -75,8 +96,8 @@ class Sidebar extends translatable(React.PureComponent) {
                   className={cn({ active: slug === corruptionType })}
                   key={slug}
                 >
-                  <img className="blue" src={`${process.env.PUBLIC_URL}/icons/blue/${slug}.svg`} alt="Tab icon"/>
-                  <img className="white" src={`${process.env.PUBLIC_URL}/icons/white/${slug}.svg`} alt="Tab icon"/>
+                  <img className="blue" src={corruptionTypeIcons.blue[slug]} alt="Tab icon"/>
+                  <img className="white" src={corruptionTypeIcons.white[slug]} alt="Tab icon"/>
                   {this.t(`crd:corruptionType:${slug}:name`)}
                   {/*<span className="count">({count})</span>*/}
                 </a>
@@ -87,8 +108,8 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'suppliers' || page === 'supplier' })}
               key="suppliers"
             >
-              <img className="blue" src={`${process.env.PUBLIC_URL}/icons/blue/suppliers.svg`} alt="Suppliers icon"/>
-              <img className="white" src={`${process.env.PUBLIC_URL}/icons/white/suppliers.svg`} alt="Suppliers icon"/>
+              <img className="blue" src={suppliersBlue} alt="Suppliers icon"/>
+              <img className="white" src={suppliersWhite} alt="Suppliers icon"/>
               {this.t('crd:contracts:baseInfo:suppliers')}
             </a>
             <a
@@ -96,9 +117,9 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'procuring-entities' || page === 'procuring-entity' })}
               key="procuring-entities"
             >
-              <img className="blue" src={`${process.env.PUBLIC_URL}/icons/blue/procuring-entities.svg`}
+              <img className="blue" src={peBlue}
                    alt="Procuring entities icon"/>
-              <img className="white" src={`${process.env.PUBLIC_URL}/icons/white/procuring-entities.svg`}
+              <img className="white" src={peWhite}
                    alt="Procuring entities icon"/>
               {this.t('crd:contracts:menu:procuringEntities')}
             </a>
@@ -107,9 +128,9 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'buyers' || page === 'buyer' })}
               key="buyers"
             >
-              <img className="blue" src={`${process.env.PUBLIC_URL}/icons/blue/buyers.svg`}
+              <img className="blue" src={buyersBlue}
                    alt="Procuring entities icon"/>
-              <img className="white" src={`${process.env.PUBLIC_URL}/icons/white/buyers.svg`}
+              <img className="white" src={buyersWhite}
                    alt="Procuring entities icon"/>
               {this.t('crd:contracts:menu:buyers')}
             </a>
@@ -119,8 +140,8 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', 'contracts-link', { active: page === 'contracts' || page === 'contract' })}
               key="contracts"
             >
-              <img className="blue" src={`${process.env.PUBLIC_URL}/icons/blue/contracts.svg`} alt="Contracts icon"/>
-              <img className="white" src={`${process.env.PUBLIC_URL}/icons/white/contracts.svg`} alt="Contracts icon"/>
+              <img className="blue" src={contractsBlue} alt="Contracts icon"/>
+              <img className="white" src={contractsWhite} alt="Contracts icon"/>
               {this.t('crd:general:contracts')}
             </a>
           </section>

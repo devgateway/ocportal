@@ -13,6 +13,8 @@ import styles from './style.scss';
 import ProjectCount from '../../charts/project-count';
 import AmountBudgeted from '../../charts/amount-budgeted';
 import React from 'react';
+import exportMap from '../../../resources/icons/export-map.svg';
+import cameraMap from '../../../resources/icons/camera-map.svg';
 
 const addTenderDeliveryLocationId = cacheFn(
   (filters, id) => ({
@@ -104,7 +106,7 @@ class LocationWrapper extends translatable(Component) {
                 <span className="chart-tools">
                   <a tabIndex={-1} role="button" onClick={() => this.doExcelExport()}>
                     <img
-                      src={process.env.PUBLIC_URL + "/icons/export-map.svg"}
+                      src={exportMap}
                       alt="Export"
                       width="16"
                       height="16"
@@ -116,7 +118,7 @@ class LocationWrapper extends translatable(Component) {
                     onClick={() => ReactDOM.findDOMNode(this.currentChart).querySelector('.modebar-btn:first-child').click()}
                   >
                     <img
-                      src={process.env.PUBLIC_URL + "/icons/camera-map.svg"}
+                      src={cameraMap}
                       alt="Screenshot"
                     />
                   </a>

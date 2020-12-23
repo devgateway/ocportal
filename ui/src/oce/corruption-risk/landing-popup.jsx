@@ -2,6 +2,7 @@ import React from "react";
 import { LOGIN_URL } from "./constants";
 import { debounce } from "../tools";
 import translatable from '../translatable';
+import logo from '../resources/logo.png';
 
 class LandingPopup extends translatable(React.Component) {
   constructor(...args){
@@ -48,7 +49,7 @@ class LandingPopup extends translatable(React.Component) {
           <div className="container-fluid">
             <div className="row">
               <div className="col-sm-1 text-right">
-                <img src={process.env.PUBLIC_URL + "/logo.png"}/>
+                <img src={logo}/>
               </div>
               <div className="col-sm-9">
                 <h4 className="popup-title">{this.t('crd:title')}</h4>

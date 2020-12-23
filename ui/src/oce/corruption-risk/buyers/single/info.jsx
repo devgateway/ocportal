@@ -1,6 +1,7 @@
 import React from "react";
 import cn from 'classnames';
 import {tCreator} from '../../../translatable';
+import flag from '../../../resources/icons/flag.svg';
 
 class Cell extends React.PureComponent {
   render() {
@@ -36,7 +37,7 @@ const Info = ({ info, flagsCount, prs, contractsCount, unflaggedContractsCount, 
             </Cell>
             <Cell title={t('crd:suppliers:ID')}>{info.id}</Cell>
             <td className="flags">
-              <img src={process.env.PUBLIC_URL + "/icons/flag.svg"} alt="Flag icon" className="flag-icon"/>
+              <img src={flag} alt="Flag icon" className="flag-icon"/>
               &nbsp;
               <span className="count">
                   {flagsCount}

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import Visualization from '../../visualization';
 import ReactIgnore from '../../react-ignore';
 import { max } from '../../tools';
-// eslint-disable-next-line no-unused-vars
-import styles from './index.scss';
+import './index.scss';
 import Plotly from 'plotly.js-basic-dist'
+import loadingBubbles from '../../resources/loading-bubbles.svg';
 
 class Chart extends Visualization {
   getData() {
@@ -77,7 +77,7 @@ class Chart extends Visualization {
       {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
       {loading && <div className="message">
         {this.t('general:loading')}<br/>
-        <img src={process.env.PUBLIC_URL + "/loading-bubbles.svg"} alt=""/>
+        <img src={loadingBubbles} alt=""/>
       </div>}
       <ReactIgnore>
         <div ref={(c) => {
