@@ -126,7 +126,7 @@ class ProcurementsTable extends PaginatedTable {
         flagType,
         flagIds,
       };
-    });
+    }).toArray();
 
     return (
       <BootstrapTableWrapper
