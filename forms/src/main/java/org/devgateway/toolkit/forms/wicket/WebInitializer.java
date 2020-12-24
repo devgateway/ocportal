@@ -13,7 +13,6 @@ package org.devgateway.toolkit.forms.wicket;
 
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.SpringWebApplicationFactory;
-import org.devgateway.toolkit.forms.filters.UICacheControlFilter;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
@@ -45,8 +44,7 @@ public class WebInitializer implements ServletContextInitializer {
                 org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter.class).addMappingForUrlPatterns(null,
                 false, "/*");
 
-        sc.addFilter("ui-cache-control-filter", UICacheControlFilter.class)
-                .addMappingForUrlPatterns(null, false, "/*");
+
 
         final FilterRegistration filter = sc.addFilter("wicket-filter", WicketFilter.class);
         filter.setInitParameter(WicketFilter.APP_FACT_PARAM, SpringWebApplicationFactory.class.getName());
