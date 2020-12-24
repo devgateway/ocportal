@@ -1,7 +1,6 @@
 import React from 'react';
-import { Set } from 'immutable';
 import PropTypes from 'prop-types';
-import Chart from '../visualizations/charts/index.jsx';
+import Chart from '../visualizations/charts/index';
 import { debounce, pluckImm } from '../tools';
 import backendYearFilterable from '../backend-year-filterable';
 import Visualization from '../visualization';
@@ -41,7 +40,6 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
   }
 
   getLayout() {
-    const { width } = this.props;
     return {
       showlegend: false,
       paper_bgcolor: 'rgba(0,0,0,0)',

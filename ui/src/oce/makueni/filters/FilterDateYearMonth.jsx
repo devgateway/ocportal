@@ -11,8 +11,8 @@ const FilterDateYearMonth = (props) => {
   const t = tCreator(props.translations);
 
   const { ep } = props;
-  const years = (props.years && props.years.length > 0) ? props.years : allYears;
-  const months = (props.months && props.months.length > 0) ? props.months : monthRange;
+  const years = (props.years.length > 0) ? props.years : allYears;
+  const months = (props.months.length > 0) ? props.months : monthRange;
 
   /**
      * Retrieve allYears from the API.
@@ -102,13 +102,17 @@ const FilterDateYearMonth = (props) => {
   );
 };
 
+FilterDateYearMonth.defaultProps = {
+  years: [],
+  months: [],
+};
+
 FilterDateYearMonth.propTypes = {
   translations: PropTypes.object.isRequired,
   ep: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  year: PropTypes.array,
-  month: PropTypes.array,
-  monthly: PropTypes.bool,
+  years: PropTypes.arrayOf(PropTypes.number),
+  months: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default FilterDateYearMonth;

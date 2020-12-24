@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import Crosstab from '../crosstab';
-import styles from './style.scss';
+import './style.scss';
 import { colorLuminance } from '../tools';
 
 class ClickableCrosstab extends Crosstab {
@@ -96,7 +96,7 @@ class ClickableCrosstab extends Crosstab {
   }
 
   componentWillUnmount() {
-    super.componentWillUnmount && super.componentWillUnmount();
+    if (super.componentWillUnmount) super.componentWillUnmount();
     document.body.removeEventListener('click', this.deselect);
   }
 

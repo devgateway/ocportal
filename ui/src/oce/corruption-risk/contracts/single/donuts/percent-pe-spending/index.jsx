@@ -1,4 +1,4 @@
-import CenterTextDonut from '../index.jsx';
+import CenterTextDonut from '../index';
 
 class PercentPESpending extends CenterTextDonut {
   getCenterText() {

@@ -46,7 +46,7 @@ class Popup extends translatable(React.Component) {
   }
 
   render() {
-    const { flaggedStats, type } = this.props;
+    const { flaggedStats } = this.props;
     const { showPopup } = this.state;
 
     const count = flaggedStats.get('count', 0);

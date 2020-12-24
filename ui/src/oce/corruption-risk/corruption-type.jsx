@@ -1,5 +1,3 @@
-import URI from 'urijs';
-import { Map } from 'immutable';
 import { pluckImm } from '../tools';
 import CustomPopupChart from './custom-popup-chart';
 import translatable from '../translatable';
@@ -31,7 +29,7 @@ class IndicatorTile extends CustomPopupChart {
     const values = data.map(pluckImm('totalTrue')).toJS();
 
     // OCE-273, preventing the chart from showing only a dot
-    if (dates.length == 1) {
+    if (dates.length === 1) {
       dates.unshift('');
       dates.push(' ');
       values.unshift(0);
@@ -83,10 +81,10 @@ class IndicatorTile extends CustomPopupChart {
     if (monthly) {
       datum = data.find((datum) => {
         const month = datum.get('month');
-        return year == this.t(`general:months:${month}`);
+        return year === this.t(`general:months:${month}`);
       });
     } else {
-      datum = data.find((datum) => datum.get('year') == year);
+      datum = data.find((datum) => datum.get('year') === year);
     }
     if (!datum) return null;
     return (
@@ -122,7 +120,7 @@ class IndicatorTile extends CustomPopupChart {
 }
 
 function groupBy3(arr) {
-  if (arr.length == 0) return [];
+  if (arr.length === 0) return [];
   if (arr.length <= 3) return [arr];
   return [arr.slice(0, 3)].concat(groupBy3(arr.slice(3)));
 }
@@ -142,7 +140,7 @@ class CorruptionType extends translatable(CRDPage) {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.corruptionType != prevProps.corruptionType) {
+    if (this.props.corruptionType !== prevProps.corruptionType) {
       this.scrollTop();
     }
   }
@@ -165,7 +163,7 @@ class CorruptionType extends translatable(CRDPage) {
               const indicatorName = this.t(`crd:indicators:${indicator}:name`);
               const indicatorDescription = this.t(`crd:indicators:${indicator}:shortDescription`);
               return (
-                <div className="col-sm-4 indicator-tile-container" key={corruptionType + indicator} onClick={(e) => onGotoIndicator(indicator)}>
+                <div className="col-sm-4 indicator-tile-container" key={corruptionType + indicator} onClick={() => onGotoIndicator(indicator)}>
                   <div className="border">
                     <h4>{indicatorName}</h4>
                     <p>{indicatorDescription}</p>

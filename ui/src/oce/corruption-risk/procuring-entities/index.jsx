@@ -66,7 +66,7 @@ class PEList extends PaginatedTable {
     getTenderAndAwardCounts(peFilters)
       .then(
         ([tenders, awards]) => this.setState({ tenders, awards }),
-        (_) => this.setState({ tenders: {}, awards: {} }),
+        () => this.setState({ tenders: {}, awards: {} }),
       );
   }
 

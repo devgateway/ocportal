@@ -16,6 +16,17 @@ const fetchEP = (url) => fetch(url.clone().query(''), {
 }).then(callFunc('json'));
 
 class DataFetcher extends React.PureComponent {
+  componentDidMount() {
+    this.fetch();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (['filters', 'endpoint', 'endpoints'].some((prop) => this.props[prop] !== prevProps[prop])) {
+      this.props.requestNewData([], null);
+      this.fetch();
+    }
+  }
+
   fetch() {
     const {
       filters, endpoint, endpoints, requestNewData,
@@ -29,17 +40,6 @@ class DataFetcher extends React.PureComponent {
           new URI(`${API_ROOT}/${endpoint}`).addSearch(filters),
         )),
       ).then(requestNewData.bind(null, []));
-    }
-  }
-
-  componentDidMount() {
-    this.fetch();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (['filters', 'endpoint', 'endpoints'].some((prop) => this.props[prop] != prevProps[prop])) {
-      this.props.requestNewData([], null);
-      this.fetch();
     }
   }
 

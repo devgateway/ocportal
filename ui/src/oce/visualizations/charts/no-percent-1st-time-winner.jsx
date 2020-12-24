@@ -1,4 +1,3 @@
-import { Map } from 'immutable';
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { asPercent, pluckImm } from '../../tools';
 import fmConnect from '../../fm/fm';

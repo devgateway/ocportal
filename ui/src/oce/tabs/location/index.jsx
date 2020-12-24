@@ -38,7 +38,7 @@ class LocationTab extends Tab {
         <div className="layer-switcher" style={switcherPos}>
           <div
             className={cn('dropdown', { open: dropdownOpen })}
-            onClick={(e) => this.setState({ dropdownOpen: !dropdownOpen })}
+            onClick={() => this.setState({ dropdownOpen: !dropdownOpen })}
           >
             <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1">
               {LAYERS[currentLayer].getLayerName(this.t.bind(this))}
@@ -48,7 +48,7 @@ class LocationTab extends Tab {
             <ul className="dropdown-menu">
               {LAYERS.map((layer, index) => (
                 <li key={index}>
-                  <a onClick={(e) => this.setState({ currentLayer: index })}>
+                  <a onClick={() => this.setState({ currentLayer: index })}>
                     {LAYERS[index].getLayerName(this.t.bind(this))}
                   </a>
                 </li>
@@ -58,11 +58,12 @@ class LocationTab extends Tab {
         </div>
       );
     }
+    return null;
   }
 
   componentDidMount() {
     super.componentDidMount();
-    const zoom = document.querySelector('.leaflet-control-zoom');
+    // const zoom = document.querySelector('.leaflet-control-zoom');
 
     this.setState({
       switcherPos: {

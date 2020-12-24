@@ -1,4 +1,4 @@
-import CenterTextDonut from './index.jsx';
+import CenterTextDonut from './index';
 
 class NrOfContractsWithPE extends CenterTextDonut {
   getClassnames() {
@@ -44,8 +44,8 @@ NrOfContractsWithPE.Donut = class extends CenterTextDonut.Donut {
   }
 
   componentDidUpdate(prevProps, ...rest) {
-    const peChanged = this.props.procuringEntityId != prevProps.procuringEntityId;
-    const supplierChanged = this.props.supplierId != prevProps.supplierId;
+    const peChanged = this.props.procuringEntityId !== prevProps.procuringEntityId;
+    const supplierChanged = this.props.supplierId !== prevProps.supplierId;
     if (peChanged || supplierChanged) {
       this.fetch();
     } else {
@@ -54,7 +54,6 @@ NrOfContractsWithPE.Donut = class extends CenterTextDonut.Donut {
   }
 
   getData() {
-    const { contract } = this.props;
     const data = super.getData();
     if (!data) return [];
     return [{

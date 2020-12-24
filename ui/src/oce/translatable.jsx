@@ -20,10 +20,6 @@ const translatable = (Class) => class Translatable extends Class {
   tMonth(month, years) {
     return `${this.t(`general:months:${month}`)} ${years[0]}`;
   }
-
-  t_n(sg, pl, n) {
-    return `${n} ${this.t(n == 1 ? sg : pl)}`;
-  }
 };
 
 export default translatable;

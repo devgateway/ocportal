@@ -11,15 +11,15 @@ class ContractsList extends React.PureComponent {
     };
   }
 
-  fetchData() {
-    const { contractorId, endpointName } = this.props;
-    fetch(`${`${API_ROOT}` + '/'}${endpointName}?` + `contractorId=${contractorId}`)
-      .then((response) => response.json())
-      .then((data) => this.setState({ data }));
-  }
-
   componentDidMount() {
     this.fetchData();
+  }
+
+  fetchData() {
+    const { contractorId, endpointName } = this.props;
+    fetch(`${API_ROOT}/${endpointName}?contractorId=${contractorId}`)
+      .then((response) => response.json())
+      .then((data) => this.setState({ data }));
   }
 
   row(entry) {
@@ -49,7 +49,7 @@ class ContractsList extends React.PureComponent {
           </tbody>
         </table>
         <span className="back-text">
-          <a onClick={(e) => resetContractorID()} className="more-details-link">
+          <a onClick={() => resetContractorID()} className="more-details-link">
             Go Back
           </a>
         </span>

@@ -3,6 +3,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 import { LOADED, loadFM, selectFM } from './fmSlice';
 
+function wrapMaybe(wrapRendered, rendered) {
+  return wrapRendered
+    ? wrapRendered(rendered)
+    : rendered;
+}
+
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
 /**
  * Render the WrappedComponent after FM entries were loaded.
  *
@@ -45,15 +55,5 @@ const fmConnect = (WrappedComponent, fmName) => {
 
   return FmComponent;
 };
-
-function getDisplayName(WrappedComponent) {
-  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-}
-
-function wrapMaybe(wrapRendered, rendered) {
-  return wrapRendered
-    ? wrapRendered(rendered)
-    : rendered;
-}
 
 export default fmConnect;

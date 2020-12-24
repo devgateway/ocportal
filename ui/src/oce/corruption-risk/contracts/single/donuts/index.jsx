@@ -1,8 +1,8 @@
 import React from 'react';
 import cn from 'classnames';
 import backendYearFilterable from '../../../../backend-year-filterable';
-import Chart from '../../../../visualizations/charts/index.jsx';
-import style from './style.scss';
+import Chart from '../../../../visualizations/charts/index';
+import './style.scss';
 import translatable from '../../../../translatable';
 
 class CenterTextDonut extends translatable(React.PureComponent) {

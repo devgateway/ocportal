@@ -21,6 +21,7 @@ const getProcurementsByStatusData = (filters) => fetch('/procurementsByTenderSta
 const getProcurementsByMethodData = (filters) => fetch('/procurementsByProcurementMethodBuyer', filters)
   .then(procurementMapper);
 
+// eslint-disable-next-line import/prefer-default-export
 export const fetchAllInfo = (filters) => Promise.all([
   getInfo(filters),
   getFlagsCount(filters),

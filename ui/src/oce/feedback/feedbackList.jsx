@@ -17,11 +17,9 @@ const FeedbackMessageList = (props) => {
   }, []);
 
   const feedbackPoster = (data) => {
-    postFeedback({ ...data, department: props.department._id }).then((res) => {
-      refreshData();
-    }).catch((error) => {
-      refreshData();
-    });
+    postFeedback({ ...data, department: props.department._id })
+      .then(() => refreshData())
+      .catch(() => refreshData());
   };
 
   return (
@@ -35,22 +33,20 @@ const FeedbackMessageList = (props) => {
                 <li>
                   <h4>
                     <span>{d.name}</span>
-&nbsp;
-                    <span
-                  className="badge"
-                >
-                  {d.replies ? d.replies.length : 0}
-                </span>
+                    &nbsp;
+                    <span className="badge">
+                      {d.replies ? d.replies.length : 0}
+                    </span>
                     <br />
                   </h4>
                   <span>{d.comment}</span>
                   <ul>
                     {d.replies && d.replies.length > 0 && d.replies.map((dd) => (
-                  <li key={dd.id}>
-                          <h4><span>{dd.name}</span></h4>
-                          <span>{dd.comment}</span>
-                        </li>
-                ))}
+                      <li key={dd.id}>
+                        <h4><span>{dd.name}</span></h4>
+                        <span>{dd.comment}</span>
+                      </li>
+                    ))}
                   </ul>
                 </li>
                 <FeedbackMessageForm replyOpen={false} replyFor={d.id} feedbackPoster={feedbackPoster} />

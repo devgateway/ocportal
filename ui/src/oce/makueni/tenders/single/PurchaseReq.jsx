@@ -12,6 +12,7 @@ const PurchaseReq = (props) => {
   const t = tCreator(props.translations);
   const { currencyFormatter, formatDate } = props.styling.tables;
 
+  // eslint-disable-next-line no-unused-vars
   const getFeedbackSubject = () => {
     const { data, department, fiscalYear } = props;
 

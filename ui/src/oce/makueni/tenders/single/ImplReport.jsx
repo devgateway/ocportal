@@ -16,6 +16,7 @@ const ImplReport = (props) => {
   const t = tCreator(props.translations);
   const { formatDate } = props.styling.tables;
 
+  // eslint-disable-next-line no-unused-vars
   const getFeedbackSubject = () => {
     let metadata;
     if (department !== undefined) {

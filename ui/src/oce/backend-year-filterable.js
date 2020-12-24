@@ -8,7 +8,7 @@ const backendFilterable = (Class) => class extends Class {
   }
 
   componentDidUpdate(prevProps) {
-    const shouldRefetch = ['years', 'months', 'monthly'].some((prop) => this.props[prop] != prevProps[prop]);
+    const shouldRefetch = ['years', 'months', 'monthly'].some((prop) => this.props[prop] !== prevProps[prop]);
     if (shouldRefetch) {
       this.fetch();
     } else super.componentDidUpdate(prevProps);

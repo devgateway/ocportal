@@ -3,6 +3,14 @@ import { fetchEP } from '../tools';
 
 export const API_ROOT = '/api';
 
+export const fetch = (ep, params) => {
+  const uri = new URI(API_ROOT + ep);
+  if (params) {
+    uri.addSearch(params);
+  }
+  return fetchEP(uri);
+};
+
 export const getProject = (params) => fetch(`/makueni/project/id/${params.id}`);
 
 export const getFeedback = (page) => fetch(`/feedback?page=${page}`);
@@ -61,11 +69,3 @@ export const getProcurementPlans = async (params) => {
 export const getProcurementPlan = (id) => fetch(`/makueni/procurementPlan/id/${id}`);
 
 export const subscribeToAlerts = (params) => fetch('/makueni/alerts/subscribeAlert', params);
-
-export const fetch = (ep, params) => {
-  const uri = new URI(API_ROOT + ep);
-  if (params) {
-    uri.addSearch(params);
-  }
-  return fetchEP(uri);
-};

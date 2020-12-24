@@ -1,4 +1,3 @@
-import React from 'react';
 import TopImplSupplier from './top-impl-supplier';
 import fmConnect from '../../fm/fm';
 

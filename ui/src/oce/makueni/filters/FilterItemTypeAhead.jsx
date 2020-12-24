@@ -51,7 +51,6 @@ FilterItemTypeAhead.propTypes = {
   ep: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   multiple: PropTypes.bool,
-  idFunc: PropTypes.func,
   mapper: PropTypes.func,
   labelKey: PropTypes.string,
   epParams: PropTypes.object,

@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import Chart from '../visualizations/charts/frontend-date-filterable';
-import ReactIgnore from '../react-ignore.jsx';
+import ReactIgnore from '../react-ignore';
 import { POPUP_HEIGHT, POPUP_WIDTH } from './constants';
 import loadingBubbles from '../resources/loading-bubbles.svg';
 

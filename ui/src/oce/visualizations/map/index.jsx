@@ -2,13 +2,11 @@ import { Map, TileLayer, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-control';
 import React from 'react';
 import L from 'leaflet';
-import frontendDateFilterable from '../frontend-date-filterable';
 import { pluck } from '../../tools';
 import Cluster from './cluster';
 import Location from './location';
 import Visualization from '../../visualization';
-// eslint-disable-next-line no-unused-vars
-import style from './style.scss';
+import './style.scss';
 import backendFilterable from '../../backend-year-filterable';
 
 const swap = ([a, b]) => [b, a];

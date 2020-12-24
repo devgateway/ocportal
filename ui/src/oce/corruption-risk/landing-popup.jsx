@@ -40,7 +40,6 @@ class LandingPopup extends translatable(React.Component) {
 
   render() {
     const { top } = this.state;
-    const { languageSwitcher } = this.props;
     return (
       <div>
         <div className="crd-fullscreen-popup-overlay" onClick={this.onClose.bind(this)} />

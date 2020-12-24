@@ -1,5 +1,5 @@
 import React from 'react';
-import RemoteRange from './inputs/range';
+import { RemoteRange } from './inputs/range';
 
 const TenderPrice = ({ ep = '/tenderValueInterval', ...otherProps }) => <RemoteRange ep={ep} titleKey="filters:tenderPrice:title" {...otherProps} />;
 

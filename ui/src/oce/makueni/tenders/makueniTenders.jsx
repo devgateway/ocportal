@@ -48,7 +48,10 @@ const MakueniTenders = (props) => {
 
   const t = tCreator(props.translations);
 
-  const showDataStep = () => introJsCount++ < 6;
+  const showDataStep = () => {
+    introJsCount += 1;
+    return introJsCount < 6;
+  };
 
   const tenderLink = (navigate) => (tenderTitle, row) => (
     <div
@@ -93,6 +96,10 @@ const MakueniTenders = (props) => {
 
   const downloadFiles = (tender) => <FileDownloadLinks files={(tender || {}).formDocs} />;
 
+  const downloadLinks = (tender) => (tender && tender.tenderLink
+    ? (<a className="download-file" href={tender.tenderLink} target="_blank">{tender.tenderLink}</a>)
+    : null);
+
   const linksAndFiles = () => {
     const { isFeatureVisible } = props;
     return (tender) => (
@@ -108,10 +115,6 @@ const MakueniTenders = (props) => {
       </div>
     );
   };
-
-  const downloadLinks = (tender) => (tender && tender.tenderLink
-    ? (<a className="download-file" href={tender.tenderLink} target="_blank">{tender.tenderLink}</a>)
-    : null);
 
   const { navigate, route, isFeatureVisible } = props;
   const [navigationPage, id] = route;
@@ -175,42 +178,41 @@ const MakueniTenders = (props) => {
         </div>
 
         <div className="col-md-9 col-sm-12 col-main-content">
-          {
-            navigationPage === undefined
-              ? (
-                <div>
-                  <h1>{t('tables:tenders:title')}</h1>
+          {navigationPage === undefined
+          && (
+            <div>
+              <h1>{t('tables:tenders:title')}</h1>
 
-                  <BootstrapTableWrapper
-                    data={dataWithCount.data}
-                    page={page}
-                    pageSize={pageSize}
-                    onPageChange={setImmer(updatePage)}
-                    onSizePerPageList={setImmer(updatePageSize)}
-                    count={dataWithCount.count}
-                    columns={visibleColumns}
-                  />
-                </div>
-              )
-              : navigationPage === 't'
-                ? (
-                  <PurchaseReqView
-                    id={id}
-                    navigate={navigate}
-                    onSwitch={props.onSwitch}
-                    translations={props.translations}
-                    styling={props.styling}
-                  />
-                )
-                : (
-                  <Project
-                    id={id}
-                    navigate={navigate}
-                    translations={props.translations}
-                    styling={props.styling}
-                  />
-                )
-          }
+              <BootstrapTableWrapper
+                data={dataWithCount.data}
+                page={page}
+                pageSize={pageSize}
+                onPageChange={setImmer(updatePage)}
+                onSizePerPageList={setImmer(updatePageSize)}
+                count={dataWithCount.count}
+                columns={visibleColumns}
+              />
+            </div>
+          )}
+          {navigationPage === 't'
+          && (
+            <PurchaseReqView
+              id={id}
+              navigate={navigate}
+              onSwitch={props.onSwitch}
+              translations={props.translations}
+              styling={props.styling}
+            />
+          )}
+          {navigationPage === 'p'
+          && (
+            <Project
+              id={id}
+              navigate={navigate}
+              translations={props.translations}
+              styling={props.styling}
+            />
+          )}
         </div>
       </div>
 

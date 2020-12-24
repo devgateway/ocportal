@@ -118,5 +118,3 @@ RemoteRange.propTypes = {
   titleKey: PropTypes.string.isRequired,
   translations: PropTypes.object.isRequired,
 };
-
-export default RemoteRange;

@@ -44,7 +44,7 @@ class DelayedContracts extends FrontendDateFilterableChart {
     const data = super.getData();
     if (data) {
       annotations = data.map((imm, index) => {
-        const sum = imm.reduce((sum, val, key) => (key == 'year' || key == 'month' ? sum : key == 'percentDelayed' ? sum : sum + val), 0).toFixed(2);
+        const sum = imm.reduce((sum, val, key) => (key === 'year' || key === 'month' || key === 'percentDelayed' ? sum : sum + val), 0).toFixed(2);
         return {
           y: index,
           x: sum,

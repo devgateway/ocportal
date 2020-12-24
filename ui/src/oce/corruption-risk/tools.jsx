@@ -2,19 +2,19 @@ import React from 'react';
 import { List } from 'immutable';
 
 // copypasted from https://www.sitepoint.com/javascript-generate-lighter-darker-color/
-export function colorLuminance(hex, lum) {
+export function colorLuminance(hexParam, lumParam) {
   // validate hex string
-  hex = String(hex).replace(/[^0-9a-f]/gi, '');
+  let hex = String(hexParam).replace(/[^0-9a-f]/gi, '');
   if (hex.length < 6) {
     hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
   }
-  lum = lum || 0;
+  const lum = lumParam || 0;
 
   // convert to decimal and change luminosity
   let rgb = '#';
   let c;
   let i;
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < 3; i += 1) {
     c = parseInt(hex.substr(i * 2, 2), 16);
     c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
     rgb += (`00${c}`).substr(c.length);
@@ -45,17 +45,15 @@ export const mkContractLink = (navigate) => (content, { id }) => (
 
 const ROUTINE_PROPS = ['filters', 'years', 'months', 'monthly', 'translations', 'width'];
 
-export const copyProps = (keys, source, target) => keys.forEach((key) => target[key] = source[key]);
+export const copyProps = (keys, source, target) => keys.forEach((key) => {
+  // eslint-disable-next-line no-param-reassign
+  target[key] = source[key];
+});
 
 export function cherrypickProps(keys, source) {
   const target = {};
   copyProps(keys, source, target);
   return target;
-}
-
-export function wireProps(parent, _prefix) {
-  const { props: parentProps } = parent;
-  return wirePropsPlain(parentProps, _prefix);
 }
 
 export function wirePropsPlain(parentProps, _prefix) {
@@ -68,6 +66,11 @@ export function wirePropsPlain(parentProps, _prefix) {
     copyProps(['data', 'requestNewData'], parentProps, props);
   }
   return props;
+}
+
+export function wireProps(parent, _prefix) {
+  const { props: parentProps } = parent;
+  return wirePropsPlain(parentProps, _prefix);
 }
 
 export const _3LineText = (content) => <div className="oce-3-line-text">{content}</div>;

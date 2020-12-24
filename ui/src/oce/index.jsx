@@ -161,18 +161,18 @@ class OCApp extends React.Component {
   }
 
   updateComparisonData(path, data) {
-    this.setState({ comparisonData: this.state.comparisonData.setIn(path, data) });
+    this.setState((state) => ({ comparisonData: state.comparisonData.setIn(path, data) }));
   }
 
   updateData(path, data) {
-    this.setState({ data: this.state.data.setIn(path, data) });
+    this.setState((state) => ({ data: state.data.setIn(path, data) }));
   }
 
   navigation() {
     return this.tabs.map((tab, index) => this.navigationLink(tab, index));
   }
 
-  navigationLink({ getName, icon }, index) {
+  navigationLink({ getName }, index) {
     return (
       <a
         key={index}
@@ -192,7 +192,7 @@ class OCApp extends React.Component {
         <div className="row filter compare">
           <div
             className={cn('col-md-12 filter-header', { selected: compareOpen })}
-            onClick={(_) => this.setState({ compareOpen: !compareOpen })}
+            onClick={() => this.setState({ compareOpen: !compareOpen })}
           >
             <i className="glyphicon glyphicon-tasks pull-left" />
             <div className="pull-left title">{this.t('header:comparison:title')}</div>

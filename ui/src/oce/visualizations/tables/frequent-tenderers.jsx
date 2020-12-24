@@ -16,7 +16,6 @@ class FrequentTenderers extends orgNamesFetching(Table) {
   }
 
   row(entry, index) {
-    const { winCounts } = this.state;
     const id1 = entry.get('tendererId1');
     const id2 = entry.get('tendererId2');
     return (
@@ -41,7 +40,7 @@ class FrequentTenderers extends orgNamesFetching(Table) {
 
   maybeGetSupplierWins() {
     const { data } = this.props;
-    if (!data) return [];
+    if (!data) return;
     const newData1 = [];
     Promise.all(
       data.map((datum) => send(new URI('/api/activeAwardsCount').addSearch('bidderId',

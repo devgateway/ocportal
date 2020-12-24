@@ -19,7 +19,7 @@ const ProcurementsByStatus = ({
   } else {
     slicedData = data.slice(0, 5);
     if (slicedData.length < length) {
-      for (let counter = slicedData.length; counter < length; counter++) {
+      for (let counter = slicedData.length; counter < length; counter += 1) {
         slicedData.unshift({});
       }
     }

@@ -46,7 +46,7 @@ const Buyer = ({
               Math.max(data.winsAndFlagsData.length, data.flaggedNrData.length)),
           }));
         },
-        (_) => updateState(() => undefined),
+        () => updateState(() => undefined),
       );
   }, [buyerFilters]);
 

@@ -34,8 +34,8 @@ class NrWonVsLost extends translatable(React.PureComponent) {
     const won = data.getIn([0, 'won', 'count']);
     const lost = data.getIn([0, 'lostCount']);
     const sum = won + lost;
-    const wonPercent = (won / sum * 100).toFixed(2);
-    const lostPercent = (lost / sum * 100).toFixed(2);
+    const wonPercent = ((won / sum) * 100).toFixed(2);
+    const lostPercent = ((lost / sum) * 100).toFixed(2);
     this.props.requestNewData(path, [{
       color: '#165781',
       label: this.t('crd:supplier:nrLostVsWon:won').replace('$#$', won).replace('$#$', wonPercent),

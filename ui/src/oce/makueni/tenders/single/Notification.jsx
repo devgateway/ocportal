@@ -11,6 +11,7 @@ const Notification = (props) => {
   const { data, isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
 
+  // eslint-disable-next-line no-unused-vars
   const getFeedbackSubject = () => {
     const { tenderTitle, department, fiscalYear } = props;
     let metadata;

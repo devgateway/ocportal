@@ -1,12 +1,15 @@
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import ViewSwitcher from '../oce/switcher.jsx';
+import ViewSwitcher from '../oce/switcher';
 import './style.scss';
 import OCEMakueni from './oceMakueni';
 import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
 import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 import { enableMapSet } from 'immer';
+import enTranslations from '../languages/en_US.json';
+import esTranslations from '../languages/es_ES.json';
+import frTranslations from '../languages/fr_FR.json';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
@@ -19,9 +22,9 @@ import PortalVideos from '../oce/makueni/PortalVideos';
 import store from '../oce/app/store';
 
 const translations = {
-  en_US: require('../languages/en_US.json'),
-  es_ES: require('../languages/es_ES.json'),
-  fr_FR: require('../languages/fr_FR.json'),
+  en_US: enTranslations,
+  es_ES: esTranslations,
+  fr_FR: frTranslations,
 };
 
 enableMapSet();

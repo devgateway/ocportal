@@ -12,7 +12,7 @@ class PercentPEPopup extends React.Component {
     const { v, label } = points[0];
     const left = x - (POPUP_WIDTH / 2) + 30;
     const top = y - POPUP_HEIGHT - 12;
-    const value = v / total * 100;
+    const value = (v / total) * 100;
     const formattedValue = Math.round(value) === value
       ? value
       : value.toFixed(2);

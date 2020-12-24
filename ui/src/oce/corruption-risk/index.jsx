@@ -23,6 +23,9 @@ import { LOGIN_URL } from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
 import makueniLogo from '../resources/makueni-logo.png';
+import enTranslations from '../../languages/en_US.json';
+import esTranslations from '../../languages/es_ES.json';
+import frTranslations from '../../languages/fr_FR.json';
 
 // eslint-disable-next-line no-undef
 class CorruptionRiskDashboard extends React.Component {
@@ -86,8 +89,8 @@ class CorruptionRiskDashboard extends React.Component {
     if (page === 'type') {
       const [, corruptionType] = route;
 
-      const indicators =        Object.keys(indicatorTypesMapping)
-          .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1);
+      const indicators = Object.keys(indicatorTypesMapping)
+        .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1);
 
       return (
         <CorruptionTypePage
@@ -173,7 +176,9 @@ class CorruptionRiskDashboard extends React.Component {
     return {
       translations,
       data: this.state.data.getIn(slug, Map()),
-      requestNewData: (path, newData) => this.setState({ data: this.state.data.setIn(slug.concat(path), newData) }),
+      requestNewData: (path, newData) => this.setState(
+        (state) => ({ data: state.data.setIn(slug.concat(path), newData) }),
+      ),
       filters: datelessFilters,
       years,
       monthly: years.length === 1,
@@ -282,7 +287,7 @@ class CorruptionRiskDashboard extends React.Component {
       disabledApiSecurity,
     } = this.state;
 
-    const { onSwitch, route, navigate } = this.props;
+    const { route, navigate } = this.props;
     const translations = this.getTranslations();
     const [page] = route;
 
@@ -329,7 +334,9 @@ class CorruptionRiskDashboard extends React.Component {
           route={route}
           navigate={navigate}
           data={data}
-          requestNewData={(path, newData) => this.setState({ data: this.state.data.setIn(path, newData) })}
+          requestNewData={(path, newData) => this.setState(
+            (state) => ({ data: state.data.setIn(path, newData) }),
+          )}
           styling={this.props.styling}
         />
         <div className="col-sm-offset-3 col-md-9 col-sm-10 content">
@@ -349,9 +356,9 @@ CorruptionRiskDashboard.propTypes = {
 };
 
 CorruptionRiskDashboard.TRANSLATIONS = {
-  en_US: require('../../languages/en_US.json'),
-  es_ES: require('../../languages/es_ES.json'),
-  fr_FR: require('../../languages/fr_FR.json'),
+  en_US: enTranslations,
+  es_ES: esTranslations,
+  fr_FR: frTranslations,
 };
 
 export default CorruptionRiskDashboard;

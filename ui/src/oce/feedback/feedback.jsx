@@ -23,6 +23,72 @@ class FeedbackMessageForm extends React.PureComponent {
     };
   }
 
+  handleChange(e) {
+    const { name } = e.target;
+    const { value } = e.target;
+
+    this.setState({
+      [name]: value,
+      error: false,
+      changeNeverFired: false,
+    });
+
+    if (name === 'email') {
+      this.setState((state) => ({
+        emailValid: value && value.match(state.emailPattern),
+      }));
+    }
+  }
+
+  handleReplyClick() {
+    this.setState({
+      replyOpen: true,
+    });
+  }
+
+  onChange(value) {
+    this.setState({
+      sendFeedbackDisabled: false,
+      recaptchaResponse: value,
+    });
+  }
+
+  submit() {
+    const {
+      email, emailPattern, name, comment, replyFor, recaptchaResponse,
+    } = this.state;
+    let error = false;
+    // const [purchaseReqId, tenderTitle] = this.props.route;
+
+    if (!email.match(emailPattern) || !name) {
+      error = true;
+
+      this.setState({
+        emailValid: email.match(emailPattern),
+      });
+    }
+
+    if (error) {
+      this.setState({ error });
+      return;
+    }
+    this.setState({
+      replyOpen: false,
+      email: '',
+      name: '',
+      comment: '',
+      sendFeedbackDisabled: true,
+    });
+    this.props.feedbackPoster({
+      email,
+      name,
+      url: getFeedbackUrlPart(),
+      comment,
+      replyFor,
+      recaptchaResponse,
+    });
+  }
+
   validateTxt(stateField) {
     if (!this.state.changeNeverFired && stateField === '') {
       return 'error';
@@ -43,56 +109,9 @@ class FeedbackMessageForm extends React.PureComponent {
     return 'error';
   }
 
-  handleChange(e) {
-    const { name } = e.target;
-    const { value } = e.target;
-
+  disableFeedbackButton() {
     this.setState({
-      [name]: value,
-      error: false,
-      changeNeverFired: false,
-    });
-
-    if (name === 'email') {
-      this.setState({
-        emailValid: value && value.match(this.state.emailPattern),
-      });
-    }
-  }
-
-  submit() {
-    const {
-      email, emailPattern, name, comment, replyFor, recaptchaResponse,
-    } = this.state;
-    let error = false;
-    // const [purchaseReqId, tenderTitle] = this.props.route;
-
-    if (!email.match(emailPattern) || !name) {
-      error = true;
-
-      this.setState({
-        emailValid: email.match(emailPattern),
-      });
-    }
-
-    if (error) {
-      this.setState({ error });
-      return 0;
-    }
-    this.setState({
-      replyOpen: false,
-      email: '',
-      name: '',
-      comment: '',
       sendFeedbackDisabled: true,
-    });
-    this.props.feedbackPoster({
-      email,
-      name,
-      url: getFeedbackUrlPart(),
-      comment,
-      replyFor,
-      recaptchaResponse,
     });
   }
 
@@ -102,25 +121,6 @@ class FeedbackMessageForm extends React.PureComponent {
         {this.state.replyFor ? 'Reply' : 'Add Comment'}
       </button>
     );
-  }
-
-  handleReplyClick() {
-    this.setState({
-      replyOpen: true,
-    });
-  }
-
-  onChange(value) {
-    this.setState({
-      sendFeedbackDisabled: false,
-      recaptchaResponse: value,
-    });
-  }
-
-  disableFeedbackButton() {
-    this.setState({
-      sendFeedbackDisabled: true,
-    });
   }
 
   renderForm() {

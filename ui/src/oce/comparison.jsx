@@ -1,10 +1,14 @@
-import { List, Set, Map } from 'immutable';
+import { List, Map } from 'immutable';
 import PureRenderCompoent from './pure-render-component';
 import translatable from './translatable';
 import { max, cacheFn, download } from './tools';
 import orgNamesFetching from './orgnames-fetching';
 import exportBlack from './resources/icons/export-black.svg';
 import camera from './resources/icons/camera.svg';
+
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-vars */
 
 class Comparison extends orgNamesFetching(translatable(PureRenderCompoent)) {
   getComponent() {
@@ -113,6 +117,7 @@ function getInverseFilter(filter) {
     case 'bidTypeId': return 'notBidTypeId';
     case 'bidSelectionMethod': return 'notBidSelectionMethod';
     case 'procuringEntityId': return 'notProcuringEntityId';
+    default: throw new Error(`unsupported filter ${filter}`);
   }
 }
 

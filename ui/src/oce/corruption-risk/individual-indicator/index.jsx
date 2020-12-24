@@ -99,10 +99,10 @@ class IndividualIndicatorChart extends CustomPopupChart {
     if (monthly) {
       datum = data.find((datum) => {
         const month = datum.get('month');
-        return year == this.tMonth(month, years);
+        return year === this.tMonth(month, years);
       });
     } else {
-      datum = data.find((datum) => datum.get('year') == year);
+      datum = data.find((datum) => datum.get('year') === year);
     }
 
     return (

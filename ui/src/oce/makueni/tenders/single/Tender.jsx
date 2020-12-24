@@ -5,9 +5,20 @@ import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
 import { tCreator } from '../../../translatable';
-import defaultSingleTenderTabTypes, { commonTenderTabTypes } from './singleUtil';
+import { commonTenderTabTypes } from './singleUtil';
 
 const Tender = (props) => {
+  const {
+    data,
+    prId,
+    isFeatureVisible,
+    translations,
+    styling,
+  } = props;
+  const { currencyFormatter, formatDate } = styling.tables;
+  const t = tCreator(translations);
+
+  // eslint-disable-next-line no-unused-vars
   const getFeedbackSubject = () => {
     const { data, department, fiscalYear } = props;
 
@@ -21,10 +32,6 @@ const Tender = (props) => {
     }
     return escape(t('tender:label') + metadata);
   };
-
-  const { data, prId, isFeatureVisible } = props;
-  const { currencyFormatter, formatDate } = props.styling.tables;
-  const t = tCreator(props.translations);
 
   const getTenderView = (tender) => (
     <div>

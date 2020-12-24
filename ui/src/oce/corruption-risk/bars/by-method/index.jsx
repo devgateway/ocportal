@@ -25,7 +25,7 @@ const ProcurementsByMethod = ({
   } else {
     slicedData = data.slice(0, length);
     if (slicedData.length < length) {
-      for (let counter = slicedData.length; counter < length; counter++) {
+      for (let counter = slicedData.length; counter < length; counter += 1) {
         slicedData.unshift({});
       }
     }

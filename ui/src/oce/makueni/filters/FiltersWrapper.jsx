@@ -43,7 +43,11 @@ const FiltersWrapper = (props) => {
 
   const toggleItem = (index) => {
     updateExpanded((draft) => {
-      draft.has(index) ? draft.delete(index) : draft.add(index);
+      if (draft.has(index)) {
+        draft.delete(index);
+      } else {
+        draft.add(index);
+      }
     });
   };
 
@@ -70,7 +74,7 @@ const FiltersWrapper = (props) => {
         >
           <div
             className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
-            onClick={(_) => toggleItem(index)}
+            onClick={() => toggleItem(index)}
           >
             <div className="pull-left title">{group.name}</div>
             <div className={`pull-right toggler ${expanded.has(index) ? 'up' : 'down'}`} />

@@ -18,11 +18,11 @@ class Crosstab extends Table {
     const { indicators } = this.props;
     const matrix = {};
     let y = 0;
-    for (let x = 0; x < indicators.length; x++) {
+    for (let x = 0; x < indicators.length; x += 1) {
       const xIndicatorID = indicators[x];
       matrix[xIndicatorID] = {};
       const datum = data[x][0];
-      for (y = 0; y < indicators.length; y++) {
+      for (y = 0; y < indicators.length; y += 1) {
         const yIndicatorID = indicators[y];
         if (datum) {
           matrix[xIndicatorID][yIndicatorID] = {

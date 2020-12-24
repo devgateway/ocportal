@@ -22,7 +22,7 @@ class Tab extends Visualization {
             width="16"
             height="16"
             className="chart-export-icon"
-            onClick={(e) => download({
+            onClick={() => download({
               ep: Component.excelEP,
               filters,
               years,
@@ -35,7 +35,7 @@ class Tab extends Visualization {
           <img
             src={camera}
             className="chart-export-icon"
-            onClick={(e) => {
+            onClick={() => {
               ref.current.querySelector('.modebar-btn:first-child').click();
             }}
           />
@@ -119,7 +119,7 @@ class Tab extends Visualization {
     if (!data) return Set();
     return this.visualizations.reduce((years, visualization, index) => years.union(
       data.get(index, List())
-        .reduce((years, data, index) => (visualization.computeYears
+        .reduce((years, data) => (visualization.computeYears
           ? years.union(visualization.computeYears(data))
           : years),
         Set()),

@@ -16,8 +16,8 @@ class OCESwitcher extends React.Component {
     const { translations, styling } = this.props;
     const { views } = this.constructor;
 
-    let [dashboard, ...route] = this.state.route;
-    if (!dashboard) dashboard = Object.keys(views)[0];
+    const [optDashboard, ...route] = this.state.route;
+    const dashboard = optDashboard || Object.keys(views)[0];
     const CurrentView = views[dashboard];
 
     return (

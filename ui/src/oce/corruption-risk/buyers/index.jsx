@@ -4,7 +4,7 @@ import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import { wireProps } from '../tools';
-import { getBuyersTenderAndAwardCounts } from './api.js';
+import { getBuyersTenderAndAwardCounts } from './api';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 const mkLink = (navigate) => (content, { id }) => (
@@ -61,7 +61,7 @@ class BuyerList extends PaginatedTable {
     getBuyersTenderAndAwardCounts(buyerFilters)
       .then(
         ([tenders, awards]) => this.setState({ tenders, awards }),
-        (_) => this.setState({ tenders: {}, awards: {} }),
+        () => this.setState({ tenders: {}, awards: {} }),
       );
   }
 

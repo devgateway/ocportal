@@ -1,5 +1,4 @@
-import { List } from 'immutable';
-import CenterTextDonut from './index.jsx';
+import CenterTextDonut from './index';
 
 class NrOfBidders extends CenterTextDonut {
   getClassnames() {
@@ -8,7 +7,7 @@ class NrOfBidders extends CenterTextDonut {
 
   getCenterText() {
     const { count, data: avg } = this.props;
-    if (isNaN(avg) || isNaN(count)) return '';
+    if (avg == null || Number.isNaN(avg) || count == null || Number.isNaN(count)) return '';
     return (
       <div>
         {count}
@@ -37,7 +36,7 @@ NrOfBidders.Donut = class extends CenterTextDonut.Donut {
   getData() {
     const avg = super.getData();
     const { count } = this.props;
-    if (isNaN(avg) || isNaN(count)) return [];
+    if (Number.isNaN(avg) || Number.isNaN(count)) return [];
     return [{
       labels: [
         this.t('crd:contract:nrBiddersVsAvg:thisLabel'),

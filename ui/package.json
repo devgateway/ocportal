@@ -59,18 +59,8 @@
       "airbnb"
     ],
     "rules": {
-      "camelcase": "warn",
       "class-methods-use-this": "warn",
-      "consistent-return": "warn",
-      "default-case": "warn",
-      "eqeqeq": "warn",
-      "global-require": "warn",
-      "implicit-arrow-linebreak": "warn",
-      "import/extensions": "warn",
-      "import/no-named-as-default": "warn",
       "import/order": "warn",
-      "import/prefer-default-export": "warn",
-      "indent": "warn",
       "jsx-a11y/alt-text": "warn",
       "jsx-a11y/anchor-is-valid": "warn",
       "jsx-a11y/click-events-have-key-events": "warn",
@@ -79,50 +69,44 @@
       "jsx-a11y/no-noninteractive-element-interactions": "warn",
       "jsx-a11y/no-static-element-interactions": "warn",
       "max-classes-per-file": "warn",
-      "max-len": "warn",
-      "no-mixed-operators": "warn",
-      "no-multi-spaces": "warn",
-      "no-nested-ternary": "warn",
-      "no-param-reassign": "warn",
-      "no-plusplus": "warn",
-      "no-restricted-globals": "warn",
-      "no-return-assign": "warn",
+      "max-len": [
+        "warn",
+        {
+          "code": 120
+        }
+      ],
+      "no-param-reassign": [
+        "error",
+        {
+          "props": true,
+          "ignorePropertyModificationsFor": [
+            "draft",
+            "state"
+          ]
+        }
+      ],
       "no-shadow": "warn",
-      "no-throw-literal": "warn",
       "no-underscore-dangle": "warn",
-      "no-unused-expressions": "warn",
-      "no-unused-vars": "warn",
-      "no-use-before-define": "warn",
-      "no-useless-concat": "warn",
-      "no-useless-constructor": "warn",
-      "no-useless-escape": "warn",
-      "prefer-const": "warn",
-      "prefer-destructuring": "warn",
-      "radix": "warn",
       "react/button-has-type": "warn",
       "react/destructuring-assignment": "warn",
       "react/forbid-prop-types": "warn",
       "react/jsx-closing-bracket-location": "warn",
       "react/jsx-closing-tag-location": "warn",
-      "react/jsx-indent": "warn",
       "react/jsx-indent-props": "warn",
       "react/jsx-no-bind": "warn",
       "react/jsx-no-target-blank": "warn",
       "react/jsx-props-no-spreading": "warn",
-      "react/no-access-state-in-setstate": "warn",
       "react/no-array-index-key": "warn",
       "react/no-children-prop": "warn",
       "react/no-deprecated": "warn",
       "react/no-find-dom-node": "warn",
       "react/no-string-refs": "warn",
-      "react/no-unused-prop-types": "warn",
       "react/no-unused-state": "warn",
       "react/no-will-update-set-state": "warn",
       "react/prefer-stateless-function": "warn",
       "react/prop-types": "warn",
       "react/react-in-jsx-scope": "warn",
-      "react/require-default-props": "warn",
-      "react/sort-comp": "warn"
+      "react/require-default-props": "warn"
     }
   },
   "browserslist": {

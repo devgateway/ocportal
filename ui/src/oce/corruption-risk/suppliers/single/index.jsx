@@ -34,10 +34,6 @@ class CrosstabExplanation extends translatable(React.PureComponent) {
 }
 
 class Info extends translatable(Visualization) {
-  constructor(...args) {
-    super(...args);
-  }
-
   getCustomEP() {
     const { id } = this.props;
     return [
@@ -211,7 +207,7 @@ const Supplier = (props) => {
             maxCommonDataLength: Math.min(5,
               Math.max(s.winsAndFlagsData.length, s.flaggedNrData.length)),
           }),
-          (_) => setFlagRowState(null),
+          () => setFlagRowState(null),
         );
     } else {
       setFlagRowState(null);

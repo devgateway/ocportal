@@ -35,8 +35,8 @@ class Sidebar extends translatable(React.PureComponent) {
     const offsetTop = el.getBoundingClientRect().top;
 
     window.addEventListener('wheel', (e) => {
-      let margin = parseInt(scrollTarget.style.marginTop);
-      if (isNaN(margin)) margin = 0;
+      let margin = parseInt(scrollTarget.style.marginTop, 10);
+      if (margin == null || Number.isNaN(margin)) margin = 0;
       if (e.deltaY > 0) {
         margin -= 40;
       } else if (window.scrollY === 0) {
@@ -77,15 +77,12 @@ class Sidebar extends translatable(React.PureComponent) {
               {this.t('crd:description')}
             </p>
 
-            {CORRUPTION_TYPES.map((slug) => {
+            {CORRUPTION_TYPES.filter((slug) => {
               const count = Object.keys(indicatorTypesMapping)
                 .filter((key) => indicatorTypesMapping[key].types.indexOf(slug) > -1)
                 .length;
-
-              if (count === 0) {
-                return;
-              }
-
+              return count > 0;
+            }).map((slug) => {
               let corruptionType;
               if (page === 'type' || page === 'indicator') {
                 [, corruptionType] = route;

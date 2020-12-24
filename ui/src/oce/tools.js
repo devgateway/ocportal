@@ -44,6 +44,7 @@ export const identity = (_) => _;
  * // => {a: 1, b: 2}
  */
 const fieldsToObj = (keyField, valueField, arr) => arr.reduce((obj, elem) => {
+  // eslint-disable-next-line no-param-reassign
   obj[elem[keyField]] = elem[valueField];
   return obj;
 }, {});

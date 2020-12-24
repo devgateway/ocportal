@@ -1,7 +1,6 @@
 import React from 'react';
-import cn from 'classnames';
 import { cloneChild } from '../tools';
-import style from './style.scss';
+import './style.scss';
 
 class Zoomable extends React.PureComponent {
   constructor(...args) {
@@ -26,7 +25,7 @@ class Zoomable extends React.PureComponent {
       };
       return (
         <div>
-          <div className="crd-fullscreen-popup-overlay" onClick={(e) => this.setState({ zoomed: false })} />
+          <div className="crd-fullscreen-popup-overlay" onClick={() => this.setState({ zoomed: false })} />
           <div className="crd-fullscreen-popup" style={style}>
             {cloneChild(this, {
               ...props,
@@ -37,6 +36,7 @@ class Zoomable extends React.PureComponent {
         </div>
       );
     }
+    return null;
   }
 
   interceptClicks({ target }) {

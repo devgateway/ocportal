@@ -43,7 +43,7 @@ const ProcuringEntity = ({
           max2ndRowCommonDataLength: Math.min(5,
             Math.max(state.winsAndFlagsData.length, state.flaggedNrData.length)),
         }),
-        (_) => setState(null),
+        () => setState(null),
       );
   }, [peFilters]);
 

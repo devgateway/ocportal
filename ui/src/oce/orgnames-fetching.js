@@ -20,21 +20,25 @@ const orgNamesFetching = (Class) => class extends Class {
       .then((orgs) => {
         const orgNames = shallowCopy(this.state.orgNames);
         if (!orgs.length) { // prevent infinite requests when no orgs names are found
-          idsWithoutNames.forEach((id) => orgNames[id] = id);
+          idsWithoutNames.forEach((id) => {
+            orgNames[id] = id;
+          });
         } else {
-          orgs.forEach(({ id, name }) => orgNames[id] = name);
+          orgs.forEach(({ id, name }) => {
+            orgNames[id] = name;
+          });
         }
         this.setState({ orgNames });
       });
   }
 
   componentDidMount() {
-    super.componentDidMount && super.componentDidMount();
+    if (super.componentDidMount) super.componentDidMount();
     this.maybeFetchOrgNames();
   }
 
   componentDidUpdate(...args) {
-    super.componentDidUpdate && super.componentDidUpdate(...args);
+    if (super.componentDidUpdate) super.componentDidUpdate(...args);
     this.maybeFetchOrgNames();
   }
 };

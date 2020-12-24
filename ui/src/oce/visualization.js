@@ -1,10 +1,9 @@
 import URI from 'urijs';
 import { fromJS } from 'immutable';
-import React from 'react';
 import PropTypes from 'prop-types';
 import translatable from './translatable';
 import Component from './pure-render-component';
-import { callFunc, fetchEP } from './tools';
+import { fetchEP } from './tools';
 
 const API_ROOT = '/api';
 

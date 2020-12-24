@@ -18,9 +18,9 @@ function clusterIcon(cluster, maxAmount) {
     count: 0,
   });
 
-  const amountRatio = maxAmount != 0 ? amount / maxAmount : 0;
+  const amountRatio = maxAmount !== 0 ? amount / maxAmount : 0;
   const green = Math.round(128 * (1 - amountRatio));
-  const shadow = cluster.getChildCount() != 1 ? `box-shadow: 0 0 5px 5px rgb(255, ${green}, 0)` : '';
+  const shadow = cluster.getChildCount() !== 1 ? `box-shadow: 0 0 5px 5px rgb(255, ${green}, 0)` : '';
   return L.divIcon({
     html: `
       <div style="background-color: rgba(255, 128, 0, .8);${shadow}">

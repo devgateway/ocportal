@@ -57,7 +57,7 @@ class AmountWonVsLost extends translatable(React.Component) {
       <Donut
         {...this.props}
         requestNewData={this.transformNewData.bind(this)}
-        data={this.props.data || []}
+        data={data || []}
         CenterText={CenterText}
         title={this.t('crd:supplier:amountLostVsWon:title')}
         subtitle={this.t('crd:supplier:amountLostVsWon:subtitle')}

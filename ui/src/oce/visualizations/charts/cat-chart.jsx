@@ -41,8 +41,13 @@ class CatChart extends backendYearFilterable(Chart) {
     data.forEach((datum) => {
       const catName = this.constructor.getCatName(datum, this.t.bind(this));
       const value = datum.get(this.constructor.CAT_VALUE_FIELD);
-      this.orientation() === 'h' ? trace.y.push(catName) : trace.x.push(catName);
-      this.orientation() === 'h' ? trace.x.push(value) : trace.y.push(value);
+      if (this.orientation() === 'h') {
+        trace.y.push(catName);
+        trace.x.push(value);
+      } else {
+        trace.x.push(catName);
+        trace.y.push(value);
+      }
       if (hoverFormatter) trace.text.push(hoverFormatter(value));
     });
 
@@ -62,7 +67,7 @@ class CatChartComparison extends Comparison {
     let rangeProp; let
       uniformData;
 
-    if (comparisonData.count() == comparisonCriteriaValues.length + 1) {
+    if (comparisonData.count() === comparisonCriteriaValues.length + 1) {
       const byCats = comparisonData.map(
         (data) => data.reduce(
           (cats, datum) => cats.set(datum.get(Component.CAT_NAME_FIELD), datum),
@@ -106,7 +111,7 @@ class CatChartComparison extends Comparison {
 
     return this.wrap(decoratedFilters.map((comparisonFilters, index) => {
       const ref = `visualization${index}`;
-      const downloadExcel = (e) => download({
+      const downloadExcel = () => download({
         ep: Component.excelEP,
         filters: comparisonFilters,
         years,
@@ -134,7 +139,7 @@ class CatChartComparison extends Comparison {
               <img src={exportBlack} width="16" height="16" />
             </div>
 
-            <div className="btn btn-default" onClick={(e) => this.refs[ref].querySelector('.modebar-btn:first-child').click()}>
+            <div className="btn btn-default" onClick={() => this.refs[ref].querySelector('.modebar-btn:first-child').click()}>
               <img src={camera} />
             </div>
           </div>

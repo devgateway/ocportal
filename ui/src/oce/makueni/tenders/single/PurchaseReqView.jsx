@@ -35,14 +35,6 @@ const PurchaseReqView = (props) => {
     return id;
   };
 
-  useEffect(() => {
-    getPurchaseRequisition({ id: maybeTrimOcidPrefix(id) }).then(setImmer(updateData));
-    setVisibleTabs(tabs.filter((tab) => isFeatureVisible(tab.fm)));
-    if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
-      changeTab(visibleTabs[0].tab);
-    }
-  }, [id, isFeatureVisible]);
-
   const tabs = [
     {
       name: t('purchaseReq:tabs:tender'),
@@ -98,6 +90,14 @@ const PurchaseReqView = (props) => {
   const changeTab = (option) => {
     setSelected(option);
   };
+
+  useEffect(() => {
+    getPurchaseRequisition({ id: maybeTrimOcidPrefix(id) }).then(setImmer(updateData));
+    setVisibleTabs(tabs.filter((tab) => isFeatureVisible(tab.fm)));
+    if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
+      changeTab(visibleTabs[0].tab);
+    }
+  }, [id, isFeatureVisible]);
 
   const isActive = (option) => {
     if (selected === undefined || selected === '') {

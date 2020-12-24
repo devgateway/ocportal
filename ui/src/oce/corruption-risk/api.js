@@ -8,11 +8,13 @@ export const getUnflaggedContractsCount = (filters) => fetch('/ocds/release/coun
 export const getContractsCount = (filters) => fetch('/flaggedRelease/count', filters);
 
 export const tenderCountsMapper = (data) => data.reduce((res, { _id, tenderCount }) => {
+  // eslint-disable-next-line no-param-reassign
   res[_id] = tenderCount;
   return res;
 }, {});
 
 export const awardCountsMapper = (data) => data.reduce((res, { _id, awardCount }) => {
+  // eslint-disable-next-line no-param-reassign
   res[_id] = awardCount;
   return res;
 }, {});

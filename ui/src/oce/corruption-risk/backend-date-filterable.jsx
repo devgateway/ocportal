@@ -8,6 +8,14 @@ class BackendDateFilterable extends React.PureComponent {
     this.state.decoratedFilters = this.decorateFilters(this.props);
   }
 
+  componentWillUpdate(nextProps) {
+    if (['filters', 'years', 'months'].some((prop) => this.props[prop] !== nextProps[prop])) {
+      this.setState({
+        decoratedFilters: this.decorateFilters(nextProps),
+      });
+    }
+  }
+
   decorateFilters({ filters, years, months }) {
     const monthly = years.length === 1;
     return {
@@ -16,14 +24,6 @@ class BackendDateFilterable extends React.PureComponent {
       monthly,
       month: monthly && months.length !== 12 ? months : [],
     };
-  }
-
-  componentWillUpdate(nextProps) {
-    if (['filters', 'years', 'months'].some((prop) => this.props[prop] != nextProps[prop])) {
-      this.setState({
-        decoratedFilters: this.decorateFilters(nextProps),
-      });
-    }
   }
 
   render() {

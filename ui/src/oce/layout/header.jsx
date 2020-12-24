@@ -3,7 +3,7 @@ import { tCreator } from '../translatable';
 import cn from 'classnames';
 import URI from 'urijs';
 import Cookies from 'universal-cookie';
-import * as introJs from 'intro.js/intro.js';
+import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 import './header.scss';
 import ReactGA from 'react-ga';
@@ -20,6 +20,21 @@ const initGA = () => {
   ReactGA.pageview(href.substring(prefix.length, href.length));
 };
 
+const noScroll = () => window.scrollTo(0, 0);
+
+const showIntroJs = () => {
+  window.scrollTo(0, 0);
+  introJs()
+    .onbeforeexit(() => {
+      window.removeEventListener('scroll', noScroll);
+      return true;
+    })
+    .setOption('overlayOpacity', 0.7)
+    .setOption('showProgress', true)
+    .setOption('scrollToElement', true)
+    .start();
+};
+
 const handleIntroJS = () => {
   const cookies = new Cookies();
   if (cookies.get('introjs') === undefined) {
@@ -31,21 +46,6 @@ const handleIntroJS = () => {
     showIntroJs();
   }
 };
-
-const showIntroJs = () => {
-  window.scrollTo(0, 0);
-  introJs.introJs()
-    .onbeforeexit(() => {
-      window.removeEventListener('scroll', noScroll);
-      return true;
-    })
-    .setOption('overlayOpacity', 0.7)
-    .setOption('showProgress', true)
-    .setOption('scrollToElement', true)
-    .start();
-};
-
-const noScroll = () => window.scrollTo(0, 0);
 
 const Header = (props) => {
   const t = tCreator(props.translations);

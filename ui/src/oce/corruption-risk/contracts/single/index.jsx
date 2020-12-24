@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, List, Set } from 'immutable';
+import { Map, List } from 'immutable';
 import CRDPage from '../../page';
 import Visualization from '../../../visualization';
 import translatable from '../../../translatable';
@@ -12,8 +12,7 @@ import Crosstab from '../../clickable-crosstab';
 import CustomPopup from '../../custom-popup';
 import DonutPopup from '../../donut/popup';
 import { wireProps } from '../../tools';
-// eslint-disable-next-line no-unused-vars
-import styles from '../style.scss';
+import '../style.scss';
 import DataFetcher from '../../data-fetcher';
 import { cacheFn } from '../../../tools';
 import flag from '../../../resources/icons/flag.svg';
@@ -30,7 +29,7 @@ class CrosstabExplanation extends translatable(React.PureComponent) {
     return (
       <p>
         {template.replace('$#$', data)
-          .replace('$#$', (data / totalContracts * 100).toFixed(2))
+          .replace('$#$', ((data / totalContracts) * 100).toFixed(2))
           .replace('$#$', nrFlags)
           .replace(
             '$#$',

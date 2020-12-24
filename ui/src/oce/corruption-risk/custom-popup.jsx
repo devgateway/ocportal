@@ -13,7 +13,7 @@ class CustomPopup extends React.Component {
   }
 
   componentDidMount() {
-    super.componentDidMount && super.componentDidMount();
+    if (super.componentDidMount) super.componentDidMount();
     const chartContainer = ReactDOM.findDOMNode(this)
       .querySelector('.js-plotly-plot');
 

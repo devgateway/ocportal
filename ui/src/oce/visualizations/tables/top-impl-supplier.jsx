@@ -24,7 +24,7 @@ class TopImplSupplier extends orgnamesFetching(Table) {
       <tr key={id}>
         <td>{this.getOrgName(id)}</td>
         <td>
-          <a onClick={(e) => this.setContractorId(id)} className="more-details-link">
+          <a onClick={() => this.setContractorId(id)} className="more-details-link">
             {entry.get('count')}
           </a>
         </td>

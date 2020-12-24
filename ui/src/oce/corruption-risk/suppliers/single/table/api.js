@@ -26,6 +26,7 @@ const mapFlaggedReleases = (data) => data.map((datum) => ({
   flags: Object.keys(datum.flags).filter((key) => datum.flags[key].value),
 }));
 
+// eslint-disable-next-line import/prefer-default-export
 export const getFlaggedReleases = (params) => Promise.all([
   fetch('/flaggedRelease/all', params).then(mapFlaggedReleases),
   fetch('/flaggedRelease/count', params),

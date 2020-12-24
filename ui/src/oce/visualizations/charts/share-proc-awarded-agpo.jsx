@@ -1,4 +1,3 @@
-import Plotly from 'plotly.js-basic-dist';
 import backendYearFilterable from '../../backend-year-filterable';
 import Chart from './index';
 import { pluckImm } from '../../tools';

@@ -18,6 +18,7 @@ const Project = (props) => {
     getProject({ id: props.id }).then(setImmer(updateData));
   });
 
+  // eslint-disable-next-line no-unused-vars
   const getFeedbackSubject = () => {
     let metadata;
     if (data !== undefined) {

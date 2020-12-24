@@ -55,7 +55,7 @@ class PaginatedTable extends Visualization {
   }
 
   render() {
-    throw 'Abstract!';
+    throw new Error('Abstract!');
   }
 }
 

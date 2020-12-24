@@ -1,4 +1,4 @@
-import Map from '../index.jsx';
+import Map from '../index';
 import Location from './location';
 import fmConnect from '../../../fm/fm';
 
