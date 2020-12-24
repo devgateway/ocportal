@@ -1,55 +1,60 @@
-import React from "react";
-import {useImmer} from "use-immer";
-import {tCreator} from '../../translatable';
+import React from 'react';
+import { useImmer } from 'use-immer';
 import cn from 'classnames';
-import fmConnect from "../../fm/fm";
+import { tCreator } from '../../translatable';
+import fmConnect from '../../fm/fm';
 
-export const singlePropertyRendererCreator = (FilterItem, property) => ({filters, onChange, ...props}) =>
-    <FilterItem value={filters[property]} onChange={value => onChange({[property]: value})} {...props} />;
+export const singlePropertyRendererCreator = (FilterItem, property) => ({ filters, onChange, ...props }) => <FilterItem value={filters[property]} onChange={(value) => onChange({ [property]: value })} {...props} />;
 
-export const minMaxPropertyRendererCreator = (FilterItem, suffix) => ({filters, onChange, ...props}) => {
+export const minMaxPropertyRendererCreator = (FilterItem, suffix) => ({ filters, onChange, ...props }) => {
   const minProperty = `min${suffix}`;
   const maxProperty = `max${suffix}`;
-  return <FilterItem
-    minValue={filters[minProperty]}
-    maxValue={filters[maxProperty]}
-    minProperty={minProperty}
-    maxProperty={maxProperty}
-    onChange={({minValue, maxValue}) => onChange({[minProperty]: minValue, [maxProperty]: maxValue})}
-    {...props} />;
-}
+  return (
+    <FilterItem
+      minValue={filters[minProperty]}
+      maxValue={filters[maxProperty]}
+      minProperty={minProperty}
+      maxProperty={maxProperty}
+      onChange={({ minValue, maxValue }) => onChange({ [minProperty]: minValue, [maxProperty]: maxValue })}
+      {...props}
+    />
+  );
+};
 
-export const dateRendererCreator = (FilterItem) => ({filters, onChange, ...props}) =>
-  <FilterItem years={filters['year']} months={filters['month']}
-              onChange={
-                value => onChange({
+export const dateRendererCreator = (FilterItem) => ({ filters, onChange, ...props }) => (
+  <FilterItem
+    years={filters.year}
+    months={filters.month}
+    onChange={
+                (value) => onChange({
                   year: value.years,
                   month: value.months,
-                  monthly: value.years.length === 1
+                  monthly: value.years.length === 1,
                 })
               }
-              {...props} />;
+    {...props}
+  />
+);
 
-const FiltersWrapper = props => {
-
+const FiltersWrapper = (props) => {
   const [expanded, updateExpanded] = useImmer(new Set());
 
   const [localFilters, updateLocalFilters] = useImmer(props.filters);
 
-  const toggleItem = index => {
-    updateExpanded(draft => {
+  const toggleItem = (index) => {
+    updateExpanded((draft) => {
       draft.has(index) ? draft.delete(index) : draft.add(index);
     });
-  }
+  };
 
   const reset = () => {
     props.applyFilters({});
     updateLocalFilters(() => ({}));
-  }
+  };
 
   const apply = () => {
     props.applyFilters(localFilters);
-  }
+  };
 
   const t = tCreator(props.translations);
 
@@ -57,28 +62,32 @@ const FiltersWrapper = props => {
     const { translations, isFeatureVisible } = props;
 
     return props.groups
-      .filter(group => !group.fm || isFeatureVisible(group.fm))
-      .map((group, index) => {
-          return (<div
-            key={index}
-            className={'row filter ' + group.className}>
-            <div className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
-                 onClick={_ => toggleItem(index)}>
-              <div className="pull-left title">{group.name}</div>
-              <div className={'pull-right toggler ' + (expanded.has(index) ? 'up' : 'down')} />
-            </div>
+      .filter((group) => !group.fm || isFeatureVisible(group.fm))
+      .map((group, index) => (
+        <div
+          key={index}
+          className={`row filter ${group.className}`}
+        >
+          <div
+            className={cn('col-md-12 filter-header', { selected: expanded.has(index) })}
+            onClick={(_) => toggleItem(index)}
+          >
+            <div className="pull-left title">{group.name}</div>
+            <div className={`pull-right toggler ${expanded.has(index) ? 'up' : 'down'}`} />
+          </div>
 
-            {expanded.has(index) &&
+          {expanded.has(index)
+            && (
             <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
-              {group.filters.map((filter, fIdx) =>
+              {group.filters.map((filter, fIdx) => (
                 <React.Fragment key={fIdx}>
                   {filter.render({
                     filters: localFilters,
-                    onChange: filters => updateLocalFilters((draft) => ({...draft, ...filters})),
-                    translations: translations
+                    onChange: (filters) => updateLocalFilters((draft) => ({ ...draft, ...filters })),
+                    translations,
                   })}
                 </React.Fragment>
-              )}
+              ))}
 
               <section className="buttons">
                 <button className="btn btn-apply pull-right" onClick={apply}>
@@ -88,16 +97,17 @@ const FiltersWrapper = props => {
                   {t('filters:reset')}
                 </button>
               </section>
-            </div>}
-          </div>)
-        });
-  }
+            </div>
+            )}
+        </div>
+      ));
+  };
 
   return (
     <div className={cn('filters', 'col-md-12')}>
       {listItems()}
     </div>
   );
-}
+};
 
 export default fmConnect(FiltersWrapper);

@@ -1,14 +1,13 @@
-import backendYearFilterable from "../../backend-year-filterable";
+import Plotly from 'plotly.js-basic-dist';
+import backendYearFilterable from '../../backend-year-filterable';
 import Chart from './index';
 import { pluckImm } from '../../tools';
-import Plotly from 'plotly.js-basic-dist'
-import fmConnect from "../../fm/fm";
+import fmConnect from '../../fm/fm';
 
-class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
-
-  getData(){
+class ShareProcAwardedAgpo extends backendYearFilterable(Chart) {
+  getData() {
     const data = super.getData();
-    if(!data || !data.count()) return [];
+    if (!data || !data.count()) return [];
     const labels = data.map(pluckImm('_id')).toJS();
     const values = data.map(pluckImm('value')).toJS();
     const text = [];
@@ -16,13 +15,13 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
       text.push(this.props.styling.charts.hoverFormatter(values[i]));
     }
     return [{
-      values: values,
-      labels: labels,
-      text: text,
+      values,
+      labels,
+      text,
       textposition: 'inside',
       hoverinfo: 'text+percent',
-      type: 'pie'
-      //,
+      type: 'pie',
+      // ,
       // marker: {
       //   colors: ['#dca402', '#144361', '#3372b1']//if you change this colors you'll have to also change it for the custom legend in ./style.scss
       // },
@@ -37,15 +36,14 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart){
     }];
   }
 
-  getLayout(){
+  getLayout() {
     return {
-      showlegend: true
-    }
+      showlegend: true,
+    };
   }
 }
 
-ShareProcAwardedAgpo.getName = t => t('charts:shareProcAwardedAgpo:title');
+ShareProcAwardedAgpo.getName = (t) => t('charts:shareProcAwardedAgpo:title');
 ShareProcAwardedAgpo.endpoint = 'shareProcurementsAwardedAgpo';
-
 
 export default fmConnect(ShareProcAwardedAgpo, 'viz.me.chart.shareProcAwardedAgpo');

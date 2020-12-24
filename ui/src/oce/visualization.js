@@ -1,10 +1,10 @@
 import URI from 'urijs';
 import { fromJS } from 'immutable';
+import React from 'react';
+import PropTypes from 'prop-types';
 import translatable from './translatable';
 import Component from './pure-render-component';
 import { callFunc, fetchEP } from './tools';
-import React from 'react';
-import PropTypes from 'prop-types';
 
 const API_ROOT = '/api';
 
@@ -25,19 +25,19 @@ class Visualization extends translatable(Component) {
     const { requestNewData } = this.props;
     let promise = false;
     if (endpoint) {
-      //console.warn('endpoint property is deprecated', endpoint);
+      // console.warn('endpoint property is deprecated', endpoint);
       promise = fetchEP(this.buildUrl(endpoint));
     }
     if (endpoints) {
-      //console.warn('endpoints property is deprecated', endpoints);
+      // console.warn('endpoints property is deprecated', endpoints);
       promise = Promise.all(endpoints.map(this.buildUrl.bind(this))
-      .map(fetchEP));
+        .map(fetchEP));
     }
     if (typeof this.getCustomEP === 'function') {
       const customEP = this.getCustomEP();
       if (Array.isArray(customEP)) {
         promise = Promise.all(customEP.map(this.buildUrl.bind(this))
-        .map(fetchEP));
+          .map(fetchEP));
       } else {
         promise = fetchEP(this.buildUrl(customEP));
       }
@@ -45,10 +45,10 @@ class Visualization extends translatable(Component) {
     if (!promise) return;
     this.setState({ loading: true });
     promise
-    .then(this.transform.bind(this))
-    .then(fromJS)
-    .then(data => requestNewData([], data))
-    .then(() => this.setState({ loading: false }));
+      .then(this.transform.bind(this))
+      .then(fromJS)
+      .then((data) => requestNewData([], data))
+      .then(() => this.setState({ loading: false }));
   }
 
   transform(data) {

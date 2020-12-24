@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 import { cloneChild } from './tools';
 
 class BackendDateFilterable extends React.PureComponent {
-  constructor(...args){
+  constructor(...args) {
     super(...args);
     this.state = this.state || {};
     this.state.decoratedFilters = this.decorateFilters(this.props);
@@ -13,23 +13,21 @@ class BackendDateFilterable extends React.PureComponent {
     return {
       ...filters,
       year: years,
-      monthly: monthly,
-      month: monthly && months.length !== 12 ? months : []
+      monthly,
+      month: monthly && months.length !== 12 ? months : [],
     };
   }
 
   componentWillUpdate(nextProps) {
-    if (['filters', 'years', 'months'].some(prop => this.props[prop] != nextProps[prop])) {
+    if (['filters', 'years', 'months'].some((prop) => this.props[prop] != nextProps[prop])) {
       this.setState({
         decoratedFilters: this.decorateFilters(nextProps),
-      })
+      });
     }
   }
 
   render() {
-    const decoratedProps = Object.assign({}, this.props, {
-      filters: this.state.decoratedFilters,
-    });
+    const decoratedProps = { ...this.props, filters: this.state.decoratedFilters };
     delete decoratedProps.years;
     delete decoratedProps.months;
     delete decoratedProps.monthly;

@@ -5,5 +5,5 @@ export function renderTopLeftLabel({ content, ...props }) {
     <g transform="translate(-5 -20)">
       <Label {...props} width={500} />
     </g>
-  )
+  );
 }

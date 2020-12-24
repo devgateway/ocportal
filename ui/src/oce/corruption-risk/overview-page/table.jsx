@@ -29,7 +29,7 @@ class Popup extends translatable(React.Component) {
             <hr />
           </div>
           <div className="col-sm-12 info">
-            {flagIds.map(flagId => <p key={flagId}>{this.t(`crd:indicators:${flagId}:name`)}</p>)}
+            {flagIds.map((flagId) => <p key={flagId}>{this.t(`crd:indicators:${flagId}:name`)}</p>)}
           </div>
         </div>
         <div className="arrow" />
@@ -50,7 +50,7 @@ class Popup extends translatable(React.Component) {
     const { showPopup } = this.state;
 
     const count = flaggedStats.get('count', 0);
-    //flaggedStats.find(stat => stat.get('type') === type).get('count')
+    // flaggedStats.find(stat => stat.get('type') === type).get('count')
     return (
       <div
         onMouseEnter={() => this.showPopup()}
@@ -87,9 +87,9 @@ class ProcurementsTable extends PaginatedTable {
     const { pageSize, page } = this.state;
 
     const jsData = contracts.map((contract) => {
-      const tenderAmount = contract.getIn(['tender', 'value', 'amount'], 'N/A') +
-          ' ' +
-          contract.getIn(['tender', 'value', 'currency'], '');
+      const tenderAmount = `${contract.getIn(['tender', 'value', 'amount'], 'N/A')
+      } ${
+        contract.getIn(['tender', 'value', 'currency'], '')}`;
 
       const tenderPeriod = contract.get('tenderPeriod');
       const startDate = new Date(tenderPeriod.get('startDate')).toLocaleDateString();
@@ -98,17 +98,16 @@ class ProcurementsTable extends PaginatedTable {
       const flags = contract.get('flags');
       const flaggedStats = flags.get('flaggedStats');
       const flagType = flaggedStats.get('type', corruptionType);
-      const flagIds =
-        flags
-          .filter(
-            flag => flag.has && flag.has('types') && flag.get('types').includes(flagType) && flag.get('value')
-          )
-          .keySeq();
+      const flagIds = flags
+        .filter(
+          (flag) => flag.has && flag.has('types') && flag.get('types').includes(flagType) && flag.get('value'),
+        )
+        .keySeq();
 
       return {
         status: contract.getIn(
           ['tender', 'status'],
-          contract.get('status', 'N/A')
+          contract.get('status', 'N/A'),
         ),
         id: contract.get('ocid'),
         title: contract.get('title', 'N/A'),

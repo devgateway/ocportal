@@ -31,16 +31,16 @@ NrOfContractsWithPE.Donut = class extends CenterTextDonut.Donut {
     if (!procuringEntityId || !supplierId) return [];
     return [
       `ocds/release/count/?procuringEntityId=${procuringEntityId}`,
-      `ocds/release/count/?procuringEntityId=${procuringEntityId}` +
-        `&supplierId=${supplierId}&awardStatus=active`
+      `ocds/release/count/?procuringEntityId=${procuringEntityId}`
+        + `&supplierId=${supplierId}&awardStatus=active`,
     ];
   }
 
-  transform([total, thisPE]){
+  transform([total, thisPE]) {
     return {
       thisPE,
-      total
-    }
+      total,
+    };
   }
 
   componentDidUpdate(prevProps, ...rest) {
@@ -60,11 +60,11 @@ NrOfContractsWithPE.Donut = class extends CenterTextDonut.Donut {
     return [{
       labels: [
         this.t('crd:contract:nrContractWithPE:match'),
-        this.t('crd:contract:nrContractWithPE:total')
+        this.t('crd:contract:nrContractWithPE:total'),
       ],
       values: [data.get('thisPE'), data.get('total')],
       hoverlabel: {
-        bgcolor: '#144361'
+        bgcolor: '#144361',
       },
       hoverinfo: 'none',
       textinfo: 'none',

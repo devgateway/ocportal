@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import URI from 'urijs';
 import { Map } from 'immutable';
 import { cloneChild } from './tools';
@@ -6,7 +6,7 @@ import { callFunc } from '../tools';
 
 const API_ROOT = '/api';
 
-const fetchEP = url => fetch(url.clone().query(''), {
+const fetchEP = (url) => fetch(url.clone().query(''), {
   method: 'POST',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -17,17 +17,17 @@ const fetchEP = url => fetch(url.clone().query(''), {
 
 class DataFetcher extends React.PureComponent {
   fetch() {
-    const { filters, endpoint, endpoints, requestNewData } = this.props;
+    const {
+      filters, endpoint, endpoints, requestNewData,
+    } = this.props;
     if (endpoint) {
       const uri = new URI(`${API_ROOT}/${endpoint}`).addSearch(filters);
       fetchEP(uri).then(requestNewData.bind(null, []));
     } else if (endpoints) {
       Promise.all(
-        endpoints.map(endpoint =>
-          fetchEP(
-            new URI(`${API_ROOT}/${endpoint}`).addSearch(filters)
-          )
-        )
+        endpoints.map((endpoint) => fetchEP(
+          new URI(`${API_ROOT}/${endpoint}`).addSearch(filters),
+        )),
       ).then(requestNewData.bind(null, []));
     }
   }
@@ -37,7 +37,7 @@ class DataFetcher extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (['filters', 'endpoint', 'endpoints'].some(prop => this.props[prop] != prevProps[prop])) {
+    if (['filters', 'endpoint', 'endpoints'].some((prop) => this.props[prop] != prevProps[prop])) {
       this.props.requestNewData([], null);
       this.fetch();
     }
@@ -47,7 +47,7 @@ class DataFetcher extends React.PureComponent {
     const { data } = this.props;
     if (!data) return null;
     return cloneChild(this, {
-      data
+      data,
     });
   }
 }
@@ -55,6 +55,6 @@ class DataFetcher extends React.PureComponent {
 DataFetcher.defaultProps = {
   filters: Map(),
   requestNewData: () => null,
-}
+};
 
 export default DataFetcher;

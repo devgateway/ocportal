@@ -1,107 +1,114 @@
-import React, {useEffect, useState} from "react";
-import {pluck, range, sameArray} from '../../tools';
+import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
-import {fetch} from "../../api/Api";
-import {tCreator} from "../../translatable";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import { pluck, range, sameArray } from '../../tools';
+import { fetch } from '../../api/Api';
+import { tCreator } from '../../translatable';
 
-const FilterDateYearMonth = props => {
-    const monthRange = range(1, 12);
-    const [allYears, setAllYears] = useState([]);
-    const t = tCreator(props.translations);
+const FilterDateYearMonth = (props) => {
+  const monthRange = range(1, 12);
+  const [allYears, setAllYears] = useState([]);
+  const t = tCreator(props.translations);
 
-    const {ep} = props;
-    const years = (props.years && props.years.length > 0) ? props.years : allYears;
-    const months = (props.months && props.months.length > 0) ? props.months : monthRange;
+  const { ep } = props;
+  const years = (props.years && props.years.length > 0) ? props.years : allYears;
+  const months = (props.months && props.months.length > 0) ? props.months : monthRange;
 
-    /**
+  /**
      * Retrieve allYears from the API.
      */
-    useEffect(() => {
-        fetch(ep).then(data => {
-            const years = data.map(pluck('_id')).sort();
-            setAllYears(years);
-        });
-    }, [ep]);
-
-    const showMonths = () => {
-        return years.filter(x => allYears.includes(x)).length === 1;
-    };
-
-    const handleOnChange = (years, months) => props.onChange({
-        years: sameArray(years, allYears) ? [] : years,
-        months: (years.length > 1 || sameArray(months, monthRange)) ? [] : months
+  useEffect(() => {
+    fetch(ep).then((data) => {
+      const years = data.map(pluck('_id')).sort();
+      setAllYears(years);
     });
+  }, [ep]);
 
-    const monthsBar = () => {
-        return monthRange.map(month => {
-            const included = months.includes(month);
-            return (<a
-              key={month}
-              className={cn('col-md-3', {active: included})}
-              onClick={() => handleOnChange(
-                  years,
-                  included
-                    ? months.filter(item => item !== month)
-                    : [...months, month]
-              )}>
-                <i className="glyphicon glyphicon-ok-circle"/> {t(`general:months:${month}`)}
-            </a>)
-        });
-    };
+  const showMonths = () => years.filter((x) => allYears.includes(x)).length === 1;
 
-    const yearsBar = () => {
-        const toggleYear = year => handleOnChange(
-            years.includes(year)
-              ? years.filter(item => item !== year)
-              : [...years, year],
-            months
-        );
+  const handleOnChange = (years, months) => props.onChange({
+    years: sameArray(years, allYears) ? [] : years,
+    months: (years.length > 1 || sameArray(months, monthRange)) ? [] : months,
+  });
 
-        const toggleOthersYears = year => handleOnChange(
-            years.length === 1 && years.includes(year) ? [] : [year],
-            months
-        );
+  const monthsBar = () => monthRange.map((month) => {
+    const included = months.includes(month);
+    return (
+      <a
+        key={month}
+        className={cn('col-md-3', { active: included })}
+        onClick={() => handleOnChange(
+          years,
+          included
+            ? months.filter((item) => item !== month)
+            : [...months, month],
+        )}
+      >
+        <i className="glyphicon glyphicon-ok-circle" />
+        {' '}
+        {t(`general:months:${month}`)}
+      </a>
+    );
+  });
 
-        return allYears
-            .map(year =>
-                (<a
-                    key={year}
-                    className={cn('col-md-3', {active: years.includes(year)})}
-                    onDoubleClick={() => toggleOthersYears(year)}
-                    onClick={e => (e.shiftKey ? toggleOthersYears(year) : toggleYear(year))}
-                >
-                    <i className="glyphicon glyphicon-ok-circle"/> {year}
-                </a>));
-    };
+  const yearsBar = () => {
+    const toggleYear = (year) => handleOnChange(
+      years.includes(year)
+        ? years.filter((item) => item !== year)
+        : [...years, year],
+      months,
+    );
 
-    return (<div className="date-filter">
-        <div className="years-bar" role="navigation">
-            {yearsBar()}
+    const toggleOthersYears = (year) => handleOnChange(
+      years.length === 1 && years.includes(year) ? [] : [year],
+      months,
+    );
+
+    return allYears
+      .map((year) => (
+        <a
+          key={year}
+          className={cn('col-md-3', { active: years.includes(year) })}
+          onDoubleClick={() => toggleOthersYears(year)}
+          onClick={(e) => (e.shiftKey ? toggleOthersYears(year) : toggleYear(year))}
+        >
+          <i className="glyphicon glyphicon-ok-circle" />
+          {' '}
+          {year}
+        </a>
+      ));
+  };
+
+  return (
+    <div className="date-filter">
+      <div className="years-bar" role="navigation">
+        {yearsBar()}
+      </div>
+
+      <div className="row">
+        <div className="hint col-md-12">
+          {t('yearsBar:ctrlClickHint')}
         </div>
+      </div>
 
-        <div className="row">
-            <div className="hint col-md-12">
-                {t('yearsBar:ctrlClickHint')}
-            </div>
-        </div>
-
-        {showMonths() === true
-            ? <div className="months-bar" role="navigation">
-                {monthsBar()}
-            </div>
-            : null
-        }
-    </div>);
+      {showMonths() === true
+        ? (
+          <div className="months-bar" role="navigation">
+            {monthsBar()}
+          </div>
+        )
+        : null}
+    </div>
+  );
 };
 
 FilterDateYearMonth.propTypes = {
-    translations: PropTypes.object.isRequired,
-    ep: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    year: PropTypes.array,
-    month: PropTypes.array,
-    monthly: PropTypes.bool
+  translations: PropTypes.object.isRequired,
+  ep: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  year: PropTypes.array,
+  month: PropTypes.array,
+  monthly: PropTypes.bool,
 };
 
 export default FilterDateYearMonth;

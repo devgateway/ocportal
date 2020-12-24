@@ -1,19 +1,19 @@
-import FrontendDateFilterableChart from "./frontend-date-filterable";
-import {pluckImm} from "../../tools";
-import fmConnect from "../../fm/fm";
+import FrontendDateFilterableChart from './frontend-date-filterable';
+import { pluckImm } from '../../tools';
+import fmConnect from '../../fm/fm';
 
-class NrCancelled extends FrontendDateFilterableChart{
-  static getName(t){return t('charts:nrCancelled:title')};
+class NrCancelled extends FrontendDateFilterableChart {
+  static getName(t) { return t('charts:nrCancelled:title'); }
 
-  getData(){
-    let data = super.getData();
-    if(!data) return [];
+  getData() {
+    const data = super.getData();
+    if (!data) return [];
     const { years } = this.props;
 
     const monthly = data.hasIn([0, 'month']);
-    const dates = monthly ?
-        data.map(pluckImm('month')).map(month => this.tMonth(month, years)).toArray() :
-        data.map(pluckImm('year')).toArray();
+    const dates = monthly
+      ? data.map(pluckImm('month')).map((month) => this.tMonth(month, years)).toArray()
+      : data.map(pluckImm('year')).toArray();
 
     return [{
       x: dates,
@@ -21,29 +21,29 @@ class NrCancelled extends FrontendDateFilterableChart{
       type: 'scatter',
       fill: 'tonexty',
       marker: {
-        color: this.props.styling.charts.traceColors[0]
-      }
+        color: this.props.styling.charts.traceColors[0],
+      },
     }];
   }
 
-  getLayout(){
-    const {hoverFormat} = this.props.styling.charts;
+  getLayout() {
+    const { hoverFormat } = this.props.styling.charts;
     return {
       xaxis: {
         title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
-        type: 'category'
+        type: 'category',
       },
       yaxis: {
         title: this.t('charts:nrCancelled:yAxisTitle'),
         hoverformat: hoverFormat,
-        tickprefix: "   "
-      }
-    }
+        tickprefix: '   ',
+      },
+    };
   }
 }
 
 NrCancelled.endpoint = 'percentTendersCancelled';
 NrCancelled.excelEP = 'numberCancelledFundingExcelChart';
-NrCancelled.getMaxField = imm => imm.get('totalCancelled');
+NrCancelled.getMaxField = (imm) => imm.get('totalCancelled');
 
 export default fmConnect(NrCancelled, 'viz.me.chart.nrCancelled');

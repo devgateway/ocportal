@@ -1,18 +1,23 @@
-import React from "react";
+import React from 'react';
 
-const TitleBelow = ({ title, children, filters, ...props }) => (
+const TitleBelow = ({
+  title, children, filters, ...props
+}) => (
   <div>
     {React.cloneElement(
-      React.Children.only(children)
-      , props)}
+      React.Children.only(children),
+      props,
+    )}
     <h4 className="title">
-      {props.zoomed ||
+      {props.zoomed
+      || (
       <>
         <button className="btn btn-default btn-sm zoom-button">
-          <i className="glyphicon glyphicon-fullscreen" style={{pointerEvents: 'none'}}/>
+          <i className="glyphicon glyphicon-fullscreen" style={{ pointerEvents: 'none' }} />
         </button>
         &nbsp;
-      </>}
+      </>
+      )}
       {title}
     </h4>
   </div>

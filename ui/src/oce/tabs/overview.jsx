@@ -12,7 +12,7 @@ class Overview extends Tab {
 }
 
 Overview.visualizations = [OverviewChart, TopSuppliersTable, TendersTable, AwardsTable,
-ExpenditureTodateVsBudget];
+  ExpenditureTodateVsBudget];
 
 Overview.icon = 'overview';
 

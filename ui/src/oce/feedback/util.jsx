@@ -1,4 +1,1 @@
-
-export const getFeedbackUrlPart = () => {
-  return window.location.hash.substr(3);
-};
+export const getFeedbackUrlPart = () => window.location.hash.substr(3);

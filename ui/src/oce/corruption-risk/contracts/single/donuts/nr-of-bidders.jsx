@@ -12,7 +12,10 @@ class NrOfBidders extends CenterTextDonut {
     return (
       <div>
         {count}
-        <span className="secondary">/{avg.toFixed(2)}</span>
+        <span className="secondary">
+          /
+          {avg.toFixed(2)}
+        </span>
       </div>
     );
   }
@@ -26,7 +29,7 @@ NrOfBidders.Donut = class extends CenterTextDonut.Donut {
   transform(data) {
     try {
       return data[0].averageNoTenderers;
-    } catch(_) {
+    } catch (_) {
       return 0;
     }
   }
@@ -38,11 +41,11 @@ NrOfBidders.Donut = class extends CenterTextDonut.Donut {
     return [{
       labels: [
         this.t('crd:contract:nrBiddersVsAvg:thisLabel'),
-        this.t('crd:contract:nrBiddersVsAvg:avgLabel')
+        this.t('crd:contract:nrBiddersVsAvg:avgLabel'),
       ],
       values: [count, avg],
       hoverlabel: {
-        bgcolor: '#144361'
+        bgcolor: '#144361',
       },
       hoverinfo: 'none',
       textinfo: 'none',
@@ -60,7 +63,7 @@ NrOfBidders.Donut = class extends CenterTextDonut.Donut {
       paper_bgcolor: 'rgba(0,0,0,0)',
     };
   }
-}
+};
 
 NrOfBidders.Donut.endpoint = 'averageNumberOfTenderers';
 NrOfBidders.Donut.UPDATABLE_FIELDS = CenterTextDonut.Donut.UPDATABLE_FIELDS.concat('count');

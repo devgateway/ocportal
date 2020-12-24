@@ -1,41 +1,41 @@
-import React from "react";
+import React from 'react';
+import { Set } from 'immutable';
+import PropTypes from 'prop-types';
 import Chart from '../visualizations/charts/index.jsx';
-import {debounce, pluckImm} from '../tools';
+import { debounce, pluckImm } from '../tools';
 import backendYearFilterable from '../backend-year-filterable';
 import Visualization from '../visualization';
-import {Set} from 'immutable';
 import translatable from '../translatable';
-import PropTypes from 'prop-types';
 
 class TotalFlagsChart extends backendYearFilterable(Chart) {
   getData() {
     const data = super.getData();
     if (!data || !data.count()) return [];
-    const labels = data.map(datum => this.t(`crd:corruptionType:${datum.get('type')}:name`))
-    .toJS();
+    const labels = data.map((datum) => this.t(`crd:corruptionType:${datum.get('type')}:name`))
+      .toJS();
     return [{
       values: data.map(pluckImm('indicatorCount'))
-      .toJS(),
-      labels: labels,
+        .toJS(),
+      labels,
       textinfo: 'value',
       textposition: 'outside',
-      hole: .8,
+      hole: 0.8,
       type: 'pie',
       hoverlabel: {
-        bgcolor: '#144361'
+        bgcolor: '#144361',
       },
       marker: {
         colors: ['#fac329',
-          //'#289df5',
-          '#3372b1']//if you change this colors you'll have to also change it for the custom legend in ./style.scss
+          // '#289df5',
+          '#3372b1'], // if you change this colors you'll have to also change it for the custom legend in ./style.scss
       },
       outsidetextfont: {
         size: 15,
-        color: '#3fc529'
+        color: '#3fc529',
       },
       insidetextfont: {
         size: 15,
-        color: '#3fc529'
+        color: '#3fc529',
       },
     }];
   }
@@ -60,7 +60,7 @@ class Counter extends backendYearFilterable(Visualization) {
       <div className="counter">
         <div className="count text-right">
           {this.getCount()
-          .toLocaleString()}
+            .toLocaleString()}
         </div>
         <div className="text text-left">
           {this.getTitle()}
@@ -68,7 +68,7 @@ class Counter extends backendYearFilterable(Visualization) {
       </div>
     );
   }
-};
+}
 
 class FlagsCounter extends Counter {
   getTitle() {
@@ -101,11 +101,9 @@ class TotalFlags extends translatable(React.Component) {
     super(...args);
     this.state = {};
 
-    this.updateSidebarWidth = debounce(() =>
-      this.setState({
-        width: document.getElementById('crd-sidebar').offsetWidth
-      })
-    );
+    this.updateSidebarWidth = debounce(() => this.setState({
+      width: document.getElementById('crd-sidebar').offsetWidth,
+    }));
   }
 
   componentDidMount() {
@@ -118,7 +116,9 @@ class TotalFlags extends translatable(React.Component) {
   }
 
   render() {
-    const { data, requestNewData, translations, filters, years, months, monthly } = this.props;
+    const {
+      data, requestNewData, translations, filters, years, months, monthly,
+    } = this.props;
     const { width } = this.state;
 
     if (!width) return null;
@@ -150,7 +150,9 @@ class TotalFlags extends translatable(React.Component) {
           translations={translations}
           width={width}
           height={200}
-          margin={{ l: 0, r: 0, t: 40, b: 20, pad: 0 }}
+          margin={{
+            l: 0, r: 0, t: 40, b: 20, pad: 0,
+          }}
           filters={filters}
           years={years}
           months={months}
@@ -158,9 +160,9 @@ class TotalFlags extends translatable(React.Component) {
           styling={this.props.styling}
         />
         <div className="crd-legend">
-          {/*<div className="fraud">*/}
-          {/*  <span className="frc-label">{this.t('crd:corruptionType:FRAUD:name')}</span>*/}
-          {/*</div>*/}
+          {/* <div className="fraud"> */}
+          {/*  <span className="frc-label">{this.t('crd:corruptionType:FRAUD:name')}</span> */}
+          {/* </div> */}
           <div className="rigging">
             <span className="frc-label">{this.t('crd:corruptionType:RIGGING:name')}</span>
           </div>

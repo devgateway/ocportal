@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import { getRoute, navigate, onNavigation } from './router';
-import React from "react";
 
-class OCESwitcher extends React.Component{
-  constructor(...args){
+class OCESwitcher extends React.Component {
+  constructor(...args) {
     super(...args);
     this.state = {
       route: getRoute(),
     };
 
-    onNavigation(route => this.setState({ route }));
+    onNavigation((route) => this.setState({ route }));
   }
 
   render() {

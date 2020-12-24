@@ -1,51 +1,51 @@
-import FrontendDateFilterableChart from "../frontend-date-filterable";
+import FrontendDateFilterableChart from '../frontend-date-filterable';
 
-class CancelledFunding extends FrontendDateFilterableChart{
-  getData(){
-    let data = super.getData();
-    if(!data) return [];
-    let {traceColors, hoverFormatter} = this.props.styling.charts;
-    let trace = {
+class CancelledFunding extends FrontendDateFilterableChart {
+  getData() {
+    const data = super.getData();
+    if (!data) return [];
+    const { traceColors, hoverFormatter } = this.props.styling.charts;
+    const trace = {
       x: [],
       y: [],
       type: 'scatter',
       fill: 'tonexty',
       marker: {
-        color: traceColors[0]
-      }
+        color: traceColors[0],
+      },
     };
 
-    if(hoverFormatter){
+    if (hoverFormatter) {
       trace.text = [];
-      trace.hoverinfo = "text";
+      trace.hoverinfo = 'text';
     }
 
     const { years } = this.props;
-    data.forEach(datum => {
-      const date = datum.has('month') ?
-        this.tMonth(datum.get('month'), years) :
-          datum.get('year');
+    data.forEach((datum) => {
+      const date = datum.has('month')
+        ? this.tMonth(datum.get('month'), years)
+        : datum.get('year');
 
-      let count = datum.get('totalCancelledTendersAmount');
+      const count = datum.get('totalCancelledTendersAmount');
       trace.x.push(date);
       trace.y.push(count);
-      if(hoverFormatter) trace.text.push(hoverFormatter(count));
+      if (hoverFormatter) trace.text.push(hoverFormatter(count));
     });
 
     return [trace];
   }
 
-  getLayout(){
+  getLayout() {
     return {
       xaxis: {
         title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
-        type: 'category'
+        type: 'category',
       },
       yaxis: {
         title: this.t('charts:cancelledAmounts:yAxisName'),
-        tickprefix: "   "
-      }
-    }
+        tickprefix: '   ',
+      },
+    };
   }
 }
 

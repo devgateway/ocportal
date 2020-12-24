@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { Map, List, Set } from 'immutable';
 import CRDPage from '../../page';
 import Visualization from '../../../visualization';
@@ -20,10 +20,12 @@ import flag from '../../../resources/icons/flag.svg';
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
   render() {
-    const { data, totalContracts, nrFlags, corruptionType } = this.props;
-    const template = nrFlags === 1 ?
-      this.t('crd:contracts:crosstab:explanation:sg') :
-      this.t('crd:contracts:crosstab:explanation:pl');
+    const {
+      data, totalContracts, nrFlags, corruptionType,
+    } = this.props;
+    const template = nrFlags === 1
+      ? this.t('crd:contracts:crosstab:explanation:sg')
+      : this.t('crd:contracts:crosstab:explanation:pl');
 
     return (
       <p>
@@ -33,12 +35,12 @@ class CrosstabExplanation extends translatable(React.PureComponent) {
           .replace(
             '$#$',
             this.t(`crd:corruptionType:${corruptionType}:name`)
-                .toLowerCase()
+              .toLowerCase(),
           )}
       </p>
     );
   }
-};
+}
 
 class Info extends translatable(Visualization) {
   getCustomEP() {
@@ -52,12 +54,11 @@ class Info extends translatable(Visualization) {
     const title = data.getIn(['tender', 'title']);
     const startDate = data.getIn(['tender', 'tenderPeriod', 'startDate']);
     const endDate = data.getIn(['tender', 'tenderPeriod', 'endDate']);
-    const award = data.get('awards', List()).find(a =>
-      a.get('status') === 'active') || Map();
+    const award = data.get('awards', List()).find((a) => a.get('status') === 'active') || Map();
 
     const PE = data.getIn(['tender', 'procuringEntity']);
 
-    const flagCount = data.get('flags', List()).filter(flag => flag.get && flag.get('value')).count();
+    const flagCount = data.get('flags', List()).filter((flag) => flag.get && flag.get('value')).count();
     return (
       <section className="info">
         <div className="row">
@@ -75,23 +76,25 @@ class Info extends translatable(Visualization) {
             <span className="count">
               {flagCount}
               &nbsp;
-              {this.t(flagCount === 1 ?
-                'crd:contracts:baseInfo:flag:sg' :
-                'crd:contracts:baseInfo:flag:pl')}
+              {this.t(flagCount === 1
+                ? 'crd:contracts:baseInfo:flag:sg'
+                : 'crd:contracts:baseInfo:flag:pl')}
             </span>
           </div>
         </div>
-        {title &&
+        {title
+          && (
           <dl>
             {title && <dt>{this.t('crd:general:contract:title')}</dt>}
             {title && <dd>{title}</dd>}
           </dl>
-        }
+          )}
         <table className="table table-bordered join-bottom info-table">
           <tbody>
             <tr>
               <td>
-                {PE && <dl>
+                {PE && (
+                <dl>
                   <dt><span className="contract-label">{this.t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
                   <dd>
                     <a
@@ -100,7 +103,8 @@ class Info extends translatable(Visualization) {
                       {PE.get('name')}
                     </a>
                   </dd>
-                </dl>}
+                </dl>
+                )}
               </td>
               <td>
                 <dl>
@@ -112,15 +116,17 @@ class Info extends translatable(Visualization) {
                 <dl>
                   <dt><span className="contract-label">{this.t('crd:contracts:baseInfo:suppliers')}</span></dt>
                   <dd>
-                    <span className="contract-value">{supplier ?
-                      <a
-                        href={`#!/crd/supplier/${supplier.get('id')}`}
-                        onClick={gotoSupplier}
-                      >
-                        {supplier.get('name')}
-                      </a> :
-                      this.t('general:undefined')
-                    }
+                    <span className="contract-value">
+                      {supplier
+                        ? (
+                          <a
+                            href={`#!/crd/supplier/${supplier.get('id')}`}
+                            onClick={gotoSupplier}
+                          >
+                            {supplier.get('name')}
+                          </a>
+                        )
+                        : this.t('general:undefined')}
                     </span>
                   </dd>
                 </dl>
@@ -144,12 +150,14 @@ class Info extends translatable(Visualization) {
                 <span className="contract-label">{this.t('crd:contracts:baseInfo:tenderDates')}</span>
                 &nbsp;
                 <span className="contract-value">
-                  {startDate ?
-                    <span>
-                      {new Date(startDate).toLocaleDateString()}
-                      &ndash;
-                    </span> :
-                    this.t('general:undefined')}
+                  {startDate
+                    ? (
+                      <span>
+                        {new Date(startDate).toLocaleDateString()}
+                        &ndash;
+                      </span>
+                    )
+                    : this.t('general:undefined')}
 
                   {endDate && new Date(endDate).toLocaleDateString()}
                 </span>
@@ -166,28 +174,38 @@ class Info extends translatable(Visualization) {
                 </span>
               </td>
               <td>
-                <span className="contract-label">{this.t('crd:contracts:baseInfo:awardDate')} </span>
+                <span className="contract-label">
+                  {this.t('crd:contracts:baseInfo:awardDate')}
+                  {' '}
+                </span>
                 &nbsp;
                 <span className="contract-value">
-                  {award.has('date') ?
-                    new Date(award.get('date')).toLocaleDateString() :
-                    this.t('general:undefined')}
+                  {award.has('date')
+                    ? new Date(award.get('date')).toLocaleDateString()
+                    : this.t('general:undefined')}
                 </span>
               </td>
             </tr>
             <tr>
-              <td><span
-                className="contract-label">{this.t('crd:contracts:baseInfo:contractAmount')}
-              </span>
+              <td>
+                <span
+                  className="contract-label"
+                >
+                  {this.t('crd:contracts:baseInfo:contractAmount')}
+                </span>
                 <span className="contract-value">
-                {data.get('contracts', []).length === 0 || data.get('contracts', [])
-                .toJS()[0].value === undefined ? this.t('general:undefined') : (data.get('contracts', [])
-                .toJS()[0].value.amount+' '+data.get('contracts', []).toJS()[0].value.currency)}</span></td>
+                  {data.get('contracts', []).length === 0 || data.get('contracts', [])
+                    .toJS()[0].value === undefined ? this.t('general:undefined') : (`${data.get('contracts', [])
+                      .toJS()[0].value.amount} ${data.get('contracts', []).toJS()[0].value.currency}`)}
+                </span>
+              </td>
 
-              <td><span className="contract-label">{this.t('crd:contracts:baseInfo:contractDateSigned')}</span>
+              <td>
+                <span className="contract-label">{this.t('crd:contracts:baseInfo:contractDateSigned')}</span>
                 <span className="contract-value">
-                {data.get('contracts', []).length === 0 || data.get('contracts', [])
-                  .toJS()[0].dateSigned === undefined ? this.t('general:undefined') : new Date(data.get('contracts', []).toJS()[0].dateSigned).toLocaleDateString()}</span>
+                  {data.get('contracts', []).length === 0 || data.get('contracts', [])
+                    .toJS()[0].dateSigned === undefined ? this.t('general:undefined') : new Date(data.get('contracts', []).toJS()[0].dateSigned).toLocaleDateString()}
+                </span>
 
               </td>
             </tr>
@@ -207,12 +225,10 @@ export default class Contract extends CRDPage {
       indicators: {},
     };
 
-    this.injectOcidFilter = cacheFn((filters, ocid) => {
-      return {
-        ...filters,
-        ocid: (filters.ocid || []).concat(ocid)
-      };
-    });
+    this.injectOcidFilter = cacheFn((filters, ocid) => ({
+      ...filters,
+      ocid: (filters.ocid || []).concat(ocid),
+    }));
   }
 
   groupIndicators({ indicatorTypesMapping }, { contract }) {
@@ -243,57 +259,65 @@ export default class Contract extends CRDPage {
   }
 
   maybeGetFlagAnalysis() {
-    const { filters, translations, years, totalContracts, id } = this.props;
+    const {
+      filters, translations, years, totalContracts, id,
+    } = this.props;
     const { indicators, crosstab } = this.state;
     const noIndicators = Object.keys(indicators)
-      .every(corruptionType =>
-        !indicators[corruptionType] || !indicators[corruptionType].length);
+      .every((corruptionType) => !indicators[corruptionType] || !indicators[corruptionType].length);
 
-    if (noIndicators) return (
-      <section className="flag-analysis">
-        <h2>{this.t('crd:contracts:flagAnalysis')}</h2>
-        <h4>{this.t('crd:contracts:noFlags')}</h4>
-      </section>
-    );
+    if (noIndicators) {
+      return (
+        <section className="flag-analysis">
+          <h2>{this.t('crd:contracts:flagAnalysis')}</h2>
+          <h4>{this.t('crd:contracts:noFlags')}</h4>
+        </section>
+      );
+    }
 
     return (
       <section className="flag-analysis">
         <h2>
           {this.t('crd:contracts:flagAnalysis')}
           &nbsp;
-          <small>({this.t('crd:contracts:clickCrosstabHint')})</small>
+          <small>
+            (
+            {this.t('crd:contracts:clickCrosstabHint')}
+            )
+          </small>
         </h2>
-        {Object.keys(indicators).map(corruptionType => {
-           const nrFlags = indicators[corruptionType].length;
-           return (
-             <div key={corruptionType}>
-               <h3>
-                 {this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}
-               </h3>
-               <DataFetcher
-                 {...wireProps(this, [corruptionType, 'explanation'])}
-                 endpoint={`ocds/release/count?totalFlagged=${nrFlags}`}
-               >
-                 <CrosstabExplanation
-                   totalContracts={totalContracts}
-                   nrFlags={nrFlags}
-                   translations={translations}
-                   corruptionType={corruptionType}
-                 />
-               </DataFetcher>
-               <Crosstab
-                 filters={this.injectOcidFilter(filters, id)}
-                 translations={translations}
-                 years={years}
-                 data={crosstab.get(corruptionType)}
-                 indicators={indicators[corruptionType]}
-                 requestNewData={(_, data) => {
-                     const { crosstab } = this.state;
-                     this.setState({ crosstab: crosstab.set(corruptionType, data)})
-                 }}
-               />
-             </div>
-           )})}
+        {Object.keys(indicators).map((corruptionType) => {
+          const nrFlags = indicators[corruptionType].length;
+          return (
+            <div key={corruptionType}>
+              <h3>
+                {this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}
+              </h3>
+              <DataFetcher
+                {...wireProps(this, [corruptionType, 'explanation'])}
+                endpoint={`ocds/release/count?totalFlagged=${nrFlags}`}
+              >
+                <CrosstabExplanation
+                  totalContracts={totalContracts}
+                  nrFlags={nrFlags}
+                  translations={translations}
+                  corruptionType={corruptionType}
+                />
+              </DataFetcher>
+              <Crosstab
+                filters={this.injectOcidFilter(filters, id)}
+                translations={translations}
+                years={years}
+                data={crosstab.get(corruptionType)}
+                indicators={indicators[corruptionType]}
+                requestNewData={(_, data) => {
+                  const { crosstab } = this.state;
+                  this.setState({ crosstab: crosstab.set(corruptionType, data) });
+                }}
+              />
+            </div>
+          );
+        })}
       </section>
     );
   }
@@ -301,16 +325,18 @@ export default class Contract extends CRDPage {
   render() {
     const { contract } = this.state;
 
-    const { id, translations, doSearch, filters, width, gotoSupplier, styling } = this.props;
+    const {
+      id, translations, doSearch, filters, width, gotoSupplier, styling,
+    } = this.props;
 
     if (!contract) return null;
 
     const supplier = contract.get('awards', List())
-      .find(award => award.get('status') === 'active', undefined, Map())
+      .find((award) => award.get('status') === 'active', undefined, Map())
       .getIn(['suppliers', 0]);
 
-    const procuringEntityId = contract.getIn(['tender', 'procuringEntity', 'id']) ||
-      contract.getIn(['tender', 'procuringEntity', 'identifier', 'id']);
+    const procuringEntityId = contract.getIn(['tender', 'procuringEntity', 'id'])
+      || contract.getIn(['tender', 'procuringEntity', 'identifier', 'id']);
 
     const donutSize = width / 3 - 100;
 
@@ -347,7 +373,8 @@ export default class Contract extends CRDPage {
             />
           </div>
           <div className="col-sm-4">
-            {procuringEntityId && supplier &&
+            {procuringEntityId && supplier
+              && (
               <CustomPopup
                 procuringEntityId={procuringEntityId}
                 supplierId={supplier.get('id')}
@@ -357,10 +384,11 @@ export default class Contract extends CRDPage {
                 width={donutSize}
                 styling={styling}
               />
-            }
+              )}
           </div>
           <div className="col-sm-4">
-            {procuringEntityId && supplier &&
+            {procuringEntityId && supplier
+              && (
               <CustomPopup
                 procuringEntityId={procuringEntityId}
                 supplierId={supplier.get('id')}
@@ -370,7 +398,7 @@ export default class Contract extends CRDPage {
                 width={donutSize}
                 styling={styling}
               />
-            }
+              )}
           </div>
         </section>
         {this.maybeGetFlagAnalysis()}

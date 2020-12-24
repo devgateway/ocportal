@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import cn from 'classnames';
 import backendYearFilterable from '../../../../backend-year-filterable';
 import Chart from '../../../../visualizations/charts/index.jsx';
@@ -16,7 +16,9 @@ class CenterTextDonut extends translatable(React.PureComponent) {
       <div className={cn(this.getClassnames())}>
         <div>
           <Donut
-            margin={{ b: 0, t: 0, r: 0, l: 0, pad: 0 }}
+            margin={{
+              b: 0, t: 0, r: 0, l: 0, pad: 0,
+            }}
             height={300}
             {...this.props}
           />
@@ -32,6 +34,6 @@ class CenterTextDonut extends translatable(React.PureComponent) {
   }
 }
 
-CenterTextDonut.Donut = class extends backendYearFilterable(Chart){};
+CenterTextDonut.Donut = class extends backendYearFilterable(Chart) {};
 
 export default CenterTextDonut;

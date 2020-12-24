@@ -8,7 +8,7 @@ class EProcurement extends Tab {
 }
 
 EProcurement.icon = 'eprocurement';
-//EProcurement.visualizations = [PercentEBid, NrEbid, PercentWithTenders];
+// EProcurement.visualizations = [PercentEBid, NrEbid, PercentWithTenders];
 EProcurement.visualizations = [];
 
 export default EProcurement;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import cn from 'classnames';
 import backendYearFilterable from '../../backend-year-filterable';
 import Chart from '../../visualizations/charts';
@@ -45,14 +45,18 @@ class Donut extends backendYearFilterable(Chart) {
 
 class DonutWrapper extends React.PureComponent {
   render() {
-    const { title, subtitle, className, data, CenterText, styling, translations } = this.props;
+    const {
+      title, subtitle, className, data, CenterText, styling, translations,
+    } = this.props;
     return (
       <div className={cn(className, 'center-text-donut')}>
         <div>
           <Donut
             {...wireProps(this)}
             endpoint={this.props.endpoint}
-            margin={{ b: 0, t: 0, r: 0, l: 0, pad: 0 }}
+            margin={{
+              b: 0, t: 0, r: 0, l: 0, pad: 0,
+            }}
             height={300}
             styling={styling}
           />

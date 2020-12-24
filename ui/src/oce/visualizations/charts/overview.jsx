@@ -1,6 +1,6 @@
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { yearlyResponse2obj, monthlyResponse2obj, pluckImm } from '../../tools';
-import fmConnect from "../../fm/fm";
+import fmConnect from '../../fm/fm';
 
 class OverviewChart extends FrontendDateFilterableChart {
   transform([tendersResponse, awardsResponse]) {
@@ -10,11 +10,11 @@ class OverviewChart extends FrontendDateFilterableChart {
     const awards = response2obj('count', awardsResponse);
     const dateKey = monthly ? 'month' : 'year';
     return Object.keys(tenders)
-    .map(date => ({
-      [dateKey]: date,
-      tender: tenders[date],
-      award: awards[date]
-    }));
+      .map((date) => ({
+        [dateKey]: date,
+        tender: tenders[date],
+        award: awards[date],
+      }));
   }
 
   getRawData() {
@@ -26,30 +26,29 @@ class OverviewChart extends FrontendDateFilterableChart {
     if (!data) return [];
     const LINES = {
       award: this.t('charts:overview:traces:award'),
-      tender: this.t('charts:overview:traces:tender')
+      tender: this.t('charts:overview:traces:tender'),
     };
 
     const { years } = this.props;
     const monthly = data.hasIn([0, 'month']);
-    const dates = monthly ?
-      data.map(pluckImm('month'))
-        .map(month => this.tMonth(month, years))
-      .toArray() :
-      data.map(pluckImm('year'))
-      .toArray();
+    const dates = monthly
+      ? data.map(pluckImm('month'))
+        .map((month) => this.tMonth(month, years))
+        .toArray()
+      : data.map(pluckImm('year'))
+        .toArray();
 
     return Object.keys(LINES)
-    .map((key, index) => ({
+      .map((key, index) => ({
         x: dates,
         y: data.map(pluckImm(key))
-        .toArray(),
+          .toArray(),
         type: 'scatter',
         name: LINES[key],
         marker: {
-          color: this.props.styling.charts.traceColors[index]
-        }
-      })
-    );
+          color: this.props.styling.charts.traceColors[index],
+        },
+      }));
   }
 
   getLayout() {
@@ -57,20 +56,20 @@ class OverviewChart extends FrontendDateFilterableChart {
       xaxis: {
         title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
         titlefont: {
-          color: '#223a49'
+          color: '#223a49',
         },
-        type: 'category'
+        type: 'category',
       },
       yaxis: {
         title: {
           text: this.t('charts:overview:yAxisName'),
-          font:{
-            color: '#223a49'
-          }
+          font: {
+            color: '#223a49',
+          },
         },
         exponentformat: 'none',
-        tickprefix: '   '
-      }
+        tickprefix: '   ',
+      },
     };
   }
 }
@@ -78,6 +77,6 @@ class OverviewChart extends FrontendDateFilterableChart {
 OverviewChart.endpoints = ['countTendersByYear', 'countAwardsByYear'];
 OverviewChart.excelEP = 'procurementActivityExcelChart';
 
-OverviewChart.getName = t => t('charts:overview:title');
+OverviewChart.getName = (t) => t('charts:overview:title');
 
 export default fmConnect(OverviewChart, 'viz.me.chart.overview');

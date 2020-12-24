@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { pluck } from '../../../../tools';
 import Donut from '../../../donut';
 import translatable from '../../../../translatable';
@@ -15,7 +15,13 @@ class CenterText extends React.Component {
         <div>
           {won}
           <div className="secondary">
-            of {sum} ({Math.trunc(percent)}%)
+            of
+            {' '}
+            {sum}
+            {' '}
+            (
+            {Math.trunc(percent)}
+            %)
           </div>
         </div>
       </div>
@@ -33,11 +39,11 @@ class NrWonVsLost extends translatable(React.PureComponent) {
     this.props.requestNewData(path, [{
       color: '#165781',
       label: this.t('crd:supplier:nrLostVsWon:won').replace('$#$', won).replace('$#$', wonPercent),
-      value: won
+      value: won,
     }, {
       color: '#5fa0c9',
       label: this.t('crd:supplier:nrLostVsWon:lost').replace('$#$', lost).replace('$#$', lostPercent),
-      value: lost
+      value: lost,
     }]);
   }
 

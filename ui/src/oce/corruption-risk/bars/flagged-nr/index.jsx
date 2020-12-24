@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -7,16 +7,16 @@ import {
   Legend,
   Bar,
   LabelList,
-  Tooltip
+  Tooltip,
 } from 'recharts';
-import translatable, {tCreator} from '../../../translatable';
+import translatable, { tCreator } from '../../../translatable';
 import { renderTopLeftLabel } from '../../archive/tools';
 import Popup from './popup';
 
 const corruptionTypeColors = {
   FRAUD: '#299df4',
   RIGGING: '#3372b2',
-  COLLUSION: '#fbc42c'
+  COLLUSION: '#fbc42c',
 };
 
 function mkGradient(id, colors) {
@@ -35,16 +35,16 @@ function mkGradient(id, colors) {
 
   return (
     <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
-      {stops.map(({ color, offset }, index) =>
+      {stops.map(({ color, offset }, index) => (
         <stop
           key={index}
-          offset={offset + '%'}
+          offset={`${offset}%`}
           style={{
             stopColor: color,
             stopOpacity: 1,
           }}
         />
-      )}
+      ))}
     </linearGradient>
   );
 }
@@ -53,7 +53,7 @@ class TaggedBar extends translatable(Bar) {
   maybeGetGradients(types) {
     return mkGradient(
       this.getGradientId(types),
-      types.map(type => corruptionTypeColors[type])
+      types.map((type) => corruptionTypeColors[type]),
     );
   }
 
@@ -65,13 +65,12 @@ class TaggedBar extends translatable(Bar) {
     if (types.length === 1) {
       const [type] = types;
       return corruptionTypeColors[type];
-    } else {
-      return `url(#${this.getGradientId(types)})`;
     }
+    return `url(#${this.getGradientId(types)})`;
   }
 
   renderRectangle(option, props) {
-    const types = props.types;
+    const { types } = props;
     return (
       <g>
         {this.maybeGetGradients(types)}
@@ -84,8 +83,9 @@ class TaggedBar extends translatable(Bar) {
   }
 }
 
-const FlaggedNr = ({ data, length, zoomed, translations }) => {
-
+const FlaggedNr = ({
+  data, length, zoomed, translations,
+}) => {
   let height = 350;
   let slicedData;
   if (zoomed) {
@@ -104,62 +104,68 @@ const FlaggedNr = ({ data, length, zoomed, translations }) => {
 
   const corruptionTypes = new Set();
   slicedData.forEach(
-    datum => datum.types.forEach(
-      type => corruptionTypes.add(type)
-    )
+    (datum) => datum.types.forEach(
+      (type) => corruptionTypes.add(type),
+    ),
   );
 
   const t = tCreator(translations);
 
   const legendPayload = [...corruptionTypes].map(
-    corruptionType => ({
+    (corruptionType) => ({
       value: t(`crd:corruptionType:${corruptionType}:name`),
       type: 'square',
       color: corruptionTypeColors[corruptionType],
-    })
+    }),
   );
 
   return (
     <div className="oce-chart">
       {(data === undefined || data.length === 0)
-        ? <div className="row">
-          <br/>
-          <div className="col-md-12">
-            <div className="message">No data</div>
+        ? (
+          <div className="row">
+            <br />
+            <div className="col-md-12">
+              <div className="message">No data</div>
+            </div>
+            <br />
           </div>
-          <br/>
-        </div>
-        : <ResponsiveContainer width="100%" height={height}>
-          <BarChart
-            layout="vertical"
-            data={slicedData}
-            barSize={zoomed ? 10 : 20}
-            barGap={0}
-            barCategoryGap={15}>
-            <XAxis type="number"/>
-            <YAxis type="category" dataKey="indicatorId" hide/>
-            <Tooltip content={<Popup/>} translations={translations} cursor={false}/>
-            <Legend
-              align="left"
-              verticalAlign="top"
-              payload={legendPayload}
-              height={30}/>
-            <TaggedBar
-              dataKey="count"
-              minPointSize={3}
-              isAnimationActive={false}>
-              <LabelList
-                formatter={indicatorId => t(`crd:indicators:${indicatorId}:name`)}
-                dataKey="indicatorId"
-                position="insideTopLeft"
-                content={renderTopLeftLabel}
+        )
+        : (
+          <ResponsiveContainer width="100%" height={height}>
+            <BarChart
+              layout="vertical"
+              data={slicedData}
+              barSize={zoomed ? 10 : 20}
+              barGap={0}
+              barCategoryGap={15}
+            >
+              <XAxis type="number" />
+              <YAxis type="category" dataKey="indicatorId" hide />
+              <Tooltip content={<Popup />} translations={translations} cursor={false} />
+              <Legend
+                align="left"
+                verticalAlign="top"
+                payload={legendPayload}
+                height={30}
               />
-            </TaggedBar>
-          </BarChart>
-        </ResponsiveContainer>
-      }
+              <TaggedBar
+                dataKey="count"
+                minPointSize={3}
+                isAnimationActive={false}
+              >
+                <LabelList
+                  formatter={(indicatorId) => t(`crd:indicators:${indicatorId}:name`)}
+                  dataKey="indicatorId"
+                  position="insideTopLeft"
+                  content={renderTopLeftLabel}
+                />
+              </TaggedBar>
+            </BarChart>
+          </ResponsiveContainer>
+        )}
     </div>
   );
-}
+};
 
 export default FlaggedNr;

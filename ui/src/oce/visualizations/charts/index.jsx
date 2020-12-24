@@ -4,7 +4,7 @@ import Visualization from '../../visualization';
 import ReactIgnore from '../../react-ignore';
 import { max } from '../../tools';
 import './index.scss';
-import Plotly from 'plotly.js-basic-dist'
+import Plotly from 'plotly.js-basic-dist';
 import loadingBubbles from '../../resources/loading-bubbles.svg';
 
 class Chart extends Visualization {
@@ -13,7 +13,9 @@ class Chart extends Visualization {
   }
 
   getDecoratedLayout() {
-    const { title, xAxisRange, yAxisRange, styling, width, height, margin, legend } = this.props;
+    const {
+      title, xAxisRange, yAxisRange, styling, width, height, margin, legend,
+    } = this.props;
     const layout = this.getLayout();
     layout.width = width;
     layout.height = height;
@@ -22,13 +24,13 @@ class Chart extends Visualization {
     if (xAxisRange) layout.xaxis.range = xAxisRange;
     if (yAxisRange) layout.yaxis.range = yAxisRange;
     if (styling) {
-      if(layout.xaxis) {
+      if (layout.xaxis) {
         layout.xaxis.titlefont = {
           color: styling.charts.axisLabelColor,
         };
       }
 
-      if(layout.yaxis) {
+      if (layout.yaxis) {
         layout.yaxis.titlefont = {
           color: styling.charts.axisLabelColor,
         };
@@ -47,7 +49,7 @@ class Chart extends Visualization {
 
   componentDidMount() {
     super.componentDidMount();
-    Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout(), {responsive: true});
+    Plotly.newPlot(this.chartContainer, this.getData(), this.getDecoratedLayout(), { responsive: true });
   }
 
   componentWillUnmount() {
@@ -56,12 +58,11 @@ class Chart extends Visualization {
 
   componentDidUpdate(prevProps) {
     super.componentDidUpdate(prevProps);
-    if (this.constructor.UPDATABLE_FIELDS.some(prop =>
-      prevProps[prop] !== this.props[prop]) || this.props.translations !== prevProps.translations) {
+    if (this.constructor.UPDATABLE_FIELDS.some((prop) => prevProps[prop] !== this.props[prop]) || this.props.translations !== prevProps.translations) {
       this.chartContainer.data = this.getData();
       this.chartContainer.layout = this.getDecoratedLayout();
       setTimeout(() => this.chartContainer && Plotly.redraw(this.chartContainer));
-    } else if (['title', 'width', 'xAxisRange', 'yAxisRange'].some(prop => prevProps[prop] !== this.props[prop])) {
+    } else if (['title', 'width', 'xAxisRange', 'yAxisRange'].some((prop) => prevProps[prop] !== this.props[prop])) {
       setTimeout(() => this.chartContainer && Plotly.relayout(this.chartContainer, this.getDecoratedLayout()));
     }
   }
@@ -73,28 +74,34 @@ class Chart extends Visualization {
   render() {
     const { loading } = this.state;
     const hasNoData = !loading && this.hasNoData();
-    return (<div className="chart-container">
-      {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
-      {loading && <div className="message">
-        {this.t('general:loading')}<br/>
-        <img src={loadingBubbles} alt=""/>
-      </div>}
-      <ReactIgnore>
-        <div ref={(c) => {
-          this.chartContainer = c;
-        }}/>
-      </ReactIgnore>
-    </div>);
+    return (
+      <div className="chart-container">
+        {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
+        {loading && (
+        <div className="message">
+          {this.t('general:loading')}
+          <br />
+          <img src={loadingBubbles} alt="" />
+        </div>
+        )}
+        <ReactIgnore>
+          <div ref={(c) => {
+            this.chartContainer = c;
+          }}
+          />
+        </ReactIgnore>
+      </div>
+    );
   }
 }
 
 Chart.isChart = true;
 
-Chart.getFillerDatum = seed => Map(seed);
+Chart.getFillerDatum = (seed) => Map(seed);
 
-Chart.getMaxField = data => data.flatten()
-.filter((value, key) => value && key !== 'year' && key !== 'month')
-.reduce(max, 0);
+Chart.getMaxField = (data) => data.flatten()
+  .filter((value, key) => value && key !== 'year' && key !== 'month')
+  .reduce(max, 0);
 
 Chart.UPDATABLE_FIELDS = ['data'];
 
@@ -105,7 +112,7 @@ Chart.propTypes = {
       axisLabelColor: PropTypes.string.isRequired,
       traceColors: PropTypes.arrayOf(PropTypes.string).isRequired,
     }).isRequired,
-  }).isRequired
+  }).isRequired,
 };
 
 Chart.defaultProps = {

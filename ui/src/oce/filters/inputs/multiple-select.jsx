@@ -1,22 +1,21 @@
-import {tCreator} from '../../translatable';
-import React, {useEffect} from "react";
-import {fetch} from "../../api/Api";
-import {Checkbox, ControlLabel, FormGroup} from "react-bootstrap";
+import { tCreator } from '../../translatable';
+import React, { useEffect } from 'react';
+import { fetch } from '../../api/Api';
+import { Checkbox, ControlLabel, FormGroup } from 'react-bootstrap';
 import './styles.css';
-import {useImmer} from "use-immer";
+import { useImmer } from 'use-immer';
 
-const MultipleSelect = props => {
-
-  const {ep, value = [], onChange} = props;
+const MultipleSelect = (props) => {
+  const { ep, value = [], onChange } = props;
   const [options, updateOptions] = useImmer([]);
   const selected = new window.Set(value);
 
-  const getId = el => el._id;
+  const getId = (el) => el._id;
 
   const getLabel = getId;
 
   useEffect(() => {
-    fetch(ep).then(data => updateOptions(() => data.filter(el => !!getId(el))));
+    fetch(ep).then((data) => updateOptions(() => data.filter((el) => !!getId(el))));
   }, [ep]);
 
   const selectAll = () => onChange(options.map(getId));
@@ -28,9 +27,9 @@ const MultipleSelect = props => {
 
   const t = tCreator(props.translations);
 
-  const onToggle = id => {
+  const onToggle = (id) => {
     if (selected.has(id)) {
-      onChange(value.filter(el => el !== id));
+      onChange(value.filter((el) => el !== id));
     } else {
       onChange(value.concat(id));
     }
@@ -38,9 +37,15 @@ const MultipleSelect = props => {
 
   return (
     <FormGroup>
-      <ControlLabel className={'multiple-select-label'}>
+      <ControlLabel className="multiple-select-label">
         Selected
-        <span className="count">({selectedCount}/{totalOptions})</span>
+        <span className="count">
+          (
+          {selectedCount}
+          /
+          {totalOptions}
+          )
+        </span>
         <div className="pull-right select-all-none">
           <a onClick={selectAll}>
             {t('filters:multipleSelect:selectAll')}
@@ -61,6 +66,6 @@ const MultipleSelect = props => {
       })}
     </FormGroup>
   );
-}
+};
 
 export default MultipleSelect;

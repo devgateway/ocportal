@@ -18,30 +18,29 @@ class ClickableCrosstab extends Crosstab {
         <td>{rowIndicatorName}</td>
         <td className="nr-flags">{rowData.getIn([rowIndicatorID, 'count'])}</td>
         {rowData.map((datum, indicatorID) => {
-          if(indicatorID === rowIndicatorID) {
+          if (indicatorID === rowIndicatorID) {
             return <td className="not-applicable" key={indicatorID}>&mdash;</td>;
-          } else {
-            const { showRawNumbers } = this.props;
-            const count = datum.get('count', 0);
-            const percent = datum.get('percent', 0);
-            const color = colorLuminance('#00ff00', percent / 100 - .5);
-            const style = { backgroundColor: color };
-            const selected = rowIndicatorID === currentlySelected.rowIndicatorID &&
-              indicatorID === currentlySelected.indicatorID;
-
-            return (
-              <td
-                key={indicatorID}
-                className={cn('selectable', { selected })}
-                style={style}
-                onClick={() => this.setState({ currentlySelected: { rowIndicatorID, indicatorID }})}
-              >
-                { showRawNumbers ?
-                  `${count} (${percent.toFixed(2)} %)` :
-                  `${percent.toFixed(2)} %`}
-              </td>
-            );
           }
+          const { showRawNumbers } = this.props;
+          const count = datum.get('count', 0);
+          const percent = datum.get('percent', 0);
+          const color = colorLuminance('#00ff00', percent / 100 - 0.5);
+          const style = { backgroundColor: color };
+          const selected = rowIndicatorID === currentlySelected.rowIndicatorID
+              && indicatorID === currentlySelected.indicatorID;
+
+          return (
+            <td
+              key={indicatorID}
+              className={cn('selectable', { selected })}
+              style={style}
+              onClick={() => this.setState({ currentlySelected: { rowIndicatorID, indicatorID } })}
+            >
+              { showRawNumbers
+                ? `${count} (${percent.toFixed(2)} %)`
+                : `${percent.toFixed(2)} %`}
+            </td>
+          );
         }).toArray()}
       </tr>
     );
@@ -73,8 +72,18 @@ class ClickableCrosstab extends Crosstab {
           </div>
           <div className="col-sm-12">
             <h5>{this.t('crd:corruptionType:crosstab:popup:count').replace('$#$', count)}</h5>
-            <p><strong>{rowIndicatorName}</strong>: {rowIndicatorDescription}</p>
-            <p><strong>{indicatorName}</strong>: {indicatorDescription}</p>
+            <p>
+              <strong>{rowIndicatorName}</strong>
+              :
+              {' '}
+              {rowIndicatorDescription}
+            </p>
+            <p>
+              <strong>{indicatorName}</strong>
+              :
+              {' '}
+              {indicatorDescription}
+            </p>
           </div>
         </div>
       </div>

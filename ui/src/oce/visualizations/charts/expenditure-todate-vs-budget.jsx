@@ -1,22 +1,21 @@
 import CatChart from './cat-chart';
-import fmConnect from "../../fm/fm";
+import fmConnect from '../../fm/fm';
 
 class ExpenditureTodateVsBudget extends CatChart {
-  static getName(t){return t('charts:expenditureToDateVsBudget:title')}
+  static getName(t) { return t('charts:expenditureToDateVsBudget:title'); }
 
-  getLayout(){
+  getLayout() {
     return {
       xaxis: {
         title: this.t('charts:expenditureToDateVsBudget:xAxisName'),
-        type: "category"
+        type: 'category',
       },
       yaxis: {
         title: this.t('charts:expenditureToDateVsBudget:yAxisName'),
-        tickprefix: "   "
-      }
-    }
+        tickprefix: '   ',
+      },
+    };
   }
-
 }
 
 ExpenditureTodateVsBudget.endpoint = 'expenditureToDateVsBudget';

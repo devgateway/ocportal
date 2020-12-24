@@ -1,8 +1,8 @@
 import cn from 'classnames';
-import {Set} from 'immutable';
+import { Set } from 'immutable';
+import React from 'react';
 import Tab from '../index';
 import TenderLocations from '../../visualizations/map/tender-locations';
-import React from 'react';
 
 class LocationTab extends Tab {
   static getName(t) {
@@ -11,11 +11,10 @@ class LocationTab extends Tab {
 
   static computeYears(data) {
     if (!data) return Set();
-    return this.LAYERS.reduce((years, visualization, index) =>
-        visualization.computeYears ?
-          years.union(visualization.computeYears(data.get(index))) :
-          years
-      , Set());
+    return this.LAYERS.reduce((years, visualization, index) => (visualization.computeYears
+      ? years.union(visualization.computeYears(data.get(index)))
+      : years),
+    Set());
   }
 
   constructor(props) {
@@ -25,32 +24,39 @@ class LocationTab extends Tab {
       dropdownOpen: false,
       switcherPos: {
         top: 0,
-        left: 0
-      }
+        left: 0,
+      },
     };
   }
 
   maybeGetSwitcher() {
-    let { LAYERS } = this.constructor;
-    let { switcherPos } = this.state;
+    const { LAYERS } = this.constructor;
+    const { switcherPos } = this.state;
     if (this.constructor.LAYERS.length > 1) {
-      let { currentLayer, dropdownOpen } = this.state;
-      return <div className="layer-switcher" style={switcherPos}>
-        <div className={cn('dropdown', { open: dropdownOpen })}
-             onClick={e => this.setState({ dropdownOpen: !dropdownOpen })}>
-          <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1">
-            {LAYERS[currentLayer].getLayerName(this.t.bind(this))} <span className="caret"></span>
-          </button>
-          <ul className="dropdown-menu">
-            {LAYERS.map((layer, index) => <li key={index}>
-              <a onClick={e => this.setState({currentLayer: index})}>
-                {LAYERS[index].getLayerName(this.t.bind(this))}
-              </a>
-              </li>
-            )}
-          </ul>
+      const { currentLayer, dropdownOpen } = this.state;
+      return (
+        <div className="layer-switcher" style={switcherPos}>
+          <div
+            className={cn('dropdown', { open: dropdownOpen })}
+            onClick={(e) => this.setState({ dropdownOpen: !dropdownOpen })}
+          >
+            <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1">
+              {LAYERS[currentLayer].getLayerName(this.t.bind(this))}
+              {' '}
+              <span className="caret" />
+            </button>
+            <ul className="dropdown-menu">
+              {LAYERS.map((layer, index) => (
+                <li key={index}>
+                  <a onClick={(e) => this.setState({ currentLayer: index })}>
+                    {LAYERS[index].getLayerName(this.t.bind(this))}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>;
+      );
     }
   }
 
@@ -60,18 +66,20 @@ class LocationTab extends Tab {
 
     this.setState({
       switcherPos: {
-         // top: zoom.offsetTop,
-         // left: zoom.offsetLeft + zoom.offsetWidth + 10
-      }
+        // top: zoom.offsetTop,
+        // left: zoom.offsetLeft + zoom.offsetWidth + 10
+      },
     });
   }
 
   render() {
-    let { currentLayer } = this.state;
-    let { data, requestNewData, translations, filters, years, styling, onUpdate} = this.props;
+    const { currentLayer } = this.state;
+    const {
+      data, requestNewData, translations, filters, years, styling, onUpdate,
+    } = this.props;
 
     const { LAYERS, CENTER, ZOOM } = this.constructor;
-    let Map = LAYERS[currentLayer];
+    const Map = LAYERS[currentLayer];
     return (
       <div className="col-sm-12 content map-content">
         {this.maybeGetSwitcher()}

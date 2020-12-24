@@ -34,57 +34,57 @@ class CorruptionType extends CustomPopupChart {
   getData() {
     const data = super.getData();
     if (!data) return [];
-    const { styling, months, monthly, years } = this.props;
+    const {
+      styling, months, monthly, years,
+    } = this.props;
     const grouped = this.groupData(data);
 
     const commonYears = new Set();
 
     if (!monthly) {
       Object.values(grouped)
-      .forEach(corruptionType =>
-        Object.keys(corruptionType)
-        .forEach(year => commonYears.add(year))
-      );
+        .forEach((corruptionType) => Object.keys(corruptionType)
+          .forEach((year) => commonYears.add(year)));
     }
 
     return Object.keys(grouped)
-    .map((type, index) => {
-      const dataForType = grouped[type];
-      let values = [];
-      let dates = [];
-      if (monthly) {
-        dates = range(1, 12)
-        .filter(month => months.includes(month))
-        .map(month => this.tMonth(month, years));
+      .map((type, index) => {
+        const dataForType = grouped[type];
+        let values = [];
+        let dates = [];
+        if (monthly) {
+          dates = range(1, 12)
+            .filter((month) => months.includes(month))
+            .map((month) => this.tMonth(month, years));
 
-        values = dates.map(month => (dataForType[month] ? dataForType[month].flaggedCount : 0));
-      } else if (years.length) {
-        dates = Array.from(years).sort();
-        values = dates.map(year => (dataForType[year] ? dataForType[year].flaggedCount : 0));
-      } else {
-        dates = Array.from(commonYears).sort();
-        values = dates.map(year => dataForType[year] ? dataForType[year].flaggedCount : 0);
-      }
+          values = dates.map((month) => (dataForType[month] ? dataForType[month].flaggedCount : 0));
+        } else if (years.length) {
+          dates = Array.from(years).sort();
+          values = dates.map((year) => (dataForType[year] ? dataForType[year].flaggedCount : 0));
+        } else {
+          dates = Array.from(commonYears).sort();
+          values = dates.map((year) => (dataForType[year] ? dataForType[year].flaggedCount : 0));
+        }
 
-      if (dates.length === 1) {
-        dates.unshift('');
-        dates.push(' ');
-        values.unshift(0);
-        values.push(0);
-      }
+        if (dates.length === 1) {
+          dates.unshift('');
+          dates.push(' ');
+          values.unshift(0);
+          values.push(0);
+        }
 
-      return {
-        x: dates,
-        y: values,
-        type: 'scatter',
-        fill: 'tonexty',
-        name: this.t(`crd:corruptionType:${type}:name`),
-        fillcolor: styling.charts.traceColors[index],
-        line: {
-          color: colorLuminance(styling.charts.traceColors[index], -0.3),
-        },
-      };
-    });
+        return {
+          x: dates,
+          y: values,
+          type: 'scatter',
+          fill: 'tonexty',
+          name: this.t(`crd:corruptionType:${type}:name`),
+          fillcolor: styling.charts.traceColors[index],
+          line: {
+            color: colorLuminance(styling.charts.traceColors[index], -0.3),
+          },
+        };
+      });
   }
 
   getLayout() {
@@ -113,11 +113,8 @@ class CorruptionType extends CustomPopupChart {
     if (!data[corruptionType]) return null;
     const dataForPoint = data[corruptionType][year];
     if (!dataForPoint) return null;
-    const indicatorCount =
-      Object.keys(indicatorTypesMapping)
-      .filter(indicatorId =>
-        indicatorTypesMapping[indicatorId].types.indexOf(dataForPoint.type) > -1
-      ).length;
+    const indicatorCount = Object.keys(indicatorTypesMapping)
+      .filter((indicatorId) => indicatorTypesMapping[indicatorId].types.indexOf(dataForPoint.type) > -1).length;
 
     const percentFlaggedLabel = this.t('crd:overview:overTimeChart:percentFlagged');
 
@@ -139,21 +136,33 @@ class CorruptionType extends CustomPopupChart {
             {year}
           </div>
           <div className="col-sm-12">
-            <hr/>
+            <hr />
           </div>
           <div
-            className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:indicators')}</div>
+            className="col-sm-7 text-right title"
+          >
+            {this.t('crd:overview:overTimeChart:indicators')}
+          </div>
           <div className="col-sm-5 text-left info">{indicatorCount}</div>
           <div
-            className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:totalFlags')}</div>
+            className="col-sm-7 text-right title"
+          >
+            {this.t('crd:overview:overTimeChart:totalFlags')}
+          </div>
           <div className="col-sm-5 text-left info">{dataForPoint.flaggedCount}</div>
           <div
-            className="col-sm-7 text-right title">{this.t('crd:overview:overTimeChart:totalProcurementsFlagged')}</div>
+            className="col-sm-7 text-right title"
+          >
+            {this.t('crd:overview:overTimeChart:totalProcurementsFlagged')}
+          </div>
           <div className="col-sm-5 text-left info">{dataForPoint.flaggedProjectCount}</div>
           <div className="col-sm-7 text-right title">{percentFlaggedLabel}</div>
-          <div className="col-sm-5 text-left info">{dataForPoint.percent.toFixed(2)}%</div>
+          <div className="col-sm-5 text-left info">
+            {dataForPoint.percent.toFixed(2)}
+            %
+          </div>
         </div>
-        <div className="arrow"/>
+        <div className="arrow" />
       </div>
     );
   }
@@ -170,7 +179,9 @@ class OverviewPage extends CRDPage {
   }
 
   render() {
-    const { indicatorTypesMapping, styling, width, navigate } = this.props;
+    const {
+      indicatorTypesMapping, styling, width, navigate,
+    } = this.props;
     return (
       <div className="page-overview">
         <section className="chart-corruption-types">
@@ -180,7 +191,9 @@ class OverviewPage extends CRDPage {
             styling={styling}
             indicatorTypesMapping={indicatorTypesMapping}
             width={width - 20}
-            margin={{ t: 0, b: 40, r: 100, pad: 20 }}
+            margin={{
+              t: 0, b: 40, r: 100, pad: 20,
+            }}
           />
         </section>
         <section>

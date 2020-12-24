@@ -19,12 +19,12 @@ class IndividualIndicatorChart extends CustomPopupChart {
 
     data = data.sort(sortByField(monthly ? 'month' : 'year'));
 
-    const dates = monthly ?
-      data.map((datum) => {
+    const dates = monthly
+      ? data.map((datum) => {
         const month = datum.get('month');
         return this.tMonth(month, years);
-      }).toJS() :
-      data.map(pluckImm('year')).toJS();
+      }).toJS()
+      : data.map(pluckImm('year')).toJS();
 
     const totalTrueValues = data.map(pluckImm('totalTrue', 0)).toJS();
     const totalPrecondMetValues = data.map(pluckImm('totalPrecondMet', 0)).toJS();
@@ -83,9 +83,9 @@ class IndividualIndicatorChart extends CustomPopupChart {
 
   getPopupWidth() {
     const label = this.t('crd:indicatorPage:individualIndicatorChart:popup:percentEligible');
-    return label.length > 23 ?
-      500:
-      350;
+    return label.length > 23
+      ? 500
+      : 350;
   }
 
   getPopup() {
@@ -102,15 +102,18 @@ class IndividualIndicatorChart extends CustomPopupChart {
         return year == this.tMonth(month, years);
       });
     } else {
-      datum = data.find(datum => datum.get('year') == year);
+      datum = data.find((datum) => datum.get('year') == year);
     }
 
     return (
-      <div className="crd-popup" style={{
-        top: popup.top,
-        left: popup.left,
-        width: this.getPopupWidth()
-      }}>
+      <div
+        className="crd-popup"
+        style={{
+          top: popup.top,
+          left: popup.left,
+          width: this.getPopupWidth(),
+        }}
+      >
         <div className="row">
           <div className="col-sm-12 info text-center">
             {year}
@@ -123,11 +126,19 @@ class IndividualIndicatorChart extends CustomPopupChart {
           <div className="col-sm-8 text-right title">{this.t('crd:indicatorPage:individualIndicatorChart:popup:eligibleProcurements')}</div>
           <div className="col-sm-4 text-left info">{datum.get('totalPrecondMet')}</div>
           <div className="col-sm-8 text-right title">{this.t('crd:indicatorPage:individualIndicatorChart:popup:percentOfEligibleFlagged')}</div>
-          <div className="col-sm-4 text-left info">{datum.get('percentTruePrecondMet').toFixed(2)} %</div>
+          <div className="col-sm-4 text-left info">
+            {datum.get('percentTruePrecondMet').toFixed(2)}
+            {' '}
+            %
+          </div>
           <div className="col-sm-8 text-right title">
             {this.t('crd:indicatorPage:individualIndicatorChart:popup:percentEligible')}
           </div>
-          <div className="col-sm-4 text-left info">{datum.get('percentPrecondMet').toFixed(2)} %</div>
+          <div className="col-sm-4 text-left info">
+            {datum.get('percentPrecondMet').toFixed(2)}
+            {' '}
+            %
+          </div>
         </div>
         <div className="arrow" />
       </div>
@@ -143,8 +154,10 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
 
   render() {
     const { chart, table } = this.state;
-    const { corruptionType, indicator, translations, filters, years, monthly, months, width
-      , styling, navigate } = this.props;
+    const {
+      corruptionType, indicator, translations, filters, years, monthly, months, width,
+      styling, navigate,
+    } = this.props;
 
     return (
       <div className="page-individual-indicator">
@@ -184,7 +197,9 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
             data={chart}
             width={width - 20}
             styling={styling}
-            margin={{ t: 0, b: 80, r: 100, pad: 40 }}
+            margin={{
+              t: 0, b: 80, r: 100, pad: 40,
+            }}
           />
         </section>
         <section className="table-section">

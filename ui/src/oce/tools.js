@@ -1,20 +1,20 @@
 import URI from 'urijs';
-import _ from "lodash";
+import _ from 'lodash';
 
 /**
  * Returns a function that will invoke `funcName` property on its argument
  * @param {Function} funcName
  * @returns {Function}
  */
-export const callFunc = funcName => obj => obj[funcName]();
+export const callFunc = (funcName) => (obj) => obj[funcName]();
 
-export const pluck = fieldName => obj => obj[fieldName];
+export const pluck = (fieldName) => (obj) => obj[fieldName];
 
-export const pluckImm = (fieldName, ...args) => imm => imm.get(fieldName, ...args);
+export const pluckImm = (fieldName, ...args) => (imm) => imm.get(fieldName, ...args);
 
 export const asPercent = (fr) => 100 * fr.toFixed(4);
 
-export const fetchJson = url => fetch(url, { credentials: 'same-origin' }).then(callFunc('json'));
+export const fetchJson = (url) => fetch(url, { credentials: 'same-origin' }).then(callFunc('json'));
 
 export function debounce(cb, delay = 200) {
   let timeout = null;
@@ -24,11 +24,11 @@ export function debounce(cb, delay = 200) {
   };
 }
 
-export const toK = number => number >= 1000 ?
-  Math.round(number / 1000) + 'K' :
-  number;
+export const toK = (number) => (number >= 1000
+  ? `${Math.round(number / 1000)}K`
+  : number);
 
-export const identity = _ => _;
+export const identity = (_) => _;
 
 /**
  * Takes two strings and an array of objects, returning on object whose keys are the values of the
@@ -66,10 +66,10 @@ export const cacheFn = (fn) => {
   };
 };
 
-export const max = (a, b) => a > b ? a : b;
+export const max = (a, b) => (a > b ? a : b);
 
 // takes and URI object and makes a POST request to it's base url and query as payload
-export const send = url => fetch(url.clone().query(''), {
+export const send = (url) => fetch(url.clone().query(''), {
   method: 'POST',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -81,7 +81,9 @@ export const send = url => fetch(url.clone().query(''), {
 export const isIE = navigator.appName === 'Microsoft Internet Explorer' || !!(navigator.userAgent.match(/Trident/)
     || navigator.userAgent.match(/rv 11/));
 
-export const download = ({ ep, filters, years, months, t }) => {
+export const download = ({
+  ep, filters, years, months, t,
+}) => {
   let url = new URI(`/api/ocds/${ep}`)
     .addSearch(filters)
     .addSearch('year', years.toArray())
@@ -120,13 +122,13 @@ export const shallowCopy = (original) => {
   return copy;
 };
 
-export const arrReplace = (a, b, [head, ...tail]) => typeof head === 'undefined' ?
-  tail :
-  [a === head ? b : head].concat(arrReplace(a, b, tail));
+export const arrReplace = (a, b, [head, ...tail]) => (typeof head === 'undefined'
+  ? tail
+  : [a === head ? b : head].concat(arrReplace(a, b, tail)));
 
-export const range = (from, to) => from > to ? [] : [from].concat(range(from + 1, to));
+export const range = (from, to) => (from > to ? [] : [from].concat(range(from + 1, to)));
 
-export const fetchEP = url => fetch(url.clone().query(''), {
+export const fetchEP = (url) => fetch(url.clone().query(''), {
   method: 'POST',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -135,10 +137,8 @@ export const fetchEP = url => fetch(url.clone().query(''), {
   body: url.query(),
 }).then(callFunc('json'));
 
-export const sameArray = (array1, array2) =>
-  array1.length === array2.length
+export const sameArray = (array1, array2) => array1.length === array2.length
   && _.difference(array1, array2).length === 0;
-
 
 /**
  * wrapper for useImmer update call, that receives as imput the update function and also the input value
