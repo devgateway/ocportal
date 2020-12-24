@@ -43,9 +43,11 @@
     "urijs": "^1.17.1",
     "use-immer": "^0.4.2",
     "word-wrap": "^1.2.3",
+    "source-map-explorer": "^2.5.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

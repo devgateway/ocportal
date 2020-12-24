@@ -80,3 +80,15 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 1. _Enable ESLint_. Open Settings, search ESLint and then check the Automatic ESLint configuration.
 2. _Exclude ui/node and ui/build folder from being indexed_. Right-click on the folder you want to exclude,
 click on _Mark Directory as_ then _Excluded_.
+   
+## Analyzing the bundle size
+
+In order to analyze the bundle size, we need first to make a production build
+
+`npm run build`
+
+After this, the analyze script can be run:
+
+`npm run analyze`
+
+This will analyze dependencies and open a browser page with the browsable results.
