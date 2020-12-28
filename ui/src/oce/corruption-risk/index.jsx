@@ -1,9 +1,11 @@
-import React from "react";
+import React from 'react';
 import cn from 'classnames';
 import URI from 'urijs';
-import {Map} from 'immutable';
+import { Map } from 'immutable';
 import PropTypes from 'prop-types';
-import {cacheFn, debounce, fetchJson, range} from '../tools';
+import {
+  cacheFn, debounce, fetchJson, range,
+} from '../tools';
 import OverviewPage from './overview-page';
 import CorruptionTypePage from './corruption-type';
 import IndividualIndicatorPage from './individual-indicator';
@@ -17,10 +19,13 @@ import ProcuringEntityPage from './procuring-entities/single';
 import BuyerPage from './buyers/single';
 import Filters from './filters';
 import LandingPopup from './landing-popup';
-import {LOGIN_URL} from './constants';
+import { LOGIN_URL } from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
 import makueniLogo from '../resources/makueni-logo.png';
+import enTranslations from '../../languages/en_US.json';
+import esTranslations from '../../languages/es_ES.json';
+import frTranslations from '../../languages/fr_FR.json';
 
 // eslint-disable-next-line no-undef
 class CorruptionRiskDashboard extends React.Component {
@@ -46,10 +51,10 @@ class CorruptionRiskDashboard extends React.Component {
 
     localStorage.alreadyVisited = true;
 
-    this.destructFilters = cacheFn(({year, month, ...otherFilters}) => ({
+    this.destructFilters = cacheFn(({ year, month, ...otherFilters }) => ({
       datelessFilters: otherFilters,
       years: year || [],
-      months: (month == null || month.length === 0) ? range(1,12) : month
+      months: (month == null || month.length === 0) ? range(1, 12) : month,
     }));
   }
 
@@ -84,22 +89,20 @@ class CorruptionRiskDashboard extends React.Component {
     if (page === 'type') {
       const [, corruptionType] = route;
 
-      const indicators =
-        Object.keys(indicatorTypesMapping)
-        .filter(key =>
-          indicatorTypesMapping[key].types.indexOf(corruptionType) > -1);
+      const indicators = Object.keys(indicatorTypesMapping)
+        .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1);
 
       return (
         <CorruptionTypePage
           {...this.wireProps(['corruptionType', corruptionType])}
           indicators={indicators}
-          onGotoIndicator={individualIndicator => navigate('indicator', corruptionType, individualIndicator)}
+          onGotoIndicator={(individualIndicator) => navigate('indicator', corruptionType, individualIndicator)}
           corruptionType={corruptionType}
           width={width}
           styling={styling}
         />
       );
-    } else if (page === 'indicator') {
+    } if (page === 'indicator') {
       const [, corruptionType, individualIndicator] = route;
       return (
         <IndividualIndicatorPage
@@ -111,9 +114,9 @@ class CorruptionRiskDashboard extends React.Component {
           navigate={navigate}
         />
       );
-    } else if (page === 'contracts') {
+    } if (page === 'contracts') {
       return this.renderArchive(ContractsPage, 'contracts');
-    } else if (page === 'contract') {
+    } if (page === 'contract') {
       return this.renderSingle({
         Component: ContractPage,
         sgSlug: 'contract',
@@ -122,25 +125,25 @@ class CorruptionRiskDashboard extends React.Component {
           totalContracts: this.state.data.getIn(['totalFlags', 'contractCounter'], 0),
         },
       });
-    } else if (page === 'suppliers') {
+    } if (page === 'suppliers') {
       return this.renderArchive(SuppliersPage, 'suppliers');
-    } else if (page === 'supplier') {
+    } if (page === 'supplier') {
       return this.renderSingle({
         Component: SupplierPage,
         sgSlug: 'supplier',
         plSlug: 'suppliers',
       });
-    } else if (page === 'procuring-entities') {
+    } if (page === 'procuring-entities') {
       return this.renderArchive(ProcuringEntitiesPage, 'procuring-entities');
-    } else if (page === 'buyers') {
+    } if (page === 'buyers') {
       return this.renderArchive(BuyersPage, 'buyers');
-    } else if (page === 'procuring-entity') {
+    } if (page === 'procuring-entity') {
       return this.renderSingle({
         Component: ProcuringEntityPage,
         sgSlug: 'procuring-entity',
         plSlug: 'procuring-entities',
       });
-    } else if (page === 'buyer') {
+    } if (page === 'buyer') {
       return this.renderSingle({
         Component: BuyerPage,
         sgSlug: 'buyer',
@@ -173,8 +176,9 @@ class CorruptionRiskDashboard extends React.Component {
     return {
       translations,
       data: this.state.data.getIn(slug, Map()),
-      requestNewData: (path, newData) =>
-        this.setState({ data: this.state.data.setIn(slug.concat(path), newData) }),
+      requestNewData: (path, newData) => this.setState(
+        (state) => ({ data: state.data.setIn(slug.concat(path), newData) }),
+      ),
       filters: datelessFilters,
       years,
       monthly: years.length === 1,
@@ -192,20 +196,20 @@ class CorruptionRiskDashboard extends React.Component {
   fetchUserInfo() {
     const noCacheUrl = new URI('/isAuthenticated').addSearch('time', Date.now());
     fetchJson(noCacheUrl)
-    .then(({ authenticated, disabledApiSecurity }) => {
-      this.setState({
-        user: {
-          loggedIn: authenticated,
-        },
-        showLandingPopup: !authenticated || disabledApiSecurity,
-        disabledApiSecurity,
+      .then(({ authenticated, disabledApiSecurity }) => {
+        this.setState({
+          user: {
+            loggedIn: authenticated,
+          },
+          showLandingPopup: !authenticated || disabledApiSecurity,
+          disabledApiSecurity,
+        });
       });
-    });
   }
 
   fetchIndicatorTypesMapping() {
     fetchJson('/api/indicatorTypesMapping')
-    .then(data => this.setState({ indicatorTypesMapping: data }));
+      .then((data) => this.setState({ indicatorTypesMapping: data }));
   }
 
   loginBox() {
@@ -233,14 +237,14 @@ class CorruptionRiskDashboard extends React.Component {
     const { locale: selectedLocale } = this.state;
     if (Object.keys(TRANSLATIONS).length <= 1) return null;
     return Object.keys(TRANSLATIONS)
-    .map(locale => (
-      <a
-        onClick={() => this.setLocale(locale)}
-        className={cn({ active: locale === selectedLocale })}
-      >
-        {locale.split('_')[0]}
-      </a>
-    ));
+      .map((locale) => (
+        <a
+          onClick={() => this.setLocale(locale)}
+          className={cn({ active: locale === selectedLocale })}
+        >
+          {locale.split('_')[0]}
+        </a>
+      ));
   }
 
   renderArchive(Component, slug) {
@@ -250,14 +254,16 @@ class CorruptionRiskDashboard extends React.Component {
       <Component
         {...this.wireProps(slug)}
         searchQuery={searchQuery}
-        doSearch={query => navigate(slug, query)}
+        doSearch={(query) => navigate(slug, query)}
         navigate={navigate}
         styling={this.props.styling}
       />
     );
   }
 
-  renderSingle({ Component, sgSlug, plSlug, additionalProps }) {
+  renderSingle({
+    Component, sgSlug, plSlug, additionalProps,
+  }) {
     const { route, navigate, styling } = this.props;
     const { indicatorTypesMapping } = this.state;
     const [, id] = route;
@@ -266,7 +272,7 @@ class CorruptionRiskDashboard extends React.Component {
         {...this.wireProps(sgSlug)}
         id={id}
         styling={styling}
-        doSearch={query => navigate(plSlug, query)}
+        doSearch={(query) => navigate(plSlug, query)}
         navigate={navigate}
         indicatorTypesMapping={indicatorTypesMapping}
         {...additionalProps}
@@ -278,26 +284,28 @@ class CorruptionRiskDashboard extends React.Component {
     const {
       filters, data,
       indicatorTypesMapping, showLandingPopup,
-      disabledApiSecurity
+      disabledApiSecurity,
     } = this.state;
 
-    const { onSwitch, route, navigate } = this.props;
+    const { route, navigate } = this.props;
     const translations = this.getTranslations();
     const [page] = route;
 
     return (
       <div className="container-fluid dashboard-corruption-risk">
-        {showLandingPopup &&
+        {showLandingPopup
+        && (
         <LandingPopup
           redirectToLogin={!disabledApiSecurity}
           requestClosing={() => this.setState({ showLandingPopup: false })}
           translations={translations}
-          languageSwitcher={(...args) => this.languageSwitcher(...args)}/>
-        }
+          languageSwitcher={(...args) => this.languageSwitcher(...args)}
+        />
+        )}
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
             <a className="portal-logo-wrapper" href="#!/crd/">
-              <img src={makueniLogo} alt="Makueni"/>
+              <img src={makueniLogo} alt="Makueni" />
               <span>Corruption Risk Dashboard</span>
             </a>
           </div>
@@ -310,9 +318,9 @@ class CorruptionRiskDashboard extends React.Component {
         </header>
 
         <Filters
-          onChange={filtersToApply => {
+          onChange={(filtersToApply) => {
             this.setState({
-              filters: filtersToApply
+              filters: filtersToApply,
             });
           }}
           translations={translations}
@@ -326,8 +334,9 @@ class CorruptionRiskDashboard extends React.Component {
           route={route}
           navigate={navigate}
           data={data}
-          requestNewData={(path, newData) =>
-            this.setState({ data: this.state.data.setIn(path, newData) })}
+          requestNewData={(path, newData) => this.setState(
+            (state) => ({ data: state.data.setIn(path, newData) }),
+          )}
           styling={this.props.styling}
         />
         <div className="col-sm-offset-3 col-md-9 col-sm-10 content">
@@ -343,13 +352,13 @@ CorruptionRiskDashboard.propTypes = {
   styling: PropTypes.object.isRequired,
   onSwitch: PropTypes.func.isRequired,
   route: PropTypes.array.isRequired,
-  navigate: PropTypes.func.isRequired
+  navigate: PropTypes.func.isRequired,
 };
 
 CorruptionRiskDashboard.TRANSLATIONS = {
-  en_US: require('../../languages/en_US.json'),
-  es_ES: require('../../languages/es_ES.json'),
-  fr_FR: require('../../languages/fr_FR.json'),
+  en_US: enTranslations,
+  es_ES: esTranslations,
+  fr_FR: frTranslations,
 };
 
 export default CorruptionRiskDashboard;

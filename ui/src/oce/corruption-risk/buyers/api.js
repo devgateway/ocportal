@@ -1,8 +1,8 @@
-import {fetch} from "../../api/Api";
-import {awardCountsMapper, tenderCountsMapper} from "../api";
+import { fetch } from '../../api/Api';
+import { awardCountsMapper, tenderCountsMapper } from '../api';
 
-export const getBuyersTenderAndAwardCounts = params =>
-  Promise.all([
-    fetch('/buyersTendersCount', params).then(tenderCountsMapper),
-    fetch('/buyersAwardsCount', params).then(awardCountsMapper)
-  ]);
+// eslint-disable-next-line import/prefer-default-export
+export const getBuyersTenderAndAwardCounts = (params) => Promise.all([
+  fetch('/buyersTendersCount', params).then(tenderCountsMapper),
+  fetch('/buyersAwardsCount', params).then(awardCountsMapper),
+]);

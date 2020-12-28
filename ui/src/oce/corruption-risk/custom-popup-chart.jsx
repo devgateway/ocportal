@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import Chart from '../visualizations/charts/frontend-date-filterable';
-import ReactIgnore from '../react-ignore.jsx';
+import ReactIgnore from '../react-ignore';
 import { POPUP_HEIGHT, POPUP_WIDTH } from './constants';
 import loadingBubbles from '../resources/loading-bubbles.svg';
 
@@ -78,10 +78,13 @@ class CustomPopupChart extends Chart {
     return (
       <div className={cn('chart-container', { 'popup-left': popup.toTheLeft })}>
         {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
-        {loading && <div className="message">
-          Loading...<br />
+        {loading && (
+        <div className="message">
+          Loading...
+          <br />
           <img src={loadingBubbles} alt="" />
-        </div>}
+        </div>
+        )}
 
         {popup.show && this.getPopup()}
 

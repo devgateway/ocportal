@@ -1,9 +1,11 @@
-import React from "react";
+import React from 'react';
 import translatable from '../../../translatable';
 
 class Popup extends translatable(React.PureComponent) {
   render() {
-    const { coordinate, active, viewBox, payload } = this.props;
+    const {
+      coordinate, active, viewBox, payload,
+    } = this.props;
     if (!active || payload == null || !payload[0]) return null;
 
     const { status, count } = payload[0].payload;
@@ -23,7 +25,9 @@ class Popup extends translatable(React.PureComponent) {
           className="crd-popup donut-popup text-center"
           style={style}
         >
-          {status}: {count}
+          {status}
+          :
+          {count}
           <div className="arrow" />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { List } from 'immutable';
 import Donut from '../../../donut';
 import translatable from '../../../../translatable';
@@ -10,14 +10,12 @@ class CenterText extends React.PureComponent {
     let style = {};
     const label = data.map(pluck('value')).join('/');
     if (label.length > 9) {
-      style = { fontSize: '2vw' }
+      style = { fontSize: '2vw' };
     }
 
     return (
       <div className="center-text two-rows total-flags-center-text" style={style}>
-        {data.map(({ color, value }) =>
-          <span key={color} style={{ color }}>{value}</span>
-        )}
+        {data.map(({ color, value }) => <span key={color} style={{ color }}>{value}</span>)}
       </div>
     );
   }
@@ -30,9 +28,9 @@ class TotalFlags extends translatable(React.PureComponent) {
     const data = (this.props.data || List()).map((datum, index) => {
       const value = datum.get('indicatorCount');
       const indicatorName = this.t(`crd:corruptionType:${datum.get('type')}:name`);
-      const label = value === 1 ?
-        this.t('crd:supplier:nrFlags:label:sg') :
-        this.t('crd:supplier:nrFlags:label:pl');
+      const label = value === 1
+        ? this.t('crd:supplier:nrFlags:label:sg')
+        : this.t('crd:supplier:nrFlags:label:pl');
 
       return {
         color: COLORS[index],

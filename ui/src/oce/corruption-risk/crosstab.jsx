@@ -4,7 +4,7 @@ import Table from '../visualizations/tables/index';
 class Crosstab extends Table {
   getCustomEP() {
     const { indicators } = this.props;
-    return indicators.map(indicator => `flags/${indicator}/crosstab`);
+    return indicators.map((indicator) => `flags/${indicator}/crosstab`);
   }
 
   componentDidUpdate(prevProps, ...args) {
@@ -18,11 +18,11 @@ class Crosstab extends Table {
     const { indicators } = this.props;
     const matrix = {};
     let y = 0;
-    for (let x = 0; x < indicators.length; x++) {
+    for (let x = 0; x < indicators.length; x += 1) {
       const xIndicatorID = indicators[x];
       matrix[xIndicatorID] = {};
       const datum = data[x][0];
-      for (y = 0; y < indicators.length; y++) {
+      for (y = 0; y < indicators.length; y += 1) {
         const yIndicatorID = indicators[y];
         if (datum) {
           matrix[xIndicatorID][yIndicatorID] = {
@@ -40,7 +40,7 @@ class Crosstab extends Table {
     return matrix;
   }
 
-  row(rowData, rowIndicatorID){
+  row(rowData, rowIndicatorID) {
     const rowIndicatorName = this.t(`crd:indicators:${rowIndicatorID}:name`);
     const rowIndicatorDescription = this.t(`crd:indicators:${rowIndicatorID}:indicator`);
     const lastKey = rowData.lastKeyOf(rowData.last());
@@ -60,8 +60,10 @@ class Crosstab extends Table {
           const style = { backgroundColor: `rgb(${color}, 255, ${color})` };
           const isLast = indicatorID === lastKey;
           return (
-            <td key={indicatorID} className={cn('hoverable', {"popup-left": isLast})} style={style}>
-              {percent && percent.toFixed(2)} %
+            <td key={indicatorID} className={cn('hoverable', { 'popup-left': isLast })} style={style}>
+              {percent && percent.toFixed(2)}
+              {' '}
+              %
               <div className="crd-popup text-left">
                 <div className="row">
                   <div className="col-sm-12 info">
@@ -75,9 +77,19 @@ class Crosstab extends Table {
                   </div>
                   <div className="col-sm-12 info">
                     <h4>{this.t('crd:corruptionType:crosstab:popup:count').replace('$#$', count)}</h4>
-                    <p><strong>{rowIndicatorName}</strong>: {rowIndicatorDescription}</p>
+                    <p>
+                      <strong>{rowIndicatorName}</strong>
+                      :
+                      {' '}
+                      {rowIndicatorDescription}
+                    </p>
                     <p className="and">{this.t('crd:corruptionType:crosstab:popup:and')}</p>
-                    <p><strong>{indicatorName}</strong>: {indicatorDescription}</p>
+                    <p>
+                      <strong>{indicatorName}</strong>
+                      :
+                      {' '}
+                      {indicatorDescription}
+                    </p>
                   </div>
                 </div>
                 <div className="arrow" />
@@ -86,7 +98,7 @@ class Crosstab extends Table {
           );
         }).toArray()}
       </tr>
-    )
+    );
   }
 
   render() {
@@ -97,7 +109,7 @@ class Crosstab extends Table {
       <table className="table table-striped table-hover table-bordered table-crosstab">
         <thead>
           <tr>
-            <th></th>
+            <th />
             <th># Flags</th>
             {data.map((_, indicatorID) => <th key={indicatorID}>{this.t(`crd:indicators:${indicatorID}:name`)}</th>).toArray()}
           </tr>

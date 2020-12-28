@@ -1,15 +1,15 @@
 import { Set } from 'immutable';
-import { cacheFn } from '../tools';
 import PropTypes from 'prop-types';
+import { cacheFn } from '../tools';
 
 const frontendDateFilterable = (Class) => {
   class Filterable extends Class {
     buildUrl(...args) {
       const url = super.buildUrl(...args);
-      return this.props.monthly ?
-        url.addSearch('monthly', true)
-        .addSearch('year', this.props.years) :
-        url;
+      return this.props.monthly
+        ? url.addSearch('monthly', true)
+          .addSearch('year', this.props.years)
+        : url;
     }
 
     getData() {
@@ -18,7 +18,8 @@ const frontendDateFilterable = (Class) => {
       if (!data) return data;
       if (monthly) {
         return this.constructor.filterDataByMonth(data, months);
-      } else if (years.length) {
+      }
+      if (years.length) {
         return this.constructor.filterDataByYears(data, years);
       }
       return data;
@@ -37,17 +38,16 @@ const frontendDateFilterable = (Class) => {
 
   Filterable.propTypes = {
     ...Filterable.propTypes,
-    years: PropTypes.array.isRequired
+    years: PropTypes.array.isRequired,
   };
 
   Filterable.computeYears = cacheFn((data) => {
     if (!data) return Set();
-    return Set(data.map(datum => +datum.get('year')));
+    return Set(data.map((datum) => +datum.get('year')));
   });
 
-  const filterDataByDate = (field, data, dates) =>
-    data.filter(datum => dates.includes(+datum.get(field)))
-    .sortBy(datum => +datum.get(field));
+  const filterDataByDate = (field, data, dates) => data.filter((datum) => dates.includes(+datum.get(field)))
+    .sortBy((datum) => +datum.get(field));
 
   Filterable.filterDataByMonth = cacheFn(filterDataByDate.bind(null, 'month'));
 

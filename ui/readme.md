@@ -151,7 +151,8 @@ This module contains a very minimal gettext implementation. You can use it, or o
 The translatable class decorator is located in _components/translatable.jsx_.
 ```js
 import translatable from "./translatable";
-class MyComponent extends translatable(Component){
+class MyComponent extends translatable(Component) {
+}
 ```
 
 It provides two functions: *\_\_* for translating strings and *\_\_n* for pluralization:

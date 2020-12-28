@@ -1,41 +1,45 @@
-import Visualization from '../visualization';
 import { List, Set } from 'immutable';
-import DefaultComparison from '../comparison';
-import { download } from '../tools';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Visualization from '../visualization';
+import DefaultComparison from '../comparison';
+import { download } from '../tools';
 import exportBlack from '../resources/icons/export-black.svg';
 import camera from '../resources/icons/camera.svg';
 
 class Tab extends Visualization {
   maybeWrap(Component, ref) {
-    let { dontWrap, getName } = Component;
-    let { filters, years, months } = this.props;
-    let exportable = Component.isChart;
-    return dontWrap ? null : rendered => (
+    const { dontWrap, getName } = Component;
+    const { filters, years, months } = this.props;
+    const exportable = Component.isChart;
+    return dontWrap ? null : (rendered) => (
       <section>
         <h4 className="page-header">
           {getName(this.t.bind(this))}
-          {exportable && Component.excelEP && false && <img
-          src={exportBlack}
+          {exportable && Component.excelEP && false && (
+          <img
+            src={exportBlack}
             width="16"
             height="16"
             className="chart-export-icon"
-            onClick={e => download({
+            onClick={() => download({
               ep: Component.excelEP,
               filters,
               years,
               months,
-              t: this.t.bind(this)
+              t: this.t.bind(this),
             })}
-          />}
-          {exportable && <img
-          src={camera}
+          />
+          )}
+          {exportable && (
+          <img
+            src={camera}
             className="chart-export-icon"
-            onClick={e => {
-              ref.current.querySelector('.modebar-btn:first-child').click()
+            onClick={() => {
+              ref.current.querySelector('.modebar-btn:first-child').click();
             }}
-          />}
+          />
+          )}
         </h4>
         {rendered}
       </section>
@@ -43,78 +47,84 @@ class Tab extends Visualization {
   }
 
   compare(Component, index) {
-    let {
-      compareBy, comparisonData, comparisonCriteriaValues, filters, requestNewComparisonData, years, bidTypes
-      , width, translations, styling, monthly, months
+    const {
+      compareBy, comparisonData, comparisonCriteriaValues, filters, requestNewComparisonData, years, bidTypes,
+      width, translations, styling, monthly, months,
     } = this.props;
-    let { compareWith: CustomComparison } = Component;
-    let Comparison = CustomComparison || DefaultComparison;
-    return <Comparison
-      key={index}
-      compareBy={compareBy}
-      comparisonData={comparisonData.get(index, List())}
-      comparisonCriteriaValues={comparisonCriteriaValues}
-      filters={filters}
-      requestNewComparisonData={(path, data) => requestNewComparisonData([index, ...path], data)}
-      years={years}
-      monthly={monthly}
-      months={months}
-      Component={Component}
-      bidTypes={bidTypes}
-      width={width}
-      translations={translations}
-      styling={styling}
-    />;
+    const { compareWith: CustomComparison } = Component;
+    const Comparison = CustomComparison || DefaultComparison;
+    return (
+      <Comparison
+        key={index}
+        compareBy={compareBy}
+        comparisonData={comparisonData.get(index, List())}
+        comparisonCriteriaValues={comparisonCriteriaValues}
+        filters={filters}
+        requestNewComparisonData={(path, data) => requestNewComparisonData([index, ...path], data)}
+        years={years}
+        monthly={monthly}
+        months={months}
+        Component={Component}
+        bidTypes={bidTypes}
+        width={width}
+        translations={translations}
+        styling={styling}
+      />
+    );
   }
 
   render() {
-    let { filters, compareBy, requestNewData, data, years, months, monthly, width, translations, styling, navigate } = this.props;
-    return <div className="col-sm-12">
-      {this.constructor.visualizations.map((Component, index) => {
-        const ref = React.createRef();
-        return compareBy && Component.comparable ? this.compare(Component, index) :
-          <div key={index} ref={ref}>
-            <Component
-              filters={filters}
-              requestNewData={(_, data) => requestNewData([index], data)}
-              data={data.get(index)}
-              monthly={monthly}
-              years={years}
-              months={months}
-              width={width}
-              navigate={navigate}
-              translations={translations}
-              styling={styling}
-              wrapRendered={this.maybeWrap(Component, ref)}
-              margin={{ t: 10, l: 100, b: 80, r: 20, pad: 20 }}
-            />
-          </div>
-        }
-      )}
-    </div>;
+    const {
+      filters, compareBy, requestNewData, data, years, months, monthly, width, translations, styling, navigate,
+    } = this.props;
+    return (
+      <div className="col-sm-12">
+        {this.constructor.visualizations.map((Component, index) => {
+          const ref = React.createRef();
+          return compareBy && Component.comparable ? this.compare(Component, index)
+            : (
+              <div key={index} ref={ref}>
+                <Component
+                  filters={filters}
+                  requestNewData={(_, data) => requestNewData([index], data)}
+                  data={data.get(index)}
+                  monthly={monthly}
+                  years={years}
+                  months={months}
+                  width={width}
+                  navigate={navigate}
+                  translations={translations}
+                  styling={styling}
+                  wrapRendered={this.maybeWrap(Component, ref)}
+                  margin={{
+                    t: 10, l: 100, b: 80, r: 20, pad: 20,
+                  }}
+                />
+              </div>
+            );
+        })}
+      </div>
+    );
   }
 
   static computeYears(data) {
     if (!data) return Set();
-    return this.visualizations.reduce((years, visualization, index) =>
-        visualization.computeYears ?
-          years.union(visualization.computeYears(data.get(index))) :
-          years
-      , Set());
+    return this.visualizations.reduce((years, visualization, index) => (visualization.computeYears
+      ? years.union(visualization.computeYears(data.get(index)))
+      : years),
+    Set());
   }
 
   static computeComparisonYears(data) {
     if (!data) return Set();
-    return this.visualizations.reduce((years, visualization, index) =>
-        years.union(
-          data.get(index, List())
-          .reduce((years, data, index) =>
-              visualization.computeYears ?
-                years.union(visualization.computeYears(data)) :
-                years
-            , Set())
-        )
-      , Set());
+    return this.visualizations.reduce((years, visualization, index) => years.union(
+      data.get(index, List())
+        .reduce((years, data) => (visualization.computeYears
+          ? years.union(visualization.computeYears(data))
+          : years),
+        Set()),
+    ),
+    Set());
   }
 
   componentDidMount() {
@@ -133,8 +143,7 @@ Tab.propTypes = {
   compareBy: PropTypes.string.isRequired,
   comparisonCriteriaValues: PropTypes.arrayOf(PropTypes.string).isRequired,
   width: PropTypes.number.isRequired,
-  onUpdate: PropTypes.func
+  onUpdate: PropTypes.func,
 };
-
 
 export default Tab;

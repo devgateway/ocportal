@@ -1,11 +1,11 @@
-import React, {Component} from "react";
+import React, { Component } from 'react';
 
-export default class ReactIgnore extends Component{
-  shouldComponentUpdate(){
+export default class ReactIgnore extends Component {
+  shouldComponentUpdate() {
     return false;
   }
 
-  render(){
+  render() {
     return React.Children.only(this.props.children);
   }
 }

@@ -1,23 +1,23 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import { getRoute, navigate, onNavigation } from './router';
-import React from "react";
 
-class OCESwitcher extends React.Component{
-  constructor(...args){
+class OCESwitcher extends React.Component {
+  constructor(...args) {
     super(...args);
     this.state = {
       route: getRoute(),
     };
 
-    onNavigation(route => this.setState({ route }));
+    onNavigation((route) => this.setState({ route }));
   }
 
   render() {
     const { translations, styling } = this.props;
     const { views } = this.constructor;
 
-    let [dashboard, ...route] = this.state.route;
-    if (!dashboard) dashboard = Object.keys(views)[0];
+    const [optDashboard, ...route] = this.state.route;
+    const dashboard = optDashboard || Object.keys(views)[0];
     const CurrentView = views[dashboard];
 
     return (

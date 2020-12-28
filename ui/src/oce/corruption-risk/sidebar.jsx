@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 import ReactDOM from 'react-dom';
 import cn from 'classnames';
-import {Map} from 'immutable';
+import { Map } from 'immutable';
 import translatable from '../translatable';
 import TotalFlags from './total-flags';
-import {CORRUPTION_TYPES} from './constants';
+import { CORRUPTION_TYPES } from './constants';
 import overviewBlue from '../resources/icons/blue/overview.svg';
 import overviewWhite from '../resources/icons/white/overview.svg';
 import suppliersBlue from '../resources/icons/blue/suppliers.svg';
@@ -34,9 +34,9 @@ class Sidebar extends translatable(React.PureComponent) {
     const scrollTarget = el.querySelector('div');
     const offsetTop = el.getBoundingClientRect().top;
 
-    window.addEventListener('wheel', e => {
-      let margin = parseInt(scrollTarget.style.marginTop);
-      if (isNaN(margin)) margin = 0;
+    window.addEventListener('wheel', (e) => {
+      let margin = parseInt(scrollTarget.style.marginTop, 10);
+      if (margin == null || Number.isNaN(margin)) margin = 0;
       if (e.deltaY > 0) {
         margin -= 40;
       } else if (window.scrollY === 0) {
@@ -47,8 +47,8 @@ class Sidebar extends translatable(React.PureComponent) {
         0,
         Math.max(
           margin,
-          window.innerHeight - scrollTarget.offsetHeight - offsetTop
-        )
+          window.innerHeight - scrollTarget.offsetHeight - offsetTop,
+        ),
       );
       scrollTarget.style.marginTop = `${newMargin}px`;
     });
@@ -57,7 +57,7 @@ class Sidebar extends translatable(React.PureComponent) {
   render() {
     const {
       page, indicatorTypesMapping, filters, years, monthly, months, navigate, translations,
-      data, requestNewData, route
+      data, requestNewData, route,
     } = this.props;
 
     return (
@@ -66,9 +66,10 @@ class Sidebar extends translatable(React.PureComponent) {
           <section role="navigation" className="row">
             <a
               onClick={() => navigate()}
-              className={cn('crd-description-link', { active: !page })}>
-              <img className="blue" src={overviewBlue} alt="Overview icon"/>
-              <img className="white" src={overviewWhite} alt="Overview icon"/>
+              className={cn('crd-description-link', { active: !page })}
+            >
+              <img className="blue" src={overviewBlue} alt="Overview icon" />
+              <img className="white" src={overviewWhite} alt="Overview icon" />
               {this.t('tabs:overview:title')}
             </a>
 
@@ -76,15 +77,12 @@ class Sidebar extends translatable(React.PureComponent) {
               {this.t('crd:description')}
             </p>
 
-            {CORRUPTION_TYPES.map((slug) => {
+            {CORRUPTION_TYPES.filter((slug) => {
               const count = Object.keys(indicatorTypesMapping)
-              .filter(key => indicatorTypesMapping[key].types.indexOf(slug) > -1)
+                .filter((key) => indicatorTypesMapping[key].types.indexOf(slug) > -1)
                 .length;
-
-              if(count === 0) {
-                return;
-              }
-
+              return count > 0;
+            }).map((slug) => {
               let corruptionType;
               if (page === 'type' || page === 'indicator') {
                 [, corruptionType] = route;
@@ -96,10 +94,10 @@ class Sidebar extends translatable(React.PureComponent) {
                   className={cn({ active: slug === corruptionType })}
                   key={slug}
                 >
-                  <img className="blue" src={corruptionTypeIcons.blue[slug]} alt="Tab icon"/>
-                  <img className="white" src={corruptionTypeIcons.white[slug]} alt="Tab icon"/>
+                  <img className="blue" src={corruptionTypeIcons.blue[slug]} alt="Tab icon" />
+                  <img className="white" src={corruptionTypeIcons.white[slug]} alt="Tab icon" />
                   {this.t(`crd:corruptionType:${slug}:name`)}
-                  {/*<span className="count">({count})</span>*/}
+                  {/* <span className="count">({count})</span> */}
                 </a>
               );
             })}
@@ -108,8 +106,8 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'suppliers' || page === 'supplier' })}
               key="suppliers"
             >
-              <img className="blue" src={suppliersBlue} alt="Suppliers icon"/>
-              <img className="white" src={suppliersWhite} alt="Suppliers icon"/>
+              <img className="blue" src={suppliersBlue} alt="Suppliers icon" />
+              <img className="white" src={suppliersWhite} alt="Suppliers icon" />
               {this.t('crd:contracts:baseInfo:suppliers')}
             </a>
             <a
@@ -117,10 +115,16 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'procuring-entities' || page === 'procuring-entity' })}
               key="procuring-entities"
             >
-              <img className="blue" src={peBlue}
-                   alt="Procuring entities icon"/>
-              <img className="white" src={peWhite}
-                   alt="Procuring entities icon"/>
+              <img
+                className="blue"
+                src={peBlue}
+                alt="Procuring entities icon"
+              />
+              <img
+                className="white"
+                src={peWhite}
+                alt="Procuring entities icon"
+              />
               {this.t('crd:contracts:menu:procuringEntities')}
             </a>
             <a
@@ -128,10 +132,16 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', { active: page === 'buyers' || page === 'buyer' })}
               key="buyers"
             >
-              <img className="blue" src={buyersBlue}
-                   alt="Procuring entities icon"/>
-              <img className="white" src={buyersWhite}
-                   alt="Procuring entities icon"/>
+              <img
+                className="blue"
+                src={buyersBlue}
+                alt="Procuring entities icon"
+              />
+              <img
+                className="white"
+                src={buyersWhite}
+                alt="Procuring entities icon"
+              />
               {this.t('crd:contracts:menu:buyers')}
             </a>
             <a
@@ -140,8 +150,8 @@ class Sidebar extends translatable(React.PureComponent) {
               className={cn('archive-link', 'contracts-link', { active: page === 'contracts' || page === 'contract' })}
               key="contracts"
             >
-              <img className="blue" src={contractsBlue} alt="Contracts icon"/>
-              <img className="white" src={contractsWhite} alt="Contracts icon"/>
+              <img className="blue" src={contractsBlue} alt="Contracts icon" />
+              <img className="white" src={contractsWhite} alt="Contracts icon" />
               {this.t('crd:general:contracts')}
             </a>
           </section>

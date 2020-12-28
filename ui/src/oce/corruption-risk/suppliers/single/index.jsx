@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from 'react';
 import { List } from 'immutable';
 import TopSearch from '../../top-search';
-import translatable, {tCreator} from '../../../translatable';
+import translatable, { tCreator } from '../../../translatable';
 import Visualization from '../../../visualization';
-import {wirePropsPlain} from '../../tools';
+import { wirePropsPlain } from '../../tools';
 import NrLostVsWon from './donuts/nr-lost-vs-won';
 import AmountLostVsWon from './donuts/amount-lost-vs-won';
 import NrFlags from './donuts/nr-flags';
@@ -17,7 +17,7 @@ import BackendDateFilterable from '../../backend-date-filterable';
 import WinsAndFlags from '../../bars/wins-and-flags/index';
 import SupplierTable from './table';
 import TitleBelow from '../../archive/title-below';
-import {fetchAllInfo} from "./api";
+import { fetchAllInfo } from './api';
 import flag from '../../../resources/icons/flag.svg';
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
@@ -34,11 +34,6 @@ class CrosstabExplanation extends translatable(React.PureComponent) {
 }
 
 class Info extends translatable(Visualization) {
-
-  constructor(...args) {
-    super(...args);
-  }
-
   getCustomEP() {
     const { id } = this.props;
     return [
@@ -52,7 +47,7 @@ class Info extends translatable(Visualization) {
     let totalFlags = 0;
     try {
       totalFlags = _totalFlags[0].flaggedCount;
-    } catch(e) {
+    } catch (e) {
       console.log('Total flags fetching failed', e);
     }
     return {
@@ -96,17 +91,17 @@ class Info extends translatable(Visualization) {
                 <span className="count">
                   {flagCount}
                   &nbsp;
-                  {this.t(flagCount === 1 ?
-                    'crd:contracts:baseInfo:flag:sg' :
-                    'crd:contracts:baseInfo:flag:pl')}
+                  {this.t(flagCount === 1
+                    ? 'crd:contracts:baseInfo:flag:sg'
+                    : 'crd:contracts:baseInfo:flag:pl')}
                 </span>
                 <small>
                   (
-                    {contractCount}
+                  {contractCount}
                     &nbsp;
-                    {this.t(contractCount === 1 ?
-                      'crd:supplier:contract:sg' :
-                      'crd:supplier:contract:pl')}
+                  {this.t(contractCount === 1
+                    ? 'crd:supplier:contract:sg'
+                    : 'crd:supplier:contract:pl')}
                   )
                 </small>
               </td>
@@ -119,24 +114,35 @@ class Info extends translatable(Visualization) {
               <td>
                 <dl className="smaller">
                   <dt>{this.t('crd:supplier:address')}</dt>
-                  {address && <dd>
-                    {address.get('streetAddress')}<br />
-                    {address.get('locality')} /
+                  {address && (
+                  <dd>
+                    {address.get('streetAddress')}
+                    <br />
+                    {address.get('locality')}
+                    {' '}
+                    /
                     &nbsp;
-                    {address.get('postalCode')} /
+                    {address.get('postalCode')}
+                    {' '}
+                    /
                     &nbsp;
                     {address.get('countryName')}
-                  </dd>}
+                  </dd>
+                  )}
                 </dl>
               </td>
               <td>
                 <dl className="smaller">
                   <dt>{this.t('crd:supplier:contact')}</dt>
-                  {contact && <dd>
-                    {contact.get('name')}<br />
-                    {contact.get('email')}<br />
+                  {contact && (
+                  <dd>
+                    {contact.get('name')}
+                    <br />
+                    {contact.get('email')}
+                    <br />
                     {contact.get('telephone')}
-                  </dd>}
+                  </dd>
+                  )}
                 </dl>
               </td>
             </tr>
@@ -147,25 +153,21 @@ class Info extends translatable(Visualization) {
   }
 }
 
-const injectSupplierFilter = cacheFn((filters, supplierId) => {
-  return {
-    ...filters,
-    supplierId: (filters.supplierId || []).concat(supplierId)
-  };
-});
+const injectSupplierFilter = cacheFn((filters, supplierId) => ({
+  ...filters,
+  supplierId: (filters.supplierId || []).concat(supplierId),
+}));
 
 const injectDatefulFilter = cacheFn((filters, years, months) => ({
   ...filters,
   year: years,
-  month: months
+  month: months,
 }));
 
-const injectBidderFilter = cacheFn((filters, bidderId) => {
-  return {
-    ...filters,
-    bidderId: (filters.bidderId || []).concat(bidderId)
-  };
-});
+const injectBidderFilter = cacheFn((filters, bidderId) => ({
+  ...filters,
+  bidderId: (filters.bidderId || []).concat(bidderId),
+}));
 
 const groupIndicators = cacheFn((indicatorTypesMapping) => {
   const result = {};
@@ -173,17 +175,18 @@ const groupIndicators = cacheFn((indicatorTypesMapping) => {
   if (indicatorTypesMapping) {
     Object.keys(indicatorTypesMapping).forEach((indicatorName) => {
       const indicator = indicatorTypesMapping[indicatorName];
-      indicator.types.forEach(type => result[type].push(indicatorName));
+      indicator.types.forEach((type) => result[type].push(indicatorName));
     });
   }
   return result;
 });
 
-const Supplier = props => {
-
+const Supplier = (props) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
-  const { translations, doSearch, id, filters, years, months, data } = props;
+  const {
+    translations, doSearch, id, filters, years, months, data,
+  } = props;
 
   const t = tCreator(translations);
 
@@ -196,22 +199,25 @@ const Supplier = props => {
   const [flagRowState, setFlagRowState] = useState();
 
   useEffect(() => {
-    if (!!totalFlags) {
+    if (totalFlags) {
       fetchAllInfo(supplierDatefulFilter)
         .then(
-          s => setFlagRowState({
+          (s) => setFlagRowState({
             ...s,
             maxCommonDataLength: Math.min(5,
-              Math.max(s.winsAndFlagsData.length, s.flaggedNrData.length))
+              Math.max(s.winsAndFlagsData.length, s.flaggedNrData.length)),
           }),
-          _ => setFlagRowState(null));
+          () => setFlagRowState(null),
+        );
     } else {
       setFlagRowState(null);
     }
   }, [totalFlags, supplierDatefulFilter]);
 
   const maybeGetFlagAnalysis = () => {
-    const { indicatorTypesMapping, id, data, filters, translations, requestNewData } = props;
+    const {
+      indicatorTypesMapping, id, data, filters, translations, requestNewData,
+    } = props;
 
     const nrFlagsByCorruptionType = {};
     CORRUPTION_TYPES.forEach((corruptionType) => { nrFlagsByCorruptionType[corruptionType] = 0; });
@@ -222,7 +228,7 @@ const Supplier = props => {
     const indicators = groupIndicators(indicatorTypesMapping);
     const noIndicators = Object
       .keys(nrFlagsByCorruptionType)
-      .every(key => nrFlagsByCorruptionType[key] === 0);
+      .every((key) => nrFlagsByCorruptionType[key] === 0);
 
     if (noIndicators) {
       return (
@@ -236,48 +242,47 @@ const Supplier = props => {
       <section className="flag-analysis">
         <br />
         {CORRUPTION_TYPES
-          .filter(corruptionType => nrFlagsByCorruptionType[corruptionType])
-          .map((corruptionType) => {
-            return (
-              <div key={corruptionType}>
-                <h3>
-                  {t(`crd:corruptionType:${corruptionType}:pageTitle`)}
-                </h3>
-                <CrosstabExplanation
-                  translations={translations}
-                  corruptionType={corruptionType}
-                  nrFlags={nrFlagsByCorruptionType[corruptionType]}
-                />
-                <Crosstab
-                  {...wirePropsPlain(props, ['crosstab', corruptionType])}
-                  filters={injectSupplierFilter(filters, id)}
-                  requestNewData={(path, newData) => {
-                    const toRemove = newData.filter(row => row.every(cell => cell.get('count') === 0)).keySeq();
-                    requestNewData(path.concat(['crosstab', corruptionType]),
-                      newData.withMutations(data => {
-                        toRemove.forEach(indicator => {
-                          data.delete(indicator);
-                          data.keySeq().forEach(key => {
-                            data.deleteIn([key, indicator]);
-                          })
-                        })
-                      })
-                    );
-                  }}
-                  indicators={indicators[corruptionType]}
-                  showRawNumbers
-                />
-              </div>
-            );
-          })}
+          .filter((corruptionType) => nrFlagsByCorruptionType[corruptionType])
+          .map((corruptionType) => (
+            <div key={corruptionType}>
+              <h3>
+                {t(`crd:corruptionType:${corruptionType}:pageTitle`)}
+              </h3>
+              <CrosstabExplanation
+                translations={translations}
+                corruptionType={corruptionType}
+                nrFlags={nrFlagsByCorruptionType[corruptionType]}
+              />
+              <Crosstab
+                {...wirePropsPlain(props, ['crosstab', corruptionType])}
+                filters={injectSupplierFilter(filters, id)}
+                requestNewData={(path, newData) => {
+                  const toRemove = newData.filter((row) => row.every((cell) => cell.get('count') === 0)).keySeq();
+                  requestNewData(path.concat(['crosstab', corruptionType]),
+                    newData.withMutations((data) => {
+                      toRemove.forEach((indicator) => {
+                        data.delete(indicator);
+                        data.keySeq().forEach((key) => {
+                          data.deleteIn([key, indicator]);
+                        });
+                      });
+                    }));
+                }}
+                indicators={indicators[corruptionType]}
+                showRawNumbers
+              />
+            </div>
+          ))}
         <h2>{t('crd:supplier:table:procurementsWon')}</h2>
         <SupplierTable translations={translations} filters={supplierDatefulFilter} />
       </section>
     );
-  }
+  };
 
   const maybeGetSections = () => {
-    const { width, id, filters, styling, translations } = props;
+    const {
+      width, id, filters, styling, translations,
+    } = props;
     const donutSize = width / 3 - window.innerWidth / 20;
     return (
       <div>
@@ -308,7 +313,8 @@ const Supplier = props => {
             />
           </div>
         </section>
-        {flagRowState &&
+        {flagRowState
+        && (
         <section className="flag-analysis">
           <h2>
             {t('crd:contracts:flagAnalysis')}
@@ -316,20 +322,27 @@ const Supplier = props => {
           <div className="col-sm-6">
             <Zoomable zoomedWidth={width}>
               <TitleBelow title={t('crd:supplier:winsAndLosses:title')}>
-                <WinsAndFlags translations={translations}
-                              data={flagRowState.winsAndFlagsData} length={flagRowState.maxCommonDataLength} />
+                <WinsAndFlags
+                  translations={translations}
+                  data={flagRowState.winsAndFlagsData}
+                  length={flagRowState.maxCommonDataLength}
+                />
               </TitleBelow>
             </Zoomable>
           </div>
           <div className="col-sm-6">
             <Zoomable zoomedWidth={width}>
               <TitleBelow title={t('crd:supplier:flaggedNr:title')}>
-                <FlaggedNr translations={translations}
-                           data={flagRowState.flaggedNrData} length={flagRowState.maxCommonDataLength} />
+                <FlaggedNr
+                  translations={translations}
+                  data={flagRowState.flaggedNrData}
+                  length={flagRowState.maxCommonDataLength}
+                />
               </TitleBelow>
             </Zoomable>
           </div>
-        </section>}
+        </section>
+        )}
         {maybeGetFlagAnalysis()}
       </div>
     );
@@ -352,14 +365,16 @@ const Supplier = props => {
         />
       </BackendDateFilterable>
 
-      {totalFlags === 0 && <section className="flag-analysis">
+      {totalFlags === 0 && (
+      <section className="flag-analysis">
         <h2>{t('crd:contracts:flagAnalysis')}</h2>
         <h4>This supplier has no flags</h4>
-      </section>}
+      </section>
+      )}
 
       {!!totalFlags && maybeGetSections()}
     </div>
   );
-}
+};
 
 export default Supplier;

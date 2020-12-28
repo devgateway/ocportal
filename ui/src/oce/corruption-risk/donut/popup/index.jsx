@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import style from './style.scss';
 
@@ -8,14 +8,13 @@ class DonutPopup extends React.Component {
   render() {
     const { x, y, points } = this.props;
     const { v: value, label } = points[0];
-    const formattedValue = Math.round(value) === value ?
-      value :
-      value.toFixed(2);
+    const formattedValue = Math.round(value) === value
+      ? value
+      : value.toFixed(2);
 
     const text = label.replace(/\$#\$/g, formattedValue);
 
     let POPUP_HEIGHT = 55;
-
 
     if (text.length >= 40) POPUP_HEIGHT = 75;
     if (text.length >= 65) POPUP_HEIGHT = 90;
