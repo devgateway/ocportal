@@ -1,7 +1,9 @@
 import React from 'react';
 import { List } from 'immutable';
 import CRDPage from '../page';
-import { getAwardAmount, mkContractLink, wireProps, _3LineText } from '../tools';
+import {
+  getAwardAmount, mkContractLink, wireProps, _3LineText,
+} from '../tools';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import BackendDateFilterable from '../backend-date-filterable';
@@ -11,13 +13,13 @@ class CList extends PaginatedTable {
   getCustomEP() {
     const { searchQuery } = this.props;
     const eps = super.getCustomEP();
-    return searchQuery ?
-      eps.map(ep => ep.addSearch('text', searchQuery)) :
-      eps;
+    return searchQuery
+      ? eps.map((ep) => ep.addSearch('text', searchQuery))
+      : eps;
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const propsChanged = ['filters', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
+    const propsChanged = ['filters', 'searchQuery'].some((key) => this.props[key] !== prevProps[key]);
     if (propsChanged) {
       this.fetch();
     } else {
@@ -36,16 +38,16 @@ class CList extends PaginatedTable {
     const { pageSize, page } = this.state;
 
     const jsData = contracts.map((contract) => {
-      const tenderAmount = contract.getIn(['tender', 'value', 'amount'], 'N/A') +
-          ' ' +
-          contract.getIn(['tender', 'value', 'currency'], '');
+      const tenderAmount = `${contract.getIn(['tender', 'value', 'amount'], 'N/A')
+      } ${
+        contract.getIn(['tender', 'value', 'currency'], '')}`;
 
       const startDate = contract.getIn(['tender', 'tenderPeriod', 'startDate']);
 
       const flags = contract.get('flags');
 
       const flagTypes = flags.get('laggedStats', List())
-        .map(flagType => this.t(`crd:corruptionType:${flagType.get('type')}:name`))
+        .map((flagType) => this.t(`crd:corruptionType:${flagType.get('type')}:name`))
         .join(', ') || 'N/A';
 
       return {

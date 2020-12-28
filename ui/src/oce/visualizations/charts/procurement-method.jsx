@@ -1,28 +1,28 @@
-import CatChart from "./cat-chart";
-import fmConnect from "../../fm/fm";
+import CatChart from './cat-chart';
+import fmConnect from '../../fm/fm';
 
 class ProcurementMethod extends CatChart {
-  static getName(t){return t('charts:procurementMethod:title')}
+  static getName(t) { return t('charts:procurementMethod:title'); }
 
-  static getCatName(datum, t){
+  static getCatName(datum, t) {
     return datum.get(this.CAT_NAME_FIELD) || t('charts:procurementMethod:unspecified');
   }
 
-  getLayout(){
+  getLayout() {
     return {
       xaxis: {
         title: this.t('charts:procurementMethod:xAxisName'),
-        type: "category"
+        type: 'category',
       },
       yaxis: {
         title: this.t('charts:procurementMethod:yAxisName'),
-        tickprefix: "   "
-      }
-    }
+        tickprefix: '   ',
+      },
+    };
   }
 
   getDecoratedLayout() {
-    if(window.innerWidth > 1600) return super.getDecoratedLayout();
+    if (window.innerWidth > 1600) return super.getDecoratedLayout();
     const layout = JSON.parse(JSON.stringify(super.getDecoratedLayout()));
     layout.margin.b = 150;
     layout.margin.r = 100;

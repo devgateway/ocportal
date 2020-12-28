@@ -1,4 +1,4 @@
-import CenterTextDonut from '../index.jsx';
+import CenterTextDonut from '../index';
 
 class PercentPESpending extends CenterTextDonut {
   getCenterText() {
@@ -61,7 +61,7 @@ PercentPESpending.Donut = class extends CenterTextDonut.Donut {
         this.t('crd:contract:percentPEspending:this'),
         this.t('crd:contract:percentPEspending:match'),
       ],
-      values: [toSuppliers, total-toSuppliers],
+      values: [toSuppliers, total - toSuppliers],
       hoverlabel: {
         bgcolor: '#144361',
       },

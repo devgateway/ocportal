@@ -9,7 +9,7 @@ import { fetchEP, pluckImm, cacheFn } from '../../tools';
 import BackendDateFilterable from '../backend-date-filterable';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
-export const mkLink = navigate => (content, { id }) => (
+export const mkLink = (navigate) => (content, { id }) => (
   <a
     href={`#!/crd/supplier/${id}`}
     onClick={() => navigate('supplier', id)}
@@ -22,13 +22,13 @@ class SList extends PaginatedTable {
   getCustomEP() {
     const { searchQuery } = this.props;
     const eps = super.getCustomEP();
-    return searchQuery ?
-      eps.map(ep => ep.addSearch('text',  decodeURIComponent(searchQuery))) :
-      eps;
+    return searchQuery
+      ? eps.map((ep) => ep.addSearch('text', decodeURIComponent(searchQuery)))
+      : eps;
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const propsChanged = ['filters', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
+    const propsChanged = ['filters', 'searchQuery'].some((key) => this.props[key] !== prevProps[key]);
     if (propsChanged) {
       this.fetch();
     } else {
@@ -43,16 +43,14 @@ class SList extends PaginatedTable {
 
     const { pageSize, page } = this.state;
 
-    const jsData = data.get('data', List()).map((supplier) => {
-      return {
-        id: supplier.get('supplierId'),
-        name: supplier.get('supplierName'),
-        wins: supplier.get('wins'),
-        winAmount: supplier.get('winAmount'),
-        losses: supplier.get('losses'),
-        flags: supplier.get('countFlags'),
-      }
-    }).toJS();
+    const jsData = data.get('data', List()).map((supplier) => ({
+      id: supplier.get('supplierId'),
+      name: supplier.get('supplierName'),
+      wins: supplier.get('wins'),
+      winAmount: supplier.get('winAmount'),
+      losses: supplier.get('losses'),
+      flags: supplier.get('countFlags'),
+    })).toJS();
 
     return (
       <BootstrapTableWrapper
@@ -96,22 +94,20 @@ class SList extends PaginatedTable {
 }
 
 class Suppliers extends CRDPage {
-  constructor(...args){
+  constructor(...args) {
     super(...args);
     this.state = this.state || {};
     this.state.winLossFlagInfo = Map();
-    this.injectWinLossData = cacheFn((data, winLossFlagInfo) => {
-      return data.update('data', List(), list => list.map(supplier => {
-        const id = supplier.get('supplierId');
-        if (!winLossFlagInfo.has(id)) return supplier;
-        const info = winLossFlagInfo.get(id);
-        return supplier
-          .set('wins', info.won.count)
-          .set('winAmount', info.won.totalAmount)
-          .set('losses', info.lostCount)
-          .set('flags', info.applied.countFlags)
-      }))
-    });
+    this.injectWinLossData = cacheFn((data, winLossFlagInfo) => data.update('data', List(), (list) => list.map((supplier) => {
+      const id = supplier.get('supplierId');
+      if (!winLossFlagInfo.has(id)) return supplier;
+      const info = winLossFlagInfo.get(id);
+      return supplier
+        .set('wins', info.won.count)
+        .set('winAmount', info.won.totalAmount)
+        .set('losses', info.lostCount)
+        .set('flags', info.applied.countFlags);
+    })));
   }
 
   onNewDataRequested(path, newData) {
@@ -121,23 +117,25 @@ class Suppliers extends CRDPage {
       fetchEP(new URI('/api/procurementsWonLost').addSearch({
         bidderId: supplierIds.toJS(),
       }))
-        .then(result => {
+        .then((result) => {
           this.setState({
-            winLossFlagInfo: Map(result.map(datum => [
+            winLossFlagInfo: Map(result.map((datum) => [
               datum.applied._id,
-              datum
-            ]))
+              datum,
+            ])),
           });
         });
     }
     this.props.requestNewData(
       path,
-      newData.set('count', newData.getIn(['count', 0, 'count'], 0))
+      newData.set('count', newData.getIn(['count', 0, 'count'], 0)),
     );
   }
 
   render() {
-    const { navigate, searchQuery, doSearch, data } = this.props;
+    const {
+      navigate, searchQuery, doSearch, data,
+    } = this.props;
     const { winLossFlagInfo } = this.state;
     return (
       <BackendDateFilterable

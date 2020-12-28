@@ -1,5 +1,5 @@
 import TopSearch from '../../top-search';
-import {tCreator} from '../../../translatable';
+import { tCreator } from '../../../translatable';
 import Info from './info';
 import Zoomable from '../../zoomable';
 import TitleBelow from '../../archive/title-below';
@@ -9,23 +9,25 @@ import ProcurementsByStatus from '../../bars/by-status';
 import ProcurementsByMethod from '../../bars/by-method';
 import ProcurementsTable from '../../table/procurements';
 import './style.scss';
-import React, {useEffect} from "react";
-import PropTypes from "prop-types";
-import {createSelector} from "@reduxjs/toolkit";
-import {fetchAllInfo} from "./api";
-import {useImmer} from "use-immer";
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { createSelector } from '@reduxjs/toolkit';
+import { fetchAllInfo } from './api';
+import { useImmer } from 'use-immer';
 
 const buyerFiltersSelector = createSelector(
-  [ props => props.id, props => props.filters, props => props.years, props => props.months ],
+  [(props) => props.id, (props) => props.filters, (props) => props.years, (props) => props.months],
   (id, filters, years, months) => ({
     ...filters,
     year: years,
     month: months,
-    buyerId: id
-  }));
+    buyerId: id,
+  }),
+);
 
-const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
-
+const Buyer = ({
+  translations, doSearch, width, navigate, ...otherProps
+}) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
   const [state, updateState] = useImmer();
@@ -34,17 +36,18 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
 
   useEffect(() => {
     fetchAllInfo(buyerFilters)
-        .then(
-            data => {
-              updateState(() => ({
-                ...data,
-                maxCommonDataLength: Math.min(5,
-                    Math.max(data.procurementsByStatusData.length, data.procurementsByMethodData.length)),
-                max2ndRowCommonDataLength: Math.min(5,
-                    Math.max(data.winsAndFlagsData.length, data.flaggedNrData.length))
-              }))
-            },
-            _ => updateState(() => undefined));
+      .then(
+        (data) => {
+          updateState(() => ({
+            ...data,
+            maxCommonDataLength: Math.min(5,
+              Math.max(data.procurementsByStatusData.length, data.procurementsByMethodData.length)),
+            max2ndRowCommonDataLength: Math.min(5,
+              Math.max(data.winsAndFlagsData.length, data.flaggedNrData.length)),
+          }));
+        },
+        () => updateState(() => undefined),
+      );
   }, [buyerFilters]);
 
   const t = tCreator(translations);
@@ -56,11 +59,17 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
         doSearch={doSearch}
         placeholder={t('crd:buyers:top-search')}
       />
-      {state &&
+      {state
+      && (
       <>
-        <Info info={state.info} flagsCount={state.flagsCount} prs={state.prs} contractsCount={state.contractsCount}
-              unflaggedContractsCount={state.unflaggedContractsCount}
-              translations={translations} />
+        <Info
+          info={state.info}
+          flagsCount={state.flagsCount}
+          prs={state.prs}
+          contractsCount={state.contractsCount}
+          unflaggedContractsCount={state.unflaggedContractsCount}
+          translations={translations}
+        />
         <section className="pe-general-statistics">
           <h2>{t('crd:procuringEntities:generalStatistics')}</h2>
           <div className="row">
@@ -70,7 +79,8 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
                   <ProcurementsByStatus
                     data={state.procurementsByStatusData}
                     length={state.maxCommonDataLength}
-                    translations={translations} />
+                    translations={translations}
+                  />
                 </TitleBelow>
               </Zoomable>
             </div>
@@ -80,7 +90,8 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
                   <ProcurementsByMethod
                     data={state.procurementsByMethodData}
                     length={state.maxCommonDataLength}
-                    translations={translations} />
+                    translations={translations}
+                  />
                 </TitleBelow>
               </Zoomable>
             </div>
@@ -97,7 +108,8 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
                   <WinsAndFlags
                     data={state.winsAndFlagsData}
                     length={state.max2ndRowCommonDataLength}
-                    translations={translations} />
+                    translations={translations}
+                  />
                 </TitleBelow>
               </Zoomable>
             </div>
@@ -107,15 +119,22 @@ const Buyer = ({ translations, doSearch, width, navigate, ...otherProps }) => {
                   <FlaggedNr
                     data={state.flaggedNrData}
                     length={state.max2ndRowCommonDataLength}
-                    translations={translations} />
+                    translations={translations}
+                  />
                 </TitleBelow>
               </Zoomable>
             </div>
           </div>
         </section>
-      </>}
+      </>
+      )}
       <section>
-        {state && <h2>Procurements by {state.info.name}</h2>}
+        {state && (
+        <h2>
+          Procurements by
+          {state.info.name}
+        </h2>
+        )}
         <ProcurementsTable
           filters={buyerFilters}
           translations={translations}
@@ -130,7 +149,7 @@ Buyer.propTypes = {
   id: PropTypes.string.isRequired,
   filters: PropTypes.object,
   years: PropTypes.array,
-  months: PropTypes.array
+  months: PropTypes.array,
 };
 
 export default Buyer;

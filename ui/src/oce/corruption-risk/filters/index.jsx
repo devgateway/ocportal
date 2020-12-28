@@ -1,25 +1,23 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import {tCreator} from '../../translatable';
+import { useImmer } from 'use-immer';
+import { tCreator } from '../../translatable';
 import {
   dateRendererCreator,
   minMaxPropertyRendererCreator,
-  singlePropertyRendererCreator
-} from "../../makueni/filters/FiltersWrapper";
-import FilterTenderDate from "../../makueni/filters/FilterTenderDate";
-import FilterBox from "./box";
-import ProcurementMethod from "../../filters/procurement-method";
-import ProcurementMethodRationale from "../../filters/procurement-method-rationale";
-import {FlaggedTenderPrice} from "../../filters/tender-price";
-import {FlaggedAwardValue} from "../../filters/award-value";
-import {Buyer, ProcuringEntity, Supplier} from "../../filters/organizations";
-import {useImmer} from "use-immer";
+  singlePropertyRendererCreator,
+} from '../../makueni/filters/FiltersWrapper';
+import FilterTenderDate from '../../makueni/filters/FilterTenderDate';
+import FilterBox from './box';
+import ProcurementMethod from '../../filters/procurement-method';
+import ProcurementMethodRationale from '../../filters/procurement-method-rationale';
+import { FlaggedTenderPrice } from '../../filters/tender-price';
+import { FlaggedAwardValue } from '../../filters/award-value';
+import { Buyer, ProcuringEntity, Supplier } from '../../filters/organizations';
 
-const isActiveForFields = (...fields) => filters =>
-  fields.map(field => filters[field]).some(value =>
-    Array.isArray(value)
-      ? value.length > 0
-      : value != null);
+const isActiveForFields = (...fields) => (filters) => fields.map((field) => filters[field]).some((value) => (Array.isArray(value)
+  ? value.length > 0
+  : value != null));
 
 const groups = [
   {
@@ -27,58 +25,58 @@ const groups = [
     active: isActiveForFields('year'),
     filters: [
       {
-        render: dateRendererCreator(FilterTenderDate)
-      }
-    ]
+        render: dateRendererCreator(FilterTenderDate),
+      },
+    ],
   },
   {
     title: 'filters:tabs:valueAmount:title',
     active: isActiveForFields('minTenderValue', 'maxTenderValue', 'minAwardValue', 'maxAwardValue'),
     filters: [
       {
-        render: minMaxPropertyRendererCreator(FlaggedTenderPrice, 'TenderValue')
+        render: minMaxPropertyRendererCreator(FlaggedTenderPrice, 'TenderValue'),
       },
       {
-        render: minMaxPropertyRendererCreator(FlaggedAwardValue, 'AwardValue')
-      }
-    ]
+        render: minMaxPropertyRendererCreator(FlaggedAwardValue, 'AwardValue'),
+      },
+    ],
   },
   {
     title: 'filters:tabs:procurementMethod:title',
     active: isActiveForFields('procurementMethod'),
     filters: [
       {
-        render: singlePropertyRendererCreator(ProcurementMethod, 'procurementMethod')
-      }
-    ]
+        render: singlePropertyRendererCreator(ProcurementMethod, 'procurementMethod'),
+      },
+    ],
   },
   {
     title: 'filters:tabs:procurementMethodRationale:title',
     active: isActiveForFields('procurementMethodRationale'),
     filters: [
       {
-        render: singlePropertyRendererCreator(ProcurementMethodRationale, 'procurementMethodRationale')
-      }
-    ]
+        render: singlePropertyRendererCreator(ProcurementMethodRationale, 'procurementMethodRationale'),
+      },
+    ],
   },
   {
     title: 'filters:tabs:organizations:title',
     active: isActiveForFields('buyerId', 'procuringEntityId', 'supplierId'),
     filters: [
       {
-        render: singlePropertyRendererCreator(Buyer, 'buyerId')
+        render: singlePropertyRendererCreator(Buyer, 'buyerId'),
       },
       {
-        render: singlePropertyRendererCreator(ProcuringEntity, 'procuringEntityId')
+        render: singlePropertyRendererCreator(ProcuringEntity, 'procuringEntityId'),
       },
       {
-        render: singlePropertyRendererCreator(Supplier, 'supplierId')
-      }
-    ]
-  }
+        render: singlePropertyRendererCreator(Supplier, 'supplierId'),
+      },
+    ],
+  },
 ];
 
-const Filters = ({translations, filters, onChange}) => {
+const Filters = ({ translations, filters, onChange }) => {
   const t = tCreator(translations);
 
   const [localFilters, updateLocalFilters] = useImmer(filters);
@@ -99,7 +97,7 @@ const Filters = ({translations, filters, onChange}) => {
 
   const ref = useRef();
 
-  const handleMouseDown = e => {
+  const handleMouseDown = (e) => {
     if (ref.current && !ref.current.contains(e.target)) {
       setCurrentBoxIndex(null);
     }
@@ -109,10 +107,10 @@ const Filters = ({translations, filters, onChange}) => {
     // attaching to dg-container instead of document because dropdowns used in filters are appended to document
     const dgContainer = document.getElementById('dg-container');
 
-    dgContainer.addEventListener("mousedown", handleMouseDown);
+    dgContainer.addEventListener('mousedown', handleMouseDown);
 
     return () => {
-      dgContainer.removeEventListener("mousedown", handleMouseDown);
+      dgContainer.removeEventListener('mousedown', handleMouseDown);
     };
   }, []);
 
@@ -131,28 +129,29 @@ const Filters = ({translations, filters, onChange}) => {
             translations={translations}
             onClick={() => setCurrentBoxIndex(currentBoxIndex === index ? null : index)}
             onApply={handleApply}
-            onReset={handleReset}>
+            onReset={handleReset}
+          >
 
-            {group.filters.map((filter, fIdx) =>
+            {group.filters.map((filter, fIdx) => (
               <React.Fragment key={fIdx}>
                 {filter.render({
                   filters: localFilters,
-                  onChange: filters => updateLocalFilters((draft) => ({...draft, ...filters})),
-                  translations: translations
+                  onChange: (filters) => updateLocalFilters((draft) => ({ ...draft, ...filters })),
+                  translations,
                 })}
               </React.Fragment>
-            )}
+            ))}
           </FilterBox>
         ))}
       </div>
     </div>
   );
-}
+};
 
 Filters.propTypes = {
   filters: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired
-}
+  translations: PropTypes.object.isRequired,
+};
 
 export default Filters;

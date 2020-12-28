@@ -1,26 +1,25 @@
-import React, {useEffect} from "react";
-import {tCreator} from '../../../translatable';
+import React, { useEffect } from 'react';
+import { useImmer } from 'use-immer';
+import { tCreator } from '../../../translatable';
 import BootstrapTableWrapper from '../../archive/bootstrap-table-wrapper';
 import { mkContractLink } from '../../tools';
-import {getFlaggedReleases} from "./api";
-import {useImmer} from "use-immer";
-import {setImmer} from "../../../tools";
+import { getFlaggedReleases } from './api';
+import { setImmer } from '../../../tools';
 
-const Table = ({filters, navigate, translations}) => {
-
+const Table = ({ filters, navigate, translations }) => {
   const t = tCreator(translations);
 
-  const formatFlags = (data) => {
-    return (
-      <div>
-        {data.map(indicator => (
-          <div key={indicator}>
-            &#9679; {t(`crd:indicators:${indicator}:name`)}
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const formatFlags = (data) => (
+    <div>
+      {data.map((indicator) => (
+        <div key={indicator}>
+          &#9679;
+          {' '}
+          {t(`crd:indicators:${indicator}:name`)}
+        </div>
+      ))}
+    </div>
+  );
 
   const [page, updatePage] = useImmer(1);
   const [pageSize, updatePageSize] = useImmer(20);
@@ -32,13 +31,13 @@ const Table = ({filters, navigate, translations}) => {
     const params = {
       ...filters,
       pageNumber: page - 1,
-      pageSize
+      pageSize,
     };
-      getFlaggedReleases(params)
-          .then(([data, count]) => {
-              updateData(() => data);
-              updateCount(() => count);
-          });
+    getFlaggedReleases(params)
+      .then(([data, count]) => {
+        updateData(() => data);
+        updateCount(() => count);
+      });
   }, [filters, page, pageSize]);
 
   return (

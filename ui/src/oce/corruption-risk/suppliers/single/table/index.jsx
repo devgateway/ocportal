@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {tCreator} from '../../../../translatable';
+import React, { useEffect, useState } from 'react';
+import { tCreator } from '../../../../translatable';
 import BootstrapTableWrapper from '../../../archive/bootstrap-table-wrapper';
-import {getFlaggedReleases} from "./api";
+import { getFlaggedReleases } from './api';
 import './style.scss';
 
-const Table = ({filters, translations}) => {
-
+const Table = ({ filters, translations }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
@@ -16,7 +15,7 @@ const Table = ({filters, translations}) => {
     const params = {
       ...filters,
       pageSize,
-      pageNumber: page - 1
+      pageNumber: page - 1,
     };
     getFlaggedReleases(params).then(([data, count]) => {
       setData(data);
@@ -46,17 +45,13 @@ const Table = ({filters, translations}) => {
     </div>
   );
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString();
-  };
+  const formatDate = (date) => new Date(date).toLocaleDateString();
 
-  const formatPE = (PEName, { PEId }) => {
-    return (
-      <a href={`#!/crd/procuring-entity/${PEId}`}>
-        {PEName}
-      </a>
-    );
-  };
+  const formatPE = (PEName, { PEId }) => (
+    <a href={`#!/crd/procuring-entity/${PEId}`}>
+      {PEName}
+    </a>
+  );
 
   return (
     <BootstrapTableWrapper

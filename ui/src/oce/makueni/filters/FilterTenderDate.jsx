@@ -1,8 +1,6 @@
+import React from 'react';
 import FilterDateYearMonth from './FilterDateYearMonth';
-import React from "react";
 
-const FilterTenderDate = ({...otherProps}) => {
-    return <FilterDateYearMonth ep='/tendersAwardsYears' {...otherProps} />
-}
+const FilterTenderDate = ({ ...otherProps }) => <FilterDateYearMonth ep="/tendersAwardsYears" {...otherProps} />;
 
 export default FilterTenderDate;

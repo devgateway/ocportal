@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 class CustomPopup extends React.Component {
@@ -13,11 +13,11 @@ class CustomPopup extends React.Component {
   }
 
   componentDidMount() {
-    super.componentDidMount && super.componentDidMount();
+    if (super.componentDidMount) super.componentDidMount();
     const chartContainer = ReactDOM.findDOMNode(this)
       .querySelector('.js-plotly-plot');
 
-    chartContainer.on('plotly_hover', e => this.showPopup(e));
+    chartContainer.on('plotly_hover', (e) => this.showPopup(e));
     chartContainer.on('plotly_unhover', () => this.setState({ show: false }));
     chartContainer.addEventListener('mousemove', this.movePopup.bind(this));
   }
@@ -35,17 +35,20 @@ class CustomPopup extends React.Component {
 
   render() {
     const { Popup, Chart } = this.props;
-    const { show, x, y, points } = this.state;
+    const {
+      show, x, y, points,
+    } = this.state;
     return (
       <div className="custom-popup-container">
-        {show &&
+        {show
+          && (
           <Popup
             {...this.props}
             y={y}
             x={x}
             points={points}
           />
-        }
+          )}
         <Chart
           {...this.props}
         />

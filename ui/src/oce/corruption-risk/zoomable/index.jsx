@@ -1,10 +1,9 @@
-import React from "react";
-import cn from 'classnames';
+import React from 'react';
 import { cloneChild } from '../tools';
-import style from './style.scss';
+import './style.scss';
 
 class Zoomable extends React.PureComponent {
-  constructor(...args){
+  constructor(...args) {
     super(...args);
     this.state = this.state || {};
     this.state.zoomed = false;
@@ -13,7 +12,7 @@ class Zoomable extends React.PureComponent {
   maybeGetZoomed() {
     const { children, ...props } = this.props;
     const { zoomed } = this.state;
-    const width = window.innerWidth * .9;
+    const width = window.innerWidth * 0.9;
     const padding = 150;
     if (zoomed) {
       const style = {
@@ -22,21 +21,22 @@ class Zoomable extends React.PureComponent {
         paddingTop: 50,
         paddingBottom: 50,
         paddingLeft: padding,
-        paddingRight: padding
+        paddingRight: padding,
       };
       return (
         <div>
-          <div className="crd-fullscreen-popup-overlay" onClick={e => this.setState({ zoomed: false })}/>
-          <div className="crd-fullscreen-popup" style={ style }>
+          <div className="crd-fullscreen-popup-overlay" onClick={() => this.setState({ zoomed: false })} />
+          <div className="crd-fullscreen-popup" style={style}>
             {cloneChild(this, {
-               ...props,
-               zoomed: true, 
-               width: width - padding * 2
+              ...props,
+              zoomed: true,
+              width: width - padding * 2,
             })}
           </div>
         </div>
       );
     }
+    return null;
   }
 
   interceptClicks({ target }) {
@@ -52,10 +52,10 @@ class Zoomable extends React.PureComponent {
       <div className="zoomable" onClick={this.interceptClicks.bind(this)}>
         {this.maybeGetZoomed()}
         {!zoomed && cloneChild(this, {
-           ...props
+          ...props,
         })}
       </div>
-    )
+    );
   }
 }
 

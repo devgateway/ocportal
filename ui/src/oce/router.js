@@ -17,5 +17,5 @@ export const navigate = (...params) => {
 
 window.addEventListener('popstate', () => {
   const route = getRoute();
-  listeners.forEach(listener => listener(route));
+  listeners.forEach((listener) => listener(route));
 });

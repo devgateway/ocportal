@@ -1,24 +1,26 @@
 import ReactDOM from 'react-dom';
 import { Popup } from 'react-leaflet';
 import cn from 'classnames';
+import React from 'react';
 import Location from '../location/marker';
 import Component from '../../../pure-render-component';
 import translatable from '../../../translatable';
-import OverviewChart from '../../../visualizations/charts/overview';
-import CostEffectiveness from '../../../visualizations/charts/cost-effectiveness';
+import OverviewChart from '../../charts/overview';
+import CostEffectiveness from '../../charts/cost-effectiveness';
 import { cacheFn, download } from '../../../tools';
-import ProcurementMethodChart from '../../../visualizations/charts/procurement-method';
+import ProcurementMethodChart from '../../charts/procurement-method';
 // eslint-disable-next-line no-unused-vars
 import styles from './style.scss';
 import ProjectCount from '../../charts/project-count';
 import AmountBudgeted from '../../charts/amount-budgeted';
-import React from 'react';
+import exportMap from '../../../resources/icons/export-map.svg';
+import cameraMap from '../../../resources/icons/camera-map.svg';
 
 const addTenderDeliveryLocationId = cacheFn(
   (filters, id) => ({
     ...filters,
-    tenderLoc: id
-  })
+    tenderLoc: id,
+  }),
 );
 
 class Tab extends translatable(Component) {}
@@ -27,7 +29,7 @@ export class ChartTab extends Tab {
   constructor(props) {
     super(props);
     this.state = {
-      chartData: null
+      chartData: null,
     };
   }
 
@@ -43,7 +45,9 @@ export class ChartTab extends Tab {
   static getChartClass() { return ''; }
 
   render() {
-    const { filters, styling, years, translations, data, monthly, months } = this.props;
+    const {
+      filters, styling, years, translations, data, monthly, months,
+    } = this.props;
     const decoratedFilters = addTenderDeliveryLocationId(filters, data._id);
     return (
       <div className={cn('map-chart', this.constructor.getChartClass())}>
@@ -57,10 +61,10 @@ export class ChartTab extends Tab {
           data={this.state.chartData}
           requestNewData={(_, chartData) => this.setState({ chartData })}
           height={250}
-          style={{ width: "100%"}}
+          style={{ width: '100%' }}
           layout={{
-              autosize: true
-            }}
+            autosize: true,
+          }}
           margin={this.constructor.getMargins()}
           legend="h"
         />
@@ -79,32 +83,37 @@ class LocationWrapper extends translatable(Component) {
 
   doExcelExport() {
     const { currentTab } = this.state;
-    const { data, filters, years, months } = this.props;
+    const {
+      data, filters, years, months,
+    } = this.props;
     const CurrentTab = this.constructor.TABS[currentTab];
     download({
       ep: CurrentTab.Chart.excelEP,
       filters: addTenderDeliveryLocationId(filters, data._id),
       years,
       months,
-      t: translationKey => this.t(translationKey),
+      t: (translationKey) => this.t(translationKey),
     });
   }
 
   render() {
     const { currentTab } = this.state;
-    const { data, translations, filters, years, styling, monthly, months } = this.props;
+    const {
+      data, translations, filters, years, styling, monthly, months,
+    } = this.props;
     const CurrentTab = this.constructor.TABS[currentTab];
-    const t = translationKey => this.t(translationKey);
+    const t = (translationKey) => this.t(translationKey);
     return (
       <Location {...this.props}>
         <Popup className="tender-locations-popup">
           <div>
             <header>
-              {CurrentTab.prototype instanceof ChartTab &&
+              {CurrentTab.prototype instanceof ChartTab
+                && (
                 <span className="chart-tools">
                   <a tabIndex={-1} role="button" onClick={() => this.doExcelExport()}>
                     <img
-                      src={process.env.PUBLIC_URL + "/icons/export-map.svg"}
+                      src={exportMap}
                       alt="Export"
                       width="16"
                       height="16"
@@ -116,12 +125,12 @@ class LocationWrapper extends translatable(Component) {
                     onClick={() => ReactDOM.findDOMNode(this.currentChart).querySelector('.modebar-btn:first-child').click()}
                   >
                     <img
-                      src={process.env.PUBLIC_URL + "/icons/camera-map.svg"}
+                      src={cameraMap}
                       alt="Screenshot"
                     />
                   </a>
                 </span>
-              }
+                )}
               {data.name}
             </header>
             <div className="row">
@@ -164,17 +173,23 @@ export class OverviewTab extends Tab {
   render() {
     const { data } = this.props;
     const { count, totalProjectsAmount } = data;
-    return (<div>
-      {/*<p>*/}
-      {/*  <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count}*/}
-      {/*</p>*/}
-      <p>
-        <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong> {count}
-      </p>
-      <p>
-        <strong>{this.t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong> {totalProjectsAmount.toLocaleString()}
-      </p>
-    </div>);
+    return (
+      <div>
+        {/* <p> */}
+        {/*  <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count} */}
+        {/* </p> */}
+        <p>
+          <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong>
+          {' '}
+          {count}
+        </p>
+        <p>
+          <strong>{this.t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong>
+          {' '}
+          {totalProjectsAmount.toLocaleString()}
+        </p>
+      </div>
+    );
   }
 }
 
@@ -209,7 +224,6 @@ export class ProjectCountChartTab extends ChartTab {
 
 ProjectCountChartTab.Chart = ProjectCount;
 
-
 export class AmountBudgetedChartTab extends ChartTab {
   static getName(t) { return t('charts:amountBudgeted:title'); }
 
@@ -218,13 +232,12 @@ export class AmountBudgetedChartTab extends ChartTab {
 
 AmountBudgetedChartTab.Chart = AmountBudgeted;
 
-
 export class ProcurementMethodTab extends ChartTab {
   static getName(t) { return t('charts:procurementMethod:title'); }
 }
 
 ProcurementMethodTab.Chart = ProcurementMethodChart;
 
-LocationWrapper.TABS = [OverviewTab, ProjectCountChartTab,AmountBudgetedChartTab];
+LocationWrapper.TABS = [OverviewTab, ProjectCountChartTab, AmountBudgetedChartTab];
 
 export default LocationWrapper;

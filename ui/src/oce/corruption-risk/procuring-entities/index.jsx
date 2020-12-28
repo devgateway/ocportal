@@ -4,10 +4,10 @@ import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import { wireProps } from '../tools';
-import {getTenderAndAwardCounts} from "./api";
+import { getTenderAndAwardCounts } from './api';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
-export const mkLink = navigate => (content, { id }) => (
+export const mkLink = (navigate) => (content, { id }) => (
   <a
     href={`#!/crd/procuring-entity/${id}`}
     onClick={() => navigate('procuring-entity', id)}
@@ -17,7 +17,7 @@ export const mkLink = navigate => (content, { id }) => (
 );
 
 class PEList extends PaginatedTable {
-  constructor(...args){
+  constructor(...args) {
     super(...args);
     this.state = this.state || {};
     this.state.tenders = {};
@@ -27,13 +27,13 @@ class PEList extends PaginatedTable {
   getCustomEP() {
     const { searchQuery } = this.props;
     const eps = super.getCustomEP();
-    return searchQuery ?
-      eps.map(ep => ep.addSearch('text', decodeURIComponent(searchQuery))) :
-      eps;
+    return searchQuery
+      ? eps.map((ep) => ep.addSearch('text', decodeURIComponent(searchQuery)))
+      : eps;
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const propsChanged = ['filters', 'searchQuery'].some(key => this.props[key] !== prevProps[key]);
+    const propsChanged = ['filters', 'searchQuery'].some((key) => this.props[key] !== prevProps[key]);
     if (propsChanged) {
       this.fetch();
     } else {
@@ -47,24 +47,27 @@ class PEList extends PaginatedTable {
   }
 
   fetchCounts() {
-    const {filters, years, months, data} = this.props;
+    const {
+      filters, years, months, data,
+    } = this.props;
 
     const ids = data
       .get('data', List())
-      .map(datum => datum.get('procuringEntityId'))
+      .map((datum) => datum.get('procuringEntityId'))
       .toArray();
 
     const peFilters = {
       ...filters,
       year: years,
       month: months,
-      procuringEntityId: ids
+      procuringEntityId: ids,
     };
 
     getTenderAndAwardCounts(peFilters)
       .then(
-        ([tenders, awards]) => this.setState({tenders, awards}),
-        _ => this.setState({tenders: {}, awards: {}}));
+        ([tenders, awards]) => this.setState({ tenders, awards }),
+        () => this.setState({ tenders: {}, awards: {} }),
+      );
   }
 
   render() {
@@ -72,7 +75,9 @@ class PEList extends PaginatedTable {
 
     const count = data.get('count', 0);
 
-    const { pageSize, page, tenders, awards } = this.state;
+    const {
+      pageSize, page, tenders, awards,
+    } = this.state;
 
     const jsData = data.get('data', List()).map((supplier) => {
       const id = supplier.get('procuringEntityId');
@@ -82,7 +87,7 @@ class PEList extends PaginatedTable {
         nrTenders: tenders[id],
         nrAwards: awards[id],
         nrFlags: supplier.get('countFlags'),
-      }
+      };
     }).toJS();
 
     return (
@@ -126,7 +131,7 @@ class ProcuringEntities extends CRDPage {
   requestNewData(path, newData) {
     this.props.requestNewData(
       path,
-      newData.set('count', newData.getIn(['count', 0, 'count'], 0))
+      newData.set('count', newData.getIn(['count', 0, 'count'], 0)),
     );
   }
 

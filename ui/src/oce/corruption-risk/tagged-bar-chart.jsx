@@ -18,17 +18,17 @@ function mkGradient(id, colors) {
 
   return (
     <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
-      {stops.map(({color, offset}) =>
+      {stops.map(({ color, offset }) => (
         <stop
-          offset={offset+'%'}
+          offset={`${offset}%`}
           style={{
             stopColor: color,
             stopOpacity: 1,
           }}
         />
-      )}
+      ))}
     </linearGradient>
-  )
+  );
 }
 
 class TaggedBarChart extends React.PureComponent {
@@ -39,15 +39,15 @@ class TaggedBarChart extends React.PureComponent {
     const $this = ReactDOM.findDOMNode(this);
     const barHeight = $this.querySelector('.trace.bars .point').getBoundingClientRect().height;
 
-    $this.querySelectorAll('.ytick').forEach(label => {
+    $this.querySelectorAll('.ytick').forEach((label) => {
       const { width } = label.getBoundingClientRect();
-      label.setAttribute('transform', `translate(${width}, ${-barHeight - deltaY})`)
+      label.setAttribute('transform', `translate(${width}, ${-barHeight - deltaY})`);
 
       if (navigator.userAgent.indexOf('Firefox') === -1) {
-        setTimeout(function() {
+        setTimeout(() => {
           const { width } = label.getBoundingClientRect();
-          label.setAttribute('transform', `translate(${width + 5}, ${-barHeight - deltaY})`)
-        })
+          label.setAttribute('transform', `translate(${width + 5}, ${-barHeight - deltaY})`);
+        });
       }
     });
   }
@@ -61,7 +61,7 @@ class TaggedBarChart extends React.PureComponent {
     const gradients = {};
     let style = '';
 
-    Object.keys(tags).map(slug => {
+    Object.keys(tags).map((slug) => {
       const { color, name } = tags[slug];
       plotlyData[slug] = {
         x: [0],
@@ -72,46 +72,48 @@ class TaggedBarChart extends React.PureComponent {
           color,
         },
         hoverinfo: 'none',
-        orientation: 'h'
-      }
+        orientation: 'h',
+      };
     });
 
     data.forEach((datum, index) => {
       plotlyData[fstTag].x[index] = datum.x;
       if (datum.tags.length > 1) {
         const gradientSlug = datum.tags.join('_');
-        gradients[gradientSlug] = gradients[gradientSlug] ||
-          datum.tags.map(tag => tags[tag].color);
-        style += `#tagged-bar-chart .point:nth-child(${index + 1}) path {` +
-          `fill: url(#${gradientSlug})!important;}\n`;
+        gradients[gradientSlug] = gradients[gradientSlug]
+          || datum.tags.map((tag) => tags[tag].color);
+        style += `#tagged-bar-chart .point:nth-child(${index + 1}) path {`
+          + `fill: url(#${gradientSlug})!important;}\n`;
       }
     });
 
     return (
       <div id="tagged-bar-chart">
-        <svg width="1" height="1" style={{float: 'right'}}>
+        <svg width="1" height="1" style={{ float: 'right' }}>
           <defs>
             {Object.entries(gradients).map(([slug, colors]) => mkGradient(slug, colors))}
           </defs>
         </svg>
-        <style dangerouslySetInnerHTML={{__html: style}}/>
+        <style dangerouslySetInnerHTML={{ __html: style }} />
         <PlotlyChart
           data={Object.values(plotlyData)}
           layout={{
             width,
             height: 350,
-            margin: {t: 0, r: 20, b: 30, l: 20, pad: 0},
+            margin: {
+              t: 0, r: 20, b: 30, l: 20, pad: 0,
+            },
             paper_bgcolor: 'rgba(0, 0, 0, 0)',
             plot_bgcolor: 'rgba(0, 0, 0, 0)',
             legend: {
               xanchor: 'right',
               yanchor: 'top',
-              x: .9,
+              x: 0.9,
               y: 1.5,
               orientation: 'h',
             },
             barmode: 'stack',
-            bargap: .5
+            bargap: 0.5,
           }}
           onUpdate={this.fixYLabels.bind(this)}
         />

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { pluck } from '../../../../tools';
 import Donut from '../../../donut';
 import translatable from '../../../../translatable';
@@ -22,7 +22,9 @@ class CenterText extends translatable(React.PureComponent) {
         <div>
           {this.format(fst)}
           <div className="secondary">
-            {this.format(snd)} {this.t('crd:supplier:amountLostVsWon:Lost')}
+            {this.format(snd)}
+            {' '}
+            {this.t('crd:supplier:amountLostVsWon:Lost')}
           </div>
         </div>
       </div>
@@ -40,12 +42,12 @@ class AmountWonVsLost extends translatable(React.Component) {
       color: '#2e833a',
       label: this.t('crd:supplier:amountLostVsWon:won')
         .replace('$#$', styling.charts.hoverFormatter(won)),
-      value: won
+      value: won,
     }, {
       color: '#72c47e',
       label: this.t('crd:supplier:amountLostVsWon:lost')
         .replace('$#$', styling.charts.hoverFormatter(lost)),
-      value: lost
+      value: lost,
     }]);
   }
 
@@ -55,7 +57,7 @@ class AmountWonVsLost extends translatable(React.Component) {
       <Donut
         {...this.props}
         requestNewData={this.transformNewData.bind(this)}
-        data={this.props.data || []}
+        data={data || []}
         CenterText={CenterText}
         title={this.t('crd:supplier:amountLostVsWon:title')}
         subtitle={this.t('crd:supplier:amountLostVsWon:subtitle')}

@@ -1,12 +1,14 @@
-import React from "react";
-import FilterItemSingleSelect from "../makueni/filters/FilterItemSingleSelect";
+import React from 'react';
+import FilterItemSingleSelect from '../makueni/filters/FilterItemSingleSelect';
 
-const BuyerSelect = props =>
+const BuyerSelect = (props) => (
   <FilterItemSingleSelect
-    labelKey='filters:buyer:title'
-    ep='/ocds/organization/buyer/all'
-    itemValueKey='id'
-    itemLabelKey='name'
-    {...props} />
+    labelKey="filters:buyer:title"
+    ep="/ocds/organization/buyer/all"
+    itemValueKey="id"
+    itemLabelKey="name"
+    {...props}
+  />
+);
 
 export default BuyerSelect;
