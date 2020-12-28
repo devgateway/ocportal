@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import reportWebVitals, {sendToGoogleAnalytics} from "../../reportWebVitals";
 
 const initGA = () => {
-  ReactGA.initialize('UA-154640611-1');
+  ReactGA.initialize(process.env.REACT_APP_GA_ID);
   let prefix = window.location.protocol + '//' + window.location.host;
   let href = window.location.href;
   ReactGA.pageview(href.substring(prefix.length, href.length));
@@ -80,8 +80,10 @@ const Header = props => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    initGA();
-    reportWebVitals(sendToGoogleAnalytics);
+    if (process.env.REACT_APP_GA_ID) {
+      initGA();
+      reportWebVitals(sendToGoogleAnalytics);
+    }
     handleIntroJS();
     dispatch(loadStats());
   }, [dispatch]);
