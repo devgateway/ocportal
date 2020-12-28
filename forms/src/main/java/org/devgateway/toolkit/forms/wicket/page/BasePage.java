@@ -52,6 +52,7 @@ import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
+import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.fm.DgFmAttachingVisitor;
 import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
@@ -138,10 +139,14 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
     private GoogleAnalyticsTracker googleAnalyticsTracker;
 
+    @SpringBean
+    private SettingsUtils settingsUtils;
+
 
     protected void createGoogleAnalyticsTracker() {
         googleAnalyticsTracker = new GoogleAnalyticsTracker(
-                "googleAnalyticsTracker", Constants.GOOGLE_ANALYTICS_ID);
+                "googleAnalyticsTracker", settingsUtils.getGoogleAnalyticsTrackingId());
+        googleAnalyticsTracker.setVisibilityAllowed(settingsUtils.getGoogleAnalyticsTrackingId() != null);
         add(googleAnalyticsTracker);
     }
 
