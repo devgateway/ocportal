@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { tCreator } from '../translatable';
 import cn from 'classnames';
 import URI from 'urijs';
 import Cookies from 'universal-cookie';
@@ -9,12 +8,14 @@ import './header.scss';
 import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { tCreator } from '../translatable';
 import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
 import makueniLogo from '../resources/makueni-logo.png';
+import { getGaId } from '../api/Api';
 
-const initGA = () => {
-  ReactGA.initialize(process.env.REACT_APP_GA_ID);
+const initGA = (gaId) => {
+  ReactGA.initialize(gaId);
   const prefix = `${window.location.protocol}//${window.location.host}`;
   const { href } = window.location;
   ReactGA.pageview(href.substring(prefix.length, href.length));
@@ -80,10 +81,12 @@ const Header = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (process.env.REACT_APP_GA_ID) {
-      initGA();
-      reportWebVitals(sendToGoogleAnalytics);
-    }
+    getGaId().then((gaObj) => {
+      if (gaObj.response !== undefined) {
+        initGA(gaObj.response);
+        reportWebVitals(sendToGoogleAnalytics);
+      }
+    });
     handleIntroJS();
     dispatch(loadStats());
   }, [dispatch]);
