@@ -28,7 +28,7 @@ export const toK = (number) => (number >= 1000
   ? `${Math.round(number / 1000)}K`
   : number);
 
-export const identity = (_) => _;
+export const identity = (value) => value;
 
 /**
  * Takes two strings and an array of objects, returning on object whose keys are the values of the
@@ -55,6 +55,9 @@ export const monthlyResponse2obj = fieldsToObj.bind(null, 'month');
 
 const shallowCompArr = (a, b) => a.every((el, index) => el === b[index]);
 
+/**
+ * Same as defaultMemoize from reselect. Equality check uses reference equality.
+ */
 export const cacheFn = (fn) => {
   let lastArgs;
   let lastResult;

@@ -2,9 +2,11 @@ import cn from 'classnames';
 import Table from '../visualizations/tables/index';
 
 class Crosstab extends Table {
-  getCustomEP() {
+  buildUrl(ep) {
+    const url = super.buildUrl(ep);
     const { indicators } = this.props;
-    return indicators.map((indicator) => `flags/${indicator}/crosstab`);
+    url.addSearch('flags', indicators);
+    return url;
   }
 
   componentDidUpdate(prevProps, ...args) {
@@ -21,10 +23,11 @@ class Crosstab extends Table {
     for (let x = 0; x < indicators.length; x += 1) {
       const xIndicatorID = indicators[x];
       matrix[xIndicatorID] = {};
-      const datum = data[x][0];
+      const xArray = data[xIndicatorID];
       for (y = 0; y < indicators.length; y += 1) {
         const yIndicatorID = indicators[y];
-        if (datum) {
+        if (xArray && xArray.length > 0) {
+          const datum = xArray[0];
           matrix[xIndicatorID][yIndicatorID] = {
             count: datum[yIndicatorID],
             percent: datum.percent[yIndicatorID],
@@ -121,5 +124,7 @@ class Crosstab extends Table {
     );
   }
 }
+
+Crosstab.endpoint = 'flags/crosstab';
 
 export default Crosstab;
