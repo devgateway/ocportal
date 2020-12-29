@@ -18,9 +18,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import javax.persistence.MappedSuperclass;
 import java.io.IOException;
 import java.io.ObjectInputStream;
