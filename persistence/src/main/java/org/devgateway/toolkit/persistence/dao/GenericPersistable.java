@@ -21,12 +21,17 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import javax.persistence.MappedSuperclass;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
  * @author mpostelnicu, ociubotaru
  */
 @JsonIgnoreProperties(value = {"new"})
+@MappedSuperclass
 public class GenericPersistable extends AbstractPersistable<Long> implements Serializable {
 
     /**

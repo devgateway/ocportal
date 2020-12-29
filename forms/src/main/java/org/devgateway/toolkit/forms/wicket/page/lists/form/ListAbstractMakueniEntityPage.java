@@ -114,8 +114,19 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     }
 
+    protected void autoPageTitle() {
+        addOrReplace(new Label("pageTitle",
+                StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(
+                        this.getClass().getSimpleName().replaceAll("List", "").replaceAll("Page", "")), ' ')
+                        + " List"));
+    }
+
+
     @Override
     protected void onInitialize() {
+        // just replace the page title with the name of the class
+        // instead of having .properties files only for the page title
+        autoPageTitle();
         super.onInitialize();
 
         // don't allow users to add new entities from the listing pages for AbstractMakueniEntity.

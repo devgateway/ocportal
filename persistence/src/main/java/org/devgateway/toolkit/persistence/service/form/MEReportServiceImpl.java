@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class MEReportServiceImpl extends AbstractMakueniEntityServiceImpl<MEReport>
+public class MEReportServiceImpl extends AbstractImplTenderProcessMakueniEntityServiceImpl<MEReport>
         implements MEReportService {
 
     @Autowired
@@ -48,5 +48,11 @@ public class MEReportServiceImpl extends AbstractMakueniEntityServiceImpl<MERepo
         approvedReport.setMeReport(report);
 
         approvedReportRepository.save(approvedReport);
+    }
+
+    @Override
+    public void delete(MEReport report) {
+        approvedReportRepository.deleteByMeReport(report);
+        super.delete(report);
     }
 }

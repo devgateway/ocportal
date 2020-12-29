@@ -15,8 +15,8 @@ import java.util.List;
  * @author mpostelnicu
  */
 @Service
-public class AdministratorReportServiceImpl extends AbstractMakueniEntityServiceImpl<AdministratorReport>
-        implements AdministratorReportService {
+public class AdministratorReportServiceImpl extends AbstractImplTenderProcessMakueniEntityServiceImpl
+        <AdministratorReport> implements AdministratorReportService {
 
     @Autowired
     private AdministratorReportRepository repository;

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,8 +28,8 @@ public class TenderItemServiceImpl extends BaseJpaServiceImpl<TenderItem> implem
     }
 
     @Override
-    public List<TenderItem> findByPurchaseItem(final PurchaseItem purchaseItem) {
-        return repository.findByPurchaseItem(purchaseItem);
+    public List<TenderItem> findByPurchaseItemIn(final Collection<PurchaseItem> purchaseItem) {
+        return repository.findByPurchaseItemIn(purchaseItem);
     }
 
     @Override

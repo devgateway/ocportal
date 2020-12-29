@@ -1,16 +1,22 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.TenderProcessRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
+import org.devgateway.toolkit.persistence.validator.validators.TenderProcessValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -54,5 +60,39 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
     public Stream<TenderProcess> findAllStream() {
         return tenderProcessRepository.findAllStream();
     }
+
+    @Override
+    public BindingResult validate(TenderProcess tp, AbstractMakueniEntity e) {
+        String status = null;
+        try {
+            if (!Objects.isNull(e)) {
+                status = e.getStatus();
+                e.setStatus(null);
+            }
+            DataBinder binder = new DataBinder(tp);
+            binder.setValidator(createValidator(e));
+            binder.validate();
+            return binder.getBindingResult();
+        } finally {
+            if (status != null) {
+                e.setStatus(status);
+            }
+        }
+    }
+
+    private TenderProcessValidator createValidator(AbstractMakueniEntity e) {
+        return new TenderProcessValidator(e != null);
+    }
+
+    @Override
+    public BindingResult validate(TenderProcess tp) {
+        return validate(tp, null);
+    }
+
+    @Transactional
+    public <E extends AbstractMakueniEntity> Stream<E> nonDraft(Stream<E> input) {
+        return input.filter(i -> !DBConstants.Status.DRAFT.equals(i.getStatus()));
+    }
+
 }
 

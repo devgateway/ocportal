@@ -154,6 +154,18 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         return PersistenceUtil.checkTerminated(entityTree.toArray(new Statusable[]{}));
     }
 
+    @Transactional(readOnly = true)
+    public boolean hasNonDraftImplForms() {
+        return hasNonDraftImplForms(administratorReports) || hasNonDraftImplForms(inspectionReports)
+                || hasNonDraftImplForms(pmcReports) || hasNonDraftImplForms(meReports)
+                || hasNonDraftImplForms(paymentVouchers);
+    }
+    
+    @Transactional(readOnly = true)
+    protected boolean hasNonDraftImplForms(Set<? extends AbstractImplTenderProcessMakueniEntity> s) {
+        return s.stream().anyMatch(f -> !DBConstants.Status.DRAFT.equals(f.getStatus()));
+    }
+
     @JsonProperty("tender")
     public Tender getSingleTender() {
         return PersistenceUtil.getNext(tender);
