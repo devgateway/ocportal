@@ -294,6 +294,7 @@
                     <include>**/*.html</include>
                     <include>**/*.xlsx</include>
                     <include>**/*.gif</include>
+                    <include>**/*.yml</include>
                 </includes>
             </resource>
         </resources>
