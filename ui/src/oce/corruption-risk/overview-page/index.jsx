@@ -1,9 +1,11 @@
+import React from 'react';
 import { range } from '../../tools';
 import CustomPopupChart from '../custom-popup-chart';
 import CRDPage from '../page';
 import { colorLuminance, wireProps } from '../tools';
 import ProcurementsTable from './table';
 import { POPUP_HEIGHT } from '../constants';
+import fmConnect from '../../fm/fm';
 
 const TRACES = ['COLLUSION', 'RIGGING'];
 
@@ -50,8 +52,8 @@ class CorruptionType extends CustomPopupChart {
     return Object.keys(grouped)
       .map((type, index) => {
         const dataForType = grouped[type];
-        let values = [];
-        let dates = [];
+        let values;
+        let dates;
         if (monthly) {
           dates = range(1, 12)
             .filter((month) => months.includes(month))
@@ -180,35 +182,41 @@ class OverviewPage extends CRDPage {
 
   render() {
     const {
-      indicatorTypesMapping, styling, width, navigate,
+      indicatorTypesMapping, styling, width, navigate, isFeatureVisible,
     } = this.props;
     return (
       <div className="page-overview">
-        <section className="chart-corruption-types">
-          <h3 className="page-header">{this.t('crd:overview:overTimeChart:title')}</h3>
-          <CorruptionType
-            {...wireProps(this, 'corruptionType')}
-            styling={styling}
-            indicatorTypesMapping={indicatorTypesMapping}
-            width={width - 20}
-            margin={{
-              t: 0, b: 40, r: 100, pad: 20,
-            }}
-          />
-        </section>
-        <section>
-          <h3 className="page-header">{this.t('crd:overview:topFlagged:title')}</h3>
-          <ProcurementsTable
-            {...wireProps(this, 'topFlaggedContracts')}
-            dataEP="corruptionRiskOverviewTable"
-            countEP="corruptionRiskOverviewTable/count"
-            navigate={navigate}
-            styling={styling}
-          />
-        </section>
+        {isFeatureVisible('crd.overview.chart')
+        && (
+          <section className="chart-corruption-types">
+            <h3 className="page-header">{this.t('crd:overview:overTimeChart:title')}</h3>
+            <CorruptionType
+              {...wireProps(this, 'corruptionType')}
+              styling={styling}
+              indicatorTypesMapping={indicatorTypesMapping}
+              width={width - 20}
+              margin={{
+                t: 0, b: 40, r: 100, pad: 20,
+              }}
+            />
+          </section>
+        )}
+        {isFeatureVisible('crd.overview.procurementProcesses')
+        && (
+          <section>
+            <h3 className="page-header">{this.t('crd:overview:topFlagged:title')}</h3>
+            <ProcurementsTable
+              {...wireProps(this, 'topFlaggedContracts')}
+              dataEP="corruptionRiskOverviewTable"
+              countEP="corruptionRiskOverviewTable/count"
+              navigate={navigate}
+              styling={styling}
+            />
+          </section>
+        )}
       </div>
     );
   }
 }
 
-export default OverviewPage;
+export default fmConnect(OverviewPage);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List } from 'immutable';
+import PropTypes from 'prop-types';
 import TopSearch from '../../top-search';
 import translatable, { tCreator } from '../../../translatable';
 import Visualization from '../../../visualization';
@@ -19,6 +20,7 @@ import SupplierTable from './table';
 import TitleBelow from '../../archive/title-below';
 import { fetchAllInfo } from './api';
 import flag from '../../../resources/icons/flag.svg';
+import fmConnect from '../../../fm/fm';
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
   render() {
@@ -185,7 +187,7 @@ const Supplier = (props) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
   const {
-    translations, doSearch, id, filters, years, months, data,
+    translations, doSearch, id, filters, years, months, data, isFeatureVisible,
   } = props;
 
   const t = tCreator(translations);
@@ -215,9 +217,7 @@ const Supplier = (props) => {
   }, [totalFlags, supplierDatefulFilter]);
 
   const maybeGetFlagAnalysis = () => {
-    const {
-      indicatorTypesMapping, id, data, filters, translations, requestNewData,
-    } = props;
+    const { indicatorTypesMapping, requestNewData } = props;
 
     const nrFlagsByCorruptionType = {};
     CORRUPTION_TYPES.forEach((corruptionType) => { nrFlagsByCorruptionType[corruptionType] = 0; });
@@ -241,7 +241,9 @@ const Supplier = (props) => {
     return (
       <section className="flag-analysis">
         <br />
-        {CORRUPTION_TYPES
+        {isFeatureVisible('crd.supplier.flagAnalysis')
+        && isFeatureVisible('crd.supplier.flagAnalysis.crosstab')
+        && CORRUPTION_TYPES
           .filter((corruptionType) => nrFlagsByCorruptionType[corruptionType])
           .map((corruptionType) => (
             <div key={corruptionType}>
@@ -273,74 +275,95 @@ const Supplier = (props) => {
               />
             </div>
           ))}
-        <h2>{t('crd:supplier:table:procurementsWon')}</h2>
-        <SupplierTable translations={translations} filters={supplierDatefulFilter} />
+        {isFeatureVisible('crd.supplier.procurements')
+        && (
+          <>
+            <h2>{t('crd:supplier:table:procurementsWon')}</h2>
+            <SupplierTable translations={translations} filters={supplierDatefulFilter} />
+          </>
+        )}
       </section>
     );
   };
 
   const maybeGetSections = () => {
-    const {
-      width, id, filters, styling, translations,
-    } = props;
+    const { width, styling } = props;
     const donutSize = width / 3 - window.innerWidth / 20;
     return (
       <div>
-        <section className="supplier-general-statistics">
-          <h2>{t('crd:supplier:generalStatistics')}</h2>
-          <div className="col-sm-4">
-            <NrLostVsWon
-              {...wirePropsPlain(props, 'nr-lost-vs-won')}
-              filters={injectBidderFilter(filters, id)}
-              width={donutSize}
-              styling={styling}
-            />
-          </div>
-          <div className="col-sm-4">
-            <AmountLostVsWon
-              {...wirePropsPlain(props, 'amount-lost-vs-won')}
-              filters={injectBidderFilter(filters, id)}
-              width={donutSize}
-              styling={styling}
-            />
-          </div>
-          <div className="col-sm-4">
-            <NrFlags
-              {...wirePropsPlain(props, 'nr-flags')}
-              filters={injectSupplierFilter(filters, id)}
-              width={donutSize}
-              styling={styling}
-            />
-          </div>
-        </section>
-        {flagRowState
+        {isFeatureVisible('crd.supplier.statistics')
+        && (
+          <section className="supplier-general-statistics">
+            <h2>{t('crd:supplier:generalStatistics')}</h2>
+            {isFeatureVisible('crd.supplier.statistics.nrLostVsWon')
+            && (
+              <div className="col-sm-4">
+                <NrLostVsWon
+                  {...wirePropsPlain(props, 'nr-lost-vs-won')}
+                  filters={injectBidderFilter(filters, id)}
+                  width={donutSize}
+                  styling={styling}
+                />
+              </div>
+            )}
+            {isFeatureVisible('crd.supplier.statistics.amountLostVsWon')
+            && (
+              <div className="col-sm-4">
+                <AmountLostVsWon
+                  {...wirePropsPlain(props, 'amount-lost-vs-won')}
+                  filters={injectBidderFilter(filters, id)}
+                  width={donutSize}
+                  styling={styling}
+                />
+              </div>
+            )}
+            {isFeatureVisible('crd.supplier.statistics.nrFlags')
+            && (
+              <div className="col-sm-4">
+                <NrFlags
+                  {...wirePropsPlain(props, 'nr-flags')}
+                  filters={injectSupplierFilter(filters, id)}
+                  width={donutSize}
+                  styling={styling}
+                />
+              </div>
+            )}
+          </section>
+        )}
+        {flagRowState && isFeatureVisible('crd.supplier.flagAnalysis')
         && (
         <section className="flag-analysis">
           <h2>
             {t('crd:contracts:flagAnalysis')}
           </h2>
-          <div className="col-sm-6">
-            <Zoomable zoomedWidth={width}>
-              <TitleBelow title={t('crd:supplier:winsAndLosses:title')}>
-                <WinsAndFlags
-                  translations={translations}
-                  data={flagRowState.winsAndFlagsData}
-                  length={flagRowState.maxCommonDataLength}
-                />
-              </TitleBelow>
-            </Zoomable>
-          </div>
-          <div className="col-sm-6">
-            <Zoomable zoomedWidth={width}>
-              <TitleBelow title={t('crd:supplier:flaggedNr:title')}>
-                <FlaggedNr
-                  translations={translations}
-                  data={flagRowState.flaggedNrData}
-                  length={flagRowState.maxCommonDataLength}
-                />
-              </TitleBelow>
-            </Zoomable>
-          </div>
+          {isFeatureVisible('crd.supplier.flagAnalysis.winsAndFlags')
+          && (
+            <div className="col-sm-6">
+              <Zoomable zoomedWidth={width}>
+                <TitleBelow title={t('crd:supplier:winsAndLosses:title')}>
+                  <WinsAndFlags
+                    translations={translations}
+                    data={flagRowState.winsAndFlagsData}
+                    length={flagRowState.maxCommonDataLength}
+                  />
+                </TitleBelow>
+              </Zoomable>
+            </div>
+          )}
+          {isFeatureVisible('crd.supplier.flagAnalysis.flaggedNr')
+          && (
+            <div className="col-sm-6">
+              <Zoomable zoomedWidth={width}>
+                <TitleBelow title={t('crd:supplier:flaggedNr:title')}>
+                  <FlaggedNr
+                    translations={translations}
+                    data={flagRowState.flaggedNrData}
+                    length={flagRowState.maxCommonDataLength}
+                  />
+                </TitleBelow>
+              </Zoomable>
+            </div>
+          )}
         </section>
         )}
         {maybeGetFlagAnalysis()}
@@ -355,16 +378,16 @@ const Supplier = (props) => {
         doSearch={doSearch}
         placeholder={t('crd:suppliers:top-search')}
       />
-      <BackendDateFilterable
-        {...wirePropsPlain(props, 'info')}
-      >
-        <Info
-          id={id}
-          filters={{}}
-          requestNewData={() => { }}
-        />
-      </BackendDateFilterable>
-
+      {isFeatureVisible('crd.supplier.info')
+      && (
+        <BackendDateFilterable {...wirePropsPlain(props, 'info')}>
+          <Info
+            id={id}
+            filters={{}}
+            requestNewData={() => { }}
+          />
+        </BackendDateFilterable>
+      )}
       {totalFlags === 0 && (
       <section className="flag-analysis">
         <h2>{t('crd:contracts:flagAnalysis')}</h2>
@@ -377,4 +400,19 @@ const Supplier = (props) => {
   );
 };
 
-export default Supplier;
+Supplier.propTypes = {
+  width: PropTypes.number.isRequired,
+  translations: PropTypes.object.isRequired,
+  doSearch: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
+  years: PropTypes.arrayOf(PropTypes.number),
+  months: PropTypes.arrayOf(PropTypes.number),
+  data: PropTypes.object,
+  styling: PropTypes.object.isRequired,
+  indicatorTypesMapping: PropTypes.object.isRequired,
+  isFeatureVisible: PropTypes.func.isRequired,
+  requestNewData: PropTypes.func.isRequired,
+};
+
+export default fmConnect(Supplier);

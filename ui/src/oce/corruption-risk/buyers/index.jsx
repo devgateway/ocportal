@@ -97,24 +97,29 @@ class BuyerList extends PaginatedTable {
           {
             text: this.t('crd:suppliers:ID'),
             dataField: 'id',
+            fm: 'crd.buyers.col.id',
             formatter: mkLink(navigate),
           },
           {
             text: this.t('crd:suppliers:name'),
             dataField: 'name',
+            fm: 'crd.buyers.col.name',
             formatter: mkLink(navigate),
           },
           {
             text: this.t('crd:procuringEntities:noOfTenders'),
             dataField: 'nrTenders',
+            fm: 'crd.buyers.col.nrTenders',
           },
           {
             text: this.t('crd:procuringEntities:noOfAwards'),
             dataField: 'nrAwards',
+            fm: 'crd.buyers.col.nrAwards',
           },
           {
             text: this.t('crd:procurementsTable:noOfFlags'),
             dataField: 'nrFlags',
+            fm: 'crd.buyers.col.nrFlags',
           },
         ]}
       />

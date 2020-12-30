@@ -1,9 +1,11 @@
+import React from 'react';
 import CustomPopupChart from '../custom-popup-chart';
 import { pluckImm } from '../../tools';
 import translatable from '../../translatable';
 import CRDPage from '../page';
 import { colorLuminance, sortByField } from '../tools';
 import ProcurementsTable from './table';
+import fmConnect from '../../fm/fm';
 
 class IndividualIndicatorChart extends CustomPopupChart {
   getCustomEP() {
@@ -121,11 +123,17 @@ class IndividualIndicatorChart extends CustomPopupChart {
           <div className="col-sm-12">
             <hr />
           </div>
-          <div className="col-sm-8 text-right title">{this.t('crd:indicatorPage:individualIndicatorChart:popup:procurementsFlagged')}</div>
+          <div className="col-sm-8 text-right title">
+            {this.t('crd:indicatorPage:individualIndicatorChart:popup:procurementsFlagged')}
+          </div>
           <div className="col-sm-4 text-left info">{datum.get('totalTrue')}</div>
-          <div className="col-sm-8 text-right title">{this.t('crd:indicatorPage:individualIndicatorChart:popup:eligibleProcurements')}</div>
+          <div className="col-sm-8 text-right title">
+            {this.t('crd:indicatorPage:individualIndicatorChart:popup:eligibleProcurements')}
+          </div>
           <div className="col-sm-4 text-left info">{datum.get('totalPrecondMet')}</div>
-          <div className="col-sm-8 text-right title">{this.t('crd:indicatorPage:individualIndicatorChart:popup:percentOfEligibleFlagged')}</div>
+          <div className="col-sm-8 text-right title">
+            {this.t('crd:indicatorPage:individualIndicatorChart:popup:percentOfEligibleFlagged')}
+          </div>
           <div className="col-sm-4 text-left info">
             {datum.get('percentTruePrecondMet').toFixed(2)}
             {' '}
@@ -156,7 +164,7 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
     const { chart, table } = this.state;
     const {
       corruptionType, indicator, translations, filters, years, monthly, months, width,
-      styling, navigate,
+      styling, navigate, isFeatureVisible,
     } = this.props;
 
     return (
@@ -182,48 +190,56 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
           &nbsp;
           {this.t(`crd:indicators:${indicator}:description`)}
         </p>
-        <section>
-          <h3 className="page-header">
-            {this.t('crd:indicatorPage:individualIndicatorChart:title').replace('$#$', this.t(`crd:indicators:${indicator}:name`))}
-          </h3>
-          <IndividualIndicatorChart
-            indicator={indicator}
-            translations={translations}
-            filters={filters}
-            years={years}
-            monthly={monthly}
-            months={months}
-            requestNewData={(_, data) => this.setState({ chart: data })}
-            data={chart}
-            width={width - 20}
-            styling={styling}
-            margin={{
-              t: 0, b: 80, r: 100, pad: 40,
-            }}
-          />
-        </section>
-        <section className="table-section">
-          <h3 className="page-header">
-            {this.t('crd:indicatorPage:projectTable:title').replace('$#$', this.t(`crd:indicators:${indicator}:name`))}
-          </h3>
-          <ProcurementsTable
-            dataEP={`flags/${indicator}/releases?flagType=${corruptionType}`}
-            countEP={`flags/${indicator}/count?flagType=${corruptionType}`}
-            indicator={indicator}
-            corruptionType={corruptionType}
-            requestNewData={(_, data) => this.setState({ table: data })}
-            data={table}
-            translations={translations}
-            filters={filters}
-            years={years}
-            monthly={monthly}
-            months={months}
-            navigate={navigate}
-          />
-        </section>
+        {isFeatureVisible('crd.flag.indicator.chart')
+        && (
+          <section>
+            <h3 className="page-header">
+              {this.t('crd:indicatorPage:individualIndicatorChart:title')
+                .replace('$#$', this.t(`crd:indicators:${indicator}:name`))}
+            </h3>
+            <IndividualIndicatorChart
+              indicator={indicator}
+              translations={translations}
+              filters={filters}
+              years={years}
+              monthly={monthly}
+              months={months}
+              requestNewData={(_, data) => this.setState({ chart: data })}
+              data={chart}
+              width={width - 20}
+              styling={styling}
+              margin={{
+                t: 0, b: 80, r: 100, pad: 40,
+              }}
+            />
+          </section>
+        )}
+        {isFeatureVisible('crd.flag.indicator.procurements')
+        && (
+          <section className="table-section">
+            <h3 className="page-header">
+              {this.t('crd:indicatorPage:projectTable:title')
+                .replace('$#$', this.t(`crd:indicators:${indicator}:name`))}
+            </h3>
+            <ProcurementsTable
+              dataEP={`flags/${indicator}/releases?flagType=${corruptionType}`}
+              countEP={`flags/${indicator}/count?flagType=${corruptionType}`}
+              indicator={indicator}
+              corruptionType={corruptionType}
+              requestNewData={(_, data) => this.setState({ table: data })}
+              data={table}
+              translations={translations}
+              filters={filters}
+              years={years}
+              monthly={monthly}
+              months={months}
+              navigate={navigate}
+            />
+          </section>
+        )}
       </div>
     );
   }
 }
 
-export default IndividualIndicatorPage;
+export default fmConnect(IndividualIndicatorPage);

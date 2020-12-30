@@ -1,5 +1,6 @@
 import React from 'react';
 import { List } from 'immutable';
+import PropTypes from 'prop-types';
 import { cacheFn, pluckImm } from '../tools';
 import CustomPopupChart from './custom-popup-chart';
 import translatable from '../translatable';
@@ -8,6 +9,7 @@ import { colorLuminance, sortByField } from './tools';
 import Crosstab from './crosstab';
 import Visualization from '../visualization';
 import frontendDateFilterable from '../visualizations/frontend-date-filterable';
+import fmConnect from '../fm/fm';
 
 class IndicatorTile extends CustomPopupChart {
   getData() {
@@ -234,52 +236,64 @@ class CorruptionType extends translatable(CRDPage) {
   render() {
     const {
       indicators, onGotoIndicator, corruptionType, filters, years, monthly, months,
-      translations, width, styling,
+      translations, width, styling, isFeatureVisible,
     } = this.props;
     const { crosstab, indicatorTiles } = this.state;
     if (!indicators || !indicators.length) return null;
 
     return (
       <div className="page-corruption-type">
-        <h2 className="page-header">{this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}</h2>
-        <p
-          className="introduction"
-          dangerouslySetInnerHTML={{ __html: this.t(`crd:corruptionType:${corruptionType}:introduction`) }}
-        />
-        <AllTiles
-          corruptionType={corruptionType}
-          onGotoIndicator={onGotoIndicator}
-          indicatorTiles={indicatorTiles}
-          indicators={indicators}
-          filters={filters}
-          years={years}
-          months={months}
-          monthly={monthly}
-          width={width}
-          styling={styling}
-          translations={translations}
-          requestNewData={(_, data) => this.setState({ indicatorTiles: data })}
-        />
-        <section>
-          <h3 className="page-header">
-            {this.t(`crd:corruptionType:${corruptionType}:crosstabTitle`)}
-          </h3>
-          <p className="introduction">{this.t(`crd:corruptionType:${corruptionType}:crosstab`)}</p>
-          <Crosstab
-            styling={styling}
-            filters={filters}
-            years={years}
-            monthly={monthly}
-            months={months}
-            indicators={indicators}
-            data={crosstab}
-            requestNewData={(_, data) => this.setState({ crosstab: data })}
-            translations={translations}
-          />
-        </section>
+        {isFeatureVisible('crd.flag.overview.charts')
+        && (
+          <>
+            <h2 className="page-header">{this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}</h2>
+            <p
+              className="introduction"
+              dangerouslySetInnerHTML={{ __html: this.t(`crd:corruptionType:${corruptionType}:introduction`) }}
+            />
+            <AllTiles
+              corruptionType={corruptionType}
+              onGotoIndicator={onGotoIndicator}
+              indicatorTiles={indicatorTiles}
+              indicators={indicators}
+              filters={filters}
+              years={years}
+              months={months}
+              monthly={monthly}
+              width={width}
+              styling={styling}
+              translations={translations}
+              requestNewData={(_, data) => this.setState({ indicatorTiles: data })}
+            />
+          </>
+        )}
+        {isFeatureVisible('crd.flag.overview.crosstab')
+        && (
+          <section>
+            <h3 className="page-header">
+              {this.t(`crd:corruptionType:${corruptionType}:crosstabTitle`)}
+            </h3>
+            <p className="introduction">{this.t(`crd:corruptionType:${corruptionType}:crosstab`)}</p>
+            <Crosstab
+              styling={styling}
+              filters={filters}
+              years={years}
+              monthly={monthly}
+              months={months}
+              indicators={indicators}
+              data={crosstab}
+              requestNewData={(_, data) => this.setState({ crosstab: data })}
+              translations={translations}
+            />
+          </section>
+        )}
       </div>
     );
   }
 }
 
-export default CorruptionType;
+CorruptionType.propTypes = {
+  isFeatureVisible: PropTypes.func.isRequired,
+};
+
+export default fmConnect(CorruptionType);

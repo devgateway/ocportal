@@ -102,24 +102,29 @@ class PEList extends PaginatedTable {
           {
             text: this.t('crd:suppliers:ID'),
             dataField: 'id',
+            fm: 'crd.procuringEntities.col.id',
             formatter: mkLink(navigate),
           },
           {
             text: this.t('crd:suppliers:name'),
             dataField: 'name',
+            fm: 'crd.procuringEntities.col.name',
             formatter: mkLink(navigate),
           },
           {
             text: this.t('crd:procuringEntities:noOfTenders'),
             dataField: 'nrTenders',
+            fm: 'crd.procuringEntities.col.nrTenders',
           },
           {
             text: this.t('crd:procuringEntities:noOfAwards'),
             dataField: 'nrAwards',
+            fm: 'crd.procuringEntities.col.nrAwards',
           },
           {
             text: this.t('crd:procurementsTable:noOfFlags'),
             dataField: 'nrFlags',
+            fm: 'crd.procuringEntities.col.nrFlags',
           },
         ]}
       />

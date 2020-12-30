@@ -107,55 +107,52 @@ const MakueniTenders = (props) => {
         data-step={showDataStep() ? 11 : ''}
         data-intro={showDataStep() ? 'Click to download the tender document hardcopy.' : ''}
       >
-        {isFeatureVisible('publicView.tendersProcessList.tenderDocs')
+        {isFeatureVisible('publicView.tendersProcesses.tenderDocs')
       && downloadFiles(tender)}
 
-        {isFeatureVisible('publicView.tendersProcessList.tenderLink')
+        {isFeatureVisible('publicView.tendersProcesses.tenderLink')
       && downloadLinks(tender)}
       </div>
     );
   };
 
-  const { navigate, route, isFeatureVisible } = props;
+  const { navigate, route } = props;
   const [navigationPage, id] = route;
 
   const columns = [{
     text: t('tables:tenders:col:title'),
     dataField: 'tender.tenderTitle',
     formatter: tenderLink(navigate),
-    visible: isFeatureVisible('publicView.tendersProcessList.tenderTitle'),
+    fm: 'publicView.tendersProcesses.col.tenderTitle',
   }, {
     text: t('tables:tenders:col:department'),
     dataField: 'department',
-    visible: isFeatureVisible('publicView.tendersProcessList.department'),
+    fm: 'publicView.tendersProcesses.col.department',
   }, {
     text: t('tables:tenders:col:fiscalYear'),
     dataField: 'fiscalYear',
-    visible: isFeatureVisible('publicView.tendersProcessList.fiscalYear'),
+    fm: 'publicView.tendersProcesses.col.fiscalYear',
   }, {
     text: t('tables:tenders:col:closingDate'),
     dataField: 'tender.closingDate',
     formatter: (closingDate) => (closingDate !== undefined ? new Date(closingDate).toLocaleDateString() : ''),
-    visible: isFeatureVisible('publicView.tendersProcessList.closingDate'),
+    fm: 'publicView.tendersProcesses.col.closingDate',
   }, {
     text: t('tables:tenders:col:tenderValue'),
     dataField: 'tender.tenderValue',
     formatter: (tenderValue) => (tenderValue !== undefined ? props.styling.charts.hoverFormatter(tenderValue) : ''),
-    visible: isFeatureVisible('publicView.tendersProcessList.tenderValue'),
+    fm: 'publicView.tendersProcesses.col.tenderValue',
   }, {
     text: t('tables:tenders:col:project'),
     dataField: 'project',
     formatter: projectLink(navigate),
-    visible: isFeatureVisible('publicView.tendersProcessList.project'),
+    fm: 'publicView.tendersProcesses.col.project',
   }, {
     text: t('tables:tenders:col:documents'),
     dataField: 'tender',
     formatter: linksAndFiles(),
-    visible: isFeatureVisible('publicView.tendersProcessList.tenderLink')
-        || isFeatureVisible('publicView.tendersProcessList.tenderDocs'),
+    fm: 'publicView.tendersProcesses.col.tenderDocsOrLink',
   }];
-
-  const visibleColumns = columns.filter((c) => c.visible);
 
   return (
     <div className="container-fluid dashboard-default">
@@ -190,7 +187,7 @@ const MakueniTenders = (props) => {
                 onPageChange={setImmer(updatePage)}
                 onSizePerPageList={setImmer(updatePageSize)}
                 count={dataWithCount.count}
-                columns={visibleColumns}
+                columns={columns}
               />
             </div>
           )}

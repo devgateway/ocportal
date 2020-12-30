@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { createSelector } from '@reduxjs/toolkit';
 import { fetchAllInfo } from './api';
+import fmConnect from '../../../fm/fm';
 
 const procuringEntityFiltersSelector = createSelector(
   [(props) => props.id, (props) => props.filters, (props) => props.years, (props) => props.months],
@@ -25,7 +26,7 @@ const procuringEntityFiltersSelector = createSelector(
 );
 
 const ProcuringEntity = ({
-  translations, doSearch, width, navigate, ...otherProps
+  translations, doSearch, width, navigate, isFeatureVisible, ...otherProps
 }) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -59,85 +60,111 @@ const ProcuringEntity = ({
       {state
       && (
       <>
-        <Info
-          info={state.info}
-          flagsCount={state.flagsCount}
-          buyers={state.buyers}
-          contractsCount={state.contractsCount}
-          unflaggedContractsCount={state.unflaggedContractsCount}
-          translations={translations}
-        />
-        <section className="pe-general-statistics">
-          <h2>{t('crd:procuringEntities:generalStatistics')}</h2>
-          <div className="row">
-            <div className="col-sm-6">
-              <Zoomable zoomedWidth={width}>
-                <TitleBelow title={t('crd:procuringEntities:byStatus:title')}>
-                  <ProcurementsByStatus
-                    data={state.procurementsByStatusData}
-                    length={state.maxCommonDataLength}
-                    translations={translations}
-                  />
-                </TitleBelow>
-              </Zoomable>
+        {isFeatureVisible('crd.procuringEntity.info')
+        && (
+          <Info
+            info={state.info}
+            flagsCount={state.flagsCount}
+            buyers={state.buyers}
+            contractsCount={state.contractsCount}
+            unflaggedContractsCount={state.unflaggedContractsCount}
+            translations={translations}
+          />
+        )}
+        {isFeatureVisible('crd.procuringEntity.statistics')
+        && (
+          <section className="pe-general-statistics">
+            <h2>{t('crd:procuringEntities:generalStatistics')}</h2>
+            <div className="row">
+              {isFeatureVisible('crd.procuringEntity.statistics.procurementsByStatus')
+              && (
+                <div className="col-sm-6">
+                  <Zoomable zoomedWidth={width}>
+                    <TitleBelow title={t('crd:procuringEntities:byStatus:title')}>
+                      <ProcurementsByStatus
+                        data={state.procurementsByStatusData}
+                        length={state.maxCommonDataLength}
+                        translations={translations}
+                      />
+                    </TitleBelow>
+                  </Zoomable>
+                </div>
+              )}
+              {isFeatureVisible('crd.procuringEntity.statistics.procurementsByMethod')
+              && (
+                <div className="col-sm-6">
+                  <Zoomable zoomedWidth={width}>
+                    <TitleBelow title={t('crd:procuringEntities:byMethod:title')}>
+                      <ProcurementsByMethod
+                        data={state.procurementsByMethodData}
+                        length={state.maxCommonDataLength}
+                        translations={translations}
+                      />
+                    </TitleBelow>
+                  </Zoomable>
+                </div>
+              )}
             </div>
-            <div className="col-sm-6">
-              <Zoomable zoomedWidth={width}>
-                <TitleBelow title={t('crd:procuringEntities:byMethod:title')}>
-                  <ProcurementsByMethod
-                    data={state.procurementsByMethodData}
-                    length={state.maxCommonDataLength}
-                    translations={translations}
-                  />
-                </TitleBelow>
-              </Zoomable>
+          </section>
+        )}
+
+        {isFeatureVisible('crd.procuringEntity.flagAnalysis')
+        && (
+          <section className="flag-analysis">
+            <h2>
+              {t('crd:contracts:flagAnalysis')}
+            </h2>
+            <div className="row">
+              {isFeatureVisible('crd.procuringEntity.flagAnalysis.winsAndFlags')
+              && (
+                <div className="col-sm-6">
+                  <Zoomable zoomedWidth={width}>
+                    <TitleBelow title={t('crd:procuringEntity:winsAndFlags:title')}>
+                      <WinsAndFlags
+                        data={state.winsAndFlagsData}
+                        length={state.max2ndRowCommonDataLength}
+                        translations={translations}
+                      />
+                    </TitleBelow>
+                  </Zoomable>
+                </div>
+              )}
+              {isFeatureVisible('crd.procuringEntity.flagAnalysis.flaggedNr')
+              && (
+                <div className="col-sm-6">
+                  <Zoomable zoomedWidth={width}>
+                    <TitleBelow title={t('crd:procuringEntity:flaggedNr:title')}>
+                      <FlaggedNr
+                        data={state.flaggedNrData}
+                        length={state.max2ndRowCommonDataLength}
+                        translations={translations}
+                      />
+                    </TitleBelow>
+                  </Zoomable>
+                </div>
+              )}
             </div>
-          </div>
-        </section>
-        <section className="flag-analysis">
-          <h2>
-            {t('crd:contracts:flagAnalysis')}
-          </h2>
-          <div className="row">
-            <div className="col-sm-6">
-              <Zoomable zoomedWidth={width}>
-                <TitleBelow title={t('crd:procuringEntity:winsAndFlags:title')}>
-                  <WinsAndFlags
-                    data={state.winsAndFlagsData}
-                    length={state.max2ndRowCommonDataLength}
-                    translations={translations}
-                  />
-                </TitleBelow>
-              </Zoomable>
-            </div>
-            <div className="col-sm-6">
-              <Zoomable zoomedWidth={width}>
-                <TitleBelow title={t('crd:procuringEntity:flaggedNr:title')}>
-                  <FlaggedNr
-                    data={state.flaggedNrData}
-                    length={state.max2ndRowCommonDataLength}
-                    translations={translations}
-                  />
-                </TitleBelow>
-              </Zoomable>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
       </>
       )}
-      <section>
-        {state && (
-        <h2>
-          Procurements by
-          {state.info.name}
-        </h2>
-        )}
-        <ProcurementsTable
-          filters={peFilters}
-          translations={translations}
-          navigate={navigate}
-        />
-      </section>
+      {isFeatureVisible('crd.procuringEntity.procurements')
+      && (
+        <section>
+          {state && (
+            <h2>
+              Procurements by
+              {state.info.name}
+            </h2>
+          )}
+          <ProcurementsTable
+            filters={peFilters}
+            translations={translations}
+            navigate={navigate}
+            fmPrefix="crd.procuringEntity.procurements.col"
+          />
+        </section>
+      )}
     </div>
   );
 };
@@ -149,4 +176,4 @@ ProcuringEntity.propTypes = {
   months: PropTypes.array,
 };
 
-export default ProcuringEntity;
+export default fmConnect(ProcuringEntity);

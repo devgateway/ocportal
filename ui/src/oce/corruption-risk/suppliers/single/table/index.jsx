@@ -65,6 +65,7 @@ const Table = ({ filters, translations }) => {
       columns={[{
         text: t('crd:contracts:baseInfo:procuringEntityName'),
         dataField: 'PEName',
+        fm: 'crd.supplier.procurements.col.procuringEntityName',
         className: 'pe-name',
         columnClassName: 'pe-name',
         formatter: formatPE,
@@ -74,19 +75,23 @@ const Table = ({ filters, translations }) => {
       }, {
         text: t('crd:contracts:list:awardAmount'),
         dataField: 'awardAmount',
+        fm: 'crd.supplier.procurements.col.awardAmount',
       }, {
         text: t('crd:contracts:baseInfo:awardDate'),
         dataField: 'awardDate',
+        fm: 'crd.supplier.procurements.col.awardDate',
         formatter: formatDate,
       }, {
         text: t('crd:supplier:table:nrBidders'),
         dataField: 'nrBidders',
+        fm: 'crd.supplier.procurements.col.nrBidders',
         headerStyle: {
           width: '10%',
         },
       }, {
         text: t('crd:procurementsTable:noOfFlags'),
         dataField: 'dummy1',
+        fm: 'crd.supplier.procurements.col.nrFlags',
         formatter: formatTypes,
         headerStyle: {
           width: '25%',
@@ -94,6 +99,7 @@ const Table = ({ filters, translations }) => {
       }, {
         text: t('crd:supplier:table:flagName'),
         dataField: 'dummy2',
+        fm: 'crd.supplier.procurements.col.flags',
         formatter: formatFlags,
         headerStyle: {
           width: '25%',

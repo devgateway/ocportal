@@ -4,7 +4,6 @@ import '../makueni.scss';
 import ProcurementPlan from './single/procurementPlan';
 import React, { useEffect } from 'react';
 import Footer from '../../layout/footer';
-import fmConnect from '../../fm/fm';
 import FileDownloadLinks from '../tenders/single/FileDownloadLinks';
 import FiltersProcurementPlanWrapper from '../filters/FiltersProcurementPlanWrapper';
 import { tCreator } from '../../translatable';
@@ -83,7 +82,7 @@ const MakueniProcurementPlans = (props) => {
     </div>
   );
 
-  const { navigate, route, isFeatureVisible } = props;
+  const { navigate, route } = props;
   const [navigationPage, id] = route;
 
   const columns = [{
@@ -93,23 +92,21 @@ const MakueniProcurementPlans = (props) => {
       width: '20%',
     },
     formatter: ppLink(navigate),
-    fm: 'publicView.procurementPlansList.id',
+    fm: 'publicView.procurementPlans.col.id',
   }, {
     text: t('tables:procurementPlans:col:dpt'),
     dataField: 'department',
-    fm: 'publicView.procurementPlansList.department',
+    fm: 'publicView.procurementPlans.col.department',
   }, {
     text: t('tables:procurementPlans:col:fy'),
     dataField: 'fiscalYear',
-    fm: 'publicView.procurementPlansList.fiscalYear',
+    fm: 'publicView.procurementPlans.col.fiscalYear',
   }, {
     text: t('tables:procurementPlans:col:ppf'),
     dataField: 'formDocs',
     formatter: downloadFiles(),
-    fm: 'publicView.procurementPlansList.formDocs',
+    fm: 'publicView.procurementPlans.col.formDocs',
   }];
-
-  const visibleColumns = columns.filter((c) => isFeatureVisible(c.fm));
 
   return (
     <div className="container-fluid dashboard-default">
@@ -145,7 +142,7 @@ const MakueniProcurementPlans = (props) => {
                   onPageChange={setPage}
                   onSizePerPageList={setPageSize}
                   count={state.count}
-                  columns={visibleColumns}
+                  columns={columns}
                 />
               </div>
             )
@@ -197,4 +194,4 @@ MakueniProcurementPlans.propTypes = {
   styling: PropTypes.object.isRequired,
 };
 
-export default fmConnect(MakueniProcurementPlans);
+export default MakueniProcurementPlans;

@@ -16,6 +16,7 @@ import '../style.scss';
 import DataFetcher from '../../data-fetcher';
 import { cacheFn } from '../../../tools';
 import flag from '../../../resources/icons/flag.svg';
+import fmConnect from '../../../fm/fm';
 
 class CrosstabExplanation extends translatable(React.PureComponent) {
   render() {
@@ -215,7 +216,7 @@ class Info extends translatable(Visualization) {
   }
 }
 
-export default class Contract extends CRDPage {
+class Contract extends CRDPage {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -325,7 +326,7 @@ export default class Contract extends CRDPage {
     const { contract } = this.state;
 
     const {
-      id, translations, doSearch, filters, width, gotoSupplier, styling,
+      id, translations, doSearch, filters, width, gotoSupplier, styling, isFeatureVisible,
     } = this.props;
 
     if (!contract) return null;
@@ -346,62 +347,80 @@ export default class Contract extends CRDPage {
           translations={translations}
           placeholder={this.t('crd:contracts:top-search')}
         />
-        <Info
-          id={id}
-          data={contract}
-          supplier={supplier}
-          filters={filters}
-          requestNewData={(_, contract) => this.setState({ contract })}
-          translations={translations}
-          gotoSupplier={gotoSupplier}
-        />
-
-        <section className="contract-statistics">
-          <h2>
-            {this.t('crd:contracts:contractStatistics')}
-          </h2>
-          <div className="col-sm-4">
-            <CustomPopup
-              count={contract.getIn(['tender', 'tenderers'], List()).count()}
-              contract={contract}
-              {...wireProps(this, 'nrOfBidders')}
-              Popup={DonutPopup}
-              Chart={NrOfBidders}
-              width={donutSize}
-              styling={styling}
-            />
-          </div>
-          <div className="col-sm-4">
-            {procuringEntityId && supplier
-              && (
-              <CustomPopup
-                procuringEntityId={procuringEntityId}
-                supplierId={supplier.get('id')}
-                {...wireProps(this, 'nrContracts')}
-                Popup={DonutPopup}
-                Chart={NrOfContractsWithThisPE}
-                width={donutSize}
-                styling={styling}
-              />
-              )}
-          </div>
-          <div className="col-sm-4">
-            {procuringEntityId && supplier
-              && (
-              <CustomPopup
-                procuringEntityId={procuringEntityId}
-                supplierId={supplier.get('id')}
-                {...wireProps(this, 'percentPESpending')}
-                Popup={PercentPESpendingPopup}
-                Chart={PercentPESpending}
-                width={donutSize}
-                styling={styling}
-              />
-              )}
-          </div>
-        </section>
-        {this.maybeGetFlagAnalysis()}
+        {isFeatureVisible('crd.contract.info')
+        && (
+          <Info
+            id={id}
+            data={contract}
+            supplier={supplier}
+            filters={filters}
+            requestNewData={(_, contract) => this.setState({ contract })}
+            translations={translations}
+            gotoSupplier={gotoSupplier}
+          />
+        )}
+        {isFeatureVisible('crd.contract.statistics')
+        && (
+          <section className="contract-statistics">
+            <h2>
+              {this.t('crd:contracts:contractStatistics')}
+            </h2>
+            {isFeatureVisible('crd.contract.statistics.nrOfBidders')
+            && (
+              <div className="col-sm-4">
+                <CustomPopup
+                  count={contract.getIn(['tender', 'tenderers'], List()).count()}
+                  contract={contract}
+                  {...wireProps(this, 'nrOfBidders')}
+                  Popup={DonutPopup}
+                  Chart={NrOfBidders}
+                  width={donutSize}
+                  styling={styling}
+                />
+              </div>
+            )}
+            {isFeatureVisible('crd.contract.statistics.nrOfContractsWithThisPE')
+            && (
+              <div className="col-sm-4">
+                {procuringEntityId && supplier
+                && (
+                  <CustomPopup
+                    procuringEntityId={procuringEntityId}
+                    supplierId={supplier.get('id')}
+                    {...wireProps(this, 'nrContracts')}
+                    Popup={DonutPopup}
+                    Chart={NrOfContractsWithThisPE}
+                    width={donutSize}
+                    styling={styling}
+                  />
+                )}
+              </div>
+            )}
+            {isFeatureVisible('crd.contract.statistics.percentPESpending')
+            && (
+              <div className="col-sm-4">
+                {procuringEntityId && supplier
+                && (
+                  <CustomPopup
+                    procuringEntityId={procuringEntityId}
+                    supplierId={supplier.get('id')}
+                    {...wireProps(this, 'percentPESpending')}
+                    Popup={PercentPESpendingPopup}
+                    Chart={PercentPESpending}
+                    width={donutSize}
+                    styling={styling}
+                  />
+                )}
+              </div>
+            )}
+          </section>
+        )}
+        {isFeatureVisible('crd.contract.flagAnalysis')
+        && isFeatureVisible('crd.contract.flagAnalysis.crosstab')
+        && this.maybeGetFlagAnalysis()}
       </div>
     );
   }
 }
+
+export default fmConnect(Contract);

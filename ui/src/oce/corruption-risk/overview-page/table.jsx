@@ -135,41 +135,50 @@ class ProcurementsTable extends PaginatedTable {
           {
             text: this.t('crd:procurementsTable:status'),
             dataField: 'status',
+            fm: 'crd.overview.procurementProcesses.col.status',
           },
           {
             text: this.t('crd:procurementsTable:contractID'),
             dataField: 'id',
+            fm: 'crd.overview.procurementProcesses.col.contractId',
             formatter: mkContractLink(navigate),
           },
           {
             text: this.t('crd:procurementsTable:title'),
             dataField: 'title',
+            fm: 'crd.overview.procurementProcesses.col.title',
             formatter: mkContractLink(navigate),
           },
           {
             text: this.t('crd:procurementsTable:procuringEntity'),
             dataField: 'PEName',
+            fm: 'crd.overview.procurementProcesses.col.procuringEntity',
             formatter: _3LineText,
           },
           {
             text: this.t('crd:procurementsTable:tenderAmount'),
             dataField: 'tenderAmount',
+            fm: 'crd.overview.procurementProcesses.col.tenderAmount',
           },
           {
             text: this.t('crd:procurementsTable:awardsAmount'),
             dataField: 'awardsAmount',
+            fm: 'crd.overview.procurementProcesses.col.awardsAmount',
           },
           {
             text: this.t('crd:procurementsTable:tenderDate'),
             dataField: 'tenderDate',
+            fm: 'crd.overview.procurementProcesses.col.tenderDate',
           },
           {
             text: this.t('crd:procurementsTable:flagType'),
             dataField: 'flagTypeName',
+            fm: 'crd.overview.procurementProcesses.col.flagType',
           },
           {
             text: this.t('crd:procurementsTable:noOfFlags'),
             dataField: 'flagIds',
+            fm: 'crd.overview.procurementProcesses.col.nrFlags',
             formatter: (_, popupData) => this.renderPopup(popupData),
             classes: 'hoverable popup-left',
           },

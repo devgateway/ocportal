@@ -23,7 +23,10 @@ class Popup extends translatable(React.Component) {
       <div className="crd-popup text-center" style={{ top: popupTop, transform: 'none' }}>
         <div className="row">
           <div className="col-sm-12 info">
-            <h5>{this.t('crd:procurementsTable:associatedFlags').replace('$#$', this.t(`crd:corruptionType:${type}:name`))}</h5>
+            <h5>
+              {this.t('crd:procurementsTable:associatedFlags')
+                .replace('$#$', this.t(`crd:corruptionType:${type}:name`))}
+            </h5>
           </div>
           <div className="col-sm-12">
             <hr />
@@ -139,40 +142,46 @@ class ProcurementsTable extends PaginatedTable {
           {
             text: this.t('crd:procurementsTable:status'),
             dataField: 'status',
+            fm: 'crd.flag.indicator.procurements.col.status',
           },
           {
             text: this.t('crd:procurementsTable:contractID'),
             dataField: 'id',
+            fm: 'crd.flag.indicator.procurements.col.contractId',
             formatter: mkContractLink(navigate),
           },
           {
             text: this.t('crd:procurementsTable:title'),
             dataField: 'title',
+            fm: 'crd.flag.indicator.procurements.col.title',
             formatter: mkContractLink(navigate),
           },
           {
             text: this.t('crd:procurementsTable:procuringEntity'),
             dataField: 'PEName',
+            fm: 'crd.flag.indicator.procurements.col.procuringEntity',
             formatter: _3LineText,
           },
           {
             text: this.t('crd:procurementsTable:tenderAmount'),
+            fm: 'crd.flag.indicator.procurements.col.tenderAmount',
             dataField: 'tenderAmount',
           },
           {
             text: this.t('crd:procurementsTable:awardsAmount'),
+            fm: 'crd.flag.indicator.procurements.col.awardsAmount',
             dataField: 'awardsAmount',
           },
           {
             text: this.t('crd:procurementsTable:tenderDate'),
+            fm: 'crd.flag.indicator.procurements.col.tenderDate',
             dataField: 'tenderDate',
           },
           {
-            text: this.t('crd:procurementsTable:individualIndicator:noOfFlags').replace(
-              '$#$',
-              this.t(`crd:corruptionType:${corruptionType}:name`),
-            ),
+            text: this.t('crd:procurementsTable:individualIndicator:noOfFlags')
+              .replace('$#$', this.t(`crd:corruptionType:${corruptionType}:name`)),
             dataField: 'dummy1',
+            fm: 'crd.flag.indicator.procurements.col.nrFlags',
             formatter: (_, popupData) => this.renderPopup(popupData),
             classes: 'hoverable popup-left',
           },

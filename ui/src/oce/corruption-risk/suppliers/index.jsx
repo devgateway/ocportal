@@ -64,28 +64,34 @@ class SList extends PaginatedTable {
           {
             text: this.t('crd:suppliers:name'),
             dataField: 'name',
+            fm: 'crd.suppliers.col.name',
             formatter: mkLink(navigate),
           },
           {
             text: this.t('crd:suppliers:ID'),
             dataField: 'id',
+            fm: 'crd.suppliers.col.id',
             formatter: mkLink(navigate),
           },
           {
             text: this.t('crd:suppliers:wins'),
             dataField: 'wins',
+            fm: 'crd.suppliers.col.wins',
           },
           {
             text: this.t('crd:suppliers:losses'),
             dataField: 'losses',
+            fm: 'crd.suppliers.col.losses',
           },
           {
             text: this.t('crd:suppliers:totalWon'),
             dataField: 'winAmount',
+            fm: 'crd.suppliers.col.totalWon',
           },
           {
             text: this.t('crd:suppliers:nrFlags'),
             dataField: 'flags',
+            fm: 'crd.suppliers.col.nrFlags',
           },
         ]}
       />

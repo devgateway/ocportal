@@ -5,6 +5,7 @@ import { debounce, pluckImm } from '../tools';
 import backendYearFilterable from '../backend-year-filterable';
 import Visualization from '../visualization';
 import translatable from '../translatable';
+import fmConnect from '../fm/fm';
 
 class TotalFlagsChart extends backendYearFilterable(Chart) {
   getData() {
@@ -173,4 +174,4 @@ class TotalFlags extends translatable(React.Component) {
   }
 }
 
-export default TotalFlags;
+export default fmConnect(TotalFlags, 'crd.sidebar.totalFlags');

@@ -1,6 +1,7 @@
 import React from 'react';
 import translatable from '../../translatable';
 import './style.scss';
+import fmConnect from '../../fm/fm';
 
 class TopSearch extends translatable(React.Component) {
   constructor(props, ...rest) {
@@ -76,4 +77,4 @@ class TopSearch extends translatable(React.Component) {
   }
 }
 
-export default TopSearch;
+export default fmConnect(TopSearch, 'crd.textSearch');

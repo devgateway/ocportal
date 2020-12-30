@@ -8,7 +8,7 @@ export const LOADING = 'loading';
 export const loadFM = createAsyncThunk(
   'fm/load',
   () => fetch('/fm/featureProperties', {
-    fmPrefixes: ['viz.', 'publicView'],
+    fmPrefixes: ['viz.', 'publicView', 'crd.'],
   }),
   {
     condition: (arg, { getState }) => getState().fm.status === NOT_INITIALIZED,

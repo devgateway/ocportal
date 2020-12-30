@@ -7,6 +7,7 @@ import paginationFactory, {
 } from 'react-bootstrap-table2-paginator';
 import PropTypes from 'prop-types';
 import './styles.scss';
+import fmConnect from '../../fm/fm';
 
 /* eslint-disable react/jsx-props-no-spreading */
 
@@ -31,43 +32,47 @@ const BootstrapTableWrapper = ({
   count,
   containerClass,
   bordered,
-}) => (
-  <PaginationProvider
-    pagination={paginationFactory({
-      custom: true,
-      withFirstAndLast: true,
-      page,
-      sizePerPage: pageSize,
-      totalSize: count,
-      sizePerPageList: [20, 50, 100, 200].map((value) => ({ text: value, value })),
-    })}
-  >
-    {
-      ({ paginationProps, paginationTableProps }) => (
-        <div className="react-bs-table-container">
-          <PaginationRow {...paginationProps} />
+  isFeatureVisible,
+}) => {
+  const visibleColumns = columns.filter((column) => !column.fm || isFeatureVisible(column.fm));
+  return (
+    <PaginationProvider
+      pagination={paginationFactory({
+        custom: true,
+        withFirstAndLast: true,
+        page,
+        sizePerPage: pageSize,
+        totalSize: count,
+        sizePerPageList: [20, 50, 100, 200].map((value) => ({ text: value, value })),
+      })}
+    >
+      {
+        ({ paginationProps, paginationTableProps }) => (
+          <div className="react-bs-table-container">
+            <PaginationRow {...paginationProps} />
 
-          <BootstrapTable
-            data={data}
-            striped
-            bordered={bordered}
-            remote
-            wrapperClasses={containerClass}
-            keyField="id"
-            columns={columns}
-            onTableChange={(type, { page, sizePerPage }) => {
-              onPageChange(page);
-              onSizePerPageList(sizePerPage);
-            }}
-            {...paginationTableProps}
-          />
+            <BootstrapTable
+              data={data}
+              striped
+              bordered={bordered}
+              remote
+              wrapperClasses={containerClass}
+              keyField="id"
+              columns={visibleColumns}
+              onTableChange={(type, { page: newPage, sizePerPage }) => {
+                onPageChange(newPage);
+                onSizePerPageList(sizePerPage);
+              }}
+              {...paginationTableProps}
+            />
 
-          <PaginationRow {...paginationProps} />
-        </div>
-      )
-    }
-  </PaginationProvider>
-);
+            <PaginationRow {...paginationProps} />
+          </div>
+        )
+      }
+    </PaginationProvider>
+  );
+};
 
 BootstrapTableWrapper.defaultProps = {
   bordered: true,
@@ -90,9 +95,11 @@ BootstrapTableWrapper.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
     dataField: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
+    fm: PropTypes.string,
     formatter: PropTypes.func,
     style: PropTypes.objectOf(PropTypes.string),
   })).isRequired,
+  isFeatureVisible: PropTypes.func.isRequired,
 };
 
-export default BootstrapTableWrapper;
+export default fmConnect(BootstrapTableWrapper);

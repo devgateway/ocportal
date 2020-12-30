@@ -14,69 +14,85 @@ import ProcurementMethodRationale from '../../filters/procurement-method-rationa
 import { FlaggedTenderPrice } from '../../filters/tender-price';
 import { FlaggedAwardValue } from '../../filters/award-value';
 import { Buyer, ProcuringEntity, Supplier } from '../../filters/organizations';
+import fmConnect from '../../fm/fm';
 
-const isActiveForFields = (...fields) => (filters) => fields.map((field) => filters[field]).some((value) => (Array.isArray(value)
-  ? value.length > 0
-  : value != null));
+const isActiveForFields = (...fields) => (filters) => fields
+  .map((field) => filters[field])
+  .some((value) => (Array.isArray(value) ? value.length > 0 : value != null));
 
 const groups = [
   {
     title: 'filters:tabs:date:title',
     active: isActiveForFields('year'),
+    fm: 'crd.filters.dateGroup',
     filters: [
       {
         render: dateRendererCreator(FilterTenderDate),
+        fm: 'crd.filters.date',
       },
     ],
   },
   {
     title: 'filters:tabs:valueAmount:title',
     active: isActiveForFields('minTenderValue', 'maxTenderValue', 'minAwardValue', 'maxAwardValue'),
+    fm: 'crd.filters.valuesGroup',
     filters: [
       {
         render: minMaxPropertyRendererCreator(FlaggedTenderPrice, 'TenderValue'),
+        fm: 'crd.filters.tenderValue',
       },
       {
         render: minMaxPropertyRendererCreator(FlaggedAwardValue, 'AwardValue'),
+        fm: 'crd.filters.awardValue',
       },
     ],
   },
   {
     title: 'filters:tabs:procurementMethod:title',
     active: isActiveForFields('procurementMethod'),
+    fm: 'crd.filters.procurementMethodGroup',
     filters: [
       {
         render: singlePropertyRendererCreator(ProcurementMethod, 'procurementMethod'),
+        fm: 'crd.filters.procurementMethod',
       },
     ],
   },
   {
     title: 'filters:tabs:procurementMethodRationale:title',
     active: isActiveForFields('procurementMethodRationale'),
+    fm: 'crd.filters.procurementMethodRationaleGroup',
     filters: [
       {
         render: singlePropertyRendererCreator(ProcurementMethodRationale, 'procurementMethodRationale'),
+        fm: 'crd.filters.procurementMethodRationale',
       },
     ],
   },
   {
     title: 'filters:tabs:organizations:title',
     active: isActiveForFields('buyerId', 'procuringEntityId', 'supplierId'),
+    fm: 'crd.filters.orgsGroup',
     filters: [
       {
         render: singlePropertyRendererCreator(Buyer, 'buyerId'),
+        fm: 'crd.filters.buyer',
       },
       {
         render: singlePropertyRendererCreator(ProcuringEntity, 'procuringEntityId'),
+        fm: 'crd.filters.procuringEntity',
       },
       {
         render: singlePropertyRendererCreator(Supplier, 'supplierId'),
+        fm: 'crd.filters.supplier',
       },
     ],
   },
 ];
 
-const Filters = ({ translations, filters, onChange }) => {
+const Filters = ({
+  translations, filters, onChange, isFeatureVisible,
+}) => {
   const t = tCreator(translations);
 
   const [localFilters, updateLocalFilters] = useImmer(filters);
@@ -114,13 +130,20 @@ const Filters = ({ translations, filters, onChange }) => {
     };
   }, []);
 
+  const visibleGroups = groups
+    .filter((group) => isFeatureVisible(group.fm))
+    .map((group) => ({
+      ...group,
+      filters: group.filters.filter((f) => isFeatureVisible(f.fm)),
+    }));
+
   return (
     <div className="row filters-bar" ref={ref}>
       <div className="col-md-12 crd-horizontal-filters">
         <div className="crd-filter-title">
           <div className="title">{t('filters:hint')}</div>
         </div>
-        {groups.map((group, index) => (
+        {visibleGroups.map((group, index) => (
           <FilterBox
             key={index}
             title={t(group.title)}
@@ -136,7 +159,7 @@ const Filters = ({ translations, filters, onChange }) => {
               <React.Fragment key={fIdx}>
                 {filter.render({
                   filters: localFilters,
-                  onChange: (filters) => updateLocalFilters((draft) => ({ ...draft, ...filters })),
+                  onChange: (newFilters) => updateLocalFilters((draft) => ({ ...draft, ...newFilters })),
                   translations,
                 })}
               </React.Fragment>
@@ -152,6 +175,7 @@ Filters.propTypes = {
   filters: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   translations: PropTypes.object.isRequired,
+  isFeatureVisible: PropTypes.func.isRequired,
 };
 
-export default Filters;
+export default fmConnect(Filters);

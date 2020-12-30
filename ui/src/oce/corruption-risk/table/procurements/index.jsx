@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
 import { useImmer } from 'use-immer';
+import PropTypes from 'prop-types';
 import { tCreator } from '../../../translatable';
 import BootstrapTableWrapper from '../../archive/bootstrap-table-wrapper';
 import { mkContractLink } from '../../tools';
 import { getFlaggedReleases } from './api';
 import { setImmer } from '../../../tools';
 
-const Table = ({ filters, navigate, translations }) => {
+const Table = ({
+  filters, navigate, translations, fmPrefix,
+}) => {
   const t = tCreator(translations);
 
   const formatFlags = (data) => (
@@ -51,6 +54,7 @@ const Table = ({ filters, navigate, translations }) => {
       columns={[{
         text: 'Tender name',
         dataField: 'name',
+        fm: `${fmPrefix}.tenderName`,
         formatter: mkContractLink(navigate),
         headerStyle: {
           width: '20%',
@@ -58,25 +62,32 @@ const Table = ({ filters, navigate, translations }) => {
       }, {
         text: 'OCID',
         dataField: 'id',
+        fm: `${fmPrefix}.ocid`,
         formatter: mkContractLink(navigate),
       }, {
         text: 'Award status',
         dataField: 'awardStatus',
+        fm: `${fmPrefix}.awardStatus`,
       }, {
         text: 'Tender amount',
         dataField: 'tenderAmount',
+        fm: `${fmPrefix}.tenderAmount`,
       }, {
         text: t('crd:contracts:list:awardAmount'),
         dataField: 'awardAmount',
+        fm: `${fmPrefix}.awardAmount`,
       }, {
         text: 'Number of bidders',
         dataField: 'nrBidders',
+        fm: `${fmPrefix}.nrBidders`,
       }, {
         text: 'Number of flags',
         dataField: 'nrFlags',
+        fm: `${fmPrefix}.nrFlags`,
       }, {
         text: t('crd:supplier:table:flagName'),
         dataField: 'flags',
+        fm: `${fmPrefix}.flags`,
         formatter: formatFlags,
         headerStyle: {
           width: '20%',
@@ -84,6 +95,11 @@ const Table = ({ filters, navigate, translations }) => {
       }]}
     />
   );
+};
+
+Table.propTypes = {
+  navigate: PropTypes.func.isRequired,
+  fmPrefix: PropTypes.string.isRequired,
 };
 
 export default Table;

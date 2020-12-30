@@ -29,7 +29,7 @@ class CustomPopupChart extends Chart {
 
   showPopup(data) {
     const point = data.points[0];
-    const year = point.x;
+    const year = parseInt(point.x, 10);
     const traceName = point.data.name;
     const traceIndex = point.fullData.index;
     const POPUP_ARROW_SIZE = 8;
