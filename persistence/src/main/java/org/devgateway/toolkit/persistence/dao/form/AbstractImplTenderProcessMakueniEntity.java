@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 public abstract class AbstractImplTenderProcessMakueniEntity extends AbstractTenderProcessMakueniEntity {
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
+    @ManyToOne(optional = false)
     @ExcelExport(name = "Contract", justExport = true)
     private Contract contract;
 

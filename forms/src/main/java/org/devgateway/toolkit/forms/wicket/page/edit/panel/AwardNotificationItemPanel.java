@@ -82,6 +82,22 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         }
     }
 
+    protected class AwardNotificationItemCountValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            List<AwardNotificationItem> items = AwardNotificationItemPanel.this.getModelObject();
+            if (items.size() == 0) {
+                form.error(getString("atLeastOneAwardNotification"));
+            }
+
+        }
+    }
+
 
     protected class ProfessionalOpinionCountValidator implements IFormValidator {
         @Override
@@ -107,8 +123,9 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
     protected void onInitialize() {
         super.onInitialize();
         final Form<?> form = findParent(Form.class);
+        form.add(new  WrongDistinctCountValidator());
         form.add(new ProfessionalOpinionCountValidator());
-        form.add(new WrongDistinctCountValidator());
+        form.add(new AwardNotificationItemCountValidator());
     }
 
     @Override

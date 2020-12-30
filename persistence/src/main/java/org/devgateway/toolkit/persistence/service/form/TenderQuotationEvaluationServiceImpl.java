@@ -41,4 +41,6 @@ public class TenderQuotationEvaluationServiceImpl extends AbstractMakueniEntityS
     public TenderQuotationEvaluation findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
     }
+
+
 }

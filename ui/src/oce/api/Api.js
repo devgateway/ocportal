@@ -11,6 +11,11 @@ export const fetch = (ep, params) => {
   return fetchEP(uri);
 };
 
+export const getGaId = async () => {
+  const gaId = await fetch('/gaId');
+  return gaId;
+};
+
 export const getProject = (params) => fetch(`/makueni/project/id/${params.id}`);
 
 export const getFeedback = (page) => fetch(`/feedback?page=${page}`);

@@ -136,6 +136,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
                 new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
         );
+        awardeeSelector.setEnabled(!editForm.getModelObject().getTenderProcess().hasNonDraftImplForms());
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         editForm.add(awardeeSelector);
 
