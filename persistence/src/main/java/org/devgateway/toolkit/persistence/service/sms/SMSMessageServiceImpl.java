@@ -60,7 +60,7 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.SMSCommands.REP
 @Transactional
 public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implements SMSMessageService {
 
-    @Value("${infobip.key}")
+    @Value("${infobip.key:#{null}}")
     private String infobipKey;
 
     private static final Logger logger = LoggerFactory.getLogger(SMSMessageServiceImpl.class);
@@ -315,6 +315,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
         Tender tender = tenderUpdates.getTender();
 
         text.add(String.format("%s: %s", getMessage(locale, "tenderName"), tender.getTitle()));
+        text.add(String.format("%s: %s", getMessage(locale, "tenderId"), tender.getTenderNumber()));
 
         SimpleDateFormat sdf = new SimpleDateFormat(DBConstants.DATE_FORMAT);
 

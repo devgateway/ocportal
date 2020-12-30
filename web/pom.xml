@@ -23,9 +23,9 @@
     </properties>
 
     <parent>
-        <groupId>org.devgateway.toolkit</groupId>
+        <groupId>org.devgateway.makueni</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.13.2-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <dependencies>
@@ -149,6 +149,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 
@@ -164,9 +170,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
 
@@ -190,9 +195,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence-mongodb</artifactId>
-            <version>1.13.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>

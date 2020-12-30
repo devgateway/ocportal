@@ -195,33 +195,35 @@
     - tenderProcessForm.purchRequisitions.formDocs
 
 # TABLE FOR ACTUAL PROCESSES
-- name: publicView.tendersProcessList.tenderTitle
+- name: publicView.tendersProcesses.col.tenderTitle
   visible: yes
   visibleDeps:
     - tenderForm
-- name: publicView.tendersProcessList.department
+- name: publicView.tendersProcesses.col.department
   visible: yes
   visibleDeps:
     - tenderProcessForm.project.procurementPlan.department
-- name: publicView.tendersProcessList.fiscalYear
+- name: publicView.tendersProcesses.col.fiscalYear
   visible: yes
   visibleDeps:
     - tenderProcessForm.project.procurementPlan.fiscalYear
-- name: publicView.tendersProcessList.closingDate
+- name: publicView.tendersProcesses.col.closingDate
   visible: yes
   visibleDeps:
     - tenderForm.closingDate
-- name: publicView.tendersProcessList.tenderValue
+- name: publicView.tendersProcesses.col.tenderValue
   visible: yes
   visibleDeps:
     - tenderForm.tenderValue
-- name: publicView.tendersProcessList.project
+- name: publicView.tendersProcesses.col.project
   visible: yes
-- name: publicView.tendersProcessList.tenderDocs
+- name: publicView.tendersProcesses.col.tenderDocsOrLink
+  visible: yes
+- name: publicView.tendersProcesses.tenderDocs
   visible: yes
   visibleDeps:
     - tenderForm.formDocs
-- name: publicView.tendersProcessList.tenderLink
+- name: publicView.tendersProcesses.tenderLink
   visible: yes
   visibleDeps:
     - tenderForm.tenderLink

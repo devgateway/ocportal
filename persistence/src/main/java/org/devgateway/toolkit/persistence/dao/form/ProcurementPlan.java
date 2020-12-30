@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -41,12 +42,12 @@ import java.util.Set;
 public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Department department;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private FiscalYear fiscalYear;
 
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Procurement Plan Items")

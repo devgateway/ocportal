@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -384,17 +385,19 @@ public class MakueniDataController extends GenericOCDSController {
     @RequestMapping(value = "/api/makueni/filters/wards", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
-    public List<Document> getWard() {
+    public List<Document> getWard(@RequestParam(required = false) List<Long> subcountyIds) {
         final List<Document> results = new ArrayList<>();
         final List<Ward> items = wardService.findAll();
 
         items.sort(Comparator.comparing(Category::getLabel));
 
-        items.stream().forEach(item -> results.add(new Document()
-                .append("id", item.getId())
-                .append("label", item.getLabel())
-                .append("subcounty", item.getSubcounty().getLabel())
-                .append("subcountyId", item.getSubcounty().getId())));
+        items.stream().filter(i -> ObjectUtils.isEmpty(subcountyIds)
+                || subcountyIds.contains(i.getSubcounty().getId())).
+                forEach(item -> results.add(new Document()
+                        .append("id", item.getId())
+                        .append("label", item.getLabel())
+                        .append("subcounty", item.getSubcounty().getLabel())
+                        .append("subcountyId", item.getSubcounty().getId())));
 
         return results;
     }

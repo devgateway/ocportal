@@ -20,18 +20,14 @@ import java.util.List;
 @RestController
 @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
 @Cacheable
-public class FlagI184ReleaseSearchController extends AbstractFlagReleaseSearchController {
-    @Override
-    protected String getFlagProperty() {
-        return FlagsConstants.I184_VALUE;
-    }
+public class FlagI184ReleaseSearchController extends AbstractSingleFlagReleaseSearchController {
 
     @Override
     @ApiOperation(value = "Search releases by flag i184")
     @RequestMapping(value = "/api/flags/i184/releases",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> releaseFlagSearch(@ModelAttribute @Valid YearFilterPagingRequest filter) {
-        return super.releaseFlagSearch(filter);
+        return super.releaseFlagSearch(FlagsConstants.I184_VALUE, filter);
     }
 
     @Override
@@ -39,6 +35,6 @@ public class FlagI184ReleaseSearchController extends AbstractFlagReleaseSearchCo
     @RequestMapping(value = "/api/flags/i184/count",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> releaseFlagCount(@ModelAttribute @Valid YearFilterPagingRequest filter) {
-        return super.releaseFlagCount(filter);
+        return super.releaseFlagCount(FlagsConstants.I184_VALUE, filter);
     }
 }

@@ -44,7 +44,7 @@ import java.util.Optional;
  * @since 2019-04-17
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-@MountPath("/tenderProcesses")
+@MountPath("/purchaseRequisitions")
 public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderProcess> {
 
     @SpringBean
@@ -125,6 +125,11 @@ public class ListTenderProcessPage extends ListAbstractMakueniEntityPage<TenderP
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void autoPageTitle() {
 
     }
 

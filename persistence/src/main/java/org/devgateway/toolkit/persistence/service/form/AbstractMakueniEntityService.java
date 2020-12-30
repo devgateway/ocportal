@@ -25,4 +25,6 @@ public interface AbstractMakueniEntityService<T extends AbstractMakueniEntity> e
     Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity);
 
     Stream<? extends AbstractMakueniEntity> getAllSubmitted();
+
+    //Collection<Map<String, String>> validate(TenderProcess tenderProcess, T entity);
 }

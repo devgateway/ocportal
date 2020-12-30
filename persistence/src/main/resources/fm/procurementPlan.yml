@@ -135,17 +135,17 @@
   visible: yes
 
 # PUBLIC VIEW
-- name: publicView.procurementPlansList.id
+- name: publicView.procurementPlans.col.id
   visible: yes
-- name: publicView.procurementPlansList.department
+- name: publicView.procurementPlans.col.department
   visible: yes
   visibleDeps:
     - procurementPlanForm.department
-- name: publicView.procurementPlansList.fiscalYear
+- name: publicView.procurementPlans.col.fiscalYear
   visible: yes
   visibleDeps:
     - procurementPlanForm.fiscalYear
-- name: publicView.procurementPlansList.formDocs
+- name: publicView.procurementPlans.col.formDocs
   visible: yes
   visibleDeps:
     - procurementPlanForm.formDocs

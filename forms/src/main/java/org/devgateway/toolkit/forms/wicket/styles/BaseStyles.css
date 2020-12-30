@@ -216,6 +216,11 @@ hr.edit-separator {
     border-bottom: 1px solid #eeeeee;
 }
 
+
+.red-icon {
+    color: red;
+}
+
 .pane {
     padding: 20px 0;
     margin-bottom: 0;

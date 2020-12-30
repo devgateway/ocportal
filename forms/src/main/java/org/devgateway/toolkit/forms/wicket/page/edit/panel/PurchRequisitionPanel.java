@@ -28,6 +28,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
+import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.select2.Select2Choice;
 
@@ -45,6 +46,8 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     @SpringBean
     protected ChargeAccountService chargeAccountService;
 
+    @SpringBean
+    protected TenderItemService tenderItemService;
 
     public PurchRequisitionPanel(final String id) {
         super(id);
@@ -94,9 +97,9 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 List<TenderItem> tenderItems = null;
-//                if (!item.isNew()) {
-//                    tenderItems = tenderItemService.findByPurchaseItem(item);
-//                }
+                if (!item.isNew()) {
+                    tenderItems = tenderItemService.findByPurchaseItemIn(item.getPurchaseItems());
+                }
 
                 if (!ObjectUtils.isEmpty(tenderItems)) {
                     final ValidationError error = new ValidationError();

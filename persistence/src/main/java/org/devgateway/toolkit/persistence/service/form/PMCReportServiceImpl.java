@@ -1,8 +1,6 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 
-import java.util.List;
-
 import org.devgateway.toolkit.persistence.dao.alerts.ApprovedReport;
 import org.devgateway.toolkit.persistence.dao.categories.Department_;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
@@ -15,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author mpostelnicu
  */
 @Service
 @Transactional
-public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCReport>
+public class PMCReportServiceImpl extends AbstractImplTenderProcessMakueniEntityServiceImpl<PMCReport>
         implements PMCReportService {
 
     @Autowired
@@ -71,5 +71,11 @@ public class PMCReportServiceImpl extends AbstractMakueniEntityServiceImpl<PMCRe
         approvedReport.setPmcReport(report);
 
         approvedReportRepository.save(approvedReport);
+    }
+
+    @Override
+    public void delete(PMCReport report) {
+        approvedReportRepository.deleteByPmcReport(report);
+        super.delete(report);
     }
 }
