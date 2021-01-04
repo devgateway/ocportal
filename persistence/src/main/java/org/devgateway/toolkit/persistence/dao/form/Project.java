@@ -46,7 +46,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @ManyToMany
     private List<CabinetPaper> cabinetPapers;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore

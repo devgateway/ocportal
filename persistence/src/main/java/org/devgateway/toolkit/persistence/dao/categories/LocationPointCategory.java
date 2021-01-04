@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
 import com.vividsolutions.jts.geom.Point;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -9,6 +10,7 @@ import javax.persistence.Transient;
  * @author mpostelnicu
  */
 @MappedSuperclass
+@Audited
 public abstract class LocationPointCategory extends Category {
 
     @org.springframework.data.annotation.Transient

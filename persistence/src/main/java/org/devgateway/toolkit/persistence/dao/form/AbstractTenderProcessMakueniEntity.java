@@ -16,7 +16,7 @@ import java.util.Objects;
 @MappedSuperclass
 public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable,
         ProcurementPlanAttachable {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tender_process_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore

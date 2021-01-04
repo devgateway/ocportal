@@ -18,23 +18,24 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
- * 
  * @author mpostelnicu
- *
  */
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FiscalYear extends AbstractAuditableEntity implements Labelable {
+
+    @NotNull
     private String name;
 
+    @NotNull
     private Date startDate;
 
+    @NotNull
     private Date endDate;
 
     public String getName() {

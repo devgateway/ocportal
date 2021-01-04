@@ -35,7 +35,7 @@ import java.util.Collections;
 @Form
 public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
