@@ -62,6 +62,11 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @OneToMany(mappedBy = "procurementPlan")
     private Set<Project> projects = new HashSet<>();
 
+    @ExcelExport(separateSheet = true, name = "Tender Processes")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "procurementPlan")
+    private Set<TenderProcess> tenderProcesses = new HashSet<>();
+
     public ProcurementPlan() {
 
     }
@@ -155,8 +160,7 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @Override
     @Transactional
     public boolean isExportable() {
-        return super.isExportable() || getProjects().stream().filter(Statusable::isExportable).
-                flatMap(p -> p.getTenderProcesses().stream()).anyMatch(Statusable::isExportable);
+        return super.isExportable() || getTenderProcesses().stream().anyMatch(Statusable::isExportable);
     }
 
     @Override
@@ -165,5 +169,13 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @org.springframework.data.annotation.Transient
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
+    }
+
+    public Set<TenderProcess> getTenderProcesses() {
+        return tenderProcesses;
+    }
+
+    public void setTenderProcesses(Set<TenderProcess> tenderProcesses) {
+        this.tenderProcesses = tenderProcesses;
     }
 }

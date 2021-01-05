@@ -62,8 +62,8 @@ public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueni
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
-        if (tenderProcess != null && tenderProcess.getProject() != null) {
-            return tenderProcess.getProject().getProcurementPlan();
+        if (tenderProcess != null) {
+            return tenderProcess.getProcurementPlan();
         }
         return null;
     }

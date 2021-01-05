@@ -1372,4 +1372,17 @@
         <addNotNullConstraint tableName="tender_process" columnName="project_id"/>
     </changeSet>
 
+    <changeSet id="OCMAKU-814-remove-projects" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="tender_process" columnName="procurement_plan_id"/>
+        </preConditions>
+        <sql>
+            update tender_process set procurement_plan_id = project.procurement_plan_id from project
+            where tender_process.project_id = project.id;
+        </sql>
+        <sql>
+            alter table tender_process alter column project_id drop not null;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

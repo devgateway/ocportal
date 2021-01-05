@@ -136,11 +136,10 @@ public class ImportPostgresToMongo {
         procurementPlanService.findAllStream().filter(Statusable::isExportable).forEach(pp -> {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
 
-            pp.getProjects().stream().forEach(project -> {
-                project.setTenderProcesses(
-                        new HashSet<>(filterNotExportable(project.getTenderProcesses())));
+            pp.setTenderProcesses(
+                        new HashSet<>(filterNotExportable(pp.getTenderProcesses())));
 
-                project.getTenderProcesses().stream().forEach(pr -> {
+                pp.getTenderProcesses().stream().forEach(pr -> {
                     pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
 
@@ -189,8 +188,8 @@ public class ImportPostgresToMongo {
                     //self.storeMakueniFormFiles(pr.getFormDocs());
                 });
 
-                project.getCabinetPapers().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
-            });
+                pp.getProjects().stream().flatMap(p->p.getCabinetPapers().stream()).
+                        forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
             self.storeMakueniFormFiles(pp.getFormDocs());
             procurementPlanMongoRepository.save(pp);
