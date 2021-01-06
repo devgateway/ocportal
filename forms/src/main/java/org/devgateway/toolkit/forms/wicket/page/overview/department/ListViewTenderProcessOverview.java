@@ -91,14 +91,16 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
     private final TenderProcess sessionTenderProcess;
 
+    private final Boolean allowNullProjects;
 
     private final SimpleDateFormat formatter = new SimpleDateFormat(DBConstants.DATE_FORMAT);
 
-    public ListViewTenderProcessOverview(final String id,
+    public ListViewTenderProcessOverview(final String id, boolean allowNullProjects,
                                          final IModel<List<TenderProcess>> model,
                                          final TenderProcess sessionTenderProcess) {
         super(id, model);
 
+        this.allowNullProjects = allowNullProjects;
         this.sessionTenderProcess = sessionTenderProcess;
 
         // check if we need to expand a Purchase Requisition
@@ -322,7 +324,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     @Transactional(readOnly = true)
     public boolean canEdit(final TenderProcess tenderProcess2,
                            final AbstractStatusAuditableEntity persistable,
-                           final Statusable previousStep) {
+                           final Statusable previousStep, boolean allowNullProjects) {
 
         TenderProcess tenderProcess = tenderProcessService.findById(tenderProcess2.getId()).get();
 
@@ -334,6 +336,10 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         //the rest of the steps of a terminated chain, can never be edited
         if (persistable == null && tenderProcess.isTerminated()) {
             return false;
+        }
+
+        if (persistable != null && persistable instanceof TenderProcess && allowNullProjects) {
+            return true;
         }
 
         return previousStep != null;
@@ -393,7 +399,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                 protected void populateItem(final ListItem<T> item) {
 
                     final T itemObj = item.getModelObject();
-                    item.add(new DeptOverviewStatusLabel("tenderStatus", itemObj));
+                    item.add(new DeptOverviewStatusLabel("tenderStatus", itemObj==null
+                            ? null: itemObj.getStatus()));
 
                     BootstrapAjaxLink<Void> editTender = createEditButton(itemObj);
 
@@ -412,7 +419,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                         editTender.setVisibilityAllowed(canAccessAddNewButtons(editClazz));
                     }
 
-                    editTender.setEnabled(canEdit(tenderProcess, item.getModelObject(), previousStep));
+                    editTender.setEnabled(canEdit(tenderProcess, item.getModelObject(), previousStep,
+                            allowNullProjects));
 
                     item.add(editTender);
 
@@ -429,7 +437,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             BootstrapAjaxLink<Void> addButton = createEditButton(null);
             addButton.setVisibilityAllowed(multiple);
             addButton.setEnabled(canAccessAddNewButtons(editClazz) && canEdit(tenderProcess,
-                    null, previousStep));
+                    null, previousStep, allowNullProjects));
             addButton.add(AttributeAppender.append("class", "no-text btn-add"));
             add(addButton);
         }

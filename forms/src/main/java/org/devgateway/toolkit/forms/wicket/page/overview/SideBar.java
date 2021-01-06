@@ -15,6 +15,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 
 import java.util.List;
 
@@ -26,12 +27,17 @@ public class SideBar extends Panel {
     @SpringBean
     private ProjectService projectService;
 
+
+    @SpringBean
+    private TenderProcessService tenderProcessService;
+
     @SpringBean
     private SessionMetadataService sessionMetadataService;
 
     private final Department department;
 
     private Label projectCount;
+    private Label tenderProcessCount;
 
     public SideBar(final String id) {
         super(id);
@@ -65,6 +71,10 @@ public class SideBar extends Panel {
         projectCount = new Label("projectCount", calculateProjectCount());
         projectCount.setOutputMarkupId(true);
         add(projectCount);
+
+        tenderProcessCount = new Label("tenderProcessCount", calculateTenderProcessCount());
+        tenderProcessCount.setOutputMarkupId(true);
+        add(tenderProcessCount);
 
         final List<Department> departments = departmentService.findAll();
         add(new PropertyListView<Department>("departmentOverviewLink", departments) {
@@ -102,7 +112,20 @@ public class SideBar extends Panel {
         return projectService.countByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
+    private Long calculateTenderProcessCount() {
+        final FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
+        if (department == null) {
+            return tenderProcessService.countByFiscalYear(fiscalYear);
+        }
+
+        return tenderProcessService.countByDepartmentAndFiscalYear(department, fiscalYear);
+    }
+
     public Label getProjectCount() {
         return projectCount;
+    }
+
+    public Label getTenderProcessCount() {
+        return tenderProcessCount;
     }
 }

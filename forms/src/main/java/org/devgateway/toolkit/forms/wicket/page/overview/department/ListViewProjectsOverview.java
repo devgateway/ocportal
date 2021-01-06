@@ -117,14 +117,14 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("project-header-" + item.getModelObject().getId());
 
-        final Project project = projectService.findById(item.getModelObject().getId()).get();
+        //final Project project = projectService.findById(item.getModelObject().getId()).get();
 
-        headerFragment.add(new DeptOverviewStatusLabel("projectStatus", project));
-        headerFragment.add(new Label("projectTitle"));
+        headerFragment.add(new DeptOverviewStatusLabel("projectStatus", item.getModelObject().getStatus()));
+        headerFragment.add(new Label("title"));
         headerFragment.add(new Label("procurementPlan.fiscalYear"));
 
         final PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_ID, project.getId());
+        pageParameters.set(WebConstants.PARAM_ID, item.getModelObject().getId());
         final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>("editProject",
                 Buttons.Type.Success) {
             @Override
@@ -139,10 +139,10 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                sessionMetadataService.setSessionProject(project);
+                sessionMetadataService.setSessionProjectId(item.getModelObject().getId());
 
                 final PageParameters pageParameters = new PageParameters();
-                pageParameters.set(WebConstants.PARAM_ID, project.getId());
+                pageParameters.set(WebConstants.PARAM_ID, item.getModelObject().getId());
                 setResponsePage(EditProjectPage.class, pageParameters);
             }
         };
@@ -183,7 +183,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         }
 
         final ListViewTenderProcessOverview listViewTenderProcessOverview =
-                new ListViewTenderProcessOverview("purchaseReqOverview",
+                new ListViewTenderProcessOverview("purchaseReqOverview", false,
                         new ListModel<>(purchaseReqs), sessionTenderProcess);
         containerFragment.add(listViewTenderProcessOverview);
 

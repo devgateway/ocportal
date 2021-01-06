@@ -75,11 +75,11 @@
   mandatory: no
   enabled: yes
   visible: yes
-- name: awardAcceptanceForm.tenderProcess.project.procurementPlan.department
+- name: awardAcceptanceForm.tenderProcess.procurementPlan.department
   mandatory: no
   enabled: yes
   visible: yes
-- name: awardAcceptanceForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: awardAcceptanceForm.tenderProcess.procurementPlan.fiscalYear
   mandatory: no
   enabled: yes
   visible: yes
@@ -106,14 +106,14 @@
     - awardAcceptanceForm.items.awardee
 - name: awardAcceptanceList.department
   visibleDeps:
-    - awardAcceptanceForm.tenderProcess.project.procurementPlan.department
+    - awardAcceptanceForm.tenderProcess.procurementPlan.department
   visible: yes
 - name: awardAcceptanceList.filterToolbar
   visible: yes
 - name: awardAcceptanceList.fiscalYear
   visible: yes
   visibleDeps:
-    - awardAcceptanceForm.tenderProcess.project.procurementPlan.fiscalYear
+    - awardAcceptanceForm.tenderProcess.procurementPlan.fiscalYear
 - name: awardAcceptanceList.lastModifiedDate
   visible: yes
 - name: awardAcceptanceList.status

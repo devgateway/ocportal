@@ -108,12 +108,12 @@
 - name: pmcReportForm.submitAndNext
   enabled: yes
   visible: yes
-- name: pmcReportForm.tenderProcess.project.procurementPlan.department
+- name: pmcReportForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
   visibleDeps:
     - procurementPlanForm.department
-- name: pmcReportForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: pmcReportForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
   visibleDeps:
@@ -157,13 +157,13 @@
 - name: pmcReportsList.department
   visible: yes
   visibleDeps:
-    - pmcReportForm.tenderProcess.project.procurementPlan.department
+    - pmcReportForm.tenderProcess.procurementPlan.department
 - name: pmcReportsList.filterToolbar
   visible: yes
 - name: pmcReportsList.fiscalYear
   visible: yes
   visibleDeps:
-    - pmcReportForm.tenderProcess.project.procurementPlan.fiscalYear
+    - pmcReportForm.tenderProcess.procurementPlan.fiscalYear
 - name: pmcReportsList.lastModifiedDate
   visible: yes
 - name: pmcReportsList.status

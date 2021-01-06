@@ -9,12 +9,12 @@ import org.devgateway.toolkit.persistence.dao.form.Statusable;
 
 public class DeptOverviewStatusLabel extends Label {
 
-    public DeptOverviewStatusLabel(final String id, final Statusable statusable) {
+    public DeptOverviewStatusLabel(final String id, String status) {
         super(id, new Model<>(""));
 
-        add(AttributeAppender.append("class", statusable != null
-                ? statusable.getStatus().toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase()));
+        add(AttributeAppender.append("class", status !=null
+                ? status.toLowerCase() : DBConstants.Status.NOT_STARTED.toLowerCase()));
 
-        add(new TooltipBehavior(Model.of(statusable != null ? statusable.getStatus().toLowerCase() : "")));
+        add(new TooltipBehavior(Model.of(status != null ? status.toLowerCase() : "")));
     }
 }

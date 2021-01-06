@@ -51,6 +51,18 @@ public class SessionMetadataService {
     private FiscalYearService fiscalYearService;
 
 
+
+    private void setSessionKey(final MetaDataKey<Long> key, final Long persistableId) {
+        final Session session = Session.get();
+        if (session != null && persistableId != null) {
+            session.setMetaData(key, persistableId);
+        } else {
+            if (session != null) {
+                session.setMetaData(key, null);
+            }
+        }
+    }
+
     private void setSessionKey(final MetaDataKey<Long> key, final GenericPersistable persistable) {
         final Session session = Session.get();
         if (session != null && persistable != null) {
@@ -92,6 +104,11 @@ public class SessionMetadataService {
     public void setSessionProject(final Project object) {
         setSessionKey(PROJECT, object);
     }
+
+    public void setSessionProjectId(Long id) {
+        setSessionKey(PROJECT, id);
+    }
+
 
     public Project getSessionProject() {
         return getSessionPersistable(PROJECT, projectService);

@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -25,5 +27,9 @@ public interface TenderProcessService extends AbstractMakueniEntityService<Tende
     BindingResult validate(TenderProcess tp);
 
     BindingResult validate(TenderProcess tp, AbstractMakueniEntity e);
+
+    Long countByFiscalYear(FiscalYear fiscalYear);
+
+    Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 }
 

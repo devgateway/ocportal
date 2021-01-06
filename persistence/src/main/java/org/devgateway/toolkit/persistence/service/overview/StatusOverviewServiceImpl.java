@@ -3,14 +3,9 @@ package org.devgateway.toolkit.persistence.service.overview;
 import org.apache.commons.collections4.SetUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
-import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
-import org.devgateway.toolkit.persistence.dao.form.Statusable;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
+import org.devgateway.toolkit.persistence.dao.form.*;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewRowGroup;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewRowInfo;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.AbstractImplTenderProcessMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -32,13 +27,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -93,7 +84,72 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StatusOverviewData> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
+    public List<StatusOverviewRowGroup> getDisplayableTenderProcesses(FiscalYear fiscalYear, String title) {
+        List<StatusOverviewRowGroup> groupList = new ArrayList<>();
+        Map<ProcurementPlan, List<TenderProcess>> pptenderProcesses = tenderProcessService.findAll((r, cq, cb) -> cb.and(
+                cb.equal(r.join(TenderProcess_.procurementPlan).get(ProcurementPlan_.fiscalYear), fiscalYear),
+                cb.isNull(r.get(TenderProcess_.project)),
+                ObjectUtils.isEmpty(title) ? cb.and() : cb.like(
+                        cb.lower(r.join(TenderProcess_.tender).get(Tender_.tenderTitle)),
+                        "%" + title.toLowerCase() + "%")
+        )).stream().collect(Collectors.groupingBy(TenderProcess::getProcurementPlan));
+
+        pptenderProcesses.forEach((procurementPlan, tenderProcesses) -> {
+            StatusOverviewRowGroup group = new StatusOverviewRowGroup();
+            groupList.add(group);
+            group.setProcurementPlan(procurementPlan);
+            tenderProcesses.forEach(tp -> {
+                StatusOverviewRowInfo rowInfo = new StatusOverviewRowInfo();
+                group.getRows().add(rowInfo);
+                rowInfo.setId(tp.getId());
+                rowInfo.setTitle(tp.getSingleTender() == null ? "No title" : tp.getSingleTender().getTitle());
+                rowInfo.setTenderProcessStatus(
+                        getProcessStatus(getMakueniEntitiesStatuses(
+                                Collections.singletonList(tp),
+                                tp.getTender(),
+                                tp.getTenderQuotationEvaluation(), tp.getProfessionalOpinion()), 4));
+                rowInfo.setAwardProcessStatus(
+                        getProcessStatus(getMakueniEntitiesStatuses(tp.getAwardNotification(), tp.getAwardAcceptance(),
+                                tp.getContract()), 3));
+                rowInfo.setImplementationStatus(
+                        getProcessStatus(getMakueniEntitiesStatuses(tp.getAdministratorReports(),
+                                tp.getInspectionReports(), tp.getPmcReports(), tp.getMeReports(), tp.getPaymentVouchers()),
+                                0));
+            });
+
+        });
+
+        return groupList;
+    }
+
+
+    private <S extends AbstractMakueniEntity> List<String> getMakueniEntitiesStatuses(
+            Collection<? extends S>... cols) {
+        ArrayList<String> ret = new ArrayList<>();
+        for (Collection<? extends S> col : cols) {
+            col.forEach(e -> ret.add(getMakueniEntityVirtualStatus(e)));
+        }
+        return ret;
+    }
+
+    private String getMakueniEntityVirtualStatus(AbstractMakueniEntity e) {
+        if (e instanceof PaymentVoucher) {
+            return getPaymentVoucherVirtualStatus((PaymentVoucher) e);
+        }
+        return e.getStatus();
+    }
+
+    private String getPaymentVoucherVirtualStatus(PaymentVoucher pv) {
+        if (pv.getStatus().equals(APPROVED) && !pv.getLastPayment()) {
+            return SUBMITTED;
+        }
+        return pv.getStatus();
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StatusOverviewRowGroup> getAllProjects(final FiscalYear fiscalYear, final String projectTitle) {
         final List<Project> projects = projectService.findAll(
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
 
@@ -111,40 +167,40 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
                 tenderProcessService.findByFiscalYear(fiscalYear));
 
-        final List<StatusOverviewData> statusOverviewData = new ArrayList<>();
+        final List<StatusOverviewRowGroup> statusOverviewData = new ArrayList<>();
         for (final Project project : projects) {
-            StatusOverviewData sod = statusOverviewData.stream()
+            StatusOverviewRowGroup sod = statusOverviewData.stream()
                     .filter(item -> project.getProcurementPlan().getId().equals(item.getProcurementPlan().getId()))
                     .findFirst()
                     .orElse(null);
             if (sod == null) {
-                sod = new StatusOverviewData();
+                sod = new StatusOverviewRowGroup();
                 sod.setProcurementPlan(project.getProcurementPlan());
                 statusOverviewData.add(sod);
             }
 
             final List<String> purchaseStatuses = purchaseStatusMap.get(project);
 
-            final StatusOverviewProjectStatus statusOverviewProjectStatus = new StatusOverviewProjectStatus();
-            statusOverviewProjectStatus.setId(project.getId());
-            statusOverviewProjectStatus.setProjectTitle(project.getProjectTitle());
-            statusOverviewProjectStatus.setProjectStatus(project.getStatus());
+            final StatusOverviewRowInfo statusOverviewRowInfo = new StatusOverviewRowInfo();
+            statusOverviewRowInfo.setId(project.getId());
+            statusOverviewRowInfo.setTitle(project.getProjectTitle());
+            statusOverviewRowInfo.setProjectStatus(project.getStatus());
 
             // check if we have at least one Purchase Requisition
             if (purchaseStatuses == null || purchaseStatuses.isEmpty()) {
-                statusOverviewProjectStatus.setTenderProcessStatus(DBConstants.Status.NOT_STARTED);
-                statusOverviewProjectStatus.setAwardProcessStatus(DBConstants.Status.NOT_STARTED);
-                statusOverviewProjectStatus.setImplementationStatus(DBConstants.Status.NOT_STARTED);
+                statusOverviewRowInfo.setTenderProcessStatus(DBConstants.Status.NOT_STARTED);
+                statusOverviewRowInfo.setAwardProcessStatus(DBConstants.Status.NOT_STARTED);
+                statusOverviewRowInfo.setImplementationStatus(DBConstants.Status.NOT_STARTED);
             } else {
-                statusOverviewProjectStatus.setTenderProcessStatus(
+                statusOverviewRowInfo.setTenderProcessStatus(
                         getProcessStatus(tenderStatusMap.get(project), purchaseStatuses.size() * 4));
-                statusOverviewProjectStatus.setAwardProcessStatus(
+                statusOverviewRowInfo.setAwardProcessStatus(
                         getProcessStatus(awardStatusMap.get(project), purchaseStatuses.size() * 3));
-                statusOverviewProjectStatus.setImplementationStatus(
+                statusOverviewRowInfo.setImplementationStatus(
                         getProcessStatus(implementationStatusMap.get(project), 0));
             }
 
-            sod.getProjects().add(statusOverviewProjectStatus);
+            sod.getRows().add(statusOverviewRowInfo);
         }
 
         return statusOverviewData;
@@ -153,6 +209,11 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     @Override
     public Long countProjects(FiscalYear fiscalYear, String projectTitle) {
         return projectService.count(new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
+    }
+
+    @Override
+    public Long countTenderProcesses(FiscalYear fiscalYear, String title) {
+        return tenderProcessService.count();
     }
 
     /**
@@ -190,15 +251,16 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
      * Group a list of {@link ProjectAttachable} objects by {@link Project} and collect all their status.
      */
     private <S extends ProjectAttachable & Statusable>
-    Map<Project, List<String>> groupStatusByProject(final List<S> list) {
-        return list.parallelStream()
+    Map<Project, List<String>> groupStatusByProject(final Collection<S> list) {
+        return list.parallelStream().filter(pa -> !ObjectUtils.isEmpty(pa.getProject()))
                 .collect(Collectors.groupingBy(ProjectAttachable::getProject,
                         Collectors.mapping(key -> key.getStatus(), Collectors.toList())));
     }
 
     private Map<Project, List<String>> groupStatusByProjectPaymentVoucher(Map<Project, List<String>> statusMap,
                                                                           final List<PaymentVoucher> list) {
-        Map<Project, List<String>> paymentStatus = list.parallelStream().filter(p -> !p.getStatus().equals(SUBMITTED))
+        Map<Project, List<String>> paymentStatus = list.parallelStream().filter(p -> !p.getStatus().equals(SUBMITTED)
+                && !ObjectUtils.isEmpty(p.getProject()))
                 .collect(Collectors.groupingBy(ProjectAttachable::getProject,
                         Collectors.mapping(key -> key.getStatus().equals(APPROVED)
                                         ? (key.getLastPayment() ? APPROVED : SUBMITTED) : key.getStatus(),
@@ -212,11 +274,11 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     }
 
     /**
-     * Merge 2 {@link Map} of statuses grouped by {@link Project}.
+     * Merge 2 {@link Map} of statuses grouped by {@link S}.
      */
-    private Map<Project, List<String>> mergeMapOfStatuses(final Map<Project, List<String>> map1,
-                                                          final Map<Project, List<String>> map2) {
-        final Map<Project, List<String>> mergedMap = new HashMap<>(map1);
+    private <S> Map<S, List<String>> mergeMapOfStatuses(final Map<S, List<String>> map1,
+                                                        final Map<S, List<String>> map2) {
+        final Map<S, List<String>> mergedMap = new HashMap<>(map1);
         map2.forEach(
                 (key, value) -> mergedMap.merge(key, value,
                         (v1, v2) -> Stream.of(v1, v2).flatMap(Collection::stream).collect(Collectors.toList())));
@@ -236,6 +298,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
         return statusMap;
     }
+
 
     private <S extends AbstractImplTenderProcessMakueniEntity & ProjectAttachable & Statusable>
     Map<Project, List<String>> addImplementationStatus(final FiscalYear fiscalYear,

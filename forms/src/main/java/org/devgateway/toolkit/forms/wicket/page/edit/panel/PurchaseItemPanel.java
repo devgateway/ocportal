@@ -219,7 +219,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
             final TenderProcess parentObject =
                     (TenderProcess) PurchaseItemPanel.this.getParent().getParent().getParent()
                             .getParent().getParent().getDefaultModelObject();
-            final List<PlanItem> planItems = parentObject.getProject().getProcurementPlan().getPlanItems();
+            final List<PlanItem> planItems = parentObject.getProcurementPlan().getPlanItems();
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",

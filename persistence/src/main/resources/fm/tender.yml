@@ -115,11 +115,11 @@
   mandatory: yes
   enabled: yes
   visible: yes
-- name: tenderForm.tenderProcess.project.procurementPlan.department
+- name: tenderForm.tenderProcess.procurementPlan.department
   mandatory: no
   enabled: yes
   visible: yes
-- name: tenderForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: tenderForm.tenderProcess.procurementPlan.fiscalYear
   mandatory: no
   enabled: yes
   visible: yes
@@ -147,7 +147,7 @@
 - name: tendersList.department
   visible: yes
   visibleDeps:
-    - tenderForm.tenderProcess.project.procurementPlan.department
+    - tenderForm.tenderProcess.procurementPlan.department
 - name: tendersList.downloadFile
   visible: yes
   visibleDeps:
@@ -157,7 +157,7 @@
 - name: tendersList.fiscalYear
   visible: yes
   visibleDeps:
-    - tenderForm.tenderProcess.project.procurementPlan.fiscalYear
+    - tenderForm.tenderProcess.procurementPlan.fiscalYear
 - name: tendersList.lastModifiedDate
   visible: yes
 - name: tendersList.status

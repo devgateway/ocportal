@@ -22,15 +22,18 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.devgateway.toolkit.forms.wicket.page.DataExportPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewRowGroup;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -51,7 +54,8 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
     private String searchBox = "";
 
-    private ListViewStatusOverview listViewStatusOverview;
+    private ListViewStatusOverview listViewStatusTenderProcessOverview;
+    private ListViewStatusOverview listViewStatusProjectOverview;
 
     @SpringBean
     private FiscalYearService fiscalYearService;
@@ -59,6 +63,67 @@ public class StatusOverviewPage extends DataEntryBasePage {
     @SpringBean
     private StatusOverviewService statusOverviewService;
     private WebMarkupContainer noData;
+
+    public class StatusOverviewSearchView extends GenericPanel<Void> {
+
+        public StatusOverviewSearchView(String id) {
+            super(id);
+        }
+    }
+    public class StatusOverviewTenderProcessView extends StatusOverviewSearchView {
+
+        public StatusOverviewTenderProcessView(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+            add(createSearchBox(StatusOverviewPage.this::updateProjectDashboard));
+            add(createYearDropdown());
+            add(createDataExport());
+
+            IModel<List<StatusOverviewRowGroup>> dataListModel = new LoadableDetachableModel<List<StatusOverviewRowGroup>>() {
+                @Override
+                protected List<StatusOverviewRowGroup> load() {
+                    return fetchTenderProcessData();
+                }
+            };
+
+            listViewStatusTenderProcessOverview = new ListViewStatusOverview("statusPanel", dataListModel);
+            add(listViewStatusTenderProcessOverview);
+
+            add(createNoData(listViewStatusTenderProcessOverview));
+        }
+    }
+
+
+    public class StatusOverviewProjectView extends StatusOverviewSearchView {
+
+        public StatusOverviewProjectView(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+            add(createSearchBox());
+            add(createYearDropdown());
+            add(createDataExport());
+
+            IModel<List<StatusOverviewRowGroup>> dataListModel = new LoadableDetachableModel<List<StatusOverviewRowGroup>>() {
+                @Override
+                protected List<StatusOverviewRowGroup> load() {
+                    return fetchProjectData();
+                }
+            };
+
+            listViewStatusProjectOverview = new ListViewStatusOverview("statusPanel", dataListModel);
+            add(listViewStatusProjectOverview);
+
+            add(createNoData(listViewStatusProjectOverview));
+        }
+    }
 
     public StatusOverviewPage(final PageParameters parameters) {
         super(parameters);
@@ -91,78 +156,91 @@ public class StatusOverviewPage extends DataEntryBasePage {
         return fiscalYearModel.getObject();
     }
 
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
 
-        addSearchBox();
-        addYearDropdown();
-
+    protected Link<Void> createDataExport() {
         final Link<Void> dataExport = new Link<Void>("dataExport") {
             @Override
             public void onClick() {
                 setResponsePage(DataExportPage.class);
             }
         };
-        add(dataExport);
+        return dataExport;
+    }
 
-        IModel<List<StatusOverviewData>> dataListModel = new LoadableDetachableModel<List<StatusOverviewData>>() {
-            @Override
-            protected List<StatusOverviewData> load() {
-                return fetchData();
-            }
-        };
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
-        listViewStatusOverview = new ListViewStatusOverview("statusPanel", dataListModel);
-        add(listViewStatusOverview);
+        //add(new StatusOverviewProjectView("statusOverviewProjectView"));
+        add(new StatusOverviewTenderProcessView("statusOverviewTenderProcessView"));
 
+    }
+
+
+    public WebMarkupContainer createNoData(AbstractListViewStatus<?> lvs) {
         noData = new WebMarkupContainer("noData");
         noData.setOutputMarkupId(true);
         noData.setOutputMarkupPlaceholderTag(true);
-        add(noData);
-        noData.setVisibilityAllowed(dataListModel.getObject().isEmpty());
+        noData.setVisibilityAllowed(lvs.getModelObject().isEmpty());
+        return noData;
     }
 
-    private void addYearDropdown() {
+    private DropDownChoice<FiscalYear> createYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
-        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice("yearsDropdown",
+        final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice<>("yearsDropdown",
                 fiscalYearModel, fiscalYearsModel, choiceRenderer);
         yearsDropdown.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
                 sessionMetadataService.setSessionFiscalYear(yearsDropdown.getModelObject());
                 fiscalYearModel.setObject(yearsDropdown.getModelObject());
-                updateDashboard(target);
+                updateProjectDashboard(target);
             }
         });
-        add(yearsDropdown);
+        return yearsDropdown;
     }
 
-    private void addSearchBox() {
+    private  TextField<String> createSearchBox(SerializableConsumer<AjaxRequestTarget> consumeUpdate) {
         final TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
         searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                updateDashboard(target);
+                consumeUpdate.accept(target);
             }
         });
-        add(searchBoxField);
+        return searchBoxField;
     }
 
-    private void updateDashboard(final AjaxRequestTarget target) {
-        listViewStatusOverview.setModelObject(fetchData());
-        listViewStatusOverview.removeListItems();
+    private void updateProjectDashboard(final AjaxRequestTarget target) {
+        listViewStatusProjectOverview.setModelObject(fetchProjectData());
+        listViewStatusProjectOverview.removeListItems();
 
         // update the project count from sidebar as well
         sideBar.getProjectCount()
                 .setDefaultModelObject(statusOverviewService.countProjects(getFiscalYear(), searchBox));
 
-        target.add(listViewStatusOverview);
+        target.add(listViewStatusProjectOverview);
         target.add(sideBar.getProjectCount());
         target.add(noData);
     }
 
-    private List<StatusOverviewData> fetchData() {
+    private void updateTenderProcessDashboard(final AjaxRequestTarget target) {
+        listViewStatusTenderProcessOverview.setModelObject(fetchProjectData());
+        listViewStatusTenderProcessOverview.removeListItems();
+
+        sideBar.getTenderProcessCount()
+                .setDefaultModelObject(statusOverviewService.countTenderProcesses(getFiscalYear(), searchBox));
+
+        target.add(listViewStatusTenderProcessOverview);
+        target.add(sideBar.getTenderProcessCount());
+        target.add(noData);
+    }
+
+    private List<StatusOverviewRowGroup> fetchProjectData() {
         return statusOverviewService.getAllProjects(getFiscalYear(), searchBox);
+    }
+
+    private List<StatusOverviewRowGroup> fetchTenderProcessData() {
+        return statusOverviewService.getDisplayableTenderProcesses(getFiscalYear(), searchBox);
     }
 }

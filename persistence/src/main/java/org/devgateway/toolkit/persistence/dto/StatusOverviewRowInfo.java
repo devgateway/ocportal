@@ -5,12 +5,12 @@ import java.io.Serializable;
 /**
  * @author gmutuhu
  */
-public class StatusOverviewProjectStatus implements Serializable {
+public class StatusOverviewRowInfo implements Serializable {
     private static final long serialVersionUID = -4877317917505893733L;
 
     private Long id;
 
-    private String projectTitle;
+    private String title;
 
     private String projectStatus;
 
@@ -28,12 +28,12 @@ public class StatusOverviewProjectStatus implements Serializable {
         this.id = id;
     }
 
-    public String getProjectTitle() {
-        return projectTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setProjectTitle(final String projectTitle) {
-        this.projectTitle = projectTitle;
+    public void setTitle(final String title) {
+        this.title = title;
     }
 
     public String getProjectStatus() {

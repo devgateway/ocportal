@@ -60,13 +60,13 @@
 - name: paymentVoucherForm.submitAndNext
   enabled: yes
   visible: yes
-- name: paymentVoucherForm.tenderProcess.project.procurementPlan.department
+- name: paymentVoucherForm.tenderProcess.procurementPlan.department
   mandatory: no
   enabled: yes
   visible: yes
   visibleDeps:
     - procurementPlanForm.department
-- name: paymentVoucherForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: paymentVoucherForm.tenderProcess.procurementPlan.fiscalYear
   mandatory: no
   enabled: yes
   visible: yes
@@ -122,7 +122,7 @@
   enabled: yes
   visible: yes
   visibleDeps:
-    - paymentVoucherForm.tenderProcess.project.procurementPlan.department
+    - paymentVoucherForm.tenderProcess.procurementPlan.department
 - name: paymentVouchersList.filterToolbar
   mandatory: no
   enabled: yes
@@ -132,7 +132,7 @@
   enabled: yes
   visible: yes
   visibleDeps:
-    - paymentVoucherForm.tenderProcess.project.procurementPlan.fiscalYear
+    - paymentVoucherForm.tenderProcess.procurementPlan.fiscalYear
 - name: paymentVouchersList.lastModifiedDate
   mandatory: no
   enabled: yes

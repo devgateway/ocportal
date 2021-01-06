@@ -71,10 +71,10 @@
 - name: tenderQuotationEvaluationForm.submitAndNext
   enabled: yes
   visible: yes
-- name: tenderQuotationEvaluationForm.tenderProcess.project.procurementPlan.department
+- name: tenderQuotationEvaluationForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
-- name: tenderQuotationEvaluationForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: tenderQuotationEvaluationForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
 - name: tenderQuotationEvaluationForm.terminate
@@ -92,7 +92,7 @@
 - name: tenderQuotationEvaluationsList.department
   visible: yes
   visibleDeps:
-    - tenderQuotationEvaluationForm.tenderProcess.project.procurementPlan.department
+    - tenderQuotationEvaluationForm.tenderProcess.procurementPlan.department
 - name: tenderQuotationEvaluationsList.downloadFile
   visible: yes
   visibleDeps:
@@ -102,7 +102,7 @@
 - name: tenderQuotationEvaluationsList.fiscalYear
   visible: yes
   visibleDeps:
-    - tenderQuotationEvaluationForm.tenderProcess.project.procurementPlan.fiscalYear
+    - tenderQuotationEvaluationForm.tenderProcess.procurementPlan.fiscalYear
 - name: tenderQuotationEvaluationsList.lastModifiedDate
   visible: yes
 - name: tenderQuotationEvaluationsList.status

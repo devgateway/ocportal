@@ -114,12 +114,12 @@
   mandatory: no
   enabled: yes
   visible: yes
-- name: meReportForm.tenderProcess.project.procurementPlan.department
+- name: meReportForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
   visibleDeps:
     - procurementPlanForm.department
-- name: meReportForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: meReportForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
   visibleDeps:
@@ -183,13 +183,13 @@
 - name: meReportsList.department
   visible: yes
   visibleDeps:
-    - meReportForm.tenderProcess.project.procurementPlan.department
+    - meReportForm.tenderProcess.procurementPlan.department
 - name: meReportsList.filterToolbar
   visible: yes
 - name: meReportsList.fiscalYear
   visible: yes
   visibleDeps:
-    - meReportForm.tenderProcess.project.procurementPlan.fiscalYear
+    - meReportForm.tenderProcess.procurementPlan.fiscalYear
 - name: meReportsList.lastModifiedDate
   visible: yes
 - name: meReportsList.meStatus

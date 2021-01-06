@@ -42,12 +42,12 @@
 - name: administratorReportForm.submitAndNext
   enabled: yes
   visible: yes
-- name: administratorReportForm.tenderProcess.project.procurementPlan.department
+- name: administratorReportForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
   visibleDeps:
     - procurementPlanForm.department
-- name: administratorReportForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: administratorReportForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
   visibleDeps:
@@ -78,13 +78,13 @@
 - name: administratorReportsList.department
   visible: yes
   visibleDeps:
-    - administratorReportForm.tenderProcess.project.procurementPlan.department
+    - administratorReportForm.tenderProcess.procurementPlan.department
 - name: administratorReportsList.filterToolbar
   visible: yes
 - name: administratorReportsList.fiscalYear
   visible: yes
   visibleDeps:
-    - administratorReportForm.tenderProcess.project.procurementPlan.fiscalYear
+    - administratorReportForm.tenderProcess.procurementPlan.fiscalYear
 - name: administratorReportsList.lastModifiedDate
   visible: yes
 - name: administratorReportsList.status

@@ -188,7 +188,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     }
 
     public ListViewTenderProcessOverview createTenderProcessOverview() {
-       return new ListViewTenderProcessOverview("tenderProcessOverview",
+       return new ListViewTenderProcessOverview("tenderProcessOverview", true,
                 new ListModel<>(fetchTenderProcessData()), sessionMetadataService.getSessionTenderProcess());
     }
 
@@ -450,7 +450,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         add(button);
 
         DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
-                "procurementPlanStatus", getProcurementPlan());
+                "procurementPlanStatus", getProcurementPlan() == null ? null : getProcurementPlan().getStatus());
         add(procurementPlanStatus);
     }
 
