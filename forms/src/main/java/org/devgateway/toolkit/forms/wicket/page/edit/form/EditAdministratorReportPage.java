@@ -5,7 +5,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.TechAdminRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AdministratorReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
@@ -68,11 +67,6 @@ public class EditAdministratorReportPage extends EditAbstractImplTenderProcessEn
         final TenderProcess tenderProcess = report.getTenderProcess();
         tenderProcess.removeAdministratorReport(report);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
     }
 
 }

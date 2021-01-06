@@ -75,4 +75,16 @@ public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueni
     public Department getDepartment() {
         return getTenderProcessNotNull().getDepartment();
     }
+
+    /**
+     * Return the next form to fill out once the current one was completed.
+     */
+    @JsonIgnore
+    public abstract Class<?> getNextForm();
+
+    /**
+     * Return true to prevent deletion of the current form if there are downstream forms that depend on this one.
+     */
+    @JsonIgnore
+    public abstract boolean hasDownstreamForms();
 }

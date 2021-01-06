@@ -6,11 +6,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardAcceptanceItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
@@ -56,11 +54,6 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntityP
     }
 
     @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return editForm.getModelObject().getTenderProcess().getSingleContract();
-    }
-
-    @Override
     protected AwardAcceptance newInstance() {
         final AwardAcceptance awardAcceptance = super.newInstance();
         awardAcceptance.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
@@ -84,11 +77,6 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntityP
         final TenderProcess tenderProcess = awardAcceptance.getTenderProcess();
         tenderProcess.removeAwardAcceptance(awardAcceptance);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return editForm.getModelObject().hasAccepted() ? EditContractPage.class : EditProfessionalOpinionPage.class;
     }
 
     @Override

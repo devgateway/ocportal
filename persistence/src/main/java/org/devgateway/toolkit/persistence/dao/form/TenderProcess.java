@@ -484,4 +484,28 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     public void setPaymentVouchers(Set<PaymentVoucher> paymentVouchers) {
         this.paymentVouchers = paymentVouchers;
     }
+
+    public boolean hasFormsDependingOnTender() {
+        return getSingleTenderQuotationEvaluation() != null
+                || hasFormsDependingOnTenderQuotationAndEvaluation();
+    }
+
+    public boolean hasFormsDependingOnTenderQuotationAndEvaluation() {
+        return getSingleProfessionalOpinion() != null
+                || hasFormsDependingOnProfessionalOpinion();
+    }
+
+    public boolean hasFormsDependingOnProfessionalOpinion() {
+        return getSingleAwardNotification() != null
+                || hasFormsDependingOnAwardNotification();
+    }
+
+    public boolean hasFormsDependingOnAwardNotification() {
+        return getSingleAwardAcceptance() != null
+                || hasFormsDependingOnAwardAcceptance();
+    }
+
+    public boolean hasFormsDependingOnAwardAcceptance() {
+        return getSingleContract() != null;
+    }
 }

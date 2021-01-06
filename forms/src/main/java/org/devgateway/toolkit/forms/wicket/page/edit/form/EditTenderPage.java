@@ -24,13 +24,11 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
@@ -153,11 +151,6 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
 
     }
 
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return editForm.getModelObject().getTenderProcess().getSingleTenderQuotationEvaluation();
-    }
-
     private void addProcuringEntitySection() {
         Select2ChoiceBootstrapFormComponent<ProcuringEntity> issuedBy = ComponentUtil.addSelect2ChoiceField(editForm,
                 "issuedBy", procuringEntityService);
@@ -181,11 +174,6 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         });
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
-    }
-
-    @Override
-    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return EditTenderQuotationEvaluationPage.class;
     }
 
     @Override

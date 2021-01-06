@@ -84,4 +84,14 @@ public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
     public void setItems(List<AwardAcceptanceItem> items) {
         this.items = items;
     }
+
+    @Override
+    public Class<?> getNextForm() {
+        return hasAccepted() ? Contract.class : ProfessionalOpinion.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnAwardAcceptance();
+    }
 }

@@ -4,10 +4,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ProfessionalOpinionItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
@@ -51,11 +49,6 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
     }
 
     @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return editForm.getModelObject().getTenderProcess().getSingleAwardNotification();
-    }
-
-    @Override
     protected ProfessionalOpinion newInstance() {
         final ProfessionalOpinion professionalOpinion = super.newInstance();
         professionalOpinion.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
@@ -79,11 +72,6 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
         final TenderProcess tenderProcess = professionalOpinion.getTenderProcess();
         tenderProcess.removeProfessionalOpinion(professionalOpinion);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return EditAwardNotificationPage.class;
     }
 
     @Override

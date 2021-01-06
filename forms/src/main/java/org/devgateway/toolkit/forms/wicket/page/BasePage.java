@@ -514,47 +514,35 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
 
-                list.add(new MenuBookmarkablePageLink<ListProcurementPlanPage>(ListProcurementPlanPage.class, null,
-                        new StringResourceModel("navbar.procurementPlan", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListProcurementPlanPage.class,
+                        "navbar.procurementPlan", "navbar.procurementPlan");
 
-                list.add(new MenuBookmarkablePageLink<ListCabinetPaperPage>(ListCabinetPaperPage.class, null,
-                        new StringResourceModel("navbar.cabinetpapers", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListCabinetPaperPage.class,
+                        "navbar.cabinetpapers", "navbar.cabinetPapers");
 
-                list.add(new MenuBookmarkablePageLink<ListProjectPage>(ListProjectPage.class, null,
-                        new StringResourceModel("navbar.project", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListProjectPage.class,
+                        "navbar.project", "navbar.project");
 
-                list.add(new MenuBookmarkablePageLink<ListTenderProcessPage>(
-                        ListTenderProcessPage.class, null,
-                        new StringResourceModel("navbar.tenderProcess", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListTenderProcessPage.class,
+                        "navbar.tenderProcess", "navbar.tenderProcess");
 
-                list.add(new MenuBookmarkablePageLink<ListTenderPage>(ListTenderPage.class, null,
-                        new StringResourceModel("navbar.tenderdocument", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListTenderPage.class,
+                        "navbar.tenderdocument", "navbar.tenderDocument");
 
-                list.add(new MenuBookmarkablePageLink<ListTenderQuotationEvaluationPage>(
-                        ListTenderQuotationEvaluationPage.class, null,
-                        new StringResourceModel("navbar.tenderquotationevaluation", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListTenderQuotationEvaluationPage.class,
+                        "navbar.tenderquotationevaluation", "navbar.tenderQuotationEvaluation");
 
-                list.add(new MenuBookmarkablePageLink<ListProfessionalOpinionPage>(ListProfessionalOpinionPage.class,
-                        null, new StringResourceModel("navbar.professionalopinion", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListProfessionalOpinionPage.class,
+                        "navbar.professionalopinion", "navbar.professionalOpinion");
 
-                list.add(new MenuBookmarkablePageLink<ListAwardNotificationPage>(ListAwardNotificationPage.class,
-                        null, new StringResourceModel("navbar.awardnotification", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
-                list.add(new MenuBookmarkablePageLink<ListAwardAcceptancePage>(ListAwardAcceptancePage.class,
-                        null, new StringResourceModel("navbar.awardacceptance", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListAwardNotificationPage.class,
+                        "navbar.awardnotification", "navbar.awardNotification");
 
-                list.add(new MenuBookmarkablePageLink<ListContractPage>(ListContractPage.class,
-                        null, new StringResourceModel("navbar.contract", this, null)
-                )
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListAwardAcceptancePage.class,
+                        "navbar.awardacceptance", "navbar.awardAcceptance");
+
+                addFormMenuItem(list, ListContractPage.class,
+                        "navbar.contract", "navbar.contract");
 
                 return list;
             }
@@ -564,6 +552,17 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
 
         return formMenu;
+    }
+
+    private <T extends BasePage> void addFormMenuItem(List<AbstractLink> list, Class<T> pageClass, String resourceKey,
+            String featureName) {
+        StringResourceModel label = new StringResourceModel(resourceKey, this);
+        MenuBookmarkablePageLink<T> link = new MenuBookmarkablePageLink<>(pageClass, label);
+        link.setIconType(FontAwesomeIconType.file_text_o);
+
+        if (fmService.isFeatureVisible(featureName)) {
+            list.add(link);
+        }
     }
 
     private NavbarDropDownButton newAdminMenu() {

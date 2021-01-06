@@ -38,4 +38,14 @@ public abstract class AbstractImplTenderProcessMakueniEntity extends AbstractTen
     public void setContract(Contract contract) {
         this.contract = contract;
     }
+
+    @Override
+    public Class<?> getNextForm() {
+        return null;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return false;
+    }
 }
