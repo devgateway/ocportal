@@ -12,6 +12,7 @@ import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -61,6 +62,9 @@ public class DgFmServiceImpl implements DgFmService {
 
     @Autowired
     private DgFmProperties fmProperties;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     private final ConcurrentSkipListSet<FeatureConfig> featureConfigs = new ConcurrentSkipListSet<>();
 
@@ -372,6 +376,8 @@ public class DgFmServiceImpl implements DgFmService {
 
                 throw e;
             }
+
+            cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
 
             applicationEventPublisher.publishEvent(new FmReconfiguredEvent(this));
         }
