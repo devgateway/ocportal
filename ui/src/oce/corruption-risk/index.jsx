@@ -3,6 +3,8 @@ import cn from 'classnames';
 import URI from 'urijs';
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
+import { defaultMemoize } from 'reselect';
+import { isEqualWith } from 'lodash';
 import {
   cacheFn, debounce, fetchJson, range,
 } from '../tools';
@@ -26,6 +28,36 @@ import makueniLogo from '../resources/makueni-logo.png';
 import enTranslations from '../../languages/en_US.json';
 import esTranslations from '../../languages/es_ES.json';
 import frTranslations from '../../languages/fr_FR.json';
+
+const getIndicators = cacheFn((indicatorTypesMapping, corruptionType) => Object.keys(indicatorTypesMapping)
+  .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1));
+
+/**
+ * Returns true if two objects are equal shallowly.
+ */
+const isShallowEqual = (a, b) => isEqualWith(a, b,
+  (aval, bval, index) => (index === undefined ? undefined : Object.is(aval, bval)));
+
+/**
+ * Creates a selector that will return filters without date properties.
+ * Changes to date properties won't result in a new filters object.
+ */
+const createDatelessFiltersSelector = () => {
+  const memoizeDatelessFilters = defaultMemoize((filters) => (filters), isShallowEqual);
+  return ({ year, month, ...datelessFilters }) => memoizeDatelessFilters(datelessFilters);
+};
+
+/**
+ * Creates a selector that returns just the date filters.
+ * Changes to other filters won't result in a new filters object.
+ */
+const createDateFiltersSelector = () => {
+  const memoizeDateFilters = defaultMemoize((year, month) => ({
+    years: year || [],
+    months: (month == null || month.length === 0) ? range(1, 12) : month,
+  }));
+  return ({ year, month }) => memoizeDateFilters(year, month);
+};
 
 // eslint-disable-next-line no-undef
 class CorruptionRiskDashboard extends React.Component {
@@ -51,11 +83,8 @@ class CorruptionRiskDashboard extends React.Component {
 
     localStorage.alreadyVisited = true;
 
-    this.destructFilters = cacheFn(({ year, month, ...otherFilters }) => ({
-      datelessFilters: otherFilters,
-      years: year || [],
-      months: (month == null || month.length === 0) ? range(1, 12) : month,
-    }));
+    this.selectDateFilters = createDateFiltersSelector();
+    this.selectDatelessFilters = createDatelessFiltersSelector();
   }
 
   componentDidMount() {
@@ -89,8 +118,7 @@ class CorruptionRiskDashboard extends React.Component {
     if (page === 'type') {
       const [, corruptionType] = route;
 
-      const indicators = Object.keys(indicatorTypesMapping)
-        .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1);
+      const indicators = getIndicators(indicatorTypesMapping, corruptionType);
 
       return (
         <CorruptionTypePage
@@ -122,7 +150,7 @@ class CorruptionRiskDashboard extends React.Component {
         sgSlug: 'contract',
         plSlug: 'contracts',
         additionalProps: {
-          totalContracts: this.state.data.getIn(['totalFlags', 'contractCounter'], 0),
+          totalContracts: this.state.data.getIn(['sidebar', 'totalFlags', 'contractCounter'], 0),
         },
       });
     } if (page === 'suppliers') {
@@ -171,7 +199,8 @@ class CorruptionRiskDashboard extends React.Component {
     const slug = Array.isArray(_slug) ? _slug : [_slug];
     const translations = this.getTranslations();
     const { filters, width } = this.state;
-    const { datelessFilters, years, months } = this.destructFilters(filters);
+    const datelessFilters = this.selectDatelessFilters(filters);
+    const { years, months } = this.selectDateFilters(filters);
 
     return {
       translations,
@@ -282,7 +311,7 @@ class CorruptionRiskDashboard extends React.Component {
 
   render() {
     const {
-      filters, data,
+      filters,
       indicatorTypesMapping, showLandingPopup,
       disabledApiSecurity,
     } = this.state;
@@ -333,10 +362,6 @@ class CorruptionRiskDashboard extends React.Component {
           indicatorTypesMapping={indicatorTypesMapping}
           route={route}
           navigate={navigate}
-          data={data}
-          requestNewData={(path, newData) => this.setState(
-            (state) => ({ data: state.data.setIn(path, newData) }),
-          )}
           styling={this.props.styling}
         />
         <div className="col-sm-offset-3 col-md-9 col-sm-10 content">

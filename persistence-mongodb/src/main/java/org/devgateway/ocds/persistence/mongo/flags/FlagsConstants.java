@@ -1,8 +1,12 @@
 package org.devgateway.ocds.persistence.mongo.flags;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public final class FlagsConstants {
 
@@ -25,6 +29,9 @@ public final class FlagsConstants {
     public static final List<String> FLAGS_LIST = Collections.unmodifiableList(
             Arrays.asList(new String[]{I038_VALUE, I007_VALUE, I019_VALUE, I182_VALUE, I045_VALUE,
                     I077_VALUE, I180_VALUE, I002_VALUE, I085_VALUE, I171_VALUE, I184_VALUE, I016_VALUE, I083_VALUE}));
+
+    public static final Map<String, String> FLAG_VALUES_BY_NAME = Collections.unmodifiableMap(
+            FLAGS_LIST.stream().collect(toMap(value -> value.substring(6, 10), identity())));
 
     private FlagsConstants() {
     }

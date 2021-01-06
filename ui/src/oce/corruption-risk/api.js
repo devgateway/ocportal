@@ -35,15 +35,17 @@ export const mapWinsAndFlags = (prop) => (data) => data.map((datum) => ({
 export const getFlaggedNrData = async (filters) => {
   const indicatorTypesMapping = await fetch('/indicatorTypesMapping');
 
-  return Promise.all(
-    Object.keys(indicatorTypesMapping).map((indicatorId) => fetch(`/flags/${indicatorId}/count`, filters)
-      .then((data) => {
-        if (!data[0]) return null;
-        return {
-          indicatorId,
-          count: data[0].count,
-          types: indicatorTypesMapping[indicatorId].types,
-        };
-      })),
-  ).then((data) => data.filter((datum) => !!datum).sort((a, b) => b.count - a.count));
+  const filtersWithFlags = {
+    ...filters,
+    flags: Object.keys(indicatorTypesMapping),
+  };
+
+  return fetch('/flags/count', filtersWithFlags).then((data) => Object.entries(data)
+    .filter(([, counts]) => counts.length > 0)
+    .map(([indicatorId, counts]) => ({
+      indicatorId,
+      count: counts[0].count,
+      types: indicatorTypesMapping[indicatorId].types,
+    }))
+    .sort((a, b) => b.count - a.count));
 };

@@ -1,16 +1,15 @@
-import { pluckImm } from '../tools';
+import React from 'react';
+import { List } from 'immutable';
+import { cacheFn, pluckImm } from '../tools';
 import CustomPopupChart from './custom-popup-chart';
 import translatable from '../translatable';
 import CRDPage from './page';
 import { colorLuminance, sortByField } from './tools';
 import Crosstab from './crosstab';
+import Visualization from '../visualization';
+import frontendDateFilterable from '../visualizations/frontend-date-filterable';
 
 class IndicatorTile extends CustomPopupChart {
-  getCustomEP() {
-    const { indicator } = this.props;
-    return `flags/${indicator}/stats`;
-  }
-
   getData() {
     const color = this.props.styling.charts.traceColors[2];
     let data = super.getData();
@@ -96,17 +95,25 @@ class IndicatorTile extends CustomPopupChart {
           <div className="col-sm-12">
             <hr />
           </div>
-          <div className="col-sm-8 text-right title">{this.t('crd:corruptionType:indicatorTile:procurementsFlagged')}</div>
+          <div className="col-sm-8 text-right title">
+            {this.t('crd:corruptionType:indicatorTile:procurementsFlagged')}
+          </div>
           <div className="col-sm-4 text-left info">{datum.get('totalTrue')}</div>
-          <div className="col-sm-8 text-right title">{this.t('crd:corruptionType:indicatorTile:eligibleProcurements')}</div>
+          <div className="col-sm-8 text-right title">
+            {this.t('crd:corruptionType:indicatorTile:eligibleProcurements')}
+          </div>
           <div className="col-sm-4 text-left info">{datum.get('totalPrecondMet')}</div>
-          <div className="col-sm-8 text-right title">{this.t('crd:corruptionType:indicatorTile:percentEligibleFlagged')}</div>
+          <div className="col-sm-8 text-right title">
+            {this.t('crd:corruptionType:indicatorTile:percentEligibleFlagged')}
+          </div>
           <div className="col-sm-4 text-left info">
             {datum.get('percentTruePrecondMet').toFixed(2)}
             {' '}
             %
           </div>
-          <div className="col-sm-8 text-right title">{this.t('crd:corruptionType:indicatorTile:percentProcurementsEligible')}</div>
+          <div className="col-sm-8 text-right title">
+            {this.t('crd:corruptionType:indicatorTile:percentProcurementsEligible')}
+          </div>
           <div className="col-sm-4 text-left info">
             {datum.get('percentPrecondMet').toFixed(2)}
             {' '}
@@ -125,18 +132,97 @@ function groupBy3(arr) {
   return [arr.slice(0, 3)].concat(groupBy3(arr.slice(3)));
 }
 
-class CorruptionType extends translatable(CRDPage) {
-  constructor(...args) {
-    super(...args);
-    this.state = {
-      indicatorTiles: {},
-    };
+const getStatsForFlag = cacheFn((stats, flag) => stats.filter((stat) => stat.get('flag') === flag));
+
+class AllTiles extends frontendDateFilterable(Visualization) {
+  buildUrl(ep) {
+    const { indicators } = this.props;
+    const url = super.buildUrl(ep);
+    url.addSearch('flags', indicators);
+    return url;
   }
 
-  updateIndicatorTile(indicator, data) {
-    const { indicatorTiles } = this.state;
-    indicatorTiles[indicator] = data;
-    this.setState({ indicatorTiles });
+  componentDidUpdate(prevProps) {
+    super.componentDidUpdate(prevProps);
+    if (this.props.indicators !== prevProps.indicators) {
+      this.fetch();
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  transform(data) {
+    const flatStats = [];
+    Object.entries(data).forEach(([flag, stats]) => {
+      stats.forEach((stat) => {
+        flatStats.push({
+          ...stat,
+          flag,
+        });
+      });
+    });
+    return flatStats;
+  }
+
+  render() {
+    const {
+      indicators, onGotoIndicator, corruptionType, translations, filters, years, months, monthly, width, styling,
+      indicatorTiles,
+    } = this.props;
+
+    return (
+      <>
+        {groupBy3(indicators).map((row) => (
+          <div className="row" key={row.join()}>
+            {row.map((indicator) => {
+              const indicatorName = this.t(`crd:indicators:${indicator}:name`);
+              const indicatorDescription = this.t(`crd:indicators:${indicator}:shortDescription`);
+              const stats = getStatsForFlag(indicatorTiles, indicator);
+              return (
+                <div
+                  className="col-sm-4 indicator-tile-container"
+                  key={corruptionType + indicator}
+                  onClick={() => onGotoIndicator(indicator)}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className="border">
+                    <h4>{indicatorName}</h4>
+                    <p>{indicatorDescription}</p>
+                    <IndicatorTile
+                      indicator={indicator}
+                      translations={translations}
+                      filters={filters}
+                      data={stats}
+                      requestNewData={() => null}
+                      margin={{
+                        t: 10, r: 5, b: 50, l: 20, pad: 5,
+                      }}
+                      height={300}
+                      years={years}
+                      monthly={monthly}
+                      months={months}
+                      width={width / 3 - 95}
+                      styling={styling}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </>
+    );
+  }
+}
+
+AllTiles.endpoint = 'flags/stats';
+
+class CorruptionType extends translatable(CRDPage) {
+  constructor() {
+    super();
+    this.state = {
+      indicatorTiles: List(),
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -156,39 +242,24 @@ class CorruptionType extends translatable(CRDPage) {
     return (
       <div className="page-corruption-type">
         <h2 className="page-header">{this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}</h2>
-        <p className="introduction" dangerouslySetInnerHTML={{ __html: this.t(`crd:corruptionType:${corruptionType}:introduction`) }} />
-        {groupBy3(indicators).map((row, index) => (
-          <div className="row" key={index}>
-            {row.map((indicator) => {
-              const indicatorName = this.t(`crd:indicators:${indicator}:name`);
-              const indicatorDescription = this.t(`crd:indicators:${indicator}:shortDescription`);
-              return (
-                <div className="col-sm-4 indicator-tile-container" key={corruptionType + indicator} onClick={() => onGotoIndicator(indicator)}>
-                  <div className="border">
-                    <h4>{indicatorName}</h4>
-                    <p>{indicatorDescription}</p>
-                    <IndicatorTile
-                      indicator={indicator}
-                      translations={translations}
-                      filters={filters}
-                      requestNewData={(_, data) => this.updateIndicatorTile(indicator, data)}
-                      data={indicatorTiles[indicator]}
-                      margin={{
-                        t: 10, r: 5, b: 50, l: 20, pad: 5,
-                      }}
-                      height={300}
-                      years={years}
-                      monthly={monthly}
-                      months={months}
-                      width={width / 3 - 95}
-                      styling={styling}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+        <p
+          className="introduction"
+          dangerouslySetInnerHTML={{ __html: this.t(`crd:corruptionType:${corruptionType}:introduction`) }}
+        />
+        <AllTiles
+          corruptionType={corruptionType}
+          onGotoIndicator={onGotoIndicator}
+          indicatorTiles={indicatorTiles}
+          indicators={indicators}
+          filters={filters}
+          years={years}
+          months={months}
+          monthly={monthly}
+          width={width}
+          styling={styling}
+          translations={translations}
+          requestNewData={(_, data) => this.setState({ indicatorTiles: data })}
+        />
         <section>
           <h3 className="page-header">
             {this.t(`crd:corruptionType:${corruptionType}:crosstabTitle`)}
