@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
  */
 public class TextSearchRequest extends GenericPagingRequest {
 
-    @Size(min = 3, max = 30)
+    @Size(min = 3, max = 255)
     private String text;
 
     public TextSearchRequest() {
@@ -23,7 +23,7 @@ public class TextSearchRequest extends GenericPagingRequest {
     }
 
     public void setText(final String text) {
-        this.text = text;
+        this.text = (text == null || text.isEmpty()) ? null : text;
     }
 
 }
