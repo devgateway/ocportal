@@ -49,6 +49,7 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("inspectionReportForm");
         super.onInitialize();
 
         Fragment inspectionExtraFields = new Fragment("childExtraFields", "inspectionExtraFields", this);
@@ -58,7 +59,6 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
         ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
 
         TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comments");
-        comment.required();
         editForm.add(comment);
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();

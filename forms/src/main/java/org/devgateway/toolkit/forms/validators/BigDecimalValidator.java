@@ -25,7 +25,8 @@ public class BigDecimalValidator implements IValidator<BigDecimal> {
             final int length = toString.length();
 
             if (length > MAX_LENGTH) {
-                final ValidationError error = new ValidationError("Number is too big");
+                final ValidationError error = new ValidationError();
+                error.addKey("BigDecimalValidator.tooBig");
                 validatable.error(error);
             }
         }

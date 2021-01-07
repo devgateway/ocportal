@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div wicket:id="explainModal"></div>
+    <form wicket:id="filterForm">
+        <div class="row">
+            <div wicket:id="feature" class="col-md-6"></div>
+            <div wicket:id="visible" class="col-md-2"></div>
+            <div wicket:id="enabled" class="col-md-2"></div>
+            <div wicket:id="mandatory" class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <div wicket:id="visibleDep" class="col-md-3"></div>
+            <div wicket:id="enabledDep" class="col-md-3"></div>
+            <div wicket:id="mandatoryDep" class="col-md-3"></div>
+            <div wicket:id="mixin" class="col-md-3"></div>
+        </div>
+        <button wicket:id="submit">[[submit]]</button>
+    </form>
+    <table wicket:id="table" class="table table-hover"></table>
+    <wicket:fragment wicket:id="actionsCell">
+        <a wicket:id="explain">[[explain]]</a>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

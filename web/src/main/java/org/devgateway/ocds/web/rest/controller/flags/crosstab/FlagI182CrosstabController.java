@@ -3,7 +3,7 @@ package org.devgateway.ocds.web.rest.controller.flags.crosstab;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.flags.FlagsConstants;
-import org.devgateway.ocds.web.rest.controller.flags.AbstractFlagCrosstabController;
+import org.devgateway.ocds.web.rest.controller.flags.AbstractSingleFlagCrosstabController;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,18 +21,13 @@ import java.util.List;
 @RestController
 @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
 @Cacheable
-public class FlagI182CrosstabController extends AbstractFlagCrosstabController {
-
-    @Override
-    protected String getFlagProperty() {
-        return FlagsConstants.I182_VALUE;
-    }
+public class FlagI182CrosstabController extends AbstractSingleFlagCrosstabController {
 
     @Override
     @ApiOperation(value = "Crosstab for flag i182")
     @RequestMapping(value = "/api/flags/i182/crosstab",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> flagStats(@ModelAttribute @Valid YearFilterPagingRequest filter) {
-        return super.flagStats(filter);
+        return super.flagStats(FlagsConstants.I182_VALUE, filter);
     }
 }

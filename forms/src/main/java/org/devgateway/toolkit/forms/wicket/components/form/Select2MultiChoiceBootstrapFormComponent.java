@@ -63,7 +63,12 @@ public class Select2MultiChoiceBootstrapFormComponent<TYPE>
 
     @Override
     protected Select2MultiChoice<TYPE> inputField(final String id, final IModel<Collection<TYPE>> model) {
-        Select2MultiChoice<TYPE> multiChoice = new Select2MultiChoice<TYPE>(id, initFieldModel());
+        Select2MultiChoice<TYPE> multiChoice = new Select2MultiChoice<TYPE>(id, initFieldModel()) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
         multiChoice.setEscapeModelStrings(false);
         return multiChoice;
     }
@@ -82,7 +87,7 @@ public class Select2MultiChoiceBootstrapFormComponent<TYPE>
 
     @Override
     protected void onInitialize() {
-        field.getSettings().setPlaceholder("Click to select");
+        field.getSettings().setPlaceholder(getString("select2.placeholder"));
         field.getSettings().setAllowClear(true);
         field.getSettings().setCloseOnSelect(true);
         field.getSettings().setDropdownAutoWidth(true);

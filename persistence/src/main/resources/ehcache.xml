@@ -87,6 +87,14 @@
            statistics="true">
     </cache>
 
+    <cache name="fmCache"
+           eternal="true"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"
+           maxEntriesLocalHeap="2000"
+           statistics="true">
+    </cache>
+
     <cache name="reportsApiCache"
            eternal="true"
            diskPersistent="false"

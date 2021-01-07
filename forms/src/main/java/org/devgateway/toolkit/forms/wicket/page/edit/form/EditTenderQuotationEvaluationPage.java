@@ -44,13 +44,13 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("tenderQuotationEvaluationForm");
         super.onInitialize();
 
-        ComponentUtil.addDateField(editForm, "closingDate").required();
+        ComponentUtil.addDateField(editForm, "closingDate");
         editForm.add(new BidPanel("bids"));
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         editForm.add(formDocs);
     }
 

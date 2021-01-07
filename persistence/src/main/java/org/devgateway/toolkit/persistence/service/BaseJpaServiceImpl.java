@@ -1,13 +1,19 @@
 package org.devgateway.toolkit.persistence.service;
 
+import static java.util.stream.Collectors.joining;
+
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ValidationException;
+import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +25,9 @@ import java.util.Set;
  * @since 2019-03-04
  */
 public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializable> implements BaseJpaService<T> {
+
+    @Autowired
+    private Validator validator;
 
     @Override
     public List<T> findAll() {
@@ -94,19 +103,33 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     @Override
     @Transactional
     public <S extends T> S save(final S entity) {
+        assertEntityIsValid(entity);
         return repository().save(entity);
     }
 
     @Override
     @Transactional(readOnly = false)
     public <S extends T> List<S> saveAll(final Iterable<S> entities) {
+        for (S entity : entities) {
+            assertEntityIsValid(entity);
+        }
         return repository().saveAll(entities);
     }
 
     @Override
     @Transactional
     public <S extends T> S saveAndFlush(final S entity) {
+        assertEntityIsValid(entity);
         return repository().saveAndFlush(entity);
+    }
+
+    private <S extends T> void assertEntityIsValid(S entity) {
+        Set<ConstraintViolation<S>> violations = validator.validate(entity);
+        if (!violations.isEmpty()) {
+            throw new ValidationException("Entity is not valid. Constraint violations:\n" + violations.stream()
+                    .map(Object::toString)
+                    .collect(joining("\n")));
+        }
     }
 
     @Override

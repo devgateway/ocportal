@@ -1,0 +1,53 @@
+
+- name: viz.me.chart.overview
+  visible: yes
+- name: viz.me.table.suppliers
+  visible: yes
+- name: viz.me.table.tenders
+  visible: yes
+- name: viz.me.table.awards
+  visible: yes
+- name: viz.me.chart.expenditureToDateVsBudget
+  visible: yes
+
+- name: viz.me.map.tenderLocations
+  visible: yes
+
+- name: viz.me.chart.costEffectiveness
+  visible: yes
+- name: viz.me.chart.procurementMethod
+  visible: yes
+- name: viz.me.chart.avgNrBids
+  visible: yes
+- name: viz.me.table.frequentTenderers
+  visible: yes
+- name: viz.me.chart.avgTenderersByBuyer
+  visible: yes
+- name: viz.me.chart.shareProcAwardedAgpo
+  visible: yes
+- name: viz.me.chart.noPercent1StTimeWinner
+  visible: yes
+- name: viz.me.chart.smallRepetitiveDirectAwardsBuyer
+  visible: yes
+
+- name: viz.me.chart.delayedContracts
+  visible: yes
+- name: viz.me.chart.pmcNotAuthContracts
+  visible: yes
+- name: viz.me.chart.cancelledContracts
+  visible: yes
+- name: viz.me.table.topSuppliersInspectionReportNoPay
+  visible: yes
+- name: viz.me.table.topSuppliersDelayedContracts
+  visible: yes
+- name: viz.me.table.topSuppliersPmcReportNoPay
+  visible: yes
+
+- name: viz.me.chart.bidPeriod
+  visible: yes
+- name: viz.me.chart.totalAmountsByItem
+  visible: yes
+- name: viz.me.chart.bidsByItem
+  visible: yes
+- name: viz.me.chart.nrCancelled
+  visible: yes

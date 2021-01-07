@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
@@ -98,21 +98,34 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         }
     }
 
+
+    protected class ProfessionalOpinionCountValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            if (getWrongProfessionalOpinionCount()) {
+                form.error(getString("wrongProfessionalOpinionCount"));
+            }
+        }
+    }
+
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Award Notification"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newAwardNotification", this));
     }
 
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new WrongDistinctCountValidator());
-            form.add(new AwardNotificationItemCountValidator());
-        }
+        final Form<?> form = findParent(Form.class);
+        form.add(new  WrongDistinctCountValidator());
+        form.add(new ProfessionalOpinionCountValidator());
+        form.add(new AwardNotificationItemCountValidator());
     }
 
     @Override
@@ -138,11 +151,10 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
 
     @Override
     public void populateCompoundListItem(final ListItem<AwardNotificationItem> item) {
-        ComponentUtil.addBigDecimalField(item, "awardValue").required()
+        ComponentUtil.addBigDecimalField(item, "awardValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         final DateFieldBootstrapFormComponent awardDate = ComponentUtil.addDateField(item, "awardDate");
-        awardDate.required();
         final Tender tender = item.getModelObject().getParent().getTenderProcess().getSingleTender();
         if (tender != null && tender.getInvitationDate() != null) {
             awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
@@ -154,7 +166,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         addSupplierInfo(item);
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
 
@@ -165,7 +176,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
                         ComponentUtil.getSuppliersInTenderQuotation(
                                 item.getModelObject().getParent().getTenderProcess(), true))
         );
-        awardeeSelector.required();
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         item.add(awardeeSelector);
 

@@ -23,7 +23,6 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.GoAndClearFilter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -104,6 +103,18 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
 
+    protected void addFmColumn(String fmName, IColumn<T, String> column) {
+        if (getFmService().isFeatureVisible(getParentCombinedFmName(this, fmName))) {
+            columns.add(column);
+        }
+    }
+
+    protected void addFmColumn(String fmName, int i, IColumn<T, String> column) {
+        if (getFmService().isFeatureVisible(getParentCombinedFmName(this, fmName))) {
+            columns.add(i, column);
+        }
+    }
+
     public AbstractListPage(final PageParameters parameters) {
         super(parameters);
 
@@ -170,7 +181,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
         // create custom submit button in order to prevent form submission
         final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
-                new Model<>("Submit"), Buttons.Type.Default) {
+                new StringResourceModel("submit", this), Buttons.Type.Default) {
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -188,9 +199,10 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
         if (hasFilteredColumns()) {
             GoAndClearFilter go = new BootstrapGoClearFilter("go", filterForm);
-            FilterToolbar filterToolbar = new GoFilterToolbar(dataTable, go, filterForm);
+            GoFilterToolbar filterToolbar = new GoFilterToolbar(dataTable, go, filterForm);
             filterToolbar.setVisibilityAllowed(filterGoReset);
             dataTable.addTopToolbar(filterToolbar);
+            filterToolbar.attachWithParentFm("filterToolbar");
         }
 
         if (hasNewPage) {
@@ -374,7 +386,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             add(download);
 
             final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton",
-                    new Model<>("Excel Download"),
+                    new StringResourceModel("excelDownload", this),
                     Buttons.Type.Warning) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target) {

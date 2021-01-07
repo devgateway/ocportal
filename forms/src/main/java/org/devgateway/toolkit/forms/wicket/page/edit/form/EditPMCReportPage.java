@@ -104,13 +104,14 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("pmcReportForm");
         super.onInitialize();
 
         editForm.add(new PMCReportValidator());
 
-        ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
+        ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true);
 
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
+        ComponentUtil.addDateField(editForm, "approvedDate");
 
         PMCMemberPanel pmcMembers = new PMCMemberPanel("pmcMembers");
         editForm.add(pmcMembers);
@@ -118,27 +119,23 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         PMCNotesPanel pmcNotes = new PMCNotesPanel("pmcNotes");
         editForm.add(pmcNotes);
 
-        ComponentUtil.addTextField(editForm, "signatureNames").required();
+        ComponentUtil.addTextField(editForm, "signatureNames");
         acknowledgeSignature = ComponentUtil.addCheckBox(editForm, "acknowledgeSignature");
         editForm.add(acknowledgeSignature);
 
-        ComponentUtil.addTextAreaField(editForm, "socialSafeguards").required();
-        ComponentUtil.addTextAreaField(editForm, "emergingComplaints").required();
-        ComponentUtil.addTextAreaField(editForm, "pmcChallenges").required();
+        ComponentUtil.addTextAreaField(editForm, "socialSafeguards");
+        ComponentUtil.addTextAreaField(editForm, "emergingComplaints");
+        ComponentUtil.addTextAreaField(editForm, "pmcChallenges");
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "pmcStatus", pmcStatusService).required();
-        ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService)
-                .required();
-
+        ComponentUtil.addSelect2ChoiceField(editForm, "pmcStatus", pmcStatusService);
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService);
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
-        wards.required();
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
                 LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
-        subcounties.required();
-
+       
         formDocs.getField().setRequireAtLeastOneItem(false);
     }
 

@@ -28,25 +28,28 @@
         <json.patch.version>1.9</json.patch.version>
         <commons-digester3.version>3.2</commons-digester3.version>
         <reflections.version>0.9.11</reflections.version>
-        <commons-io.version>2.6</commons-io.version>
     </properties>
 
     <parent>
-        <groupId>org.devgateway.toolkit</groupId>
+        <groupId>org.devgateway.makueni</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.13.4-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.13.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
         <dependency>
@@ -136,7 +139,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
         </dependency>
 
         <dependency>

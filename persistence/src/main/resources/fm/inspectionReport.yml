@@ -1,0 +1,185 @@
+# EDIT PAGE
+- name: inspectionReportForm
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.approve
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.approvedDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.authorizePayment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.cancel
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.comments
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.delete
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.formDocs
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.privateSectorRequests
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.privateSectorRequests.newButton
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.privateSectorRequests.remove
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.privateSectorRequests.requestDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.privateSectorRequests.upload
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.save
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.tenderProcess.project.procurementPlan.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: inspectionReportForm.tenderProcess.project.procurementPlan.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: inspectionReportForm.tenderProcess.singleContract.awardee
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: inspectionReportForm.tenderProcess.singleContract.contractValue
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.tenderProcess.tender.iterator.next.tenderTitle
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: inspectionReportForm.terminate
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+
+# LIST PAGE
+- name: inspectionReportsList
+  enabled: yes
+  visible: yes
+- name: inspectionReportsList.department
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.tenderProcess.project.procurementPlan.department
+- name: inspectionReportsList.filterToolbar
+  visible: yes
+- name: inspectionReportsList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: inspectionReportsList.lastModifiedDate
+  visible: yes
+- name: inspectionReportsList.status
+  visible: yes
+- name: inspectionReportsList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: inspectionReportsList.approvedDate
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.approvedDate
+- name: inspectionReportsList.authorizePayment
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.authorizePayment
+- name: inspectionReportsList.awardee
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.tenderProcess.singleContract.awardee
+
+# PUBLIC VIEW
+- name: publicView.inspectionReport
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm
+- name: publicView.inspectionReport.contractValue
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.tenderProcess.singleContract.contractValue
+- name: publicView.inspectionReport.comments
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.comments
+- name: publicView.inspectionReport.privateSectorRequests
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.privateSectorRequests
+- name: publicView.inspectionReport.privateSectorRequests.requestDate
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.privateSectorRequests.requestDate
+- name: publicView.inspectionReport.privateSectorRequests.upload
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.privateSectorRequests.upload
+- name: publicView.inspectionReport.authorizePayment
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.authorizePayment
+- name: publicView.inspectionReport.tenderTitle
+  visible: yes
+- name: publicView.inspectionReport.contractor
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.tenderProcess.singleContract.awardee
+- name: publicView.inspectionReport.fiscalYear
+  visible: yes
+- name: publicView.inspectionReport.approvedDate
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.approvedDate
+- name: publicView.inspectionReport.formDocs
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.formDocs

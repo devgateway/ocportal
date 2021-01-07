@@ -37,6 +37,7 @@ public class ListMEReportPage extends ListAbstractImplTenderProcessMakueniEntity
 
     @Override
     protected void onInitialize() {
+        attachFm("meReportsList");
         addTenderTitleColumn();
         addMEStatusColumn();
 
@@ -44,7 +45,7 @@ public class ListMEReportPage extends ListAbstractImplTenderProcessMakueniEntity
     }
 
     protected void addMEStatusColumn() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(
+        addFmColumn("meStatus", new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>(
                         (new StringResourceModel("meStatus", ListMEReportPage.this)).getString()),
                 "meStatus",

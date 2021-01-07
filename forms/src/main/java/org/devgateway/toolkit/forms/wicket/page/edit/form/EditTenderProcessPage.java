@@ -71,6 +71,7 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("tenderProcessForm");
         super.onInitialize();
 
         editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.department"));

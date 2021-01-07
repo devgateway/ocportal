@@ -25,5 +25,4 @@ import org.springframework.context.annotation.Profile;
 @Profile("!integration")
 public class DatabaseConfiguration {
 
-
 }

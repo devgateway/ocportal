@@ -30,6 +30,7 @@ public class ListProfessionalOpinionPage extends ListAbstractTenderProcessMakuen
 
     @Override
     protected void onInitialize() {
+        attachFm("professionalOpinionsList");
         addTenderTitleColumn();
         super.onInitialize();
     }

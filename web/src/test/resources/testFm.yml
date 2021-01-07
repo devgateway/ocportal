@@ -1,0 +1,86 @@
+# basic features
+- name: defaults
+
+- name: reverseDefaults
+  visible: false
+  enabled: false
+  mandatory: true
+
+- name: allEnabled
+  mandatory: true
+
+- name: allDisabled
+  visible: false
+  enabled: false
+
+# optional feature disabled and hidden via mixin
+- name: allDisabledMixin
+  mixins:
+    - allDisabled
+
+# mixin will disable visible and enabled properties, mandatory cannot be overridden
+- name: mandatoryWithAllDisabledMixin
+  mandatory: true
+  mixins:
+    - allDisabled
+
+# mixin will disable visible and enabled properties, mandatory cannot be overridden
+- name: mandatoryWithAllDisabledChainedMixin
+  mandatory: true
+  mixins:
+    - allDisabledMixin
+
+# mixin cannot enable visible and enabled properties but will enable the mandatory property
+- name: mixingInAllEnabled
+  visible: false
+  enabled: false
+  mixins:
+    - allEnabled
+
+# using visible deps to hide a feature, feature will remain enabled and non-mandatory
+- name: visibleDepsAllDisabled
+  visibleDeps:
+    - allDisabled
+
+# hide feature through chaining
+- name: visibleDepsAllDisabledChained
+  visibleDeps:
+    - visibleDepsAllDisabled
+
+# explicitly hidden features cannot be made visible via visibleDeps
+- name: visibleDepsAllEnabled
+  visible: false
+  visibleDeps:
+    - allEnabled
+
+# require a feature via mandatory deps
+- name: mandatoryDepsAllEnabled
+  mandatoryDeps:
+    - allEnabled
+
+# require a feature via chained mandatory deps
+- name: mandatoryDepsAllEnabledChained
+  mandatoryDeps:
+    - mandatoryDepsAllEnabled
+
+# mandatory deps can't be used make a feature optional
+- name: mandatoryDepsAllDisabled
+  mandatory: true
+  mandatoryDeps:
+    - allDisabled
+
+# disable a feature using enabled deps
+- name: enabledDepsAllDisabled
+  enabledDeps:
+    - allDisabled
+
+# disable a feature using chained enabled deps
+- name: enabledDepsAllDisabledChained
+  enabledDeps:
+    - enabledDepsAllDisabled
+
+# explicitly enabled feature cannot be enabled through deps
+- name: enabledDepsAllEnabled
+  enabled: false
+  enabledDeps:
+    - allEnabled

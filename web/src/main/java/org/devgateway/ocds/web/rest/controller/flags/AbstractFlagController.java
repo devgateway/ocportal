@@ -11,9 +11,6 @@ import java.util.Arrays;
  */
 public abstract class AbstractFlagController extends GenericOCDSController {
 
-    protected abstract String getFlagProperty();
-
-
     /**
      * Creates Group function that performs sum on conditional boolean of type value given.
      *

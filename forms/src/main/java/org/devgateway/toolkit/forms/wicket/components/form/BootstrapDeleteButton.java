@@ -25,12 +25,13 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.json.JSONObject;
 
 /**
  * @author mpostelnicu
  * 
  */
-public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
+public abstract class BootstrapDeleteButton extends DgFmLaddaAjaxButton {
 
     private static final long serialVersionUID = 8306451874943978003L;
 
@@ -71,7 +72,8 @@ public abstract class BootstrapDeleteButton extends LaddaAjaxButton {
 
         super.updateAjaxAttributes(attributes);
         AjaxCallListener ajaxCallListener = new AjaxCallListener();
-        ajaxCallListener.onPrecondition("return confirm('Confirm Delete?');");
+        String message = getString("confirmDelete");
+        ajaxCallListener.onPrecondition(String.format("return confirm(%s);", JSONObject.quote(message)));
         attributes.getAjaxCallListeners().add(ajaxCallListener);
     }
 

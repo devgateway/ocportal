@@ -249,7 +249,6 @@ public class OcdsController extends GenericOCDSController {
     @ApiOperation(value = "Counts all available releases with flags, filtered by the given criteria.")
     @RequestMapping(value = "/api/flaggedRelease/count", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    @JsonView(Views.Internal.class)
     @Cacheable
     public Long countFlaggedOcdsReleases(
             @ModelAttribute @Valid final YearFilterPagingRequest releaseRequest) {
