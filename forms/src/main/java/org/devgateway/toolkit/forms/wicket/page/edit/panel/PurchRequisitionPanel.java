@@ -10,8 +10,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
@@ -70,18 +70,14 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     }
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Purchase Requisition"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newPurchaseRequisition", this));
     }
 
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new PurchRequisitionItemCountValidator());
-        }
+        findParent(Form.class).add(new PurchRequisitionItemCountValidator());
     }
 
     @Override
@@ -124,13 +120,12 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
 
     @Override
     public void populateCompoundListItem(final ListItem<PurchRequisition> item) {
-        ComponentUtil.addDateField(item, "requestApprovalDate").required();
+        ComponentUtil.addDateField(item, "requestApprovalDate");
         item.add(new PurchaseItemPanel("purchaseItems"));
 
-        ComponentUtil.addDateField(item, "approvedDate").required();
+        ComponentUtil.addDateField(item, "approvedDate");
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
 
@@ -156,12 +151,12 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
             GenericBootstrapFormComponent<Staff, Select2Choice<Staff>> requestedBy =
                     ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "requestedBy",
                             staffService
-                    ).required();
+                    );
             requestedBy.add(new StopEventPropagationBehavior());
             GenericBootstrapFormComponent<ChargeAccount, Select2Choice<ChargeAccount>> chargeAccount =
                     ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "chargeAccount",
                             chargeAccountService
-                    ).required();
+                    );
             chargeAccount.add(new StopEventPropagationBehavior());
         }
     }

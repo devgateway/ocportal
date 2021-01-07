@@ -53,7 +53,7 @@ public class CheckBoxPickerBootstrapFormComponent
         final BootstrapCheckBoxPickerConfig config = new BootstrapCheckBoxPickerConfig().withOnClass("btn-info")
                 .withOffClass("btn-warning")
                 .withOnIcon(FontAwesomeIconType.thumbs_up).withOffIcon(FontAwesomeIconType.thumbs_down)
-                .withReverse(true);
+                .withReverse(true).withSize(BootstrapCheckBoxPickerConfig.Size.Small);
 
         final BootstrapCheckBoxPicker checkBoxPicker = new BootstrapCheckBoxPicker("field", initFieldModel(), config);
         checkBoxPicker.add(new AjaxFormComponentUpdatingBehavior("change") {

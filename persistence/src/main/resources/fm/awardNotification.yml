@@ -1,0 +1,156 @@
+# EDIT PAGE
+- name: awardNotificationForm
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.approve
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.cancel
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.delete
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.acknowledgementDays
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.awardDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.awardValue
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.awardee
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.newButton
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.remove
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.supplierAddress
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.items.supplierID
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.save
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.tenderNumber
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.tenderProcess.project.procurementPlan.department
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.tenderProcess.project.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.tenderTitle
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.terminate
+  enabled: yes
+  visible: yes
+- name: awardNotificationForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+
+# LIST PAGE
+- name: awardNotificationsList
+  enabled: yes
+  visible: yes
+- name: awardNotificationsList.awardee
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardee
+- name: awardNotificationsList.department
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.tenderProcess.project.procurementPlan.department
+- name: awardNotificationsList.filterToolbar
+  visible: yes
+- name: awardNotificationsList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: awardNotificationsList.lastModifiedDate
+  visible: yes
+- name: awardNotificationsList.status
+  visible: yes
+- name: awardNotificationsList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.awardNotification
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm
+- name: publicView.awardNotification.items
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items
+- name: publicView.awardNotification.items.awardValue
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardValue
+- name: publicView.awardNotification.items.awardDate
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardDate
+- name: publicView.awardNotification.items.acknowledgementDays
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.acknowledgementDays
+- name: publicView.awardNotification.items.awardee.label
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardee
+- name: publicView.awardNotification.items.awardee.code
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardee
+- name: publicView.awardNotification.items.awardee.address
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.awardee
+- name: publicView.awardNotification.items.formDocs
+  visible: yes
+  visibleDeps:
+    - awardNotificationForm.items.formDocs

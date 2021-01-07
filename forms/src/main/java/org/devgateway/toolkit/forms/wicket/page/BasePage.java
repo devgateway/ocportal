@@ -48,9 +48,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
+import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.fm.DgFmAttachingVisitor;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
@@ -76,6 +80,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.fm.ListFeaturesPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
@@ -97,6 +102,7 @@ import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,7 +120,7 @@ import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_U
  *
  * @author miha
  */
-public abstract class BasePage extends GenericWebPage<Void> {
+public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormComponentSubject  {
     private static final long serialVersionUID = -4179591658828697452L;
 
     protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);
@@ -133,12 +139,41 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     private GoogleAnalyticsTracker googleAnalyticsTracker;
 
+    @SpringBean
+    private SettingsUtils settingsUtils;
+
 
     protected void createGoogleAnalyticsTracker() {
         googleAnalyticsTracker = new GoogleAnalyticsTracker(
-                "googleAnalyticsTracker", Constants.GOOGLE_ANALYTICS_ID);
+                "googleAnalyticsTracker", settingsUtils.getGoogleAnalyticsTrackingId());
+        googleAnalyticsTracker.setVisibilityAllowed(settingsUtils.getGoogleAnalyticsTrackingId() != null);
         add(googleAnalyticsTracker);
     }
+
+    @SpringBean
+    protected DgFmService fmService;
+
+    @Override
+    public DgFmService getFmService() {
+        return fmService;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isFmEnabled(super::isEnabled);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isFmVisible(super::isVisible);
+    }
+
+//    @Override
+//    public MarkupContainer add(Component... children) {
+//        MarkupContainer ret = super.add(children);
+//        attachFmForChildren(children);
+//        return ret;
+//    }
 
     /**
      * Determines if this page has a fluid container for the content or not.
@@ -243,7 +278,13 @@ public abstract class BasePage extends GenericWebPage<Void> {
         return notificationPanel;
     }
 
-    private NavbarDropDownButton newLanguageMenu() {
+    @Override
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        visitChildren(new DgFmAttachingVisitor());
+    }
+
+    public NavbarDropDownButton newLanguageMenu() {
         final NavbarDropDownButton languageDropDown =
                 new NavbarDropDownButton(new StringResourceModel("navbar.lang", this, null)) {
 
@@ -299,7 +340,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     private NavbarButton<Homepage> newHomeMenu() {
         // home
-        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class, Model.of("Home"));
+        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class,
+                new StringResourceModel("navbar.home", this));
         homeMenu.setIconType(FontAwesomeIconType.home);
         MetaDataRoleAuthorizationStrategy.authorize(homeMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
         return homeMenu;
@@ -634,6 +676,16 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         ).setIconType(FontAwesomeIconType.mail_reply_all);
                 MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
                 list.add(alertsStatistics);
+
+                if (WebApplication.get().usesDevelopmentConfig()) {
+                    BootstrapBookmarkablePageLink<ListFeaturesPage> features =
+                            new MenuBookmarkablePageLink<ListFeaturesPage>(ListFeaturesPage.class,
+                                    new StringResourceModel("navbar.features", BasePage.this, null)
+                            ).setIconType(FontAwesomeIconType.list);
+                    MetaDataRoleAuthorizationStrategy.authorize(features, Component.RENDER, ROLE_ADMIN);
+                    list.add(features);
+                }
+
                 return list;
             }
         };

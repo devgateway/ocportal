@@ -173,7 +173,7 @@ public class LoginPage extends BasePage {
                             setResponsePage(getApplication().getHomePage());
                         }
                     } else if (session.getAe().getMessage().equalsIgnoreCase("User is disabled")) {
-                        notificationPanel.error(session.getAe().getMessage());
+                        notificationPanel.error(getString("userIsDisabled"));
                         target.add(notificationPanel);
                     } else {
                         notificationPanel.error(getString("bad_credentials"));

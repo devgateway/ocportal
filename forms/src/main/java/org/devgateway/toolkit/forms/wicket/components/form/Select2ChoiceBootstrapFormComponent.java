@@ -60,7 +60,12 @@ public class Select2ChoiceBootstrapFormComponent<TYPE>
 
     @Override
     protected Select2Choice<TYPE> inputField(final String id, final IModel<TYPE> model) {
-        return new Select2Choice<>(id, initFieldModel());
+        return new Select2Choice<TYPE>(id, initFieldModel()) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
     }
 
     @Override
@@ -72,7 +77,7 @@ public class Select2ChoiceBootstrapFormComponent<TYPE>
     protected void onInitialize() {
         super.onInitialize();
 
-        field.getSettings().setPlaceholder("Click to select");
+        field.getSettings().setPlaceholder(getString("select2.placeholder"));
         field.getSettings().setAllowClear(true);
         field.getSettings().setCloseOnSelect(true);
         field.getSettings().setDropdownAutoWidth(true);

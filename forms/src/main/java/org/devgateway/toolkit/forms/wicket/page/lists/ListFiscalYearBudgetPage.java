@@ -12,7 +12,7 @@
 package org.devgateway.toolkit.forms.wicket.page.lists;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -58,11 +58,11 @@ public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget>
 
     @Override
     protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
                 "department", "department", new ListModel<>(departments), dataTable
         ));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("fiscalYear", this),
                 "fiscalYear", "fiscalYear", new ListModel<>(fiscalYears), dataTable
         ));
 

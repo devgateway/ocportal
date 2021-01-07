@@ -89,15 +89,16 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     }
 
     protected void addLastModifiedDateColumn() {
-        columns.add(new SimpleDateProperyColumn<>(new Model<>((new StringResourceModel("lastModifiedDate",
-                ListAbstractMakueniEntityPage.this)).getString()),
+        addFmColumn("lastModifiedDate", new SimpleDateProperyColumn<>(new Model<>((
+                new StringResourceModel("lastModifiedDate",
+                        ListAbstractMakueniEntityPage.this)).getString()),
                 "lastModifiedDate", "lastModifiedDate",
                 t -> t.getLastModifiedDate().orElse(null)));
     }
 
     protected void addFileDownloadColumn() {
         Component trn = this;
-        columns.add(new AbstractColumn<T, String>(
+        addFmColumn("downloadFile", new AbstractColumn<T, String>(
                 new StringResourceModel("downloadFile", trn)) {
             @Override
             public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
@@ -121,11 +122,11 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
                         + " List"));
     }
 
+
     @Override
     protected void onInitialize() {
         // just replace the page title with the name of the class
         // instead of having .properties files only for the page title
-
         autoPageTitle();
         super.onInitialize();
 

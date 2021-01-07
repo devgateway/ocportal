@@ -43,7 +43,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         super(id);
     }
 
-    protected class ListItemsValidator implements IFormValidator {
+    protected class TenderListItemsValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
             return new FormComponent[0];
@@ -53,10 +53,6 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         public void validate(Form<?> form) {
             final Set<PlanItem> planItems = new HashSet<>();
             final List<TenderItem> tenderItems = TenderItemPanel.this.getModelObject();
-
-            if (tenderItems.size() == 0) {
-                form.error(getString("atLeastOneItem"));
-            }
 
             for (final TenderItem tenderItem : tenderItems) {
                 if (tenderItem.getPurchaseItem() != null && tenderItem.getPurchaseItem().getPlanItem() != null) {
@@ -93,11 +89,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new ListItemsValidator());
-        }
+        findParent(Form.class).add(new TenderListItemsValidator());
     }
 
     @Override
@@ -121,7 +113,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 };
         quantity.decimal();
         quantity.getField().add(RangeValidator.minimum(BigDecimal.ONE), new BigDecimalValidator());
-        quantity.required();
+        //quantity.required();
         item.add(quantity);
 
         unit = new GenericSleepFormComponent<>("unit",
@@ -145,7 +137,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                 };
         price.decimal();
-        price.required();
+        //price.required();
         price.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         item.add(price);
 
@@ -191,7 +183,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                             target.add(unit);
                         }
                     };
-            purchaseItem.required();
+            //purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
 
             final Component description = ComponentUtil.addTextField(this, "description");

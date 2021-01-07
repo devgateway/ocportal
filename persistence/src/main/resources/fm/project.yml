@@ -1,0 +1,135 @@
+# PROJECT FORM PAGE
+- name: projectForm
+  enabled: yes
+  visible: yes
+- name: projectForm.amountBudgeted
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: projectForm.amountRequested
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: projectForm.approve
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: projectForm.approvedDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: projectForm.cabinetPapers
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: projectForm.cancel
+  enabled: yes
+  visible: yes
+- name: projectForm.delete
+  enabled: yes
+  visible: yes
+- name: projectForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: projectForm.procurementPlan.department
+  enabled: yes
+  visible: yes
+- name: projectForm.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+- name: projectForm.projectTitle
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: projectForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: projectForm.save
+  enabled: yes
+  visible: yes
+- name: projectForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: projectForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: projectForm.subcounties
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: projectForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: projectForm.terminate
+  enabled: yes
+  visible: yes
+- name: projectForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: projectForm.wards
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - projectForm.subcounties
+  enabledDeps:
+    - projectForm.subcounties
+
+# PROJECT LIST PAGE
+- name: projectList
+  enabled: yes
+  visible: yes
+- name: projectList.department
+  visible: yes
+  visibleDeps:
+    - projectForm.procurementPlan.department
+- name: projectList.filterToolbar
+  visible: yes
+- name: projectList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - projectForm.procurementPlan.fiscalYear
+- name: projectList.lastModifiedDate
+  visible: yes
+- name: projectList.projectTitle
+  visible: yes
+  visibleDeps:
+    - projectForm.projectTitle
+- name: projectList.status
+  visible: yes
+
+# PUBLIC VIEW
+- name: publicView.project
+  visible: yes
+  visibleDeps:
+    - projectForm
+- name: publicView.project.projectTitle
+  visible: yes
+  visibleDeps:
+    - projectForm.projectTitle
+- name: publicView.project.cabinetPapers
+  visible: yes
+  visibleDeps:
+    - projectForm.cabinetPapers
+- name: publicView.project.amountBudgeted
+  visible: yes
+  visibleDeps:
+    - projectForm.amountBudgeted
+- name: publicView.project.amountRequested
+  visible: yes
+  visibleDeps:
+    - projectForm.amountRequested
+- name: publicView.project.subcounties
+  visible: yes
+  visibleDeps:
+    - projectForm.subcounties
+- name: publicView.project.wards
+  visible: yes
+  visibleDeps:
+    - projectForm.wards
+- name: publicView.project.approvedDate
+  visible: yes
+  visibleDeps:
+    - projectForm.approvedDate

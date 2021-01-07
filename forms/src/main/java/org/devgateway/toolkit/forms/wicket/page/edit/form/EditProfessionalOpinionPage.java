@@ -43,6 +43,7 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("professionalOpinionForm");
         super.onInitialize();
 
         ProfessionalOpinionItemPanel items = new ProfessionalOpinionItemPanel("items");

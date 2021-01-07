@@ -34,7 +34,9 @@ public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tende
     @Override
     protected void onInitialize() {
 
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(
+        attachFm("tendersList");
+
+        addFmColumn("tenderTitle", new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("title", ListTenderPage.this)).getString()),
                 "tenderTitle", "tenderTitle"));
 

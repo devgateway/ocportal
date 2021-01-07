@@ -59,6 +59,11 @@ public class CheckBoxBootstrapFormComponent extends GenericEnablingBootstrapForm
                 wrappedCheckbox.setOutputMarkupId(true);
                 return wrappedCheckbox;
             }
+
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
         };
     }
 

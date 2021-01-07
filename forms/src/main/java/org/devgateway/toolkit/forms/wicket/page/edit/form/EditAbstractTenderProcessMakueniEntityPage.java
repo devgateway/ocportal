@@ -7,7 +7,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -152,8 +151,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
             revertToDraftModal = new ButtonContentModal(
                     "revertToDraftModal",
-                    new StringResourceModel("reactivateModal", this, null),
-                    Model.of("REACTIVATE"), Buttons.Type.Warning
+                    new StringResourceModel("reactivateModal.content", this),
+                    new StringResourceModel("reactivateModal.reactivate", this), Buttons.Type.Warning
             );
         }
         return revertToDraftModal;

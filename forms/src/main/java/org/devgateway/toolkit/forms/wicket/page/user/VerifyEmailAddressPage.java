@@ -5,6 +5,7 @@ import net.sf.ehcache.CacheManager;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
@@ -85,9 +86,13 @@ public class VerifyEmailAddressPage extends BasePage {
 
         final TransparentWebMarkupContainer messageContainer = new TransparentWebMarkupContainer("messageContainer");
         add(messageContainer);
+
         final TransparentWebMarkupContainer errorContainer = new TransparentWebMarkupContainer("errorContainer");
+        errorContainer.add(new WebMarkupContainer("link"));
         add(errorContainer);
+
         final TransparentWebMarkupContainer successContainer = new TransparentWebMarkupContainer("successContainer");
+        successContainer.add(new WebMarkupContainer("link"));
         add(successContainer);
 
         errorContainer.setVisibilityAllowed(error);

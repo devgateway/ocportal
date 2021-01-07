@@ -44,6 +44,11 @@ public class TwitterFieldBootstrapFormComponent extends TextFieldBootstrapFormCo
             private static final long serialVersionUID = 1L;
 
             @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+
+            @Override
             public void convertInput() {
                 super.convertInput();
 

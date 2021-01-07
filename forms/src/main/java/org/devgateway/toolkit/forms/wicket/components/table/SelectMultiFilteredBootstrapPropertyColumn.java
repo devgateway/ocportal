@@ -60,6 +60,7 @@ public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceF
         selectorField.hideLabel();
         selectorField.setEnabled(enableInput);
 
+        selectorField.fmNoAutoAttach();
         selectorField.getField().add(new AjaxComponentUpdatingBehavior(form, "change"));
 
         return selectorField;

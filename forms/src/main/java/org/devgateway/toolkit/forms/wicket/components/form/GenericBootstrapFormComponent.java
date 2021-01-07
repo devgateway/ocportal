@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.ResourceModel;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.models.SubComponentWrapModel;
 import org.devgateway.toolkit.forms.models.ViewModeConverterModel;
 import org.devgateway.toolkit.forms.wicket.components.FieldPanel;
@@ -47,7 +48,8 @@ import java.util.List;
 /**
  * @author mpostelnicu
  */
-public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>> extends FieldPanel<TYPE> {
+public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>>
+        extends FieldPanel<TYPE> implements DgFmFormComponentSubject {
     private static final long serialVersionUID = -7051128382707812456L;
 
     protected FormGroup border;

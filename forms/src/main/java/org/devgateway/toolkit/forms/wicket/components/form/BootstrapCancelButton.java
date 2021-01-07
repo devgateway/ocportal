@@ -25,7 +25,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
  * @author mpostelnicu
  * 
  */
-public abstract class BootstrapCancelButton extends LaddaAjaxButton {
+public abstract class BootstrapCancelButton extends DgFmLaddaAjaxButton {
 
     private static final long serialVersionUID = -5748825183253028913L;
 

@@ -48,6 +48,7 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntityP
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("awardAcceptanceForm");
         super.onInitialize();
 
         AwardAcceptanceItemPanel items = new AwardAcceptanceItemPanel("items");

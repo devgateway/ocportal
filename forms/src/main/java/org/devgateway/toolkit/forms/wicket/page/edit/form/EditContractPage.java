@@ -64,16 +64,16 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("contractForm");
         super.onInitialize();
 
         submitAndNext.setVisibilityAllowed(false);
 
-        ComponentUtil.addTextField(editForm, "referenceNumber").required();
-        ComponentUtil.addBigDecimalField(editForm, "contractValue").required()
+        ComponentUtil.addTextField(editForm, "referenceNumber");
+        ComponentUtil.addBigDecimalField(editForm, "contractValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         final DateFieldBootstrapFormComponent contractDate = ComponentUtil.addDateField(editForm, "contractDate");
-        contractDate.required();
 
         AwardNotificationItem acceptedNotification = editForm.getModelObject().getTenderProcess()
                 .getSingleAwardNotification().getAcceptedNotification();
@@ -82,9 +82,9 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
             contractDate.getField().add(new AfterThanDateValidator(acceptedNotification.getAwardDate()));
         }
 
-        ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
-        ComponentUtil.addDateField(editForm, "expiryDate").required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
+        ComponentUtil.addDateField(editForm, "contractApprovalDate");
+        ComponentUtil.addDateField(editForm, "expiryDate");
+        ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService);
 
         addSupplierInfo();
 
@@ -136,7 +136,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
                 new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
         );
-        awardeeSelector.required();
         awardeeSelector.setEnabled(!editForm.getModelObject().getTenderProcess().hasNonDraftImplForms());
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         editForm.add(awardeeSelector);

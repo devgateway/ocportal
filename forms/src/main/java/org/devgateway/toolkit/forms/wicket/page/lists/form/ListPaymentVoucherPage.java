@@ -29,6 +29,7 @@ public class ListPaymentVoucherPage extends ListAbstractImplTenderProcessMakueni
 
     @Override
     protected void onInitialize() {
+        attachFm("paymentVouchersList");
         addTenderTitleColumn();
 
         super.onInitialize();

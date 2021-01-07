@@ -107,11 +107,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent().getParent().getParent().getParent().getParent();
-        if (form != null) {
-            form.add(new ListItemsValidator());
-        }
+        final Form<?> form = findParent(Form.class);
+        form.add(new ListItemsValidator());
     }
 
     @Override
@@ -164,7 +161,6 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                 };
         quantity.decimal();
         quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        quantity.required();
         item.add(quantity);
 
         unit = new GenericSleepFormComponent<>("unit",
@@ -187,7 +183,6 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                 };
         amount.decimal();
         amount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        amount.required();
         item.add(amount);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
@@ -234,7 +229,6 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                             target.add(unit);
                         }
                     };
-            planItem.required();
             planItem.add(new StopEventPropagationBehavior());
 
             final Component description = ComponentUtil.addTextField(this, "description");
