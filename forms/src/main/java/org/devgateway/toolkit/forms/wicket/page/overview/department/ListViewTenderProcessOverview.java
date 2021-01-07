@@ -399,8 +399,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                 protected void populateItem(final ListItem<T> item) {
 
                     final T itemObj = item.getModelObject();
-                    item.add(new DeptOverviewStatusLabel("tenderStatus", itemObj==null
-                            ? null: itemObj.getStatus()));
+                    item.add(new DeptOverviewStatusLabel("tenderStatus", itemObj == null
+                            ? null : itemObj.getStatus()));
 
                     BootstrapAjaxLink<Void> editTender = createEditButton(itemObj);
 

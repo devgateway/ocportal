@@ -16,6 +16,7 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
+import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class SideBar extends Panel {
     @SpringBean
     private ProjectService projectService;
 
+
+    @SpringBean
+    private StatusOverviewService statusOverviewService;
 
     @SpringBean
     private TenderProcessService tenderProcessService;
@@ -114,11 +118,8 @@ public class SideBar extends Panel {
 
     private Long calculateTenderProcessCount() {
         final FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
-        if (department == null) {
-            return tenderProcessService.countByFiscalYear(fiscalYear);
-        }
-
-        return tenderProcessService.countByDepartmentAndFiscalYear(department, fiscalYear);
+            return tenderProcessService.count(
+                    statusOverviewService.getTenderProcessViewSpecification(department, fiscalYear, null));
     }
 
     public Label getProjectCount() {

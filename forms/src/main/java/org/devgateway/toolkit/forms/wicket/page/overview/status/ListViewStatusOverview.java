@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -27,8 +28,12 @@ import java.util.List;
  */
 public class ListViewStatusOverview extends AbstractListViewStatus<StatusOverviewRowGroup> {
 
-    public ListViewStatusOverview(final String id, final IModel<List<StatusOverviewRowGroup>> model) {
+    private final Boolean tenderProcessView;
+
+    public ListViewStatusOverview(final String id, final IModel<List<StatusOverviewRowGroup>> model,
+                                  Boolean tenderProcessView) {
         super(id, model);
+        this.tenderProcessView = tenderProcessView;
     }
 
     @Override
@@ -43,7 +48,10 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
 
         headerFragment.add(new Label("procurementPlan.department"));
         headerFragment.add(new Label("procurementPlan.fiscalYear"));
-        headerFragment.add(new Label("projectCount", item.getModelObject().getRows().size()));
+        headerFragment.add(new Label("rowCount", item.getModelObject().getRows().size()));
+        headerFragment.add(new Label("countLabel", new StringResourceModel(
+                tenderProcessView ? "tenderProcesses" : "projects",
+                ListViewStatusOverview.this)));
 
         header.add(headerFragment);
     }
@@ -72,7 +80,11 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                     @Override
                     public void onClick() {
                         sessionMetadataService.setSessionDepartment(procurementPlan.getDepartment());
-                        sessionMetadataService.setSessionProjectId(item.getModelObject().getId());
+                        if (tenderProcessView) {
+                            sessionMetadataService.setSessionTenderProcessId(item.getModelObject().getId());
+                        } else {
+                            sessionMetadataService.setSessionProjectId(item.getModelObject().getId());
+                        }
                         setResponsePage(DepartmentOverviewPage.class);
                     }
                 };
@@ -100,7 +112,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                     @Override
                     protected void onComponentTag(final ComponentTag tag) {
                         super.onComponentTag(tag);
-                        if(status ==null) {
+                        if (status == null) {
                             setVisibilityAllowed(false);
                             return;
                         }

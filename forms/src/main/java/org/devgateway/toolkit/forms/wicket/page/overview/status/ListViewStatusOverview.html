@@ -5,7 +5,10 @@
     <wicket:fragment wicket:id="headerFragment">
         <span wicket:id="procurementPlan.department" class="division">[[department]]</span>
         <span wicket:id="procurementPlan.fiscalYear" class="year">[[year]]</span>
-        <span wicket:id="projectCount" class="projects-number">[[count]]</span><label><wicket:message key="projects" /></label>
+        <span wicket:id="rowCount" class="projects-number">[[count]]</span>
+        <label>
+            <span wicket:id="countLabel"/>
+        </label>
     </wicket:fragment>
 
 

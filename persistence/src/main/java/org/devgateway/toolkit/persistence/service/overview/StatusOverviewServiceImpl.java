@@ -2,8 +2,19 @@ package org.devgateway.toolkit.persistence.service.overview;
 
 import org.apache.commons.collections4.SetUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.*;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
+import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
+import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewRowGroup;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewRowInfo;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
@@ -25,11 +36,17 @@ import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,13 +103,9 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     @Transactional(readOnly = true)
     public List<StatusOverviewRowGroup> getDisplayableTenderProcesses(FiscalYear fiscalYear, String title) {
         List<StatusOverviewRowGroup> groupList = new ArrayList<>();
-        Map<ProcurementPlan, List<TenderProcess>> pptenderProcesses = tenderProcessService.findAll((r, cq, cb) -> cb.and(
-                cb.equal(r.join(TenderProcess_.procurementPlan).get(ProcurementPlan_.fiscalYear), fiscalYear),
-                cb.isNull(r.get(TenderProcess_.project)),
-                ObjectUtils.isEmpty(title) ? cb.and() : cb.like(
-                        cb.lower(r.join(TenderProcess_.tender).get(Tender_.tenderTitle)),
-                        "%" + title.toLowerCase() + "%")
-        )).stream().collect(Collectors.groupingBy(TenderProcess::getProcurementPlan));
+        Map<ProcurementPlan, List<TenderProcess>> pptenderProcesses = tenderProcessService.findAll(
+                getTenderProcessViewSpecification(null, fiscalYear, title)
+        ).stream().collect(Collectors.groupingBy(TenderProcess::getProcurementPlan));
 
         pptenderProcesses.forEach((procurementPlan, tenderProcesses) -> {
             StatusOverviewRowGroup group = new StatusOverviewRowGroup();
@@ -102,7 +115,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 StatusOverviewRowInfo rowInfo = new StatusOverviewRowInfo();
                 group.getRows().add(rowInfo);
                 rowInfo.setId(tp.getId());
-                rowInfo.setTitle(tp.getSingleTender() == null ? "No title" : tp.getSingleTender().getTitle());
+                rowInfo.setTitle(tp.getSingleTender() == null ? tp.getClass().getSimpleName() + " " + tp.getId()
+                        : tp.getSingleTender().getTitle());
                 rowInfo.setTenderProcessStatus(
                         getProcessStatus(getMakueniEntitiesStatuses(
                                 Collections.singletonList(tp),
@@ -113,7 +127,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                                 tp.getContract()), 3));
                 rowInfo.setImplementationStatus(
                         getProcessStatus(getMakueniEntitiesStatuses(tp.getAdministratorReports(),
-                                tp.getInspectionReports(), tp.getPmcReports(), tp.getMeReports(), tp.getPaymentVouchers()),
+                                tp.getInspectionReports(), tp.getPmcReports(), tp.getMeReports(),
+                                tp.getPaymentVouchers()),
                                 0));
             });
 
@@ -214,6 +229,19 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     @Override
     public Long countTenderProcesses(FiscalYear fiscalYear, String title) {
         return tenderProcessService.count();
+    }
+
+    public Specification<TenderProcess> getTenderProcessViewSpecification(Department department,
+                                                                          FiscalYear fiscalYear, String title) {
+            return (r, cq, cb) -> cb.and(
+                    department == null ? cb.and()
+                            : cb.equal(r.join(TenderProcess_.procurementPlan)
+                                    .get(ProcurementPlan_.department), department),
+                    cb.equal(r.join(TenderProcess_.procurementPlan).get(ProcurementPlan_.fiscalYear), fiscalYear),
+                    cb.isNull(r.get(TenderProcess_.project)),
+                    ObjectUtils.isEmpty(title) ? cb.and() : cb.like(
+                            cb.lower(r.join(TenderProcess_.tender).get(Tender_.tenderTitle)),
+                            "%" + title.toLowerCase() + "%"));
     }
 
     /**

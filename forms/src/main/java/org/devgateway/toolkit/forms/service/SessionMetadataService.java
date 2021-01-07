@@ -109,6 +109,10 @@ public class SessionMetadataService {
         setSessionKey(PROJECT, id);
     }
 
+    public void setSessionTenderProcessId(Long id) {
+        setSessionKey(PURCHASE_REQUISITION, id);
+    }
+
 
     public Project getSessionProject() {
         return getSessionPersistable(PROJECT, projectService);
