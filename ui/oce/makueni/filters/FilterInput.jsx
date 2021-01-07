@@ -1,6 +1,9 @@
 import translatable from '../../translatable';
-import { FormControl, FormGroup } from 'react-bootstrap';
+import { FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
 import { delayUserInput } from '../tenders/state';
+
+const MIN_LENGTH = 3;
+const MAX_LENGTH = 255;
 
 class FilterInput extends translatable(React.Component) {
   constructor(props) {
@@ -36,15 +39,16 @@ class FilterInput extends translatable(React.Component) {
   handleChange(e) {
     const { filters, onUpdate } = this.props;
     const inputValue = e.target.value;
+    const externalValue = (!inputValue || inputValue.length < MIN_LENGTH) ? null : inputValue;
     
     const self = this;
     delayUserInput('amount', function () {
       filters.getState()
       .then(value => {
         if (onUpdate === undefined) {
-          filters.assign(self.constructor.getName(), value.set('text', inputValue));
+          filters.assign(self.constructor.getName(), value.set('text', externalValue));
         } else {
-          onUpdate('text', inputValue);
+          onUpdate('text', externalValue);
         }
       });
     }, 100);
@@ -54,14 +58,17 @@ class FilterInput extends translatable(React.Component) {
   
   render() {
     const { value } = this.state;
-    
+
     return (<FormGroup>
       <FormControl
         type="text"
         value={value}
+        maxLength={MAX_LENGTH}
         placeholder="Enter search term"
         onChange={this.handleChange}
       />
+      {value && value.length < MIN_LENGTH &&
+      <HelpBlock>{this.t('filters:text:minLength').replace('$#$', MIN_LENGTH)}</HelpBlock>}
     </FormGroup>);
   }
 }
