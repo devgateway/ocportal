@@ -33,6 +33,7 @@
   "export:error": "An error occurred during export!",
   "export:exporting": "Exporting...",
   "export:export": "Export",
+  "filters:text:minLength": "Please type at least $#$ characters.",
   "filters:awardValue:title": "Award value",
   "filters:hint": "Filter your data",
   "filters:title": "Filter the data",
