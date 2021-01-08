@@ -190,6 +190,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             add(createNewTenderProcessButton());
 
             add(createNoData(listViewTenderProcessOverview));
+            add(new DgFmBehavior("deptOverview.tenderProcess"));
         }
     }
 
@@ -219,6 +220,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             add(projectList);
 
             add(createNoData(projectList));
+            add(new DgFmBehavior("deptOverview.project"));
         }
     }
 

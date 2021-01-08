@@ -30,6 +30,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.wicket.page.DataExportPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
@@ -175,6 +176,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
         public StatusOverviewTenderProcessView(String id) {
             super(id);
+            add(new DgFmBehavior("statusOverview.tenderProcess"));
         }
 
         @Override
@@ -188,6 +190,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
 
         public StatusOverviewProjectView(String id) {
             super(id);
+            add(new DgFmBehavior("statusOverview.project"));
         }
 
         @Override
