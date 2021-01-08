@@ -66,13 +66,13 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
 import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
@@ -234,8 +234,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::convertNumberOfTenderers
         );
 
-        safeSetEach(ocdsTender.getLocations()::add, tender.getProject()::getWards, this::lpcToMakueniLocation);
-        safeSetEach(ocdsTender.getLocations()::add, tender.getProject()::getSubcounties, this::lpcToMakueniLocation);
+        safeSetEach(ocdsTender.getLocations()::add, tenderProjectWards(tender), this::lpcToMakueniLocation);
+        safeSetEach(ocdsTender.getLocations()::add, tenderProjectSubcounties(tender), this::lpcToMakueniLocation);
 
         //documents
         safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
@@ -252,6 +252,15 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
         return ocdsTender;
+    }
+
+    public Supplier<Collection<Ward>> tenderProjectWards(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
+        return tender == null || tender.getProject() == null ? null : tender.getProject()::getWards;
+    }
+
+    public Supplier<Collection<Subcounty>> tenderProjectSubcounties(org.devgateway.toolkit.persistence.dao.form.Tender
+                                                                          tender) {
+        return tender == null || tender.getProject() == null ? null : tender.getProject()::getSubcounties;
     }
 
 
@@ -562,7 +571,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Budget createPlanningBudget(TenderProcess tenderProcess) {
         MakueniBudget budget = new MakueniBudget();
 
-        safeSet(budget::setProject, tenderProcess.getProject()::getProjectTitle);
+        safeSet(budget::setProject, tenderProcessProjectTitle(tenderProcess));
         safeSet(budget::setProjectID, tenderProcess::getProject, this::entityIdToString);
         safeSet(budget::setAmount, () -> tenderProcess.getPurchRequisitions().stream().
                 flatMap(pr -> pr.getPurchaseItems().stream()).map(PurchaseItem::getAmount).reduce(
@@ -571,6 +580,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(budget.getBudgetBreakdown()::add, () -> tenderProcess, this::createPlanningBudgetBreakdown);
 
         return budget;
+    }
+
+    public Supplier<String> tenderProcessProjectTitle(TenderProcess tenderProcess) {
+        return tenderProcess == null || tenderProcess.getProject() == null ? null : tenderProcess.getProject()
+                ::getProjectTitle;
     }
 
 
@@ -666,7 +680,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::storeAsDocumentProcurementPlan
         );
 
-        safeSetEach(planning.getDocuments()::add, tenderProcess.getProject()::getCabinetPapers,
+        safeSetEach(planning.getDocuments()::add, tenderProcessProjectCabinetPapers(tenderProcess),
                 this::storeAsDocumentProjectPlan
         );
 
@@ -675,6 +689,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return planning;
     }
 
+
+    public Supplier<Collection<CabinetPaper>> tenderProcessProjectCabinetPapers(TenderProcess tenderProcess) {
+        return tenderProcess == null || tenderProcess.getProject() == null ? null : tenderProcess.getProject()
+                ::getCabinetPapers;
+    }
 
     public MakueniOrganization convertOrganization(
             org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
@@ -771,7 +790,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         try {
             //never export releases from draft procurement plans or projects
             if (!tenderProcess.getProcurementPlan().getStatus().equals(DBConstants.Status.APPROVED)
-                    || !tenderProcess.getProject().getStatus().equals(DBConstants.Status.APPROVED)) {
+                    || (tenderProcess.getProject() != null && !tenderProcess.getProject().getStatus()
+                    .equals(DBConstants.Status.APPROVED))) {
                 return null;
             }
             Release release = createRelease(tenderProcess);
@@ -903,7 +923,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         }
     }
 
-    public <S, C, X, Y> void safeSetEach(Consumer<C> consumer, Supplier<Collection<S>> supplier,
+    public <S, C, X, Y> void safeSetEach(Consumer<C> consumer,
+                                         Supplier<Collection<S>> supplier,
                                          Function<S, X> converter1, Function<X, Y> converter2,
                                          Function<Y, C> converter3) {
         if (supplier == null || consumer == null || converter1 == null || converter2 == null || converter3 == null) {
@@ -1218,9 +1239,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(release::setPlanning, () -> tenderProcess, this::createPlanning);
         safeSet(release::setBids, tenderProcess::getSingleTenderQuotationEvaluation, this::createBids);
         safeSet(release::setTender, tenderProcess::getSingleTender, this::createTender);
-        safeSet(release::setBuyer, tenderProcess::getProject, Project::getProcurementPlan,
-                ProcurementPlan::getDepartment, this::convertBuyer
-        );
+        safeSet(release::setBuyer, tenderProcess::getProcurementPlan, ProcurementPlan::getDepartment,
+                this::convertBuyer);
 
 
         if (release.getTender() != null) {
