@@ -1,5 +1,6 @@
 package org.devgateway.ocds.web.rest.controller;
 
+import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
@@ -29,6 +30,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -47,6 +49,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -97,14 +100,7 @@ public class MakueniDataController extends GenericOCDSController {
     @Resource
     private MakueniDataController self; // Self-autowired reference to proxified bean of this class.
 
-    @ApiOperation(value = "Fetch Makueni Tenders")
-    @RequestMapping(value = "/api/makueni/tenders",
-            method = {RequestMethod.POST, RequestMethod.GET},
-            produces = "application/json")
-    @Cacheable
-    public List<Document> makueniTenders(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
-        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
-
+    private List<AggregationOperation> makueniTenderOperations(MakueniFilterPagingRequest filter) {
         final Criteria criteria = new Criteria().andOperator(
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
@@ -124,20 +120,36 @@ public class MakueniDataController extends GenericOCDSController {
                 getYearFilterCriteria(filter, "tender.closingDate")
         );
 
-        final Aggregation aggregation = newAggregation(match(criteria),
+        List<AggregationOperation> operations = Lists.newArrayList(
+                match(criteria),
                 unwind("tenderProcesses"),
                 unwind("tenderProcesses.tender"),
                 project("tenderProcesses._id", "department", "fiscalYear", "tenderProcesses.tender.tenderTitle",
                         "tenderProcesses.project", "tenderProcesses.tender.closingDate", "tenderProcesses.tender._id",
                         "tenderProcesses.tender.tenderValue", "tenderProcesses.tender.formDocs",
                         "tenderProcesses.tender.tenderItems"),
-                match(criteriaTender),
+                match(criteriaTender));
+        return operations;
+    }
+
+    @ApiOperation(value = "Fetch Makueni Tenders")
+    @RequestMapping(value = "/api/makueni/tenders",
+            method = {RequestMethod.POST, RequestMethod.GET},
+            produces = "application/json")
+    @Cacheable
+    public List<Document> makueniTenders(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
+        List<AggregationOperation> aggregationOperations = makueniTenderOperations(filter);
+        aggregationOperations.addAll(Arrays.asList(
                 sort(Sort.Direction.DESC, "tender.closingDate"),
                 skip(filter.getSkip()),
-                limit(filter.getPageSize()));
+                limit(filter.getPageSize()))
+        );
+        return mongoTemplate.aggregate(newAggregation(aggregationOperations).withOptions(makueniAggOptions()),
+                "procurementPlan", Document.class).getMappedResults();
+    }
 
-        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
-                .getMappedResults();
+    private AggregationOptions makueniAggOptions() {
+        return Aggregation.newAggregationOptions().allowDiskUse(true).build();
     }
 
     @ApiOperation(value = "Counts Makueni Tenders")
@@ -146,45 +158,27 @@ public class MakueniDataController extends GenericOCDSController {
             produces = "application/json")
     @Cacheable
     public Integer makueniTendersCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
-        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+        List<AggregationOperation> aggregationOperations = makueniTenderOperations(filter);
+        aggregationOperations.add(group().count().as("count"));
+
+        Document doc = mongoTemplate.aggregate(newAggregation(aggregationOperations)
+                .withOptions(makueniAggOptions()), "procurementPlan", Document.class).getUniqueMappedResult();
+
+        return doc == null ? 0 : (Integer) doc.get("count");
+    }
+
+    private List<AggregationOperation> makueniPlanOperations(MakueniFilterPagingRequest filter) {
 
         final Criteria criteria = new Criteria().andOperator(
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
 
-        final Criteria criteriaTender = new Criteria().andOperator(
-                where("tender.tenderTitle").exists(true),
-                createFilterCriteria("project.subcounties._id", filter.getSubcounty()),
-                createFilterCriteria("project.wards._id", filter.getWard()),
-                createFilterCriteria(
-                        "tender.tenderItems.purchaseItem.planItem.item._id",
-                        filter.getItem()
-                ),
-                createRangeFilterCriteria("tender.tenderValue",
-                        filter.getMin(), filter.getMax()
-                ),
-                createTextCriteria(filter.getText()),
-                getYearFilterCriteria(filter, "tender.closingDate")
+        List<AggregationOperation> operations = Lists.newArrayList(
+                match(criteria),
+                project("formDocs", "department", "fiscalYear", "status", "approvedDate")
         );
 
-        final Aggregation aggregation = newAggregation(match(criteria),
-                unwind("tenderProcesses"),
-                unwind("tenderProcesses.tender"),
-                project("tenderProcesses._id", "department", "fiscalYear", "tenderProcesses.tender.tenderTitle",
-                        "tenderProcesses.project", "tenderProcesses.tender.closingDate", "tenderProcesses.tender._id",
-                        "tenderProcesses.tender.tenderValue", "tenderProcesses.tender.formDocs",
-                        "tenderProcesses.tender.tenderItems"),
-                match(criteriaTender),
-                group().count().as("count"));
-
-        final Document doc = mongoTemplate.aggregate(
-                aggregation.withOptions(options), "procurementPlan", Document.class).getUniqueMappedResult();
-
-        if (doc == null) {
-            return 0;
-        } else {
-            return (Integer) doc.get("count");
-        }
+        return operations;
     }
 
     @ApiOperation(value = "Fetch Makueni Procurement Plans")
@@ -194,23 +188,17 @@ public class MakueniDataController extends GenericOCDSController {
     @Cacheable
     public List<ProcurementPlan> makueniProcurementPlans(
             @ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
-        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
-
-        final Criteria criteria = new Criteria().andOperator(
-                createFilterCriteria("department._id", filter.getDepartment()),
-                createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
+        List<AggregationOperation> aggregationOperations = makueniPlanOperations(filter);
 
         BasicDBObject customSorting = new BasicDBObject();
         customSorting.put("fiscalYear.startDate", -1);
         customSorting.put("department.label", 1);
 
-        final Aggregation aggregation = newAggregation(match(criteria),
-                project("formDocs", "department", "fiscalYear", "status", "approvedDate"),
-                new CustomSortingOperation(customSorting),
-                skip(filter.getSkip()),
-                limit(filter.getPageSize()));
+        aggregationOperations.addAll(Arrays.asList(
+                new CustomSortingOperation(customSorting), skip(filter.getSkip()), limit(filter.getPageSize())));
 
-        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", ProcurementPlan.class)
+        return mongoTemplate.aggregate(newAggregation(aggregationOperations)
+                .withOptions(makueniAggOptions()), "procurementPlan", ProcurementPlan.class)
                 .getMappedResults();
     }
 
@@ -220,24 +208,14 @@ public class MakueniDataController extends GenericOCDSController {
             produces = "application/json")
     @Cacheable
     public Integer makueniProcurementPlansCount(@ModelAttribute @Valid final MakueniFilterPagingRequest filter) {
-        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
-
-        final Criteria criteria = new Criteria().andOperator(
-                createFilterCriteria("department._id", filter.getDepartment()),
-                createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
-
-        final Aggregation aggregation = newAggregation(match(criteria),
-                project("formDocs", "department", "fiscalYear", "status", "approvedDate"),
-                group().count().as("count"));
+        List<AggregationOperation> aggregationOperations = makueniPlanOperations(filter);
+        aggregationOperations.add(group().count().as("count"));
 
         final Document doc = mongoTemplate.aggregate(
-                aggregation.withOptions(options), "procurementPlan", Document.class).getUniqueMappedResult();
+                newAggregation(aggregationOperations).withOptions(makueniAggOptions()),
+                "procurementPlan", Document.class).getUniqueMappedResult();
 
-        if (doc == null) {
-            return 0;
-        } else {
-            return (Integer) doc.get("count");
-        }
+        return doc == null ? 0 : (Integer) doc.get("count");
     }
 
     @RequestMapping(value = "/api/makueni/procurementPlan/id/{id:^[0-9\\-]*$}",
