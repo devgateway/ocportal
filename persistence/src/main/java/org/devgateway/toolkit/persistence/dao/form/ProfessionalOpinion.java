@@ -77,4 +77,14 @@ public class ProfessionalOpinion extends AbstractTenderProcessMakueniEntity {
     public void setItems(List<ProfessionalOpinionItem> items) {
         this.items = items;
     }
+
+    @Override
+    public Class<?> getNextForm() {
+        return AwardNotification.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnProfessionalOpinion();
+    }
 }

@@ -43,6 +43,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -279,7 +280,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
         add(new Label("cabinetMinisterialPaper",
                 new StringResourceModel("cabinetMinisterialPaper", this)
-                        .setParameters(new PropertyModel<>(fiscalYearModel, "label"))));
+                        .setParameters(new PropertyModel<>(fiscalYearModel, "label")))
+                .add(new DgFmBehavior("deptOverview.cabinetPaper")));
 
         add(new Label("budget",
                 new StringResourceModel("budget", this).setParameters(
@@ -287,7 +289,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                         fiscalYearBudgetModel
                                 .map(FiscalYearBudget::getAmountBudgeted)
                                 .map(Objects::toString)
-                                .orElse(""))));
+                                .orElse("")))
+                .add(new DgFmBehavior("deptOverview.fiscalYearBudget")));
 
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();

@@ -243,4 +243,14 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     public void setProcurementMethodRationale(ProcurementMethodRationale procurementMethodRationale) {
         this.procurementMethodRationale = procurementMethodRationale;
     }
+
+    @Override
+    public Class<?> getNextForm() {
+        return TenderQuotationEvaluation.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnTender();
+    }
 }

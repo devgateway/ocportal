@@ -169,4 +169,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
         children.addAll(getTenderProcessNotNull().getPaymentVouchers());
         return children;
     }
+
+    @Override
+    public Class<?> getNextForm() {
+        return null;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return false;
+    }
 }

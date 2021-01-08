@@ -1,0 +1,31 @@
+# Menus
+- name: navbar.procurementPlan
+  visibleDeps:
+    - procurementPlanForm
+- name: navbar.cabinetPapers
+  visibleDeps:
+    - cabinetPaperForm
+- name: navbar.project
+  visibleDeps:
+    - projectForm
+- name: navbar.tenderProcess
+  visibleDeps:
+    - tenderProcessForm
+- name: navbar.tenderDocument
+  visibleDeps:
+    - tenderForm
+- name: navbar.tenderQuotationEvaluation
+  visibleDeps:
+    - tenderQuotationEvaluationForm
+- name: navbar.professionalOpinion
+  visibleDeps:
+    - professionalOpinionForm
+- name: navbar.awardNotification
+  visibleDeps:
+    - awardNotificationForm
+- name: navbar.awardAcceptance
+  visibleDeps:
+    - awardAcceptanceForm
+- name: navbar.contract
+  visibleDeps:
+    - contractForm

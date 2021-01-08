@@ -1,0 +1,42 @@
+# Department Overview
+- name: deptOverview.fiscalYearBudget
+  visible: yes
+- name: deptOverview.cabinetPaper
+  visible: yes
+
+# Department Overview - Tender Process
+- name: deptOverview.tenderProcess.purchaseRequisition
+  visible: yes
+- name: deptOverview.tenderProcess.tenderDocument
+  visibleDeps:
+    - tenderForm
+- name: deptOverview.tenderProcess.tenderQuotationEvaluation
+  visibleDeps:
+    - tenderQuotationEvaluationForm
+- name: deptOverview.tenderProcess.professionalOpinion
+  visibleDeps:
+    - professionalOpinionForm
+- name: deptOverview.tenderProcess.awardNotification
+  visibleDeps:
+    - awardNotificationForm
+- name: deptOverview.tenderProcess.awardAcceptance
+  visibleDeps:
+    - awardAcceptanceForm
+- name: deptOverview.tenderProcess.contract
+  visibleDeps:
+    - contractForm
+- name: deptOverview.tenderProcess.administratorReport
+  visibleDeps:
+    - administratorReportForm
+- name: deptOverview.tenderProcess.inspectionReport
+  visibleDeps:
+    - inspectionReportForm
+- name: deptOverview.tenderProcess.pmcReport
+  visibleDeps:
+    - pmcReportForm
+- name: deptOverview.tenderProcess.meReport
+  visibleDeps:
+    - meReportForm
+- name: deptOverview.tenderProcess.paymentVoucher
+  visibleDeps:
+    - paymentVoucherForm

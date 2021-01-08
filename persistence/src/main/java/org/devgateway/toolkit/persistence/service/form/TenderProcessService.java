@@ -31,5 +31,10 @@ public interface TenderProcessService extends AbstractMakueniEntityService<Tende
     Long countByFiscalYear(FiscalYear fiscalYear);
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
+
+    /**
+     * Return first visible downstream form class starting and including the passed form class.
+     */
+    Class<?> getFirstVisibleDownstreamForm(Class<?> formClass);
 }
 

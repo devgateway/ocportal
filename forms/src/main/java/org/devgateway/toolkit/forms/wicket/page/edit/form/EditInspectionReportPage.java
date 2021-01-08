@@ -9,7 +9,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PrivateSectorRequestPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.TechAdminRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
@@ -82,11 +81,6 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
         final TenderProcess tenderProcess = report.getTenderProcess();
         tenderProcess.removeInspectonReport(report);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
     }
 
 }
