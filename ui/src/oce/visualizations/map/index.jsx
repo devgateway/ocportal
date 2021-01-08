@@ -60,12 +60,12 @@ class MapVisual extends backendFilterable(Visualization) {
 
   render() {
     const {
-      translations, filters, years, styling, months, monthly, zoom, data,
+      translations, filters, years, styling, months, monthly, zoom,
     } = this.props;
     const { locationType } = this.state;
-    let center;
     let _zoom;
-    if (data) {
+    let center;
+    if (this.getData() && this.getData().length > 0) {
       center = L.latLngBounds(this.getData()
         .map(pluck('coords'))
         .map(swap))

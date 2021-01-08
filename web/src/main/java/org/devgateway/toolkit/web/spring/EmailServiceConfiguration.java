@@ -19,7 +19,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class EmailServiceConfiguration {
 
-    private static final int SMTP_PORT = 2500;
+    private static final int SMTP_PORT = 25;
 
     @Bean
     public JavaMailSender javaMailSenderImpl() {
