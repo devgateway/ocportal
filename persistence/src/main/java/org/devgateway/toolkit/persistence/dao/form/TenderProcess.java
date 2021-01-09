@@ -486,6 +486,35 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         this.paymentVouchers = paymentVouchers;
     }
 
+    @SuppressWarnings("unchecked")
+    public <Z extends Statusable> Z getProcurementEntity(Class<Z> clazz) {
+        if (clazz.equals(Project.class)) {
+            return (Z) getProject();
+        }
+        if (clazz.equals(TenderProcess.class)) {
+            return (Z) this;
+        }
+        if (clazz.equals(Tender.class)) {
+            return (Z) getSingleTender();
+        }
+        if (clazz.equals(TenderQuotationEvaluation.class)) {
+            return (Z) getSingleTenderQuotationEvaluation();
+        }
+        if (clazz.equals(ProfessionalOpinion.class)) {
+            return (Z) getSingleProfessionalOpinion();
+        }
+        if (clazz.equals(AwardNotification.class)) {
+            return (Z) getSingleAwardNotification();
+        }
+        if (clazz.equals(AwardAcceptance.class)) {
+            return (Z) getSingleAwardAcceptance();
+        }
+        if (clazz.equals(Contract.class)) {
+            return (Z) getSingleContract();
+        }
+        throw new RuntimeException("Unrecognized class " + clazz + " mapped to entity");
+    }
+
     public boolean hasFormsDependingOnTender() {
         return getSingleTenderQuotationEvaluation() != null
                 || hasFormsDependingOnTenderQuotationAndEvaluation();

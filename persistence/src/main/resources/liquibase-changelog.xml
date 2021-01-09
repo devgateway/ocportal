@@ -1382,6 +1382,7 @@
         </sql>
         <sql>
             alter table tender_process alter column project_id drop not null;
+            alter table professional_opinion_item alter column parent_id drop not null;
         </sql>
     </changeSet>
 

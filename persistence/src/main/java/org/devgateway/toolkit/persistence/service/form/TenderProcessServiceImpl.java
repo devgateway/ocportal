@@ -11,6 +11,7 @@ import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
@@ -27,6 +28,7 @@ import org.springframework.validation.DataBinder;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -40,16 +42,16 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
 
     private static class TenderProcessForm {
 
-        private final Class<?> formClass;
+        private final Class<? extends Statusable> formClass;
 
         private final String featureName;
 
-        TenderProcessForm(Class<?> formClass, String featureName) {
+        TenderProcessForm(Class<? extends Statusable> formClass, String featureName) {
             this.formClass = formClass;
             this.featureName = featureName;
         }
 
-        public Class<?> getFormClass() {
+        public Class<? extends Statusable> getFormClass() {
             return formClass;
         }
 
@@ -58,8 +60,21 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
         }
     }
 
+    @Override
+    public Statusable getPreviousStatusable(TenderProcess tp, Class<?> currentClazz) {
+        TenderProcessForm entry = FORMS.stream().filter(f -> f.getFormClass().equals(currentClazz))
+                .findFirst().orElseThrow(() -> new RuntimeException("Unknown class to fm mapping " + currentClazz));
+        for (int i = FORMS.indexOf(entry) - 1; i >= 0; i--) {
+            if (dgFmService.isFeatureVisible(FORMS.get(i).getFeatureName())) {
+                return tp.getProcurementEntity(FORMS.get(i).getFormClass());
+            }
+        }
+        return null;
+    }
+
     private static final List<TenderProcessForm> FORMS = ImmutableList.of(
             // this is really for purchase reqs
+            new TenderProcessForm(Project.class, "projectForm"),
             new TenderProcessForm(TenderProcess.class, "tenderProcessForm.purchRequisitions"),
             new TenderProcessForm(Tender.class, "tenderForm"),
             new TenderProcessForm(TenderQuotationEvaluation.class, "tenderQuotationEvaluationForm"),
