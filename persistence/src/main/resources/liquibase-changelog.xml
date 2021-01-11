@@ -1407,4 +1407,13 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-3" author="mpostelnicu">
+        <preConditions>
+            <tableExists tableName="purchase_requisition_group"/>
+        </preConditions>
+        <addNotNullConstraint tableName="purchase_requisition_group" columnName="tender_process_id"/>
+        <sql>alter table tender_process alter column status drop not null;</sql>
+        <sql>alter table tender_process alter column procurement_plan_id set not null;</sql>
+    </changeSet>
+
 </databaseChangeLog>

@@ -32,9 +32,8 @@ public class ListPurchaseRequisitionGroupPage extends ListAbstractTenderProcessM
     @Override
     protected void onInitialize() {
         attachFm("purchaseRequisitionList");
-        addTenderTitleColumn();
-            super.onInitialize();
-        }
+        super.onInitialize();
+    }
 
     @Override
     public JpaFilterState<PurchaseRequisitionGroup> newFilterState() {

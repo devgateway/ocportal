@@ -115,6 +115,10 @@
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm
+- name: purchaseRequisitionList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
 - name: purchaseRequisitionList.department
   visible: yes
   visibleDeps:

@@ -224,12 +224,12 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel",
                     Collections.singletonList(purchaseRequisitionGroup),
-                    pr -> Arrays.asList(
-                    pr.getPurchaseRequestNumber(),
-                    pr.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
-                            .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
-                    pr.getAmount()
-            ), tenderProcess, EditPurchaseRequisitionGroupPage.class,
+                    pr -> pr != null ? Arrays.asList(
+                            pr.getPurchaseRequestNumber(),
+                            pr.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
+                                    .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
+                            pr.getAmount()
+                    ) : null, tenderProcess, EditPurchaseRequisitionGroupPage.class,
                     tenderProcessService.getPreviousStatusable(tenderProcess, PurchaseRequisitionGroup.class), false,
                     "deptOverview.tenderProcess.purchaseRequisition"
             );

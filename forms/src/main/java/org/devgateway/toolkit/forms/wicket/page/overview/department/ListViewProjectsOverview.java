@@ -167,8 +167,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                TenderProcess tenderProcess = tenderProcessService.newInstance();
+                tenderProcess.setProject(project);
+                tenderProcess.setProcurementPlan(sessionMetadataService.getSessionPP());
+                TenderProcess savedTenderProcess = tenderProcessService.save(tenderProcess);
                 sessionMetadataService.setSessionProject(project);
-                setResponsePage(EditPurchaseRequisitionGroupPage.class);
+                sessionMetadataService.setSessionTenderProcess(savedTenderProcess);
+                setResponsePage(DepartmentOverviewPage.class);
             }
         };
         addTenderProcess.setLabel(
