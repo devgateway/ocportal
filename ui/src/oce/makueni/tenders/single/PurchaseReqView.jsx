@@ -114,7 +114,7 @@ const PurchaseReqView = (props) => {
         return (
           <Tender
             data={data.tenderProcesses.tender}
-            prId={data._id}
+            prId={data.tenderProcesses._id}
             department={data.department}
             fiscalYear={data.fiscalYear}
             styling={props.styling}
@@ -292,7 +292,7 @@ const PurchaseReqView = (props) => {
           type="submit"
           data-step="11"
           data-intro={t('purchaseReq:receiveAlerts:dataIntro')}
-          onClick={() => props.onSwitch('alerts', data._id, data.tenderProcesses.tender[0].tenderTitle)}
+          onClick={() => props.onSwitch('alerts', data.tenderProcesses._id, data.tenderProcesses.tender[0].tenderTitle)}
         >
           {t('purchaseReq:receiveAlerts:caption')}
         </button>
