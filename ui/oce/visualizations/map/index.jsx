@@ -1,11 +1,9 @@
 import { Map, TileLayer, ZoomControl } from 'react-leaflet';
-import frontendDateFilterable from '../frontend-date-filterable';
 import { pluck } from '../../tools';
 import Cluster from './cluster';
 import Location from './location';
 import Visualization from '../../visualization';
-// eslint-disable-next-line no-unused-vars
-import style from './style.less';
+import './style.less';
 import Control from 'react-leaflet-control';
 import backendFilterable from '../../backend-year-filterable';
 
@@ -15,7 +13,8 @@ class MapVisual extends backendFilterable(Visualization) {
   constructor(props) {
     super(props);
     this.state = {
-      locationType: "subcounty"
+      locationType: "subcounty",
+      center: { lat: 0, lng: 0 },
     }
   }
   getMaxAmount() {
@@ -35,11 +34,17 @@ class MapVisual extends backendFilterable(Visualization) {
   componentDidMount() {
     const { filters, onUpdate } = this.props;
     onUpdate(filters.set('locationType',['subcounty']));
+    this.computeCenter();
   }
 
   componentWillUnmount() {
     const { filters, onUpdate } = this.props;
     onUpdate(filters.set('locationType',[]));
+  }
+
+  componentDidUpdate(prevProps) {
+    super.componentDidUpdate(prevProps);
+    this.computeCenter();
   }
 
   computeLocationButtonClass(locationType, buttonType) {
@@ -52,24 +57,26 @@ class MapVisual extends backendFilterable(Visualization) {
     onUpdate(filters.set('locationType', [buttonType]));
   }
 
+  computeCenter() {
+    const data = this.getData();
+    if (data && data.length > 0) {
+      const newCenter = L.latLngBounds(data
+        .map(pluck('coords'))
+        .map(swap))
+        .getCenter();
+      const { center } = this.state;
+      if (center.lat !== newCenter.lat || center.lng !== newCenter.lng) {
+        this.setState({ center: { lat: newCenter.lat, lng: newCenter.lng } });
+      }
+    }
+  }
+
   render() {
     const { translations, filters, years, styling, months, monthly, zoom } = this.props;
-    const { locationType } = this.state;
-    let center;
-    let _zoom;
-    if (this.getData() && this.getData().length > 0) {
-      center = L.latLngBounds(this.getData()
-      .map(pluck('coords'))
-      .map(swap))
-      .getCenter();
-      _zoom = zoom;
-    } else {
-      center = [0, 0];
-      _zoom = 1;
-    }
+    const { locationType, center } = this.state;
 
     return (
-      <Map center={center} zoom={_zoom} zoomControl={false} dragging={!L.Browser.mobile} tap={false}>
+      <Map center={center} zoom={zoom} zoomControl={false} dragging={!L.Browser.mobile} tap={false}>
         {this.getTiles()}
         <Cluster maxAmount={this.getMaxAmount()}>
           {this.getData()
@@ -110,6 +117,9 @@ class MapVisual extends backendFilterable(Visualization) {
 }
 
 MapVisual.propTypes = {};
+MapVisual.defaultProps = {
+  zoom: 1,
+};
 MapVisual.computeComparisonYears = null;
 MapVisual.Location = Location;
 
