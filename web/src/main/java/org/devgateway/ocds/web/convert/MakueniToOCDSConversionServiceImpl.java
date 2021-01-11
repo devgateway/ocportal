@@ -62,7 +62,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AbstractAuthImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
@@ -340,10 +339,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             return Tender.Status.cancelled;
         }
 
-        AwardAcceptance awardAcceptance = Optional.ofNullable(tender.getTenderProcess().getSingleAwardAcceptance())
+        org.devgateway.toolkit.persistence.dao.form.Contract contract =
+                Optional.ofNullable(tender.getTenderProcess().getSingleContract())
                 .filter(Statusable::isExportable)
-                .filter(AwardAcceptance::hasAccepted).orElse(null);
-        if (!ObjectUtils.isEmpty(awardAcceptance)) {
+               .orElse(null);
+        if (!ObjectUtils.isEmpty(contract)) {
             return Tender.Status.complete;
         }
 
@@ -1132,8 +1132,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setValue, contract::getContractValue, this::convertAmount);
         safeSetEach(ocdsContract.getDocuments()::add, contract::getContractDocs, this::storeAsDocumentContractNotice);
         safeSet(ocdsContract::setAwardID,
-                contract.getTenderProcess().getSingleAwardAcceptance()
-                        .getAcceptedAcceptance()::getExportableNotificationItem, this::entityIdToString);
+                contract.getTenderProcess()::getSingleAwardNotification, this::entityIdToString);
         safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertOrganization);
         safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
