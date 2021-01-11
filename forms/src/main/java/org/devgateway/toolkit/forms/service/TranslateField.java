@@ -19,7 +19,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPag
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardAcceptanceItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
@@ -60,7 +60,7 @@ public class TranslateField {
                     .put("ProcurementPlan", EditProcurementPlanPage.class)
                     .put("Project", EditProjectPage.class)
                     .put("CabinetPaper", EditCabinetPaperPage.class)
-                    .put("TenderProcess", EditTenderProcessPage.class)
+                    .put("TenderProcess", EditPurchaseRequisitionGroupPage.class)
                     .put("Tender", EditTenderPage.class)
                     .put("TenderQuotationEvaluation", EditTenderQuotationEvaluationPage.class)
                     .put("ProfessionalOpinion", EditProfessionalOpinionPage.class)

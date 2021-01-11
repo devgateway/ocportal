@@ -24,6 +24,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
@@ -38,7 +39,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-17
  */
-public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition, TenderProcess> {
+public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition, PurchaseRequisitionGroup> {
 
     @SpringBean
     protected StaffService staffService;
@@ -81,7 +82,7 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     }
 
     @Override
-    public PurchRequisition createNewChild(final IModel<TenderProcess> parentModel) {
+    public PurchRequisition createNewChild(final IModel<PurchaseRequisitionGroup> parentModel) {
         final PurchRequisition child = new PurchRequisition();
         child.setParent(parentModel.getObject());
         child.setExpanded(true);

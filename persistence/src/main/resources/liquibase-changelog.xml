@@ -1386,4 +1386,25 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-1" author="mpostelnicu">
+        <sql>alter table purch_requisition rename column parent_id to old_parent_id</sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-2" author="mpostelnicu">
+        <preConditions>
+            <tableExists tableName="purchase_requisition_group"/>
+        </preConditions>
+        <sql>insert into purchase_requisition_group (id, tender_process_id,
+            created_by, created_date, last_modified_by, last_modified_date, status, approved_date,
+            purchase_request_number) (select nextval('hibernate_sequence'), id,
+            created_by, created_date, last_modified_by, last_modified_date, status, approved_date,
+            purchase_request_number from tender_process);
+        </sql>
+        <sql>
+            update purch_requisition set parent_id = purchase_requisition_group.id
+            from purchase_requisition_group where purch_requisition.old_parent_id=
+            purchase_requisition_group.tender_process_id;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

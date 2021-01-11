@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;

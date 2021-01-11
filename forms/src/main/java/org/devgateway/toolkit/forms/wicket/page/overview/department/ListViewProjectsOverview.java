@@ -26,7 +26,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -168,7 +168,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 sessionMetadataService.setSessionProject(project);
-                setResponsePage(EditTenderProcessPage.class);
+                setResponsePage(EditPurchaseRequisitionGroupPage.class);
             }
         };
         addTenderProcess.setLabel(

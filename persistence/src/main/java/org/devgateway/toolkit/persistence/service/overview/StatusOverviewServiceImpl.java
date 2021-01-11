@@ -30,6 +30,7 @@ import org.devgateway.toolkit.persistence.service.form.PMCReportService;
 import org.devgateway.toolkit.persistence.service.form.PaymentVoucherService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionGroupService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
@@ -57,6 +58,7 @@ import static org.devgateway.toolkit.persistence.dao.DBConstants.Status.SUBMITTE
  * @author gmutuhu
  */
 @Service
+@Transactional(readOnly = true)
 public class StatusOverviewServiceImpl implements StatusOverviewService {
     protected static final Logger logger = LoggerFactory.getLogger(StatusOverviewService.class);
 
@@ -68,6 +70,9 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Autowired
     private TenderService tenderService;
+
+    @Autowired
+    private PurchaseRequisitionGroupService purchaseRequisitionGroupService;
 
     @Autowired
     private TenderQuotationEvaluationService tenderQuotationEvaluationService;
@@ -100,7 +105,6 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     private ContractService contractService;
 
     @Override
-    @Transactional(readOnly = true)
     public List<StatusOverviewRowGroup> getDisplayableTenderProcesses(FiscalYear fiscalYear, String title) {
         List<StatusOverviewRowGroup> groupList = new ArrayList<>();
         Map<ProcurementPlan, List<TenderProcess>> pptenderProcesses = tenderProcessService.findAll(
@@ -119,7 +123,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                         : tp.getSingleTender().getTitle());
                 rowInfo.setTenderProcessStatus(
                         getProcessStatus(getMakueniEntitiesStatuses(
-                                Collections.singletonList(tp),
+                                Collections.singletonList(tp.getSinglePurchaseRequisition()),
                                 tp.getTender(),
                                 tp.getTenderQuotationEvaluation(), tp.getProfessionalOpinion()), 4));
                 rowInfo.setAwardProcessStatus(
@@ -169,7 +173,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 new ProjectFilterState(fiscalYear, projectTitle).getSpecification());
 
         final Map<Project, List<String>> tenderStatusMap = addStatus(
-                fiscalYear, tenderProcessService, tenderService,
+                fiscalYear, purchaseRequisitionGroupService, tenderService,
                 tenderQuotationEvaluationService, professionalOpinionService);
         final Map<Project, List<String>> awardStatusMap = addStatus(
                 fiscalYear, awardNotificationService, awardAcceptanceService, contractService);
@@ -180,7 +184,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
         // get list of statuses of PurchaseRequisition forms grouped by Project
         final Map<Project, List<String>> purchaseStatusMap = groupStatusByProject(
-                tenderProcessService.findByFiscalYear(fiscalYear));
+                purchaseRequisitionGroupService.findByFiscalYear(fiscalYear));
 
         final List<StatusOverviewRowGroup> statusOverviewData = new ArrayList<>();
         for (final Project project : projects) {
@@ -278,14 +282,16 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     /**
      * Group a list of {@link ProjectAttachable} objects by {@link Project} and collect all their status.
      */
-    private <S extends ProjectAttachable & Statusable>
+    @Transactional(readOnly = true)
+    public <S extends ProjectAttachable & Statusable>
     Map<Project, List<String>> groupStatusByProject(final Collection<S> list) {
-        return list.parallelStream().filter(pa -> !ObjectUtils.isEmpty(pa.getProject()))
+        return list.stream().filter(pa -> !ObjectUtils.isEmpty(pa.getProject()))
                 .collect(Collectors.groupingBy(ProjectAttachable::getProject,
                         Collectors.mapping(key -> key.getStatus(), Collectors.toList())));
     }
 
-    private Map<Project, List<String>> groupStatusByProjectPaymentVoucher(Map<Project, List<String>> statusMap,
+    @Transactional(readOnly = true)
+    public Map<Project, List<String>> groupStatusByProjectPaymentVoucher(Map<Project, List<String>> statusMap,
                                                                           final List<PaymentVoucher> list) {
         Map<Project, List<String>> paymentStatus = list.parallelStream().filter(p -> !p.getStatus().equals(SUBMITTED)
                 && !ObjectUtils.isEmpty(p.getProject()))
@@ -304,7 +310,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     /**
      * Merge 2 {@link Map} of statuses grouped by {@link S}.
      */
-    private <S> Map<S, List<String>> mergeMapOfStatuses(final Map<S, List<String>> map1,
+    @Transactional(readOnly = true)
+    public <S> Map<S, List<String>> mergeMapOfStatuses(final Map<S, List<String>> map1,
                                                         final Map<S, List<String>> map2) {
         final Map<S, List<String>> mergedMap = new HashMap<>(map1);
         map2.forEach(
@@ -314,7 +321,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         return mergedMap;
     }
 
-    private <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
+    @Transactional(readOnly = true)
+    public  <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
     Map<Project, List<String>> addStatus(final FiscalYear fiscalYear,
                                          final AbstractMakueniEntityService<? extends S>... services) {
         Map<Project, List<String>> statusMap = new HashMap<>();
@@ -328,7 +336,8 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     }
 
 
-    private <S extends AbstractImplTenderProcessMakueniEntity & ProjectAttachable & Statusable>
+    @Transactional(readOnly = true)
+    public  <S extends AbstractImplTenderProcessMakueniEntity & ProjectAttachable & Statusable>
     Map<Project, List<String>> addImplementationStatus(final FiscalYear fiscalYear,
                                                        final AbstractImplTenderProcessMakueniEntityService
                                                                <? extends S>... services) {

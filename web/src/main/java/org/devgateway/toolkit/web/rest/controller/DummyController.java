@@ -206,7 +206,7 @@ public class DummyController {
                     for (int j = 0; j < 3; j++) {
                         final TenderProcess tenderProcess = new TenderProcess();
                         tenderProcess.setProject(project);
-                        tenderProcess.setPurchaseRequestNumber("# " + i + j + "-" + random.nextInt(50000));
+                        //tenderProcess.setPurchaseRequestNumber("# " + i + j + "-" + random.nextInt(50000));
 
                         prs.add(tenderProcess);
 

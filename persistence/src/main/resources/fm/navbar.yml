@@ -10,7 +10,7 @@
     - projectForm
 - name: navbar.tenderProcess
   visibleDeps:
-    - tenderProcessForm
+    - purchaseRequisitionForm
 - name: navbar.tenderDocument
   visibleDeps:
     - tenderForm

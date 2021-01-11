@@ -173,7 +173,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
 
             // filtered the list based on form Purchase Requisition
             final Tender parentObject = (Tender) TenderItemPanel.this.getParent().getDefaultModelObject();
-            final List<PurchaseItem> purchaseItems = parentObject.getTenderProcess().getPurchaseItems();
+            List<PurchaseItem> purchaseItems = parentObject.getTenderProcess()
+                    .getSinglePurchaseRequisition().getPurchaseItems();
+
 
             final Select2ChoiceBootstrapFormComponent<PurchaseItem> purchaseItem =
                     new Select2ChoiceBootstrapFormComponent<PurchaseItem>(

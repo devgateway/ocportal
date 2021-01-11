@@ -3,8 +3,10 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
+import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -42,11 +44,11 @@ import java.util.stream.Collectors;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "project_id"),
-        @Index(columnList = "purchaseRequestNumber")})
+@Table(indexes = {@Index(columnList = "project_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form
-public class TenderProcess extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
+public class TenderProcess extends AbstractAuditableEntity implements Labelable, ProjectAttachable,
+        ProcurementPlanAttachable, DepartmentAttachable, Terminatable {
     @ManyToOne(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Project project;
@@ -58,16 +60,6 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
 
-    @ExcelExport(useTranslation = true, name = "Purchase Request Number")
-    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
-    private String purchaseRequestNumber;
-
-    @ExcelExport(name = "Purchase Requisitions", separateSheet = true)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "parent_id")
-    @OrderColumn(name = "index")
-    private List<PurchRequisition> purchRequisitions = new ArrayList<>();
 
     @ExcelExport(separateSheet = true, name = "Tender")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
@@ -80,6 +72,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<TenderQuotationEvaluation> tenderQuotationEvaluation = new HashSet<>();
+
+    @ExcelExport(separateSheet = true, name = "Purchase Requisition")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<PurchaseRequisitionGroup> purchaseRequisition = new HashSet<>();
 
     @ExcelExport(separateSheet = true, name = "Professional Opinion")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
@@ -136,6 +134,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     private Set<PaymentVoucher> paymentVouchers = new HashSet<>();
 
+    @Override
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public AbstractAuditableEntity getParent() {
+        return null;
+    }
 
     /**
      * Calculates if this {@link TenderProcess} is terminated. This involves going through all stages and
@@ -147,7 +151,7 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @Transactional(readOnly = true)
     public boolean isTerminated() {
         ArrayList<Statusable> entityTree = new ArrayList<>();
-        entityTree.add(PersistenceUtil.getNext(tender));
+        entityTree.add(PersistenceUtil.getNext(purchaseRequisition));
         entityTree.add(PersistenceUtil.getNext(tenderQuotationEvaluation));
         entityTree.add(PersistenceUtil.getNext(professionalOpinion));
         entityTree.add(PersistenceUtil.getNext(awardNotification));
@@ -183,6 +187,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         return PersistenceUtil.getNext(tenderQuotationEvaluation);
     }
 
+    @JsonProperty("purchaseRequisition")
+    public PurchaseRequisitionGroup getSinglePurchaseRequisition() {
+        return PersistenceUtil.getNext(purchaseRequisition);
+    }
+
     @JsonProperty("professionalOpinion")
     public ProfessionalOpinion getSingleProfessionalOpinion() {
         return PersistenceUtil.getNext(professionalOpinion);
@@ -212,49 +221,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         this.project = project;
     }
 
-    public String getPurchaseRequestNumber() {
-        return purchaseRequestNumber;
+    public Set<PurchaseRequisitionGroup> getPurchaseRequisition() {
+        return purchaseRequisition;
     }
 
-    public void setPurchaseRequestNumber(final String purchaseRequestNumber) {
-        this.purchaseRequestNumber = purchaseRequestNumber;
-    }
-
-    @Override
-    public void setLabel(final String label) {
-
-    }
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public String getLabel() {
-        return purchaseRequestNumber;
-    }
-
-    @Override
-    public String toString() {
-        return getLabel();
-    }
-
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public BigDecimal getAmount() {
-        BigDecimal amount = BigDecimal.ZERO;
-        for (PurchRequisition pr : purchRequisitions) {
-            for (PurchaseItem item : pr.getPurchaseItems()) {
-                if (item.getAmount() != null && item.getQuantity() != null) {
-                    amount = amount.add(item.getAmount().multiply(item.getQuantity()));
-                }
-            }
-        }
-
-        return amount;
-    }
-
-    @Transient
-    public List<PurchaseItem> getPurchaseItems() {
-        return purchRequisitions.stream().flatMap(pr -> pr.getPurchaseItems().stream()).collect(Collectors.toList());
+    public void setPurchaseRequisition(Set<PurchaseRequisitionGroup> purchaseRequisition) {
+        this.purchaseRequisition = purchaseRequisition;
     }
 
     public Set<Tender> getTender() {
@@ -270,10 +242,22 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
         item.setTenderProcess(this);
     }
 
+    public void addPurchaseRequisition(final PurchaseRequisitionGroup item) {
+        purchaseRequisition.add(item);
+        item.setTenderProcess(this);
+    }
+
+
     public void removeTender(final Tender item) {
         tender.remove(item);
         item.setTenderProcess(null);
     }
+
+    public void removePurchaseRequisition(final PurchaseRequisitionGroup item) {
+        purchaseRequisition.remove(item);
+        item.setTenderProcess(null);
+    }
+
 
     public void removeAdministratorReport(final AdministratorReport item) {
         administratorReports.remove(item);
@@ -426,24 +410,8 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
-        return Collections.singletonList(PersistenceUtil.getNext(tender));
-    }
-
-    @Override
-    @Transactional
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
     public Department getDepartment() {
         return getProcurementPlan().getDepartment();
-    }
-
-    public List<PurchRequisition> getPurchRequisitions() {
-        return purchRequisitions;
-    }
-
-    public void setPurchRequisitions(List<PurchRequisition> purchRequisitions) {
-        this.purchRequisitions = purchRequisitions;
     }
 
     public Set<AdministratorReport> getAdministratorReports() {
@@ -487,12 +455,12 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     }
 
     @SuppressWarnings("unchecked")
-    public <Z extends Statusable> Z getProcurementEntity(Class<Z> clazz) {
+    public <Z extends AbstractMakueniEntity> Z getProcurementEntity(Class<Z> clazz) {
         if (clazz.equals(Project.class)) {
             return (Z) getProject();
         }
-        if (clazz.equals(TenderProcess.class)) {
-            return (Z) this;
+        if (clazz.equals(PurchaseRequisitionGroup.class)) {
+            return (Z) getSinglePurchaseRequisition();
         }
         if (clazz.equals(Tender.class)) {
             return (Z) getSingleTender();
@@ -513,6 +481,11 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
             return (Z) getSingleContract();
         }
         throw new RuntimeException("Unrecognized class " + clazz + " mapped to entity");
+    }
+
+    public boolean hasFormsDependingOnPurchaseRequisition() {
+        return getSingleTender() != null
+                || hasFormsDependingOnTender();
     }
 
     public boolean hasFormsDependingOnTender() {
@@ -541,5 +514,15 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public void setProcurementPlan(ProcurementPlan procurementPlan) {
         this.procurementPlan = procurementPlan;
+    }
+
+    @Override
+    public void setLabel(String label) {
+
+    }
+
+    @Override
+    public String getLabel() {
+        return getId().toString();
     }
 }

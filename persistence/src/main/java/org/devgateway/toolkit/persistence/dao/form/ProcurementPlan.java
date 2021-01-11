@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -141,26 +142,15 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     }
 
     /**
-     * please read first OCMAKU-477 to understand why we need to export draft procurement plans.
-     * <p>
-     * the rule to determine if a procurement plan will be published is now the following (by "exportable"
-     * we mean terminated or approved):
-     * <p>
-     * if the procurement plan is exportable - it gets published
-     * if the procurement plan is draft AND it contains at least one exportable project which contains at least
-     * one tender process which is exportable
-     * <p>
-     * This has implications on the public portal pages, since draft submission of procurement plans is
-     * <p>
-     * procurement plans can be exported without file uploads
-     * procurement plans can be exported without approval dates
+     * Since we no longer have projects all the time, a procurement plan becomes exportable as soon as it has
+     * some tender processes added, regardless if these are approved or not
      *
      * @return
      */
     @Override
     @Transactional
     public boolean isExportable() {
-        return super.isExportable() || getTenderProcesses().stream().anyMatch(Statusable::isExportable);
+        return super.isExportable() || getTenderProcesses().size() > 0;
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -153,13 +154,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     public boolean isTerminatedWithImplementation() {
         return PersistenceUtil.checkTerminated(
-                ArrayUtils.add(getDirectChildrenEntitiesNotNull().toArray(new Statusable[]{}), this));
+                ArrayUtils.add(getDirectChildrenEntities().toArray(new Statusable[]{}), this));
     }
 
-    @Override
+
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
+    @Override
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
         children.addAll(getTenderProcessNotNull().getAdministratorReports());

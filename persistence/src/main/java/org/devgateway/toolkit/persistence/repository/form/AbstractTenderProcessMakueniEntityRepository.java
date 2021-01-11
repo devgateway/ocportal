@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 @NoRepositoryBean
-public interface AbstractPurchaseReqMakueniEntityRepository<T extends AbstractTenderProcessMakueniEntity>
+public interface AbstractTenderProcessMakueniEntityRepository<T extends AbstractTenderProcessMakueniEntity>
         extends AbstractMakueniEntityRepository<T> {
     T findByTenderProcess(@Param("tenderProcess") TenderProcess tenderProcess);
 

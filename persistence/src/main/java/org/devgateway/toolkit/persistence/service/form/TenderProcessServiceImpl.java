@@ -11,14 +11,14 @@ import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.repository.form.TenderProcessRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
+import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.devgateway.toolkit.persistence.validator.validators.TenderProcessValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,6 @@ import org.springframework.validation.DataBinder;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -36,22 +35,22 @@ import java.util.stream.Stream;
  * @since 2019-04-17
  */
 @Service
-@Transactional(readOnly = true)
-public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<TenderProcess>
+@Transactional
+public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
         implements TenderProcessService {
 
     private static class TenderProcessForm {
 
-        private final Class<? extends Statusable> formClass;
+        private final Class<? extends AbstractMakueniEntity> formClass;
 
         private final String featureName;
 
-        TenderProcessForm(Class<? extends Statusable> formClass, String featureName) {
+        TenderProcessForm(Class<? extends AbstractMakueniEntity> formClass, String featureName) {
             this.formClass = formClass;
             this.featureName = featureName;
         }
 
-        public Class<? extends Statusable> getFormClass() {
+        public Class<? extends AbstractMakueniEntity> getFormClass() {
             return formClass;
         }
 
@@ -61,7 +60,7 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
     }
 
     @Override
-    public Statusable getPreviousStatusable(TenderProcess tp, Class<?> currentClazz) {
+    public AbstractMakueniEntity getPreviousStatusable(TenderProcess tp, Class<?> currentClazz) {
         TenderProcessForm entry = FORMS.stream().filter(f -> f.getFormClass().equals(currentClazz))
                 .findFirst().orElseThrow(() -> new RuntimeException("Unknown class to fm mapping " + currentClazz));
         for (int i = FORMS.indexOf(entry) - 1; i >= 0; i--) {
@@ -72,10 +71,27 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
         return null;
     }
 
-    private static final List<TenderProcessForm> FORMS = ImmutableList.of(
+    @Override
+    public AbstractMakueniEntity getNextStatusable(TenderProcess tp, Class<?> currentClazz) {
+        TenderProcessForm entry = FORMS.stream().filter(f -> f.getFormClass().equals(currentClazz))
+                .findFirst().orElseThrow(() -> new RuntimeException("Unknown class to fm mapping " + currentClazz));
+        for (int i = FORMS.indexOf(entry) + 1; i < FORMS.size(); i++) {
+            if (dgFmService.isFeatureVisible(FORMS.get(i).getFeatureName())) {
+                return tp.getProcurementEntity(FORMS.get(i).getFormClass());
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<TenderProcess> findByFiscalYear(final FiscalYear fiscalYear) {
+        return tenderProcessRepository.findByFiscalYear(fiscalYear);
+    }
+
+    public static final List<TenderProcessForm> FORMS = ImmutableList.of(
             // this is really for purchase reqs
             new TenderProcessForm(Project.class, "projectForm"),
-            new TenderProcessForm(TenderProcess.class, "tenderProcessForm.purchRequisitions"),
+            new TenderProcessForm(PurchaseRequisitionGroup.class, "purchaseRequisitionForm"),
             new TenderProcessForm(Tender.class, "tenderForm"),
             new TenderProcessForm(TenderQuotationEvaluation.class, "tenderQuotationEvaluationForm"),
             new TenderProcessForm(ProfessionalOpinion.class, "professionalOpinionForm"),
@@ -94,12 +110,6 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
     protected BaseJpaRepository<TenderProcess, Long> repository() {
         return tenderProcessRepository;
     }
-
-    @Override
-    public TextSearchableRepository<TenderProcess, Long> textRepository() {
-        return tenderProcessRepository;
-    }
-
 
     @Override
     public TenderProcess newInstance() {

@@ -8,5 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-04-24
  */
 @Transactional
-public interface ProfessionalOpinionRepository extends AbstractPurchaseReqMakueniEntityRepository<ProfessionalOpinion> {
+public interface ProfessionalOpinionRepository extends AbstractTenderProcessMakueniEntityRepository
+        <ProfessionalOpinion> {
 }

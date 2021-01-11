@@ -178,7 +178,7 @@ public class TenderProcessValidator implements Validator {
         List<AbstractMakueniEntity> allForms = new ArrayList<>();
         allForms.add(tp.getProcurementPlan());
         allForms.add(tp.getProject());
-        allForms.add(tp);
+        allForms.add(tp.getSinglePurchaseRequisition());
         allForms.add(tp.getSingleTender());
         allForms.add(tp.getSingleTenderQuotationEvaluation());
         allForms.add(tp.getSingleProfessionalOpinion());
@@ -229,7 +229,7 @@ public class TenderProcessValidator implements Validator {
             draftForms.add("Project");
         }
 
-        if (existsDraftWithLowerFormsDraft(allForms, tp)) {
+        if (existsDraftWithLowerFormsDraft(allForms, tp.getSinglePurchaseRequisition())) {
             draftForms.add("Purchase Requisition");
         }
 

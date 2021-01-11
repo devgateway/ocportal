@@ -175,8 +175,7 @@ public class SMSMessageServiceImpl extends BaseJpaServiceImpl<SMSMessage> implem
 
     private TenderProcess getTenderProcessIfUsableBySMS(Long tenderProcessId) {
         Optional<TenderProcess> byId = tenderProcessService.findById(tenderProcessId);
-        if (byId.isPresent() && byId.get().getStatus().equals(DBConstants.Status.APPROVED)
-                && byId.get().getSingleTender() != null && byId.get().getSingleTender().getStatus()
+        if (byId.isPresent() && byId.get().getSingleTender() != null && byId.get().getSingleTender().getStatus()
                 .equals(DBConstants.Status.APPROVED)) {
             return byId.get();
         }

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Transactional
-public interface TenderRepository extends AbstractPurchaseReqMakueniEntityRepository<Tender> {
+public interface TenderRepository extends AbstractTenderProcessMakueniEntityRepository<Tender> {
     @Override
     @Query("select tender from  #{#entityName} tender where lower(tender.tenderTitle) like %:name%")
     Page<Tender> searchText(@Param("name") String name, Pageable page);

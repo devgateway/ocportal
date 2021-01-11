@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gmutuhu
  */
 @Transactional
-public interface AwardAcceptanceRepository extends AbstractPurchaseReqMakueniEntityRepository<AwardAcceptance> {
+public interface AwardAcceptanceRepository extends AbstractTenderProcessMakueniEntityRepository<AwardAcceptance> {
 
 }
