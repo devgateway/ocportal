@@ -1167,16 +1167,21 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             return Award.Status.cancelled;
         }
 
-        AwardAcceptanceItem exportableAcceptanceItem = item.getExportableAcceptanceItem();
-        if (exportableAcceptanceItem == null) {
+        org.devgateway.toolkit.persistence.dao.form.Contract contract =
+                Optional.ofNullable(item.getParent().getTenderProcess().getSingleContract())
+                        .filter(Statusable::isExportable)
+                        .orElse(null);
+        if (contract == null) {
             return Award.Status.pending;
-        } else {
+        }
 
-            if (exportableAcceptanceItem.isAccepted()) {
-                return Award.Status.active;
-            } else {
-                return Award.Status.unsuccessful;
-            }
+        Optional<AwardNotificationItem> first = item.getParent().getItems().stream().sorted(
+                Comparator.comparing(AwardNotificationItem::getAwardDate).reversed())
+                .findFirst();
+        if (first.get().equals(item)) {
+            return Award.Status.active;
+        } else {
+            return Award.Status.unsuccessful;
         }
     }
 
