@@ -145,8 +145,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                TenderProcess tenderProcess = tenderProcessService.newInstance();
+                tenderProcess.setProcurementPlan(sessionMetadataService.getSessionPP());
+                TenderProcess savedTenderProcess = tenderProcessService.save(tenderProcess);
+                sessionMetadataService.setSessionTenderProcess(savedTenderProcess);
                 sessionMetadataService.setSessionProject(null);
-                setResponsePage(EditPurchaseRequisitionGroupPage.class);
+                setResponsePage(DepartmentOverviewPage.class);
             }
         };
         addTenderProcess.setLabel(

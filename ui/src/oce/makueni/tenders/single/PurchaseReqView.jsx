@@ -43,7 +43,7 @@ const PurchaseReqView = (props) => {
     }, {
       name: t('purchaseReq:tabs:purchaseReqs'),
       tab: 2,
-      fm: 'publicView.tenderProcess',
+      fm: 'publicView.purchaseRequisition',
     }, {
       name: t('purchaseReq:tabs:tenderEvaluation'),
       tab: 3,
@@ -125,7 +125,7 @@ const PurchaseReqView = (props) => {
       case 2:
         return (
           <PurchaseReq
-            data={data.tenderProcesses}
+            data={data.tenderProcesses.purchaseRequisition}
             department={data.department}
             fiscalYear={data.fiscalYear}
             styling={props.styling}

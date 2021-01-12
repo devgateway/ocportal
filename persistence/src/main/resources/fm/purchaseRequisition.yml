@@ -137,63 +137,63 @@
   visible: yes
 
 # PUBLIC VIEW
-- name: publicView.tenderProcess
+- name: publicView.purchaseRequisition
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm
-- name: publicView.tenderProcess.purchaseRequestNumber
+- name: publicView.purchaseRequisition.purchaseRequestNumber
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchaseRequestNumber
-- name: publicView.tenderProcess.purchRequisitions
+- name: publicView.purchaseRequisition.purchRequisitions
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions
-- name: publicView.tenderProcess.purchRequisitions.requestedBy
+- name: publicView.purchaseRequisition.purchRequisitions.requestedBy
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.requestedBy
-- name: publicView.tenderProcess.purchRequisitions.chargeAccount
+- name: publicView.purchaseRequisition.purchRequisitions.chargeAccount
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.chargeAccount
-- name: publicView.tenderProcess.purchRequisitions.requestApprovalDate
+- name: publicView.purchaseRequisition.purchRequisitions.requestApprovalDate
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.requestApprovalDate
-- name: publicView.tenderProcess.purchRequisitions.approvedDate
+- name: publicView.purchaseRequisition.purchRequisitions.approvedDate
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.approvedDate
-- name: publicView.tenderProcess.purchRequisitions.purchaseItems
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.purchaseItems
-- name: publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.label
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.planItem.label
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.purchaseItems.planItem
-- name: publicView.tenderProcess.purchRequisitions.purchaseItems.description
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.description
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.purchaseItems.description
-- name: publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.unitOfIssue
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.planItem.unitOfIssue
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.purchaseItems.planItem
-- name: publicView.tenderProcess.purchRequisitions.purchaseItems.quantity
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.quantity
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.purchaseItems.quantity
-- name: publicView.tenderProcess.purchRequisitions.purchaseItems.amount
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.amount
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.purchaseItems.amount
-- name: publicView.tenderProcess.purchRequisitions.purchaseItems.totalCost
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.totalCost
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.purchaseItems.totalCost
-- name: publicView.tenderProcess.purchRequisitions.formDocs
+- name: publicView.purchaseRequisition.purchRequisitions.formDocs
   visible: yes
   visibleDeps:
     - purchaseRequisitionForm.purchRequisitions.formDocs

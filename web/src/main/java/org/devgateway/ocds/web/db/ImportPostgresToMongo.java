@@ -153,6 +153,8 @@ public class ImportPostgresToMongo {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
                 pp.getTenderProcesses().stream().forEach(pr -> {
                     pr.setPurchaseRequisition(new HashSet<>(filterNotExportable(pr.getPurchaseRequisition())));
+                    pr.getPurchaseRequisition().stream().flatMap(i -> i.getPurchRequisitions().stream())
+                            .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
                     pr.getPurchaseRequisition().stream().forEach(item -> self.storeMakueniFormFiles(
                             item.getFormDocs()));
 
