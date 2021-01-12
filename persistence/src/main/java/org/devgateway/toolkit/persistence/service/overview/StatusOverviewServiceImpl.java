@@ -1,22 +1,31 @@
 package org.devgateway.toolkit.persistence.service.overview;
 
 import org.apache.commons.collections4.SetUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
+import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.ProjectAttachable;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
+import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewRowGroup;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewRowInfo;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.AbstractImplTenderProcessMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -32,6 +41,7 @@ import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionServic
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionGroupService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessServiceImpl;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.slf4j.Logger;
@@ -43,6 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,6 +75,9 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private DgFmService fmService;
 
     @Autowired
     private TenderProcessService tenderProcessService;
@@ -123,12 +137,15 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                         : tp.getSingleTender().getTitle());
                 rowInfo.setTenderProcessStatus(
                         getProcessStatus(getMakueniEntitiesStatuses(
-                                Collections.singletonList(tp.getSinglePurchaseRequisition()),
+                                tp.getPurchaseRequisition(),
                                 tp.getTender(),
-                                tp.getTenderQuotationEvaluation(), tp.getProfessionalOpinion()), 4));
+                                tp.getTenderQuotationEvaluation(), tp.getProfessionalOpinion()),
+                                getStatusSizeWithFm(PurchaseRequisitionGroup.class, Tender.class,
+                                        TenderQuotationEvaluation.class, ProfessionalOpinion.class)));
                 rowInfo.setAwardProcessStatus(
                         getProcessStatus(getMakueniEntitiesStatuses(tp.getAwardNotification(), tp.getAwardAcceptance(),
-                                tp.getContract()), 3));
+                                tp.getContract()),
+                                getStatusSizeWithFm(AwardNotification.class, AwardAcceptance.class, Contract.class)));
                 rowInfo.setImplementationStatus(
                         getProcessStatus(getMakueniEntitiesStatuses(tp.getAdministratorReports(),
                                 tp.getInspectionReports(), tp.getPmcReports(), tp.getMeReports(),
@@ -139,6 +156,12 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         });
 
         return groupList;
+    }
+
+    public int getStatusSizeWithFm(Class<? extends AbstractMakueniEntity>... classes) {
+        return (int) Arrays.stream(classes).map(TenderProcessServiceImpl.FORM_FM_MAP::get)
+                .map(fmService::isFeatureVisible)
+                .filter(BooleanUtils::isTrue).count();
     }
 
 

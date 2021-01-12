@@ -1,7 +1,7 @@
 # TENDER PROCESS FORM PAGE
 - name: purchaseRequisitionForm
   enabled: yes
-  visible: yes
+  visible: no
 - name: purchaseRequisitionForm.approve
   enabled: yes
   visible: yes

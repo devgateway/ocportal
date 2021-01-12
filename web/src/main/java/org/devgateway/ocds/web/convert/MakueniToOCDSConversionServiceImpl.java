@@ -47,7 +47,6 @@ import org.devgateway.ocds.persistence.mongo.repository.main.MakueniLocationRepo
 import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.ocds.web.rest.controller.OcdsController;
-import org.devgateway.toolkit.persistence.dao.AbstractDocsChildExpAuditEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
@@ -427,7 +426,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setId, tenderItem::getId, this::longIdToString);
         safeSet(ocdsItem::setUnit, () -> tenderItem, this::createTenderItemUnit);
         safeSet(ocdsItem::setQuantity, tenderItem::getQuantity, BigDecimal::doubleValue);
-        safeSet(ocdsItem::setClassification, tenderItem::getPurchaseItem, this::createPurchaseItemClassification);
+        safeSet(ocdsItem::setClassification, tenderItem::getNonNullPlanItem,
+                this::createPlanItemClassification);
         return ocdsItem;
     }
 
@@ -435,23 +435,23 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Unit createTenderItemUnit(TenderItem tenderItem) {
         Unit unit = new Unit();
         safeSet(unit::setScheme, () -> MongoConstants.OCDSSchemes.UNCEFACT);
-        safeSet(unit::setName, tenderItem::getPurchaseItem, PurchaseItem::getPlanItem, PlanItem::getUnitOfIssue,
+        safeSet(unit::setName, tenderItem::getNonNullPlanItem, PlanItem::getUnitOfIssue,
                 Category::getLabel
         );
 
-        safeSet(unit::setId, tenderItem::getPurchaseItem, PurchaseItem::getPlanItem, PlanItem::getUnitOfIssue,
+        safeSet(unit::setId, tenderItem::getNonNullPlanItem,  PlanItem::getUnitOfIssue,
                 Category::getCode
         );
         safeSet(unit::setValue, tenderItem::getUnitPrice, this::convertAmount);
         return unit;
     }
 
-    public Classification createPurchaseItemClassification(PurchaseItem purchaseItem) {
+    public Classification createPlanItemClassification(PlanItem planItem) {
         Classification classification = new Classification();
         safeSet(classification::setScheme, () -> MongoConstants.OCDSSchemes.X_KE_IFMIS);
-        safeSet(classification::setId, purchaseItem::getPlanItem, PlanItem::getItem, Category::getCode
+        safeSet(classification::setId, () -> planItem, PlanItem::getItem, Category::getCode
         );
-        safeSet(classification::setDescription, purchaseItem::getPlanItem, PlanItem::getItem, Category::getLabel,
+        safeSet(classification::setDescription, () -> planItem, PlanItem::getItem, Category::getLabel,
                 WordUtils::capitalizeFully
         );
         return classification;
@@ -1018,7 +1018,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setDescription, purchaseItem::getLabel);
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, BigDecimal::doubleValue);
-        safeSet(ocdsItem::setClassification, () -> purchaseItem, this::createPurchaseItemClassification);
+        safeSet(ocdsItem::setClassification, purchaseItem::getPlanItem, this::createPlanItemClassification);
         safeSet(ocdsItem::setTargetGroup, purchaseItem::getPlanItem, PlanItem::getTargetGroup,
                 this::categoryLabel
         );

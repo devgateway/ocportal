@@ -480,6 +480,9 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
         if (clazz.equals(Contract.class)) {
             return (Z) getSingleContract();
         }
+        if (clazz.equals(ProcurementPlan.class)) {
+            return (Z) getProcurementPlan();
+        }
         throw new RuntimeException("Unrecognized class " + clazz + " mapped to entity");
     }
 

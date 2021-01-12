@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
@@ -27,7 +28,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -90,6 +93,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
 
     public static final List<TenderProcessForm> FORMS = ImmutableList.of(
             // this is really for purchase reqs
+            new TenderProcessForm(ProcurementPlan.class, "procurementPlanForm"),
             new TenderProcessForm(Project.class, "projectForm"),
             new TenderProcessForm(PurchaseRequisitionGroup.class, "purchaseRequisitionForm"),
             new TenderProcessForm(Tender.class, "tenderForm"),
@@ -99,6 +103,10 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
             new TenderProcessForm(AwardAcceptance.class, "awardAcceptanceForm"),
             new TenderProcessForm(Contract.class, "contractForm")
     );
+
+    public static final Map<? extends Class<? extends AbstractMakueniEntity>, String> FORM_FM_MAP =
+            ImmutableMap.copyOf(FORMS.stream().collect(Collectors.toMap(TenderProcessForm::getFormClass,
+                    TenderProcessForm::getFeatureName)));
 
     @Autowired
     private TenderProcessRepository tenderProcessRepository;

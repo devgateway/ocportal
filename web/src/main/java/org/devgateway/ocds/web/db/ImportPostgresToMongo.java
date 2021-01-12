@@ -113,7 +113,8 @@ public class ImportPostgresToMongo {
 
     @Transactional(readOnly = true)
     public void formStatusIntegrityCheck(TenderProcess tp, StringBuffer sb) {
-        if (fmService.isFeatureVisible("purchaseRequisitionForm")) {
+        if (fmService.isFeatureVisible("purchaseRequisitionForm")
+                && tp.getSinglePurchaseRequisition() != null) {
             formStatusIntegrityCheck(tp.getSinglePurchaseRequisition(), sb);
         } else {
             formStatusIntegrityCheck(tenderProcessService.getNextStatusable(tp, PurchaseRequisitionGroup.class), sb);
@@ -122,6 +123,9 @@ public class ImportPostgresToMongo {
 
     @Transactional(readOnly = true)
     public void formStatusIntegrityCheck(AbstractMakueniEntity p, StringBuffer sb) {
+        if (p == null) {
+            return;
+        }
         p.getDirectChildrenEntitiesNotNull().forEach(e -> {
             if (!goodParentStatus(p.getStatus(), e.getStatus())) {
                 sb.append("Parent ").append(p.getClass().getSimpleName()).append(" with id ").append(p.getId())

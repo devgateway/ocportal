@@ -11,6 +11,8 @@
 # Department Overview - Tender Process
 - name: deptOverview.tenderProcess.purchaseRequisition
   visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm
 - name: deptOverview.tenderProcess.tenderDocument
   visibleDeps:
     - tenderForm

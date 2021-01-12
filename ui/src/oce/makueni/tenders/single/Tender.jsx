@@ -110,7 +110,7 @@ const Tender = (props) => {
                   <div key={tenderItem._id} className="box">
                     <div className="row display-flex">
                       {isFeatureVisible('publicView.tender.tenderItems.item')
-                    && <Item label={t('tender:item')} value={tenderItem.purchaseItem.planItem.item.label} col={6} />}
+                    && <Item label={t('tender:item')} value={tenderItem.nonNullPlanItem.item.label} col={6} />}
 
                       {isFeatureVisible('publicView.tender.tenderItems.description')
                     && <Item label={t('tender:item:description')} value={tenderItem.description} col={6} />}
@@ -119,7 +119,7 @@ const Tender = (props) => {
                     && (
                     <Item
                       label={t('tender:item:unitOfIssue')}
-value={tenderItem.purchaseItem.planItem.unitOfIssue.label}
+                      value={tenderItem.nonNullPlanItem.unitOfIssue.label}
                       col={3}
                     />
                     )}
