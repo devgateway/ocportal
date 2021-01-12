@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeSet;
 
@@ -75,6 +76,12 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
     private TreeSet<String> bidderId;
+
+    @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
+    private ArrayList<String> leftBidderIds;
+
+    @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
+    private ArrayList<String> rightBidderIds;
 
     @ApiModelProperty(value = "This will filter after tender.locations._id")
     private TreeSet<String> tenderLoc = new TreeSet<>();
@@ -331,5 +338,21 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
     public void setOcid(TreeSet<String> ocid) {
         this.ocid = ocid;
+    }
+
+    public ArrayList<String> getLeftBidderIds() {
+        return leftBidderIds;
+    }
+
+    public void setLeftBidderIds(ArrayList<String> leftBidderIds) {
+        this.leftBidderIds = leftBidderIds;
+    }
+
+    public ArrayList<String> getRightBidderIds() {
+        return rightBidderIds;
+    }
+
+    public void setRightBidderIds(ArrayList<String> rightBidderIds) {
+        this.rightBidderIds = rightBidderIds;
     }
 }

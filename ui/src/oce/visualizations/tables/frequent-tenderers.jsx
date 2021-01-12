@@ -1,8 +1,7 @@
 import { List } from 'immutable';
-import URI from 'urijs';
 import Table from './index';
 import orgNamesFetching from '../../orgnames-fetching';
-import { send, callFunc } from '../../tools';
+import { fetchEP } from '../../tools';
 import fmConnect from '../../fm/fm';
 
 const maybeSlice = (flag, list) => (flag ? list.slice(0, 10) : list);
@@ -41,27 +40,17 @@ class FrequentTenderers extends orgNamesFetching(Table) {
   maybeGetSupplierWins() {
     const { data } = this.props;
     if (!data) return;
-    const newData1 = [];
-    Promise.all(
-      data.map((datum) => send(new URI('/api/activeAwardsCount').addSearch('bidderId',
-        [datum.get('tendererId1'), datum.get('tendererId2')])
-        .addSearch('supplierId', datum.get('tendererId1'))).then(callFunc('json')).then((r) => newData1.push(datum.set('supplierCount1', r[0] === undefined ? 0 : r[0].cnt)))),
-    )
-      .then(
-        () => {
-          const newData = [];
-          Promise.all(
-            newData1.map((datum) => send(new URI('/api/activeAwardsCount').addSearch('bidderId',
-              [datum.get('tendererId1'), datum.get('tendererId2')])
-              .addSearch('supplierId', datum.get('tendererId1'))).then(callFunc('json')).then((r) => newData.push(datum.set('supplierCount2', r[0] === undefined ? 0 : r[0].cnt)))),
-          )
-            .then(
-              () => {
-                this.setState({ newData });
-              },
-            );
-        },
-      );
+
+    const url = this.buildUrl('activeAwardsCount')
+      .addSearch('leftBidderIds', data.map((datum) => datum.get('tendererId1')).toJS().join(','))
+      .addSearch('rightBidderIds', data.map((datum) => datum.get('tendererId2')).toJS().join(','));
+    fetchEP(url)
+      .then((allCounts) => {
+        const newData = data.map((datum, key) => datum
+          .set('supplierCount1', allCounts[key][0])
+          .set('supplierCount2', allCounts[key][1]));
+        this.setState({ newData });
+      });
   }
 
   componentDidMount() {
