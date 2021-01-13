@@ -1382,6 +1382,14 @@
         </sql>
         <sql>
             alter table tender_process alter column project_id drop not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-814-remove-projects-2" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="professional_opinion_item" />
+        </preConditions>
+        <sql>
             alter table professional_opinion_item alter column parent_id drop not null;
         </sql>
     </changeSet>
