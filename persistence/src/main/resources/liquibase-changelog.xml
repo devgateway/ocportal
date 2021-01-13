@@ -1391,7 +1391,7 @@
     </changeSet>
 
     <changeSet id="OCMAKU-824-remove-purchase-reqs-2" author="mpostelnicu">
-        <preConditions>
+        <preConditions onFail="CONTINUE">
             <tableExists tableName="purchase_requisition_group"/>
         </preConditions>
         <sql>insert into purchase_requisition_group (id, tender_process_id,
@@ -1408,7 +1408,7 @@
     </changeSet>
 
     <changeSet id="OCMAKU-824-remove-purchase-reqs-3" author="mpostelnicu">
-        <preConditions>
+        <preConditions onFail="CONTINUE">
             <tableExists tableName="purchase_requisition_group"/>
         </preConditions>
         <addNotNullConstraint tableName="purchase_requisition_group" columnName="tender_process_id"/>

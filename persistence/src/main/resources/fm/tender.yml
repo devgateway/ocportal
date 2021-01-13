@@ -91,7 +91,7 @@
 - name: tenderForm.tenderItems.planItem
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.tenderItems.quantity
   mandatory: yes
   enabled: yes
