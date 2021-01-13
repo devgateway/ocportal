@@ -135,6 +135,8 @@
   visible: yes
 
 # PUBLIC VIEW
+- name: publicView.procurementPlans
+  visible: yes
 - name: publicView.procurementPlans.col.id
   visible: yes
 - name: publicView.procurementPlans.col.department
