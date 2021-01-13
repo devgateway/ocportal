@@ -25,5 +25,10 @@ public interface TenderProcessService extends AbstractMakueniEntityService<Tende
     BindingResult validate(TenderProcess tp);
 
     BindingResult validate(TenderProcess tp, AbstractMakueniEntity e);
+
+    /**
+     * Return first visible downstream form class starting and including the passed form class.
+     */
+    Class<?> getFirstVisibleDownstreamForm(Class<?> formClass);
 }
 

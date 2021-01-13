@@ -15,7 +15,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRol
 import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.MEStatusService;
@@ -145,11 +144,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
         final TenderProcess tenderProcess = report.getTenderProcess();
         tenderProcess.removeMEReport(report);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
     }
 
     @Override

@@ -785,7 +785,7 @@
     border: 1px solid #dfe3e9;
     border-top: 1px solid #ffffff;
     margin-top: -12px;
-    padding: 15px;
+    padding: 15px 15px 0 15px;
 }
 
 .divider {
@@ -813,6 +813,7 @@
 .tender-detail {
     border-right: 1px solid #eeeeee;
     margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .tender-header .tender-label {

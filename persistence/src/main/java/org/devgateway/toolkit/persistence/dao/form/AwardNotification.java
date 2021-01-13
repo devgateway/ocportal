@@ -98,4 +98,14 @@ public class AwardNotification extends AbstractTenderProcessMakueniEntity {
     public void setItems(List<AwardNotificationItem> items) {
         this.items = items;
     }
+
+    @Override
+    public Class<?> getNextForm() {
+        return AwardAcceptance.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnAwardNotification();
+    }
 }

@@ -82,4 +82,14 @@ public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntit
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getProfessionalOpinion()));
     }
+
+    @Override
+    public Class<?> getNextForm() {
+        return ProfessionalOpinion.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnTenderQuotationAndEvaluation();
+    }
 }

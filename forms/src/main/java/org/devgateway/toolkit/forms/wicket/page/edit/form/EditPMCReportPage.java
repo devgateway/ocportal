@@ -21,7 +21,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.PMCRoleAssig
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.PMCStatusService;
@@ -178,11 +177,6 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         final TenderProcess tenderProcess = report.getTenderProcess();
         tenderProcess.removePMCReport(report);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
     }
 
     @Override

@@ -17,7 +17,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -92,11 +91,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     }
 
     @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
-    }
-
-    @Override
     protected Contract newInstance() {
         final Contract contract = super.newInstance();
         contract.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
@@ -123,12 +117,16 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     }
 
     public static List<Supplier> getAcceptedSupplier(TenderProcess tenderProcess) {
-        return tenderProcess.getSingleAwardAcceptance().getItems()
-                .stream()
-                .filter(AwardAcceptanceItem::isAccepted)
-                .map(AwardAcceptanceItem::getAwardee)
-                .filter(Objects::nonNull)
-                .findFirst().map(Arrays::asList).orElseGet(Arrays::asList);
+        if (tenderProcess.getSingleAwardAcceptance() != null) {
+            return tenderProcess.getSingleAwardAcceptance().getItems()
+                    .stream()
+                    .filter(AwardAcceptanceItem::isAccepted)
+                    .map(AwardAcceptanceItem::getAwardee)
+                    .filter(Objects::nonNull)
+                    .findFirst().map(Arrays::asList).orElseGet(Arrays::asList);
+        } else {
+            return tenderProcess.getSingleAwardNotification().getAwardee();
+        }
     }
 
 
