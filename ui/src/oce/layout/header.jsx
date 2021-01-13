@@ -13,6 +13,7 @@ import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
 import makueniLogo from '../resources/makueni-logo.png';
 import { getGaId } from '../api/Api';
+import fmConnect from '../fm/fm';
 
 const initGA = (gaId) => {
   ReactGA.initialize(gaId);
@@ -48,8 +49,10 @@ const handleIntroJS = () => {
   }
 };
 
-const Header = (props) => {
-  const t = tCreator(props.translations);
+const Header = ({
+  translations, onSwitch, selected, styling, isFeatureVisible,
+}) => {
+  const t = tCreator(translations);
 
   const tabs = [
     {
@@ -63,6 +66,7 @@ const Header = (props) => {
       title: t('header:procurementPlan'),
       step: 3,
       intro: t('header:procurementPlan:intro'),
+      featureName: 'publicView.procurementPlans',
     },
     {
       name: 'm-and-e',
@@ -78,6 +82,8 @@ const Header = (props) => {
     },
   ];
 
+  const visibleTabs = tabs.filter((tab) => !tab.featureName || isFeatureVisible(tab.featureName));
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -91,9 +97,9 @@ const Header = (props) => {
     dispatch(loadStats());
   }, [dispatch]);
 
-  const changeOption = (option) => props.onSwitch(option);
+  const changeOption = (option) => onSwitch(option);
 
-  const isActive = (option) => props.selected === option;
+  const isActive = (option) => selected === option;
 
   const exportBtn = () => {
     const excelURL = new URI('/api/makueni/excelExport');
@@ -116,7 +122,7 @@ const Header = (props) => {
     );
   };
 
-  const { currencyFormatter } = props.styling.tables;
+  const { currencyFormatter } = styling.tables;
 
   const stats = useSelector(selectStats);
 
@@ -136,7 +142,7 @@ const Header = (props) => {
           <div className="row">
             <div className="navigation">
               {
-                tabs.map((tab) => (
+                visibleTabs.map((tab) => (
                   <a
                     key={tab.name}
                     className={cn('', { active: isActive(tab.name) })}
@@ -167,7 +173,12 @@ const Header = (props) => {
           stats.status === LOADED
             ? (
               <div>
-                <div className="col-lg-3 col-md-3 col-sm-6 total-item" data-step="5" data-intro={t('header:totalContracts:intro')} data-position="right">
+                <div
+                  className="col-lg-3 col-md-3 col-sm-6 total-item"
+                  data-step="5"
+                  data-intro={t('header:totalContracts:intro')}
+                  data-position="right"
+                >
                   <span className="total-label">{t('header:totalContracts')}</span>
                   <span className="total-number">{stats.totalContracts}</span>
                 </div>
@@ -197,7 +208,8 @@ Header.propTypes = {
   translations: PropTypes.object.isRequired,
   selected: PropTypes.string,
   onSwitch: PropTypes.func.isRequired,
+  isFeatureVisible: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
 };
 
-export default Header;
+export default fmConnect(Header);

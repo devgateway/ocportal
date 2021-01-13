@@ -16,6 +16,7 @@ class MapVisual extends backendFilterable(Visualization) {
     super(props);
     this.state = {
       locationType: 'subcounty',
+      center: { lat: 0, lng: 0 },
     };
   }
 
@@ -35,10 +36,16 @@ class MapVisual extends backendFilterable(Visualization) {
 
   componentDidMount() {
     this.handleUpdate(['subcounty']);
+    this.computeCenter();
   }
 
   componentWillUnmount() {
     this.handleUpdate([]);
+  }
+
+  componentDidUpdate(prevProps) {
+    super.componentDidUpdate(prevProps);
+    this.computeCenter();
   }
 
   computeLocationButtonClass(locationType, buttonType) {
@@ -58,26 +65,28 @@ class MapVisual extends backendFilterable(Visualization) {
     });
   }
 
+  computeCenter() {
+    const data = this.getData();
+    if (data && data.length > 0) {
+      const newCenter = L.latLngBounds(data
+        .map(pluck('coords'))
+        .map(swap))
+        .getCenter();
+      const { center } = this.state;
+      if (center.lat !== newCenter.lat || center.lng !== newCenter.lng) {
+        this.setState({ center: { lat: newCenter.lat, lng: newCenter.lng } });
+      }
+    }
+  }
+
   render() {
     const {
       translations, filters, years, styling, months, monthly, zoom,
     } = this.props;
-    const { locationType } = this.state;
-    let _zoom;
-    let center;
-    if (this.getData() && this.getData().length > 0) {
-      center = L.latLngBounds(this.getData()
-        .map(pluck('coords'))
-        .map(swap))
-        .getCenter();
-      _zoom = zoom;
-    } else {
-      center = [0, 0];
-      _zoom = 1;
-    }
+    const { locationType, center } = this.state;
 
     return (
-      <Map center={center} zoom={_zoom} zoomControl={false} dragging={!L.Browser.mobile} tap={false}>
+      <Map center={center} zoom={zoom} zoomControl={false} dragging={!L.Browser.mobile} tap={false}>
         {this.getTiles()}
         <Cluster maxAmount={this.getMaxAmount()}>
           {this.getData()
@@ -120,6 +129,9 @@ class MapVisual extends backendFilterable(Visualization) {
 }
 
 MapVisual.propTypes = {};
+MapVisual.defaultProps = {
+  zoom: 1,
+};
 MapVisual.computeComparisonYears = null;
 MapVisual.Location = Location;
 
