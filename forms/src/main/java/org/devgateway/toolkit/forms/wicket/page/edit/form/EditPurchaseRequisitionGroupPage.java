@@ -10,12 +10,12 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
-import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
-import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionGroupService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -28,10 +28,13 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/purchaseRequisition")
-public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderProcess>
+public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityPage<PurchaseRequisitionGroup>
         implements ProcurementRoleAssignable {
     @SpringBean
-    private TenderProcessService tenderProcessService;
+    private PurchaseRequisitionGroupService purchaseRequisitionGroupService;
+
+    @SpringBean
+    protected TenderProcessService tenderProcessService;
 
     @SpringBean
     private ProjectService projectService;
@@ -50,18 +53,18 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
         }
     }
 
-    public EditTenderProcessPage() {
+    public EditPurchaseRequisitionGroupPage() {
         this(new PageParameters());
     }
 
-    public EditTenderProcessPage(final PageParameters parameters) {
+    public EditPurchaseRequisitionGroupPage(final PageParameters parameters) {
         super(parameters);
-        this.jpaService = tenderProcessService;
+        this.jpaService = purchaseRequisitionGroupService;
     }
 
     @Override
     protected void onInitialize() {
-        editForm.attachFm("tenderProcessForm");
+        editForm.attachFm("purchaseRequisitionForm");
         super.onInitialize();
 
         editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.department"));
@@ -92,17 +95,16 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
     }
 
     @Override
-    protected TenderProcess newInstance() {
-        final TenderProcess tenderProcess = super.newInstance();
-        tenderProcess.setProcurementPlan(sessionMetadataService.getSessionPP());
-        tenderProcess.setProject(sessionMetadataService.getSessionProject());
-        return tenderProcess;
+    protected PurchaseRequisitionGroup newInstance() {
+        final PurchaseRequisitionGroup pr = super.newInstance();
+        pr.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
+        return pr;
     }
 
     @Override
     public boolean isTerminated() {
-        final TenderProcess tenderProcess = editForm.getModelObject();
-        return tenderProcess.isTerminated();
+        PurchaseRequisitionGroup pr = editForm.getModelObject();
+        return pr.isTerminated();
     }
 
 //    @Override
@@ -115,7 +117,7 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
 //    }
 
     @Override
-    protected void afterSaveEntity(final TenderProcess saveable) {
+    protected void afterSaveEntity(final PurchaseRequisitionGroup saveable) {
         super.afterSaveEntity(saveable);
 
         // autogenerate the number
@@ -123,12 +125,10 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
             saveable.setPurchaseRequestNumber(saveable.getProcurementPlan().getDepartment().getCode()
                     + "/" + saveable.getId());
 
-            jpaService.saveAndFlush(saveable);
+            jpaService.save(saveable);
         }
-
-        // add current Purchase Requisition in session
-        sessionMetadataService.setSessionTenderProcess(editForm.getModelObject());
     }
+
 
 //    @Override
 //    protected void beforeDeleteEntity(final TenderProcess tenderProcess) {
@@ -140,13 +140,29 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
 //    }
 
     @Override
+    protected void beforeSaveEntity(final PurchaseRequisitionGroup entity) {
+        super.beforeSaveEntity(entity);
+        final TenderProcess tenderProcess = entity.getTenderProcess();
+        tenderProcess.addPurchaseRequisition(entity);
+        tenderProcessService.save(tenderProcess);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final PurchaseRequisitionGroup entity) {
+        super.beforeDeleteEntity(entity);
+
+        final TenderProcess tenderProcess = entity.getTenderProcess();
+        tenderProcess.removePurchaseRequisition(entity);
+        tenderProcessService.save(tenderProcess);
+    }
+
+    @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTender())) {
-            pp.set(WebConstants.PARAM_ID, PersistenceUtil.getNext(editForm.getModelObject().getTender()).getId());
+        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getTender())) {
+            pp.set(WebConstants.PARAM_ID, PersistenceUtil.getNext(editForm
+                    .getModelObject().getTenderProcess().getTender()).getId());
         }
-        // add current Purchase Requisition in session
-        sessionMetadataService.setSessionTenderProcess(editForm.getModelObject());
 
         return pp;
     }

@@ -46,7 +46,7 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
 
     public static final Map<Class<?>, Class<? extends Page>> PAGE_CLASS_BY_FORM_CLASS =
             ImmutableMap.<Class<?>, Class<? extends Page>>builder()
-                    .put(TenderProcess.class, EditTenderProcessPage.class)
+                    .put(TenderProcess.class, EditPurchaseRequisitionGroupPage.class)
                     .put(Tender.class, EditTenderPage.class)
                     .put(TenderQuotationEvaluation.class, EditTenderQuotationEvaluationPage.class)
                     .put(ProfessionalOpinion.class, EditProfessionalOpinionPage.class)

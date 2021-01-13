@@ -31,8 +31,8 @@ import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 import org.springframework.util.ObjectUtils;
 
@@ -216,8 +216,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
             super.onInitialize();
 
             // filtered the list based on form Procurement Plan
-            final TenderProcess parentObject =
-                    (TenderProcess) PurchaseItemPanel.this.getParent().getParent().getParent()
+            final PurchaseRequisitionGroup parentObject =
+                    (PurchaseRequisitionGroup) PurchaseItemPanel.this.getParent().getParent().getParent()
                             .getParent().getParent().getDefaultModelObject();
             final List<PlanItem> planItems = parentObject.getProcurementPlan().getPlanItems();
 

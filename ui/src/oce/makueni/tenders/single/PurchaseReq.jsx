@@ -25,25 +25,31 @@ const PurchaseReq = (props) => {
     return escape(t('purchaseReq:label') + metadata);
   };
 
-  const getPurchaseReq = () => (
+  const getPurchaseReq = (purchaseRequisition) => (
     <div>
       <div className="row">
-        {isFeatureVisible('publicView.tenderProcess.purchaseRequestNumber')
-        && <Item label={t('purchaseReq:purchaseRequestNumber')} value={data.purchaseRequestNumber} col={3} />}
+        {isFeatureVisible('publicView.purchaseRequisition.purchaseRequestNumber')
+        && (
+        <Item
+          label={t('purchaseReq:purchaseRequestNumber')}
+          value={purchaseRequisition.purchaseRequestNumber}
+          col={3}
+        />
+        )}
       </div>
 
-      {
-        data.purchRequisitions !== undefined && isFeatureVisible('publicView.tenderProcess.purchRequisitions')
-          ? data.purchRequisitions.map((preq) => (
-            <div key={preq._id} className="box">
-              <div className="row">
-                {isFeatureVisible('publicView.tenderProcess.purchRequisitions.requestedBy')
+      {purchaseRequisition.purchRequisitions !== undefined
+      && isFeatureVisible('publicView.purchaseRequisition.purchRequisitions')
+        ? purchaseRequisition.purchRequisitions.map((preq) => (
+          <div key={preq._id} className="box">
+            <div className="row">
+              {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.requestedBy')
                     && <Item label={t('purchaseReq:requestedBy')} value={preq.requestedBy.label} col={3} />}
 
-                {isFeatureVisible('publicView.tenderProcess.purchRequisitions.chargeAccount')
+              {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.chargeAccount')
                     && <Item label={t('purchaseReq:chargeAccount')} value={preq.chargeAccount.label} col={3} />}
 
-                {isFeatureVisible('publicView.tenderProcess.purchRequisitions.requestApprovalDate')
+              {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.requestApprovalDate')
                     && (
                     <Item
                       label={t('purchaseReq:requestApprovalDate')}
@@ -52,11 +58,11 @@ const PurchaseReq = (props) => {
                     />
                     )}
 
-                {isFeatureVisible('publicView.tenderProcess.purchRequisitions.approvedDate')
+              {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.approvedDate')
                     && <Item label={t('purchaseReq:approvedDate')} value={formatDate(preq.approvedDate)} col={3} />}
-              </div>
-              {
-                    preq.purchaseItems !== undefined && isFeatureVisible('publicView.tenderProcess.purchRequisitions.purchaseItems')
+            </div>
+            {
+                    preq.purchaseItems !== undefined && isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.purchaseItems')
                       ? (
                         <div>
                           <div className="row padding-top-10">
@@ -71,13 +77,13 @@ const PurchaseReq = (props) => {
                             preq.purchaseItems.map((pr) => (
                               <div key={pr._id} className="box">
                                 <div className="row display-flex">
-                                  {isFeatureVisible('publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.label')
+                                  {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.purchaseItems.planItem.label')
                                 && <Item label={t('purchaseReq:items:item')} value={pr.planItem.item.label} col={6} />}
 
-                                  {isFeatureVisible('publicView.tenderProcess.purchRequisitions.purchaseItems.description')
+                                  {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.purchaseItems.description')
                                 && <Item label={t('purchaseReq:items:description')} value={pr.description} col={6} />}
 
-                                  {isFeatureVisible('publicView.tenderProcess.purchRequisitions.purchaseItems.planItem.unitOfIssue')
+                                  {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.purchaseItems.planItem.unitOfIssue')
                                 && (
                                 <Item
                                   label={t('purchaseReq:items:unitOfIssue')}
@@ -86,13 +92,13 @@ const PurchaseReq = (props) => {
                                 />
                                 )}
 
-                                  {isFeatureVisible('publicView.tenderProcess.purchRequisitions.purchaseItems.quantity')
+                                  {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.purchaseItems.quantity')
                                 && <Item label={t('purchaseReq:items:quantity')} value={currencyFormatter(pr.quantity)} col={3} />}
 
-                                  {isFeatureVisible('publicView.tenderProcess.purchRequisitions.purchaseItems.amount')
+                                  {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.purchaseItems.amount')
                                 && <Item label={t('purchaseReq:items:amount')} value={currencyFormatter(pr.amount)} col={3} />}
 
-                                  {isFeatureVisible('publicView.tenderProcess.purchRequisitions.purchaseItems.totalCost')
+                                  {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.purchaseItems.totalCost')
                                 && (
                                 <Item
                                   label={t('purchaseReq:items:totalCost')}
@@ -108,28 +114,27 @@ const PurchaseReq = (props) => {
                       )
                       : null
                   }
-              <div className="row">
-                {isFeatureVisible('publicView.tenderProcess.purchRequisitions.formDocs')
+            <div className="row">
+              {isFeatureVisible('publicView.purchaseRequisition.purchRequisitions.formDocs')
                     && (
                     <Item label={t('purchaseReq:docs')} col={6}>
                       <FileDownloadLinks files={preq.formDocs} useDash />
                     </Item>
                     )}
-              </div>
             </div>
-          ))
-          : null
-      }
+          </div>
+        ))
+        : null}
 
     </div>
   );
 
-  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getPurchaseReq());
+  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getPurchaseReq(data[0]));
 };
 
 PurchaseReq.propTypes = {
   ...commonTenderTabTypes,
-  data: PropTypes.object,
+  data: PropTypes.array,
 };
 
 export default fmConnect(PurchaseReq);

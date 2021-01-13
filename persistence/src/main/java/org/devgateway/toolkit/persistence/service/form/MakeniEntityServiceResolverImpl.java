@@ -15,8 +15,8 @@ import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,9 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
 
     @Autowired
     private CabinetPaperService cabinetPaperService;
+
+    @Autowired
+    private PurchaseRequisitionGroupService purchaseRequisitionGroupService;
 
     @Autowired
     private ContractService contractService;
@@ -83,7 +86,7 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
                 AbstractMakueniEntityService<? extends AbstractMakueniEntity>>builder()
                 .put(Tender.class, tenderService)
                 .put(TenderQuotationEvaluation.class, tenderQuotationEvaluationService)
-                .put(TenderProcess.class, tenderProcessService)
+                .put(PurchaseRequisitionGroup.class, purchaseRequisitionGroupService)
                 .put(Project.class, projectService)
                 .put(ProfessionalOpinion.class, professionalOpinionService)
                 .put(ProcurementPlan.class, procurementPlanService)

@@ -8,6 +8,7 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @author mpostelnicu
  */
 @Service
+@Transactional
 public class AdministratorReportServiceImpl extends AbstractImplTenderProcessMakueniEntityServiceImpl
         <AdministratorReport> implements AdministratorReportService {
 

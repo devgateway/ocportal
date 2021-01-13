@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface TenderQuotationEvaluationRepository
-        extends AbstractPurchaseReqMakueniEntityRepository<TenderQuotationEvaluation> {
+        extends AbstractTenderProcessMakueniEntityRepository<TenderQuotationEvaluation> {
 
     @Query("select te from  #{#entityName} te JOIN te.tenderProcess pr JOIN pr.tender t "
             + " where lower(t.tenderTitle) like %:name%")

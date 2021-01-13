@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
@@ -8,6 +10,7 @@ import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.AccessType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,10 +31,16 @@ import java.math.BigDecimal;
         @Index(columnList = "description")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderItem extends AbstractChildExpandableAuditEntity<Tender> implements ListViewItem {
-    @ExcelExport(justExport = true, useTranslation = true, name = "Item")
+    @ExcelExport(justExport = true, useTranslation = true, name = "Purchase Item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PurchaseItem purchaseItem;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Plan Item")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
+    @org.springframework.data.annotation.Transient
+    private PlanItem planItem;
 
     @ExcelExport(useTranslation = true, name = "Description")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
@@ -42,6 +51,11 @@ public class TenderItem extends AbstractChildExpandableAuditEntity<Tender> imple
 
     @ExcelExport(useTranslation = true, name = "Unit Price")
     private BigDecimal unitPrice;
+
+    @AccessType(AccessType.Type.PROPERTY)
+    public PlanItem getNonNullPlanItem() {
+        return purchaseItem != null ? purchaseItem.getPlanItem() : planItem;
+    }
 
     public BigDecimal getQuantity() {
         return quantity;
@@ -75,4 +89,12 @@ public class TenderItem extends AbstractChildExpandableAuditEntity<Tender> imple
         this.description = description;
     }
 
+
+    public PlanItem getPlanItem() {
+        return planItem;
+    }
+
+    public void setPlanItem(PlanItem planItem) {
+        this.planItem = planItem;
+    }
 }

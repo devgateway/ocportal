@@ -54,7 +54,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectP
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
@@ -145,8 +145,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                TenderProcess tenderProcess = tenderProcessService.newInstance();
+                tenderProcess.setProcurementPlan(sessionMetadataService.getSessionPP());
+                TenderProcess savedTenderProcess = tenderProcessService.save(tenderProcess);
+                sessionMetadataService.setSessionTenderProcess(savedTenderProcess);
                 sessionMetadataService.setSessionProject(null);
-                setResponsePage(EditTenderProcessPage.class);
+                setResponsePage(DepartmentOverviewPage.class);
             }
         };
         addTenderProcess.setLabel(

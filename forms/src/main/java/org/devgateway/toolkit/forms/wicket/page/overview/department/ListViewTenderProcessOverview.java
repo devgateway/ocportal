@@ -45,7 +45,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPMCReportPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPaymentVoucherPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
@@ -57,10 +57,12 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
@@ -90,6 +92,9 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
     @SpringBean
     private TenderProcessService tenderProcessService;
+
+    @SpringBean
+    protected DgFmService fmService;
 
     private final TenderProcess sessionTenderProcess;
 
@@ -208,6 +213,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             containerFragment.add(panels);
 
             final Tender tender = PersistenceUtil.getNext(tenderProcess.getTender());
+            final PurchaseRequisitionGroup purchaseRequisitionGroup = tenderProcess.getSinglePurchaseRequisition();
             final TenderQuotationEvaluation tenderQuotationEvaluation = PersistenceUtil.getNext(tenderProcess
                     .getTenderQuotationEvaluation());
             final ProfessionalOpinion professionalOpinion = PersistenceUtil.getNext(
@@ -217,13 +223,14 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             final Contract contract = PersistenceUtil.getNext(tenderProcess.getContract());
 
             final Panel requisitionPanel = new TenderDetailPanel<>("requisitionPanel",
-                    Collections.singletonList(tenderProcess),
-                    tp -> Arrays.asList(
-                    tenderProcess.getPurchaseRequestNumber(),
-                    tp.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
-                            .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
-                    tp.getAmount()
-            ), tenderProcess, EditTenderProcessPage.class, tenderProcess.getProject(), false,
+                    Collections.singletonList(purchaseRequisitionGroup),
+                    pr -> pr != null ? Arrays.asList(
+                            pr.getPurchaseRequestNumber(),
+                            pr.getPurchRequisitions().stream().map(PurchRequisition::getRequestApprovalDate)
+                                    .filter(Objects::nonNull).map(formatter::format).collect(Collectors.toList()),
+                            pr.getAmount()
+                    ) : null, tenderProcess, EditPurchaseRequisitionGroupPage.class,
+                    tenderProcessService.getPreviousStatusable(tenderProcess, PurchaseRequisitionGroup.class), false,
                     "deptOverview.tenderProcess.purchaseRequisition"
             );
             panels.add(requisitionPanel);
@@ -231,7 +238,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             final Panel tenderPanel = new TenderDetailPanel<>("tenderPanel", Collections.singletonList(tender),
                     t ->
                     t != null ? (Arrays.asList(t.getTenderTitle(), t.getTenderNumber(), t.getTenderValue())) : null,
-                    tenderProcess, EditTenderPage.class, tenderProcess, false,
+                    tenderProcess, EditTenderPage.class,
+                    tenderProcessService.getPreviousStatusable(tenderProcess, Tender.class), false,
                     "deptOverview.tenderProcess.tenderDocument");
             panels.add(tenderPanel);
 
@@ -239,7 +247,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     Collections.singletonList(tenderQuotationEvaluation),
                     qe -> (qe != null && tender != null)
                             ? new ArrayList<>(Arrays.asList(tender.getTenderTitle(), tender.getTenderNumber())) : null,
-                    tenderProcess, EditTenderQuotationEvaluationPage.class, tender, false,
+                    tenderProcess, EditTenderQuotationEvaluationPage.class,
+                    tenderProcessService.getPreviousStatusable(tenderProcess, TenderQuotationEvaluation.class), false,
                     "deptOverview.tenderProcess.tenderQuotationEvaluation");
             panels.add(evaluationPanel);
 
@@ -250,7 +259,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                             .map(Objects::toString)
                             .collect(Collectors.toList())
                             : null,
-                    tenderProcess, EditProfessionalOpinionPage.class, tenderQuotationEvaluation, false,
+                    tenderProcess, EditProfessionalOpinionPage.class,
+                    tenderProcessService.getPreviousStatusable(tenderProcess, ProfessionalOpinion.class), false,
                     "deptOverview.tenderProcess.professionalOpinion");
             panels.add(professionalOpinionPanel);
 
@@ -260,7 +270,8 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                             .stream()
                             .map(Objects::toString)
                             .collect(Collectors.toList()) : null,
-                    tenderProcess, EditAwardNotificationPage.class, professionalOpinion, false,
+                    tenderProcess, EditAwardNotificationPage.class,
+                    tenderProcessService.getPreviousStatusable(tenderProcess, AwardNotification.class), false,
                     "deptOverview.tenderProcess.awardNotification");
             panels.add(awardNotificationPanel);
 
@@ -268,14 +279,16 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     Collections.singletonList(awardAcceptance),
                     aa -> aa != null ? aa.getItems().stream().map(Objects::toString)
                             .collect(Collectors.toList()) : null,
-                    tenderProcess, EditAwardAcceptancePage.class, awardNotification, false,
+                    tenderProcess, EditAwardAcceptancePage.class,
+                    tenderProcessService.getPreviousStatusable(tenderProcess, AwardAcceptance.class), false,
                     "deptOverview.tenderProcess.awardAcceptance"
             );
             panels.add(awardAcceptancePanel);
 
             final Panel contractPanel = new TenderDetailPanel<>("contractPanel", Collections.singletonList(contract),
                     c -> c != null ? new ArrayList<>(Arrays.asList(c.getAwardee(),
-                    c.getContractValue())) : null, tenderProcess, EditContractPage.class, awardAcceptance, false,
+                    c.getContractValue())) : null, tenderProcess, EditContractPage.class,
+                    tenderProcessService.getPreviousStatusable(tenderProcess, Contract.class), false,
                     "deptOverview.tenderProcess.contract"
             );
             panels.add(contractPanel);
@@ -355,7 +368,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             return false;
         }
 
-        if (persistable != null && persistable instanceof TenderProcess && allowNullProjects) {
+        if (persistable != null && persistable instanceof PurchaseRequisitionGroup && allowNullProjects) {
             return true;
         }
 

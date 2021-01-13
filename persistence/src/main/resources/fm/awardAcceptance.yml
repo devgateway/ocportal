@@ -1,7 +1,7 @@
 # EDIT PAGE
 - name: awardAcceptanceForm
   enabled: yes
-  visible: yes
+  visible: no
 - name: awardAcceptanceForm.approve
   enabled: yes
   visible: yes

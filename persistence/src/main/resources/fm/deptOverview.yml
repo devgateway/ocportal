@@ -4,13 +4,15 @@
 - name: deptOverview.cabinetPaper
   visible: yes
 - name: deptOverview.project
-  visible: yes
+  visible: no
 - name: deptOverview.tenderProcess
   visible: yes
 
 # Department Overview - Tender Process
 - name: deptOverview.tenderProcess.purchaseRequisition
   visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm
 - name: deptOverview.tenderProcess.tenderDocument
   visibleDeps:
     - tenderForm

@@ -85,9 +85,13 @@
   enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.purchaseItem
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
+- name: tenderForm.tenderItems.planItem
+  mandatory: no
+  enabled: yes
+  visible: no
 - name: tenderForm.tenderItems.quantity
   mandatory: yes
   enabled: yes

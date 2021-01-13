@@ -94,13 +94,12 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPa
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderProcessPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
-import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.slf4j.Logger;
@@ -523,7 +522,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 addFormMenuItem(list, ListProjectPage.class,
                         "navbar.project", "navbar.project");
 
-                addFormMenuItem(list, ListTenderProcessPage.class,
+                addFormMenuItem(list, ListPurchaseRequisitionGroupPage.class,
                         "navbar.tenderProcess", "navbar.tenderProcess");
 
                 addFormMenuItem(list, ListTenderPage.class,

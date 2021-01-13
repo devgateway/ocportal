@@ -220,6 +220,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @Override
     @Transactional
     protected Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getTenderQuotationEvaluation()));
     }

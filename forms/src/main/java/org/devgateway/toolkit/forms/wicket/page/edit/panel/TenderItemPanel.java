@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     private GenericSleepFormComponent unit;
@@ -55,8 +56,15 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
             final List<TenderItem> tenderItems = TenderItemPanel.this.getModelObject();
 
             for (final TenderItem tenderItem : tenderItems) {
+                if (tenderItem.getPlanItem() != null && tenderItem.getPurchaseItem() != null) {
+                    form.error(getString("purchaseItemPlanItemNotAllowed"));
+                }
                 if (tenderItem.getPurchaseItem() != null && tenderItem.getPurchaseItem().getPlanItem() != null) {
                     planItems.add(tenderItem.getPurchaseItem().getPlanItem());
+                } else {
+                    if (tenderItem.getPlanItem() != null) {
+                        planItems.add(tenderItem.getPlanItem());
+                    }
                 }
             }
 
@@ -72,18 +80,27 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                                 (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
                                         .get("headerField").get("purchaseItem");
 
-                        if (purchaseItem != null) {
-                            purchaseItem.getField().error(getString("uniqueItem"));
+                        final GenericBootstrapFormComponent planItem =
+                                (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
+                                        .get("headerField").get("planItem");
 
-                            final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
-                            if (target.isPresent()) {
-                                target.get().add(purchaseItem.getBorder());
+                        if (purchaseItem != null) {
+                            reportItemError(purchaseItem);
+                        } else {
+                            if (planItem != null) {
+                                reportItemError(planItem);
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    public void reportItemError(GenericBootstrapFormComponent<?, ?> c) {
+            c.getField().error(getString("uniqueItem"));
+            RequestCycle.get().find(AjaxRequestTarget.class).ifPresent(ajaxRequestTarget ->
+                    ajaxRequestTarget.add(c.getBorder()));
     }
 
     @Override
@@ -122,6 +139,12 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                             && item.getModelObject().getPurchaseItem().getPlanItem() != null
                             && item.getModelObject().getPurchaseItem().getPlanItem().getUnitOfIssue() != null) {
                         return item.getModelObject().getPurchaseItem().getPlanItem().getUnitOfIssue();
+                    } else {
+                        if (item.getModelObject().getPlanItem() != null
+                                && item.getModelObject().getPlanItem() != null
+                                && item.getModelObject().getPlanItem().getUnitOfIssue() != null) {
+                            return item.getModelObject().getPlanItem().getUnitOfIssue();
+                        }
                     }
                     return null;
                 });
@@ -173,11 +196,14 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
 
             // filtered the list based on form Purchase Requisition
             final Tender parentObject = (Tender) TenderItemPanel.this.getParent().getDefaultModelObject();
-            final List<PurchaseItem> purchaseItems = parentObject.getTenderProcess().getPurchaseItems();
 
             final Select2ChoiceBootstrapFormComponent<PurchaseItem> purchaseItem =
                     new Select2ChoiceBootstrapFormComponent<PurchaseItem>(
-                            "purchaseItem", new GenericChoiceProvider<>(purchaseItems)) {
+                            "purchaseItem", new GenericChoiceProvider<>(
+                            parentObject.getTenderProcess()
+                                    .getPurchaseRequisition().stream().flatMap(pr -> pr.getPurchaseItems().stream())
+                                    .collect(Collectors.toList())
+                    )) {
                         @Override
                         protected void onUpdate(final AjaxRequestTarget target) {
                             target.add(unit);
@@ -185,6 +211,21 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     };
             //purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
+
+
+            final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
+                    new Select2ChoiceBootstrapFormComponent<PlanItem>(
+                            "planItem", new GenericChoiceProvider<>(
+                            parentObject.getTenderProcess().getProcurementPlan().getPlanItems())) {
+                        @Override
+                        protected void onUpdate(final AjaxRequestTarget target) {
+                            target.add(unit);
+                        }
+                    };
+            //purchaseItem.required();
+            planItem.add(new StopEventPropagationBehavior());
+
+            add(planItem);
 
             final Component description = ComponentUtil.addTextField(this, "description");
             description.add(new StopEventPropagationBehavior());
