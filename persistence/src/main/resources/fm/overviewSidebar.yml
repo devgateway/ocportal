@@ -1,6 +1,6 @@
 # Sidebar in Status and Department Dashboards
 
 - name: overviewSidebar.projectCount
-  visible: yes
-- name: overviewSidebar.tenderProcessCount
   visible: no
+- name: overviewSidebar.tenderProcessCount
+  visible: yes
