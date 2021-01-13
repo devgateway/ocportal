@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,12 +29,19 @@ public class FrequentTenderersControllerTest extends AbstractEndPointControllerT
 
     @Test
     public void activeAwardsCountTest() throws Exception {
-        final List<Document> frequentTenderers = frequentTenderersController
-                .activeAwardsCount(new YearFilterPagingRequest());
+        YearFilterPagingRequest filter = new YearFilterPagingRequest();
+        ArrayList<String> leftBidderIds = new ArrayList<>();
+        leftBidderIds.add("GB-COH-1234567844");
+        filter.setLeftBidderIds(leftBidderIds);
 
-        Assert.assertEquals(2, frequentTenderers.size());
-        Assert.assertEquals(1, frequentTenderers.get(0).get("cnt"));
-        Assert.assertEquals(1, frequentTenderers.get(1).get("cnt"));
+        ArrayList<String> rightBidderIds = new ArrayList<>();
+        rightBidderIds.add("GB-COH-1234567845");
+        filter.setRightBidderIds(rightBidderIds);
+
+        final List<List<Integer>> counts = frequentTenderersController
+                .getActiveAwardsCountInBatch(filter);
+
+        Assert.assertEquals(2, counts.size());
     }
 
 }

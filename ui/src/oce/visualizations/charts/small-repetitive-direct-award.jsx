@@ -9,7 +9,7 @@ class SmallRepetitiveDirectAwardsBuyer extends CatChart {
       xaxis: {
         title: this.t('charts:smallRepetitiveDirectAwardsByBuyer:xAxisTitle'),
         type: 'category',
-        tickangle: 35,
+        tickangle: -45,
         automargin: true,
         tickfont: { size: 9 },
       },
