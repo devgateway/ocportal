@@ -29,6 +29,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
+import org.devgateway.toolkit.forms.fm.DgFmAttachingVisitor;
 import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
@@ -232,6 +233,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
                 addAcordion(item);
 
+                item.visitChildren(new DgFmAttachingVisitor());
                 checkAndSendEventForDisableEditing(item);
             }
         };
