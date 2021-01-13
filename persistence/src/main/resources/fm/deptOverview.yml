@@ -6,7 +6,7 @@
 - name: deptOverview.project
   visible: yes
 - name: deptOverview.tenderProcess
-  visible: yes
+  visible: no
 
 # Department Overview - Tender Process
 - name: deptOverview.tenderProcess.purchaseRequisition

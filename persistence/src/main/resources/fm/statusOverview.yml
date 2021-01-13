@@ -4,6 +4,6 @@
   visibleDeps:
     - projectForm.projectTitle
 - name: statusOverview.tenderProcess
-  visible: yes
+  visible: no
   visibleDeps:
     - tenderForm.tenderTitle
