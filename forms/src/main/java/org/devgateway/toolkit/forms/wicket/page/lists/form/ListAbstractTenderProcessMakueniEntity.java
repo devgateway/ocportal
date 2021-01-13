@@ -46,14 +46,14 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
     protected void onInitialize() {
         addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("department", this),
-                "tenderProcess.project.procurementPlan.department",
-                "tenderProcess.project.procurementPlan.department",
+                "tenderProcess.procurementPlan.department",
+                "tenderProcess.procurementPlan.department",
                 new ListModel(departments), dataTable));
 
         addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("fiscalYear", this),
-                "tenderProcess.project.procurementPlan.fiscalYear",
-                "tenderProcess.project.procurementPlan.fiscalYear",
+                "tenderProcess.procurementPlan.fiscalYear",
+                "tenderProcess.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));
 
         addFmColumn("lastModifiedDate", new PropertyColumn<T, String>(

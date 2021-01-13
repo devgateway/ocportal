@@ -12,14 +12,13 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.model.StringResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewData;
-import org.devgateway.toolkit.persistence.dto.StatusOverviewProjectStatus;
-import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewRowGroup;
+import org.devgateway.toolkit.persistence.dto.StatusOverviewRowInfo;
 
 import java.util.List;
 
@@ -27,27 +26,32 @@ import java.util.List;
  * @author idobre
  * @since 2019-05-24
  */
-public class ListViewStatusOverview extends AbstractListViewStatus<StatusOverviewData> {
-    @SpringBean
-    private ProjectService projectService;
+public class ListViewStatusOverview extends AbstractListViewStatus<StatusOverviewRowGroup> {
 
-    public ListViewStatusOverview(final String id, final IModel<List<StatusOverviewData>> model) {
+    private final Boolean tenderProcessView;
+
+    public ListViewStatusOverview(final String id, final IModel<List<StatusOverviewRowGroup>> model,
+                                  Boolean tenderProcessView) {
         super(id, model);
+        this.tenderProcessView = tenderProcessView;
     }
 
     @Override
-    protected void populateCompoundListItem(final ListItem<StatusOverviewData> item) {
+    protected void populateCompoundListItem(final ListItem<StatusOverviewRowGroup> item) {
     }
 
     @Override
     protected void populateHeader(final String headerFragmentId,
                                   final AjaxLink<Void> header,
-                                  final ListItem<StatusOverviewData> item) {
+                                  final ListItem<StatusOverviewRowGroup> item) {
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
 
         headerFragment.add(new Label("procurementPlan.department"));
         headerFragment.add(new Label("procurementPlan.fiscalYear"));
-        headerFragment.add(new Label("projectCount", item.getModelObject().getProjects().size()));
+        headerFragment.add(new Label("rowCount", item.getModelObject().getRows().size()));
+        headerFragment.add(new Label("countLabel", new StringResourceModel(
+                tenderProcessView ? "tenderProcesses" : "projects",
+                ListViewStatusOverview.this)));
 
         header.add(headerFragment);
     }
@@ -55,33 +59,36 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
     @Override
     protected void populateHideableContainer(final String containerFragmentId,
                                              final TransparentWebMarkupContainer hideableContainer,
-                                             final ListItem<StatusOverviewData> item, boolean expanded) {
+                                             final ListItem<StatusOverviewRowGroup> item, boolean expanded) {
         final Fragment containerFragment = new Fragment(containerFragmentId, "containerFragment", this);
 
         final ProcurementPlan procurementPlan = item.getModelObject().getProcurementPlan();
 
         // add the project list
-        containerFragment.add(new ListView<StatusOverviewProjectStatus>("projects") {
+        containerFragment.add(new ListView<StatusOverviewRowInfo>("rows") {
             @Override
-            protected void populateItem(final ListItem<StatusOverviewProjectStatus> item) {
+            protected void populateItem(final ListItem<StatusOverviewRowInfo> item) {
                 // we wrap the item model on a compound model so we can use the field ids as property models
-                final CompoundPropertyModel<StatusOverviewProjectStatus> compoundPropertyModel
+                final CompoundPropertyModel<StatusOverviewRowInfo> compoundPropertyModel
                         = new CompoundPropertyModel<>(item.getModel());
 
                 // we set back the model as the compound model,
                 // thus ensures the rest of the items added will benefit
                 item.setModel(compoundPropertyModel);
 
-                final Link<Void> link = new Link<Void>("title") {
+                final Link<Void> link = new Link<Void>("titleLink") {
                     @Override
                     public void onClick() {
                         sessionMetadataService.setSessionDepartment(procurementPlan.getDepartment());
-                        sessionMetadataService.setSessionProject(
-                                projectService.findById(item.getModelObject().getId()).get());
+                        if (tenderProcessView) {
+                            sessionMetadataService.setSessionTenderProcessId(item.getModelObject().getId());
+                        } else {
+                            sessionMetadataService.setSessionProjectId(item.getModelObject().getId());
+                        }
                         setResponsePage(DepartmentOverviewPage.class);
                     }
                 };
-                link.add(new Label("projectTitle"));
+                link.add(new Label("title"));
                 item.add(link);
                 
                 item.add(addStatus("projectStatus", item.getModelObject().getProjectStatus(), ""));
@@ -105,6 +112,10 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                     @Override
                     protected void onComponentTag(final ComponentTag tag) {
                         super.onComponentTag(tag);
+                        if (status == null) {
+                            setVisibilityAllowed(false);
+                            return;
+                        }
 
                         final String cssClass;
                         if (DBConstants.Status.NOT_STARTED.equals(status)) {
@@ -123,7 +134,7 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
     }
 
     @Override
-    protected Long getItemId(final ListItem<StatusOverviewData> item) {
+    protected Long getItemId(final ListItem<StatusOverviewRowGroup> item) {
         return item.getModelObject().getProcurementPlan().getId();
     }
 }

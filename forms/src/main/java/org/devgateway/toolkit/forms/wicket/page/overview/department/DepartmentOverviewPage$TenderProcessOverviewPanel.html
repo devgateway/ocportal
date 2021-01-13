@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html wicket:id="html" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+
+    <!-- start: search panel -->
+    <div class="search-panel">
+
+        <!-- start: search panel title -->
+        <div class="row search-panel-header">
+            <div class="col-md-8">
+                <h3><wicket:message key="ministryTenders" /></h3>
+            </div>
+        </div>
+        <!-- start: search panel title -->
+
+        <div class="search-form">
+            <div class="col-md-9 no-padding">
+                <input tabindex="1" class="form-control project-search" wicket:id="searchBox"
+                       placeholder="Search by Tender Title"/>
+            </div>
+            <div class="col-md-3 no-padding">
+
+                <select wicket:id="years" class="btn btn-default project-year"></select>
+
+                <form wicket:id="excelForm">
+                    <button wicket:id="excelButton" type="button" class="btn btn-default download"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar department row">
+        <div class="col-md-12">
+              <span class="status approved">
+                  <wicket:message key="approved" />
+              </span>
+            <span class="status terminated">
+                    <wicket:message key="terminated" />
+              </span>
+            <span class="status submitted">
+                    <wicket:message key="submitted" />
+              </span>
+            <span class="status draft">
+                    <wicket:message key="draft" />
+              </span>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button type="button" class="btn btn-add pull-right" wicket:id="addTenderProcess">[[ADD New]]</button>
+    </div>
+
+    <div class="ministry" wicket:id="listTenderProcessWrapper">
+        <div class="project-panels-wrapper">
+        <div>
+            <div class="collapse collapse-content in tender">
+
+                <div wicket:id="tenderProcessOverview"></div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div wicket:id="noData" class="row col-md-offset-5 col-col-md-2">
+        <h3><wicket:message key="noData" /></h3>
+    </div>
+
+</wicket:panel>
+</body>
+</html>

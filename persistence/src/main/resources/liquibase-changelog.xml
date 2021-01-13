@@ -1325,4 +1325,64 @@
         <addNotNullConstraint tableName="payment_voucher" columnName="tender_process_id"/>
     </changeSet>
 
+    <changeSet id="OCMAKU-785-tp" author="mpostelnicu">
+        <sqlFile path="sql/OCMAKU-785-cleanup-tp.sql"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-785-constraints" author="mpostelnicu">
+        <addNotNullConstraint tableName="award_acceptance" columnName="tender_process_id"/>
+<!--        <addNotNullConstraint tableName="award_acceptance_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="award_notification" columnName="tender_process_id"/>
+        <!--        <addNotNullConstraint tableName="award_notification_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="contract" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="professional_opinion" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender_quotation_evaluation" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender_process" columnName="project_id"/>
+        <addNotNullConstraint tableName="project" columnName="procurement_plan_id"/>
+        <addNotNullConstraint tableName="cabinet_paper" columnName="procurement_plan_id"/>
+        <addNotNullConstraint tableName="person" columnName="username"/>
+        <addNotNullConstraint tableName="person" columnName="email"/>
+        <addNotNullConstraint tableName="person" columnName="first_name"/>
+        <addNotNullConstraint tableName="person" columnName="last_name"/>
+        <addNotNullConstraint tableName="person" columnName="password"/>
+        <!--        <addNotNullConstraint tableName="bid" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="contract_document" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="feedback_message" columnName="email"/>
+        <addNotNullConstraint tableName="feedback_message" columnName="name"/>
+        <addNotNullConstraint tableName="feedback_message" columnName="comment"/>
+        <addNotNullConstraint tableName="file_metadata" columnName="content_id"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="name"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="start_date"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="end_date"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="amount_budgeted"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="department_id"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="fiscal_year_id"/>
+        <!--        <addNotNullConstraint tableName="plan_item" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="pmcmember" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="pmcnotes" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="private_sector_request" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="procurement_plan" columnName="department_id"/>
+        <addNotNullConstraint tableName="procurement_plan" columnName="fiscal_year_id"/>
+        <addNotNullConstraint tableName="professional_opinion_item" columnName="parent_id"/>
+        <!--        <addNotNullConstraint tableName="purch_requisition" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="purchase_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="status_changed_comment" columnName="status"/>
+        <!--        <addNotNullConstraint tableName="tender_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="tender_process" columnName="project_id"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-814-remove-projects" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="tender_process" columnName="procurement_plan_id"/>
+        </preConditions>
+        <sql>
+            update tender_process set procurement_plan_id = project.procurement_plan_id from project
+            where tender_process.project_id = project.id;
+        </sql>
+        <sql>
+            alter table tender_process alter column project_id drop not null;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

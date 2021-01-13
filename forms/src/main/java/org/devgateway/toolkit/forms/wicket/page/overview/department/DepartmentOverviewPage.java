@@ -24,16 +24,19 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -51,7 +54,9 @@ import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectP
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -59,14 +64,19 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
+import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.excel.DataExportService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.http.HttpServletResponse;
@@ -89,9 +99,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     private String searchBox = "";
 
     private ListViewProjectsOverview listViewProjectsOverview;
+    private ListViewTenderProcessOverview listViewTenderProcessOverview;
+    private TransparentWebMarkupContainer listTenderProcessWrapper;
 
     @SpringBean
     private ProjectService projectService;
+
+    @SpringBean
+    private TenderProcessService tenderProcessService;
 
     @SpringBean
     private ProcurementPlanService procurementPlanService;
@@ -112,6 +127,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     private DataExportService dataExportService;
     private WebMarkupContainer noData;
 
+
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
     }
@@ -122,6 +138,90 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private ProcurementPlan getProcurementPlan() {
         return procurementPlanModel.getObject();
+    }
+
+    public BootstrapAjaxLink<Void> createNewTenderProcessButton() {
+        final BootstrapAjaxLink<Void> addTenderProcess = new BootstrapAjaxLink<Void>("addTenderProcess",
+                Buttons.Type.Success) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                sessionMetadataService.setSessionProject(null);
+                setResponsePage(EditTenderProcessPage.class);
+            }
+        };
+        addTenderProcess.setLabel(
+                new StringResourceModel("addTenderProcess", DepartmentOverviewPage.this, null));
+        addTenderProcess.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
+        return addTenderProcess;
+    }
+
+    public class TenderProcessOverviewPanel extends GenericPanel<Void> {
+
+        public TenderProcessOverviewPanel(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+            add(createYearDropdown());
+
+            final Form<?> excelForm = new ExcelDownloadForm("excelForm");
+            add(excelForm);
+
+            add(createTenderSearchBox());
+
+            listViewTenderProcessOverview = createTenderProcessOverview();
+            listTenderProcessWrapper =
+                    new TransparentWebMarkupContainer("listTenderProcessWrapper") {
+                        @Override
+                        public boolean isVisible() {
+                            return !listViewTenderProcessOverview.getModelObject().isEmpty();
+                        }
+                    };
+            listTenderProcessWrapper.setOutputMarkupId(true);
+
+
+            add(listTenderProcessWrapper);
+
+
+            listTenderProcessWrapper.add(listViewTenderProcessOverview);
+
+            add(createNewTenderProcessButton());
+
+            add(createNoData(listViewTenderProcessOverview));
+            add(new DgFmBehavior("deptOverview.tenderProcess"));
+        }
+    }
+
+    public ListViewTenderProcessOverview createTenderProcessOverview() {
+       return new ListViewTenderProcessOverview("tenderProcessOverview", true,
+                new ListModel<>(fetchTenderProcessData()), sessionMetadataService.getSessionTenderProcess());
+    }
+
+    public class ProjectOverviewPanel extends GenericPanel<Void> {
+
+        public ProjectOverviewPanel(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+            add(createProjectButton());
+            add(createYearDropdown());
+
+            final Form<?> excelForm = new ExcelDownloadForm("excelForm");
+            add(excelForm);
+
+            add(createProjectSearchBox());
+
+            ListViewProjectsOverview projectList = createProjectList();
+            add(projectList);
+
+            add(createNoData(projectList));
+            add(new DgFmBehavior("deptOverview.project"));
+        }
     }
 
     public DepartmentOverviewPage(final PageParameters parameters) {
@@ -202,17 +302,10 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
         addCabinetPaperButton();
         listCabinetPaperButton();
-        addProjectButton();
-        addYearDropdown();
 
-        final Form<?> excelForm = new ExcelDownloadForm("excelForm");
-        add(excelForm);
+        add(new ProjectOverviewPanel("projectOverview"));
 
-        addSearchBox();
-
-        addProjectList();
-
-
+        add(new TenderProcessOverviewPanel("tenderProcessOverview"));
     }
 
     /**
@@ -367,7 +460,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         add(button);
 
         DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
-                "procurementPlanStatus", getProcurementPlan());
+                "procurementPlanStatus", getProcurementPlan() == null ? null : getProcurementPlan().getStatus());
         add(procurementPlanStatus);
     }
 
@@ -410,17 +503,17 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         add(editCabinetPaper);
     }
 
-    private void addProjectButton() {
+    private BootstrapBookmarkablePageLink<Void> createProjectButton() {
         sessionMetadataService.setSessionPP(getProcurementPlan());
         final BootstrapBookmarkablePageLink<Void> addNewProject = new BootstrapBookmarkablePageLink<>(
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewPage.this, null));
         addNewProject.setEnabled(getProcurementPlan() != null);
         addNewProject.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
-        add(addNewProject);
+        return addNewProject;
     }
 
-    private void addYearDropdown() {
+    private DropDownChoice<FiscalYear> createYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice<>("years",
                 fiscalYearModel, fiscalYearsModel, choiceRenderer);
@@ -432,53 +525,90 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 setResponsePage(DepartmentOverviewPage.class);
             }
         });
-        add(yearsDropdown);
+        return yearsDropdown;
     }
 
-    private void addSearchBox() {
-        final TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
+    private TextField<String> createProjectSearchBox() {
+        TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
         searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                updateDashboard(target);
+                updateProjectDashboard(target);
             }
         });
-        add(searchBoxField);
+        return searchBoxField;
+    }
+
+
+    private TextField<String> createTenderSearchBox() {
+        TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
+        searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
+            @Override
+            protected void onUpdate(final AjaxRequestTarget target) {
+                updateTenderProcessDashboard(target);
+            }
+        });
+        return searchBoxField;
     }
 
     @Transactional(readOnly = true)
-    public void addProjectList() {
+    public ListViewProjectsOverview createProjectList() {
 
         IModel<List<Project>> projectListModel = new LoadableDetachableModel<List<Project>>() {
             @Override
             protected List<Project> load() {
-                return fetchData();
+                return fetchProjectData();
             }
         };
 
-        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel,
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsList", projectListModel,
                 procurementPlanModel
         );
         add(listViewProjectsOverview);
+        return listViewProjectsOverview;
+    }
 
+
+
+    public WebMarkupContainer createNoData(AbstractListViewStatus<?> lvs) {
         noData = new WebMarkupContainer("noData");
         noData.setOutputMarkupId(true);
         noData.setOutputMarkupPlaceholderTag(true);
-        add(noData);
-        noData.setVisibilityAllowed(projectListModel.getObject().isEmpty());
+        noData.setVisibilityAllowed(lvs.getModelObject().isEmpty());
+        return noData;
     }
 
-    private void updateDashboard(final AjaxRequestTarget target) {
-        listViewProjectsOverview.setModelObject(fetchData());
+    private void updateProjectDashboard(final AjaxRequestTarget target) {
+        listViewProjectsOverview.setModelObject(fetchProjectData());
         listViewProjectsOverview.removeListItems();
 
         target.add(listViewProjectsOverview);
     }
 
+    private void updateTenderProcessDashboard(final AjaxRequestTarget target) {
+        listViewTenderProcessOverview.setModelObject(fetchTenderProcessData());
+        listViewTenderProcessOverview.removeListItems();
+
+        target.add(listViewTenderProcessOverview, listTenderProcessWrapper);
+    }
+
     @Transactional(readOnly = true)
-    public List<Project> fetchData() {
+    public List<Project> fetchProjectData() {
         return getProcurementPlan() == null
                 ? new ArrayList<>()
                 : projectService.findAll(new ProjectFilterState(getProcurementPlan(), searchBox).getSpecification());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TenderProcess> fetchTenderProcessData() {
+        return getProcurementPlan() == null
+                ? new ArrayList<>()
+                : tenderProcessService.findAll((r, cq, cb) -> cb.and(
+                cb.equal(r.get(TenderProcess_.procurementPlan), getProcurementPlan()),
+                cb.isNull(r.get(TenderProcess_.project)),
+                ObjectUtils.isEmpty(searchBox) ? cb.and() : cb.like(
+                        cb.lower(r.join(TenderProcess_.tender).get(Tender_.tenderTitle)),
+                        "%" + searchBox.toLowerCase() + "%")
+        ));
     }
 }

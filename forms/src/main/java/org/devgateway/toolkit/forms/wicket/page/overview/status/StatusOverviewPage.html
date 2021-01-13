@@ -5,55 +5,20 @@
     <div class="main-content">
         <div class="row header">
             <div class="col-md-3">
-                <h2><wicket:message key="statusOverview" /></h2>
+                <h2>
+                    <wicket:message key="statusOverview"/>
+                </h2>
             </div>
             <div class="col-md-8 no-padding">
-                <p><wicket:message key="statusOverviewDescription" />
+                <p>
+                    <wicket:message key="statusOverviewDescription"/>
                 </p>
             </div>
         </div>
 
-        <div class="search-panel">
-            <div class="row search-panel-header">
-                <div class="col-md-8">
-                    <h3><wicket:message key="departmentProcurementPlans" /></h3>
-                </div>
-            </div>
+        <div wicket:id="statusOverviewTenderProcessView"/>
+        <div wicket:id="statusOverviewProjectView"/>
 
-            <div class="search-form">
-                <div class="col-md-9 no-padding">
-                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"
-                           placeholder="Search by Project Title"/>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <select wicket:id="yearsDropdown" class="btn btn-default project-year"></select>
-                    <button wicket:id="dataExport" type="button" class="btn btn-default download"></button>
-                </div>
-            </div>
-        </div>
-
-        <div class="status-bar row">
-            <div class="col-md-12">
-              <span class="status approved">
-                  <wicket:message key="approved" />
-              </span>
-                <span class="status terminated">
-                    <wicket:message key="terminated" />
-              </span>
-                <span class="status submitted">
-                    <wicket:message key="submitted" />
-              </span>
-                <span class="status draft">
-                    <wicket:message key="draft" />
-              </span>
-            </div>
-        </div>
-
-        <div wicket:id="statusPanel"></div>
-
-        <div wicket:id="noData" class="row col-md-offset-5 col-col-md-2">
-            <h3><wicket:message key="noData" /></h3>
-        </div>
     </div>
 </wicket:extend>
 </body>

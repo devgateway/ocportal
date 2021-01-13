@@ -60,10 +60,10 @@
 - name: professionalOpinionForm.submitAndNext
   enabled: yes
   visible: yes
-- name: professionalOpinionForm.tenderProcess.project.procurementPlan.department
+- name: professionalOpinionForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
-- name: professionalOpinionForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: professionalOpinionForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
 - name: professionalOpinionForm.terminate
@@ -80,13 +80,13 @@
 - name: professionalOpinionsList.department
   visible: yes
   visibleDeps:
-    - professionalOpinionForm.tenderProcess.project.procurementPlan.department
+    - professionalOpinionForm.tenderProcess.procurementPlan.department
 - name: professionalOpinionsList.filterToolbar
   visible: yes
 - name: professionalOpinionsList.fiscalYear
   visible: yes
   visibleDeps:
-    - professionalOpinionForm.tenderProcess.project.procurementPlan.fiscalYear
+    - professionalOpinionForm.tenderProcess.procurementPlan.fiscalYear
 - name: professionalOpinionsList.lastModifiedDate
   visible: yes
 - name: professionalOpinionsList.status

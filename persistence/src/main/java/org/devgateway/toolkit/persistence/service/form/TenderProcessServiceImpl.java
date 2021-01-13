@@ -2,6 +2,8 @@ package org.devgateway.toolkit.persistence.service.form;
 
 import com.google.common.collect.ImmutableList;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
@@ -121,6 +123,16 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
                 e.setStatus(status);
             }
         }
+    }
+
+    @Override
+    public Long countByFiscalYear(FiscalYear fiscalYear) {
+        return tenderProcessRepository.countByFiscalYear(fiscalYear);
+    }
+
+    @Override
+    public Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear) {
+        return tenderProcessRepository.countByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
     private TenderProcessValidator createValidator(AbstractMakueniEntity e) {

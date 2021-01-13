@@ -54,16 +54,6 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
         this(new PageParameters());
     }
 
-    @Override
-    protected void checkInitParameters() {
-        // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
-        if (entityId == null && sessionMetadataService.getSessionProject() == null) {
-            logger.warn("Something wrong happened since we are trying to add a new TenderProcess Entity "
-                    + "without having a Project!");
-            setResponsePage(StatusOverviewPage.class);
-        }
-    }
-
     public EditTenderProcessPage(final PageParameters parameters) {
         super(parameters);
         this.jpaService = tenderProcessService;
@@ -104,8 +94,8 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
     @Override
     protected TenderProcess newInstance() {
         final TenderProcess tenderProcess = super.newInstance();
+        tenderProcess.setProcurementPlan(sessionMetadataService.getSessionPP());
         tenderProcess.setProject(sessionMetadataService.getSessionProject());
-
         return tenderProcess;
     }
 
@@ -115,14 +105,14 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
         return tenderProcess.isTerminated();
     }
 
-    @Override
-    protected void beforeSaveEntity(final TenderProcess tenderProcess) {
-        super.beforeSaveEntity(tenderProcess);
-
-        final Project project = tenderProcess.getProject();
-        project.addTenderProcess(tenderProcess);
-        projectService.save(project);
-    }
+//    @Override
+//    protected void beforeSaveEntity(final TenderProcess tenderProcess) {
+//        super.beforeSaveEntity(tenderProcess);
+//
+//        final Project project = tenderProcess.getProject();
+//        project.addTenderProcess(tenderProcess);
+//        projectService.save(project);
+//    }
 
     @Override
     protected void afterSaveEntity(final TenderProcess saveable) {
@@ -140,14 +130,14 @@ public class EditTenderProcessPage extends EditAbstractMakueniEntityPage<TenderP
         sessionMetadataService.setSessionTenderProcess(editForm.getModelObject());
     }
 
-    @Override
-    protected void beforeDeleteEntity(final TenderProcess tenderProcess) {
-        super.beforeDeleteEntity(tenderProcess);
-
-        final Project project = tenderProcess.getProject();
-        project.remoteTenderProcess(tenderProcess);
-        projectService.save(project);
-    }
+//    @Override
+//    protected void beforeDeleteEntity(final TenderProcess tenderProcess) {
+//        super.beforeDeleteEntity(tenderProcess);
+//
+//        final Project project = tenderProcess.getProject();
+//        project.remoteTenderProcess(tenderProcess);
+//        projectService.save(project);
+//    }
 
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {

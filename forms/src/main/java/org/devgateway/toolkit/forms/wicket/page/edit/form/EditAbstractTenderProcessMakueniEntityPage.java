@@ -97,8 +97,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     protected void onInitialize() {
         super.onInitialize();
 
-        editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.department"));
-        editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.fiscalYear"));
+        editForm.add(new GenericSleepFormComponent<>("tenderProcess.procurementPlan.department"));
+        editForm.add(new GenericSleepFormComponent<>("tenderProcess.procurementPlan.fiscalYear"));
         editForm.add(new TenderProcessFormValidator());
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);

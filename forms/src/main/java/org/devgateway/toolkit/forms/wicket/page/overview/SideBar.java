@@ -2,12 +2,14 @@ package org.devgateway.toolkit.forms.wicket.page.overview;
 
 import de.agilecoders.wicket.core.util.Attributes;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
@@ -15,6 +17,8 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
+import org.devgateway.toolkit.persistence.service.overview.StatusOverviewService;
 
 import java.util.List;
 
@@ -26,12 +30,22 @@ public class SideBar extends Panel {
     @SpringBean
     private ProjectService projectService;
 
+
+    @SpringBean
+    private StatusOverviewService statusOverviewService;
+
+    @SpringBean
+    private TenderProcessService tenderProcessService;
+
     @SpringBean
     private SessionMetadataService sessionMetadataService;
 
     private final Department department;
 
     private Label projectCount;
+    private Label tenderProcessCount;
+    private TransparentWebMarkupContainer projectCountWrapper;
+    private TransparentWebMarkupContainer tenderProcessCountWrapper;
 
     public SideBar(final String id) {
         super(id);
@@ -62,9 +76,19 @@ public class SideBar extends Panel {
         };
         add(statusLink);
 
+        projectCountWrapper = new TransparentWebMarkupContainer("projectCountWrapper");
         projectCount = new Label("projectCount", calculateProjectCount());
+        projectCountWrapper.add(new DgFmBehavior("overviewSidebar.projectCount"));
         projectCount.setOutputMarkupId(true);
-        add(projectCount);
+        projectCountWrapper.add(projectCount);
+        add(projectCountWrapper);
+
+        tenderProcessCountWrapper = new TransparentWebMarkupContainer("tenderProcessCountWrapper");
+        tenderProcessCount = new Label("tenderProcessCount", calculateTenderProcessCount());
+        tenderProcessCountWrapper.add(new DgFmBehavior("overviewSidebar.tenderProcessCount"));
+        tenderProcessCount.setOutputMarkupId(true);
+        tenderProcessCountWrapper.add(tenderProcessCount);
+        add(tenderProcessCountWrapper);
 
         final List<Department> departments = departmentService.findAll();
         add(new PropertyListView<Department>("departmentOverviewLink", departments) {
@@ -102,7 +126,17 @@ public class SideBar extends Panel {
         return projectService.countByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
+    private Long calculateTenderProcessCount() {
+        final FiscalYear fiscalYear = sessionMetadataService.getSessionFiscalYear();
+            return tenderProcessService.count(
+                    statusOverviewService.getTenderProcessViewSpecification(department, fiscalYear, null));
+    }
+
     public Label getProjectCount() {
         return projectCount;
+    }
+
+    public Label getTenderProcessCount() {
+        return tenderProcessCount;
     }
 }

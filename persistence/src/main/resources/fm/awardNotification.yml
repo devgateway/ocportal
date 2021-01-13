@@ -72,10 +72,10 @@
   mandatory: no
   enabled: yes
   visible: yes
-- name: awardNotificationForm.tenderProcess.project.procurementPlan.department
+- name: awardNotificationForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
-- name: awardNotificationForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: awardNotificationForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
 - name: awardNotificationForm.tenderTitle
@@ -101,13 +101,13 @@
 - name: awardNotificationsList.department
   visible: yes
   visibleDeps:
-    - awardNotificationForm.tenderProcess.project.procurementPlan.department
+    - awardNotificationForm.tenderProcess.procurementPlan.department
 - name: awardNotificationsList.filterToolbar
   visible: yes
 - name: awardNotificationsList.fiscalYear
   visible: yes
   visibleDeps:
-    - awardNotificationForm.tenderProcess.project.procurementPlan.fiscalYear
+    - awardNotificationForm.tenderProcess.procurementPlan.fiscalYear
 - name: awardNotificationsList.lastModifiedDate
   visible: yes
 - name: awardNotificationsList.status

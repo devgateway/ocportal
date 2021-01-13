@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.repository.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
@@ -29,8 +30,18 @@ public interface TenderProcessRepository extends AbstractMakueniEntityRepository
     List<TenderProcess> findByProjectProcurementPlan(ProcurementPlan procurementPlan);
 
     @Override
-    @Query("select c from  #{#entityName} c where c.project.procurementPlan.fiscalYear = :fiscalYear")
+    @Query("select c from  #{#entityName} c where c.procurementPlan.fiscalYear = :fiscalYear")
     List<TenderProcess> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
+
+
+    @Query("select count(c) from  #{#entityName} c where c.procurementPlan.department = :department and "
+            + "c.procurementPlan.fiscalYear = :fiscalYear")
+    Long countByDepartmentAndFiscalYear(@Param("department") Department department,
+                                        @Param("fiscalYear") FiscalYear fiscalYear);
+
+
+    @Query("select count(c) from  #{#entityName} c where c.procurementPlan.fiscalYear = :fiscalYear")
+    Long countByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
 
     @Query("select p from TenderProcess p")
     Stream<TenderProcess> findAllStream();

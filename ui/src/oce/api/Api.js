@@ -32,19 +32,19 @@ export const getTenders = async (params) => {
   const data = rawData.map((datum) => {
     let project;
     let tender;
-    if (datum.projects !== undefined && datum.projects.tenderProcesses !== undefined
-        && datum.projects.tenderProcesses.tender !== undefined) {
-      tender = { purchaseReqId: datum.projects.tenderProcesses._id, ...datum.projects.tenderProcesses.tender[0] };
+    if (datum.tender !== undefined) {
+      tender = { purchaseReqId: datum._id, ...datum.tender };
     }
-    if (datum.projects !== undefined) {
+
+    if (datum.project !== undefined) {
       project = {
-        _id: datum.projects._id,
-        projectTitle: datum.projects.projectTitle,
+        _id: datum.project._id,
+        projectTitle: datum.project.projectTitle,
       };
     }
 
     return {
-      id: `${datum._id}-${(tender || {})._id}-${(project || {})._id}`,
+      id: `${datum._id}-${(tender || {})._id}`,
       department: datum.department.label,
       fiscalYear: datum.fiscalYear.name,
       tender: tender !== undefined ? tender : undefined,

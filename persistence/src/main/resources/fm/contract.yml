@@ -84,10 +84,10 @@
   mandatory: no
   enabled: yes
   visible: yes
-- name: contractForm.tenderProcess.project.procurementPlan.department
+- name: contractForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
-- name: contractForm.tenderProcess.project.procurementPlan.fiscalYear
+- name: contractForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
 - name: contractForm.tenderTitle
@@ -110,7 +110,7 @@
 - name: contractsList.department
   visible: yes
   visibleDeps:
-    - contractForm.tenderProcess.project.procurementPlan.department
+    - contractForm.tenderProcess.procurementPlan.department
 - name: contractsList.downloadFile
   visible: yes
   visibleDeps:
@@ -120,7 +120,7 @@
 - name: contractsList.fiscalYear
   visible: yes
   visibleDeps:
-    - contractForm.tenderProcess.project.procurementPlan.fiscalYear
+    - contractForm.tenderProcess.procurementPlan.fiscalYear
 - name: contractsList.lastModifiedDate
   visible: yes
 - name: contractsList.status

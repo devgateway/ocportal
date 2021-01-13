@@ -49,9 +49,14 @@ import java.util.stream.Collectors;
 public class TenderProcess extends AbstractMakueniEntity implements ProjectAttachable, ProcurementPlanAttachable {
     @ManyToOne(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Project project;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    private Project project;
+    private ProcurementPlan procurementPlan;
 
     @ExcelExport(useTranslation = true, name = "Purchase Request Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
@@ -199,7 +204,6 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     }
 
     @Override
-    @JsonIgnore
     public Project getProject() {
         return project;
     }
@@ -415,10 +419,7 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
-        if (project != null) {
-            return project.getProcurementPlan();
-        }
-        return null;
+        return procurementPlan;
     }
 
     @Override
@@ -507,5 +508,9 @@ public class TenderProcess extends AbstractMakueniEntity implements ProjectAttac
 
     public boolean hasFormsDependingOnAwardAcceptance() {
         return getSingleContract() != null;
+    }
+
+    public void setProcurementPlan(ProcurementPlan procurementPlan) {
+        this.procurementPlan = procurementPlan;
     }
 }

@@ -20,14 +20,12 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -46,17 +44,12 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @ManyToMany
     private List<CabinetPaper> cabinetPapers;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     private ProcurementPlan procurementPlan;
-
-    @ExcelExport(separateSheet = true, name = "Tender Processes")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(mappedBy = "project")
-    private Set<TenderProcess> tenderProcesses = new HashSet<>();
 
     @ExcelExport(useTranslation = true, name = "Project Title")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
@@ -144,29 +137,13 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
         this.procurementPlan = procurementPlan;
     }
 
-    public Set<TenderProcess> getTenderProcesses() {
-        return tenderProcesses;
-    }
-
-    public void setTenderProcesses(Set<TenderProcess> tenderProcesses) {
-        this.tenderProcesses = tenderProcesses;
-    }
-
-    public void addTenderProcess(final TenderProcess pr) {
-        tenderProcesses.add(pr);
-        pr.setProject(this);
-    }
-
-    public void remoteTenderProcess(final TenderProcess pr) {
-        tenderProcesses.remove(pr);
-    }
 
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        return tenderProcesses;
+        return Collections.emptyList();
     }
 
     @Override
