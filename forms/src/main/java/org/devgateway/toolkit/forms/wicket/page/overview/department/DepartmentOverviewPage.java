@@ -284,10 +284,16 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
         add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
 
-        add(new Label("cabinetMinisterialPaper",
+        WebMarkupContainer cabinetMinisterialPaperRow = new WebMarkupContainer("cabinetMinisterialPaperRow");
+        cabinetMinisterialPaperRow.add(new DgFmBehavior("deptOverview.cabinetPaper"));
+        add(cabinetMinisterialPaperRow);
+
+        cabinetMinisterialPaperRow.add(new Label("cabinetMinisterialPaper",
                 new StringResourceModel("cabinetMinisterialPaper", this)
-                        .setParameters(new PropertyModel<>(fiscalYearModel, "label")))
-                .add(new DgFmBehavior("deptOverview.cabinetPaper")));
+                        .setParameters(new PropertyModel<>(fiscalYearModel, "label"))));
+
+        cabinetMinisterialPaperRow.add(createEditCabinetPaperButton());
+        cabinetMinisterialPaperRow.add(createListCabinetPaperButton());
 
         add(new Label("budget",
                 new StringResourceModel("budget", this).setParameters(
@@ -303,9 +309,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         addFiscalYearBudgetButton();
         addEditFiscalYearBudgetButton();
         addLabelOrInvisibleContainer("procurementPlanLabel", getProcurementPlan());
-
-        addCabinetPaperButton();
-        listCabinetPaperButton();
 
         add(new ProjectOverviewPanel("projectOverview"));
 
@@ -468,7 +471,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         add(procurementPlanStatus);
     }
 
-    private void addCabinetPaperButton() {
+    private BootstrapAjaxLink<Void> createEditCabinetPaperButton() {
         final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("editCabinetPaper",
                 Buttons.Type.Success) {
             @Override
@@ -479,11 +482,11 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("editCabinetPaper.tooltip", this)));
-        add(editCabinetPaper);
         editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtons(EditCabinetPaperPage.class));
+        return editCabinetPaper;
     }
 
-    private void listCabinetPaperButton() {
+    private BootstrapAjaxLink<Void> createListCabinetPaperButton() {
         final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("listCabinetPaper",
                 Buttons.Type.Success) {
             @Override
@@ -504,7 +507,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("listCabinetPaper.tooltip", this)));
-        add(editCabinetPaper);
+        return editCabinetPaper;
     }
 
     private BootstrapBookmarkablePageLink<Void> createProjectButton() {
