@@ -1,14 +1,15 @@
+import React, { useEffect, useState } from 'react';
 import Header from '../layout/header';
 import {
   Alert, FormControl, FormGroup, ControlLabel, HelpBlock,
 } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import './alerts.scss';
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { fetch, subscribeToAlerts } from '../api/Api';
 import { setImmer } from '../tools';
+import { tCreator } from '../translatable';
 
 const emailPattern = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
 
@@ -75,11 +76,15 @@ const Alerts = (props) => {
     }
   };
 
+  const { translations } = props;
+
+  const t = tCreator(translations);
+
   return (
     <div className="container-fluid dashboard-default">
 
       <Header
-        translations={props.translations}
+        translations={translations}
         onSwitch={props.onSwitch}
         styling={props.styling}
         selected=""
@@ -89,18 +94,18 @@ const Alerts = (props) => {
         <div className="col-md-10 col-md-offset-1">
           <div className="row title">
             <div className="col-md-12">
-              <h2>Subscribe to Makueni OC Portal Alerts</h2>
+              <h2>{t('alerts:title')}</h2>
             </div>
           </div>
 
           <div className="row">
             <div className="col-md-12">
-              <h4 className="sub-title">Sign up for Alerts</h4>
+              <h4 className="sub-title">{t('alerts:subtitle')}</h4>
             </div>
 
             <div className="col-md-6">
               <FormGroup validationState={getEmailValidationState()} bsSize="large">
-                <ControlLabel>Enter your email address</ControlLabel>
+                <ControlLabel>{t('alerts:email')}</ControlLabel>
                 <FormControl
                   type="email"
                   name="email"
@@ -110,7 +115,7 @@ const Alerts = (props) => {
                 />
                 <FormControl.Feedback />
                 {
-                  email && !emailValid && <HelpBlock>Email is invalid</HelpBlock>
+                  email && !emailValid && <HelpBlock>{t('alerts:invalidEmail')}</HelpBlock>
                 }
               </FormGroup>
             </div>
@@ -122,14 +127,13 @@ const Alerts = (props) => {
                 <div>
                   <div className="row">
                     <div className="col-md-12">
-                      <h4 className="sub-title">Alert Preferences</h4>
+                      <h4 className="sub-title">{t('alerts:alertPreferences')}</h4>
                     </div>
                   </div>
 
                   <div className="row">
                     <div className="col-md-12">
-                      You will receive Email Updates for the following
-                      Tender:
+                      {t('alerts:alertsForTender')}
                       {' '}
                       <b>{unescape(tenderTitle)}</b>
                     </div>
@@ -141,19 +145,19 @@ const Alerts = (props) => {
                 <div>
                   <div className="row">
                     <div className="col-md-12">
-                      <h4 className="sub-title">Alert Preferences</h4>
+                      <h4 className="sub-title">{t('alerts:alertPreferences')}</h4>
                     </div>
                     <div className="col-md-2" />
                     <div className="col-md-5">
-                      <ControlLabel>Receive alerts for all Tenders from this Department</ControlLabel>
+                      <ControlLabel>{t('alerts:alertsForTendersFromDepartment')}</ControlLabel>
                     </div>
                     <div className="col-md-5">
-                      <ControlLabel>Receive alerts for these Items from all Departments</ControlLabel>
+                      <ControlLabel>{t('alerts:alertsForItemsFromDepartment')}</ControlLabel>
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-md-2">
-                      When a New Tender is released
+                      {t('alerts:onNewTender')}
                     </div>
                     <div className="col-md-5">
                       <Typeahead
@@ -166,7 +170,7 @@ const Alerts = (props) => {
                         })}
                         options={fetchedDepartments === undefined ? [] : fetchedDepartments}
                         clearButton
-                        placeholder="For this Department(s)"
+                        placeholder={t('alerts:departmentsPlaceholder')}
                         selected={departments}
                         multiple
                         isLoading={fetchedDepartments === undefined}
@@ -185,7 +189,7 @@ const Alerts = (props) => {
                         })}
                         options={fetchedItems === undefined ? [] : fetchedItems}
                         clearButton
-                        placeholder="For this Item(s)"
+                        placeholder={t('alerts:itemsPlaceholder')}
                         selected={items}
                         multiple
                         isLoading={fetchedItems === undefined}
@@ -205,7 +209,7 @@ const Alerts = (props) => {
                 type="submit"
                 onClick={submit}
               >
-                Apply Subscription Preferences
+                {t('alerts:subscribe')}
               </button>
             </div>
           </div>
@@ -220,8 +224,8 @@ const Alerts = (props) => {
 &nbsp;
                       {
                       purchaseReqId === undefined
-                        ? <span>Please enter a valid email address and select at least 1 Department or 1 Item</span>
-                        : <span>Please enter a valid email address</span>
+                        ? <span>{t('alerts:formErrorGeneral')}</span>
+                        : <span>{t('alerts:formErrorForTender')}</span>
                     }
                     </Alert>
                   </div>
@@ -239,21 +243,16 @@ const Alerts = (props) => {
                       {serverResponse.status === true
                         ? (
                           <Alert bsStyle="info">
-                            A confirmation email was send to
-                            {' '}
-                            {email}
-                            {' '}
-                            address.
+                            {t('alerts:subscribedSuccessfully:line1').replace('$#$', email)}
                             <br />
-                            Please check your email and click on provided URL in order to validate your
-                            email address.
+                            {t('alerts:subscribedSuccessfully:line2')}
                           </Alert>
                         )
                         : (
                           <Alert bsStyle="danger">
-                            Error subscribing!
+                            {t('alerts:subscribeFailed')}
                             <br />
-                            {serverResponse.status === false ? serverResponse.message : 'Unknown error'}
+                            {serverResponse.status === false ? serverResponse.message : t('alerts:unknownError')}
                           </Alert>
                         )}
                     </h4>
