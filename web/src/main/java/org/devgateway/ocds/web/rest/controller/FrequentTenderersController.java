@@ -93,8 +93,8 @@ public class FrequentTenderersController extends GenericOCDSController {
     @RequestMapping(value = "/api/activeAwardsCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    public List<List<Integer>> getActiveAwardsCountInBatch(@ModelAttribute @Valid
-                                                               final YearFilterPagingRequest filter) {
+    public List<List<Integer>> getActiveAwardsCountInBatch(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
         Assert.notNull(filter.getLeftBidderIds(), "Left bidder ids must not be null");
         Assert.notNull(filter.getRightBidderIds(), "Right bidder ids must not be null");
         Assert.notNull(filter.getLeftBidderIds().size() == filter.getRightBidderIds().size(),
