@@ -8,8 +8,12 @@
   visible: yes
 - name: publicView.filter.subcounties
   visible: yes
+  visibleDeps:
+    - projectForm.subcounties
 - name: publicView.filter.wards
   visible: yes
+  visibleDeps:
+    - projectForm.wards
 - name: publicView.filter.amount
   visible: yes
 - name: publicView.filter.date
