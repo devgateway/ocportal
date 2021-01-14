@@ -52,7 +52,7 @@ const Table = ({
       onSizePerPageList={setImmer(updatePageSize)}
       count={count}
       columns={[{
-        text: 'Tender name',
+        text: t('crd:procurements:table:tenderName'),
         dataField: 'name',
         fm: `${fmPrefix}.tenderName`,
         formatter: mkContractLink(navigate),
@@ -60,32 +60,32 @@ const Table = ({
           width: '20%',
         },
       }, {
-        text: 'OCID',
+        text: t('crd:procurements:table:ocid'),
         dataField: 'id',
         fm: `${fmPrefix}.ocid`,
         formatter: mkContractLink(navigate),
       }, {
-        text: 'Award status',
+        text: t('crd:procurements:table:awardStatus'),
         dataField: 'awardStatus',
         fm: `${fmPrefix}.awardStatus`,
       }, {
-        text: 'Tender amount',
+        text: t('crd:procurements:table:tenderAmount'),
         dataField: 'tenderAmount',
         fm: `${fmPrefix}.tenderAmount`,
       }, {
-        text: t('crd:contracts:list:awardAmount'),
+        text: t('crd:procurements:table:awardAmount'),
         dataField: 'awardAmount',
         fm: `${fmPrefix}.awardAmount`,
       }, {
-        text: 'Number of bidders',
+        text: t('crd:procurements:table:nrOfBidders'),
         dataField: 'nrBidders',
         fm: `${fmPrefix}.nrBidders`,
       }, {
-        text: 'Number of flags',
+        text: t('crd:procurements:table:nrOfFlags'),
         dataField: 'nrFlags',
         fm: `${fmPrefix}.nrFlags`,
       }, {
-        text: t('crd:supplier:table:flagName'),
+        text: t('crd:procurements:table:flagName'),
         dataField: 'flags',
         fm: `${fmPrefix}.flags`,
         formatter: formatFlags,

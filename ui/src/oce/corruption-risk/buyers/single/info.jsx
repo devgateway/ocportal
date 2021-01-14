@@ -50,15 +50,9 @@ const Info = ({
                     : 'crd:contracts:baseInfo:flag:pl')}
                 </span>
                 <small>
-                  {contractsCount}
-                  {' '}
-                  procurements flagged
+                  {t('crd:buyers:info:procurementsFlagged').replace('$#$', contractsCount)}
                   <br />
-                  (Out of
-                  {' '}
-                  {unflaggedContractsCount}
-                  {' '}
-                  procurement won)
+                  {t('crd:buyers:info:procurementsWon').replace('$#$', unflaggedContractsCount)}
                 </small>
               </td>
             </tr>
