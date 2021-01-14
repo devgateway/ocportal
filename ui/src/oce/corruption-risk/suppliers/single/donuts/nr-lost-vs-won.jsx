@@ -3,7 +3,7 @@ import { pluck } from '../../../../tools';
 import Donut from '../../../donut';
 import translatable from '../../../../translatable';
 
-class CenterText extends React.Component {
+class CenterText extends translatable(React.Component) {
   render() {
     const { data } = this.props;
     if (!data) return null;
@@ -15,13 +15,9 @@ class CenterText extends React.Component {
         <div>
           {won}
           <div className="secondary">
-            of
-            {' '}
-            {sum}
-            {' '}
-            (
-            {Math.trunc(percent)}
-            %)
+            {this.t('crd:supplier:nrLostVsWon:center')
+              .replace('$#$', sum)
+              .replace('$#$', Math.trunc(percent))}
           </div>
         </div>
       </div>

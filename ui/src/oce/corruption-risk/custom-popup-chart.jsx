@@ -1,10 +1,12 @@
 import cn from 'classnames';
+import PropTypes from 'prop-types';
 import Chart from '../visualizations/charts/frontend-date-filterable';
 import ReactIgnore from '../react-ignore';
 import { POPUP_HEIGHT, POPUP_WIDTH } from './constants';
 import loadingBubbles from '../resources/loading-bubbles.svg';
+import translatable from '../translatable';
 
-class CustomPopupChart extends Chart {
+class CustomPopupChart extends translatable(Chart) {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -80,7 +82,7 @@ class CustomPopupChart extends Chart {
         {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
         {loading && (
         <div className="message">
-          Loading...
+          {this.t('general:loading')}
           <br />
           <img src={loadingBubbles} alt="" />
         </div>
@@ -95,5 +97,9 @@ class CustomPopupChart extends Chart {
     );
   }
 }
+
+CustomPopupChart.propTypes = {
+  translations: PropTypes.object.isRequired,
+};
 
 export default CustomPopupChart;

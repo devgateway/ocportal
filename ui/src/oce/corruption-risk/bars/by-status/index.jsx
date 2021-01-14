@@ -33,7 +33,7 @@ const ProcurementsByStatus = ({
           <div className="row">
             <br />
             <div className="col-md-12">
-              <div className="message">No data</div>
+              <div className="message">{t('charts:general:noData')}</div>
             </div>
             <br />
           </div>
