@@ -335,7 +335,7 @@ class CorruptionRiskDashboard extends React.Component {
           <div className="col-sm-10 logo-wrapper">
             <a className="portal-logo-wrapper" href="#!/crd/">
               <img src={makueniLogo} alt="Makueni" />
-              <span>Corruption Risk Dashboard</span>
+              <span>{this.t('crd:title')}</span>
             </a>
           </div>
 
