@@ -233,7 +233,7 @@ const Supplier = (props) => {
     if (noIndicators) {
       return (
         <section className="flag-analysis">
-          <h4>This supplier has no flags</h4>
+          <h4>{t('crd:supplier:noFlags')}</h4>
         </section>
       );
     }
