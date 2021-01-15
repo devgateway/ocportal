@@ -119,6 +119,7 @@ $lightest-grey: #f9f9f9;
     .item-value {
         font-size: 18px;
         font-weight: bold;
+        overflow-wrap: break-word;
 
         &.download {
             i {
