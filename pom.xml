@@ -15,7 +15,7 @@
     <artifactId>makueni</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
-    <name>Makueni</name>
+    <name>Elgeyo Marakwet</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
 

@@ -192,7 +192,7 @@ public class AlertsManagerImpl implements AlertsManager {
                         + "\" please visit the website to see the update: \n\n"
                         + tenderLinks.toString() + "\n"
                         + "Thanks,\n"
-                        + "Makueni Portal Team \n\n\n"
+                        + "Elgeyo Marakwet Portal Team \n\n\n"
                         + "If you do not want to receive our email alerts anymore please click on the following link: "
                         + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
                         + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
@@ -205,7 +205,7 @@ public class AlertsManagerImpl implements AlertsManager {
                         + "The following tender(s) have been published: \n\n"
                         + tenderLinks.toString() + "\n"
                         + "Thanks,\n"
-                        + "Makueni Portal Team \n\n\n"
+                        + "Elgeyo Marakwet Portal Team \n\n\n"
                         + "If you do not want to receive our email alerts anymore please click on the following link: "
                         + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
                         + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
