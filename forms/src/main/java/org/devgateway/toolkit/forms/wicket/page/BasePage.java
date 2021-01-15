@@ -13,6 +13,7 @@ package org.devgateway.toolkit.forms.wicket.page;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuDivider;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
@@ -33,11 +34,13 @@ import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDa
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -56,6 +59,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.fm.DgFmAttachingVisitor;
 import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearBudgetPage;
@@ -109,6 +113,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static org.devgateway.toolkit.forms.WebConstants.PARAM_PRINT;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
@@ -123,6 +128,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     private static final long serialVersionUID = -4179591658828697452L;
 
     protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);
+    protected BootstrapBookmarkablePageLink<Void> printLink;
 
     private TransparentWebMarkupContainer mainContainer;
 
@@ -254,6 +260,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
         navbar = newNavbar("navbar");
         mainHeader.add(navbar);
+        mainHeader.setVisibilityAllowed(!ComponentUtil.isPrintMode());
 
         // Add information about navbar position on mainHeader element.
         if (navbar.getPosition().equals(Navbar.Position.DEFAULT)) {
@@ -264,11 +271,26 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
         mainFooter = new Footer("mainFooter");
         add(mainFooter);
+        mainFooter.setVisibilityAllowed(!ComponentUtil.isPrintMode());
 
         pageTitle = new Label("pageTitle", new ResourceModel("page.title"));
         add(pageTitle);
 
         createGoogleAnalyticsTracker();
+    }
+
+    protected void createPrintLink() {
+        PageParameters pp = new PageParameters(getPageParameters());
+        pp.set(PARAM_PRINT, true);
+        printLink = new BootstrapBookmarkablePageLink<Void>("printLink", BasePage.this.getClass(), pp,
+                Buttons.Type.Default) {
+
+        };
+        printLink.setIconType(FontAwesomeIconType.print).setSize(Buttons.Size.Large);
+        PopupSettings popupSettings = new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS);
+        printLink.setPopupSettings(popupSettings);
+        add(printLink);
+        printLink.setVisibilityAllowed(!ComponentUtil.isPrintMode());
     }
 
     private NotificationPanel createFeedbackPanel() {
@@ -726,9 +748,16 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         return navbar;
     }
 
+    public void addPrintWindowJs(final IHeaderResponse response) {
+        if (ComponentUtil.isPrintMode()) {
+            response.render(OnLoadHeaderItem.forScript("window.print();"));
+        }
+    }
+
     @Override
     public void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
+        addPrintWindowJs(response);
 
         // Load Styles.
         response.render(CssHeaderItem.forReference(BaseStyles.INSTANCE));
