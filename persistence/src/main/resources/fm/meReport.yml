@@ -34,7 +34,7 @@
 - name: meReportForm.formDocs
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: meReportForm.inspected
   mandatory: yes
   enabled: yes
