@@ -80,6 +80,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
         tenderProcesses = tenderProcessService.findByProjectProcurementPlan(procurementPlanModel.getObject())
                 .parallelStream()
+                .filter(tp -> tp.getProject() != null)
                 .collect(Collectors.groupingBy(TenderProcess::getProject,
                         Collectors.mapping(Function.identity(), Collectors.toList())));
     }
