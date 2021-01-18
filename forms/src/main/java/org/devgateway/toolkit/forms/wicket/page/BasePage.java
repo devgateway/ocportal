@@ -469,30 +469,20 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
 
-                list.add(new MenuBookmarkablePageLink<ListAdministratorReportPage>(
-                        ListAdministratorReportPage.class, null,
-                        new StringResourceModel("navbar.administratorReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListAdministratorReportPage.class,
+                        "navbar.administratorReport", "navbar.administratorReport");
 
-                list.add(new MenuBookmarkablePageLink<ListInspectionReportPage>(
-                        ListInspectionReportPage.class, null,
-                        new StringResourceModel("navbar.inspectionReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListInspectionReportPage.class,
+                        "navbar.inspectionReport", "navbar.inspectionReport");
 
-                list.add(new MenuBookmarkablePageLink<ListPMCReportPage>(
-                        ListPMCReportPage.class, null,
-                        new StringResourceModel("navbar.pmcReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListPMCReportPage.class,
+                        "navbar.pmcReport", "navbar.pmcReport");
 
-                list.add(new MenuBookmarkablePageLink<ListMEReportPage>(
-                        ListMEReportPage.class, null,
-                        new StringResourceModel("navbar.meReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListMEReportPage.class,
+                        "navbar.meReport", "navbar.meReport");
 
-                list.add(new MenuBookmarkablePageLink<ListPaymentVoucherPage>(
-                        ListPaymentVoucherPage.class, null,
-                        new StringResourceModel("navbar.paymentVoucher", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListPaymentVoucherPage.class,
+                        "navbar.paymentVoucher", "navbar.paymentVoucher");
 
                 return list;
             }

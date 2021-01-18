@@ -29,3 +29,18 @@
 - name: navbar.contract
   visibleDeps:
     - contractForm
+- name: navbar.administratorReport
+  visibleDeps:
+    - administratorReportForm
+- name: navbar.inspectionReport
+  visibleDeps:
+    - inspectionReportForm
+- name: navbar.pmcReport
+  visibleDeps:
+    - pmcReportForm
+- name: navbar.meReport
+  visibleDeps:
+    - meReportForm
+- name: navbar.paymentVoucher
+  visibleDeps:
+    - paymentVoucherForm
