@@ -258,3 +258,7 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderLink
+- name: publicView.tender.receiveAlertsButton
+  visible: yes
+  visibleDeps:
+    - publicView.subscribeToAlertsButton
