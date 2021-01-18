@@ -75,18 +75,20 @@ public class ConstraintInfoProvider {
             for (Attribute<?, ?> attr : entity.getAttributes()) {
                 String fmName = prefix + attr.getName();
 
-                visit(attr, fmName, javaType);
+                if (isFeatureVisible(fmName)) {
+                    visit(attr, fmName, javaType);
 
-                if (JPAUtils.isOneToMany(attr)) {
-                    if (JPAUtils.isOwningOneToMany(attr)) {
-                        collect(prefix + attr.getName() + ".",
-                                ((PluralAttribute<?, ?, ?>) attr).getElementType().getJavaType());
+                    if (JPAUtils.isOneToMany(attr)) {
+                        if (JPAUtils.isOwningOneToMany(attr)) {
+                            collect(prefix + attr.getName() + ".",
+                                    ((PluralAttribute<?, ?, ?>) attr).getElementType().getJavaType());
+                        }
+                    } else if (JPAUtils.isOneToOne(attr)) {
+                        collect(prefix + attr.getName() + ".", attr.getJavaType());
+                    } else if (!(JPAUtils.isManyToOne(attr) || JPAUtils.isManyToMany(attr) || JPAUtils.isBasic(attr))) {
+                        throw new RuntimeException(String.format("Not implemented case for %s.%s",
+                                attr.getDeclaringType().getJavaType().getSimpleName(), attr.getName()));
                     }
-                } else if (JPAUtils.isOneToOne(attr)) {
-                    collect(prefix + attr.getName() + ".", attr.getJavaType());
-                } else if (!(JPAUtils.isManyToOne(attr) || JPAUtils.isManyToMany(attr) || JPAUtils.isBasic(attr))) {
-                    throw new RuntimeException(String.format("Not implemented case for %s.%s",
-                            attr.getDeclaringType().getJavaType().getSimpleName(), attr.getName()));
                 }
             }
         }
@@ -100,7 +102,7 @@ public class ConstraintInfoProvider {
             boolean cascadeValidation = JPAUtils.isOwningOneToMany(attr) || JPAUtils.isOneToOne(attr);
             ConstrainedField field = new ConstrainedField(attr);
 
-            boolean required = dgFmService.hasFeature(fmName) && dgFmService.isFeatureMandatory(fmName);
+            boolean required = isFeatureMandatory(fmName);
 
             ConstraintInfo constraintInfo = fields.computeIfAbsent(field, f -> new ConstraintInfo(cascadeValidation));
             if (required) {
@@ -123,5 +125,13 @@ public class ConstraintInfoProvider {
         public Map<ConstrainedField, ConstraintInfo> getFields() {
             return fields;
         }
+    }
+
+    private boolean isFeatureVisible(String featureName) {
+        return dgFmService.hasFeature(featureName) && dgFmService.isFeatureVisible(featureName);
+    }
+
+    private boolean isFeatureMandatory(String featureName) {
+        return dgFmService.hasFeature(featureName) && dgFmService.isFeatureMandatory(featureName);
     }
 }
