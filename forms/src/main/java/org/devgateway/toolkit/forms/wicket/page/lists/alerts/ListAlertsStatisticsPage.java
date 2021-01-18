@@ -28,6 +28,9 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
 
         this.jpaService = alertsStatisticsService;
         this.editPageClass = EditAlertsStatisticsPage.class;
+
+        hasNewPage = false;
+        hasEditPage = false;
     }
 
     @Override
@@ -47,7 +50,5 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
                 "sendingTime", "sendingTime"));
 
         super.onInitialize();
-
-        columns.remove(6);
     }
 }
