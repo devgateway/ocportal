@@ -10,6 +10,7 @@ import { tCreator } from '../../translatable';
 import { getProcurementPlans } from '../../api/Api';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
+import fmConnect from '../../fm/fm';
 
 const MakueniProcurementPlans = (props) => {
   useEffect(() => window.scrollTo(0, 0), []);
@@ -82,7 +83,7 @@ const MakueniProcurementPlans = (props) => {
     </div>
   );
 
-  const { navigate, route } = props;
+  const { navigate, route, isFeatureVisible } = props;
   const [navigationPage, id] = route;
 
   const columns = [{
@@ -157,7 +158,8 @@ const MakueniProcurementPlans = (props) => {
 }
         </div>
       </div>
-
+      {isFeatureVisible('publicView.subscribeToAlertsButton')
+      && (
       <div className="alerts-container">
         <div className="row alerts-button subscribe">
           <div className="col-md-12">
@@ -171,7 +173,9 @@ const MakueniProcurementPlans = (props) => {
           </div>
         </div>
       </div>
-
+      )}
+      {isFeatureVisible('publicView.smsHelpButton')
+      && (
       <div className="smshelp-container">
         <div className="row alerts-button subscribe">
           <div className="col-md-12">
@@ -185,6 +189,7 @@ const MakueniProcurementPlans = (props) => {
           </div>
         </div>
       </div>
+      )}
       <Footer translations={props.translations} />
     </div>
   );
@@ -194,4 +199,4 @@ MakueniProcurementPlans.propTypes = {
   styling: PropTypes.object.isRequired,
 };
 
-export default MakueniProcurementPlans;
+export default fmConnect(MakueniProcurementPlans);
