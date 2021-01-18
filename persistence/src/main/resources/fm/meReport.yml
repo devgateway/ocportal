@@ -198,6 +198,8 @@
     - meReportForm.meStatus
 - name: meReportsList.status
   visible: yes
+- name: meReportsList.tenderTitle
+  visible: yes
 
 # PUBLIC VIEW
 - name: publicView.meReport
