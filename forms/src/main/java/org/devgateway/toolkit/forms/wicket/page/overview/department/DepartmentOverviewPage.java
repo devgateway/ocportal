@@ -155,6 +155,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         addTenderProcess.setLabel(
                 new StringResourceModel("addTenderProcess", DepartmentOverviewPage.this, null));
+        addTenderProcess.setEnabled(getProcurementPlan() != null);
         addTenderProcess.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
         return addTenderProcess;
     }
