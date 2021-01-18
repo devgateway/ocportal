@@ -545,7 +545,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 updateProjectDashboard(target);
             }
         });
-        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("project.searchBox.placeholder")));
+        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("project.searchBox.placeholder",
+                DepartmentOverviewPage.this)));
         return searchBoxField;
     }
 
@@ -558,7 +559,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 updateTenderProcessDashboard(target);
             }
         });
-        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("tender.searchBox.placeholder")));
+        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("tender.searchBox.placeholder",
+                DepartmentOverviewPage.this)));
         return searchBoxField;
     }
 
