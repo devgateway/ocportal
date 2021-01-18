@@ -57,6 +57,10 @@ public class TenderItem extends AbstractChildExpandableAuditEntity<Tender> imple
         return purchaseItem != null ? purchaseItem.getPlanItem() : planItem;
     }
 
+    public void setNonNullPlanItem(PlanItem planItem) {
+
+    }
+
     public BigDecimal getQuantity() {
         return quantity;
     }
