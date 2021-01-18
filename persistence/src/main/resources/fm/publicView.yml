@@ -19,6 +19,6 @@
 - name: publicView.filter.date
   visible: yes
 - name: publicView.smsHelpButton
-  visible: yes
+  visible: no
 - name: publicView.subscribeToAlertsButton
   visible: yes
