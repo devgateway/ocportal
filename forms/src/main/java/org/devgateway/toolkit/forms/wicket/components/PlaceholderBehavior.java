@@ -14,6 +14,7 @@ package org.devgateway.toolkit.forms.wicket.components;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.model.IModel;
 
 /**
  * A behavior that adds a placeholder attribute support for an input components.
@@ -21,15 +22,15 @@ import org.apache.wicket.markup.ComponentTag;
 public class PlaceholderBehavior extends Behavior {
 
     private static final long serialVersionUID = -5721230717164734414L;
-    private final String placeholder;
+    private final IModel<String> placeholder;
 
-    public PlaceholderBehavior(final String placeholder) {
+    public PlaceholderBehavior(final IModel<String> placeholder) {
         this.placeholder = placeholder;
     }
 
     @Override
     public void onComponentTag(final Component component, final ComponentTag tag) {
         super.onComponentTag(component, tag);
-        tag.put("placeholder", placeholder);
+        tag.put("placeholder", placeholder.getObject());
     }
 }
