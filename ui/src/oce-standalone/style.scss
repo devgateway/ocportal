@@ -338,13 +338,6 @@ $yearsBarHeight: 30px;
             line-height: 28px;
             margin-bottom: 3px;
 
-            @media screen and (max-width: 992px) {
-                display: block;
-                float: left;
-                width: 30%;
-            }
-
-
             &:hover {
                 background-color: #707070;
             }
