@@ -209,7 +209,7 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
               width={width - 20}
               styling={styling}
               margin={{
-                t: 0, b: 80, r: 100, pad: 40,
+                t: 0, b: 80, r: 20, pad: 40,
               }}
             />
           </section>
