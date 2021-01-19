@@ -118,6 +118,10 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity {
         return getProject().getAmountBudgeted();
     }
 
+    public void setAmountBudgeted(BigDecimal amountBudgeted) {
+
+    }
+
     @Override
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();

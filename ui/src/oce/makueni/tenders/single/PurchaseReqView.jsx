@@ -286,6 +286,7 @@ const PurchaseReqView = (props) => {
         </span>
       </a>
 
+      {isFeatureVisible('publicView.tender.receiveAlertsButton') && (
       <div className="col-md-offset-5 col-md-4">
         <button
           className="btn btn-subscribe pull-right"
@@ -297,6 +298,7 @@ const PurchaseReqView = (props) => {
           {t('purchaseReq:receiveAlerts:caption')}
         </button>
       </div>
+      )}
     </div>
     {
       displayTab()
