@@ -100,9 +100,12 @@ class TotalFlags extends translatable(React.Component) {
     super(...args);
     this.state = {};
 
-    this.updateSidebarWidth = debounce(() => this.setState({
-      width: document.getElementById('crd-sidebar').offsetWidth,
-    }));
+    this.updateSidebarWidth = debounce(() => {
+      const el = document.getElementById('crd-sidebar-totalFlags');
+      this.setState({
+        width: el ? el.clientWidth : 0,
+      });
+    });
   }
 
   componentDidMount() {
@@ -120,9 +123,10 @@ class TotalFlags extends translatable(React.Component) {
     } = this.props;
     const { width } = this.state;
 
-    if (!width) return null;
+    if (width === null) return null;
+
     return (
-      <div className="total-flags">
+      <div id="crd-sidebar-totalFlags" className="total-flags">
         <ContractCounter
           data={data.get('contractCounter')}
           requestNewData={(_, data) => requestNewData(['contractCounter'], data)}

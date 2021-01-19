@@ -13,7 +13,6 @@ $resetColor: #dca402;
 $borderColor: #eeeeee;
 
 .dashboard-corruption-risk {
-    padding-left: 0;
 
     .form-control {
         border: 2px solid $borderColor;
@@ -136,9 +135,13 @@ $borderColor: #eeeeee;
         z-index: 10;
         @media (max-width: 768px) {
             height: auto;
-            margin-top: 35px;
             padding-left: 15px;
             position: relative;
+        }
+
+        @media screen and (max-width: 992px) {
+            position: relative;
+            top: 0;
         }
 
         .crd-filter-title {
@@ -330,17 +333,17 @@ $borderColor: #eeeeee;
         background: transparent;
         border-right: none;
         height: $extend;
-        margin-left: -5px;
+        margin-left: -15px;
         overflow-y: scroll;
         padding-bottom: 200px;
         padding-right: 0;
         top: $filterHeight * 2;
 
         @media (max-width: 768px) {
-            margin-left: 0;
             position: relative !important;
             top: auto;
-            width: 102%;
+            overflow-y: auto;
+            margin-right: -15px;
         }
 
         >div {
@@ -359,7 +362,7 @@ $borderColor: #eeeeee;
 
         .total-flags {
             background: #fafafa;
-            margin: 15px 0 0 -10px;
+            margin: 15px 0 0 -15px;
             padding-bottom: 50px;
             $infoWidth: 250px;
             border-radius: 5px;
@@ -568,15 +571,11 @@ $borderColor: #eeeeee;
 
     .content {
         $arrowSize: 8px;
-        margin-top: 89px;
-        margin-bottom: 80px;
-        overflow-y: scroll;
-        padding: 30px $gutterRight 0 50px;
-        @media (max-width: 1200px) {
-            padding: 30px $gutterRightMd 0 50px;
-        }
-        @media (max-width: 768px) {
-            padding: 40px;
+        margin-top: $filterHeight * 2;
+        padding-right: 0;
+
+        @media screen and (max-width: 992px) {
+            margin-top: 0;
         }
 
         h2, h3, h4 {
