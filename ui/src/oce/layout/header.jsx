@@ -172,7 +172,7 @@ const Header = ({
         {
           stats.status === LOADED
             ? (
-              <div>
+              <>
                 <div
                   className="col-lg-3 col-md-3 col-sm-6 total-item"
                   data-step="5"
@@ -191,7 +191,7 @@ const Header = ({
                   <span className="total-label">{t('header:totalContractsAmount')}</span>
                   <span className="total-number">{currencyFormatter(stats.totalContractsAmount)}</span>
                 </div>
-              </div>
+              </>
             )
             : null
         }
