@@ -35,6 +35,7 @@ public class ListItemPage extends AbstractListCategoryPage<Item> {
 
         this.jpaService = itemService;
         this.editPageClass = EditItemPage.class;
+        filterGoReset = true;
     }
 
     @Override
