@@ -135,6 +135,10 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: tenderForm.billOfQuantities
+  mandatory: no
+  enabled: yes
+  visible: no
 - name: tenderForm.terminate
   enabled: yes
   visible: yes

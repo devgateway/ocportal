@@ -149,6 +149,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
 
+        editForm.add(new FileInputBootstrapFormComponent("billOfQuantities"));
     }
 
     private void addProcuringEntitySection() {
