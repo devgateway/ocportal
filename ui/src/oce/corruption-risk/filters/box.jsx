@@ -4,7 +4,7 @@ import { tCreator } from '../../translatable';
 
 const FilterBox = (props) => {
   const {
-    title, open, active, onClick, onApply, onReset, translations,
+    title, open, active, onClick, onApply, onReset, translations, right,
   } = props;
 
   const t = tCreator(translations);
@@ -17,7 +17,10 @@ const FilterBox = (props) => {
       <i className="glyphicon glyphicon-menu-down" />
       {open
       && (
-      <div className="dropdown" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={cn('dropdown', { 'dropdown-r': right })}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="box-content">
           {props.children}
         </div>
