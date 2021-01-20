@@ -182,6 +182,7 @@ const Tender = (props) => {
 Tender.propTypes = {
   ...commonTenderTabTypes,
   data: PropTypes.array,
+  prId: PropTypes.number.isRequired,
 };
 
 export default fmConnect(Tender);
