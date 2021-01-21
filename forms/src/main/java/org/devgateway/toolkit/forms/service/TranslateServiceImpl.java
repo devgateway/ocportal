@@ -19,5 +19,10 @@ public class TranslateServiceImpl implements TranslateService {
 
         return translateField.getFieldLabel(field);
     }
+
+    @Override
+    public String getTranslation(Class clazz) {
+        return new TranslateField(clazz).getString("page.title");
+    }
 }
 

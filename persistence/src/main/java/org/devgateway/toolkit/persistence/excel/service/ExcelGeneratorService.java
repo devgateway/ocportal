@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.excel.service;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.devgateway.toolkit.persistence.excel.ExcelFile;
 import org.devgateway.toolkit.persistence.excel.ExcelFileDefault;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -22,8 +23,12 @@ import java.util.List;
 @Service
 @CacheConfig(keyGenerator = "genericExcelKeyGenerator", cacheNames = "excelExportCache")
 public class ExcelGeneratorService {
+
     @Autowired(required = false)
     private TranslateService translateService;
+
+    @Autowired
+    private DgFmService fmService;
 
     /**
      * Method that returns a byte array with an excel export.
@@ -39,7 +44,7 @@ public class ExcelGeneratorService {
                                    final Specification spec,
                                    final Pageable pageable) throws IOException {
         final List<Object> objects = jpaService.findAll(spec, pageable).getContent();
-        final ExcelFile excelFile = new ExcelFileDefault(objects, translateService);
+        final ExcelFile excelFile = new ExcelFileDefault(objects, translateService, fmService);
         final Workbook workbook = excelFile.createWorkbook();
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -59,9 +64,9 @@ public class ExcelGeneratorService {
     public byte[] getExcelDownload(final List<Object> objects, final boolean useTranslations) throws IOException {
         final ExcelFile excelFile;
         if (useTranslations) {
-            excelFile = new ExcelFileDefault(objects, translateService);
+            excelFile = new ExcelFileDefault(objects, translateService, fmService);
         } else {
-            excelFile = new ExcelFileDefault(objects);
+            excelFile = new ExcelFileDefault(objects, fmService);
         }
         final Workbook workbook = excelFile.createWorkbook();
 
