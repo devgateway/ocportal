@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "administratorReportForm")
 public class AdministratorReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
 }

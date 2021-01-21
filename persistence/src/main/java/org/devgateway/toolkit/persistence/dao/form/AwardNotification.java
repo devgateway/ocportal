@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @Table(indexes = {@Index(columnList = "tender_process_id")}, uniqueConstraints =
 @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "awardNotificationForm")
 public class AwardNotification extends AbstractTenderProcessMakueniEntity {
 
     @ExcelExport(name = "Award Notifications", separateSheet = true)
