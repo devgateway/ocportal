@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { tCreator } from '../../translatable';
@@ -10,6 +10,11 @@ const EMPTY_STRING = '';
 const FilterInput = (props) => {
   const { value, translations } = props;
   const [internalValue, setInternalValue] = useState(value);
+
+  useEffect(() => {
+    if (props.value === undefined || props.value === '') setInternalValue('');
+  }, [props.value]);
+
   const handleChange = (e) => {
     const { value: newValue } = e.target;
     setInternalValue(newValue);
