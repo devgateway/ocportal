@@ -35,7 +35,7 @@
 - name: inspectionReportForm.outcome
   mandatory: no
   enabled: yes
-  visible: no
+  visible: yes
 - name: inspectionReportForm.privateSectorRequests
   mandatory: no
   enabled: yes
@@ -59,7 +59,7 @@
 - name: inspectionReportForm.picture
   mandatory: no
   enabled: yes
-  visible: no
+  visible: yes
 - name: inspectionReportForm.revertToDraft
   enabled: yes
   visible: yes
