@@ -18,7 +18,6 @@
     <name>Makueni</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
-s
     <properties>
         <revision>1.13.2-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

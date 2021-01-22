@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethodRationale;
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -98,6 +101,11 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<TenderItem> tenderItems = new ArrayList<>();
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Bill of Quantities")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FileMetadata> billOfQuantities = new HashSet<>();
 
     @Override
     public void setLabel(final String label) {
@@ -243,6 +251,14 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     public void setProcurementMethodRationale(ProcurementMethodRationale procurementMethodRationale) {
         this.procurementMethodRationale = procurementMethodRationale;
+    }
+
+    public Set<FileMetadata> getBillOfQuantities() {
+        return billOfQuantities;
+    }
+
+    public void setBillOfQuantities(Set<FileMetadata> billOfQuantities) {
+        this.billOfQuantities = billOfQuantities;
     }
 
     @Override
