@@ -117,7 +117,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.cors().and().authorizeRequests()
                 .expressionHandler(webExpressionHandler()) // inject role hierarchy
-                .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+                .antMatchers("/monitoring**").access("hasRole('ROLE_ADMIN')").
+                 and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtSecret))
                 .authorizeRequests().antMatchers("/api/user/forgotPassword").permitAll().and()
                 .authorizeRequests().anyRequest().authenticated().and()
