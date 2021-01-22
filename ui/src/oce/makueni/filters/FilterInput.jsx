@@ -12,8 +12,8 @@ const FilterInput = (props) => {
   const [internalValue, setInternalValue] = useState(value);
 
   useEffect(() => {
-    if (props.value === undefined || props.value === '') setInternalValue('');
-  }, [props.value]);
+    setInternalValue(value);
+  }, [value]);
 
   const handleChange = (e) => {
     const { value: newValue } = e.target;
