@@ -1,6 +1,6 @@
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
-import {Alert, FormControl, FormGroup, ControlLabel, FormText} from 'react-bootstrap';
+import {Alert, FormControl, FormGroup, ControlLabel, HelpBlock} from 'react-bootstrap';
 import {Typeahead} from 'react-bootstrap-typeahead';
 
 import './alerts.less';
@@ -194,7 +194,7 @@ class Alerts extends CRDPage {
                   {
                     this.state.emailValid
                         ? null
-                        : <FormText>Email is invalid</FormText>
+                        : <HelpBlock>Email is invalid</HelpBlock>
                   }
                 </FormGroup>
               </div>
