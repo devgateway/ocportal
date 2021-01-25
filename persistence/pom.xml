@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
 
     <name>Persistence</name>
-    <description>Makueni Persistence</description>
+    <description>Elgeyo Persistence</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,8 +25,8 @@
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
+        <groupId>org.devgateway.ocportal.elgeyo</groupId>
+        <artifactId>elgeyo</artifactId>
         <version>${revision}</version>
     </parent>
 
