@@ -15,6 +15,7 @@ import org.devgateway.ocds.persistence.dao.UserDashboard;
 import org.devgateway.ocds.persistence.repository.UserDashboardRepository;
 import org.apache.catalina.startup.Tomcat;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.fm.DgFmProperties;
 import org.devgateway.toolkit.persistence.repository.RoleRepository;
 import org.devgateway.toolkit.persistence.service.sms.OnfonMediaProperties;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
@@ -41,13 +43,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * @author mpostelnicu
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = ValidationAutoConfiguration.class)
 @EnableJpaRepositories(basePackageClasses = { RoleRepository.class, UserDashboardRepository.class })
 @EnableTransactionManagement
 @EntityScan(basePackageClasses = { GenericPersistable.class, UserDashboard.class })
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/application.properties")
 @ComponentScan("org.devgateway.toolkit")
-@EnableConfigurationProperties(OnfonMediaProperties.class)
+@EnableConfigurationProperties({OnfonMediaProperties.class, DgFmProperties.class})
 public class PersistenceApplication {
     private static final Logger logger = LoggerFactory.getLogger(PersistenceApplication.class);
 

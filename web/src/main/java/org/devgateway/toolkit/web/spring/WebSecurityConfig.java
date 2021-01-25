@@ -104,7 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(allowUrlEncodedSlashHttpFirewall()).ignoring().
                 antMatchers("/", "/v2/api-docs/**", "/swagger-ui.html**", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/dashboard", "/languages/**",
-                        "/isAuthenticated", "/error",
+                        "/isAuthenticated", "/error", "/swagger-ui/**",
                         "/wicket/resource/**/*.ttf", "/wicket/resource/**/*.woff", "/corruption-risk",
                         SecurityUtil.getDisabledApiSecurity(adminSettingsRepository) ? "/api/**" : "/",
                         "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.css.map"
@@ -117,7 +117,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.cors().and().authorizeRequests()
                 .expressionHandler(webExpressionHandler()) // inject role hierarchy
-                .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+                .antMatchers("/monitoring**").access("hasRole('ROLE_ADMIN')").
+                 and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtSecret))
                 .authorizeRequests().antMatchers("/api/user/forgotPassword").permitAll().and()
                 .authorizeRequests().anyRequest().authenticated().and()

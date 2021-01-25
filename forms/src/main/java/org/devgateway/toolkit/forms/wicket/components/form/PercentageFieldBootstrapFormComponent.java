@@ -58,6 +58,11 @@ public class PercentageFieldBootstrapFormComponent extends TextFieldBootstrapFor
         return new TextField<BigDecimal>(id, initFieldModel()) {
             private static final long serialVersionUID = 1L;
 
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+
             /*
              * (non-Javadoc)
              * 

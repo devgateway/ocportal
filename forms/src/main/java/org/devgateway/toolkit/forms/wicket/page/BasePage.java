@@ -48,9 +48,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
+import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.fm.DgFmAttachingVisitor;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
@@ -76,6 +80,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListUnitPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.feedback.ListFeedbackMessagePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.flags.ListFlagHistoryPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.fm.ListFeaturesPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAdministratorReportPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardAcceptancePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListAwardNotificationPage;
@@ -88,14 +93,14 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPaymentVoucherPag
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderProcessPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
-import org.devgateway.toolkit.web.Constants;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +119,7 @@ import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_U
  *
  * @author miha
  */
-public abstract class BasePage extends GenericWebPage<Void> {
+public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormComponentSubject  {
     private static final long serialVersionUID = -4179591658828697452L;
 
     protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);
@@ -133,12 +138,41 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     private GoogleAnalyticsTracker googleAnalyticsTracker;
 
+    @SpringBean
+    private SettingsUtils settingsUtils;
+
 
     protected void createGoogleAnalyticsTracker() {
         googleAnalyticsTracker = new GoogleAnalyticsTracker(
-                "googleAnalyticsTracker", Constants.GOOGLE_ANALYTICS_ID);
+                "googleAnalyticsTracker", settingsUtils.getGoogleAnalyticsTrackingId());
+        googleAnalyticsTracker.setVisibilityAllowed(settingsUtils.getGoogleAnalyticsTrackingId() != null);
         add(googleAnalyticsTracker);
     }
+
+    @SpringBean
+    protected DgFmService fmService;
+
+    @Override
+    public DgFmService getFmService() {
+        return fmService;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isFmEnabled(super::isEnabled);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isFmVisible(super::isVisible);
+    }
+
+//    @Override
+//    public MarkupContainer add(Component... children) {
+//        MarkupContainer ret = super.add(children);
+//        attachFmForChildren(children);
+//        return ret;
+//    }
 
     /**
      * Determines if this page has a fluid container for the content or not.
@@ -243,7 +277,13 @@ public abstract class BasePage extends GenericWebPage<Void> {
         return notificationPanel;
     }
 
-    private NavbarDropDownButton newLanguageMenu() {
+    @Override
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        visitChildren(new DgFmAttachingVisitor());
+    }
+
+    public NavbarDropDownButton newLanguageMenu() {
         final NavbarDropDownButton languageDropDown =
                 new NavbarDropDownButton(new StringResourceModel("navbar.lang", this, null)) {
 
@@ -299,7 +339,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
     private NavbarButton<Homepage> newHomeMenu() {
         // home
-        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class, Model.of("Home"));
+        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class,
+                new StringResourceModel("navbar.home", this));
         homeMenu.setIconType(FontAwesomeIconType.home);
         MetaDataRoleAuthorizationStrategy.authorize(homeMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
         return homeMenu;
@@ -428,30 +469,20 @@ public abstract class BasePage extends GenericWebPage<Void> {
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
 
-                list.add(new MenuBookmarkablePageLink<ListAdministratorReportPage>(
-                        ListAdministratorReportPage.class, null,
-                        new StringResourceModel("navbar.administratorReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListAdministratorReportPage.class,
+                        "navbar.administratorReport", "navbar.administratorReport");
 
-                list.add(new MenuBookmarkablePageLink<ListInspectionReportPage>(
-                        ListInspectionReportPage.class, null,
-                        new StringResourceModel("navbar.inspectionReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListInspectionReportPage.class,
+                        "navbar.inspectionReport", "navbar.inspectionReport");
 
-                list.add(new MenuBookmarkablePageLink<ListPMCReportPage>(
-                        ListPMCReportPage.class, null,
-                        new StringResourceModel("navbar.pmcReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListPMCReportPage.class,
+                        "navbar.pmcReport", "navbar.pmcReport");
 
-                list.add(new MenuBookmarkablePageLink<ListMEReportPage>(
-                        ListMEReportPage.class, null,
-                        new StringResourceModel("navbar.meReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListMEReportPage.class,
+                        "navbar.meReport", "navbar.meReport");
 
-                list.add(new MenuBookmarkablePageLink<ListPaymentVoucherPage>(
-                        ListPaymentVoucherPage.class, null,
-                        new StringResourceModel("navbar.paymentVoucher", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListPaymentVoucherPage.class,
+                        "navbar.paymentVoucher", "navbar.paymentVoucher");
 
                 return list;
             }
@@ -472,47 +503,35 @@ public abstract class BasePage extends GenericWebPage<Void> {
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
 
-                list.add(new MenuBookmarkablePageLink<ListProcurementPlanPage>(ListProcurementPlanPage.class, null,
-                        new StringResourceModel("navbar.procurementPlan", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListProcurementPlanPage.class,
+                        "navbar.procurementPlan", "navbar.procurementPlan");
 
-                list.add(new MenuBookmarkablePageLink<ListCabinetPaperPage>(ListCabinetPaperPage.class, null,
-                        new StringResourceModel("navbar.cabinetpapers", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListCabinetPaperPage.class,
+                        "navbar.cabinetpapers", "navbar.cabinetPapers");
 
-                list.add(new MenuBookmarkablePageLink<ListProjectPage>(ListProjectPage.class, null,
-                        new StringResourceModel("navbar.project", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListProjectPage.class,
+                        "navbar.project", "navbar.project");
 
-                list.add(new MenuBookmarkablePageLink<ListTenderProcessPage>(
-                        ListTenderProcessPage.class, null,
-                        new StringResourceModel("navbar.tenderProcess", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListPurchaseRequisitionGroupPage.class,
+                        "navbar.tenderProcess", "navbar.tenderProcess");
 
-                list.add(new MenuBookmarkablePageLink<ListTenderPage>(ListTenderPage.class, null,
-                        new StringResourceModel("navbar.tenderdocument", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListTenderPage.class,
+                        "navbar.tenderdocument", "navbar.tenderDocument");
 
-                list.add(new MenuBookmarkablePageLink<ListTenderQuotationEvaluationPage>(
-                        ListTenderQuotationEvaluationPage.class, null,
-                        new StringResourceModel("navbar.tenderquotationevaluation", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListTenderQuotationEvaluationPage.class,
+                        "navbar.tenderquotationevaluation", "navbar.tenderQuotationEvaluation");
 
-                list.add(new MenuBookmarkablePageLink<ListProfessionalOpinionPage>(ListProfessionalOpinionPage.class,
-                        null, new StringResourceModel("navbar.professionalopinion", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListProfessionalOpinionPage.class,
+                        "navbar.professionalopinion", "navbar.professionalOpinion");
 
-                list.add(new MenuBookmarkablePageLink<ListAwardNotificationPage>(ListAwardNotificationPage.class,
-                        null, new StringResourceModel("navbar.awardnotification", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
-                list.add(new MenuBookmarkablePageLink<ListAwardAcceptancePage>(ListAwardAcceptancePage.class,
-                        null, new StringResourceModel("navbar.awardacceptance", this, null))
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListAwardNotificationPage.class,
+                        "navbar.awardnotification", "navbar.awardNotification");
 
-                list.add(new MenuBookmarkablePageLink<ListContractPage>(ListContractPage.class,
-                        null, new StringResourceModel("navbar.contract", this, null)
-                )
-                        .setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListAwardAcceptancePage.class,
+                        "navbar.awardacceptance", "navbar.awardAcceptance");
+
+                addFormMenuItem(list, ListContractPage.class,
+                        "navbar.contract", "navbar.contract");
 
                 return list;
             }
@@ -522,6 +541,17 @@ public abstract class BasePage extends GenericWebPage<Void> {
         MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
 
         return formMenu;
+    }
+
+    private <T extends BasePage> void addFormMenuItem(List<AbstractLink> list, Class<T> pageClass, String resourceKey,
+            String featureName) {
+        StringResourceModel label = new StringResourceModel(resourceKey, this);
+        MenuBookmarkablePageLink<T> link = new MenuBookmarkablePageLink<>(pageClass, label);
+        link.setIconType(FontAwesomeIconType.file_text_o);
+
+        if (fmService.isFeatureVisible(featureName)) {
+            list.add(link);
+        }
     }
 
     private NavbarDropDownButton newAdminMenu() {
@@ -568,7 +598,7 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         new StringResourceModel("navbar.jminix", this, null))
                         .setIconType(FontAwesomeIconType.bug));
 
-                final MenuBookmarkablePageLink<HALRedirectPage> halBrowserLink =
+                final MenuBookmarkablePageLink<HalBrowserHALRedirectPage> halBrowserLink =
                         new MenuBookmarkablePageLink<HALRedirectPage>(HALRedirectPage.class, null,
                                 new StringResourceModel("navbar.halbrowser", this, null)) {
                             private static final long serialVersionUID = 1L;
@@ -634,6 +664,16 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         ).setIconType(FontAwesomeIconType.mail_reply_all);
                 MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
                 list.add(alertsStatistics);
+
+                if (WebApplication.get().usesDevelopmentConfig()) {
+                    BootstrapBookmarkablePageLink<ListFeaturesPage> features =
+                            new MenuBookmarkablePageLink<ListFeaturesPage>(ListFeaturesPage.class,
+                                    new StringResourceModel("navbar.features", BasePage.this, null)
+                            ).setIconType(FontAwesomeIconType.list);
+                    MetaDataRoleAuthorizationStrategy.authorize(features, Component.RENDER, ROLE_ADMIN);
+                    list.add(features);
+                }
+
                 return list;
             }
         };

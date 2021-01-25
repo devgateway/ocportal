@@ -24,13 +24,11 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
@@ -91,10 +89,10 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("tenderForm");
         super.onInitialize();
-
         final TextFieldBootstrapFormComponent<String> title = ComponentUtil.addTextField(editForm, "tenderTitle");
-        title.required();
+        //title.required();
         title.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
 
         title.getField().add(new UniquePropertyEntryValidator<>(getString("uniqueTitle"), tenderService::findAll,
@@ -106,7 +104,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
                 editForm,
                 "tenderNumber"
         );
-        tenderNumber.required();
+        //tenderNumber.required();
         tenderNumber.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         tenderNumber.getField().add(new UniquePropertyEntryValidator<>(
                 getString("uniqueNumber"),
@@ -118,15 +116,15 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         DateFieldBootstrapFormComponent closingDate = ComponentUtil.addDateField(editForm, "closingDate");
         FiscalYear fiscalYear = editForm.getModelObject().getProcurementPlan().getFiscalYear();
 
-        closingDate.required();
+        //closingDate.required();
 
         final DateFieldBootstrapFormComponent invitationDate = ComponentUtil.addDateField(editForm, "invitationDate");
-        invitationDate.required();
+        //invitationDate.required();
         invitationDate.getField().add(RangeValidator.range(fiscalYear.getStartDate(), fiscalYear.getEndDate()));
         invitationDate.getField().add(new EarlierThanDateFieldValidator(closingDate,
                 getString("closingDate.label")));
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService).required();
+        ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethod", procurementMethodService);
 
         ComponentUtil.addSelect2ChoiceField(editForm, "procurementMethodRationale",
                 procurementMethodRationaleService);
@@ -151,17 +149,13 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
 
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return editForm.getModelObject().getTenderProcess().getSingleTenderQuotationEvaluation();
+        editForm.add(new FileInputBootstrapFormComponent("billOfQuantities"));
     }
 
     private void addProcuringEntitySection() {
         Select2ChoiceBootstrapFormComponent<ProcuringEntity> issuedBy = ComponentUtil.addSelect2ChoiceField(editForm,
                 "issuedBy", procuringEntityService);
-        issuedBy.required();
+        //issuedBy.required();
         issuedBy.getField().add(new AjaxComponentUpdatingBehavior("change"));
 
         procuringEntityEmail = new GenericSleepFormComponent<>("emailAddress", (IModel<String>) () -> {
@@ -181,11 +175,6 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         });
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
-    }
-
-    @Override
-    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return EditTenderQuotationEvaluationPage.class;
     }
 
     @Override

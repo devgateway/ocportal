@@ -27,7 +27,7 @@ public class SettingsUtils {
 
     private AdminSettings setting;
 
-    @Value("${googleAnalyticsTrackingId:#{null}}")
+    @Value("${gaId:#{null}}")
     private String googleAnalyticsTrackingId;
 
     public String getGoogleAnalyticsTrackingId() {

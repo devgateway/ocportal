@@ -25,7 +25,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * @author mpostelnicu
+ * @author mpostelnicu, ociubotaru
  */
 @JsonIgnoreProperties(value = {"new"})
 @MappedSuperclass
@@ -52,3 +52,4 @@ public class GenericPersistable extends AbstractPersistable<Long> implements Ser
         in.defaultReadObject();
     }
 }
+

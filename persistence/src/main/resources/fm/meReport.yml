@@ -1,0 +1,322 @@
+# EDIT PAGE
+- name: meReportForm
+  enabled: yes
+  visible: yes
+- name: meReportForm.approve
+  enabled: yes
+  visible: yes
+- name: meReportForm.approvedDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.byWhen
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.cancel
+  enabled: yes
+  visible: yes
+- name: meReportForm.contractorContact
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.delete
+  enabled: yes
+  visible: yes
+- name: meReportForm.directBeneficiariesTarget
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.expenditure
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.formDocs
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.inspected
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.invoiced
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.lpoAmount
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.lpoNumber
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.meStatus
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.officerResponsible
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.outcome
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.output
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.projectProgress
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.projectScope
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.remarks
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: meReportForm.save
+  enabled: yes
+  visible: yes
+- name: meReportForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: meReportForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: meReportForm.sno
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.subcounties
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: meReportForm.subwards
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.tenderProcess.project.amountBudgeted
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - projectForm
+- name: meReportForm.tenderProcess.procurementPlan.department
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: meReportForm.tenderProcess.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.fiscalYear
+- name: meReportForm.tenderProcess.singleContract.awardee
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: meReportForm.tenderProcess.singleContract.contractDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDate
+- name: meReportForm.tenderProcess.singleContract.expiryDate
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.expiryDate
+- name: meReportForm.tenderProcess.tender.iterator.next.tenderTitle
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: meReportForm.terminate
+  enabled: yes
+  visible: yes
+- name: meReportForm.uncommitted
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportForm.wards
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: meReportForm.wayForward
+  mandatory: yes
+  enabled: yes
+  visible: yes
+
+# LIST PAGE
+- name: meReportsList
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: meReportsList.approvedDate
+  visible: yes
+  visibleDeps:
+    - meReportForm.approvedDate
+- name: meReportsList.awardee
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.singleContract.awardee
+- name: meReportsList.department
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.procurementPlan.department
+- name: meReportsList.filterToolbar
+  visible: yes
+- name: meReportsList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.procurementPlan.fiscalYear
+- name: meReportsList.lastModifiedDate
+  visible: yes
+- name: meReportsList.meStatus
+  visible: yes
+  visibleDeps:
+    - meReportForm.meStatus
+- name: meReportsList.status
+  visible: yes
+- name: meReportsList.tenderTitle
+  visible: yes
+
+# PUBLIC VIEW
+- name: publicView.meReport
+  visible: yes
+  visibleDeps:
+    - meReportForm
+- name: publicView.meReport.sno
+  visible: yes
+  visibleDeps:
+    - meReportForm.sno
+- name: publicView.meReport.subcounties
+  visible: yes
+  visibleDeps:
+    - meReportForm.subcounties
+- name: publicView.meReport.wards
+  visible: yes
+  visibleDeps:
+    - meReportForm.wards
+- name: publicView.meReport.subwards
+  visible: yes
+  visibleDeps:
+    - meReportForm.subwards
+- name: publicView.meReport.lpoAmount
+  visible: yes
+  visibleDeps:
+    - meReportForm.lpoAmount
+- name: publicView.meReport.lpoNumber
+  visible: yes
+  visibleDeps:
+    - meReportForm.lpoNumber
+- name: publicView.meReport.expenditure
+  visible: yes
+  visibleDeps:
+    - meReportForm.expenditure
+- name: publicView.meReport.uncommitted
+  visible: yes
+  visibleDeps:
+    - meReportForm.uncommitted
+- name: publicView.meReport.projectScope
+  visible: yes
+  visibleDeps:
+    - meReportForm.projectScope
+- name: publicView.meReport.output
+  visible: yes
+  visibleDeps:
+    - meReportForm.output
+- name: publicView.meReport.outcome
+  visible: yes
+  visibleDeps:
+    - meReportForm.outcome
+- name: publicView.meReport.projectProgress
+  visible: yes
+  visibleDeps:
+    - meReportForm.projectProgress
+- name: publicView.meReport.directBeneficiariesTarget
+  visible: yes
+  visibleDeps:
+    - meReportForm.directBeneficiariesTarget
+- name: publicView.meReport.wayForward
+  visible: yes
+  visibleDeps:
+    - meReportForm.wayForward
+- name: publicView.meReport.byWhen
+  visible: yes
+  visibleDeps:
+    - meReportForm.byWhen
+- name: publicView.meReport.inspected
+  visible: yes
+  visibleDeps:
+    - meReportForm.inspected
+- name: publicView.meReport.invoiced
+  visible: yes
+  visibleDeps:
+    - meReportForm.invoiced
+- name: publicView.meReport.officerResponsible
+  visible: yes
+  visibleDeps:
+    - meReportForm.officerResponsible
+- name: publicView.meReport.meStatus
+  visible: yes
+  visibleDeps:
+    - meReportForm.meStatus
+- name: publicView.meReport.remarks
+  visible: yes
+  visibleDeps:
+    - meReportForm.remarks
+- name: publicView.meReport.contractorContact
+  visible: yes
+  visibleDeps:
+    - meReportForm.contractorContact
+- name: publicView.meReport.contractDate
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.singleContract.contractDate
+- name: publicView.meReport.contractExpiryDate
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.singleContract.expiryDate
+- name: publicView.meReport.amountBudgeted
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.project.amountBudgeted
+- name: publicView.meReport.tenderTitle
+  visible: yes
+- name: publicView.meReport.contractor
+  visible: yes
+  visibleDeps:
+    - meReportForm.tenderProcess.singleContract.awardee
+- name: publicView.meReport.fiscalYear
+  visible: yes
+- name: publicView.meReport.approvedDate
+  visible: yes
+  visibleDeps:
+    - meReportForm.approvedDate
+- name: publicView.meReport.formDocs
+  visible: yes
+  visibleDeps:
+    - meReportForm.formDocs

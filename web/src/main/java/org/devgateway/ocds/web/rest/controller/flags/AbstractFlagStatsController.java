@@ -33,24 +33,24 @@ public abstract class AbstractFlagStatsController extends AbstractFlagController
     }
 
 
-    protected DBObject getProjectPrepare(final YearFilterPagingRequest year) {
+    protected DBObject getProjectPrepare(String flagProperty, final YearFilterPagingRequest year) {
         DBObject projectPrepare = new BasicDBObject();
-        projectPrepare.put(getFlagProperty(), 1);
+        projectPrepare.put(flagProperty, 1);
         addYearlyMonthlyProjection(year, projectPrepare, ref(getTenderDateField()));
         return projectPrepare;
     }
 
 
-    protected DBObject getGroup(final YearFilterPagingRequest filter) {
+    protected DBObject getGroup(String flagProperty, final YearFilterPagingRequest filter) {
         DBObject group = new BasicDBObject();
         addYearlyMonthlyReferenceToGroup(filter, group);
         group.put(GenericKeys.TOTAL, new BasicDBObject("$sum", 1));
         group.put(GenericKeys.TOTAL_TRUE, new BasicDBObject("$sum", new BasicDBObject("$cond",
-                Arrays.asList(new BasicDBObject("$eq", Arrays.asList(ref(getFlagProperty()), true)), 1, 0))));
+                Arrays.asList(new BasicDBObject("$eq", Arrays.asList(ref(flagProperty), true)), 1, 0))));
         group.put(GenericKeys.TOTAL_FALSE, new BasicDBObject("$sum", new BasicDBObject("$cond",
-                Arrays.asList(new BasicDBObject("$eq", Arrays.asList(ref(getFlagProperty()), false)), 1, 0))));
+                Arrays.asList(new BasicDBObject("$eq", Arrays.asList(ref(flagProperty), false)), 1, 0))));
         group.put(GenericKeys.TOTAL_PRECOND_MET, new BasicDBObject("$sum", new BasicDBObject("$cond",
-                Arrays.asList(new BasicDBObject("$gt", Arrays.asList(ref(getFlagProperty()), null)), 1, 0))));
+                Arrays.asList(new BasicDBObject("$gt", Arrays.asList(ref(flagProperty), null)), 1, 0))));
         return group;
     }
 
@@ -94,9 +94,10 @@ public abstract class AbstractFlagStatsController extends AbstractFlagController
         return project2;
     }
 
-    public List<Document> flagStats(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
-        DBObject projectPrepare = getProjectPrepare(filter);
-        DBObject group = getGroup(filter);
+    protected List<Document> flagStats(String flagProperty,
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        DBObject projectPrepare = getProjectPrepare(flagProperty, filter);
+        DBObject group = getGroup(flagProperty, filter);
         DBObject projectPercentage = getProjectPercentage(filter);
 
         Aggregation agg = newAggregation(

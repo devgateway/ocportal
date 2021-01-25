@@ -17,7 +17,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -64,16 +63,16 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("contractForm");
         super.onInitialize();
 
         submitAndNext.setVisibilityAllowed(false);
 
-        ComponentUtil.addTextField(editForm, "referenceNumber").required();
-        ComponentUtil.addBigDecimalField(editForm, "contractValue").required()
+        ComponentUtil.addTextField(editForm, "referenceNumber");
+        ComponentUtil.addBigDecimalField(editForm, "contractValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         final DateFieldBootstrapFormComponent contractDate = ComponentUtil.addDateField(editForm, "contractDate");
-        contractDate.required();
 
         AwardNotificationItem acceptedNotification = editForm.getModelObject().getTenderProcess()
                 .getSingleAwardNotification().getAcceptedNotification();
@@ -82,18 +81,13 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
             contractDate.getField().add(new AfterThanDateValidator(acceptedNotification.getAwardDate()));
         }
 
-        ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
-        ComponentUtil.addDateField(editForm, "expiryDate").required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
+        ComponentUtil.addDateField(editForm, "contractApprovalDate");
+        ComponentUtil.addDateField(editForm, "expiryDate");
+        ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService);
 
         addSupplierInfo();
 
         editForm.add(new ContractDocumentPanel("contractDocs"));
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
     }
 
     @Override
@@ -123,12 +117,16 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     }
 
     public static List<Supplier> getAcceptedSupplier(TenderProcess tenderProcess) {
-        return tenderProcess.getSingleAwardAcceptance().getItems()
-                .stream()
-                .filter(AwardAcceptanceItem::isAccepted)
-                .map(AwardAcceptanceItem::getAwardee)
-                .filter(Objects::nonNull)
-                .findFirst().map(Arrays::asList).orElseGet(Arrays::asList);
+        if (tenderProcess.getSingleAwardAcceptance() != null) {
+            return tenderProcess.getSingleAwardAcceptance().getItems()
+                    .stream()
+                    .filter(AwardAcceptanceItem::isAccepted)
+                    .map(AwardAcceptanceItem::getAwardee)
+                    .filter(Objects::nonNull)
+                    .findFirst().map(Arrays::asList).orElseGet(Arrays::asList);
+        } else {
+            return tenderProcess.getSingleAwardNotification().getAwardee();
+        }
     }
 
 
@@ -136,7 +134,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
                 new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
         );
-        awardeeSelector.required();
         awardeeSelector.setEnabled(!editForm.getModelObject().getTenderProcess().hasNonDraftImplForms());
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
         editForm.add(awardeeSelector);

@@ -9,7 +9,10 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
@@ -38,6 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 /**
  * @author idobre
@@ -80,6 +84,9 @@ public class ImportPostgresToMongo {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private DgFmService fmService;
+
     @Transactional(readOnly = true)
     public void formStatusIntegrityCheck() {
         logger.info("Checking forms status integrity...");
@@ -105,7 +112,20 @@ public class ImportPostgresToMongo {
     }
 
     @Transactional(readOnly = true)
+    public void formStatusIntegrityCheck(TenderProcess tp, StringBuffer sb) {
+        if (fmService.isFeatureVisible("purchaseRequisitionForm")
+                && tp.getSinglePurchaseRequisition() != null) {
+            formStatusIntegrityCheck(tp.getSinglePurchaseRequisition(), sb);
+        } else {
+            formStatusIntegrityCheck(tenderProcessService.getNextStatusable(tp, PurchaseRequisitionGroup.class), sb);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public void formStatusIntegrityCheck(AbstractMakueniEntity p, StringBuffer sb) {
+        if (p == null) {
+            return;
+        }
         p.getDirectChildrenEntitiesNotNull().forEach(e -> {
             if (!goodParentStatus(p.getStatus(), e.getStatus())) {
                 sb.append("Parent ").append(p.getClass().getSimpleName()).append(" with id ").append(p.getId())
@@ -135,12 +155,13 @@ public class ImportPostgresToMongo {
 
         procurementPlanService.findAllStream().filter(Statusable::isExportable).forEach(pp -> {
             pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
+                pp.getTenderProcesses().stream().forEach(pr -> {
+                    pr.setPurchaseRequisition(new HashSet<>(filterNotExportable(pr.getPurchaseRequisition())));
+                    pr.getPurchaseRequisition().stream().flatMap(i -> i.getPurchRequisitions().stream())
+                            .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
+                    pr.getPurchaseRequisition().stream().forEach(item -> self.storeMakueniFormFiles(
+                            item.getFormDocs()));
 
-            pp.getProjects().stream().forEach(project -> {
-                project.setTenderProcesses(
-                        new HashSet<>(filterNotExportable(project.getTenderProcesses())));
-
-                project.getTenderProcesses().stream().forEach(pr -> {
                     pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
 
@@ -184,13 +205,10 @@ public class ImportPostgresToMongo {
 
                     pr.setPaymentVouchers(new HashSet<>(filterNotExportable(pr.getPaymentVouchers())));
                     pr.getPaymentVouchers().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
-
-                    pr.getPurchRequisitions().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
-                    //self.storeMakueniFormFiles(pr.getFormDocs());
                 });
 
-                project.getCabinetPapers().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
-            });
+                pp.getProjects().stream().flatMap(p->p.getCabinetPapers().stream()).
+                        forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
             self.storeMakueniFormFiles(pp.getFormDocs());
             procurementPlanMongoRepository.save(pp);
@@ -208,16 +226,16 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.wards._id", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                new Index().on("tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
                         Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.tenderValue", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.tender.tenderValue", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.closingDate", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.tender.closingDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.lastModifiedDate", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.lastModifiedDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.lastModifiedDate", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.tender.lastModifiedDate", Sort.Direction.ASC));
 
         Document fyDepartmentIndex = new Document();
         fyDepartmentIndex.put("fiscalYear.startDate", -1);
@@ -227,7 +245,7 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new TextIndexDefinition.TextIndexDefinitionBuilder()
                         .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)
-                        .onField("projects.tenderProcesses.tender.tenderTitle")
+                        .onField("tenderProcesses.tender.tenderTitle")
                         .onField("projects.projectTitle")
                         .build());
 

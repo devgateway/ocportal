@@ -1,0 +1,233 @@
+# TENDER PROCESS FORM PAGE
+- name: purchaseRequisitionForm
+  enabled: yes
+  visible: no
+- name: purchaseRequisitionForm.approve
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.cancel
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.delete
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.project.procurementPlan.department
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.project.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.approvedDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.chargeAccount
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.newButton
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.amount
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.description
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.newButton
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.planItem
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.quantity
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.remove
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.totalCost
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.purchaseItems.unit
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.remove
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.requestApprovalDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchRequisitions.requestedBy
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.purchaseRequestNumber
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.save
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.terminate
+  enabled: yes
+  visible: yes
+- name: purchaseRequisitionForm.visibleStatusComments
+  enabled: yes
+  visible: yes
+
+# TENDER PROCESSES LIST PAGE
+- name: purchaseRequisitionList
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm
+- name: purchaseRequisitionList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: purchaseRequisitionList.department
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.project.procurementPlan.department
+- name: purchaseRequisitionList.downloadOcds
+  visible: yes
+- name: purchaseRequisitionList.filterToolbar
+  visible: yes
+- name: purchaseRequisitionList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.project.procurementPlan.fiscalYear
+- name: purchaseRequisitionList.lastModifiedDate
+  visible: yes
+- name: purchaseRequisitionList.status
+  visible: yes
+
+# PUBLIC VIEW
+- name: publicView.purchaseRequisition
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm
+- name: publicView.purchaseRequisition.purchaseRequestNumber
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchaseRequestNumber
+- name: publicView.purchaseRequisition.purchRequisitions
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions
+- name: publicView.purchaseRequisition.purchRequisitions.requestedBy
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.requestedBy
+- name: publicView.purchaseRequisition.purchRequisitions.chargeAccount
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.chargeAccount
+- name: publicView.purchaseRequisition.purchRequisitions.requestApprovalDate
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.requestApprovalDate
+- name: publicView.purchaseRequisition.purchRequisitions.approvedDate
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.approvedDate
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.purchaseItems
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.planItem.label
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.purchaseItems.planItem
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.description
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.purchaseItems.description
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.planItem.unitOfIssue
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.purchaseItems.planItem
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.quantity
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.purchaseItems.quantity
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.amount
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.purchaseItems.amount
+- name: publicView.purchaseRequisition.purchRequisitions.purchaseItems.totalCost
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.purchaseItems.totalCost
+- name: publicView.purchaseRequisition.purchRequisitions.formDocs
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.purchRequisitions.formDocs
+
+# TABLE FOR ACTUAL PROCESSES
+- name: publicView.tendersProcesses.col.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm
+- name: publicView.tendersProcesses.col.department
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.project.procurementPlan.department
+- name: publicView.tendersProcesses.col.fiscalYear
+  visible: yes
+  visibleDeps:
+    - purchaseRequisitionForm.project.procurementPlan.fiscalYear
+- name: publicView.tendersProcesses.col.closingDate
+  visible: yes
+  visibleDeps:
+    - tenderForm.closingDate
+- name: publicView.tendersProcesses.col.tenderValue
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderValue
+- name: publicView.tendersProcesses.col.project
+  visible: yes
+- name: publicView.tendersProcesses.col.tenderDocsOrLink
+  visible: yes
+- name: publicView.tendersProcesses.tenderDocs
+  visible: yes
+  visibleDeps:
+    - tenderForm.formDocs
+- name: publicView.tendersProcesses.tenderLink
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderLink

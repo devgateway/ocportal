@@ -97,7 +97,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
         final PlanItem planItem = item.getModelObject();
-            ComponentUtil.addSelect2ChoiceField(item, "unitOfIssue", unitService).required();
+            ComponentUtil.addSelect2ChoiceField(item, "unitOfIssue", unitService);
 
             final TextFieldBootstrapFormComponent<BigDecimal> quantity =
                     new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
@@ -108,7 +108,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     };
             quantity.decimal();
             quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-            quantity.required();
             item.add(quantity);
 
             final TextFieldBootstrapFormComponent<BigDecimal> estimatedCost =
@@ -120,7 +119,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     };
             estimatedCost.decimal();
             estimatedCost.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-            estimatedCost.required();
             item.add(estimatedCost);
 
             totalCost = new GenericSleepFormComponent<>("totalCost",
@@ -134,7 +132,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             totalCost.setOutputMarkupId(true);
             item.add(totalCost);
 
-            ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService).required();
+        ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService);
             final TextFieldBootstrapFormComponent<String> sourceOfFunds = ComponentUtil.addTextField(item,
                     "sourceOfFunds");
             sourceOfFunds.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
@@ -266,7 +264,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         @Override
         protected void onInitialize() {
             super.onInitialize();
-            ComponentUtil.addSelect2ChoiceField(this, "item", itemService).required();
+            ComponentUtil.addSelect2ChoiceField(this, "item", itemService);
         }
     }
 

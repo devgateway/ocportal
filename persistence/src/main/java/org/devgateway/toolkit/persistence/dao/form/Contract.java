@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.ArrayUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -39,6 +41,7 @@ import java.util.List;
         uniqueConstraints =
         @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
@@ -151,13 +154,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     public boolean isTerminatedWithImplementation() {
         return PersistenceUtil.checkTerminated(
-                ArrayUtils.add(getDirectChildrenEntitiesNotNull().toArray(new Statusable[]{}), this));
+                ArrayUtils.add(getDirectChildrenEntities().toArray(new Statusable[]{}), this));
     }
 
-    @Override
+
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
+    @Override
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
         children.addAll(getTenderProcessNotNull().getAdministratorReports());
@@ -166,5 +170,15 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
         children.addAll(getTenderProcessNotNull().getMeReports());
         children.addAll(getTenderProcessNotNull().getPaymentVouchers());
         return children;
+    }
+
+    @Override
+    public Class<?> getNextForm() {
+        return null;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return false;
     }
 }

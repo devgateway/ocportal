@@ -44,17 +44,20 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
 
     @Override
     protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "tenderProcess.project.procurementPlan.department",
-                "tenderProcess.project.procurementPlan.department",
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
+                "tenderProcess.procurementPlan.department",
+                "tenderProcess.procurementPlan.department",
                 new ListModel(departments), dataTable));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
-                "tenderProcess.project.procurementPlan.fiscalYear",
-                "tenderProcess.project.procurementPlan.fiscalYear",
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYear", this),
+                "tenderProcess.procurementPlan.fiscalYear",
+                "tenderProcess.procurementPlan.fiscalYear",
                 new ListModel(fiscalYears), dataTable));
 
-        columns.add(new PropertyColumn<T, String>(new Model<>("Last Updated Date"),
+        addFmColumn("lastModifiedDate", new PropertyColumn<T, String>(
+                new StringResourceModel("lastUpdatedDate", this),
                 "lastModifiedDate", "lastModifiedDate") {
             @Override
             public void populateItem(final Item<ICellPopulator<T>> item,
@@ -75,7 +78,7 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
     }
 
     protected void addAwardeeColumn() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(
+        addFmColumn("awardee", new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>(
                         (new StringResourceModel("awardee", ListAbstractTenderProcessMakueniEntity.this)).getString()),
                 "items.awardee",
@@ -86,7 +89,8 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
 
     protected void addTenderTitleColumn() {
 
-        columns.add(new TextFilteredBootstrapPropertyColumn<T, AbstractTenderProcessMakueniFilterState<T>, String>(
+        addFmColumn("tenderTitle", new TextFilteredBootstrapPropertyColumn<T,
+                AbstractTenderProcessMakueniFilterState<T>, String>(
                 new Model<>(
                         (new StringResourceModel("title", ListAbstractTenderProcessMakueniEntity.this)).getString()),
                 null, "tenderProcess.tender.iterator.next.tenderTitle"

@@ -18,13 +18,13 @@ import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -32,8 +32,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -44,6 +42,7 @@ import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.exceptions.NullListPageClassException;
+import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
 import org.devgateway.toolkit.forms.util.MarkupCacheService;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
@@ -58,6 +57,7 @@ import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -172,7 +172,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal createDeleteModal() {
         final TextContentModal modal = new TextContentModal("deleteModal",
-                Model.of("DELETE is an irreversible operation. Are you sure?"));
+                new StringResourceModel("confirmDeleteModal.content", this));
         modal.addCloseButton();
 
         final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
@@ -186,7 +186,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             }
         };
         deleteButton.setDefaultFormProcessing(false);
-        deleteButton.setLabel(Model.of("DELETE"));
+        deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
         modal.addButton(deleteButton);
 
         return modal;
@@ -194,16 +194,16 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal createDeleteFailedModal() {
         final TextContentModal modal = new TextContentModal("deleteFailedModal",
-                new ResourceModel("delete_error_message"));
-        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+                new StringResourceModel("deleteFailedModal.content", this));
+        final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
             }
         };
-        deleteButton.setDefaultFormProcessing(false);
-        deleteButton.setLabel(Model.of("OK"));
-        modal.addButton(deleteButton);
+        okButton.setDefaultFormProcessing(false);
+        okButton.setLabel(new StringResourceModel("deleteFailedModal.ok", this));
+        modal.addButton(okButton);
 
         modal.add(new AjaxEventBehavior("hidden.bs.modal") {
             @Override
@@ -263,8 +263,26 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
 
-    public class EditForm extends BootstrapForm<T> {
+    public class EditForm extends BootstrapForm<T> implements DgFmComponentSubject {
         private static final long serialVersionUID = -9127043819229346784L;
+
+        @SpringBean
+        protected DgFmService fmService;
+
+        @Override
+        public DgFmService getFmService() {
+            return fmService;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isFmEnabled(super::isEnabled);
+        }
+
+        @Override
+        public boolean isVisible() {
+            return isFmVisible(super::isVisible);
+        }
 
         /**
          * wrap the model with a {@link CompoundPropertyModel} to ease editing
@@ -377,7 +395,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
          *
          * @return
          */
-        protected Class<? extends GenericWebPage<Void>> getResponsePage() {
+        protected Class<? extends Page> getResponsePage() {
             return listPageClass;
         }
 

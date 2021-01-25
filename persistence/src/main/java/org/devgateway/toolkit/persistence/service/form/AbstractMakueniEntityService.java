@@ -15,15 +15,6 @@ import java.util.stream.Stream;
 public interface AbstractMakueniEntityService<T extends AbstractMakueniEntity> extends BaseJpaService<T> {
     List<T> findByFiscalYear(FiscalYear fiscalYear);
 
-    /**
-     * Gets all the downstream forms/children of given entity in an Set collection.
-     * Will invoke {@link AbstractMakueniEntity#getDirectChildrenEntitiesNotNull()} ()} on each
-     *
-     * @param entity
-     * @return
-     */
-    Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity);
-
     Stream<? extends AbstractMakueniEntity> getAllSubmitted();
 
     //Collection<Map<String, String>> validate(TenderProcess tenderProcess, T entity);

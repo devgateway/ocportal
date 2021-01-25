@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.dao;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.MappedSuperclass;
@@ -14,6 +15,7 @@ import java.util.Set;
  * @author mpostelnicu
  */
 @MappedSuperclass
+@Audited
 public abstract class AbstractDocsChildExpAuditEntity<P extends AbstractAuditableEntity> extends
         AbstractChildExpandableAuditEntity<P> {
 

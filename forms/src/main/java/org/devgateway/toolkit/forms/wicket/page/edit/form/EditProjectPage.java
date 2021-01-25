@@ -13,6 +13,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
@@ -91,6 +92,7 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("projectForm");
         super.onInitialize();
 
         submitAndNext.setVisibilityAllowed(false);
@@ -100,7 +102,6 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
 
         final TextFieldBootstrapFormComponent<String> projectTitle =
                 ComponentUtil.addTextField(editForm, "projectTitle");
-        projectTitle.required();
         projectTitle.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         projectTitle.getField().add(uniqueTitle());
 
@@ -109,7 +110,6 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
                 .findByProcurementPlan(editForm.getModelObject().getProcurementPlan());
         final Select2MultiChoiceBootstrapFormComponent cabinetPaper = new Select2MultiChoiceBootstrapFormComponent<>(
                 "cabinetPapers", new GenericChoiceProvider<>(cabinetPapers));
-        cabinetPaper.required();
         editForm.add(cabinetPaper);
 
         ComponentUtil.addBigDecimalField(editForm, "amountBudgeted")
@@ -131,12 +131,14 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
                 }
             }
 
+
             @Override
             public void onEvent(final IEvent<?> event) {
                 ComponentUtil.enableDisableEvent(this, event);
             }
         };
         editForm.add(allSubcounties);
+
 
         final IndicatingAjaxFallbackLink allWards = new IndicatingAjaxFallbackLink<Void>("allWards") {
             @Override
@@ -170,8 +172,10 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
                 LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
+        allSubcounties.add(new DgFmBehavior(subcounties));
+        allWards.add(new DgFmBehavior(wards));
 
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
+        ComponentUtil.addDateField(editForm, "approvedDate");
 
         saveTerminateButton.setVisibilityAllowed(false);
     }

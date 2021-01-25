@@ -2,12 +2,15 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.group.GroupSequenceProvider;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
 @Table(indexes = {@Index(columnList = "tender_process_id")}, uniqueConstraints =
 @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class AwardNotification extends AbstractTenderProcessMakueniEntity {
 
     @ExcelExport(name = "Award Notifications", separateSheet = true)
@@ -94,5 +98,15 @@ public class AwardNotification extends AbstractTenderProcessMakueniEntity {
 
     public void setItems(List<AwardNotificationItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public Class<?> getNextForm() {
+        return AwardAcceptance.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnAwardNotification();
     }
 }

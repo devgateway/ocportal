@@ -61,6 +61,11 @@ public class CheckBoxToggleBootstrapFormComponent
             private static final long serialVersionUID = 1L;
 
             @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+
+            @Override
             protected CheckBox newCheckBox(final String id, final IModel<Boolean> model) {
                 wrappedCheckbox = super.newCheckBox(id, model);
                 wrappedCheckbox.add(new AjaxFormComponentUpdatingBehavior("change") {

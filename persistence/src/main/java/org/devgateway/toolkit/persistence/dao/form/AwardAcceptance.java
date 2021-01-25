@@ -2,8 +2,10 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,6 +36,7 @@ import java.util.stream.Collectors;
 @Table(indexes = {@Index(columnList = "tender_process_id")}, uniqueConstraints =
 @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
 
     @ExcelExport(name = "Award Acceptances", separateSheet = true)
@@ -81,5 +84,15 @@ public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
 
     public void setItems(List<AwardAcceptanceItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public Class<?> getNextForm() {
+        return hasAccepted() ? Contract.class : ProfessionalOpinion.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnAwardAcceptance();
     }
 }

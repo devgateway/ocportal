@@ -11,10 +11,13 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
+import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -47,6 +50,9 @@ public class AverageNumberOfTenderersPerBuyer extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> averageNumberOfTenderersPerBuyer(@ModelAttribute
                                                            @Valid final YearFilterPagingRequest filter) {
+        DBObject sort = new BasicDBObject();
+        sort.put("_id", 1);
+
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.TENDER_NO_TENDERERS)
                         .gt(0).and(MongoConstants.FieldNames.BUYER_NAME).exists(true)
@@ -57,7 +63,8 @@ public class AverageNumberOfTenderersPerBuyer extends GenericOCDSController {
                         .as(MongoConstants.FieldNames.BUYER_NAME),
                 group(MongoConstants.FieldNames.BUYER_NAME)
                         .avg("numberOfTenderers")
-                        .as("numberOfTenderers")
+                        .as("numberOfTenderers"),
+                new CustomSortingOperation(sort)
         );
 
 

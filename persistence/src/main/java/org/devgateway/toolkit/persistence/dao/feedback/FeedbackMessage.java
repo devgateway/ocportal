@@ -8,6 +8,7 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author mpostelnicu
@@ -17,11 +18,14 @@ import javax.persistence.Entity;
 @Audited
 public class FeedbackMessage extends AbstractChildExpandableAuditEntity<ReplyableFeedbackMessage> {
 
+    @NotNull
     private String name;
 
+    @NotNull
     private String email;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @NotNull
     private String comment;
 
     private boolean visible = true;

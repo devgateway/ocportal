@@ -1,0 +1,155 @@
+- name: tenderQuotationEvaluationForm
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.approve
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids.newButton
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids.quotedAmount
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids.remove
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids.supplier
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids.supplierScore
+  mandatory: no
+  enabled: no
+  visible: no
+- name: tenderQuotationEvaluationForm.bids.supplierRanking
+  mandatory: no
+  enabled: no
+  visible: no
+- name: tenderQuotationEvaluationForm.bids.supplierID
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids.supplierResponsiveness
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.cancel
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.closingDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.delete
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.save
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.tenderProcess.procurementPlan.department
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.tenderProcess.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.terminate
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.comments
+  visible: yes
+- name: tenderQuotationEvaluationForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationsList
+  visible: yes
+  enabled: yes
+- name: tenderQuotationEvaluationsList.department
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.tenderProcess.procurementPlan.department
+- name: tenderQuotationEvaluationsList.downloadFile
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.formDocs
+- name: tenderQuotationEvaluationsList.filterToolbar
+  visible: yes
+- name: tenderQuotationEvaluationsList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.tenderProcess.procurementPlan.fiscalYear
+- name: tenderQuotationEvaluationsList.lastModifiedDate
+  visible: yes
+- name: tenderQuotationEvaluationsList.status
+  visible: yes
+- name: tenderQuotationEvaluationsList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.tenderQuotationEvaluation
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm
+- name: publicView.tenderQuotationEvaluation.closingDate
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.closingDate
+- name: publicView.tenderQuotationEvaluation.bids
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids
+- name: publicView.tenderQuotationEvaluation.bids.supplier.label
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplier
+- name: publicView.tenderQuotationEvaluation.bids.supplier.code
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplier
+- name: publicView.tenderQuotationEvaluation.bids.supplierScore
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplierScore
+- name: publicView.tenderQuotationEvaluation.bids.supplierRanking
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplierRanking
+- name: publicView.tenderQuotationEvaluation.bids.quotedAmount
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.quotedAmount
+- name: publicView.tenderQuotationEvaluation.bids.supplierResponsiveness
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.bids.supplierResponsiveness
+- name: publicView.tenderQuotationEvaluation.formDocs
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.formDocs

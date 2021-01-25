@@ -25,11 +25,13 @@ public class TextFilteredBootstrapPropertyColumn<T, F, S> extends TextFilteredPr
         super(displayModel, propertyExpression);
     }
 
+
     @Override
     public Component getFilter(final String componentId, final FilterForm<?> form) {
         final TextFieldBootstrapFormComponent<F> textField =
                 new TextFieldBootstrapFormComponent<>(componentId, getFilterModel(form));
         textField.hideLabel();
+        textField.fmNoAutoAttach();
         return textField;
     }
 }

@@ -5,57 +5,20 @@
     <div class="main-content">
         <div class="row header">
             <div class="col-md-3">
-                <h2>Status Overview</h2>
+                <h2>
+                    <wicket:message key="statusOverview"/>
+                </h2>
             </div>
             <div class="col-md-8 no-padding">
-                <p>Observe the status for each Department’s projects, including which are pending approval. Navigate to
-                    each department’s workspace to add and edit projects and update the associated procurement stages by
-                    clicking on the project name or clicking on a department on the left menu.
+                <p>
+                    <wicket:message key="statusOverviewDescription"/>
                 </p>
             </div>
         </div>
 
-        <div class="search-panel">
-            <div class="row search-panel-header">
-                <div class="col-md-8">
-                    <h3>Department / Ministries Procurement Plans</h3>
-                </div>
-            </div>
+        <div wicket:id="statusOverviewTenderProcessView"/>
+        <div wicket:id="statusOverviewProjectView"/>
 
-            <div class="search-form">
-                <div class="col-md-9 no-padding">
-                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"
-                           placeholder="Search by Project Title"/>
-                </div>
-                <div class="col-md-3 no-padding">
-                    <select wicket:id="yearsDropdown" class="btn btn-default project-year"></select>
-                    <button wicket:id="dataExport" type="button" class="btn btn-default download"></button>
-                </div>
-            </div>
-        </div>
-
-        <div class="status-bar row">
-            <div class="col-md-12">
-              <span class="status approved">
-              Approved
-              </span>
-                <span class="status terminated">
-              Terminated
-              </span>
-                <span class="status submitted">
-              Submitted
-              </span>
-                <span class="status draft">
-              Draft
-              </span>
-            </div>
-        </div>
-
-        <div wicket:id="statusPanel"></div>
-
-        <div wicket:id="noData" class="row col-md-offset-5 col-col-md-2">
-            <h3>NO DATA</h3>
-        </div>
     </div>
 </wicket:extend>
 </body>

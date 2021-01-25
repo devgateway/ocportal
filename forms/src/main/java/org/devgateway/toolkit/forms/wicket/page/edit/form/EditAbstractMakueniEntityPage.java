@@ -9,7 +9,6 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -102,9 +101,8 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected ButtonContentModal createRevertToDraftModal() {
         ButtonContentModal buttonContentModal = new ButtonContentModal(
                 "revertToDraftModal",
-                Model.of("Rejecting to draft this entity will result in rejecting to draft"
-                        + " any other entities downstream. Proceed?"),
-                Model.of("REJECT TO DRAFT"), Buttons.Type.Warning);
+                new StringResourceModel("confirmRevertToDraftModal.content", this),
+                new StringResourceModel("confirmRevertToDraftModal.rejectToDraft", this), Buttons.Type.Warning);
         return buttonContentModal;
     }
 

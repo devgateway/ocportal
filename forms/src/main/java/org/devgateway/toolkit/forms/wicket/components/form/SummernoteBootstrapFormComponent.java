@@ -142,7 +142,12 @@ public class SummernoteBootstrapFormComponent extends GenericBootstrapFormCompon
         config.getButtons("Layout").clear();
         config.getButtons("Misc").clear();
 
-        summernoteEditor = new ToolkitSummernoteEditor(id, initFieldModel(), config);
+        summernoteEditor = new ToolkitSummernoteEditor(id, initFieldModel(), config) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
         return summernoteEditor;
     }
 

@@ -17,6 +17,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
@@ -49,10 +50,10 @@ import org.devgateway.toolkit.forms.wicket.components.form.OptionallyRequiredTex
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
+import org.devgateway.toolkit.persistence.dao.form.Terminatable;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.datetime.markup.html.basic.DateLabel;
@@ -63,7 +64,7 @@ import org.wicketstuff.select2.Select2Choice;
  * Page used to make editing easy, extend to get easy access to one entity for editing
  */
 public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAuditableEntity>
-        extends AbstractEditPage<T> {
+        extends AbstractEditPage<T> implements Terminatable {
 
     protected Fragment entityButtonsFragment;
 
@@ -146,8 +147,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     protected ButtonContentModal createTerminateModal() {
         ButtonContentModal buttonContentModal = new ButtonContentModal(
                 "terminateModal",
-                Model.of("Are you sure you want to TERMINATE the contracting process?"),
-                Model.of("TERMINATE"), Buttons.Type.Danger);
+                new StringResourceModel("confirmTerminateModal.content", this),
+                new StringResourceModel("confirmTerminateModal.terminate", this), Buttons.Type.Danger);
         return buttonContentModal;
     }
 
@@ -515,7 +516,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             }
 
             @Override
-            protected Class<? extends BasePage> getResponsePage() {
+            protected Class<? extends Page> getResponsePage() {
                 return pageAfterSubmitAndNext();
             }
 
@@ -532,8 +533,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     /**
      * Override this function in order to redirect the user to the next page after clicking on submitAndNext button.
      */
-    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return (Class<? extends BasePage>) getPage().getClass();
+    protected Class<? extends Page> pageAfterSubmitAndNext() {
+        return getPage().getClass();
     }
 
     /**
@@ -562,8 +563,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             }
 
             @Override
-            protected Class<? extends BasePage> getResponsePage() {
-                return (Class<? extends BasePage>) getPage().getClass();
+            protected Class<? extends Page> getResponsePage() {
+                return getPage().getClass();
             }
 
             @Override
@@ -682,7 +683,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
 
-    protected boolean isTerminated() {
+    @Override
+    public boolean isTerminated() {
         return DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus());
     }
 

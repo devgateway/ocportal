@@ -14,10 +14,10 @@
  */
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.AbstractDateTextFieldConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextField;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.DateTextFieldConfig;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.IModel;
 
 import java.util.Date;
@@ -42,6 +42,11 @@ public class DateFieldBootstrapFormComponent extends AbstractDateFieldBootstrapF
         super(id);
     }
 
+    public DateFieldBootstrapFormComponent autoCompleteOff() {
+        field.add(AttributeAppender.append("autocomplete", "off"));
+        return this;
+    }
+
     /**
      * @param id
      * @param model
@@ -57,6 +62,17 @@ public class DateFieldBootstrapFormComponent extends AbstractDateFieldBootstrapF
 
     @Override
     protected DateTextField newDateTextField(final String id, final AbstractDateTextFieldConfig config) {
-        return new DateTextField(id, initFieldModel(), (DateTextFieldConfig) config);
+        return new DateTextField(id, initFieldModel(), (DateTextFieldConfig) config) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        autoCompleteOff();
     }
 }

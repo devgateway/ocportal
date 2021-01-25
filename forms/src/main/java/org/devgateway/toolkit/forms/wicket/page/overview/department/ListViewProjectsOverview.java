@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -24,9 +23,10 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -80,6 +80,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
         tenderProcesses = tenderProcessService.findByProjectProcurementPlan(procurementPlanModel.getObject())
                 .parallelStream()
+                .filter(tp -> tp.getProject() != null)
                 .collect(Collectors.groupingBy(TenderProcess::getProject,
                         Collectors.mapping(Function.identity(), Collectors.toList())));
     }
@@ -117,14 +118,14 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("project-header-" + item.getModelObject().getId());
 
-        final Project project = projectService.findById(item.getModelObject().getId()).get();
+        //final Project project = projectService.findById(item.getModelObject().getId()).get();
 
-        headerFragment.add(new DeptOverviewStatusLabel("projectStatus", project));
-        headerFragment.add(new Label("projectTitle"));
+        headerFragment.add(new DeptOverviewStatusLabel("projectStatus", item.getModelObject().getStatus()));
+        headerFragment.add(new Label("title"));
         headerFragment.add(new Label("procurementPlan.fiscalYear"));
 
         final PageParameters pageParameters = new PageParameters();
-        pageParameters.set(WebConstants.PARAM_ID, project.getId());
+        pageParameters.set(WebConstants.PARAM_ID, item.getModelObject().getId());
         final BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>("editProject",
                 Buttons.Type.Success) {
             @Override
@@ -139,15 +140,15 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
 
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                sessionMetadataService.setSessionProject(project);
+                sessionMetadataService.setSessionProjectId(item.getModelObject().getId());
 
                 final PageParameters pageParameters = new PageParameters();
-                pageParameters.set(WebConstants.PARAM_ID, project.getId());
+                pageParameters.set(WebConstants.PARAM_ID, item.getModelObject().getId());
                 setResponsePage(EditProjectPage.class, pageParameters);
             }
         };
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProjectPage.class) ? "Edit" : "View")
-                + " Project")));
+        button.add(new TooltipBehavior(
+                EditViewResourceModel.of(canAccessAddNewButtons(EditProjectPage.class), "project", this)));
         headerFragment.add(button);
 
         header.add(headerFragment);
@@ -167,8 +168,13 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
                 Buttons.Type.Success) {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                TenderProcess tenderProcess = tenderProcessService.newInstance();
+                tenderProcess.setProject(project);
+                tenderProcess.setProcurementPlan(sessionMetadataService.getSessionPP());
+                TenderProcess savedTenderProcess = tenderProcessService.save(tenderProcess);
                 sessionMetadataService.setSessionProject(project);
-                setResponsePage(EditTenderProcessPage.class);
+                sessionMetadataService.setSessionTenderProcess(savedTenderProcess);
+                setResponsePage(DepartmentOverviewPage.class);
             }
         };
         addTenderProcess.setLabel(
@@ -183,7 +189,7 @@ public class ListViewProjectsOverview extends AbstractListViewStatus<Project> {
         }
 
         final ListViewTenderProcessOverview listViewTenderProcessOverview =
-                new ListViewTenderProcessOverview("purchaseReqOverview",
+                new ListViewTenderProcessOverview("purchaseReqOverview", false,
                         new ListModel<>(purchaseReqs), sessionTenderProcess);
         containerFragment.add(listViewTenderProcessOverview);
 

@@ -67,7 +67,8 @@ public class ProjectStatisticsController extends GenericOCDSController {
                 new CustomProjectionOperation(project),
                 group(getYearlyMonthlyGroupingFields(filter, "projectID")),
                 group(getYearlyMonthlyGroupingFields(filter)).count().as(Keys.COUNT),
-                transformYearlyGrouping(filter).andInclude(Keys.COUNT)
+                transformYearlyGrouping(filter).andInclude(Keys.COUNT),
+                getSortByYearMonth(filter)
         );
 
         return releaseAgg(agg);
@@ -94,7 +95,8 @@ public class ProjectStatisticsController extends GenericOCDSController {
                 group(getYearlyMonthlyGroupingFields(filter, "projectID"))
                         .first(Keys.AMOUNT).as(Keys.AMOUNT),
                 group(getYearlyMonthlyGroupingFields(filter)).sum(Keys.AMOUNT).as(Keys.AMOUNT),
-                transformYearlyGrouping(filter).andInclude(Keys.AMOUNT)
+                transformYearlyGrouping(filter).andInclude(Keys.AMOUNT),
+                getSortByYearMonth(filter)
         );
 
         return releaseAgg(agg);

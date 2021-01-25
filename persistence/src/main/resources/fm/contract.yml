@@ -1,0 +1,181 @@
+# EDIT PAGE
+- name: contractForm
+  enabled: yes
+  visible: yes
+- name: contractForm.approve
+  enabled: yes
+  visible: yes
+- name: contractForm.awardee
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.cancel
+  enabled: yes
+  visible: yes
+- name: contractForm.contractApprovalDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.contractDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.contractDocs
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: contractForm.contractDocs.contractDocumentType
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.contractDocs.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.contractDocs.newButton
+  enabled: yes
+  visible: yes
+- name: contractForm.contractDocs.remove
+  enabled: yes
+  visible: yes
+- name: contractForm.contractValue
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.delete
+  enabled: yes
+  visible: yes
+- name: contractForm.expiryDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: contractForm.procuringEntity
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.referenceNumber
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: contractForm.save
+  enabled: yes
+  visible: yes
+- name: contractForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: contractForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: contractForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: contractForm.supplierAddress
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: contractForm.tenderNumber
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: contractForm.tenderProcess.procurementPlan.department
+  enabled: yes
+  visible: yes
+- name: contractForm.tenderProcess.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+- name: contractForm.tenderTitle
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: contractForm.terminate
+  enabled: yes
+  visible: yes
+- name: contractForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+
+# LIST PAGE
+- name: contractsList
+  enabled: yes
+  visible: yes
+- name: contractsList.department
+  visible: yes
+  visibleDeps:
+    - contractForm.tenderProcess.procurementPlan.department
+- name: contractsList.downloadFile
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDocs.formDocs
+- name: contractsList.filterToolbar
+  visible: yes
+- name: contractsList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - contractForm.tenderProcess.procurementPlan.fiscalYear
+- name: contractsList.lastModifiedDate
+  visible: yes
+- name: contractsList.status
+  visible: yes
+- name: contractsList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.contract
+  visible: yes
+  visibleDeps:
+    - contractForm
+- name: publicView.contract.referenceNumber
+  visible: yes
+  visibleDeps:
+    - contractForm.referenceNumber
+- name: publicView.contract.contractDate
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDate
+- name: publicView.contract.expiryDate
+  visible: yes
+  visibleDeps:
+    - contractForm.expiryDate
+- name: publicView.contract.awardee.label
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: publicView.contract.awardee.address
+  visible: yes
+  visibleDeps:
+    - contractForm.awardee
+- name: publicView.contract.procuringEntity
+  visible: yes
+  visibleDeps:
+    - contractForm.procuringEntity
+- name: publicView.contract.contractValue
+  visible: yes
+  visibleDeps:
+    - contractForm.contractValue
+- name: publicView.contract.contractApprovalDate
+  visible: yes
+  visibleDeps:
+    - contractForm.contractApprovalDate
+- name: publicView.contract.contractDocs
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDocs
+- name: publicView.contract.contractDocs.contractDocumentType
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDocs.contractDocumentType
+- name: publicView.contract.contractDocs.formDocs
+  visible: yes
+  visibleDeps:
+    - contractForm.contractDocs.formDocs

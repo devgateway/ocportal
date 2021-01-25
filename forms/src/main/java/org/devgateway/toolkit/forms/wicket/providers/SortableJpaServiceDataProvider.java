@@ -62,7 +62,7 @@ public class SortableJpaServiceDataProvider<T extends GenericPersistable & Seria
         if (getSort() == null) {
             return null;
         }
-        return new Sort(getSort().isAscending() ? Direction.ASC : Direction.DESC, getSort().getProperty());
+        return Sort.by(getSort().isAscending() ? Direction.ASC : Direction.DESC, getSort().getProperty());
     }
 
     /**

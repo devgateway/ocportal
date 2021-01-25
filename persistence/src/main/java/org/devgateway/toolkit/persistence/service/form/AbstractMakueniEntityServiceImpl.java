@@ -31,25 +31,6 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
         return makueniRepository().findByFiscalYear(fiscalYear);
     }
 
-    @Transactional
-    public Collection<? extends AbstractMakueniEntity> getAllChildrenInHierarchy(T entity) {
-        T loadedEntity = findById(entity.getId()).orElseThrow(
-                () -> new RuntimeException("Cannot find entity with id " + entity.getId()));
-        Set<AbstractMakueniEntity> ret = new HashSet<>();
-        collectChildrenEntities(loadedEntity, ret);
-        return ret;
-    }
-
-    @Transactional
-    private void collectChildrenEntities(AbstractMakueniEntity entity,
-                                         Collection<AbstractMakueniEntity> ret) {
-        Collection<? extends AbstractMakueniEntity> directChildrenEntities = entity.getDirectChildrenEntitiesNotNull();
-        if (!directChildrenEntities.isEmpty()) {
-            ret.addAll(directChildrenEntities);
-            directChildrenEntities.forEach(e -> collectChildrenEntities(e, ret));
-        }
-    }
-
     @Override
     public Stream<? extends AbstractMakueniEntity> getAllSubmitted() {
         return makueniRepository().findByStatus(DBConstants.Status.SUBMITTED);

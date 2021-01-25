@@ -13,7 +13,7 @@ package org.devgateway.ocds.forms.wicket.page.list;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.ocds.forms.wicket.page.edit.EditColorIndicatorPairPage;
@@ -36,13 +36,13 @@ public class ListAllColorIndicatorPage extends AbstractListPage<ColorIndicatorPa
         super(pageParameters);
         this.jpaService = colorIndicatorPairService;
         this.editPageClass = EditColorIndicatorPairPage.class;
-        columns.add(new PropertyColumn<ColorIndicatorPair, String>(new Model<String>("First Indicator"),
+        columns.add(new PropertyColumn<>(new StringResourceModel("firstIndicator", this),
                 "firstIndicator", "firstIndicator"));
 
-        columns.add(new PropertyColumn<ColorIndicatorPair, String>(new Model<String>("Second Indicator"),
+        columns.add(new PropertyColumn<>(new StringResourceModel("secondIndicator", this),
                 "secondIndicator", "secondIndicator"));
 
-        columns.add(new PropertyColumn<ColorIndicatorPair, String>(new Model<String>("Color"),
+        columns.add(new PropertyColumn<>(new StringResourceModel("color", this),
                 "color", "color"));
 
     }

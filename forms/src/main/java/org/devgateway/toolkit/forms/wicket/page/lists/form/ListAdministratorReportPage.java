@@ -29,6 +29,7 @@ public class ListAdministratorReportPage extends ListAbstractImplTenderProcessMa
 
     @Override
     protected void onInitialize() {
+        attachFm("administratorReportsList");
 
 //        columns.add(new TextFilteredBootstrapPropertyColumn<>(
 //                new Model<>((new StringResourceModel("title", ListAdministratorReportPage.this)).getString()),

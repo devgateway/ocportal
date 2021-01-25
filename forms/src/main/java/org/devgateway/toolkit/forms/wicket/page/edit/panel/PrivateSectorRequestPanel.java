@@ -32,7 +32,6 @@ public class PrivateSectorRequestPanel extends ListViewSectionPanel<PrivateSecto
     @Override
     public void populateCompoundListItem(final ListItem<PrivateSectorRequest> item) {
         FileInputBootstrapFormComponent upload = new FileInputBootstrapFormComponent("upload");
-        upload.required();
         upload.maxFiles(1);
         item.add(upload);
 

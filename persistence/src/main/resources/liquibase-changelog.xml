@@ -12,7 +12,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="add-default-group" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
@@ -1323,6 +1323,105 @@
         <addNotNullConstraint tableName="inspection_report" columnName="tender_process_id"/>
         <addNotNullConstraint tableName="mereport" columnName="tender_process_id"/>
         <addNotNullConstraint tableName="payment_voucher" columnName="tender_process_id"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-785-tp" author="mpostelnicu">
+        <sqlFile path="sql/OCMAKU-785-cleanup-tp.sql"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-785-constraints" author="mpostelnicu">
+        <addNotNullConstraint tableName="award_acceptance" columnName="tender_process_id"/>
+<!--        <addNotNullConstraint tableName="award_acceptance_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="award_notification" columnName="tender_process_id"/>
+        <!--        <addNotNullConstraint tableName="award_notification_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="contract" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="professional_opinion" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender_quotation_evaluation" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender_process" columnName="project_id"/>
+        <addNotNullConstraint tableName="project" columnName="procurement_plan_id"/>
+        <addNotNullConstraint tableName="cabinet_paper" columnName="procurement_plan_id"/>
+        <addNotNullConstraint tableName="person" columnName="username"/>
+        <addNotNullConstraint tableName="person" columnName="email"/>
+        <addNotNullConstraint tableName="person" columnName="first_name"/>
+        <addNotNullConstraint tableName="person" columnName="last_name"/>
+        <addNotNullConstraint tableName="person" columnName="password"/>
+        <!--        <addNotNullConstraint tableName="bid" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="contract_document" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="feedback_message" columnName="email"/>
+        <addNotNullConstraint tableName="feedback_message" columnName="name"/>
+        <addNotNullConstraint tableName="feedback_message" columnName="comment"/>
+        <addNotNullConstraint tableName="file_metadata" columnName="content_id"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="name"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="start_date"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="end_date"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="amount_budgeted"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="department_id"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="fiscal_year_id"/>
+        <!--        <addNotNullConstraint tableName="plan_item" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="pmcmember" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="pmcnotes" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="private_sector_request" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="procurement_plan" columnName="department_id"/>
+        <addNotNullConstraint tableName="procurement_plan" columnName="fiscal_year_id"/>
+        <addNotNullConstraint tableName="professional_opinion_item" columnName="parent_id"/>
+        <!--        <addNotNullConstraint tableName="purch_requisition" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="purchase_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="status_changed_comment" columnName="status"/>
+        <!--        <addNotNullConstraint tableName="tender_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="tender_process" columnName="project_id"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-814-remove-projects" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="tender_process" columnName="procurement_plan_id"/>
+        </preConditions>
+        <sql>
+            update tender_process set procurement_plan_id = project.procurement_plan_id from project
+            where tender_process.project_id = project.id;
+        </sql>
+        <sql>
+            alter table tender_process alter column project_id drop not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-814-remove-projects-2" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="professional_opinion_item" />
+        </preConditions>
+        <sql>
+            alter table professional_opinion_item alter column parent_id drop not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-1" author="mpostelnicu">
+        <sql>alter table purch_requisition rename column parent_id to old_parent_id</sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-2" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="purchase_requisition_group"/>
+        </preConditions>
+        <sql>insert into purchase_requisition_group (id, tender_process_id,
+            created_by, created_date, last_modified_by, last_modified_date, status, approved_date,
+            purchase_request_number) (select nextval('hibernate_sequence'), id,
+            created_by, created_date, last_modified_by, last_modified_date, status, approved_date,
+            purchase_request_number from tender_process);
+        </sql>
+        <sql>
+            update purch_requisition set parent_id = purchase_requisition_group.id
+            from purchase_requisition_group where purch_requisition.old_parent_id=
+            purchase_requisition_group.tender_process_id;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-3" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="purchase_requisition_group"/>
+        </preConditions>
+        <addNotNullConstraint tableName="purchase_requisition_group" columnName="tender_process_id"/>
+        <sql>alter table tender_process alter column status drop not null;</sql>
+        <sql>alter table tender_process alter column procurement_plan_id set not null;</sql>
     </changeSet>
 
 </databaseChangeLog>

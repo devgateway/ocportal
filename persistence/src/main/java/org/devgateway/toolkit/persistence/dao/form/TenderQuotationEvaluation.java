@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.hibernate.annotations.Cache;
@@ -34,6 +35,7 @@ import java.util.List;
         uniqueConstraints =
         @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form
 public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
@@ -79,5 +81,15 @@ public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntit
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getProfessionalOpinion()));
+    }
+
+    @Override
+    public Class<?> getNextForm() {
+        return ProfessionalOpinion.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnTenderQuotationAndEvaluation();
     }
 }

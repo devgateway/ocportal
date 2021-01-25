@@ -1,13 +1,14 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import com.google.common.collect.ImmutableMap;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -19,16 +20,22 @@ import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPa
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.Contract;
+import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mihai
@@ -37,6 +44,16 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         extends EditAbstractMakueniEntityPage<T> {
     protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessMakueniEntityPage.class);
 
+    public static final Map<Class<?>, Class<? extends Page>> PAGE_CLASS_BY_FORM_CLASS =
+            ImmutableMap.<Class<?>, Class<? extends Page>>builder()
+                    .put(TenderProcess.class, EditPurchaseRequisitionGroupPage.class)
+                    .put(Tender.class, EditTenderPage.class)
+                    .put(TenderQuotationEvaluation.class, EditTenderQuotationEvaluationPage.class)
+                    .put(ProfessionalOpinion.class, EditProfessionalOpinionPage.class)
+                    .put(AwardNotification.class, EditAwardNotificationPage.class)
+                    .put(AwardAcceptance.class, EditAwardAcceptancePage.class)
+                    .put(Contract.class, EditContractPage.class)
+                    .build();
 
     @SpringBean
     private TenderProcessService tenderProcessService;
@@ -80,8 +97,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     protected void onInitialize() {
         super.onInitialize();
 
-        editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.department"));
-        editForm.add(new GenericSleepFormComponent<>("tenderProcess.project.procurementPlan.fiscalYear"));
+        editForm.add(new GenericSleepFormComponent<>("tenderProcess.procurementPlan.department"));
+        editForm.add(new GenericSleepFormComponent<>("tenderProcess.procurementPlan.fiscalYear"));
         editForm.add(new TenderProcessFormValidator());
         if (isTerminated()) {
             alertTerminated.setVisibilityAllowed(true);
@@ -90,7 +107,7 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         saveTerminateButton.setVisibilityAllowed(!isTerminated()
                 && editForm.getModelObject().getDirectChildrenEntitiesNotNull().isEmpty());
 
-        if (!ObjectUtils.isEmpty(getNextForm())
+        if (editForm.getModelObject().hasDownstreamForms()
                 && getPageParameters().get(WebConstants.PARAM_DELETE_ENABLED).isEmpty()) {
             deleteButton.setVisibilityAllowed(false);
         }
@@ -135,8 +152,6 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         };
     }
 
-    protected abstract AbstractTenderProcessMakueniEntity getNextForm();
-
     @Override
     protected SaveEditPageButton getRevertToDraftPageButton() {
         SaveEditPageButton revertToDraftPageButton = super.getRevertToDraftPageButton();
@@ -152,8 +167,8 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
         if (DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus())) {
             revertToDraftModal = new ButtonContentModal(
                     "revertToDraftModal",
-                    new StringResourceModel("reactivateModal", this, null),
-                    Model.of("REACTIVATE"), Buttons.Type.Warning
+                    new StringResourceModel("reactivateModal.content", this),
+                    new StringResourceModel("reactivateModal.reactivate", this), Buttons.Type.Warning
             );
         }
         return revertToDraftModal;
@@ -163,5 +178,21 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     public boolean isTerminated() {
         final TenderProcess tenderProcess = editForm.getModelObject().getTenderProcess();
         return super.isTerminated() || (tenderProcess != null && tenderProcess.isTerminated());
+    }
+
+    @Override
+    protected Class<? extends Page> pageAfterSubmitAndNext() {
+        Class<?> formClass;
+        T entity = editForm.getModelObject();
+        formClass = entity.getNextForm();
+        if (formClass == null) {
+            return getPage().getClass();
+        }
+        Class<?> visibleFormClass = tenderProcessService.getFirstVisibleDownstreamForm(formClass);
+        if (visibleFormClass != null) {
+            return PAGE_CLASS_BY_FORM_CLASS.getOrDefault(visibleFormClass, getPage().getClass());
+        } else {
+            return getPage().getClass();
+        }
     }
 }

@@ -24,33 +24,40 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
+import org.devgateway.toolkit.forms.wicket.components.PlaceholderBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditFiscalYearBudgetPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
+import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -58,20 +65,26 @@ import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
+import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.excel.DataExportService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
 import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author gmutuhu
@@ -87,9 +100,14 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     private String searchBox = "";
 
     private ListViewProjectsOverview listViewProjectsOverview;
+    private ListViewTenderProcessOverview listViewTenderProcessOverview;
+    private TransparentWebMarkupContainer listTenderProcessWrapper;
 
     @SpringBean
     private ProjectService projectService;
+
+    @SpringBean
+    private TenderProcessService tenderProcessService;
 
     @SpringBean
     private ProcurementPlanService procurementPlanService;
@@ -110,6 +128,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     private DataExportService dataExportService;
     private WebMarkupContainer noData;
 
+
     private Department getDepartment() {
         return sessionMetadataService.getSessionDepartment();
     }
@@ -120,6 +139,95 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private ProcurementPlan getProcurementPlan() {
         return procurementPlanModel.getObject();
+    }
+
+    public BootstrapAjaxLink<Void> createNewTenderProcessButton() {
+        final BootstrapAjaxLink<Void> addTenderProcess = new BootstrapAjaxLink<Void>("addTenderProcess",
+                Buttons.Type.Success) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                TenderProcess tenderProcess = tenderProcessService.newInstance();
+                tenderProcess.setProcurementPlan(sessionMetadataService.getSessionPP());
+                TenderProcess savedTenderProcess = tenderProcessService.save(tenderProcess);
+                sessionMetadataService.setSessionTenderProcess(savedTenderProcess);
+                sessionMetadataService.setSessionProject(null);
+                setResponsePage(DepartmentOverviewPage.class);
+            }
+        };
+        addTenderProcess.setLabel(
+                new StringResourceModel("addTenderProcess", DepartmentOverviewPage.this, null));
+        addTenderProcess.setEnabled(getProcurementPlan() != null);
+        addTenderProcess.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
+        return addTenderProcess;
+    }
+
+    public class TenderProcessOverviewPanel extends GenericPanel<Void> {
+
+        public TenderProcessOverviewPanel(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+            add(createYearDropdown());
+
+            final Form<?> excelForm = new ExcelDownloadForm("excelForm");
+            add(excelForm);
+
+            add(createTenderSearchBox());
+
+            listViewTenderProcessOverview = createTenderProcessOverview();
+            listTenderProcessWrapper =
+                    new TransparentWebMarkupContainer("listTenderProcessWrapper") {
+                        @Override
+                        public boolean isVisible() {
+                            return !listViewTenderProcessOverview.getModelObject().isEmpty();
+                        }
+                    };
+            listTenderProcessWrapper.setOutputMarkupId(true);
+
+
+            add(listTenderProcessWrapper);
+
+
+            listTenderProcessWrapper.add(listViewTenderProcessOverview);
+
+            add(createNewTenderProcessButton());
+
+            add(createNoData(listViewTenderProcessOverview));
+            add(new DgFmBehavior("deptOverview.tenderProcess"));
+        }
+    }
+
+    public ListViewTenderProcessOverview createTenderProcessOverview() {
+       return new ListViewTenderProcessOverview("tenderProcessOverview", true,
+                new ListModel<>(fetchTenderProcessData()), sessionMetadataService.getSessionTenderProcess());
+    }
+
+    public class ProjectOverviewPanel extends GenericPanel<Void> {
+
+        public ProjectOverviewPanel(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onInitialize() {
+            super.onInitialize();
+            add(createProjectButton());
+            add(createYearDropdown());
+
+            final Form<?> excelForm = new ExcelDownloadForm("excelForm");
+            add(excelForm);
+
+            add(createProjectSearchBox());
+
+            ListViewProjectsOverview projectList = createProjectList();
+            add(projectList);
+
+            add(createNoData(projectList));
+            add(new DgFmBehavior("deptOverview.project"));
+        }
     }
 
     public DepartmentOverviewPage(final PageParameters parameters) {
@@ -177,9 +285,26 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         super.onInitialize();
 
         add(new Label("departmentLabel", getDepartment() == null ? "" : getDepartment().getLabel()));
-        add(new Label("fiscalYear", new PropertyModel<>(fiscalYearModel, "label")));
-        add(new Label("fiscalYear2", new PropertyModel<>(fiscalYearModel, "label")));
-        add(new Label("fiscalBudget", new PropertyModel<>(fiscalYearBudgetModel, "amountBudgeted")));
+
+        WebMarkupContainer cabinetMinisterialPaperRow = new WebMarkupContainer("cabinetMinisterialPaperRow");
+        cabinetMinisterialPaperRow.add(new DgFmBehavior("deptOverview.cabinetPaper"));
+        add(cabinetMinisterialPaperRow);
+
+        cabinetMinisterialPaperRow.add(new Label("cabinetMinisterialPaper",
+                new StringResourceModel("cabinetMinisterialPaper", this)
+                        .setParameters(new PropertyModel<>(fiscalYearModel, "label"))));
+
+        cabinetMinisterialPaperRow.add(createEditCabinetPaperButton());
+        cabinetMinisterialPaperRow.add(createListCabinetPaperButton());
+
+        add(new Label("budget",
+                new StringResourceModel("budget", this).setParameters(
+                        new PropertyModel<>(fiscalYearModel, "label"),
+                        fiscalYearBudgetModel
+                                .map(FiscalYearBudget::getAmountBudgeted)
+                                .map(Objects::toString)
+                                .orElse("")))
+                .add(new DgFmBehavior("deptOverview.fiscalYearBudget")));
 
         addNewProcurementPlanButton();
         addEditProcurementPlanButton();
@@ -187,19 +312,9 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         addEditFiscalYearBudgetButton();
         addLabelOrInvisibleContainer("procurementPlanLabel", getProcurementPlan());
 
-        addCabinetPaperButton();
-        listCabinetPaperButton();
-        addProjectButton();
-        addYearDropdown();
+        add(new ProjectOverviewPanel("projectOverview"));
 
-        final Form<?> excelForm = new ExcelDownloadForm("excelForm");
-        add(excelForm);
-
-        addSearchBox();
-
-        addProjectList();
-
-
+        add(new TenderProcessOverviewPanel("tenderProcessOverview"));
     }
 
     /**
@@ -286,7 +401,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         link.setEnabled(fiscalYearBudgetModel.getObject() == null);
-        link.add(new TooltipBehavior(Model.of("Add New Fiscal Year Budget")));
+        link.add(new TooltipBehavior(new StringResourceModel("addFiscalYearBudget.tooltip", this)));
         add(link);
         link.setVisibilityAllowed(canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
     }
@@ -298,7 +413,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
         newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtons(EditProcurementPlanPage.class));
 
-        newProcurementPlanLabel = new Label("newProcurementPlanLabel", Model.of("Create new procurement plan"));
+        newProcurementPlanLabel = new Label("newProcurementPlanLabel",
+                new StringResourceModel("newProcurementPlanLabel", this));
         newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
         add(newProcurementPlanLabel);
     }
@@ -322,8 +438,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         button.setEnabled(fiscalYearBudget != null);
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditFiscalYearBudgetPage.class) ? "Edit"
-                : "View") + " Fiscal Year Budget")));
+        button.add(new TooltipBehavior(EditViewResourceModel.of(
+                canAccessAddNewButtons(EditFiscalYearBudgetPage.class), "fiscalYearBudget", this)));
 
         add(button);
 
@@ -347,17 +463,17 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         button.setEnabled(getProcurementPlan() != null);
-        button.add(new TooltipBehavior(Model.of((canAccessAddNewButtons(EditProcurementPlanPage.class) ? "Edit"
-                : "View") + " Procurement Plan")));
+        button.add(new TooltipBehavior(EditViewResourceModel.of(
+                canAccessAddNewButtons(EditProcurementPlanPage.class), "procurementPlan", this)));
 
         add(button);
 
         DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
-                "procurementPlanStatus", getProcurementPlan());
+                "procurementPlanStatus", getProcurementPlan() == null ? null : getProcurementPlan().getStatus());
         add(procurementPlanStatus);
     }
 
-    private void addCabinetPaperButton() {
+    private BootstrapAjaxLink<Void> createEditCabinetPaperButton() {
         final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("editCabinetPaper",
                 Buttons.Type.Success) {
             @Override
@@ -367,12 +483,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
-        editCabinetPaper.add(new TooltipBehavior(Model.of("Add New Cabinet Paper")));
-        add(editCabinetPaper);
+        editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("editCabinetPaper.tooltip", this)));
         editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtons(EditCabinetPaperPage.class));
+        return editCabinetPaper;
     }
 
-    private void listCabinetPaperButton() {
+    private BootstrapAjaxLink<Void> createListCabinetPaperButton() {
         final BootstrapAjaxLink<Void> editCabinetPaper = new BootstrapAjaxLink<Void>("listCabinetPaper",
                 Buttons.Type.Success) {
             @Override
@@ -392,21 +508,21 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             }
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
-        editCabinetPaper.add(new TooltipBehavior(Model.of("List Cabinet Papers")));
-        add(editCabinetPaper);
+        editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("listCabinetPaper.tooltip", this)));
+        return editCabinetPaper;
     }
 
-    private void addProjectButton() {
+    private BootstrapBookmarkablePageLink<Void> createProjectButton() {
         sessionMetadataService.setSessionPP(getProcurementPlan());
         final BootstrapBookmarkablePageLink<Void> addNewProject = new BootstrapBookmarkablePageLink<>(
                 "addNewProject", EditProjectPage.class, Buttons.Type.Success);
         addNewProject.setLabel(new StringResourceModel("addNewProject", DepartmentOverviewPage.this, null));
         addNewProject.setEnabled(getProcurementPlan() != null);
         addNewProject.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
-        add(addNewProject);
+        return addNewProject;
     }
 
-    private void addYearDropdown() {
+    private DropDownChoice<FiscalYear> createYearDropdown() {
         final ChoiceRenderer<FiscalYear> choiceRenderer = new ChoiceRenderer<>("label", "id");
         final DropDownChoice<FiscalYear> yearsDropdown = new DropDownChoice<>("years",
                 fiscalYearModel, fiscalYearsModel, choiceRenderer);
@@ -418,53 +534,94 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 setResponsePage(DepartmentOverviewPage.class);
             }
         });
-        add(yearsDropdown);
+        return yearsDropdown;
     }
 
-    private void addSearchBox() {
-        final TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
+    private TextField<String> createProjectSearchBox() {
+        TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
         searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
-                updateDashboard(target);
+                updateProjectDashboard(target);
             }
         });
-        add(searchBoxField);
+        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("project.searchBox.placeholder",
+                DepartmentOverviewPage.this)));
+        return searchBoxField;
+    }
+
+
+    private TextField<String> createTenderSearchBox() {
+        TextField<String> searchBoxField = new TextField<>("searchBox", new PropertyModel<>(this, "searchBox"));
+        searchBoxField.add(new AjaxFormComponentUpdatingBehavior("change") {
+            @Override
+            protected void onUpdate(final AjaxRequestTarget target) {
+                updateTenderProcessDashboard(target);
+            }
+        });
+        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("tender.searchBox.placeholder",
+                DepartmentOverviewPage.this)));
+        return searchBoxField;
     }
 
     @Transactional(readOnly = true)
-    public void addProjectList() {
+    public ListViewProjectsOverview createProjectList() {
 
         IModel<List<Project>> projectListModel = new LoadableDetachableModel<List<Project>>() {
             @Override
             protected List<Project> load() {
-                return fetchData();
+                return fetchProjectData();
             }
         };
 
-        listViewProjectsOverview = new ListViewProjectsOverview("projectsOverview", projectListModel,
+        listViewProjectsOverview = new ListViewProjectsOverview("projectsList", projectListModel,
                 procurementPlanModel
         );
         add(listViewProjectsOverview);
+        return listViewProjectsOverview;
+    }
 
+
+
+    public WebMarkupContainer createNoData(AbstractListViewStatus<?> lvs) {
         noData = new WebMarkupContainer("noData");
         noData.setOutputMarkupId(true);
         noData.setOutputMarkupPlaceholderTag(true);
-        add(noData);
-        noData.setVisibilityAllowed(projectListModel.getObject().isEmpty());
+        noData.setVisibilityAllowed(lvs.getModelObject().isEmpty());
+        return noData;
     }
 
-    private void updateDashboard(final AjaxRequestTarget target) {
-        listViewProjectsOverview.setModelObject(fetchData());
+    private void updateProjectDashboard(final AjaxRequestTarget target) {
+        listViewProjectsOverview.setModelObject(fetchProjectData());
         listViewProjectsOverview.removeListItems();
 
         target.add(listViewProjectsOverview);
     }
 
+    private void updateTenderProcessDashboard(final AjaxRequestTarget target) {
+        listViewTenderProcessOverview.setModelObject(fetchTenderProcessData());
+        listViewTenderProcessOverview.removeListItems();
+
+        target.add(listViewTenderProcessOverview, listTenderProcessWrapper);
+    }
+
     @Transactional(readOnly = true)
-    public List<Project> fetchData() {
+    public List<Project> fetchProjectData() {
         return getProcurementPlan() == null
                 ? new ArrayList<>()
                 : projectService.findAll(new ProjectFilterState(getProcurementPlan(), searchBox).getSpecification());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TenderProcess> fetchTenderProcessData() {
+        return getProcurementPlan() == null
+                ? new ArrayList<>()
+                : tenderProcessService.findAll((r, cq, cb) -> cb.and(
+                cb.equal(r.get(TenderProcess_.procurementPlan), getProcurementPlan()),
+                cb.isNull(r.get(TenderProcess_.project)),
+                ObjectUtils.isEmpty(searchBox) ? cb.and() : cb.like(
+                        cb.lower(r.join(TenderProcess_.tender).get(Tender_.tenderTitle)),
+                        "%" + searchBox.toLowerCase() + "%")
+        ));
     }
 }

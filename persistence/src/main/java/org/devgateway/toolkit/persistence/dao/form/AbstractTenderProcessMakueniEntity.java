@@ -16,7 +16,7 @@ import java.util.Objects;
 @MappedSuperclass
 public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable,
         ProcurementPlanAttachable {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tender_process_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -62,8 +62,8 @@ public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueni
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public ProcurementPlan getProcurementPlan() {
-        if (tenderProcess != null && tenderProcess.getProject() != null) {
-            return tenderProcess.getProject().getProcurementPlan();
+        if (tenderProcess != null) {
+            return tenderProcess.getProcurementPlan();
         }
         return null;
     }
@@ -75,4 +75,16 @@ public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueni
     public Department getDepartment() {
         return getTenderProcessNotNull().getDepartment();
     }
+
+    /**
+     * Return the next form to fill out once the current one was completed.
+     */
+    @JsonIgnore
+    public abstract Class<?> getNextForm();
+
+    /**
+     * Return true to prevent deletion of the current form if there are downstream forms that depend on this one.
+     */
+    @JsonIgnore
+    public abstract boolean hasDownstreamForms();
 }
