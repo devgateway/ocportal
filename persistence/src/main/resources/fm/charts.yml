@@ -11,7 +11,7 @@
   visible: yes
 
 - name: viz.me.map.tenderLocations
-  visible: yes
+  visible: no
 
 - name: viz.me.chart.costEffectiveness
   visible: yes

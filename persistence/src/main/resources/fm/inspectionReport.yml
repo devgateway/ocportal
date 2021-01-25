@@ -13,7 +13,7 @@
 - name: inspectionReportForm.authorizePayment
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: inspectionReportForm.cancel
   enabled: yes
   visible: yes
