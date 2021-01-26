@@ -23,6 +23,21 @@ import style from './style.less';
 import Sidebar from './sidebar';
 import {filters as CRDFilters} from '../state/oce-state';
 
+const createDestructFilters = (excludeProps) => {
+  return cacheFn(filters => {
+    let datelessFilters = filters.delete('years').delete('months');
+    if (excludeProps) {
+      // datelessFilters = datelessFilters.deleteAll(excludeProps);
+      datelessFilters = excludeProps.reduce((filters, prop) => filters.delete(prop), datelessFilters);
+    }
+    return {
+      filters: datelessFilters,
+      years: filters.get('years', Set()),
+      months: filters.get('months', Set()),
+    };
+  })
+};
+
 // eslint-disable-next-line no-undef
 class CorruptionRiskDashboard extends React.Component {
   constructor(...args) {
@@ -51,12 +66,9 @@ class CorruptionRiskDashboard extends React.Component {
 
     localStorage.alreadyVisited = true;
 
-    this.destructFilters = cacheFn(filters => ({
-      filters: filters.delete('years')
-      .delete('months'),
-      years: filters.get('years', Set()),
-      months: filters.get('months', Set()),
-    }));
+    this.destructFilters = createDestructFilters();
+    this.destructFiltersForSupplierView = createDestructFilters(['supplierId']);
+    this.destructFiltersForPEView = createDestructFilters(['procuringEntityId']);
   }
 
   componentDidMount() {
@@ -136,6 +148,7 @@ class CorruptionRiskDashboard extends React.Component {
         Component: SupplierPage,
         sgSlug: 'supplier',
         plSlug: 'suppliers',
+        destructFiltersFn: this.destructFiltersForSupplierView,
       });
     } else if (page === 'procuring-entities') {
       return this.renderArchive(ProcuringEntitiesPage, 'procuring-entities');
@@ -146,6 +159,7 @@ class CorruptionRiskDashboard extends React.Component {
         Component: ProcuringEntityPage,
         sgSlug: 'procuring-entity',
         plSlug: 'procuring-entities',
+        destructFiltersFn: this.destructFiltersForPEView,
       });
     } else if (page === 'buyer') {
       return this.renderSingle({
@@ -171,11 +185,13 @@ class CorruptionRiskDashboard extends React.Component {
     return TRANSLATIONS[locale];
   }
 
-  wireProps(_slug) {
+  wireProps(_slug, destructFiltersFn) {
     const slug = Array.isArray(_slug) ? _slug : [_slug];
     const translations = this.getTranslations();
     const { appliedFilters, allYears, width } = this.state;
-    const { filters, years: selectedYears, months } = this.destructFilters(appliedFilters);
+    const { filters, years: selectedYears, months } = destructFiltersFn
+      ? destructFiltersFn(appliedFilters)
+      : this.destructFilters(appliedFilters);
     const years = Set(allYears)
     .equals(selectedYears) ?
       Set() :
@@ -285,13 +301,13 @@ class CorruptionRiskDashboard extends React.Component {
     );
   }
 
-  renderSingle({ Component, sgSlug, plSlug, additionalProps }) {
+  renderSingle({ Component, sgSlug, plSlug, additionalProps, destructFiltersFn }) {
     const { route, navigate, styling } = this.props;
     const { indicatorTypesMapping } = this.state;
     const [, id] = route;
     return (
       <Component
-        {...this.wireProps(sgSlug)}
+        {...this.wireProps(sgSlug, destructFiltersFn)}
         id={id}
         styling={styling}
         doSearch={query => navigate(plSlug, query)}

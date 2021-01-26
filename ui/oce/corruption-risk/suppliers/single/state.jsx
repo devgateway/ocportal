@@ -14,7 +14,7 @@ export const supplierFilters = SupplierState.mapping({
   name: 'supplierFilters',
   deps: [datefulFilters, supplierId],
   mapper: (filters, supplierId) =>
-    filters.update('supplierId', Set(), supplierIds => supplierIds.add(supplierId))
+    filters.set('supplierId', Set.of(supplierId))
 });
 
 export const supplierFlaggedNrData = new FlaggedNrMapping({
