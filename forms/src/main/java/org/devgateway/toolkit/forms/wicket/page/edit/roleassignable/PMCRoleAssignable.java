@@ -7,10 +7,10 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
  */
 public interface PMCRoleAssignable extends ImplementationRoleAssignable {
 
-    @Override
-    default String getUserRole() {
-        return SecurityConstants.Roles.ROLE_PMC_USER;
-    }
+//    @Override
+//    default String getUserRole() {
+//        return SecurityConstants.Roles.ROLE_PMC_USER;
+//    }
 
     @Override
     default String getValidatorRole() {
