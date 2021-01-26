@@ -128,13 +128,11 @@ $borderColor: #eeeeee;
         font-family: 'Montserrat', sans-serif;
         border-bottom: 2px solid #f6f6f6;
         top: $filterHeight;
-        height: $filterHeight;
         left: 0;
         right: 0;
         position: fixed;
         z-index: 10;
         @media (max-width: 768px) {
-            height: auto;
             padding-left: 15px;
             position: relative;
         }
