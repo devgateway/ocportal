@@ -43,7 +43,7 @@
 - name: tenderForm.objective
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.procurementMethod
   mandatory: yes
   enabled: yes
