@@ -1424,4 +1424,20 @@
         <sql>alter table tender_process alter column procurement_plan_id set not null;</sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-842" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Satisfactory"/>
+            <column name="DTYPE" value="InspectionReportOutcome"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Unsatisfactory"/>
+            <column name="DTYPE" value="InspectionReportOutcome"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
