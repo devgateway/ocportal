@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.text.WordUtils;
 import org.devgateway.jocds.OcdsValidatorConstants;
@@ -511,9 +512,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(milestone::setCode, () -> report.getClass().getSimpleName());
         safeSet(milestone::setDateModified, report::getApprovedDate);
         safeSet(milestone::setAuthorizePayment, report::getAuthorizePayment);
-        safeSet(milestone::setDateMet, () -> report.getAuthorizePayment() ? report.getApprovedDate() : null);
+        safeSet(milestone::setDateMet, () -> BooleanUtils.isTrue(report.getAuthorizePayment())
+                ? report.getApprovedDate() : null);
         safeSet(milestone::setStatus,
-                () -> report.getAuthorizePayment() ? Milestone.Status.MET : Milestone.Status.NOT_MET);
+                () -> BooleanUtils.isTrue(report.getAuthorizePayment())
+                        ? Milestone.Status.MET : Milestone.Status.NOT_MET);
         safeSetEach(milestone.getDocuments()::add, report::getFormDocs, this::storeAsDocumentPhProgressReport);
         return milestone;
     }
