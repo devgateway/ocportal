@@ -41,7 +41,10 @@ const InspectionReport = (props) => {
       <div key="2">
         <div className="row">
           {isFeatureVisible('publicView.inspectionReport.comments')
-        && <Item label={t('inspectionReport:comments')} value={i.comments} col={6} />}
+          && <Item label={t('inspectionReport:comments')} value={i.comments} col={6} />}
+
+          {isFeatureVisible('publicView.inspectionReport.outcome')
+          && <Item label={t('inspectionReport:outcome')} value={(i.outcome || {}).label} col={6} />}
 
           {
           i.privateSectorRequests !== undefined
@@ -91,6 +94,15 @@ const InspectionReport = (props) => {
               </div>
             ) : null
         }
+
+        {isFeatureVisible('publicView.inspectionReport.picture')
+        && (
+          <div className="row">
+            <Item label={t('inspectionReport:image')} col={12}>
+              <FileDownloadLinks files={i.picture} useDash />
+            </Item>
+          </div>
+        )}
       </div>
     );
   };
