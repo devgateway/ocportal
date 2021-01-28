@@ -7,5 +7,6 @@ import java.lang.reflect.Field;
  * @since 09/05/2018
  */
 public interface TranslateService {
+    String getTranslation(Class clazz);
     String getTranslation(Class clazz, Field field);
 }

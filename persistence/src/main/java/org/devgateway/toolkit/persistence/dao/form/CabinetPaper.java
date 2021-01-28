@@ -33,7 +33,7 @@ import java.util.Collections;
         @Index(columnList = "number"),
         @Index(columnList = "name")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "cabinetPaperForm")
 public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

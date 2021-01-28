@@ -39,7 +39,7 @@ import java.util.Set;
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
 @Document
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "procurementPlanForm")
 public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
