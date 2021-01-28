@@ -208,10 +208,10 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
         if (TenderProcess.class.isAssignableFrom(fieldClass)) {
             sheetName = "Tender Process";
         }
-        if (StringUtils.isEmpty(sheetName)) {
+        if (translateService != null && StringUtils.isEmpty(sheetName)) {
             sheetName = translateService.getTranslation(clazz, field);
         }
-        if (StringUtils.isEmpty(sheetName)) {
+        if (translateService != null && StringUtils.isEmpty(sheetName)) {
             sheetName = translateService.getTranslation(fieldClass);
         }
         if (StringUtils.isEmpty(sheetName)) {
