@@ -191,3 +191,11 @@
   visible: yes
   visibleDeps:
     - inspectionReportForm.formDocs
+- name: publicView.inspectionReport.outcome
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.outcome
+- name: publicView.inspectionReport.picture
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.picture
