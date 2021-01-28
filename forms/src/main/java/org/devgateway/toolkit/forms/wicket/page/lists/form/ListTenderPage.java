@@ -119,7 +119,7 @@ public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tende
                                      final IModel<Tender> model) {
                 if (DBConstants.Status.EXPORTABLE.contains(model.getObject().getStatus())) {
                     cellItem.add(new ListTenderPage.OcdsPanel(componentId,
-                            new Model<>(model.getObject().getId())));
+                            new Model<>(model.getObject().getTenderProcess().getId())));
                 } else {
                     cellItem.add(new Label(componentId));
                 }
@@ -132,6 +132,8 @@ public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tende
     protected void onInitialize() {
 
         attachFm("tendersList");
+
+        addOcdsDownloadColumn();
 
         addFmColumn("tenderTitle", new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("title", ListTenderPage.this)).getString()),

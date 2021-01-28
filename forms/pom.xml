@@ -18,12 +18,12 @@
     <packaging>jar</packaging>
 
     <name>Wicket Forms</name>
-    <description>Makueni Forms</description>
+    <description>Elgeyo Forms</description>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.elgeyo</groupId>
+        <artifactId>elgeyo</artifactId>
+        <version>2.0.1-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -42,7 +42,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -53,17 +53,17 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>ui</artifactId>
         </dependency>
 
@@ -136,11 +136,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-rest-hal-browser</artifactId>
         </dependency>
 
         <dependency>

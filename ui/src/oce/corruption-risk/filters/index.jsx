@@ -153,7 +153,6 @@ const Filters = ({
             onClick={() => setCurrentBoxIndex(currentBoxIndex === index ? null : index)}
             onApply={handleApply}
             onReset={handleReset}
-            right={index < 3}
           >
 
             {group.filters.map((filter, fIdx) => (

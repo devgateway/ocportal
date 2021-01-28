@@ -13,7 +13,7 @@
 - name: inspectionReportForm.authorizePayment
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: inspectionReportForm.cancel
   enabled: yes
   visible: yes
@@ -29,6 +29,10 @@
   enabled: yes
   visible: yes
 - name: inspectionReportForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.outcome
   mandatory: no
   enabled: yes
   visible: yes
@@ -50,6 +54,10 @@
   visible: yes
 - name: inspectionReportForm.privateSectorRequests.upload
   mandatory: yes
+  enabled: yes
+  visible: yes
+- name: inspectionReportForm.picture
+  mandatory: no
   enabled: yes
   visible: yes
 - name: inspectionReportForm.revertToDraft
