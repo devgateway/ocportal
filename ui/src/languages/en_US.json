@@ -646,6 +646,7 @@
   "tender:issuedBy:email": "Procuring Entity Email",
   "tender:value": "Tender Value",
   "tender:targetGroup": "Target Group",
+  "tender:billOfQuantities": "Download Bill of Quantities",
   "tender:objective": "Tender Objective",
   "tender:tenderItems": "Tender Items",
   "tender:item": "Item",

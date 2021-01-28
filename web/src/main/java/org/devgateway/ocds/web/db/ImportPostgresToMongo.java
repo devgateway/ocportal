@@ -164,6 +164,7 @@ public class ImportPostgresToMongo {
 
                     pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
+                    pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getBillOfQuantities()));
 
                     pr.setTenderQuotationEvaluation(new HashSet<>(
                             filterNotExportable(pr.getTenderQuotationEvaluation())));
