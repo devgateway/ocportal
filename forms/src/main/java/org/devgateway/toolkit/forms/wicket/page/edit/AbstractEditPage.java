@@ -591,6 +591,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected void onInitialize() {
         super.onInitialize();
 
+        createPrintLink();
+
         // we cant do anything if we dont have a jpaService here
         if (jpaService == null) {
             throw new NullJpaServiceException();
