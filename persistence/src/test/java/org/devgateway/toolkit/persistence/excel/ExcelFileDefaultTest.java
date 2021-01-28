@@ -3,6 +3,9 @@ package org.devgateway.toolkit.persistence.excel;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.excel.service.TranslateService;
+import org.devgateway.toolkit.persistence.fm.entity.DgFeature;
+import org.devgateway.toolkit.persistence.fm.entity.FeatureConfig;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -11,7 +14,9 @@ import org.springframework.data.domain.Persistable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author idobre
@@ -25,11 +30,82 @@ public class ExcelFileDefaultTest {
         public String getTranslation(Class clazz, Field field) {
             return null;
         }
+
+        @Override
+        public String getTranslation(Class clazz) {
+            return null;
+        }
+    }
+
+    public class TestDgFmService implements DgFmService {
+
+        @Override
+        public Collection<DgFeature> getFeatures() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<DgFeature> getFeaturesByPrefix(String featureName) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public DgFeature getFeature(String featureName) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Boolean hasFeature(String featureName) {
+            return true;
+        }
+
+        @Override
+        public Boolean isFeatureEnabled(String featureName) {
+            return true;
+        }
+
+        @Override
+        public Boolean isFeatureMandatory(String featureName) {
+            return false;
+        }
+
+        @Override
+        public Boolean isFeatureVisible(String featureName) {
+            return true;
+        }
+
+        @Override
+        public Boolean isFmActive() {
+            return true;
+        }
+
+        @Override
+        public int featuresCount() {
+            return 0;
+        }
+
+        @Override
+        public String getParentCombinedFmName(String parentFmName, String featureName) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Set<FeatureConfig> getFeatureConfigs() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void addOrReplaceFeatureConfig(FeatureConfig featureConfig) {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Test
     public void createWorkbook() throws Exception {
-        final ExcelFile excelFile = new ExcelFileDefault(createObjects(), new TestTranslateService());
+        final ExcelFile excelFile = new ExcelFileDefault(
+                createObjects(),
+                new TestTranslateService(),
+                new TestDgFmService());
         final Workbook workbook = excelFile.createWorkbook();
 
         // try (FileOutputStream outputStream = new FileOutputStream("/Users/ionut/Downloads/file-export.xlsx")) {

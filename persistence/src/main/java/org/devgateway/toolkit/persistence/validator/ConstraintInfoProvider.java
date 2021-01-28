@@ -6,7 +6,6 @@ import org.devgateway.toolkit.persistence.fm.ConstraintInfo;
 import org.devgateway.toolkit.persistence.fm.Constraints;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.jpa.JPAUtils;
-import org.devgateway.toolkit.persistence.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,9 @@ public class ConstraintInfoProvider {
                 logger.debug("Collecting required attributes for root {}", javaType);
             }
 
-            collect(StringUtils.uncapitalizeCamelCase(javaType.getSimpleName()) + "Form.", javaType);
+            Form form = javaType.getAnnotation(Form.class);
+
+            collect(form.featureName() + ".", javaType);
         }
 
         private void collect(String prefix, Class<?> javaType) {

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
         uniqueConstraints =
         @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "purchaseRequisitionForm")
 public class PurchaseRequisitionGroup extends AbstractTenderProcessMakueniEntity {
 
     @ExcelExport(name = "Purchase Requisitions", separateSheet = true)

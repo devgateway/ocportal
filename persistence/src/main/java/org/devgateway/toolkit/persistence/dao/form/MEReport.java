@@ -34,7 +34,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "meReportForm")
 public class MEReport extends AbstractImplTenderProcessMakueniEntity {
 
     @ExcelExport(useTranslation = true)

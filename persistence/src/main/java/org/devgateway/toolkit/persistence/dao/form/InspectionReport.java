@@ -32,7 +32,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "inspectionReportForm")
 public class InspectionReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
