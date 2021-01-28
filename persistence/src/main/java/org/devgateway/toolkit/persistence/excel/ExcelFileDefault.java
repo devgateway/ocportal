@@ -61,7 +61,7 @@ public class ExcelFileDefault implements ExcelFile {
      * Generate sheet name based on the title of the form.
      */
     private String getSheetNameFor(Class clazz) {
-        String sheetName = translateService.getTranslation(clazz);
+        String sheetName = translateService == null ? null : translateService.getTranslation(clazz);
         if (StringUtils.isEmpty(sheetName)) {
             sheetName = clazz.getSimpleName().toLowerCase();
         }
