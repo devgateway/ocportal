@@ -34,7 +34,7 @@ import java.util.List;
         uniqueConstraints =
         @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "professionalOpinionForm")
 public class ProfessionalOpinion extends AbstractTenderProcessMakueniEntity {
 
     @ExcelExport(name = "Professional Opinions", separateSheet = true)
