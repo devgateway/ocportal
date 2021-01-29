@@ -85,6 +85,13 @@ const Tender = (props) => {
         {isFeatureVisible('publicView.tender.tenderValue')
         && <Item label={t('tender:value')} value={currencyFormatter(tender.tenderValue)} col={4} />}
 
+        {isFeatureVisible('publicView.tender.billOfQuantities')
+        && (
+        <Item label={t('tender:billOfQuantities')} col={4}>
+          <FileDownloadLinks files={tender.billOfQuantities || []} useDash />
+        </Item>
+        )}
+
         {isFeatureVisible('publicView.tender.targetGroup')
         && <Item label={t('tender:targetGroup')} value={tender.targetGroup && tender.targetGroup.label} col={4} />}
 

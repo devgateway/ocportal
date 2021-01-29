@@ -41,7 +41,7 @@ import java.util.List;
         uniqueConstraints =
         @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "contractForm")
 public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
@@ -63,11 +63,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Reference Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
-
-    @ExcelExport(justExport = true, useTranslation = true, name = "Procuring Entity Name")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private ProcuringEntity procuringEntity;
 
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Contract Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -122,14 +117,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
 
     public void setReferenceNumber(final String referenceNumber) {
         this.referenceNumber = referenceNumber;
-    }
-
-    public ProcuringEntity getProcuringEntity() {
-        return procuringEntity;
-    }
-
-    public void setProcuringEntity(final ProcuringEntity procuringEntity) {
-        this.procuringEntity = procuringEntity;
     }
 
     public List<ContractDocument> getContractDocs() {

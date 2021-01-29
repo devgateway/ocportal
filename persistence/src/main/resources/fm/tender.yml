@@ -158,6 +158,8 @@
     - tenderForm.tenderProcess.procurementPlan.department
 - name: tendersList.downloadFile
   visible: yes
+- name: tendersList.downloadOcds
+  visible: yes
   visibleDeps:
     - tenderForm.formDocs
 - name: tendersList.filterToolbar
@@ -220,6 +222,10 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderValue
+- name: publicView.tender.billOfQuantities
+  visible: yes
+  visibleDeps:
+    - tenderForm.billOfQuantities
 - name: publicView.tender.targetGroup
   visible: yes
   visibleDeps:
