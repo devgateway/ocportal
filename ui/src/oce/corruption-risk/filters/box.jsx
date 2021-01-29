@@ -1,13 +1,13 @@
 import React from 'react';
 import cn from 'classnames';
-import { tCreator } from '../../translatable';
+import { useTranslation } from 'react-i18next';
 
 const FilterBox = (props) => {
   const {
-    title, open, active, onClick, onApply, onReset, translations, right,
+    title, open, active, onClick, onApply, onReset, right,
   } = props;
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   return (
     <div onClick={onClick} className={cn('filter', { open, active })}>

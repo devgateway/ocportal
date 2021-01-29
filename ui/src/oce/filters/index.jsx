@@ -1,5 +1,5 @@
 import React from 'react';
-import { tCreator } from '../translatable';
+import { useTranslation } from 'react-i18next';
 import FiltersWrapper, {
   minMaxPropertyRendererCreator,
   singlePropertyRendererCreator,
@@ -16,7 +16,7 @@ import AwardValue from './award-value';
 import FilterTenderDate from '../makueni/filters/FilterTenderDate';
 
 const Filters = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const groups = [
     {
@@ -89,7 +89,6 @@ const Filters = (props) => {
       groups={groups}
       filters={props.filters}
       applyFilters={props.onUpdate}
-      translations={props.translations}
     />
   );
 };

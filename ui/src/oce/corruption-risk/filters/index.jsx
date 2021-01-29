@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
-import { tCreator } from '../../translatable';
+import { useTranslation } from 'react-i18next';
 import {
   dateRendererCreator,
   minMaxPropertyRendererCreator,
@@ -91,9 +91,9 @@ const groups = [
 ];
 
 const Filters = ({
-  translations, filters, onChange, isFeatureVisible,
+  filters, onChange, isFeatureVisible,
 }) => {
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const [localFilters, updateLocalFilters] = useImmer(filters);
 
@@ -149,7 +149,6 @@ const Filters = ({
             title={t(group.title)}
             open={currentBoxIndex === index}
             active={group.active(filters)}
-            translations={translations}
             onClick={() => setCurrentBoxIndex(currentBoxIndex === index ? null : index)}
             onApply={handleApply}
             onReset={handleReset}
@@ -161,7 +160,6 @@ const Filters = ({
                 {filter.render({
                   filters: localFilters,
                   onChange: (newFilters) => updateLocalFilters((draft) => ({ ...draft, ...newFilters })),
-                  translations,
                 })}
               </React.Fragment>
             ))}
@@ -175,7 +173,6 @@ const Filters = ({
 Filters.propTypes = {
   filters: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
 };
 

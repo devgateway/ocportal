@@ -25,9 +25,7 @@ import { LOGIN_URL } from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
 import makueniLogo from '../resources/makueni-logo.png';
-import enTranslations from '../../languages/en_US.json';
-import esTranslations from '../../languages/es_ES.json';
-import frTranslations from '../../languages/fr_FR.json';
+import { LOCALES } from '../translatable';
 
 const getIndicators = cacheFn((indicatorTypesMapping, corruptionType) => Object.keys(indicatorTypesMapping)
   .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1));
@@ -74,12 +72,6 @@ class CorruptionRiskDashboard extends React.Component {
       data: Map(),
       showLandingPopup: !localStorage.alreadyVisited,
     };
-    const { oceLocale } = localStorage;
-    if (oceLocale && this.constructor.TRANSLATIONS[oceLocale]) {
-      this.state.locale = oceLocale;
-    } else {
-      this.state.locale = 'en_US';
-    }
 
     localStorage.alreadyVisited = true;
 
@@ -101,11 +93,6 @@ class CorruptionRiskDashboard extends React.Component {
         width: document.querySelector('.content').offsetWidth - 30,
       });
     }));
-  }
-
-  setLocale(locale) {
-    this.setState({ locale });
-    localStorage.oceLocale = locale;
   }
 
   getPage() {
@@ -189,21 +176,15 @@ class CorruptionRiskDashboard extends React.Component {
     );
   }
 
-  getTranslations() {
-    const { TRANSLATIONS } = this.constructor;
-    const { locale } = this.state;
-    return TRANSLATIONS[locale];
-  }
-
   wireProps(_slug) {
     const slug = Array.isArray(_slug) ? _slug : [_slug];
-    const translations = this.getTranslations();
+    const { t } = this.props;
     const { filters, width } = this.state;
     const datelessFilters = this.selectDatelessFilters(filters);
     const { years, months } = this.selectDateFilters(filters);
 
     return {
-      translations,
+      t,
       data: this.state.data.getIn(slug, Map()),
       requestNewData: (path, newData) => this.setState(
         (state) => ({ data: state.data.setIn(slug.concat(path), newData) }),
@@ -214,12 +195,6 @@ class CorruptionRiskDashboard extends React.Component {
       months,
       width,
     };
-  }
-
-  t(str) {
-    const { locale } = this.state;
-    const { TRANSLATIONS } = this.constructor;
-    return TRANSLATIONS[locale][str] || TRANSLATIONS.en_US[str] || str;
   }
 
   fetchUserInfo() {
@@ -242,11 +217,12 @@ class CorruptionRiskDashboard extends React.Component {
   }
 
   loginBox() {
+    const { t } = this.props;
     if (this.state.user.loggedIn) {
       return (
         <a href="/preLogout?referrer=/ui/index.html?corruption-risk-dashboard">
           <button className="btn btn-success">
-            {this.t('general:logout')}
+            {t('general:logout')}
           </button>
         </a>
       );
@@ -255,25 +231,24 @@ class CorruptionRiskDashboard extends React.Component {
     return (
       <a href={`${LOGIN_URL}${hash}`}>
         <button className="btn btn-success">
-          {this.t('general:login')}
+          {t('general:login')}
         </button>
       </a>
     );
   }
 
   languageSwitcher() {
-    const { TRANSLATIONS } = this.constructor;
-    const { locale: selectedLocale } = this.state;
-    if (Object.keys(TRANSLATIONS).length <= 1) return null;
-    return Object.keys(TRANSLATIONS)
-      .map((locale) => (
-        <a
-          onClick={() => this.setLocale(locale)}
-          className={cn({ active: locale === selectedLocale })}
-        >
-          {locale.split('_')[0]}
-        </a>
-      ));
+    const { i18n } = this.props;
+    if (LOCALES.length <= 1) return null;
+    return LOCALES.map((locale) => (
+      <a
+        key={locale}
+        onClick={() => i18n.changeLanguage(locale)}
+        className={cn({ active: locale === i18n.language })}
+      >
+        {locale.split('_')[0]}
+      </a>
+    ));
   }
 
   renderArchive(Component, slug) {
@@ -316,26 +291,25 @@ class CorruptionRiskDashboard extends React.Component {
       disabledApiSecurity,
     } = this.state;
 
-    const { route, navigate } = this.props;
-    const translations = this.getTranslations();
+    const { route, navigate, t } = this.props;
     const [page] = route;
 
     return (
       <div className="container-fluid dashboard-corruption-risk">
         {showLandingPopup
         && (
-        <LandingPopup
-          redirectToLogin={!disabledApiSecurity}
-          requestClosing={() => this.setState({ showLandingPopup: false })}
-          translations={translations}
-          languageSwitcher={(...args) => this.languageSwitcher(...args)}
-        />
+          <LandingPopup
+            redirectToLogin={!disabledApiSecurity}
+            requestClosing={() => this.setState({ showLandingPopup: false })}
+            t={t}
+            languageSwitcher={(...args) => this.languageSwitcher(...args)}
+          />
         )}
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
             <a className="portal-logo-wrapper" href="#!/crd/">
               <img src={makueniLogo} alt="Makueni" />
-              <span>{this.t('crd:title')}</span>
+              <span>{t('crd:title')}</span>
             </a>
           </div>
 
@@ -352,7 +326,6 @@ class CorruptionRiskDashboard extends React.Component {
               filters: filtersToApply,
             });
           }}
-          translations={translations}
           filters={filters}
         />
 
@@ -373,17 +346,12 @@ class CorruptionRiskDashboard extends React.Component {
 }
 
 CorruptionRiskDashboard.propTypes = {
-  translations: PropTypes.object.isRequired,
   styling: PropTypes.object.isRequired,
   onSwitch: PropTypes.func.isRequired,
   route: PropTypes.array.isRequired,
   navigate: PropTypes.func.isRequired,
-};
-
-CorruptionRiskDashboard.TRANSLATIONS = {
-  en_US: enTranslations,
-  es_ES: esTranslations,
-  fr_FR: frTranslations,
+  t: PropTypes.func.isRequired,
+  i18n: PropTypes.object.isRequired,
 };
 
 export default CorruptionRiskDashboard;

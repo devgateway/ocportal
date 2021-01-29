@@ -3,6 +3,7 @@ import Table from './index';
 import orgNamesFetching from '../../orgnames-fetching';
 import { fetchEP } from '../../tools';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
 
 const maybeSlice = (flag, list) => (flag ? list.slice(0, 10) : list);
 
@@ -68,23 +69,24 @@ class FrequentTenderers extends orgNamesFetching(Table) {
   render() {
     if (!this.props.data) return null;
     const { showAll, newData } = this.state;
+    const { t } = this.props;
     return (
       <table className="table table-stripped trable-hover frequent-supplier-bidder-table">
         <thead>
           <tr>
             <th>
-              {this.t('tables:frequentTenderers:supplier')}
+              {t('tables:frequentTenderers:supplier')}
               {' '}
               #1
             </th>
             <th>
-              {this.t('tables:frequentTenderers:supplier')}
+              {t('tables:frequentTenderers:supplier')}
               {' '}
               #2
             </th>
-            <th>{this.t('tables:frequentTenderers:nrITB')}</th>
-            <th>{this.t('tables:frequentTenderers:supplier1wins')}</th>
-            <th>{this.t('tables:frequentTenderers:supplier2wins')}</th>
+            <th>{t('tables:frequentTenderers:nrITB')}</th>
+            <th>{t('tables:frequentTenderers:supplier1wins')}</th>
+            <th>{t('tables:frequentTenderers:supplier2wins')}</th>
           </tr>
         </thead>
         <tbody>
@@ -97,7 +99,7 @@ class FrequentTenderers extends orgNamesFetching(Table) {
                 className="btn btn-info btn-danger btn-block"
                 onClick={() => this.setState({ showAll: true })}
               >
-                {this.t('tables:showAll')}
+                {t('tables:showAll')}
               </button>
             </td>
           </tr>
@@ -110,5 +112,9 @@ class FrequentTenderers extends orgNamesFetching(Table) {
 
 FrequentTenderers.getName = (t) => t('tables:frequentTenderers:title');
 FrequentTenderers.endpoint = 'frequentTenderers';
+
+FrequentTenderers.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(FrequentTenderers, 'viz.me.table.frequentTenderers');

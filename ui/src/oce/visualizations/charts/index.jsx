@@ -58,7 +58,7 @@ class Chart extends Visualization {
 
   componentDidUpdate(prevProps) {
     super.componentDidUpdate(prevProps);
-    if (this.constructor.UPDATABLE_FIELDS.some((prop) => prevProps[prop] !== this.props[prop]) || this.props.translations !== prevProps.translations) {
+    if (this.constructor.UPDATABLE_FIELDS.some((prop) => prevProps[prop] !== this.props[prop])) {
       this.chartContainer.data = this.getData();
       this.chartContainer.layout = this.getDecoratedLayout();
       setTimeout(() => this.chartContainer && Plotly.redraw(this.chartContainer));
@@ -73,13 +73,14 @@ class Chart extends Visualization {
 
   render() {
     const { loading } = this.state;
+    const { t } = this.props;
     const hasNoData = !loading && this.hasNoData();
     return (
       <div className="chart-container">
-        {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
+        {hasNoData && <div className="message">{t('charts:general:noData')}</div>}
         {loading && (
         <div className="message">
-          {this.t('general:loading')}
+          {t('general:loading')}
           <br />
           <img src={loadingBubbles} alt="" />
         </div>
@@ -113,6 +114,7 @@ Chart.propTypes = {
       traceColors: PropTypes.arrayOf(PropTypes.string).isRequired,
     }).isRequired,
   }).isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 Chart.defaultProps = {

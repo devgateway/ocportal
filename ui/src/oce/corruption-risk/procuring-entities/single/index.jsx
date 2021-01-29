@@ -1,5 +1,8 @@
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { createSelector } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 import TopSearch from '../../top-search';
-import { tCreator } from '../../../translatable';
 import Info from './info';
 import Zoomable from '../../zoomable';
 import TitleBelow from '../../archive/title-below';
@@ -9,9 +12,6 @@ import ProcurementsByStatus from '../../bars/by-status';
 import ProcurementsByMethod from '../../bars/by-method';
 import ProcurementsTable from '../../table/procurements';
 import './style.scss';
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { createSelector } from '@reduxjs/toolkit';
 import { fetchAllInfo } from './api';
 import fmConnect from '../../../fm/fm';
 
@@ -26,7 +26,7 @@ const procuringEntityFiltersSelector = createSelector(
 );
 
 const ProcuringEntity = ({
-  translations, doSearch, width, navigate, isFeatureVisible, ...otherProps
+  doSearch, width, navigate, isFeatureVisible, ...otherProps
 }) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -48,12 +48,12 @@ const ProcuringEntity = ({
       );
   }, [peFilters]);
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   return (
     <div className="pe-page single-page">
       <TopSearch
-        translations={translations}
+        t={t}
         doSearch={doSearch}
         placeholder={t('crd:procuringEntities:top-search')}
       />
@@ -68,7 +68,6 @@ const ProcuringEntity = ({
             buyers={state.buyers}
             contractsCount={state.contractsCount}
             unflaggedContractsCount={state.unflaggedContractsCount}
-            translations={translations}
           />
         )}
         {isFeatureVisible('crd.procuringEntity.statistics')
@@ -84,7 +83,6 @@ const ProcuringEntity = ({
                       <ProcurementsByStatus
                         data={state.procurementsByStatusData}
                         length={state.maxCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -98,7 +96,6 @@ const ProcuringEntity = ({
                       <ProcurementsByMethod
                         data={state.procurementsByMethodData}
                         length={state.maxCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -123,7 +120,6 @@ const ProcuringEntity = ({
                       <WinsAndFlags
                         data={state.winsAndFlagsData}
                         length={state.max2ndRowCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -137,7 +133,6 @@ const ProcuringEntity = ({
                       <FlaggedNr
                         data={state.flaggedNrData}
                         length={state.max2ndRowCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -159,7 +154,6 @@ const ProcuringEntity = ({
           )}
           <ProcurementsTable
             filters={peFilters}
-            translations={translations}
             navigate={navigate}
             fmPrefix="crd.procuringEntity.procurements.col"
           />

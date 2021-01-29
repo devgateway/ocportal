@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { createSelector } from '@reduxjs/toolkit';
 import { useImmer } from 'use-immer';
 import TopSearch from '../../top-search';
-import { tCreator } from '../../../translatable';
 import Info from './info';
 import Zoomable from '../../zoomable';
 import TitleBelow from '../../archive/title-below';
@@ -15,6 +14,7 @@ import ProcurementsTable from '../../table/procurements';
 import './style.scss';
 import { fetchAllInfo } from './api';
 import fmConnect from '../../../fm/fm';
+import { useTranslation } from 'react-i18next';
 
 const buyerFiltersSelector = createSelector(
   [(props) => props.id, (props) => props.filters, (props) => props.years, (props) => props.months],
@@ -27,7 +27,7 @@ const buyerFiltersSelector = createSelector(
 );
 
 const Buyer = ({
-  translations, doSearch, width, navigate, isFeatureVisible, ...otherProps
+  doSearch, width, navigate, isFeatureVisible, ...otherProps
 }) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -51,12 +51,12 @@ const Buyer = ({
       );
   }, [buyerFilters]);
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   return (
     <div className="pe-page single-page">
       <TopSearch
-        translations={translations}
+        t={t}
         doSearch={doSearch}
         placeholder={t('crd:buyers:top-search')}
       />
@@ -71,7 +71,6 @@ const Buyer = ({
             prs={state.prs}
             contractsCount={state.contractsCount}
             unflaggedContractsCount={state.unflaggedContractsCount}
-            translations={translations}
           />
         )}
         {isFeatureVisible('crd.buyer.statistics')
@@ -87,7 +86,6 @@ const Buyer = ({
                       <ProcurementsByStatus
                         data={state.procurementsByStatusData}
                         length={state.maxCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -101,7 +99,6 @@ const Buyer = ({
                       <ProcurementsByMethod
                         data={state.procurementsByMethodData}
                         length={state.maxCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -125,7 +122,6 @@ const Buyer = ({
                       <WinsAndFlags
                         data={state.winsAndFlagsData}
                         length={state.max2ndRowCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -139,7 +135,6 @@ const Buyer = ({
                       <FlaggedNr
                         data={state.flaggedNrData}
                         length={state.max2ndRowCommonDataLength}
-                        translations={translations}
                       />
                     </TitleBelow>
                   </Zoomable>
@@ -161,7 +156,6 @@ const Buyer = ({
           )}
           <ProcurementsTable
             filters={buyerFilters}
-            translations={translations}
             navigate={navigate}
             fmPrefix="crd.buyer.procurements.col"
           />

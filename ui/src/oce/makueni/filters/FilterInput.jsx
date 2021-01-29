@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { tCreator } from '../../translatable';
+import { useTranslation } from 'react-i18next';
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 255;
 const EMPTY_STRING = '';
 
 const FilterInput = (props) => {
-  const { value, translations } = props;
+  const { value } = props;
   const [internalValue, setInternalValue] = useState(value);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const FilterInput = (props) => {
     const externalValue = (!newValue || newValue.length < MIN_LENGTH) ? EMPTY_STRING : newValue;
     props.onChange(externalValue);
   };
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   return (
     <FormGroup>
@@ -41,7 +41,6 @@ const FilterInput = (props) => {
 FilterInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string,
-  translations: PropTypes.object.isRequired,
 };
 
 FilterInput.defaultProps = {

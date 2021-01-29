@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import NoDataMessage from './NoData';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import { commonTenderTabTypes } from './singleUtil';
 
 const Tender = (props) => {
@@ -12,11 +12,10 @@ const Tender = (props) => {
     data,
     prId,
     isFeatureVisible,
-    translations,
     styling,
   } = props;
   const { currencyFormatter, formatDate } = styling.tables;
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   // eslint-disable-next-line no-unused-vars
   const getFeedbackSubject = () => {
@@ -176,7 +175,7 @@ const Tender = (props) => {
   );
 
   return (data === undefined
-    ? <NoDataMessage translations={props.translations} /> : getTenderView(data[0]));
+    ? <NoDataMessage /> : getTenderView(data[0]));
 };
 
 Tender.propTypes = {

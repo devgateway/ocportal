@@ -1,17 +1,19 @@
 import CatChart from './cat-chart';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
 
 class ExpenditureTodateVsBudget extends CatChart {
   static getName(t) { return t('charts:expenditureToDateVsBudget:title'); }
 
   getLayout() {
+    const { t } = this.props;
     return {
       xaxis: {
-        title: this.t('charts:expenditureToDateVsBudget:xAxisName'),
+        title: t('charts:expenditureToDateVsBudget:xAxisName'),
         type: 'category',
       },
       yaxis: {
-        title: this.t('charts:expenditureToDateVsBudget:yAxisName'),
+        title: t('charts:expenditureToDateVsBudget:yAxisName'),
         tickprefix: '   ',
       },
     };
@@ -21,5 +23,9 @@ class ExpenditureTodateVsBudget extends CatChart {
 ExpenditureTodateVsBudget.endpoint = 'expenditureToDateVsBudget';
 ExpenditureTodateVsBudget.CAT_NAME_FIELD = 'type';
 ExpenditureTodateVsBudget.CAT_VALUE_FIELD = 'amount';
+
+ExpenditureTodateVsBudget.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(ExpenditureTodateVsBudget, 'viz.me.chart.expenditureToDateVsBudget');

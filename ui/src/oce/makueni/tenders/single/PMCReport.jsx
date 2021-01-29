@@ -1,12 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
-import { tCreator } from '../../../translatable';
 import AuthImplReport from './AuthImplReport';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const PMCReport = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const authChildren = (i) => {
     const { isFeatureVisible } = props;

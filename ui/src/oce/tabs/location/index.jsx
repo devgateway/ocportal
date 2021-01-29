@@ -3,6 +3,7 @@ import { Set } from 'immutable';
 import React from 'react';
 import Tab from '../index';
 import TenderLocations from '../../visualizations/map/tender-locations';
+import PropTypes from 'prop-types';
 
 class LocationTab extends Tab {
   static getName(t) {
@@ -32,6 +33,7 @@ class LocationTab extends Tab {
   maybeGetSwitcher() {
     const { LAYERS } = this.constructor;
     const { switcherPos } = this.state;
+    const { t } = this.props;
     if (this.constructor.LAYERS.length > 1) {
       const { currentLayer, dropdownOpen } = this.state;
       return (
@@ -41,7 +43,7 @@ class LocationTab extends Tab {
             onClick={() => this.setState({ dropdownOpen: !dropdownOpen })}
           >
             <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1">
-              {LAYERS[currentLayer].getLayerName(this.t.bind(this))}
+              {LAYERS[currentLayer].getLayerName(t)}
               {' '}
               <span className="caret" />
             </button>
@@ -49,7 +51,7 @@ class LocationTab extends Tab {
               {LAYERS.map((layer, index) => (
                 <li key={index}>
                   <a onClick={() => this.setState({ currentLayer: index })}>
-                    {LAYERS[index].getLayerName(this.t.bind(this))}
+                    {LAYERS[index].getLayerName(t)}
                   </a>
                 </li>
               ))}
@@ -76,7 +78,7 @@ class LocationTab extends Tab {
   render() {
     const { currentLayer } = this.state;
     const {
-      data, requestNewData, translations, filters, years, styling, onUpdate,
+      data, requestNewData, t, filters, years, styling, onUpdate,
     } = this.props;
 
     const { LAYERS, CENTER, ZOOM } = this.constructor;
@@ -88,7 +90,7 @@ class LocationTab extends Tab {
           {...this.props}
           data={data.get(currentLayer)}
           requestNewData={(_, data) => requestNewData([currentLayer], data)}
-          translations={translations}
+          t={t}
           filters={filters}
           onUpdate={onUpdate}
           years={years}
@@ -106,5 +108,9 @@ LocationTab.computeComparisonYears = null;
 LocationTab.LAYERS = [TenderLocations];
 LocationTab.CENTER = [14.5, 105];
 LocationTab.ZOOM = 10;
+
+LocationTab.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default LocationTab;

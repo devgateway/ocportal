@@ -1,14 +1,14 @@
 import React from 'react';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
 import AuthImplReport from './AuthImplReport';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const InspectionReport = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const authChildren = (i) => {
     const { currencyFormatter } = props.styling.tables;
