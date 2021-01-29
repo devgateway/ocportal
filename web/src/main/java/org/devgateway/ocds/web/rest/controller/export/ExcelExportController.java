@@ -103,7 +103,7 @@ public class ExcelExportController extends GenericOCDSController {
         }
     }
 
-    @ApiOperation(value = "Export Makueni Data in Excel format.")
+    @ApiOperation(value = "Export Data in Excel format.")
     @RequestMapping(value = "/api/makueni/excelExport", method = {RequestMethod.GET, RequestMethod.POST})
     public void makueniExcelExport(final HttpServletResponse response) throws IOException {
         final List<ProcurementPlan> procurementPlans = procurementPlanService.findAll();
@@ -115,7 +115,7 @@ public class ExcelExportController extends GenericOCDSController {
         zout.setMethod(ZipOutputStream.DEFLATED);
         zout.setLevel(Deflater.NO_COMPRESSION);
 
-        ZipEntry ze = new ZipEntry("Makueni Data.xlsx");
+        ZipEntry ze = new ZipEntry("Export Data.xlsx");
         zout.putNextEntry(ze);
         byte[] bytes = excelGeneratorService.getExcelDownload(new ArrayList<>(procurementPlans), false);
         zout.write(bytes, 0, bytes.length);

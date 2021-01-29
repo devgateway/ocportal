@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 
+const DROPDOWN_WIDTH = 500;
+
 const FilterBox = (props) => {
   const {
-    title, open, active, onClick, onApply, onReset, right,
+    title, open, active, onClick, onApply, onReset,
   } = props;
 
   const { t } = useTranslation();
 
+  const box = useRef();
+
+  const [dropdownMarginLeft, setDropdownMarginLeft] = useState(0);
+
+  const handleClick = () => {
+    const { clientWidth } = document.documentElement;
+    setDropdownMarginLeft(Math.min(0, clientWidth - DROPDOWN_WIDTH - box.current.getBoundingClientRect().left));
+    onClick();
+  };
+
+  const style = {
+    marginLeft: dropdownMarginLeft,
+  };
+
   return (
-    <div onClick={onClick} className={cn('filter', { open, active })}>
+    <div onClick={handleClick} className={cn('filter', { open, active })} ref={box}>
       <span className="box-title">
         {title}
       </span>
@@ -18,8 +34,9 @@ const FilterBox = (props) => {
       {open
       && (
       <div
-        className={cn('dropdown', { 'dropdown-r': right })}
+        className={cn('dropdown')}
         onClick={(e) => e.stopPropagation()}
+        style={style}
       >
         <div className="box-content">
           {props.children}
