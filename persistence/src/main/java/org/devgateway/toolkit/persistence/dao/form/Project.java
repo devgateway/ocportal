@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "projectForm")
 public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Papers")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

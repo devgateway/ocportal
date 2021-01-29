@@ -20,16 +20,12 @@ $extend: 100%;
 .content {
     margin-top: $headerHeight * 2;
     margin-bottom: 96px;
-    @media screen and (max-width: 1024px) {
-        background-color: #f9f9f9;
-        margin-top: 175px;
-    }
     @media screen and (max-width: 992px) {
         margin-top: 0;
     }
     @media screen and (max-width: 767px) {
         background-color: #ffffff;
-        margin-top: $base-space * 3;
+        margin-top: 24px;
     }
 }
 
@@ -47,7 +43,6 @@ header.branding {
     height: $headerHeight;
     z-index: 1002;
     @media screen and (max-width: 992px) {
-        display: block;
         position: relative;
     }
     @media screen and (max-width: 767px) {
@@ -77,7 +72,6 @@ header.branding {
     height: $headerHeight;
     z-index: 1001;
     @media screen and (max-width: 992px) {
-        padding-top: 5px;
         position: relative;
         top: 0;
     }
@@ -344,13 +338,6 @@ $yearsBarHeight: 30px;
             line-height: 28px;
             margin-bottom: 3px;
 
-            @media screen and (max-width: 992px) {
-                display: block;
-                float: left;
-                width: 30%;
-            }
-
-
             &:hover {
                 background-color: #707070;
             }
@@ -567,10 +554,6 @@ footer.main-footer {
     float: right;
     height: 64px;
     padding: 0;
-    @media screen and (max-width: 992px) {
-        float: none;
-        margin-top: 58px;
-    }
     @media screen and (max-width: 767px){
         margin-top:0;
     }
@@ -607,7 +590,7 @@ footer.main-footer {
                 background-repeat: no-repeat;
                 background-position: center center;
                 background-size: 45px 45px;
-                @media screen and (max-width: 1024px) {
+                @media screen and (max-width: 992px) {
                     background-size: 60px 60px;
                 }
             }
@@ -617,7 +600,7 @@ footer.main-footer {
                 background-repeat: no-repeat;
                 background-position: center center;
                 background-size: 45px 45px;
-                @media screen and (max-width: 1024px) {
+                @media screen and (max-width: 992px) {
                     background-size: 60px 60px;
                 }
             }

@@ -36,7 +36,7 @@ const FilterDateYearMonth = (props) => {
     return (
       <a
         key={month}
-        className={cn('col-md-3', { active: included })}
+        className={cn('col-xs-3 col-md-4', { active: included })}
         onClick={() => handleOnChange(
           years,
           included
@@ -68,7 +68,7 @@ const FilterDateYearMonth = (props) => {
       .map((year) => (
         <a
           key={year}
-          className={cn('col-md-3', { active: years.includes(year) })}
+          className={cn('col-md-4 col-xs-3', { active: years.includes(year) })}
           onDoubleClick={() => toggleOthersYears(year)}
           onClick={(e) => (e.shiftKey ? toggleOthersYears(year) : toggleYear(year))}
         >

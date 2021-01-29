@@ -32,6 +32,10 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: inspectionReportForm.outcome
+  mandatory: no
+  enabled: yes
+  visible: no
 - name: inspectionReportForm.privateSectorRequests
   mandatory: no
   enabled: yes
@@ -52,6 +56,10 @@
   mandatory: yes
   enabled: yes
   visible: yes
+- name: inspectionReportForm.picture
+  mandatory: no
+  enabled: yes
+  visible: no
 - name: inspectionReportForm.revertToDraft
   enabled: yes
   visible: yes
@@ -183,3 +191,11 @@
   visible: yes
   visibleDeps:
     - inspectionReportForm.formDocs
+- name: publicView.inspectionReport.outcome
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.outcome
+- name: publicView.inspectionReport.picture
+  visible: yes
+  visibleDeps:
+    - inspectionReportForm.picture

@@ -116,7 +116,7 @@ const MakueniTenders = (props) => {
     );
   };
 
-  const { navigate, route } = props;
+  const { navigate, route, isFeatureVisible } = props;
   const [navigationPage, id] = route;
 
   const columns = [{
@@ -212,7 +212,8 @@ const MakueniTenders = (props) => {
           )}
         </div>
       </div>
-
+      {isFeatureVisible('publicView.subscribeToAlertsButton')
+      && (
       <div className="alerts-container">
         <div className="row alerts-button subscribe">
           <div className="col-md-12">
@@ -226,6 +227,9 @@ const MakueniTenders = (props) => {
           </div>
         </div>
       </div>
+      )}
+      {isFeatureVisible('publicView.smsHelpButton')
+      && (
       <div className="smshelp-container">
         <div className="row alerts-button subscribe">
           <div className="col-md-12">
@@ -239,6 +243,7 @@ const MakueniTenders = (props) => {
           </div>
         </div>
       </div>
+      )}
       <Footer translations={props.translations} />
     </div>
   );

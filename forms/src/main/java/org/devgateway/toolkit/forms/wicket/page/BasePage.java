@@ -97,15 +97,15 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPaymentVoucherPag
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionGroupPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
+import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -491,30 +491,20 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             protected List<AbstractLink> newSubMenuButtons(final String arg0) {
                 final List<AbstractLink> list = new ArrayList<>();
 
-                list.add(new MenuBookmarkablePageLink<ListAdministratorReportPage>(
-                        ListAdministratorReportPage.class, null,
-                        new StringResourceModel("navbar.administratorReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListAdministratorReportPage.class,
+                        "navbar.administratorReport", "navbar.administratorReport");
 
-                list.add(new MenuBookmarkablePageLink<ListInspectionReportPage>(
-                        ListInspectionReportPage.class, null,
-                        new StringResourceModel("navbar.inspectionReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListInspectionReportPage.class,
+                        "navbar.inspectionReport", "navbar.inspectionReport");
 
-                list.add(new MenuBookmarkablePageLink<ListPMCReportPage>(
-                        ListPMCReportPage.class, null,
-                        new StringResourceModel("navbar.pmcReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListPMCReportPage.class,
+                        "navbar.pmcReport", "navbar.pmcReport");
 
-                list.add(new MenuBookmarkablePageLink<ListMEReportPage>(
-                        ListMEReportPage.class, null,
-                        new StringResourceModel("navbar.meReport", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListMEReportPage.class,
+                        "navbar.meReport", "navbar.meReport");
 
-                list.add(new MenuBookmarkablePageLink<ListPaymentVoucherPage>(
-                        ListPaymentVoucherPage.class, null,
-                        new StringResourceModel("navbar.paymentVoucher", this, null)
-                ).setIconType(FontAwesomeIconType.file_text_o));
+                addFormMenuItem(list, ListPaymentVoucherPage.class,
+                        "navbar.paymentVoucher", "navbar.paymentVoucher");
 
                 return list;
             }
@@ -630,7 +620,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                         new StringResourceModel("navbar.jminix", this, null))
                         .setIconType(FontAwesomeIconType.bug));
 
-                final MenuBookmarkablePageLink<HALRedirectPage> halBrowserLink =
+                final MenuBookmarkablePageLink<HalBrowserHALRedirectPage> halBrowserLink =
                         new MenuBookmarkablePageLink<HALRedirectPage>(HALRedirectPage.class, null,
                                 new StringResourceModel("navbar.halbrowser", this, null)) {
                             private static final long serialVersionUID = 1L;

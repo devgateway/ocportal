@@ -33,7 +33,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Form
+@Form(featureName = "pmcReportForm")
 public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
@@ -54,12 +54,15 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
     private List<PMCMember> pmcMembers = new ArrayList<>();
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true, name = "Social Safeguards")
     private String socialSafeguards;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true, name = "Emerging Complaints")
     private String emergingComplaints;
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
+    @ExcelExport(useTranslation = true, name = "PMC Challenges")
     private String pmcChallenges;
 
     @ExcelExport(name = "PMC Notes", separateSheet = true)

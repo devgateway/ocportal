@@ -197,13 +197,13 @@ class AllTiles extends frontendDateFilterable(Visualization) {
                       data={stats}
                       requestNewData={() => null}
                       margin={{
-                        t: 10, r: 5, b: 50, l: 20, pad: 5,
+                        t: 10, r: 5, b: 40, l: 20, pad: 5,
                       }}
                       height={300}
                       years={years}
                       monthly={monthly}
                       months={months}
-                      width={width / 3 - 95}
+                      width={width / 3 - 47}
                       styling={styling}
                     />
                   </div>

@@ -85,13 +85,13 @@
   enabled: yes
   visible: yes
 - name: tenderForm.tenderItems.purchaseItem
-  mandatory: no
-  enabled: yes
-  visible: yes
-- name: tenderForm.tenderItems.planItem
-  mandatory: no
+  mandatory: yes
   enabled: yes
   visible: no
+- name: tenderForm.tenderItems.planItem
+  mandatory: yes
+  enabled: yes
+  visible: yes
 - name: tenderForm.tenderItems.quantity
   mandatory: yes
   enabled: yes
@@ -135,6 +135,10 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: tenderForm.billOfQuantities
+  mandatory: no
+  enabled: yes
+  visible: no
 - name: tenderForm.terminate
   enabled: yes
   visible: yes
@@ -153,6 +157,8 @@
   visibleDeps:
     - tenderForm.tenderProcess.procurementPlan.department
 - name: tendersList.downloadFile
+  visible: yes
+- name: tendersList.downloadOcds
   visible: yes
   visibleDeps:
     - tenderForm.formDocs
@@ -216,6 +222,10 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderValue
+- name: publicView.tender.billOfQuantities
+  visible: yes
+  visibleDeps:
+    - tenderForm.billOfQuantities
 - name: publicView.tender.targetGroup
   visible: yes
   visibleDeps:
@@ -258,3 +268,7 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderLink
+- name: publicView.tender.receiveAlertsButton
+  visible: yes
+  visibleDeps:
+    - publicView.subscribeToAlertsButton

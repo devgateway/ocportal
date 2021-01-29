@@ -40,50 +40,74 @@ const PurchaseReqView = (props) => {
       name: t('purchaseReq:tabs:tender'),
       tab: 1,
       fm: 'publicView.tender',
+      dataFn: (data) => data.tenderProcesses.tender,
+      component: Tender,
     }, {
       name: t('purchaseReq:tabs:purchaseReqs'),
       tab: 2,
       fm: 'publicView.purchaseRequisition',
+      dataFn: (data) => data.tenderProcesses.purchaseRequisition,
+      component: PurchaseReq,
     }, {
       name: t('purchaseReq:tabs:tenderEvaluation'),
       tab: 3,
       fm: 'publicView.tenderQuotationEvaluation',
+      dataFn: (data) => data.tenderProcesses.tenderQuotationEvaluation,
+      component: TenderQuotation,
     }, {
       name: t('purchaseReq:tabs:professionalOpinion'),
       tab: 4,
       fm: 'publicView.professionalOpinions',
+      dataFn: (data) => data.tenderProcesses.professionalOpinion,
+      component: ProfessionalOpinion,
     }, {
       name: t('purchaseReq:tabs:notification'),
       tab: 5,
       fm: 'publicView.awardNotification',
+      dataFn: (data) => data.tenderProcesses.awardNotification,
+      component: Notification,
     }, {
       name: t('purchaseReq:tabs:award'),
       tab: 6,
       fm: 'publicView.awardAcceptance',
+      dataFn: (data) => data.tenderProcesses.awardAcceptance,
+      component: Award,
     }, {
       name: t('purchaseReq:tabs:contract'),
       tab: 7,
       fm: 'publicView.contract',
+      dataFn: (data) => data.tenderProcesses.contract,
+      component: Contract,
     }, {
       name: t('purchaseReq:tabs:adminReports'),
       tab: 8,
       fm: 'publicView.administratorReport',
+      dataFn: (data) => data.tenderProcesses.administratorReports,
+      component: AdministratorReport,
     }, {
       name: t('purchaseReq:tabs:inspectionReports'),
       tab: 9,
       fm: 'publicView.inspectionReport',
+      dataFn: (data) => data.tenderProcesses.inspectionReports,
+      component: InspectionReport,
     }, {
       name: t('purchaseReq:tabs:pmcReports'),
       tab: 10,
       fm: 'publicView.pmcReport',
+      dataFn: (data) => data.tenderProcesses.pmcReports,
+      component: PMCReport,
     }, {
       name: t('purchaseReq:tabs:meReports'),
       tab: 11,
       fm: 'publicView.meReport',
+      dataFn: (data) => data.tenderProcesses.meReports,
+      component: MEReport,
     }, {
       name: t('purchaseReq:tabs:paymentVouchers'),
       tab: 12,
       fm: 'publicView.paymentVoucher',
+      dataFn: (data) => data.tenderProcesses.paymentVouchers,
+      component: PaymentVoucher,
     },
   ];
 
@@ -92,12 +116,19 @@ const PurchaseReqView = (props) => {
   };
 
   useEffect(() => {
-    getPurchaseRequisition({ id: maybeTrimOcidPrefix(id) }).then(setImmer(updateData));
-    setVisibleTabs(tabs.filter((tab) => isFeatureVisible(tab.fm)));
+    getPurchaseRequisition({ id: maybeTrimOcidPrefix(id) })
+      .then(setImmer(updateData));
+  }, [id]);
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    setVisibleTabs(tabs.filter((tab) => isFeatureVisible(tab.fm) && tab.dataFn(data)));
     if (visibleTabs.length > 0 && selected !== visibleTabs[0].tab) {
       changeTab(visibleTabs[0].tab);
     }
-  }, [id, isFeatureVisible]);
+  }, [data]);
 
   const isActive = (option) => {
     if (selected === undefined || selected === '') {
@@ -109,153 +140,20 @@ const PurchaseReqView = (props) => {
   const displayTab = () => {
     const { tenderTitle } = data.tenderProcesses.tender[0];
 
-    switch (selected) {
-      case 1:
-        return (
-          <Tender
-            data={data.tenderProcesses.tender}
-            prId={data.tenderProcesses._id}
-            department={data.department}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 2:
-        return (
-          <PurchaseReq
-            data={data.tenderProcesses.purchaseRequisition}
-            department={data.department}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 3:
-        return (
-          <TenderQuotation
-            data={data.tenderProcesses.tenderQuotationEvaluation}
-            tenderTitle={tenderTitle}
-            department={data.department}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 4:
-        return (
-          <ProfessionalOpinion
-            data={data.tenderProcesses.professionalOpinion}
-            tenderTitle={tenderTitle}
-            department={data.department}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 5:
-        return (
-          <Notification
-            data={data.tenderProcesses.awardNotification}
-            tenderTitle={tenderTitle}
-            department={data.department}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 6:
-        return (
-          <Award
-            data={data.tenderProcesses.awardAcceptance}
-            department={data.department}
-            tenderTitle={tenderTitle}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 7:
-        return (
-          <Contract
-            data={data.tenderProcesses.contract}
-            department={data.department}
-            tenderTitle={tenderTitle}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 8:
-        return (
-          <AdministratorReport
-            data={data.tenderProcesses.administratorReports}
-            department={data.department}
-            tenderTitle={tenderTitle}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 9:
-        return (
-          <InspectionReport
-            data={data.tenderProcesses.inspectionReports}
-            department={data.department}
-            tenderTitle={tenderTitle}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 10:
-        return (
-          <PMCReport
-            data={data.tenderProcesses.pmcReports}
-            department={data.department}
-            tenderTitle={tenderTitle}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 11:
-        return (
-          <MEReport
-            data={data.tenderProcesses.meReports}
-            department={data.department}
-            tenderTitle={tenderTitle}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      case 12:
-        return (
-          <PaymentVoucher
-            data={data.tenderProcesses.paymentVouchers}
-            department={data.department}
-            tenderTitle={tenderTitle}
-            fiscalYear={data.fiscalYear}
-            styling={props.styling}
-            translations={props.translations}
-          />
-        );
-
-      default:
-        throw new Error('Tab not implemented');
-    }
+    return visibleTabs
+      .filter((currentTab) => currentTab.tab === selected)
+      .map((currentTab) => (
+        <currentTab.component
+          key={currentTab.tab}
+          data={currentTab.dataFn(data)}
+          department={data.department}
+          fiscalYear={data.fiscalYear}
+          styling={props.styling}
+          translations={props.translations}
+          prId={data.tenderProcesses._id}
+          tenderTitle={tenderTitle}
+        />
+      ));
   };
 
   return (data !== undefined && (
@@ -286,6 +184,7 @@ const PurchaseReqView = (props) => {
         </span>
       </a>
 
+      {isFeatureVisible('publicView.tender.receiveAlertsButton') && (
       <div className="col-md-offset-5 col-md-4">
         <button
           className="btn btn-subscribe pull-right"
@@ -297,6 +196,7 @@ const PurchaseReqView = (props) => {
           {t('purchaseReq:receiveAlerts:caption')}
         </button>
       </div>
+      )}
     </div>
     {
       displayTab()

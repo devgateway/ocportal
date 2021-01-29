@@ -45,6 +45,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
+import org.devgateway.toolkit.forms.wicket.components.PlaceholderBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.components.util.EditViewResourceModel;
@@ -155,6 +156,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         addTenderProcess.setLabel(
                 new StringResourceModel("addTenderProcess", DepartmentOverviewPage.this, null));
+        addTenderProcess.setEnabled(getProcurementPlan() != null);
         addTenderProcess.setVisibilityAllowed(canAccessAddNewButtons(EditProjectPage.class));
         return addTenderProcess;
     }
@@ -543,6 +545,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 updateProjectDashboard(target);
             }
         });
+        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("project.searchBox.placeholder",
+                DepartmentOverviewPage.this)));
         return searchBoxField;
     }
 
@@ -555,6 +559,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 updateTenderProcessDashboard(target);
             }
         });
+        searchBoxField.add(new PlaceholderBehavior(new StringResourceModel("tender.searchBox.placeholder",
+                DepartmentOverviewPage.this)));
         return searchBoxField;
     }
 

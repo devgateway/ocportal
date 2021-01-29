@@ -42,9 +42,17 @@ const isShallowEqual = (a, b) => isEqualWith(a, b,
  * Creates a selector that will return filters without date properties.
  * Changes to date properties won't result in a new filters object.
  */
-const createDatelessFiltersSelector = () => {
+const createDatelessFiltersSelector = (excludeProps) => {
   const memoizeDatelessFilters = defaultMemoize((filters) => (filters), isShallowEqual);
-  return ({ year, month, ...datelessFilters }) => memoizeDatelessFilters(datelessFilters);
+  return (filters) => {
+    const datelessFilters = { ...filters };
+    delete datelessFilters.year;
+    delete datelessFilters.month;
+    if (excludeProps) {
+      excludeProps.forEach((prop) => delete datelessFilters[prop]);
+    }
+    return memoizeDatelessFilters(datelessFilters);
+  };
 };
 
 /**
@@ -85,6 +93,8 @@ class CorruptionRiskDashboard extends React.Component {
 
     this.selectDateFilters = createDateFiltersSelector();
     this.selectDatelessFilters = createDatelessFiltersSelector();
+    this.selectDatelessFiltersForSupplier = createDatelessFiltersSelector(['supplierId']);
+    this.selectDatelessFiltersForPE = createDatelessFiltersSelector(['procuringEntityId']);
   }
 
   componentDidMount() {
@@ -160,6 +170,7 @@ class CorruptionRiskDashboard extends React.Component {
         Component: SupplierPage,
         sgSlug: 'supplier',
         plSlug: 'suppliers',
+        selectDatelessFiltersFn: this.selectDatelessFiltersForSupplier,
       });
     } if (page === 'procuring-entities') {
       return this.renderArchive(ProcuringEntitiesPage, 'procuring-entities');
@@ -170,6 +181,7 @@ class CorruptionRiskDashboard extends React.Component {
         Component: ProcuringEntityPage,
         sgSlug: 'procuring-entity',
         plSlug: 'procuring-entities',
+        selectDatelessFiltersFn: this.selectDatelessFiltersForPE,
       });
     } if (page === 'buyer') {
       return this.renderSingle({
@@ -195,11 +207,13 @@ class CorruptionRiskDashboard extends React.Component {
     return TRANSLATIONS[locale];
   }
 
-  wireProps(_slug) {
+  wireProps(_slug, selectDatelessFiltersFn) {
     const slug = Array.isArray(_slug) ? _slug : [_slug];
     const translations = this.getTranslations();
     const { filters, width } = this.state;
-    const datelessFilters = this.selectDatelessFilters(filters);
+    const datelessFilters = selectDatelessFiltersFn
+      ? selectDatelessFiltersFn(filters)
+      : this.selectDatelessFilters(filters);
     const { years, months } = this.selectDateFilters(filters);
 
     return {
@@ -291,14 +305,14 @@ class CorruptionRiskDashboard extends React.Component {
   }
 
   renderSingle({
-    Component, sgSlug, plSlug, additionalProps,
+    Component, sgSlug, plSlug, additionalProps, selectDatelessFiltersFn,
   }) {
     const { route, navigate, styling } = this.props;
     const { indicatorTypesMapping } = this.state;
     const [, id] = route;
     return (
       <Component
-        {...this.wireProps(sgSlug)}
+        {...this.wireProps(sgSlug, selectDatelessFiltersFn)}
         id={id}
         styling={styling}
         doSearch={(query) => navigate(plSlug, query)}
@@ -364,7 +378,7 @@ class CorruptionRiskDashboard extends React.Component {
           navigate={navigate}
           styling={this.props.styling}
         />
-        <div className="col-sm-offset-3 col-md-9 col-sm-10 content">
+        <div className="col-sm-offset-3 col-sm-9 content">
           {this.getPage()}
         </div>
       </div>

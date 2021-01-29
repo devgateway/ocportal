@@ -164,6 +164,7 @@ public class ImportPostgresToMongo {
 
                     pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
+                    pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getBillOfQuantities()));
 
                     pr.setTenderQuotationEvaluation(new HashSet<>(
                             filterNotExportable(pr.getTenderQuotationEvaluation())));
@@ -226,16 +227,16 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.wards._id", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                new Index().on("tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
                         Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.tenderValue", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.tender.tenderValue", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.closingDate", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.tender.closingDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.lastModifiedDate", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.lastModifiedDate", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("projects.tenderProcesses.tender.lastModifiedDate", Sort.Direction.ASC));
+                new Index().on("tenderProcesses.tender.lastModifiedDate", Sort.Direction.ASC));
 
         Document fyDepartmentIndex = new Document();
         fyDepartmentIndex.put("fiscalYear.startDate", -1);
@@ -245,7 +246,7 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new TextIndexDefinition.TextIndexDefinitionBuilder()
                         .withDefaultLanguage(MongoConstants.MONGO_LANGUAGE)
-                        .onField("projects.tenderProcesses.tender.tenderTitle")
+                        .onField("tenderProcesses.tender.tenderTitle")
                         .onField("projects.projectTitle")
                         .build());
 
