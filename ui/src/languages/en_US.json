@@ -555,7 +555,7 @@
   "inspectionReport:contractValue": "Contract Sum",
   "inspectionReport:comments": "Comments",
   "inspectionReport:image": "Image",
-  "inspectionReport:outcome": "Outcome",
+  "inspectionReport:outcome": "Was the work satisfactory or unsatisfactory?",
   "inspectionReport:daysUntilReport": "No of days for the inspection report to be done",
   "inspectionReport:privateSectorRequest:sg": "Private Sector Request",
   "inspectionReport:privateSectorRequest:pl": "Private Sector Requests",
