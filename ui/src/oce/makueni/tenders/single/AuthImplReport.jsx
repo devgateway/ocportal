@@ -12,13 +12,14 @@ const AuthImplReport = (props) => {
   const authChildElements = (i) => {
     const { formatBoolean } = props.styling.tables;
     const { isFeatureVisible } = props;
-    return ([childElements && childElements(i), <div key="1" className="row">
-      {isFeatureVisible(`${fmPrefix}.authorizePayment`)
+    return ([childElements && childElements(i),
+      <div key="1" className="row">
+        {isFeatureVisible(`${fmPrefix}.authorizePayment`)
       && <Item label={t('authImplReport:authorizePayment')} value={formatBoolean(i.authorizePayment)} col={3} />}
-      {
+        {
         authChildren && authChildren(i)
       }
-    </div>]);
+      </div>]);
   };
 
   return (<ImplReport {...props} childElements={authChildElements} />);
