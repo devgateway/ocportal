@@ -626,6 +626,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         super.renderHead(response);
 
         // block UI
-        response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
+        if (!ComponentUtil.isPrintMode()) {
+            response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
+        }
     }
 }
