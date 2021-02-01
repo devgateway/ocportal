@@ -53,10 +53,6 @@
   mandatory: no
   enabled: yes
   visible: yes
-- name: contractForm.procuringEntity
-  mandatory: yes
-  enabled: yes
-  visible: yes
 - name: contractForm.referenceNumber
   mandatory: yes
   enabled: yes
@@ -155,10 +151,6 @@
   visible: yes
   visibleDeps:
     - contractForm.awardee
-- name: publicView.contract.procuringEntity
-  visible: yes
-  visibleDeps:
-    - contractForm.procuringEntity
 - name: publicView.contract.contractValue
   visible: yes
   visibleDeps:
