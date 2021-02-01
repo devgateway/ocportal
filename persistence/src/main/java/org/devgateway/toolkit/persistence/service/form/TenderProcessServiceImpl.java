@@ -169,7 +169,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
     }
 
     private TenderProcessValidator createValidator(AbstractMakueniEntity e) {
-        return new TenderProcessValidator(e != null);
+        return new TenderProcessValidator(e, e != null);
     }
 
     @Override
