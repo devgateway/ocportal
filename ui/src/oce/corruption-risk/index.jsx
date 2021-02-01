@@ -378,8 +378,10 @@ class CorruptionRiskDashboard extends React.Component {
           navigate={navigate}
           styling={this.props.styling}
         />
-        <div className="col-sm-offset-3 col-sm-9 content">
-          {this.getPage()}
+        <div className="row">
+          <div className="col-sm-offset-3 col-sm-9 content">
+            {this.getPage()}
+          </div>
         </div>
       </div>
     );
