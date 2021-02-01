@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -34,9 +35,11 @@ import java.util.stream.Stream;
 public class TenderProcessValidator implements Validator {
 
     private Boolean submission = false;
+    private AbstractMakueniEntity validatable;
 
-    public TenderProcessValidator(Boolean submission) {
+    public TenderProcessValidator(AbstractMakueniEntity validatable, Boolean submission) {
         this.submission = submission;
+        this.validatable = validatable;
     }
 
     public TenderProcessValidator() {
@@ -316,7 +319,7 @@ public class TenderProcessValidator implements Validator {
         nonDraft(tp.getAwardAcceptance()).findFirst().ifPresent(i -> aaCount.set(i.getItems().size()));
 
         if (existsNonDraftPair(tp.getAwardNotification(), tp.getProfessionalOpinion())) {
-            if (poCount.get() != anCount.get()) {
+            if (poCount.get() != anCount.get() && (!submission || validatable instanceof AwardNotification)) {
                 errors.reject("The Award Notifications count must match the Professional Opinions count");
             }
         }

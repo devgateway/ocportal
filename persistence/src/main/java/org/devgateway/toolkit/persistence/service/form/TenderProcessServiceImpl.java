@@ -81,7 +81,7 @@ public class TenderProcessServiceImpl extends AbstractMakueniEntityServiceImpl<T
     }
 
     private TenderProcessValidator createValidator(AbstractMakueniEntity e) {
-        return new TenderProcessValidator(e != null);
+        return new TenderProcessValidator(e, e != null);
     }
 
     @Override
