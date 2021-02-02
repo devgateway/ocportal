@@ -32,7 +32,7 @@ public interface ExcelSheet {
      * @param object
      * @param row
      */
-    void writeRow(Class clazz, Object object, Row row);
+    void writeRow(Class clazz, Object object, Row row, String parentFeatureName);
 
     /**
      * Write the received list of objects into an excel sheet.
@@ -42,13 +42,13 @@ public interface ExcelSheet {
      * @param clazz
      * @param objects
      */
-    void writeSheet(Class clazz, List<Object> objects);
+    void writeSheet(Class clazz, List<Object> objects, String parentFeatureName);
 
     /**
      * Write the objects and return the first row index.
      * Used to (possible) create a document link between sheets.
      */
-    int writeSheetGetLink(Class clazz, List<Object> objects);
+    int writeSheetGetLink(Class clazz, List<Object> objects, String parentFeatureName);
 
     /**
      * Returns the Sheet name.
