@@ -21,17 +21,17 @@ public class AbstractExcelSheetTest {
         }
 
         @Override
-        public void writeRow(Class clazz, Object object, Row row) {
+        public void writeRow(Class clazz, Object object, Row row, String parentFeatureName) {
 
         }
 
         @Override
-        public void writeSheet(Class clazz, List<Object> objects) {
+        public void writeSheet(Class clazz, List<Object> objects, String parentFeatureName) {
 
         }
 
         @Override
-        public int writeSheetGetLink(Class clazz, List<Object> objects) {
+        public int writeSheetGetLink(Class clazz, List<Object> objects, String parentFeatureName) {
             return 0;
         }
 
@@ -58,9 +58,9 @@ public class AbstractExcelSheetTest {
         excelSheet.writeCell("text", row, 2);
         excelSheet.writeCell(1, row, 3);
 
-        Assert.assertEquals(CellType.BLANK, row.getCell(0).getCellType());
+        Assert.assertEquals(CellType.BLANK, row.getCell(0).getCellTypeEnum());
         Assert.assertEquals("Yes", row.getCell(1).getStringCellValue());
-        Assert.assertEquals(CellType.STRING, row.getCell(2).getCellType());
-        Assert.assertEquals(CellType.NUMERIC, row.getCell(3).getCellType());
+        Assert.assertEquals(CellType.STRING, row.getCell(2).getCellTypeEnum());
+        Assert.assertEquals(CellType.NUMERIC, row.getCell(3).getCellTypeEnum());
     }
 }
