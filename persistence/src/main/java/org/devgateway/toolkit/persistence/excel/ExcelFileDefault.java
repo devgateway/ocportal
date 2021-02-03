@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.excel.service.TranslateService;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 
@@ -48,10 +49,11 @@ public class ExcelFileDefault implements ExcelFile {
             final ExcelSheet excelSheet = new ExcelSheetDefault(workbook, translateService, fmService, "no data");
             excelSheet.emptySheet();
         } else {
-            final Class clazz = this.objects.get(0).getClass();
+            final Class<?> clazz = this.objects.get(0).getClass();
+            Form form = clazz.getAnnotation(Form.class);
             String sheetName = getSheetNameFor(clazz);
             final ExcelSheet excelSheet = new ExcelSheetDefault(workbook, translateService, fmService, sheetName);
-            excelSheet.writeSheet(clazz, objects);
+            excelSheet.writeSheet(clazz, objects, form.featureName());
         }
 
         return workbook;
@@ -61,7 +63,7 @@ public class ExcelFileDefault implements ExcelFile {
      * Generate sheet name based on the title of the form.
      */
     private String getSheetNameFor(Class clazz) {
-        String sheetName = translateService.getTranslation(clazz);
+        String sheetName = translateService == null ? null : translateService.getTranslation(clazz);
         if (StringUtils.isEmpty(sheetName)) {
             sheetName = clazz.getSimpleName().toLowerCase();
         }

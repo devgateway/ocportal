@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 import { tCreator } from '../../translatable';
 
@@ -15,11 +15,22 @@ const FilterBox = (props) => {
 
   const [dropdownMarginLeft, setDropdownMarginLeft] = useState(0);
 
-  const handleClick = () => {
+  const updateDropdownPosition = () => {
     const { clientWidth } = document.documentElement;
-    setDropdownMarginLeft(Math.min(0, clientWidth - DROPDOWN_WIDTH - box.current.getBoundingClientRect().left));
+    const left = Math.min(0, clientWidth - DROPDOWN_WIDTH - box.current.getBoundingClientRect().left);
+    setDropdownMarginLeft(left);
+  };
+
+  const handleClick = () => {
+    updateDropdownPosition();
     onClick();
   };
+
+  useEffect(() => {
+    const update = updateDropdownPosition;
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   const style = {
     marginLeft: dropdownMarginLeft,

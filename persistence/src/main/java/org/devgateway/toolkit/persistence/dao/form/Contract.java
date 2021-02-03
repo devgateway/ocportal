@@ -64,11 +64,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Procuring Entity Name")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private ProcuringEntity procuringEntity;
-
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Contract Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -122,14 +117,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
 
     public void setReferenceNumber(final String referenceNumber) {
         this.referenceNumber = referenceNumber;
-    }
-
-    public ProcuringEntity getProcuringEntity() {
-        return procuringEntity;
-    }
-
-    public void setProcuringEntity(final ProcuringEntity procuringEntity) {
-        this.procuringEntity = procuringEntity;
     }
 
     public List<ContractDocument> getContractDocs() {

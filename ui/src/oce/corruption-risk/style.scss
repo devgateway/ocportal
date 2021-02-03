@@ -572,7 +572,6 @@ $borderColor: #eeeeee;
     .content {
         $arrowSize: 8px;
         margin-top: $filterHeight * 2;
-        padding-right: 0;
 
         @media screen and (max-width: 992px) {
             margin-top: 0;
@@ -603,6 +602,16 @@ $borderColor: #eeeeee;
 
             p.introduction, h2 + p.definition {
                 margin-top: -20px;
+            }
+
+            .table-crosstab {
+                .name-column {
+                    min-width: 130px;
+                }
+            }
+
+            .crosstab-container {
+                overflow-x: auto;
             }
         }
 
@@ -767,8 +776,17 @@ $borderColor: #eeeeee;
 
             @media (max-width: 768px) {
                 font-size: 8px;
-                margin-left: -30px;
-                width: 125%;
+                width: 100%;
+            }
+
+            .react-bootstrap-table {
+                overflow-x: auto;
+
+                .table {
+                    @media (max-width: 768px) {
+                        min-width: 550px;
+                    }
+                }
             }
         }
 

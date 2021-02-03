@@ -221,6 +221,8 @@
     - tenderForm.tenderValue
 - name: publicView.tendersProcesses.col.project
   visible: yes
+  visibleDeps:
+    - projectForm
 - name: publicView.tendersProcesses.col.tenderDocsOrLink
   visible: yes
 - name: publicView.tendersProcesses.tenderDocs
