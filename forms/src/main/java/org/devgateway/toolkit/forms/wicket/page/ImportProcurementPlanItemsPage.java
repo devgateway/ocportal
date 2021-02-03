@@ -233,9 +233,11 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                     continue;
                 }
                 PlanItem pi = new PlanItem();
-                Item item = itemService.findByCode(r.getCell(2).getStringCellValue());
+                String itemCode = toSingleLine(r.getCell(2).getStringCellValue());
+                Item item = itemService.findByCode(itemCode);
                 if (item == null) {
-                    item = createItem(r);
+                    String itemLabel = toSingleLine(r.getCell(3).getStringCellValue());
+                    item = createItem(itemCode, itemLabel);
                 }
                 pi.setItem(item);
                 pp.getPlanItems().add(pi);
@@ -270,6 +272,14 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         }
 
         return pp;
+    }
+
+    private String toSingleLine(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.replace('\n', ' ')
+                .replace("\r", "");
     }
 
     private ProcurementMethod getProcurementMethod(Row r) {
@@ -311,10 +321,10 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         return t;
     }
 
-    protected Item createItem(Row r) {
+    protected Item createItem(String code, String label) {
         Item item = new Item();
-        item.setCode(r.getCell(2).getStringCellValue());
-        item.setLabel(r.getCell(3).getStringCellValue());
+        item.setCode(code);
+        item.setLabel(label);
         return itemService.save(item);
     }
 
