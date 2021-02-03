@@ -327,8 +327,8 @@ public class MakueniDataController extends GenericOCDSController {
                 unwind("tender"),
                 project("tender.tenderItems"),
                 unwind("tenderItems"),
-                group("tenderItems.purchaseItem.planItem.item")
-                        .first("tenderItems.purchaseItem.planItem.item.label").as("label"),
+                group("tenderItems.nonNullPlanItem.item")
+                        .first("tenderItems.nonNullPlanItem.item.label").as("label"),
                 sort(Sort.by(Sort.Direction.ASC, "label"))
         );
 
