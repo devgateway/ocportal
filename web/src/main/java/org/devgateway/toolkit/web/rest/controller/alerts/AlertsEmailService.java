@@ -56,7 +56,7 @@ public class AlertsEmailService {
             msg.setTo(parent.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("You've received a reply to your feedback message!");
-            msg.setText("Click on the link below to view your message on the Government of Makueni County Open"
+            msg.setText("Click on the link below to view your message on the Government of Elgeyo Marakwet County Open"
                     + " Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
         };
         try {
@@ -108,17 +108,17 @@ public class AlertsEmailService {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
             final String content = "Hello,\n\n"
-                    + "Before you can receive Makueni Alerts we need to validate your email address.\n"
+                    + "Before you can receive Elgeyo Marakwet Alerts we need to validate your email address.\n"
                     + "You can do this by simply clicking on the link below: \n\n"
                     + "Verify email url: <a style=\"color: #3060ED; text-decoration: none;\" href=\""
                     + url + "\">" + url + "</a>\n\n"
                     + "If you have problems, please paste the above URL into your browser.\n\n"
                     + "Thanks,\n"
-                    + "Makueni Portal Team";
+                    + "Elgeyo Marakwet Portal Team";
 
             msg.setTo(alert.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
-            msg.setSubject("Makueni OC Portal - Please Verify Email Address");
+            msg.setSubject("Elgeyo Marakwet OC Portal - Please Verify Email Address");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
         try {
