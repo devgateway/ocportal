@@ -11,7 +11,6 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
 import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
@@ -96,23 +95,4 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
                 && (x.getStatus().equals(DBConstants.Status.SUBMITTED) || x.getStatus()
                 .equals(DBConstants.Status.APPROVED))).collect(Collectors.toList()));
     }
-
-    @Override
-    protected void beforeSaveEntity(final PaymentVoucher report) {
-        super.beforeSaveEntity(report);
-
-        final TenderProcess tenderProcess = report.getTenderProcess();
-        tenderProcess.addPaymentVoucher(report);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final PaymentVoucher report) {
-        super.beforeDeleteEntity(report);
-
-        final TenderProcess tenderProcess = report.getTenderProcess();
-        tenderProcess.removePaymentVoucher(report);
-        tenderProcessService.save(tenderProcess);
-    }
-
 }

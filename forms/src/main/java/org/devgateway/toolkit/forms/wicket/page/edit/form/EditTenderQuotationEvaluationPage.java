@@ -8,7 +8,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
@@ -58,24 +57,6 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
         tenderQuotationEvaluation.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return tenderQuotationEvaluation;
-    }
-
-    @Override
-    protected void beforeSaveEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        super.beforeSaveEntity(tenderQuotationEvaluation);
-
-        final TenderProcess tenderProcess = tenderQuotationEvaluation.getTenderProcess();
-        tenderProcess.addTenderQuotationEvaluation(tenderQuotationEvaluation);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        super.beforeDeleteEntity(tenderQuotationEvaluation);
-
-        final TenderProcess tenderProcess = tenderQuotationEvaluation.getTenderProcess();
-        tenderProcess.removeTenderQuotationEvaluation(tenderQuotationEvaluation);
-        tenderProcessService.save(tenderProcess);
     }
 
     @Override

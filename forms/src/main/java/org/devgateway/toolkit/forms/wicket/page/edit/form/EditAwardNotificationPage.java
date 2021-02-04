@@ -7,7 +7,6 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -53,24 +52,6 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
         awardNotification.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return awardNotification;
-    }
-
-    @Override
-    protected void beforeSaveEntity(final AwardNotification awardNotification) {
-        super.beforeSaveEntity(awardNotification);
-
-        final TenderProcess tenderProcess = awardNotification.getTenderProcess();
-        tenderProcess.addAwardNotification(awardNotification);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final AwardNotification awardNotification) {
-        super.beforeDeleteEntity(awardNotification);
-
-        final TenderProcess tenderProcess = awardNotification.getTenderProcess();
-        tenderProcess.removeAwardNotification(awardNotification);
-        tenderProcessService.save(tenderProcess);
     }
 
     @Override
