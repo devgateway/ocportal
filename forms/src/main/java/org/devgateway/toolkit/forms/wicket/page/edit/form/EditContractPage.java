@@ -21,7 +21,6 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -92,24 +91,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         contract.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return contract;
-    }
-
-    @Override
-    protected void beforeSaveEntity(final Contract contract) {
-        super.beforeSaveEntity(contract);
-
-        final TenderProcess tenderProcess = contract.getTenderProcess();
-        tenderProcess.addContract(contract);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final Contract contract) {
-        super.beforeDeleteEntity(contract);
-
-        final TenderProcess tenderProcess = contract.getTenderProcess();
-        tenderProcess.removeContract(contract);
-        tenderProcessService.save(tenderProcess);
     }
 
     public static List<Supplier> getAcceptedSupplier(TenderProcess tenderProcess) {
