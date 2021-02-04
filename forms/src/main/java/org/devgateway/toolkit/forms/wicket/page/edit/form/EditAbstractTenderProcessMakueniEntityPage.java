@@ -15,6 +15,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -104,7 +105,7 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
             alertTerminated.setVisibilityAllowed(true);
         }
 
-        saveTerminateButton.setVisibilityAllowed(!isTerminated()
+        saveTerminateButton.setVisibilityAllowed(!ComponentUtil.isPrintMode() && !isTerminated()
                 && editForm.getModelObject().getDirectChildrenEntitiesNotNull().isEmpty());
 
         if (editForm.getModelObject().hasDownstreamForms()

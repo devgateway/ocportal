@@ -591,6 +591,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected void onInitialize() {
         super.onInitialize();
 
+        createPrintLink();
+
         // we cant do anything if we dont have a jpaService here
         if (jpaService == null) {
             throw new NullJpaServiceException();
@@ -624,6 +626,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         super.renderHead(response);
 
         // block UI
-        response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
+        if (!ComponentUtil.isPrintMode()) {
+            response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
+        }
     }
 }
