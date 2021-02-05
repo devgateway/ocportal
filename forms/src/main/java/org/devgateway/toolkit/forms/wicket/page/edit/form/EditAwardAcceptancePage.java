@@ -10,6 +10,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardAcceptanceItemPa
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -58,6 +59,24 @@ public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntityP
         awardAcceptance.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return awardAcceptance;
+    }
+
+    @Override
+    protected void beforeSaveEntity(final AwardAcceptance awardAcceptance) {
+        super.beforeSaveEntity(awardAcceptance);
+
+        final TenderProcess tenderProcess = awardAcceptance.getTenderProcess();
+        tenderProcess.addAwardAcceptance(awardAcceptance);
+        tenderProcessService.save(tenderProcess);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final AwardAcceptance awardAcceptance) {
+        super.beforeDeleteEntity(awardAcceptance);
+
+        final TenderProcess tenderProcess = awardAcceptance.getTenderProcess();
+        tenderProcess.removeAwardAcceptance(awardAcceptance);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override

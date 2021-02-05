@@ -197,6 +197,24 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         sessionMetadataService.setSessionTenderProcess(null);
     }
 
+    @Override
+    protected void beforeSaveEntity(final Project project) {
+        super.beforeSaveEntity(project);
+
+        final ProcurementPlan procurementPlan = project.getProcurementPlan();
+        procurementPlan.addProject(project);
+        procurementPlanService.save(procurementPlan);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final Project project) {
+        super.beforeDeleteEntity(project);
+
+        final ProcurementPlan procurementPlan = project.getProcurementPlan();
+        procurementPlan.removeProject(project);
+        procurementPlanService.save(procurementPlan);
+    }
+
     private IValidator<String> uniqueTitle() {
         final StringValue id = getPageParameters().get(WebConstants.PARAM_ID);
         return new UniqueTitleValidator(id.toLong(-1));
