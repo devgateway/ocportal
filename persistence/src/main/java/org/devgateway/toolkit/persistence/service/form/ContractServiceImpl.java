@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class ContractServiceImpl extends AbstractTenderProcessEntityServiceImpl<Contract>
+public class ContractServiceImpl extends AbstractMakueniEntityServiceImpl<Contract>
         implements ContractService {
 
     @Autowired
