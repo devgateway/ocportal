@@ -371,6 +371,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                     download.initiate(target);
                 }
             };
+            excelButton.setEnabled(getProcurementPlan() != null);
             add(excelButton);
         }
     }
