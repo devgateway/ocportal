@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class AwardNotificationServiceImpl extends AbstractTenderProcessEntityServiceImpl<AwardNotification>
+public class AwardNotificationServiceImpl extends AbstractMakueniEntityServiceImpl<AwardNotification>
         implements AwardNotificationService {
 
     @Autowired

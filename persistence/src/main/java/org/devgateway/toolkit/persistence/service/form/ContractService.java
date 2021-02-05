@@ -6,6 +6,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 /**
  * @author gmutuhu
  */
-public interface ContractService extends AbstractTenderProcessEntityService<Contract> {
+public interface ContractService extends AbstractMakueniEntityService<Contract> {
     Contract findByTenderProcess(TenderProcess tenderProcess);
 }

@@ -2,8 +2,10 @@ package org.devgateway.toolkit.persistence.service.form;
 
 
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionGroupRepository;
+import org.devgateway.toolkit.persistence.repository.form.TenderRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class PurchaseRequisitionGroupServiceImpl
-        extends AbstractTenderProcessEntityServiceImpl<PurchaseRequisitionGroup>
+public class PurchaseRequisitionGroupServiceImpl extends AbstractMakueniEntityServiceImpl<PurchaseRequisitionGroup>
         implements PurchaseRequisitionGroupService {
 
     @Autowired
