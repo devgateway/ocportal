@@ -22,6 +22,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.PMCStatusService;
 import org.devgateway.toolkit.persistence.service.category.ProjectClosureHandoverService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
@@ -158,6 +159,24 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
     @Override
     protected void onBeforeSaveApprove(AjaxRequestTarget target) {
         editForm.getModelObject().setRejected(false);
+    }
+
+    @Override
+    protected void beforeSaveEntity(final PMCReport report) {
+        super.beforeSaveEntity(report);
+
+        final TenderProcess tenderProcess = report.getTenderProcess();
+        tenderProcess.addPMCReport(report);
+        tenderProcessService.save(tenderProcess);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final PMCReport report) {
+        super.beforeDeleteEntity(report);
+
+        final TenderProcess tenderProcess = report.getTenderProcess();
+        tenderProcess.removePMCReport(report);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
