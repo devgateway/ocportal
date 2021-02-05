@@ -12,6 +12,8 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.PrivateSectorRequestP
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.TechAdminRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.repository.category.InspectionReportOutcomeRepository;
 import org.devgateway.toolkit.persistence.service.category.InspectionReportOutcomeService;
 import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
@@ -74,4 +76,23 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
 
         editForm.add(new FileInputBootstrapFormComponent("picture"));
     }
+
+    @Override
+    protected void beforeSaveEntity(final InspectionReport report) {
+        super.beforeSaveEntity(report);
+
+        final TenderProcess tenderProcess = report.getTenderProcess();
+        tenderProcess.addInspectionReport(report);
+        tenderProcessService.save(tenderProcess);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final InspectionReport report) {
+        super.beforeDeleteEntity(report);
+
+        final TenderProcess tenderProcess = report.getTenderProcess();
+        tenderProcess.removeInspectonReport(report);
+        tenderProcessService.save(tenderProcess);
+    }
+
 }
