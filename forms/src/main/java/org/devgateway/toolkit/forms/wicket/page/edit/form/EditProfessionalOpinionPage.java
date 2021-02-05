@@ -7,6 +7,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ProfessionalOpinionItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -53,6 +54,24 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
         professionalOpinion.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return professionalOpinion;
+    }
+
+    @Override
+    protected void beforeSaveEntity(final ProfessionalOpinion professionalOpinion) {
+        super.beforeSaveEntity(professionalOpinion);
+
+        final TenderProcess tenderProcess = professionalOpinion.getTenderProcess();
+        tenderProcess.addProfessionalOpinion(professionalOpinion);
+        tenderProcessService.save(tenderProcess);
+    }
+
+    @Override
+    protected void beforeDeleteEntity(final ProfessionalOpinion professionalOpinion) {
+        super.beforeDeleteEntity(professionalOpinion);
+
+        final TenderProcess tenderProcess = professionalOpinion.getTenderProcess();
+        tenderProcess.removeProfessionalOpinion(professionalOpinion);
+        tenderProcessService.save(tenderProcess);
     }
 
     @Override
