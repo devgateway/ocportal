@@ -186,6 +186,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                         }
                     };
             listTenderProcessWrapper.setOutputMarkupId(true);
+            listTenderProcessWrapper.setOutputMarkupPlaceholderTag(true);
 
 
             add(listTenderProcessWrapper);
