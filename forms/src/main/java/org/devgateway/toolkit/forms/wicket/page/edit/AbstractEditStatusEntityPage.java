@@ -344,10 +344,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 Duration.minutes(settingsUtils.getAutosaveTime())) {
             @Override
             protected void onTimer(final AjaxRequestTarget target) {
-                if (hasNonRecoverableError()) {
-                    return;
-                }
-
                 // display block UI message until the page is reloaded
                 target.prependJavaScript(getShowBlockUICode());
 
