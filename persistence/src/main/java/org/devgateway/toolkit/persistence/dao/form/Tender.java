@@ -88,7 +88,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @ManyToOne
     private ProcuringEntity issuedBy;
 
-    @ExcelExport(useTranslation = true, name = "Tender Value")
+    @ExcelExport(useTranslation = true, name = "Tender Value (KES)")
     private BigDecimal tenderValue;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
