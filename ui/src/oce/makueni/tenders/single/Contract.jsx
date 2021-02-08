@@ -37,19 +37,22 @@ const Contract = (props) => {
         && <Item label={t('contract:expiryDate')} value={formatDate(contract.expiryDate)} col={4} />}
 
         {isFeatureVisible('publicView.contract.awardee.label')
-        && <Item label={t('contract:awardee:label')} value={contract.awardee.label} col={6} />}
+        && <Item label={t('contract:awardee:label')} value={contract.awardee.label} col={4} />}
 
         {isFeatureVisible('publicView.contract.awardee.address')
-        && <Item label={t('contract:awardee:address')} value={contract.awardee.address} col={6} />}
-
-        {isFeatureVisible('publicView.contract.procuringEntity')
-        && <Item label={t('contract:procuringEntity:label')} value={contract.procuringEntity.label} col={4} />}
+        && <Item label={t('contract:awardee:address')} value={contract.awardee.address} col={4} />}
 
         {isFeatureVisible('publicView.contract.contractValue')
         && <Item label={t('contract:contractValue')} value={currencyFormatter(contract.contractValue)} col={4} />}
 
         {isFeatureVisible('publicView.contract.contractApprovalDate')
-        && <Item label={t('contract:contractApprovalDate')} value={formatDate(contract.contractApprovalDate)} col={4} />}
+        && (
+        <Item
+          label={t('contract:contractApprovalDate')}
+          value={formatDate(contract.contractApprovalDate)}
+          col={4}
+        />
+        )}
       </div>
 
       {
