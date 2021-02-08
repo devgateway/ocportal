@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.ArrayUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
-import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
-import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
+import org.devgateway.toolkit.persistence.validator.Severity;
+import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.devgateway.toolkit.persistence.validator.validators.UniqueTenderProcessEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -42,6 +43,8 @@ import java.util.List;
         @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "contractForm")
+@UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
+        message = "{org.devgateway.toolkit.persistence.dao.form.UniqueContract.message}")
 public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
@@ -63,11 +66,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Reference Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
-
-    @ExcelExport(justExport = true, useTranslation = true, name = "Procuring Entity Name")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private ProcuringEntity procuringEntity;
 
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Contract Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -122,14 +120,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
 
     public void setReferenceNumber(final String referenceNumber) {
         this.referenceNumber = referenceNumber;
-    }
-
-    public ProcuringEntity getProcuringEntity() {
-        return procuringEntity;
-    }
-
-    public void setProcuringEntity(final ProcuringEntity procuringEntity) {
-        this.procuringEntity = procuringEntity;
     }
 
     public List<ContractDocument> getContractDocs() {

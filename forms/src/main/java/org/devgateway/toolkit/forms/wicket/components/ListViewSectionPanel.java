@@ -199,6 +199,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             }
         };
         listWrapper.add(showHideAllEntries);
+        showHideAllEntries.setVisibilityAllowed(!ComponentUtil.isPrintMode());
 
         final IModel listModel = new FilteredListModel<T>(getModel()) {
             @Override
@@ -254,6 +255,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     private void addAcordion(final ListItem<T> item) {
         final Label showDetailsLink = new Label("showDetailsLink", new ResourceModel("showDetailsLink"));
         showDetailsLink.setOutputMarkupId(true);
+        showDetailsLink.setVisibilityAllowed(!ComponentUtil.isPrintMode());
 
         // the section that will collapse
         final TransparentWebMarkupContainer hideableContainer =
@@ -276,6 +278,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 }
             }
         };
+        accordionToggle.setEnabled(!ComponentUtil.isPrintMode());
         accordionToggle.setOutputMarkupId(true);
         accordion.add(accordionToggle);
 
@@ -313,7 +316,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             }
         }
 
-        if (item.getModelObject().getExpanded()) {
+        if (item.getModelObject().getExpanded() ||  ComponentUtil.isPrintMode()) {
             hideableContainer.add(new AttributeModifier("class", new Model<>("panel-body panel-collapse collapse in")));
             showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLink"));
         }

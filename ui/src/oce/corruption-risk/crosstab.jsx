@@ -111,18 +111,22 @@ class Crosstab extends Table {
     if (!data) return null;
     if (!data.count()) return null;
     return (
-      <table className="table table-striped table-hover table-bordered table-crosstab">
-        <thead>
-          <tr>
-            <th />
-            <th># Flags</th>
-            {data.map((_, indicatorID) => <th key={indicatorID}>{t(`crd:indicators:${indicatorID}:name`)}</th>).toArray()}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((rowData, indicatorID) => this.row(rowData, indicatorID)).toArray()}
-        </tbody>
-      </table>
+      <div className="crosstab-container">
+        <table className="table table-striped table-hover table-bordered table-crosstab">
+          <thead>
+            <tr>
+              <th className="name-column" />
+              <th className="flags-column"># Flags</th>
+              {data.map((_, indicatorID) => (
+                <th className="percent-column" key={indicatorID}>{t(`crd:indicators:${indicatorID}:name`)}</th>
+              )).toArray()}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((rowData, indicatorID) => this.row(rowData, indicatorID)).toArray()}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

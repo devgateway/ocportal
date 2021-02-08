@@ -196,15 +196,18 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
         visibleStatusComments = getVisibleStatusComments();
         editForm.add(visibleStatusComments);
+        visibleStatusComments.setVisibilityAllowed(!ComponentUtil.isPrintMode());
 
         statusCommentsWrapper = new TransparentWebMarkupContainer("statusCommentsWrapper");
         statusCommentsWrapper.setOutputMarkupId(true);
         statusCommentsWrapper.setOutputMarkupPlaceholderTag(true);
         statusCommentsWrapper.setVisibilityAllowed(false);
         editForm.add(statusCommentsWrapper);
+        statusCommentsWrapper.setVisibilityAllowed(!ComponentUtil.isPrintMode());
 
         statusComments = getStatusCommentsListView();
         newStatusComment = getNewStatusCommentField();
+        newStatusComment.setVisibilityAllowed(!ComponentUtil.isPrintMode());
         statusCommentsWrapper.add(statusComments);
         editForm.add(newStatusComment);
 
@@ -341,6 +344,10 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 Duration.minutes(settingsUtils.getAutosaveTime())) {
             @Override
             protected void onTimer(final AjaxRequestTarget target) {
+                if (hasNonRecoverableError()) {
+                    return;
+                }
+
                 // display block UI message until the page is reloaded
                 target.prependJavaScript(getShowBlockUICode());
 

@@ -102,7 +102,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
     }
 
     @Override
-    public void writeRow(final Class clazz, final Object object, final Row row) {
+    public void writeRow(final Class clazz, final Object object, final Row row, final String parentFeatureName) {
         final Iterator<Field> fields = ExcelFieldService.getFields(clazz);
 
         // if we have a parent then the first row should be the parent name with a link.
@@ -120,6 +120,16 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
             final Field field = fields.next();
             final FieldType fieldType = ExcelFieldService.getFieldType(field);
 
+            Class<?> fieldClass = ExcelFieldService.getFieldClass(field);
+            Form form = fieldClass.getAnnotation(Form.class);
+            String featureName = form != null
+                    ? form.featureName()
+                    : String.format("%s.%s", parentFeatureName, field.getName());
+            if (fmService.hasFeature(featureName) && !fmService.isFeatureVisible(featureName)) {
+                logger.warn("not exporting: " + featureName);
+                continue;
+            }
+
             try {
                 switch (fieldType) {
                     case basic:
@@ -131,23 +141,21 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
 
                     case object:
                         headerPrefix.push(ExcelFieldService.getFieldName(clazz, field, translateService));
-                        Class fieldClass = ExcelFieldService.getFieldClass(field);
 
                         if (ExcelFieldService.isCollection(field)) {
                             final List<Object> flattenObjects = new ArrayList();
                             flattenObjects.addAll((Collection) getFieldValue(field, object));
-                            writeRowFlattenObject(fieldClass, flattenObjects, row);
+                            writeRowFlattenObject(fieldClass, flattenObjects, row, featureName);
                         } else {
-                            writeRow(fieldClass, getFieldValue(field, object), row);
+                            writeRow(fieldClass, getFieldValue(field, object), row, featureName);
                         }
 
                         headerPrefix.pop();
                         break;
 
                     case objectSeparateSheet:
-                        fieldClass = ExcelFieldService.getFieldClass(field);
-
                         if (isInvisibleForm(fieldClass)) {
+                            logger.warn("not exporting FORM: " + fieldClass.getName());
                             break;
                         }
 
@@ -172,7 +180,8 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
 
                         coll = getFreeColl(row);
                         writeHeaderLabel(clazz, field, row, coll);
-                        final int rowNumber = objectSepareteSheet.writeSheetGetLink(fieldClass, newObjects);
+                        final int rowNumber = objectSepareteSheet.writeSheetGetLink(fieldClass, newObjects,
+                                featureName);
                         if (rowNumber != -1) {
                             writeCellLink(objectSepareteSheet.getExcelSheetName(), row, coll,
                                     objectSepareteSheet.getExcelSheetName(), rowNumber);
@@ -238,12 +247,19 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
      * @param objects
      * @param row
      */
-    private void writeRowFlattenObject(final Class clazz, final List<Object> objects, final Row row) {
+    private void writeRowFlattenObject(final Class clazz, final List<Object> objects, final Row row,
+            final String parentFeatureName) {
         final Iterator<Field> fields = ExcelFieldService.getFields(clazz);
 
         while (fields.hasNext()) {
             final Field field = fields.next();
             final FieldType fieldType = ExcelFieldService.getFieldType(field);
+
+            String featureName = String.format("%s.%s", parentFeatureName, field.getName());
+            if (!fmService.isFeatureVisible(featureName)) {
+                logger.warn("not exporting: " + featureName);
+                continue;
+            }
 
             try {
                 switch (fieldType) {
@@ -278,7 +294,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
                                 }
                             }
 
-                            writeRowFlattenObject(fieldClass, newObjects, row);
+                            writeRowFlattenObject(fieldClass, newObjects, row, featureName);
                             headerPrefix.pop();
                         }
 
@@ -300,7 +316,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
     }
 
     @Override
-    public void writeSheet(final Class clazz, final List<Object> objects) {
+    public void writeSheet(final Class clazz, final List<Object> objects, String parentFeatureName) {
         for (Object obj : objects) {
             // apply rules for exporting Makueni Forms (see: OCMAKU-200)
             if (obj instanceof Statusable && !(obj instanceof CabinetPaper)) {
@@ -313,12 +329,12 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
             int lastRow = excelSheet.getLastRowNum();
             final Row row = createRow(excelSheet, ++lastRow);
 
-            writeRow(clazz, obj, row);
+            writeRow(clazz, obj, row, parentFeatureName);
         }
     }
 
     @Override
-    public int writeSheetGetLink(final Class clazz, final List<Object> objects) {
+    public int writeSheetGetLink(final Class clazz, final List<Object> objects, String parentFeatureName) {
         if (objects == null || objects.isEmpty()) {
             return -1;
         }
@@ -326,7 +342,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
         // check if this is first time when we created this sheet and skip header row
         // also add 2 since the getLastRowNum() function is 0-based and Excel is 1-based
         int lastRow = excelSheet.getLastRowNum() == 0 ? 2 : (excelSheet.getLastRowNum() + 2);
-        this.writeSheet(clazz, objects);
+        this.writeSheet(clazz, objects, parentFeatureName);
 
         return lastRow;
     }
