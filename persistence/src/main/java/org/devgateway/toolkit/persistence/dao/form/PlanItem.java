@@ -62,19 +62,19 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     @ManyToOne
     private TargetGroup targetGroup;
 
-    @ExcelExport(useTranslation = true, name = "Target Group Value")
+    @ExcelExport(useTranslation = true, name = "Target Group Value (KES)")
     private BigDecimal targetGroupValue;
 
-    @ExcelExport(useTranslation = true, name = "1st Quarter")
+    @ExcelExport(useTranslation = true, name = "1st Quarter (KES)")
     private BigDecimal quarter1st;
 
-    @ExcelExport(useTranslation = true, name = "2nd Quarter")
+    @ExcelExport(useTranslation = true, name = "2nd Quarter (KES)")
     private BigDecimal quarter2nd;
 
-    @ExcelExport(useTranslation = true, name = "3rd Quarter")
+    @ExcelExport(useTranslation = true, name = "3rd Quarter (KES)")
     private BigDecimal quarter3rd;
 
-    @ExcelExport(useTranslation = true, name = "4th Quarter")
+    @ExcelExport(useTranslation = true, name = "4th Quarter (KES)")
     private BigDecimal quarter4th;
 
     public Item getItem() {
