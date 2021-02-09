@@ -176,8 +176,13 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         final Fragment headerFragment = new Fragment(headerFragmentId, "headerFragment", this);
         headerFragment.setMarkupId("purchasereq-header-" + item.getModelObject().getId());
 
-        headerFragment.add(new Label("title",
-                new StringResourceModel("tenderProcess").setParameters(item.getIndex() + 1)));
+        Label titleLabel = getTenderProcessTitleLabel((item.getIndex() + 1), item.getModelObject());
+        if (item.getModelObject().getSingleTender() != null
+                && !StringUtils.isEmpty(item.getModelObject().getSingleTender().getTitle())) {
+            titleLabel.add(AttributeAppender.append("title",
+                    item.getModelObject().getSingleTender().getTitle()));
+        }
+        headerFragment.add(titleLabel);
         headerFragment.add(createValidationLabel(item));
 
         WebMarkupContainer terminatedRequisition = new WebMarkupContainer("terminatedRequisition");
@@ -189,11 +194,13 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         header.add(headerFragment);
     }
 
-    protected String getTenderProcessTitle(int index, TenderProcess tp) {
+    protected Label getTenderProcessTitleLabel(int index, TenderProcess tp) {
         if (tp.getSingleTender() != null && !StringUtils.isEmpty(tp.getSingleTender().getTitle())) {
-            return StringUtils.abbreviate(tp.getSingleTender().getTitle(), 100);
+            return new Label("tenderProcessTitle",
+                    StringUtils.abbreviate(tp.getSingleTender().getTitle(), 100));
         }
-        return "Tender Process " + index;
+        return new Label("tenderProcessTitle",
+                new StringResourceModel("tenderProcessIndexed").setParameters(index));
     }
 
     @Override
