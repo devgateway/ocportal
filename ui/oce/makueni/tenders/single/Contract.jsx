@@ -53,15 +53,11 @@ class Contract extends React.Component {
       </div>
 
       <div className="row padding-top-10">
-        <div className="col-md-4">
-          <div className="item-label">Procuring Entity Name</div>
-          <div className="item-value">{contract.procuringEntity.label}</div>
-        </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="item-label">Contract Value</div>
           <div className="item-value">{currencyFormatter(contract.contractValue)}</div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="item-label">Contract Approved Date</div>
           <div className="item-value">{formatDate(contract.contractApprovalDate)}</div>
         </div>
