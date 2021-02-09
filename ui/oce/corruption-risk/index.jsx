@@ -371,7 +371,7 @@ class CorruptionRiskDashboard extends React.Component {
           allYears={allYears}
           styling={this.props.styling}
         />
-        <div className="col-sm-offset-3 col-md-9 col-sm-10 content">
+        <div className="col-sm-offset-3 col-md-9 col-sm-10 content main-crd-content">
           {this.getPage()}
         </div>
       </div>
