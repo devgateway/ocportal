@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
@@ -13,4 +14,6 @@ import java.util.List;
  */
 public interface TenderItemService extends BaseJpaService<TenderItem> {
     List<TenderItem> findByPurchaseItemIn(Collection<PurchaseItem> purchaseItem);
+
+    List<TenderItem> findByPlanItem(PlanItem planItem);
 }
