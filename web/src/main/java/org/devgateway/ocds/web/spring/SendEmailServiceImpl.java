@@ -25,7 +25,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
@@ -96,12 +95,13 @@ public class SendEmailServiceImpl implements SendEmailService {
         msg.setFrom(DBConstants.FROM_EMAIL);
         msg.setSubject("Recover your password");
         msg.setText("Dear " + person.getFirstName() + " " + person.getLastName() + ",\n\n"
-                + "These are your new login credentials for Makueni.\n\n" + "Username: " + person.getUsername() + "\n"
+                + "These are your new login credentials for Elgeyo Marakwet.\n\n"
+                + "Username: " + person.getUsername() + "\n"
                 + "Password: " + newPassword + "\n\n"
                 + "At login, you will be prompted to change your password to one of your choice.\n\n" + "Thank you,\n"
                 + "DG Team");
         try {
-            send(msg);
+            javaMailSender.send(msg);
         } catch (MailException e) {
             e.printStackTrace();
         }
@@ -140,15 +140,15 @@ public class SendEmailServiceImpl implements SendEmailService {
                     + "at least 1 special character.\n"
                     + "2. Subsequently you may change your password on a need basis.\n\n"
                     + "Kind regards,\n"
-                    + "Makueni Team";
+                    + "Elgeyo Marakwet Team";
             msg.setTo(person.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
-            msg.setSubject("Your Makueni Account");
+            msg.setSubject("Your Elgeyo Marakwet Account");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
 
         try {
-            send(messagePreparator);
+            javaMailSender.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send new account email to userId=" + person.getId(), e);
         }
