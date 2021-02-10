@@ -27,6 +27,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,12 +50,19 @@ public class SendEmailServiceImpl implements SendEmailService {
     private HttpServletRequest request;
 
 
-    @Value("${disableEmail}")
-    private Boolean disableEmail = false;
+    @Value("${disableEmailSending:#{false}}")
+    private Boolean disableEmailSending;
+
+    @PostConstruct
+    public void postConstruct() {
+        if (disableEmailSending) {
+            logger.warn("**** SENDING OF EMAILS IS DISABLED !! ****");
+        }
+    }
 
     @Override
     public void send(MimeMessagePreparator mimeMessagePreparator) throws MailException {
-        if (disableEmail) {
+        if (disableEmailSending) {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             try {
                 mimeMessagePreparator.prepare(mimeMessage);
@@ -74,7 +82,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 
     @Override
     public void send(SimpleMailMessage simpleMessage) throws MailException {
-        if (disableEmail) {
+        if (disableEmailSending) {
             logger.info("Prepared Simple Message: " + simpleMessage.toString());
         } else {
             javaMailSender.send(simpleMessage);

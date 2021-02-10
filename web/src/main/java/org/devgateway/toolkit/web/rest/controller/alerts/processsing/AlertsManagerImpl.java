@@ -264,7 +264,9 @@ public class AlertsManagerImpl implements AlertsManager {
                 unwind("tenderProcesses.tender"),
                 match(where("tenderProcesses.tender.closingDate").gte(new Date())),
                 match(where("tenderProcesses.lastModifiedDate")    // change to "lte" for local testing
-                        .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))),
+                        .gte(alert.getLastChecked() != null
+                                ? Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant())
+                                : new Date(0))),
                 match(criteria));
 
         final List<Document> documents = mongoTemplate.aggregate(
