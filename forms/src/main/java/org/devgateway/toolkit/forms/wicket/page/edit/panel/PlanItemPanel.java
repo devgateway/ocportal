@@ -219,19 +219,19 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                 new ResourceModel("removeButton")) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
-                final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
-
-                if (purchaseItems.size() > 0) {
-                    final ValidationError error = new ValidationError();
-                    error.addKey("planItemError");
-                    error(error);
-                } else {
-                    PlanItemPanel.this.getModelObject().remove(item);
-                    listView.removeAll();
-                    target.add(listWrapper);
-                }
-
                 target.add(removeButtonNotificationPanel);
+                if (!item.isNew()) {
+                    final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
+                    if (purchaseItems.size() > 0) {
+                        final ValidationError error = new ValidationError();
+                        error.addKey("planItemError");
+                        error(error);
+                        return;
+                    }
+                }
+                PlanItemPanel.this.getModelObject().remove(item);
+                listView.removeAll();
+                target.add(listWrapper);
             }
         };
 
