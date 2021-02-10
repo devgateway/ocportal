@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
+import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class AlertsEmailService {
     private static final Logger logger = LoggerFactory.getLogger(AlertsEmailService.class);
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private SendEmailService emailSendingService;
 
     @Autowired
     private SMSMessageService smsMessageService;
@@ -60,7 +60,7 @@ public class AlertsEmailService {
                     + " Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send alert email for feedback message from " + message.getEmail());
             throw e;
@@ -122,7 +122,7 @@ public class AlertsEmailService {
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send verification email for: " + alert.getEmail(), e);
             throw e;
@@ -131,7 +131,7 @@ public class AlertsEmailService {
 
     public void sendEmailAlert(final Alert alert, final MimeMessagePreparator message) throws MailException {
         try {
-            javaMailSender.send(message);
+            emailSendingService.send(message);
         } catch (MailException e) {
             logger.error("Failed to send email alert for for: " + alert.getEmail(), e);
             throw e;
