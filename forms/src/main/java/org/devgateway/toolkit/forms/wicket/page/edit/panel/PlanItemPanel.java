@@ -32,11 +32,13 @@ import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
+import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.category.UnitService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseItemService;
+import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -61,6 +63,9 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @SpringBean
     private PurchaseItemService purchaseItemService;
+
+    @SpringBean
+    private TenderItemService tenderItemService;
 
     private final PlanItemFilterBean listFilterBean;
 
@@ -217,19 +222,28 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                 new ResourceModel("removeButton")) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
-                final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
-
-                if (purchaseItems.size() > 0) {
-                    final ValidationError error = new ValidationError();
-                    error.addKey("planItemError");
-                    error(error);
-                } else {
-                    PlanItemPanel.this.getModelObject().remove(item);
-                    listView.removeAll();
-                    target.add(listWrapper);
-                }
-
                 target.add(removeButtonNotificationPanel);
+                if (!item.isNew()) {
+                    final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
+
+                    if (purchaseItems.size() > 0) {
+                        final ValidationError error = new ValidationError();
+                        error.addKey("planItemErrorPurchase");
+                        error(error);
+                        return;
+                    }
+
+                    final List<TenderItem> tenderItems = tenderItemService.findByPlanItem(item);
+                    if (tenderItems.size() > 0) {
+                        final ValidationError error = new ValidationError();
+                        error.addKey("planItemErrorTender");
+                        error(error);
+                        return;
+                    }
+                }
+                PlanItemPanel.this.getModelObject().remove(item);
+                listView.removeAll();
+                target.add(listWrapper);
             }
         };
 
