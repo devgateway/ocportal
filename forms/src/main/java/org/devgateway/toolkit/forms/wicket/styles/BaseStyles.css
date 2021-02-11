@@ -203,6 +203,12 @@ h1.pageTitle {
 	padding-right: 9px;
 }
 
+.navbar-inverse .navbar-nav > li > a{
+  font-size: 1vw;
+  padding-left: 10px;
+	padding-right: 10px;
+}
+
 /* file upload
 -------------------------------------------------- */
 .file-preview.loading {
