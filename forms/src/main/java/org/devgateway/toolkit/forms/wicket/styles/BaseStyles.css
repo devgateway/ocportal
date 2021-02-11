@@ -165,7 +165,7 @@ body {
 
 .navbar-header .navbar-brand span {
     display: inline-block;
-    font-size: 1.1vw;
+    font-size: 1.05vw;
     font-weight: 700;
     margin-top: 10px;
     padding-left: 0;
@@ -199,8 +199,8 @@ h1.pageTitle {
 
 .navbar-inverse .navbar-nav > li > a{
   font-size: 1vw;
-  padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 9px;
+	padding-right: 9px;
 }
 
 /* file upload
