@@ -46,9 +46,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     @SpringBean
     protected TenderProcessService tenderProcessService;
 
-    @SpringBean
-    protected ProcuringEntityService procuringEntityService;
-
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
     private GenericSleepFormComponent supplierAddress;
@@ -84,7 +81,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
 
         ComponentUtil.addDateField(editForm, "contractApprovalDate").required();
         ComponentUtil.addDateField(editForm, "expiryDate").required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "procuringEntity", procuringEntityService).required();
 
         addSupplierInfo();
 

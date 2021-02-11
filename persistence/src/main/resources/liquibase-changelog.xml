@@ -1325,4 +1325,13 @@
         <addNotNullConstraint tableName="payment_voucher" columnName="tender_process_id"/>
     </changeSet>
 
+    <changeSet id="OCMAKU-901" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <foreignKeyConstraintExists foreignKeyName="fk1thmycnkpijd9t97s05q88ohy"/>
+        </preConditions>
+        <sql>
+            alter table contract drop constraint fk1thmycnkpijd9t97s05q88ohy;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
