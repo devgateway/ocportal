@@ -145,11 +145,15 @@
 - name: tenderForm.wards
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
+  visibleDeps:
+    - tenderForm.subcounties
+  enabledDeps:
+    - tenderForm.subcounties
 - name: tenderForm.subcounties
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 
 # TENDERS LIST PAGE
 - name: tenderForm.visibleStatusComments
