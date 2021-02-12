@@ -1468,7 +1468,7 @@
         <sql>
             CREATE FUNCTION insertWard(text, text) RETURNS void
             AS '
-            INSERT INTO category (id, label, subcounty_id, dtype, location_point) VALUES (nextval(''hibernate_sequence''),
+            INSERT INTO category (id, label, subcounty_id, dtype) VALUES (nextval(''hibernate_sequence''),
             $1, (select id from category where dtype = ''Subcounty'' and label = $2), ''Ward'');
             ' LANGUAGE SQL VOLATILE;
         </sql>
