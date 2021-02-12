@@ -1464,4 +1464,13 @@
               AND STRPOS(label, CHR(10)) > 0;
         ]]></sql>
     </changeSet>
+    <changeSet id="OCMAKU-916-insert-ward-function" author="mpostelnicu">
+        <sql>
+            CREATE FUNCTION insertWard(text, text) RETURNS void
+            AS '
+            INSERT INTO category (id, label, subcounty_id, dtype, location_point) VALUES (nextval(''hibernate_sequence''),
+            $1, (select id from category where dtype = ''Subcounty'' and label = $2), ''Ward'');
+            ' LANGUAGE SQL VOLATILE;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
