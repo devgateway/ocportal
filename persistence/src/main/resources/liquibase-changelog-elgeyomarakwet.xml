@@ -23,7 +23,7 @@
         <sql>delete from project_subcounties</sql>
         <sql>delete from alerts_subscription_wards</sql>
         <sql>delete from alerts_subscription_subcounties</sql>
-        <sql>delete from category where dtype='Subward'</sql>
+        <sql>delete from category where dtype='SubWard'</sql>
         <sql>delete from category where dtype='Ward'</sql>
         <sql>delete from category where dtype='Subcounty'</sql>
         <insert tableName="CATEGORY">
