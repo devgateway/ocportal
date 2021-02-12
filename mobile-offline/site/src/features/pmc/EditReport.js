@@ -586,6 +586,18 @@ function CheckboxField(props) {
     );
 }
 
+function TextAreaField(props) {
+    const error = (props.errors || {})[props.name];
+    return (
+        <div className="form-group">
+            <label>{props.label}</label>
+            <textarea name={props.name} value={props.value || ''} onChange={props.onChange} rows="2"
+                      className={"form-control" + (error ? " is-invalid" : "")} disabled={props.isDisabled} />
+            {error && <div className="invalid-feedback">{error}</div>}
+        </div>
+    );
+}
+
 function TextField(props) {
     const error = (props.errors || {})[props.name];
     return (
