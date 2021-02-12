@@ -101,11 +101,15 @@
 - name: contractForm.wards
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
+  visibleDeps:
+    - contractForm.subcounties
+  enabledDeps:
+    - contractForm.subcounties
 - name: contractForm.subcounties
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 
 # LIST PAGE
 - name: contractsList
