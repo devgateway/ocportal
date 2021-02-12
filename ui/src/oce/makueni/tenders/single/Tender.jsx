@@ -95,6 +95,24 @@ const Tender = (props) => {
         {isFeatureVisible('publicView.tender.targetGroup')
         && <Item label={t('tender:targetGroup')} value={tender.targetGroup && tender.targetGroup.label} col={4} />}
 
+        {isFeatureVisible('publicView.tender.wards')
+        && (
+        <Item
+          label={t('tender:wards')}
+          value={tender.wards && tender.wards.map((item) => item.label).join(', ')}
+          col={4}
+        />
+        )}
+
+        {isFeatureVisible('publicView.tender.subcounties')
+        && (
+        <Item
+          label={t('tender:subcounties')}
+          value={tender.subcounties && tender.subcounties.map((item) => item.label).join(', ')}
+          col={4}
+        />
+        )}
+
         {isFeatureVisible('publicView.tender.objective')
         && <Item label={t('tender:objective')} value={tender.objective} col={12} />}
       </div>

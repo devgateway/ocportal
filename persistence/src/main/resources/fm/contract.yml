@@ -98,6 +98,14 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: contractForm.wards
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.subcounties
+  mandatory: yes
+  enabled: yes
+  visible: yes
 
 # LIST PAGE
 - name: contractsList
@@ -159,6 +167,14 @@
   visible: yes
   visibleDeps:
     - contractForm.contractApprovalDate
+- name: publicView.contract.wards
+  visible: yes
+  visibleDeps:
+    - contractForm.wards
+- name: publicView.contract.subcounties
+  visible: yes
+  visibleDeps:
+    - contractForm.subcounties
 - name: publicView.contract.contractDocs
   visible: yes
   visibleDeps:
