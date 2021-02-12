@@ -110,9 +110,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_METADATA_ROLES;
 import static org.devgateway.toolkit.forms.WebConstants.PARAM_PRINT;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
@@ -392,6 +394,16 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
     }
 
+    private <L extends AbstractListPage> void
+    createAddListMenuWithRoles(List<AbstractLink> list, Collection<String> roles, Class<L> clazz, String resourceKey,
+                               IconType iconType) {
+        BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
+        for (String role : roles) {
+            MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+        }
+    }
+
+
 
     private NavbarDropDownButton newMetadataMenu() {
         // metadata menu
@@ -443,11 +455,11 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                         "navbar.stafflist", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListPMCStaffPage.class,
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListPMCStaffPage.class,
                         "navbar.pmcStaffList", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListDesignationPage.class,
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListDesignationPage.class,
                         "navbar.designations", FontAwesomeIconType.certificate
                 );
 
