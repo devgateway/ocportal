@@ -142,6 +142,14 @@
 - name: tenderForm.terminate
   enabled: yes
   visible: yes
+- name: tenderForm.wards
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.subcounties
+  mandatory: yes
+  enabled: yes
+  visible: yes
 
 # TENDERS LIST PAGE
 - name: tenderForm.visibleStatusComments
@@ -272,3 +280,11 @@
   visible: yes
   visibleDeps:
     - publicView.subscribeToAlertsButton
+- name: publicView.tender.wards
+  visible: yes
+  visibleDeps:
+    - tenderForm.wards
+- name: publicView.tender.subcounties
+  visible: yes
+  visibleDeps:
+    - tenderForm.subcounties
