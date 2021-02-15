@@ -8,6 +8,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
@@ -22,48 +23,50 @@ import javax.validation.constraints.NotNull;
 public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEntity<PrequalificationSchema>
         implements ListViewItem, Labelable {
 
-        @NotBlank
-        private String code;
+    @NotBlank
+    @Column(nullable = false)
+    private String code;
 
-        @NotBlank
-        private String name;
+    @NotBlank
+    @Column(nullable = false)
+    private String name;
 
-        @ManyToOne
-        @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-        @NotNull
-        private TargetGroup companyCategory;
+    @ManyToOne
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @NotNull
+    private TargetGroup companyCategory;
 
-        @Override
-        public void setLabel(String label) {
+    @Override
+    public void setLabel(String label) {
 
-        }
+    }
 
-        @Override
-        public String getLabel() {
-                return name;
-        }
+    @Override
+    public String getLabel() {
+        return name;
+    }
 
-        public String getCode() {
-                return code;
-        }
+    public String getCode() {
+        return code;
+    }
 
-        public void setCode(String code) {
-                this.code = code;
-        }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-        public String getName() {
-                return name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public void setName(String name) {
-                this.name = name;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public TargetGroup getCompanyCategory() {
-                return companyCategory;
-        }
+    public TargetGroup getCompanyCategory() {
+        return companyCategory;
+    }
 
-        public void setCompanyCategory(TargetGroup companyCategory) {
-                this.companyCategory = companyCategory;
-        }
+    public void setCompanyCategory(TargetGroup companyCategory) {
+        this.companyCategory = companyCategory;
+    }
 }

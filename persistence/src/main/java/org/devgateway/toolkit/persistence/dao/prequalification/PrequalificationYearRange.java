@@ -17,6 +17,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
@@ -31,6 +32,7 @@ import javax.validation.constraints.NotNull;
 public class PrequalificationYearRange extends AbstractAuditableEntity implements Labelable {
 
     @NotBlank
+    @Column(nullable = false)
     private String name;
 
     @NotNull
