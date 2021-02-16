@@ -24,14 +24,16 @@ public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEnti
         implements ListViewItem, Labelable {
 
     @NotBlank
+    @NotNull
     @Column(nullable = false)
     private String code;
 
     @NotBlank
+    @NotNull
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @NotNull
     private TargetGroup companyCategory;

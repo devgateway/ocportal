@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,12 @@ import java.util.List;
 public class PrequalificationSchema extends AbstractStatusAuditableEntity {
 
     @NotBlank
+    @NotNull
     @Column(nullable = false)
     private String name;
 
     @NotBlank
+    @NotNull
     @Column(nullable = false)
     private String prefix;
 

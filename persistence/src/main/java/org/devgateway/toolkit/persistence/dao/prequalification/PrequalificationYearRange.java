@@ -32,16 +32,19 @@ import javax.validation.constraints.NotNull;
 public class PrequalificationYearRange extends AbstractAuditableEntity implements Labelable {
 
     @NotBlank
+    @NotNull
     @Column(nullable = false)
     private String name;
 
     @NotNull
+    @Column(nullable = false)
     private Integer startYear;
 
     @NotNull
+    @Column(nullable = false)
     private Integer endYear;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @NotNull
     private PrequalificationSchema schema;
