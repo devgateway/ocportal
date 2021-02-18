@@ -181,12 +181,4 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         supplierAddress.setOutputMarkupId(true);
         item.add(supplierAddress);
     }
-
-
-    @Override
-    protected boolean filterListItem(final AwardNotificationItem purchaseItem) {
-        return true;
-    }
-
-
 }

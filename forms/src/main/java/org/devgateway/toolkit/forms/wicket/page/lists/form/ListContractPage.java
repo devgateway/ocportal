@@ -55,10 +55,16 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
     @Override
     protected void onInitialize() {
         attachFm("contractsList");
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
         addTenderTitleColumn();
         addFileDownloadColumn();
         addAwardeeColumn();
-        super.onInitialize();
     }
 
     @Override
@@ -68,7 +74,7 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
                         (new StringResourceModel("awardee", ListContractPage.this)).getString()),
                 "awardee",
                 "awardee",
-                new ListModel<>(awardees), dataTable, false
+                new ListModel<>(awardees), getDataTable(), false
         ));
     }
 
