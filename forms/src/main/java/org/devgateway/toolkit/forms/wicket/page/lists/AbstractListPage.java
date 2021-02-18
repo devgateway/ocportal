@@ -78,7 +78,7 @@ import java.util.zip.ZipOutputStream;
  * Data table is initialized in onInitialize() to allow greater flexibility for the subclasses in its own
  * initialization. Subclasses may not reference dataTable unless super.onInitialize() was called.
  *
- * TODO explain col init
+ * Columns must be added inside addColumns(). Data table and data provider are already instantiated at this point.
  *
  * @author mpostelnicu This class can be use to display a list of Categories
  * <p>
