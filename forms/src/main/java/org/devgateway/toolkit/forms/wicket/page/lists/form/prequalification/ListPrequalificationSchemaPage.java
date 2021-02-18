@@ -56,7 +56,7 @@ public class ListPrequalificationSchemaPage extends AbstractListStatusEntityPage
         addFmColumn("prequalificationYearRanges", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("prequalificationYearRanges", this),
                 "prequalificationYearRanges", "prequalificationYearRanges",
-                new ListModel<>(prequalificationYearRangeService.findAll()), dataTable
+                new ListModel<>(prequalificationYearRangeService.findAll()), getDataTable()
         ));
 
         super.onInitialize();
