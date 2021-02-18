@@ -8,13 +8,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
@@ -23,20 +21,13 @@ import javax.validation.constraints.NotNull;
 public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEntity<PrequalificationSchema>
         implements ListViewItem, Labelable {
 
-    @NotBlank
-    @NotNull
-    @Column(nullable = false)
     private String code;
 
-    @NotBlank
-    @NotNull
-    @Column(nullable = false)
     private String name;
 
-    @ManyToOne(optional = false)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @NotNull
-    private TargetGroup companyCategory;
+    @ManyToMany
+    private List<TargetGroup> companyCategories;
 
     @Override
     public void setLabel(String label) {
@@ -64,11 +55,11 @@ public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEnti
         this.name = name;
     }
 
-    public TargetGroup getCompanyCategory() {
-        return companyCategory;
+    public List<TargetGroup> getCompanyCategories() {
+        return companyCategories;
     }
 
-    public void setCompanyCategory(TargetGroup companyCategory) {
-        this.companyCategory = companyCategory;
+    public void setCompanyCategories(List<TargetGroup> companyCategories) {
+        this.companyCategories = companyCategories;
     }
 }

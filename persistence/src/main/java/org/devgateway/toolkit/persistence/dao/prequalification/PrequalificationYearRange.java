@@ -19,7 +19,10 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -29,9 +32,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Table(indexes = {@Index(columnList = "name")},
+        uniqueConstraints = {@UniqueConstraint(columnNames = "name"),
+                @UniqueConstraint(columnNames = {"startYear", "endYear"})})
 public class PrequalificationYearRange extends AbstractAuditableEntity implements Labelable {
 
-    @NotBlank
     @NotNull
     @Column(nullable = false)
     private String name;

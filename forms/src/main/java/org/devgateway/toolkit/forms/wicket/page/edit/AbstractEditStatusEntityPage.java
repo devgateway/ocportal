@@ -42,6 +42,7 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
@@ -274,7 +275,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
     }
 
-    public abstract boolean isDisableEditingEvent();
+    public boolean isDisableEditingEvent() {
+        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
+    }
 
     protected abstract boolean isViewMode();
 
@@ -661,6 +664,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         addApproveButtonPermissions(saveApproveButton);
         addSaveRevertButtonPermissions(revertToDraftPageButton);
         addDeleteButtonPermissions(deleteButton);
+        addSaveNextButtonPermissions(submitAndNext);
         addTerminateButtonPermissions(saveTerminateButton);
 
         // no need to display the buttons on print view so we overwrite the above permissions
@@ -674,15 +678,48 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         }
     }
 
-    protected abstract void addTerminateButtonPermissions(Component button);
+    protected void addSaveNextButtonPermissions(Component button) {
+        addDefaultAllButtonsPermissions(button);
+    }
 
-    protected abstract void addDeleteButtonPermissions(Component button);
+    protected void addTerminateButtonPermissions(Component button) {
+        addDefaultAllButtonsPermissions(button);
+        if (editForm.getModelObject().isNew()) {
+            button.setVisibilityAllowed(false);
+        }
+    }
 
-    protected abstract void addSaveRevertButtonPermissions(Component button);
+    protected void addDeleteButtonPermissions(Component button) {
+        addDefaultAllButtonsPermissions(button);
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
+        button.setVisibilityAllowed(entityId != null && !isTerminated() && !isViewMode());
+    }
 
-    protected abstract void addApproveButtonPermissions(Component button);
+    protected void addSaveRevertButtonPermissions(Component button) {
+        addDefaultAllButtonsPermissions(button);
 
-    protected abstract void addSaveButtonsPermissions(Component button);
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+
+        //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
+        if (FormSecurityUtil.isCurrentUserAdmin()
+                && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
+                || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
+            button.setVisibilityAllowed(true);
+        }
+    }
+
+    protected void addApproveButtonPermissions(Component button) {
+        addDefaultAllButtonsPermissions(button);
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
+    }
+
+    protected void addSaveButtonsPermissions(Component button) {
+        addDefaultAllButtonsPermissions(button);
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+    }
 
     protected void addDefaultAllButtonsPermissions(final Component button) {
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);

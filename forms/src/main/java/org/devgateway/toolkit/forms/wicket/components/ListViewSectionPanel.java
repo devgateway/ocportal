@@ -67,6 +67,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     protected DgFmService fmService;
 
     private ListItemsValidator listItemsValidator;
+    private AjaxLink<Void> showHideAllEntries;
 
     @Override
     public DgFmService getFmService() {
@@ -95,8 +96,16 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
     protected NotificationPanel addButtonNotificationPanel;
 
+    private final Boolean foldable;
+
     public ListViewSectionPanel(final String id) {
         super(id);
+        this.foldable = true;
+    }
+
+    public ListViewSectionPanel(final String id, final Boolean foldable) {
+        super(id);
+        this.foldable = foldable;
     }
 
     protected void checkAndSendEventForDisableEditing(IEventSink sink) {
@@ -166,7 +175,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 new StringResourceModel("totalEntries", this).setParameters(
                         (IModel<Integer>) () -> ListViewSectionPanel.this.getModel().getObject().size())));
 
-        final AjaxLink<Void> showHideAllEntries = new AjaxLink<Void>("showHideAllEntries") {
+        showHideAllEntries = new AjaxLink<Void>("showHideAllEntries") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 // take the list of elements from the path: listWrapper/list
@@ -199,7 +208,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             }
         };
         listWrapper.add(showHideAllEntries);
-        showHideAllEntries.setVisibilityAllowed(!ComponentUtil.isPrintMode());
+        showHideAllEntries.setVisibilityAllowed(foldable && !ComponentUtil.isPrintMode());
 
         final IModel listModel = new FilteredListModel<T>(getModel()) {
             @Override
@@ -223,11 +232,12 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 // we add the header #
                 item.add(new Label("headerNo", 1 + item.getIndex()));
 
-                // just keep the last element editable and expanded
-                if (item.getIndex() == getModel().getObject().size() - 1) {
+                // just keep the last element editable and expanded, unless non foldable
+                if (!foldable || item.getIndex() == getModel().getObject().size() - 1) {
                     item.getModelObject().setExpanded(true);
                     item.getModelObject().setEditable(true);
                 }
+
 
                 // we add the rest of the items in the listItem
                 populateCompoundListItem(item);
@@ -252,10 +262,17 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         add(addButtonNotificationPanel);
     }
 
-    private void addAcordion(final ListItem<T> item) {
+    protected Label createShowDetailsLink() {
         final Label showDetailsLink = new Label("showDetailsLink", new ResourceModel("showDetailsLink"));
         showDetailsLink.setOutputMarkupId(true);
-        showDetailsLink.setVisibilityAllowed(!ComponentUtil.isPrintMode());
+        showDetailsLink.setOutputMarkupPlaceholderTag(true);
+        showDetailsLink.setVisibilityAllowed(foldable && !ComponentUtil.isPrintMode());
+        return showDetailsLink;
+    }
+
+
+    private void addAcordion(final ListItem<T> item) {
+        Label showDetailsLink = createShowDetailsLink();
 
         // the section that will collapse
         final TransparentWebMarkupContainer hideableContainer =
@@ -270,6 +287,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         final AjaxLink<Void> accordionToggle = new AjaxLink<Void>(ID_ACCORDION_TOGGLE) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
+                if (!foldable) {
+                    return;
+                }
                 final T modelObject = item.getModelObject();
                 if (modelObject.getExpanded()) {
                     hideSection(modelObject, target, hideableContainer, showDetailsLink);
