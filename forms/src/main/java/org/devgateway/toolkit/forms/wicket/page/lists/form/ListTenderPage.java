@@ -133,6 +133,13 @@ public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tende
 
         attachFm("tendersList");
 
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
         addOcdsDownloadColumn();
 
         addFmColumn("tenderTitle", new TextFilteredBootstrapPropertyColumn<>(
@@ -140,9 +147,6 @@ public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tende
                 "tenderTitle", "tenderTitle"));
 
         addFileDownloadColumn();
-
-        super.onInitialize();
-
     }
 
     @Override

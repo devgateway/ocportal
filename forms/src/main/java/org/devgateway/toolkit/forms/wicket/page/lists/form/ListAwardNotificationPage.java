@@ -30,11 +30,17 @@ public class ListAwardNotificationPage extends ListAbstractTenderProcessMakueniE
     @Override
     protected void onInitialize() {
         attachFm("awardNotificationsList");
-        addTenderTitleColumn();
-        addAwardeeColumn();
+
         super.onInitialize();
     }
 
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
+        addTenderTitleColumn();
+        addAwardeeColumn();
+    }
 
     @Override
     public JpaFilterState<AwardNotification> newFilterState() {

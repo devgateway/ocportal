@@ -32,6 +32,13 @@ public class ListAlertPage extends AbstractListPage<Alert> {
 
     @Override
     protected void onInitialize() {
+        super.onInitialize();
+
+        editPageLink.setVisibilityAllowed(false);
+    }
+
+    @Override
+    protected void addColumns() {
         columns.add(new PropertyColumn<>(new StringResourceModel("email", this),
                 "email", "email"));
 
@@ -49,9 +56,5 @@ public class ListAlertPage extends AbstractListPage<Alert> {
 
         columns.add(new PropertyColumn<>(new StringResourceModel("lastSendDate", this),
                 "lastSendDate", "lastSendDate"));
-
-        super.onInitialize();
-
-        editPageLink.setVisibilityAllowed(false);
     }
 }

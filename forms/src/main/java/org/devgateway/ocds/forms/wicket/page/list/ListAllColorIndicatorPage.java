@@ -30,12 +30,14 @@ public class ListAllColorIndicatorPage extends AbstractListPage<ColorIndicatorPa
     @SpringBean
     protected ColorIndicatorPairService colorIndicatorPairService;
 
-
-
     public ListAllColorIndicatorPage(final PageParameters pageParameters) {
         super(pageParameters);
         this.jpaService = colorIndicatorPairService;
         this.editPageClass = EditColorIndicatorPairPage.class;
+    }
+
+    @Override
+    protected void addColumns() {
         columns.add(new PropertyColumn<>(new StringResourceModel("firstIndicator", this),
                 "firstIndicator", "firstIndicator"));
 
@@ -44,7 +46,5 @@ public class ListAllColorIndicatorPage extends AbstractListPage<ColorIndicatorPa
 
         columns.add(new PropertyColumn<>(new StringResourceModel("color", this),
                 "color", "color"));
-
     }
-
 }
