@@ -6,6 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -62,6 +63,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> implements
         DgFmFormComponentSubject {
     private static final Logger logger = LoggerFactory.getLogger(ListViewSectionPanel.class);
+
+    private static final MetaDataKey<Boolean> HEADER = new MetaDataKey<Boolean>() { };
 
     @SpringBean
     protected DgFmService fmService;
@@ -303,7 +306,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         accordion.add(accordionToggle);
 
         // we add the special header field
-        accordionToggle.add(getHeaderField("headerField", new CompoundPropertyModel<>(item.getModel())));
+        Component headerField = createHeaderField("headerField", new CompoundPropertyModel<>(item.getModel()));
+        headerField.setMetaData(HEADER, true);
+        accordionToggle.add(headerField);
 
         accordionToggle.add(showDetailsLink);
         accordion.add(hideableContainer);
@@ -447,13 +452,16 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
-            final T newChild = createNewChild(
-                    (IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel());
+            final T newChild = createNewChild(getParentModel());
             ListViewSectionPanel.this.getModelObject().add(newChild);
 
             listView.removeAll();
             target.add(listWrapper);
         }
+    }
+
+    protected IModel<PARENT> getParentModel() {
+        return (IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel();
     }
 
     private static void goToComponent(final AjaxRequestTarget target, final String markupId) {
@@ -469,10 +477,18 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         add(hiddenForm);
     }
 
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<T> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<T> compoundModel) {
         return new TransparentWebMarkupContainer(id);
     }
 
+    protected Component findHeaderField(final ListItem<T> item) {
+        return item.visitChildren((object, visit) -> {
+            Boolean value = object.getMetaData(HEADER);
+            if (value != null && value) {
+                visit.stop(object);
+            }
+        });
+    }
 
     /**
      * Use the constructor for new children and return the entity after setting its parent.
@@ -488,5 +504,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
      */
     public abstract void populateCompoundListItem(ListItem<T> item);
 
-    protected abstract boolean filterListItem(T t);
+    protected boolean filterListItem(T t) {
+        return true;
+    }
 }

@@ -176,12 +176,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
     }
 
     @Override
-    protected boolean filterListItem(final TenderItem tenderItem) {
-        return true;
-    }
-
-    @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<TenderItem> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<TenderItem> compoundModel) {
         return new TenderItemHeaderPanel(id, compoundModel);
     }
 

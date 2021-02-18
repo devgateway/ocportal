@@ -51,6 +51,7 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractMakueniEntityPage;
+import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -73,22 +74,28 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
+ *
+ * Data table is initialized in onInitialize() to allow greater flexibility for the subclasses in its own
+ * initialization. Subclasses may not reference dataTable unless super.onInitialize() was called.
+ *
+ * Columns must be added inside addColumns(). Data table and data provider are already instantiated at this point.
+ *
  * @author mpostelnicu This class can be use to display a list of Categories
  * <p>
  */
 public abstract class AbstractListPage<T extends GenericPersistable & Serializable> extends BasePage {
     protected Class<? extends AbstractEditPage<T>> editPageClass;
 
-    protected final AjaxFallbackBootstrapDataTable<T, String> dataTable;
+    private AjaxFallbackBootstrapDataTable<T, String> dataTable;
 
-    protected final List<IColumn<T, String>> columns;
+    protected final List<IColumn<T, String>> columns = new ArrayList<>();
 
     protected BaseJpaService<T> jpaService;
 
     protected boolean hasEditPage = true;
     protected boolean hasNewPage = true;
 
-    private final SortableJpaServiceDataProvider<T> dataProvider;
+    private AbstractDataProvider<T> dataProvider;
 
     protected BootstrapBookmarkablePageLink<T> editPageLink;
     protected BootstrapBookmarkablePageLink<T> topEditPageLink;
@@ -117,29 +124,14 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     public AbstractListPage(final PageParameters parameters) {
         super(parameters);
+    }
 
-        columns = new ArrayList<>();
-        dataProvider = new SortableJpaServiceDataProvider<>();
-        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
-
-        columns.add(new AbstractColumn<T, String>(new Model<>("#")) {
-            @Override
-            public void populateItem(final Item<ICellPopulator<T>> cellItem,
-                                     final String componentId,
-                                     final IModel<T> model) {
-                final OddEvenItem oddEvenItem = (OddEvenItem) cellItem.getParent().getParent();
-                final long index = WebConstants.PAGE_SIZE * dataTable.getCurrentPage() + oddEvenItem.getIndex() + 1;
-                cellItem.add(new Label(componentId, index));
-            }
-        });
+    protected AbstractDataProvider<T> createDataProvider() {
+        return new SortableJpaServiceDataProvider<>(jpaService);
     }
 
     public ActionPanel getActionPanel(final String id, final IModel<T> model) {
         return new ActionPanel(id, model);
-    }
-
-    public SortableJpaServiceDataProvider<T> getProvider() {
-        return new SortableJpaServiceDataProvider<>(jpaService);
     }
 
     @Override
@@ -153,8 +145,10 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             throw new NullEditPageClassException();
         }
 
-        dataProvider.setJpaService(jpaService);
+        dataProvider = createDataProvider();
         dataProvider.setFilterState(newFilterState());
+
+        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
         // create the excel download form; by default this form is hidden and we should make it visible only to pages
         // where we want to export entities to excel file
@@ -162,18 +156,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         excelForm.setVisibilityAllowed(false);
         add(excelForm);
 
-        // add the 'Edit' button
-        if (hasEditPage) {
-            columns.add(new AbstractColumn<T, String>(new StringResourceModel("actionsColumn", this, null)) {
-                private static final long serialVersionUID = -7447601118569862123L;
-
-                @Override
-                public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
-                                         final IModel<T> model) {
-                    cellItem.add(getActionPanel(componentId, model));
-                }
-            });
-        }
+        initializeColumns();
 
         final ResettingFilterForm<JpaFilterState<T>> filterForm =
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
@@ -222,6 +205,40 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         }
         add(editPageLink);
         add(topEditPageLink);
+    }
+
+    private void initializeColumns() {
+        columns.add(new AbstractColumn<T, String>(new Model<>("#")) {
+            @Override
+            public void populateItem(final Item<ICellPopulator<T>> cellItem,
+                    final String componentId,
+                    final IModel<T> model) {
+                final OddEvenItem<?> oddEvenItem = (OddEvenItem<?>) cellItem.getParent().getParent();
+                final long index = WebConstants.PAGE_SIZE * dataTable.getCurrentPage() + oddEvenItem.getIndex() + 1;
+                cellItem.add(new Label(componentId, index));
+            }
+        });
+
+        addColumns();
+
+        // add the 'Edit' button
+        if (hasEditPage) {
+            columns.add(new AbstractColumn<T, String>(new StringResourceModel("actionsColumn", this, null)) {
+                private static final long serialVersionUID = -7447601118569862123L;
+
+                @Override
+                public void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
+                        final IModel<T> model) {
+                    cellItem.add(getActionPanel(componentId, model));
+                }
+            });
+        }
+    }
+
+    protected abstract void addColumns();
+
+    public AjaxFallbackBootstrapDataTable<T, String> getDataTable() {
+        return dataTable;
     }
 
     public class ActionPanel extends Panel {
