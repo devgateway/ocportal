@@ -100,6 +100,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationSchemaPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -386,6 +387,14 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     }
 
     private <L extends AbstractListPage> void
+    createAddFmListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
+                              IconType iconType) {
+        if (fmService.isFeatureVisible(resourceKey)) {
+            createAddListMenuWithRole(list, role, clazz, resourceKey, iconType);
+        }
+    }
+
+    private <L extends AbstractListPage> void
     createAddListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
                               IconType iconType) {
         BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
@@ -470,6 +479,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListUnitPage.class,
                         "navbar.unitlist", FontAwesomeIconType.list
+                );
+
+                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationSchemaPage.class,
+                        "navbar.prequalificationSchema", FontAwesomeIconType.list
                 );
 
                 return list;
