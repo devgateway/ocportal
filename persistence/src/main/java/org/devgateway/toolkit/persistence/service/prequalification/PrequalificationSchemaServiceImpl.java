@@ -40,6 +40,12 @@ public class PrequalificationSchemaServiceImpl extends BaseJpaServiceImpl<Prequa
     }
 
     @Override
+    public long countByNameOrPrefix(PrequalificationSchema schema) {
+        return prequalificationSchemaRepository.countByNameOrPrefix(schema.getId(),
+                schema.getName(), schema.getPrefix());
+    }
+
+    @Override
     public Long saveDuplicateSchema(Long schemaId) {
         Optional<PrequalificationSchema> byId = findById(schemaId);
         if (!byId.isPresent()) {
