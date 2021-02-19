@@ -13,6 +13,11 @@ package org.devgateway.toolkit.persistence.dao.prequalification;
 
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.Labelable;
+import org.devgateway.toolkit.persistence.validator.Severity;
+import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
+import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchema;
+import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationYearRange;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -35,6 +40,8 @@ import javax.validation.constraints.NotNull;
 @Table(indexes = {@Index(columnList = "name")},
         uniqueConstraints = {@UniqueConstraint(columnNames = "name"),
                 @UniqueConstraint(columnNames = {"startYear", "endYear"})})
+@UniquePrequalificationYearRange(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
+        message = "{org.devgateway.toolkit.persistence.dao.prequalification.UniquePrequalificationYearRange.message}")
 public class PrequalificationYearRange extends AbstractAuditableEntity implements Labelable {
 
     @NotNull
@@ -50,7 +57,6 @@ public class PrequalificationYearRange extends AbstractAuditableEntity implement
     private Integer endYear;
 
     @ManyToOne(optional = false)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @NotNull
     private PrequalificationSchema schema;
 
@@ -70,7 +76,7 @@ public class PrequalificationYearRange extends AbstractAuditableEntity implement
 
     @Override
     public String getLabel() {
-        return startYear + "-" + endYear;
+        return name;
     }
 
     public Integer getStartYear() {
@@ -103,5 +109,10 @@ public class PrequalificationYearRange extends AbstractAuditableEntity implement
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+       return getLabel();
     }
 }

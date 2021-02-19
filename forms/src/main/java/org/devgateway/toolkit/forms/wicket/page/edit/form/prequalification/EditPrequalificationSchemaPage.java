@@ -15,6 +15,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.List
 import org.devgateway.toolkit.persistence.dao.categories.Category_;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema_;
+import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange_;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationSchemaService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -36,31 +37,19 @@ public class EditPrequalificationSchemaPage extends AbstractEditStatusEntityPage
 
     public TextFieldBootstrapFormComponent<String> createNameField() {
         final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
-        addUniquePropertyEntryValidator(name.getField(), PrequalificationSchema_.name, "uniqueName");
+        ComponentUtil.addUniquePropertyEntryValidator(name.getField(), PrequalificationSchema_.name, jpaService,
+                editForm.getModel(), "uniqueName");
         name.required();
         return name;
     }
 
-    private void addUniquePropertyEntryValidator(FormComponent<String> field,
-                                                 SingularAttribute<PrequalificationSchema, String> singularAttribute,
-                                                 String errorKey) {
-        field.add(new UniquePropertyEntryValidator<>(getString(errorKey),
-                jpaService::findAll,
-                (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(singularAttribute)),
-                        v.trim().toLowerCase()),
-                editForm.getModel()));
-    }
-
-
     public TextFieldBootstrapFormComponent<String> createPrefixField() {
         final TextFieldBootstrapFormComponent<String> prefix = ComponentUtil.addTextField(editForm, "prefix");
         prefix.required();
-        addUniquePropertyEntryValidator(prefix.getField(), PrequalificationSchema_.prefix, "uniquePrefix");
+        ComponentUtil.addUniquePropertyEntryValidator(prefix.getField(), PrequalificationSchema_.prefix, jpaService,
+                editForm.getModel(), "uniquePrefix");
         return prefix;
     }
-
-
-
 
     @Override
     protected void onInitialize() {
