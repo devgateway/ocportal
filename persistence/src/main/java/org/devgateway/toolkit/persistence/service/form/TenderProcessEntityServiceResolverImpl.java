@@ -1,11 +1,13 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import com.google.common.collect.ImmutableMap;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,8 +26,8 @@ public class TenderProcessEntityServiceResolverImpl implements TenderProcessEnti
 
     @PostConstruct
     public void init() {
-       serviceMap = tenderProcessServiceList.stream()
-               .collect(Collectors.toMap(s -> s.newInstance().getClass(), s -> s));
+       serviceMap = ImmutableMap.copyOf(tenderProcessServiceList.stream()
+               .collect(Collectors.toMap(s -> s.newInstance().getClass(), s -> s)));
     }
 
     @Override
