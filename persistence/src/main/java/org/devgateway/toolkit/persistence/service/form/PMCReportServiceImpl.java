@@ -8,7 +8,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.alerts.ApprovedReportRepository;
 import org.devgateway.toolkit.persistence.repository.form.PMCReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,11 +44,6 @@ public class PMCReportServiceImpl extends AbstractImplTenderProcessMakueniEntity
     @Override
     public List<PMCReport> findByTenderProcess(final TenderProcess tenderProcess) {
         return repository.findByTenderProcess(tenderProcess);
-    }
-
-    @Override
-    public TextSearchableRepository<PMCReport, Long> textRepository() {
-        return repository;
     }
 
     @Override

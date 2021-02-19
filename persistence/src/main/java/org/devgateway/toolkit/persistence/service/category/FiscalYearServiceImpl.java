@@ -1,15 +1,16 @@
 package org.devgateway.toolkit.persistence.service.category;
 
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear_;
 import org.devgateway.toolkit.persistence.repository.category.FiscalYearRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 
 /**
@@ -26,11 +27,6 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
 
     @Override
     protected BaseJpaRepository<FiscalYear, Long> repository() {
-        return fiscalYearRepository;
-    }
-
-    @Override
-    public TextSearchableRepository<FiscalYear, Long> textRepository() {
         return fiscalYearRepository;
     }
 
@@ -56,5 +52,10 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
     @Override
     public List<FiscalYear> getYearsWithData() {
         return fiscalYearRepository.getYearsWithData();
+    }
+
+    @Override
+    public SingularAttribute<? super FiscalYear, String> getTextAttribute() {
+        return FiscalYear_.name;
     }
 }
