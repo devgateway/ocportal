@@ -7,10 +7,12 @@ import org.devgateway.toolkit.persistence.repository.prequalification.Prequalifi
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.metamodel.SingularAttribute;
 
 @Service
+@Transactional
 public class PrequalificationYearRangeServiceImpl extends BaseJpaServiceImpl<PrequalificationYearRange>
         implements PrequalificationYearRangeService {
 

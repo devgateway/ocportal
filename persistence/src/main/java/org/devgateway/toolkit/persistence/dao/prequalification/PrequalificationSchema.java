@@ -2,6 +2,9 @@ package org.devgateway.toolkit.persistence.dao.prequalification;
 
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.Form;
+import org.devgateway.toolkit.persistence.dao.Labelable;
+import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -13,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,10 +27,13 @@ import java.util.Set;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "name")})
-public class PrequalificationSchema extends AbstractStatusAuditableEntity {
+@Form(featureName = "prequalificationSchemaForm")
+public class PrequalificationSchema extends AbstractStatusAuditableEntity implements Labelable {
 
+    @NotNull(groups = NonDraft.class)
     private String name;
 
+    @NotNull(groups = NonDraft.class)
     private String prefix;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -37,7 +44,7 @@ public class PrequalificationSchema extends AbstractStatusAuditableEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
-    @Size(min = 1)
+    @Size(min = 1, groups = NonDraft.class)
     private List<PrequalificationSchemaItem> items = new ArrayList<>();
 
     @Override
@@ -75,5 +82,20 @@ public class PrequalificationSchema extends AbstractStatusAuditableEntity {
 
     public void setPrequalificationYearRanges(Set<PrequalificationYearRange> prequalificationYearRanges) {
         this.prequalificationYearRanges = prequalificationYearRanges;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.name = label;
+    }
+
+    @Override
+    public String getLabel() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return getLabel();
     }
 }

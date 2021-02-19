@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -12,6 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -21,13 +25,16 @@ import java.util.List;
 public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEntity<PrequalificationSchema>
         implements ListViewItem, Labelable {
 
+    @NotNull(groups = NonDraft.class)
     private String code;
 
+    @NotNull(groups = NonDraft.class)
     private String name;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
-    private List<TargetGroup> companyCategories;
+    @Size(min = 1, groups = NonDraft.class)
+    private List<TargetGroup> companyCategories = new ArrayList<>();
 
     @Override
     public void setLabel(String label) {
