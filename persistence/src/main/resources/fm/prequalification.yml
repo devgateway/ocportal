@@ -1,7 +1,7 @@
 - name: prequalificationSchemaForm
-  enabled: yes
+  visible: no
 - name: prequalificationSchemaList
-  enabled: yes
+  visible: yes
 - name: prequalificationSchemaList.filterToolbar
   mandatory: no
   enabled: yes

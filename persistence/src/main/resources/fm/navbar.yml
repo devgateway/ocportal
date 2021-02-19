@@ -44,3 +44,6 @@
 - name: navbar.paymentVoucher
   visibleDeps:
     - paymentVoucherForm
+- name:  navbar.prequalificationSchema
+  visibleDeps:
+    - prequalificationSchemaForm
