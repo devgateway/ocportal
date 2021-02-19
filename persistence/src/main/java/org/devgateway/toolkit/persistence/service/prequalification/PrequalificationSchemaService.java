@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
 public interface PrequalificationSchemaService extends BaseJpaService<PrequalificationSchema>,
         TextSearchableService<PrequalificationSchema> {
 
+    long countByNameOrPrefix(PrequalificationSchema schema);
 
     Long saveDuplicateSchema(Long schemaId);
 }
