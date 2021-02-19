@@ -237,7 +237,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     protected abstract void addColumns();
 
-    public AjaxFallbackBootstrapDataTable<T, String> getDataTable() {
+    protected AjaxFallbackBootstrapDataTable<T, String> getDataTable() {
         return dataTable;
     }
 
