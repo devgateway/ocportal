@@ -1,44 +1,35 @@
 package org.devgateway.toolkit.persistence.service.filterstate.prequalification;
 
 import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.persistence.dao.TestForm;
-import org.devgateway.toolkit.persistence.dao.TestForm_;
+import org.devgateway.toolkit.persistence.dao.form.Contract_;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema_;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange_;
+import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
-public class PrequalificationSchemaFilterState extends StatusAuditableEntityFilterState<PrequalificationSchema> {
+public class PrequalificationYearRangeFilterState extends JpaFilterState<PrequalificationYearRange> {
     private String name;
-    private String prefix;
-    private PrequalificationYearRange prequalificationYearRanges;
+    private PrequalificationSchema schema;
 
     @Override
-    public Specification<PrequalificationSchema> getSpecification() {
+    public Specification<PrequalificationYearRange> getSpecification() {
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
             if (StringUtils.isNotBlank(name)) {
-                predicates.add(cb.like(root.get(PrequalificationSchema_.name), "%" + name + "%"));
+                predicates.add(cb.like(root.get(PrequalificationYearRange_.name), "%" + name + "%"));
             }
 
-            if (StringUtils.isNotBlank(prefix)) {
-                predicates.add(cb.like(root.get(PrequalificationSchema_.prefix), "%" + prefix + "%"));
-            }
-
-            if (prequalificationYearRanges != null) {
-                return subSetIn(root, query, PrequalificationSchema.class,
-                        PrequalificationSchema_.prequalificationYearRanges,
-                        PrequalificationYearRange_.id, PrequalificationYearRange::getId,
-                        Collections.singleton(prequalificationYearRanges));
+            if (schema != null) {
+                predicates.add(cb.equal(root.get(PrequalificationYearRange_.schema), schema));
             }
 
             predicates.add(super.getSpecification().toPredicate(root, query, cb));
@@ -54,11 +45,12 @@ public class PrequalificationSchemaFilterState extends StatusAuditableEntityFilt
         this.name = name;
     }
 
-    public String getPrefix() {
-        return prefix;
+
+    public PrequalificationSchema getSchema() {
+        return schema;
     }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+    public void setSchema(PrequalificationSchema schema) {
+        this.schema = schema;
     }
 }

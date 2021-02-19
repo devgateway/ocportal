@@ -34,4 +34,9 @@ public class PrequalificationYearRangeServiceImpl extends BaseJpaServiceImpl<Pre
     public SingularAttribute<? super PrequalificationYearRange, String> getTextAttribute() {
         return PrequalificationYearRange_.name;
     }
+
+    @Override
+    public long countByName(PrequalificationYearRange e) {
+        return prequalificationYearRangeRepository.countByName(e.getId(), e.getName());
+    }
 }
