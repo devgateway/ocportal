@@ -20,7 +20,7 @@ public class ContractServiceImpl extends AbstractTenderProcessEntityServiceImpl<
     private ContractRepository contractRepository;
 
     @Override
-    protected BaseJpaRepository<Contract, Long> repository() {
+    public BaseJpaRepository<Contract, Long> repository() {
         return contractRepository;
     }
 
