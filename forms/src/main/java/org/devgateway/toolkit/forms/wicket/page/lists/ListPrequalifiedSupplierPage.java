@@ -4,6 +4,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -17,19 +18,17 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.models.PersistableJpaRepositoryModel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditPrequalifiedSupplierPage;
-import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
+import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -91,7 +90,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
     public ListPrequalifiedSupplierPage(PageParameters parameters) {
         super(parameters);
 
-        filterModel = Model.of(new Filter());
+        filterModel = new DozerModel<>(new Filter());
     }
 
     @Override
@@ -100,23 +99,20 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         super.onInitialize();
 
-        // TODO test when there is no default year range!
-
         Filter filter = filterModel.getObject();
 
-        filter.setYearRange(new PersistableJpaRepositoryModel<>(prequalificationYearRangeService.findDefault(),
-                prequalificationYearRangeService));
+        filter.setYearRange(prequalificationYearRangeService.findDefault());
 
         Form<Filter> filterForm = new Form<>("form", new CompoundPropertyModel<>(filterModel));
 
         Select2MultiChoiceBootstrapFormComponent<PrequalificationSchemaItem> items;
         items = new Select2MultiChoiceBootstrapFormComponent<>("items",
-                new PrequalificationSchemaItemChoiceProvider(filter.getYearRange()));
+                new PrequalificationSchemaItemChoiceProvider(filterModel.map(Filter::getYearRange)));
         filterForm.add(items);
 
         Select2ChoiceBootstrapFormComponent<PrequalificationYearRange> yearRange;
         yearRange = new Select2ChoiceBootstrapFormComponent<PrequalificationYearRange>("yearRange",
-                new GenericPersistableJpaTextChoiceProvider<>(prequalificationYearRangeService), filter.yearRange) {
+                new GenericPersistableJpaTextChoiceProvider<>(prequalificationYearRangeService)) {
 
             @Override
             protected void onInitialize() {
@@ -162,7 +158,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
     private static final class Filter extends JpaFilterState<PrequalifiedSupplierItem> {
 
-        private IModel<PrequalificationYearRange> yearRange;
+        private PrequalificationYearRange yearRange;
 
         private List<PrequalificationSchemaItem> items = new ArrayList<>();
 
@@ -174,11 +170,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         private List<Ward> wards = new ArrayList<>();
 
-        public IModel<PrequalificationYearRange> getYearRange() {
+        public PrequalificationYearRange getYearRange() {
             return yearRange;
         }
 
-        public void setYearRange(IModel<PrequalificationYearRange> yearRange) {
+        public void setYearRange(PrequalificationYearRange yearRange) {
             this.yearRange = yearRange;
         }
 
@@ -233,7 +229,10 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 sub.select(subRoot);
 
                 List<Predicate> subPredicates = new ArrayList<>();
-                subPredicates.add(cb.equal(subRoot.get(PrequalifiedSupplier_.yearRange), yearRange.getObject()));
+
+                if (yearRange != null) {
+                    subPredicates.add(cb.equal(subRoot.get(PrequalifiedSupplier_.yearRange), yearRange));
+                }
 
                 if (!companyCategories.isEmpty()) {
                     subPredicates.add(subRoot.join(PrequalifiedSupplier_.supplier)
@@ -316,7 +315,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             @Override
             public void onClick(AjaxRequestTarget target) {
                 PageParameters params = new PageParameters();
-                PrequalificationYearRange yearRange = filterModel.getObject().getYearRange().getObject();
+                PrequalificationYearRange yearRange = filterModel.getObject().getYearRange();
                 if (yearRange != null) {
                     params.add("yearRangeId", yearRange.getId());
                 }
