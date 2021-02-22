@@ -9,6 +9,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.events.SupplierChanged;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactDropdownButton;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.NewContactAlert;
@@ -144,19 +145,6 @@ public class EditPrequalifiedSupplierPage extends AbstractEditPage<PrequalifiedS
         };
         supplier.required();
         editForm.add(supplier);
-    }
-
-    public static final class SupplierChanged {
-
-        private final AjaxRequestTarget target;
-
-        public SupplierChanged(AjaxRequestTarget target) {
-            this.target = target;
-        }
-
-        public AjaxRequestTarget getTarget() {
-            return target;
-        }
     }
 
     @Override

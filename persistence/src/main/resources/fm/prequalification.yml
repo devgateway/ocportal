@@ -1,5 +1,5 @@
 - name: prequalificationSchemaForm
-  visible: no
+  visible: yes
 
 - name: prequalificationSchemaList
   visible: yes
