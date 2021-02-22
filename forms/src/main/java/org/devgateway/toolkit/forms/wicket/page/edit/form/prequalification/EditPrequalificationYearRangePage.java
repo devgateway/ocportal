@@ -1,6 +1,9 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -36,6 +39,38 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
         this.jpaService = prequalificationYearRangeService;
         this.listPageClass = ListPrequalificationYearRangePage.class;
     }
+
+    protected class YearOrderValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            if (editForm.getModelObject() != null && editForm.getModelObject().getStartYear() != null
+                    && editForm.getModelObject().getEndYear() != null
+                    && editForm.getModelObject().getStartYear() > editForm.getModelObject().getEndYear()) {
+                form.error(getString("yearOrder"));
+            }
+        }
+    }
+
+    protected class NonOverlappingYearValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            if (editForm.getModelObject() != null
+                    && prequalificationYearRangeService.countByOverlapping(editForm.getModelObject()) != 0) {
+                form.error(getString("overlappingYears"));
+            }
+        }
+    }
+
 
     public TextFieldBootstrapFormComponent<String> createNameField() {
         final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
@@ -78,6 +113,8 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
         editForm.add(createSchemaField());
         editForm.add(createStartYearField());
         editForm.add(createEndYearField());
+        editForm.add(new YearOrderValidator());
+        editForm.add(new NonOverlappingYearValidator());
     }
 
 }
