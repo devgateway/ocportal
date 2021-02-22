@@ -89,6 +89,7 @@ body {
      * The main page content should have some height.
      */
     min-height: 20em;
+    padding-bottom: 15px;
 }
 @media (min-width: 1025px){
   .mainContainer{

@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -30,6 +31,7 @@ import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
+import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier_;
@@ -57,6 +59,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TODO implement delete in actions
@@ -284,7 +287,17 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         columns.add(new PropertyColumn<>(
                 new StringResourceModel("companyCategory", this), "parent.supplier.targetGroup"));
 
-        // TODO add subcounty + ward columns
+        columns.add(new LambdaColumn<>(
+                new StringResourceModel("subcounties", this),
+                item -> item.getParent().getSupplier().getSubcounties().stream()
+                        .map(Category::toString)
+                        .collect(Collectors.joining(", "))));
+
+        columns.add(new LambdaColumn<>(
+                new StringResourceModel("wards", this),
+                item -> item.getParent().getSupplier().getWards().stream()
+                        .map(Category::toString)
+                        .collect(Collectors.joining(", "))));
 
         columns.add(new PropertyColumn<>(
                 new StringResourceModel("directors", this), "nonNullContact.directors"));
