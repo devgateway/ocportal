@@ -28,13 +28,7 @@ public class ListAlertPage extends AbstractListPage<Alert> {
 
         this.jpaService = alertService;
         this.editPageClass = EditAlertPage.class;
-    }
-
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
-
-        editPageLink.setVisibilityAllowed(false);
+        this.hasNewPage = false;
     }
 
     @Override

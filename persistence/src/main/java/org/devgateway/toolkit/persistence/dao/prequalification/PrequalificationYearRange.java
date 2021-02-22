@@ -16,8 +16,10 @@ import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.validator.Severity;
 import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
 import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
+import org.devgateway.toolkit.persistence.validator.validators.NonOverlappingPrequalificationYearRange;
 import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchema;
 import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationYearRange;
+import org.devgateway.toolkit.persistence.validator.validators.YearOrderPrequalificationYearRange;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -28,7 +30,6 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -42,6 +43,10 @@ import javax.validation.constraints.NotNull;
                 @UniqueConstraint(columnNames = {"startYear", "endYear"})})
 @UniquePrequalificationYearRange(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.prequalification.UniquePrequalificationYearRange.message}")
+@NonOverlappingPrequalificationYearRange(groups = HighLevel.class, payload = Severity.NonRecoverable.class, message =
+         "{org.devgateway.toolkit.persistence.dao.prequalification.NonOverlappingPrequalificationYearRange.message}")
+@YearOrderPrequalificationYearRange(groups = HighLevel.class, payload = Severity.NonRecoverable.class, message =
+        "{org.devgateway.toolkit.persistence.dao.prequalification.YearOrderPrequalificationYearRange.message}")
 public class PrequalificationYearRange extends AbstractAuditableEntity implements Labelable {
 
     @NotNull

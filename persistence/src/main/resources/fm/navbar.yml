@@ -47,3 +47,6 @@
 - name:  navbar.prequalificationSchema
   visibleDeps:
     - prequalificationSchemaForm
+- name:  navbar.prequalificationYearRange
+  visibleDeps:
+    - prequalificationSchemaForm

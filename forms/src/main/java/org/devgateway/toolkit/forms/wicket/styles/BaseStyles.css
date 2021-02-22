@@ -415,7 +415,7 @@ hr.edit-separator {
     border-radius: 0;
 }
 
-.form-wrapper .panel-default > .panel-heading {
+.form-wrapper .panel-group > .panel-default > .panel-heading {
     background-color: #f6f6f6;
     border-radius: 0;
     padding: 0;

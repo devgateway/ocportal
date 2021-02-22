@@ -50,18 +50,12 @@ public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget>
         this.editPageClass = EditFiscalYearBudgetPage.class;
         this.departments = departmentService.findAll();
         this.fiscalYears = fiscalYearService.findAll();
+        this.hasNewPage = false;
     }
 
     protected final List<Department> departments;
 
     protected final List<FiscalYear> fiscalYears;
-
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
-        editPageLink.setVisibilityAllowed(false);
-        topEditPageLink.setVisibilityAllowed(false);
-    }
 
     @Override
     protected void addColumns() {

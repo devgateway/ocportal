@@ -101,6 +101,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListPurchaseRequisiti
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationSchemaPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationYearRangePage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -280,10 +281,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         createGoogleAnalyticsTracker();
     }
 
-    protected void createPrintLink() {
+    protected Component createPrintLink(String id) {
         PageParameters pp = new PageParameters(getPageParameters());
         pp.set(PARAM_PRINT, true);
-        printLink = new BootstrapBookmarkablePageLink<Void>("printLink", BasePage.this.getClass(), pp,
+        printLink = new BootstrapBookmarkablePageLink<Void>(id, BasePage.this.getClass(), pp,
                 Buttons.Type.Default) {
 
         };
@@ -292,6 +293,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         printLink.setPopupSettings(popupSettings);
         add(printLink);
         printLink.setVisibilityAllowed(!ComponentUtil.isPrintMode());
+        return printLink;
     }
 
     private NotificationPanel createFeedbackPanel() {
@@ -484,6 +486,11 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationSchemaPage.class,
                         "navbar.prequalificationSchema", FontAwesomeIconType.list
                 );
+
+                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationYearRangePage.class,
+                        "navbar.prequalificationYearRange", FontAwesomeIconType.list
+                );
+
 
                 return list;
             }

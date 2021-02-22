@@ -69,4 +69,8 @@ public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEnti
     public void setCompanyCategories(List<TargetGroup> companyCategories) {
         this.companyCategories = companyCategories;
     }
+
+    public String toString(PrequalificationYearRange yearRange) {
+        return String.format("%s/%s/%s: %s", getParent().getPrefix(), yearRange.getName(), code, name);
+    }
 }

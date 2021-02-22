@@ -63,7 +63,6 @@ public class ListPrequalificationSchemaPage extends AbstractListStatusEntityPage
     protected void onInitialize() {
         attachFm("prequalificationSchemaList");
         super.onInitialize();
-        topEditPageLink.setVisibilityAllowed(false);
         addOrReplace(createImportNewPageLink());
     }
 
