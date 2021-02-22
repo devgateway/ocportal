@@ -15,8 +15,6 @@ import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.validator.Severity;
 import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
-import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
-import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchema;
 import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationYearRange;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -28,7 +26,6 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**

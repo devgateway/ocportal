@@ -280,10 +280,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         createGoogleAnalyticsTracker();
     }
 
-    protected void createPrintLink() {
+    protected Component createPrintLink(String id) {
         PageParameters pp = new PageParameters(getPageParameters());
         pp.set(PARAM_PRINT, true);
-        printLink = new BootstrapBookmarkablePageLink<Void>("printLink", BasePage.this.getClass(), pp,
+        printLink = new BootstrapBookmarkablePageLink<Void>(id, BasePage.this.getClass(), pp,
                 Buttons.Type.Default) {
 
         };
@@ -292,6 +292,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         printLink.setPopupSettings(popupSettings);
         add(printLink);
         printLink.setVisibilityAllowed(!ComponentUtil.isPrintMode());
+        return printLink;
     }
 
     private NotificationPanel createFeedbackPanel() {

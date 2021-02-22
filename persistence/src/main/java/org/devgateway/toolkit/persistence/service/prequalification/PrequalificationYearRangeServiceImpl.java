@@ -6,9 +6,12 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.devgateway.toolkit.persistence.repository.prequalification.PrequalificationYearRangeRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import javax.persistence.metamodel.SingularAttribute;
 
 @Service
@@ -33,6 +36,16 @@ public class PrequalificationYearRangeServiceImpl extends BaseJpaServiceImpl<Pre
     @Override
     public SingularAttribute<? super PrequalificationYearRange, String> getTextAttribute() {
         return PrequalificationYearRange_.name;
+    }
+
+    @Override
+    public PrequalificationYearRange findDefault() {
+        return repository().findOne((Specification<PrequalificationYearRange>) (root, cq, cb) -> {
+            Subquery<Integer> subquery = cq.subquery(Integer.class);
+            Root<PrequalificationYearRange> subRoot = subquery.from(PrequalificationYearRange.class);
+            subquery.select(cb.max(subRoot.get(PrequalificationYearRange_.endYear)));
+            return cb.equal(root.get(PrequalificationYearRange_.endYear), subquery);
+        }).orElse(null);
     }
 
     @Override

@@ -7,5 +7,7 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
 public interface PrequalificationYearRangeService extends BaseJpaService<PrequalificationYearRange>,
         TextSearchableService<PrequalificationYearRange> {
 
+    PrequalificationYearRange findDefault();
+
     long countByName(PrequalificationYearRange range);
 }

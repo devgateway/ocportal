@@ -1,5 +1,6 @@
 - name: prequalificationSchemaForm
   visible: no
+
 - name: prequalificationSchemaList
   visible: yes
 - name: prequalificationSchemaList.filterToolbar
@@ -22,3 +23,89 @@
   mandatory: no
   enabled: yes
   visible: yes
+
+- name: prequalifiedSupplierForm
+  enabled: yes
+  visible: yes
+- name: prequalifiedSupplierForm.yearRange
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.supplier
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.directors
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.email
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.phoneNumber
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.mailingAddress
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items.item
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items.useDefaultContact
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items.directors
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items.email
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items.phoneNumber
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items.mailingAddress
+  enabled: yes
+  visible: yes
+  mandatory: yes
+- name: prequalifiedSupplierForm.items.newButton
+  visible: yes
+- name: prequalifiedSupplierForm.items.remove
+  visible: yes
+- name: prequalifiedSupplierForm.save
+  enabled: yes
+  visible: yes
+- name: prequalifiedSupplierForm.delete
+  enabled: yes
+  visible: yes
+- name: prequalifiedSupplierForm.cancel
+  enabled: yes
+  visible: yes
+
+- name: prequalifiedSupplierList
+  visible: yes
+- name: prequalifiedSupplierList.companyCategories
+  visible: true
+- name: prequalifiedSupplierList.items
+  visible: true
+- name: prequalifiedSupplierList.subcounties
+  visible: true
+- name: prequalifiedSupplierList.submit
+  visible: true
+- name: prequalifiedSupplierList.suppliers
+  visible: true
+- name: prequalifiedSupplierList.wards
+  visible: true
+- name: prequalifiedSupplierList.yearRange
+  visible: true

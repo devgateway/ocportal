@@ -30,7 +30,7 @@ public class PersistableJpaRepositoryModel<T extends GenericPersistable & Serial
         extends LoadableDetachableModel<T> {
     private static final long serialVersionUID = -3668189792112474025L;
 
-    private final Long id;
+    private Long id;
 
     private final BaseJpaService<T> jpaService;
 
@@ -49,7 +49,12 @@ public class PersistableJpaRepositoryModel<T extends GenericPersistable & Serial
     @Override
     protected T load() {
         return jpaService.findById(id).orElse(null);
+    }
 
+    @Override
+    public void setObject(T object) {
+        id = object.getId();
+        super.setObject(object);
     }
 
     @Override

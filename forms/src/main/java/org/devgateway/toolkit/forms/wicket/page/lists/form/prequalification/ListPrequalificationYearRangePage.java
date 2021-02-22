@@ -59,8 +59,6 @@ public class ListPrequalificationYearRangePage extends AbstractListPage<Prequali
     protected void onInitialize() {
         //attachFm("prequalificationSchemaList");
         super.onInitialize();
-        topEditPageLink.setVisibilityAllowed(false);
-
     }
 
     @Override

@@ -23,16 +23,11 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.GoAndClearFilter;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -45,9 +40,6 @@ import org.devgateway.toolkit.forms.exceptions.NullEditPageClassException;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
-import org.devgateway.toolkit.forms.wicket.components.table.AjaxFallbackBootstrapDataTable;
-import org.devgateway.toolkit.forms.wicket.components.table.ResettingFilterForm;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractMakueniEntityPage;
@@ -57,7 +49,6 @@ import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.domain.PageRequest;
@@ -67,8 +58,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -83,24 +72,13 @@ import java.util.zip.ZipOutputStream;
  * @author mpostelnicu This class can be use to display a list of Categories
  * <p>
  */
-public abstract class AbstractListPage<T extends GenericPersistable & Serializable> extends BasePage {
+public abstract class AbstractListPage<T extends GenericPersistable & Serializable> extends AbstractBaseListPage<T> {
     protected Class<? extends AbstractEditPage<T>> editPageClass;
-
-    private AjaxFallbackBootstrapDataTable<T, String> dataTable;
-
-    protected final List<IColumn<T, String>> columns = new ArrayList<>();
 
     protected BaseJpaService<T> jpaService;
 
     protected boolean hasEditPage = true;
     protected boolean hasNewPage = true;
-
-    private AbstractDataProvider<T> dataProvider;
-
-    protected BootstrapBookmarkablePageLink<T> editPageLink;
-    protected BootstrapBookmarkablePageLink<T> topEditPageLink;
-
-    protected Boolean filterGoReset = false;
 
     protected Form excelForm;
 
@@ -136,8 +114,6 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
-
         if (jpaService == null) {
             throw new NullJpaServiceException();
         }
@@ -145,82 +121,43 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             throw new NullEditPageClassException();
         }
 
-        dataProvider = createDataProvider();
-        dataProvider.setFilterState(newFilterState());
-
-        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
+        super.onInitialize();
 
         // create the excel download form; by default this form is hidden and we should make it visible only to pages
         // where we want to export entities to excel file
         excelForm = new ExcelDownloadForm("excelForm");
         excelForm.setVisibilityAllowed(false);
         add(excelForm);
-
-        initializeColumns();
-
-        final ResettingFilterForm<JpaFilterState<T>> filterForm =
-                new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
-        filterForm.add(dataTable);
-
-        // create custom submit button in order to prevent form submission
-        final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
-                new StringResourceModel("submit", this), Buttons.Type.Default) {
-
-            @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                super.onSubmit(target);
-
-                // don't do anything on submit, just refresh the table
-                target.add(dataTable);
-            }
-        };
-        filterForm.add(dataTable);
-        filterForm.add(submit);
-        filterForm.setDefaultButton(submit);
-
-        add(filterForm);
-
-        if (hasFilteredColumns()) {
-            GoAndClearFilter go = new BootstrapGoClearFilter("go", filterForm);
-            GoFilterToolbar filterToolbar = new GoFilterToolbar(dataTable, go, filterForm);
-            filterToolbar.setVisibilityAllowed(filterGoReset);
-            dataTable.addTopToolbar(filterToolbar);
-            filterToolbar.attachWithParentFm("filterToolbar");
-        }
-
-        if (hasNewPage) {
-            editPageLink = new BootstrapBookmarkablePageLink<>("new", editPageClass, Buttons.Type.Success);
-            editPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
-                    .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
-
-            topEditPageLink = new BootstrapBookmarkablePageLink<>("newTop", editPageClass, Buttons.Type.Success);
-            topEditPageLink.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
-                    .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
-        } else {
-            editPageLink = new BootstrapBookmarkablePageLink<T>("new", BasePage.class, Buttons.Type.Success);
-            editPageLink.setVisibilityAllowed(false);
-
-            topEditPageLink = new BootstrapBookmarkablePageLink<T>("newTop", BasePage.class, Buttons.Type.Success);
-            topEditPageLink.setVisibilityAllowed(false);
-        }
-        add(editPageLink);
-        add(topEditPageLink);
     }
 
-    private void initializeColumns() {
-        columns.add(new AbstractColumn<T, String>(new Model<>("#")) {
-            @Override
-            public void populateItem(final Item<ICellPopulator<T>> cellItem,
-                    final String componentId,
-                    final IModel<T> model) {
-                final OddEvenItem<?> oddEvenItem = (OddEvenItem<?>) cellItem.getParent().getParent();
-                final long index = WebConstants.PAGE_SIZE * dataTable.getCurrentPage() + oddEvenItem.getIndex() + 1;
-                cellItem.add(new Label(componentId, index));
-            }
-        });
+    @Override
+    protected Component createAddButton(String id) {
+        if (hasNewPage) {
+            BootstrapBookmarkablePageLink<T> button;
+            button = new BootstrapBookmarkablePageLink<>(id, editPageClass, Buttons.Type.Success);
+            button.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
+                    .setLabel(new StringResourceModel("new", AbstractListPage.this));
+            return button;
+        } else {
+            return super.createAddButton(id);
+        }
+    }
 
-        addColumns();
+    @Override
+    protected Component createTopAddButton(String id) {
+        if (hasNewPage) {
+            BootstrapBookmarkablePageLink<T> button;
+            button = new BootstrapBookmarkablePageLink<>(id, editPageClass, Buttons.Type.Success);
+            button.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
+                    .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
+            return button;
+        } else {
+            return super.createTopAddButton(id);
+        }
+    }
 
+    @Override
+    protected void addActionColumn() {
         // add the 'Edit' button
         if (hasEditPage) {
             columns.add(new AbstractColumn<T, String>(new StringResourceModel("actionsColumn", this, null)) {
@@ -233,12 +170,6 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                 }
             });
         }
-    }
-
-    protected abstract void addColumns();
-
-    protected AjaxFallbackBootstrapDataTable<T, String> getDataTable() {
-        return dataTable;
     }
 
     public class ActionPanel extends Panel {
@@ -305,19 +236,6 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         return new WebMarkupContainer("printButton").setVisibilityAllowed(false);
     }
 
-    private boolean hasFilteredColumns() {
-        for (final IColumn<?, ?> column : columns) {
-            if (column instanceof IFilteredColumn) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public JpaFilterState<T> newFilterState() {
-        return new JpaFilterState<>();
-    }
-
     /**
      * A wrapper form that is used to fire the excel download action
      */
@@ -344,7 +262,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
                                 final long count = excelGeneratorService.count(
                                         jpaService,
-                                        dataProvider.getFilterState().getSpecification());
+                                        getDataProvider().getFilterState().getSpecification());
 
                                 // if we need to export just one file then we don't create an archive
                                 if (count <= batchSize) {
@@ -354,7 +272,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
                                     final byte[] bytes = excelGeneratorService.getExcelDownload(
                                             jpaService,
-                                            dataProvider.getFilterState().getSpecification(),
+                                            getDataProvider().getFilterState().getSpecification(),
                                             pageRequest);
 
                                     response.setContentType(
@@ -375,7 +293,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                                                 Sort.Direction.ASC, "id");
                                         final byte[] bytes = excelGeneratorService.getExcelDownload(
                                                 jpaService,
-                                                dataProvider.getFilterState().getSpecification(),
+                                                getDataProvider().getFilterState().getSpecification(),
                                                 pageRequest);
                                         final ZipEntry ze = new ZipEntry("excel-export-page " + (i + 1) + ".xlsx");
                                         zout.putNextEntry(ze);
