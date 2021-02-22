@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.validator.Severity;
 import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchema;
+import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchemaItems;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -32,6 +33,8 @@ import java.util.Set;
 @Form(featureName = "prequalificationSchemaForm")
 @UniquePrequalificationSchema(groups = NonDraft.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.prequalification.UniquePrequalificationSchema.message}")
+@UniquePrequalificationSchemaItems(groups = NonDraft.class, payload = Severity.NonRecoverable.class,
+        message = "{org.devgateway.toolkit.persistence.dao.prequalification.UniquePrequalificationSchemaItems.message}")
 public class PrequalificationSchema extends AbstractStatusAuditableEntity implements Labelable {
 
     @NotNull(groups = NonDraft.class)
