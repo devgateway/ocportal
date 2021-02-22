@@ -38,7 +38,7 @@ public class EditPrequalificationSchemaPage extends AbstractEditStatusEntityPage
     public TextFieldBootstrapFormComponent<String> createNameField() {
         final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
         ComponentUtil.addUniquePropertyEntryValidator(name.getField(), PrequalificationSchema_.name, jpaService,
-                editForm.getModel(), "uniqueName");
+                editForm.getModel(), getString("uniqueName"));
         name.required();
         return name;
     }
@@ -47,7 +47,7 @@ public class EditPrequalificationSchemaPage extends AbstractEditStatusEntityPage
         final TextFieldBootstrapFormComponent<String> prefix = ComponentUtil.addTextField(editForm, "prefix");
         prefix.required();
         ComponentUtil.addUniquePropertyEntryValidator(prefix.getField(), PrequalificationSchema_.prefix, jpaService,
-                editForm.getModel(), "uniquePrefix");
+                editForm.getModel(), getString("uniquePrefix"));
         return prefix;
     }
 

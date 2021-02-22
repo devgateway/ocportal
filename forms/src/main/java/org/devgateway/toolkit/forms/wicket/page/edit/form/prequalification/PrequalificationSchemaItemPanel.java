@@ -14,6 +14,8 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
+import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchemaItemsValidator;
+import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchemaValidator;
 
 import java.util.List;
 
@@ -50,15 +52,15 @@ public class PrequalificationSchemaItemPanel extends ListViewSectionPanel<Prequa
     }
 
     protected boolean getWrongDistinctItemNameCount() {
-        long distinctCount = PrequalificationSchemaItemPanel.this.getModelObject()
-                .stream().map(PrequalificationSchemaItem::getName).distinct().count();
-        return distinctCount != PrequalificationSchemaItemPanel.this.getModelObject().size();
+       return UniquePrequalificationSchemaItemsValidator.wrongDistinctItemCount(
+               PrequalificationSchemaItemPanel.this.getModelObject(),
+                PrequalificationSchemaItem::getName);
     }
 
     protected boolean getWrongDistinctItemCodeCount() {
-        long distinctCount = PrequalificationSchemaItemPanel.this.getModelObject()
-                .stream().map(PrequalificationSchemaItem::getCode).distinct().count();
-        return distinctCount != PrequalificationSchemaItemPanel.this.getModelObject().size();
+        return UniquePrequalificationSchemaItemsValidator.wrongDistinctItemCount(
+                PrequalificationSchemaItemPanel.this.getModelObject(),
+                PrequalificationSchemaItem::getCode);
     }
 
 
