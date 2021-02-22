@@ -50,6 +50,13 @@ public class PrequalificationYearRangeServiceImpl extends BaseJpaServiceImpl<Pre
 
     @Override
     public long countByName(PrequalificationYearRange e) {
-        return prequalificationYearRangeRepository.countByName(e.getId(), e.getName());
+        return prequalificationYearRangeRepository.countByName(e.getId() == null ? -1 : e.getId(), e.getName());
+    }
+
+    @Override
+    public long countByOverlapping(PrequalificationYearRange range) {
+        return prequalificationYearRangeRepository.countByOverlapping(
+                range.getId() == null ? -1 : range.getId(), range.getStartYear(),
+                range.getEndYear());
     }
 }

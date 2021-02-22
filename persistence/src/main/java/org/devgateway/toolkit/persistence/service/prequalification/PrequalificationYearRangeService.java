@@ -10,4 +10,6 @@ public interface PrequalificationYearRangeService extends BaseJpaService<Prequal
     PrequalificationYearRange findDefault();
 
     long countByName(PrequalificationYearRange range);
+
+    long countByOverlapping(PrequalificationYearRange range);
 }
