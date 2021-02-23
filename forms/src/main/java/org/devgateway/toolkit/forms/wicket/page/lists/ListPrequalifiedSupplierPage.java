@@ -3,7 +3,9 @@ package org.devgateway.toolkit.forms.wicket.page.lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -50,6 +52,7 @@ import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationYearRangeService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierItemService;
+import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -62,13 +65,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * TODO implement delete in actions
- *
  * @author Octavian Ciubotaru
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/prequalifiedSuppliers")
 public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<PrequalifiedSupplierItem> {
+
+    @SpringBean
+    private PrequalifiedSupplierService prequalifiedSupplierService;
 
     @SpringBean
     private PrequalifiedSupplierItemService prequalifiedSupplierItemService;
@@ -89,6 +93,10 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
     private WardService wardService;
 
     private final IModel<Filter> filterModel;
+
+    private TextContentModal deleteModal;
+
+    private IModel<PrequalifiedSupplierItem> itemToDeleteModel;
 
     public ListPrequalifiedSupplierPage(PageParameters parameters) {
         super(parameters);
@@ -153,6 +161,9 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         });
 
         add(filterForm);
+
+        deleteModal = createDeleteModal();
+        add(deleteModal);
     }
 
     protected AbstractDataProvider<PrequalifiedSupplierItem> createDataProvider() {
@@ -356,12 +367,57 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
             BootstrapBookmarkablePageLink<EditPrequalifiedSupplierPage> editPageLink =
                     new BootstrapBookmarkablePageLink<>(
-                            "edit", EditPrequalifiedSupplierPage.class, params, Buttons.Type.Info);
+                            "edit", EditPrequalifiedSupplierPage.class, params, Buttons.Type.Primary);
             editPageLink.setIconType(FontAwesomeIconType.edit)
                     .setSize(Buttons.Size.Small)
-                    .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", ListPrequalifiedSupplierPage.this, null));
             add(editPageLink);
+
+            BootstrapAjaxLink<Void> deleteItemLink = new BootstrapAjaxLink<Void>("delete", Buttons.Type.Danger) {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    itemToDeleteModel = model;
+                    deleteModal.show(target);
+                }
+            };
+            deleteItemLink.setIconType(FontAwesomeIconType.trash)
+                    .setSize(Buttons.Size.Small)
+                    .setLabel(new StringResourceModel("delete", ListPrequalifiedSupplierPage.this, null));
+            add(deleteItemLink);
         }
+    }
+
+    protected TextContentModal createDeleteModal() {
+        final TextContentModal modal = new TextContentModal("deleteModal",
+                new StringResourceModel("confirmDeleteModal.content", this));
+        modal.addCloseButton();
+
+        final LaddaAjaxLink<Void> deleteButton = new LaddaAjaxLink<Void>("button", Buttons.Type.Danger) {
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                modal.appendCloseDialogJavaScript(target);
+                onDelete(target);
+            }
+        };
+        deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
+        modal.addButton(deleteButton);
+
+        return modal;
+    }
+
+    private void onDelete(AjaxRequestTarget target) {
+        PrequalifiedSupplierItem item = itemToDeleteModel.getObject();
+        PrequalifiedSupplier prequalifiedSupplier = item.getParent();
+        if (prequalifiedSupplier.getItems().size() == 1) {
+            prequalifiedSupplierService.delete(prequalifiedSupplier);
+        } else {
+            prequalifiedSupplier.getItems().remove(item);
+            prequalifiedSupplierService.save(prequalifiedSupplier);
+        }
+
+        itemToDeleteModel = null;
+
+        target.add(getDataTable());
     }
 }
