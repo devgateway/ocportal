@@ -3,11 +3,13 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.danekja.java.util.function.serializable.SerializableSupplier;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
@@ -101,9 +103,13 @@ public class PrequalificationSchemaItemPanel extends ListViewSectionPanel<Prequa
 
     @Override
     public void populateCompoundListItem(final ListItem<PrequalificationSchemaItem> item) {
-       ComponentUtil.addTextField(item, "code").required();
-       ComponentUtil.addTextField(item, "name").required();
-       ComponentUtil.addSelect2MultiChoiceField(item, "companyCategories", targetGroupService).required();
+        GenericBootstrapFormComponent<String, TextField<String>> code = ComponentUtil.addTextField(item, "code")
+                .required();
+        code.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        GenericBootstrapFormComponent<String, TextField<String>> name = ComponentUtil.addTextField(item, "name")
+                .required();
+        name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+        ComponentUtil.addSelect2MultiChoiceField(item, "companyCategories", targetGroupService).required();
     }
 
     @Override

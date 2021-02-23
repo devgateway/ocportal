@@ -31,9 +31,9 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "name")})
 @Form(featureName = "prequalificationSchemaForm")
-@UniquePrequalificationSchema(groups = NonDraft.class, payload = Severity.NonRecoverable.class,
+@UniquePrequalificationSchema(groups = NonDraft.class,
         message = "{org.devgateway.toolkit.persistence.dao.prequalification.UniquePrequalificationSchema.message}")
-@UniquePrequalificationSchemaItems(groups = NonDraft.class, payload = Severity.NonRecoverable.class,
+@UniquePrequalificationSchemaItems(groups = NonDraft.class,
         message = "{org.devgateway.toolkit.persistence.dao.prequalification.UniquePrequalificationSchemaItems.message}")
 public class PrequalificationSchema extends AbstractStatusAuditableEntity implements Labelable {
 
