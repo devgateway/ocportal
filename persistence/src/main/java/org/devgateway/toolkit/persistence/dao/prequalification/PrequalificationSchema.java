@@ -51,7 +51,8 @@ public class PrequalificationSchema extends AbstractStatusAuditableEntity implem
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
-    @Size(min = 1, groups = NonDraft.class)
+    @Size(min = 1, groups = NonDraft.class, message =
+    "{org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItemsSize.message}")
     private List<PrequalificationSchemaItem> items = new ArrayList<>();
 
     @Override
