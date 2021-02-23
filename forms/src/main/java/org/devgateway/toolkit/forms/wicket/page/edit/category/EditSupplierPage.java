@@ -47,6 +47,10 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
     protected void onInitialize() {
         super.onInitialize();
 
+        if (editForm.getModelObject().isNew()) {
+            editForm.getModelObject().setLabel(getPageParameters().get("label").toOptionalString());
+        }
+
         addCode();
         final TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
         address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT);
