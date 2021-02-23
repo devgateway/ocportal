@@ -57,6 +57,7 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -248,13 +249,22 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                     subPredicates.add(cb.equal(subRoot.get(PrequalifiedSupplier_.yearRange), yearRange));
                 }
 
+                Join<PrequalifiedSupplier, Supplier> supplierJoin = subRoot.join(PrequalifiedSupplier_.supplier);
+
                 if (!companyCategories.isEmpty()) {
-                    subPredicates.add(subRoot.join(PrequalifiedSupplier_.supplier)
-                            .get(Supplier_.targetGroup).in(companyCategories));
+                    subPredicates.add(supplierJoin.get(Supplier_.targetGroup).in(companyCategories));
                 }
 
                 if (!suppliers.isEmpty()) {
-                    subPredicates.add(subRoot.join(PrequalifiedSupplier_.supplier).in(suppliers));
+                    subPredicates.add(supplierJoin.in(suppliers));
+                }
+
+                if (!subcounties.isEmpty()) {
+                    subPredicates.add(supplierJoin.join(Supplier_.subcounties).in(subcounties));
+                }
+
+                if (!wards.isEmpty()) {
+                    subPredicates.add(supplierJoin.join(Supplier_.wards).in(wards));
                 }
 
                 sub.where(subPredicates.toArray(new Predicate[0]));
@@ -266,9 +276,6 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 if (!items.isEmpty()) {
                     predicates.add(root.join(PrequalifiedSupplierItem_.item).in(items));
                 }
-
-                // TODO add ward
-                // TODO add subcounty
 
                 return cb.and(predicates.toArray(new Predicate[0]));
             };
