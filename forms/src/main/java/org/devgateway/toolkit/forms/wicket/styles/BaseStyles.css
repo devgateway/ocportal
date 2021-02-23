@@ -4,11 +4,6 @@
  */
 
 html {
-    /*
-     * Always show page scroll-bar to prevent side-movement when hovering over items that are extending their height and
-     * suddenly the content doesn't fit above the fold.
-     */
-    overflow-y: scroll;
     position: relative;
     min-height: 100%;
 }
@@ -16,6 +11,11 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 50px !important;
+    /*
+     * Always show page scroll-bar to prevent side-movement when hovering over items that are extending their height and
+     * suddenly the content doesn't fit above the fold.
+     */
+    overflow-y: scroll;
 }
 
 .mainHeader.with-navbar-default .navbar-default {
