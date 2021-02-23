@@ -1,18 +1,14 @@
 package org.devgateway.toolkit.persistence.service.filterstate.prequalification;
 
 import org.apache.commons.lang3.StringUtils;
-import org.devgateway.toolkit.persistence.dao.form.Contract_;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
-import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema_;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange_;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PrequalificationYearRangeFilterState extends JpaFilterState<PrequalificationYearRange> {
@@ -25,7 +21,8 @@ public class PrequalificationYearRangeFilterState extends JpaFilterState<Prequal
             final List<Predicate> predicates = new ArrayList<>();
 
             if (StringUtils.isNotBlank(name)) {
-                predicates.add(cb.like(root.get(PrequalificationYearRange_.name), "%" + name + "%"));
+                predicates.add(cb.like(cb.lower(root.get(PrequalificationYearRange_.name)),
+                        "%" + name.toLowerCase() + "%"));
             }
 
             if (schema != null) {
