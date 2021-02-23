@@ -5,6 +5,8 @@ import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationS
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 
+import java.util.Collections;
+
 /**
  * @author Octavian Ciubotaru
  */
@@ -15,7 +17,8 @@ public class PrequalificationSchemaItemChoiceProvider
 
     public PrequalificationSchemaItemChoiceProvider(IModel<PrequalificationYearRange> yearRange) {
         super(yearRange.map(PrequalificationYearRange::getSchema)
-                .map(PrequalificationSchema::getItems));
+                .map(PrequalificationSchema::getItems)
+                .orElse(Collections.emptyList()));
         this.yearRange = yearRange;
     }
 

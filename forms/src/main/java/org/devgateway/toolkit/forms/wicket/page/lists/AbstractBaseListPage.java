@@ -93,10 +93,15 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
 
         if (hasFilteredColumns()) {
             GoAndClearFilter go = new BootstrapGoClearFilter("go", filterForm);
-            GoFilterToolbar filterToolbar = new GoFilterToolbar(dataTable, go, filterForm);
+            GoFilterToolbar filterToolbar = new GoFilterToolbar(dataTable, go, filterForm) {
+                @Override
+                protected void onInitialize() {
+                    super.onInitialize();
+                    attachWithParentFm("filterToolbar");
+                }
+            };
             filterToolbar.setVisibilityAllowed(filterGoReset);
             dataTable.addTopToolbar(filterToolbar);
-            filterToolbar.attachWithParentFm("filterToolbar");
         }
 
         return filterForm;

@@ -50,3 +50,6 @@
 - name:  navbar.prequalificationYearRange
   visibleDeps:
     - prequalificationSchemaForm
+- name:  navbar.prequalifiedSupplierPage
+  visibleDeps:
+    - prequalifiedSupplierForm

@@ -11,8 +11,10 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.service.category.SubcountyService;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
+import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -29,6 +31,12 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
     @SpringBean
     private TargetGroupService targetGroupService;
 
+    @SpringBean
+    private SubcountyService subcountyService;
+
+    @SpringBean
+    private WardService wardService;
+
     public EditSupplierPage(final PageParameters parameters) {
         super(parameters);
         jpaService = supplierService;
@@ -39,10 +47,18 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
     protected void onInitialize() {
         super.onInitialize();
 
+        if (editForm.getModelObject().isNew()) {
+            editForm.getModelObject().setLabel(getPageParameters().get("label").toOptionalString());
+        }
+
         addCode();
         final TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
         address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT);
 
         ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", targetGroupService);
+
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
     }
 }

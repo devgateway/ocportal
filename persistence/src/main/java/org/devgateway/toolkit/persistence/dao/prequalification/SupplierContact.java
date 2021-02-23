@@ -18,6 +18,10 @@ public class SupplierContact extends AbstractContact<Supplier> {
     public SupplierContact() {
     }
 
+    public SupplierContact(AbstractContact<?> copy) {
+        copy(copy, this);
+    }
+
     public SupplierContact(Supplier supplier) {
         setParent(supplier);
     }

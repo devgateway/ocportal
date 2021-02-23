@@ -3,12 +3,16 @@ package org.devgateway.toolkit.forms.wicket.page.lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
+import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -17,20 +21,19 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.models.PersistableJpaRepositoryModel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditPrequalifiedSupplierPage;
-import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
+import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
+import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier_;
@@ -49,24 +52,28 @@ import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationYearRangeService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierItemService;
+import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * TODO implement delete in actions
- *
  * @author Octavian Ciubotaru
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
 @MountPath("/prequalifiedSuppliers")
 public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<PrequalifiedSupplierItem> {
+
+    @SpringBean
+    private PrequalifiedSupplierService prequalifiedSupplierService;
 
     @SpringBean
     private PrequalifiedSupplierItemService prequalifiedSupplierItemService;
@@ -88,10 +95,14 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
     private final IModel<Filter> filterModel;
 
+    private TextContentModal deleteModal;
+
+    private IModel<PrequalifiedSupplierItem> itemToDeleteModel;
+
     public ListPrequalifiedSupplierPage(PageParameters parameters) {
         super(parameters);
 
-        filterModel = Model.of(new Filter());
+        filterModel = new DozerModel<>(new Filter());
     }
 
     @Override
@@ -100,23 +111,20 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         super.onInitialize();
 
-        // TODO test when there is no default year range!
-
         Filter filter = filterModel.getObject();
 
-        filter.setYearRange(new PersistableJpaRepositoryModel<>(prequalificationYearRangeService.findDefault(),
-                prequalificationYearRangeService));
+        filter.setYearRange(prequalificationYearRangeService.findDefault());
 
         Form<Filter> filterForm = new Form<>("form", new CompoundPropertyModel<>(filterModel));
 
         Select2MultiChoiceBootstrapFormComponent<PrequalificationSchemaItem> items;
         items = new Select2MultiChoiceBootstrapFormComponent<>("items",
-                new PrequalificationSchemaItemChoiceProvider(filter.getYearRange()));
+                new PrequalificationSchemaItemChoiceProvider(filterModel.map(Filter::getYearRange)));
         filterForm.add(items);
 
         Select2ChoiceBootstrapFormComponent<PrequalificationYearRange> yearRange;
         yearRange = new Select2ChoiceBootstrapFormComponent<PrequalificationYearRange>("yearRange",
-                new GenericPersistableJpaTextChoiceProvider<>(prequalificationYearRangeService), filter.yearRange) {
+                new GenericPersistableJpaTextChoiceProvider<>(prequalificationYearRangeService)) {
 
             @Override
             protected void onInitialize() {
@@ -154,6 +162,9 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         });
 
         add(filterForm);
+
+        deleteModal = createDeleteModal();
+        add(deleteModal);
     }
 
     protected AbstractDataProvider<PrequalifiedSupplierItem> createDataProvider() {
@@ -162,7 +173,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
     private static final class Filter extends JpaFilterState<PrequalifiedSupplierItem> {
 
-        private IModel<PrequalificationYearRange> yearRange;
+        private PrequalificationYearRange yearRange;
 
         private List<PrequalificationSchemaItem> items = new ArrayList<>();
 
@@ -174,11 +185,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         private List<Ward> wards = new ArrayList<>();
 
-        public IModel<PrequalificationYearRange> getYearRange() {
+        public PrequalificationYearRange getYearRange() {
             return yearRange;
         }
 
-        public void setYearRange(IModel<PrequalificationYearRange> yearRange) {
+        public void setYearRange(PrequalificationYearRange yearRange) {
             this.yearRange = yearRange;
         }
 
@@ -233,15 +244,27 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 sub.select(subRoot);
 
                 List<Predicate> subPredicates = new ArrayList<>();
-                subPredicates.add(cb.equal(subRoot.get(PrequalifiedSupplier_.yearRange), yearRange.getObject()));
+
+                if (yearRange != null) {
+                    subPredicates.add(cb.equal(subRoot.get(PrequalifiedSupplier_.yearRange), yearRange));
+                }
+
+                Join<PrequalifiedSupplier, Supplier> supplierJoin = subRoot.join(PrequalifiedSupplier_.supplier);
 
                 if (!companyCategories.isEmpty()) {
-                    subPredicates.add(subRoot.join(PrequalifiedSupplier_.supplier)
-                            .get(Supplier_.targetGroup).in(companyCategories));
+                    subPredicates.add(supplierJoin.get(Supplier_.targetGroup).in(companyCategories));
                 }
 
                 if (!suppliers.isEmpty()) {
-                    subPredicates.add(subRoot.join(PrequalifiedSupplier_.supplier).in(suppliers));
+                    subPredicates.add(supplierJoin.in(suppliers));
+                }
+
+                if (!subcounties.isEmpty()) {
+                    subPredicates.add(supplierJoin.join(Supplier_.subcounties).in(subcounties));
+                }
+
+                if (!wards.isEmpty()) {
+                    subPredicates.add(supplierJoin.join(Supplier_.wards).in(wards));
                 }
 
                 sub.where(subPredicates.toArray(new Predicate[0]));
@@ -253,9 +276,6 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 if (!items.isEmpty()) {
                     predicates.add(root.join(PrequalifiedSupplierItem_.item).in(items));
                 }
-
-                // TODO add ward
-                // TODO add subcounty
 
                 return cb.and(predicates.toArray(new Predicate[0]));
             };
@@ -285,7 +305,17 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         columns.add(new PropertyColumn<>(
                 new StringResourceModel("companyCategory", this), "parent.supplier.targetGroup"));
 
-        // TODO add subcounty + ward columns
+        columns.add(new LambdaColumn<>(
+                new StringResourceModel("subcounties", this),
+                item -> item.getParent().getSupplier().getSubcounties().stream()
+                        .map(Category::toString)
+                        .collect(Collectors.joining(", "))));
+
+        columns.add(new LambdaColumn<>(
+                new StringResourceModel("wards", this),
+                item -> item.getParent().getSupplier().getWards().stream()
+                        .map(Category::toString)
+                        .collect(Collectors.joining(", "))));
 
         columns.add(new PropertyColumn<>(
                 new StringResourceModel("directors", this), "nonNullContact.directors"));
@@ -316,7 +346,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             @Override
             public void onClick(AjaxRequestTarget target) {
                 PageParameters params = new PageParameters();
-                PrequalificationYearRange yearRange = filterModel.getObject().getYearRange().getObject();
+                PrequalificationYearRange yearRange = filterModel.getObject().getYearRange();
                 if (yearRange != null) {
                     params.add("yearRangeId", yearRange.getId());
                 }
@@ -344,12 +374,57 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
             BootstrapBookmarkablePageLink<EditPrequalifiedSupplierPage> editPageLink =
                     new BootstrapBookmarkablePageLink<>(
-                            "edit", EditPrequalifiedSupplierPage.class, params, Buttons.Type.Info);
+                            "edit", EditPrequalifiedSupplierPage.class, params, Buttons.Type.Primary);
             editPageLink.setIconType(FontAwesomeIconType.edit)
                     .setSize(Buttons.Size.Small)
-                    .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", ListPrequalifiedSupplierPage.this, null));
             add(editPageLink);
+
+            BootstrapAjaxLink<Void> deleteItemLink = new BootstrapAjaxLink<Void>("delete", Buttons.Type.Danger) {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    itemToDeleteModel = model;
+                    deleteModal.show(target);
+                }
+            };
+            deleteItemLink.setIconType(FontAwesomeIconType.trash)
+                    .setSize(Buttons.Size.Small)
+                    .setLabel(new StringResourceModel("delete", ListPrequalifiedSupplierPage.this, null));
+            add(deleteItemLink);
         }
+    }
+
+    protected TextContentModal createDeleteModal() {
+        final TextContentModal modal = new TextContentModal("deleteModal",
+                new StringResourceModel("confirmDeleteModal.content", this));
+        modal.addCloseButton();
+
+        final LaddaAjaxLink<Void> deleteButton = new LaddaAjaxLink<Void>("button", Buttons.Type.Danger) {
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                modal.appendCloseDialogJavaScript(target);
+                onDelete(target);
+            }
+        };
+        deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
+        modal.addButton(deleteButton);
+
+        return modal;
+    }
+
+    private void onDelete(AjaxRequestTarget target) {
+        PrequalifiedSupplierItem item = itemToDeleteModel.getObject();
+        PrequalifiedSupplier prequalifiedSupplier = item.getParent();
+        if (prequalifiedSupplier.getItems().size() == 1) {
+            prequalifiedSupplierService.delete(prequalifiedSupplier);
+        } else {
+            prequalifiedSupplier.getItems().remove(item);
+            prequalifiedSupplierService.save(prequalifiedSupplier);
+        }
+
+        itemToDeleteModel = null;
+
+        target.add(getDataTable());
     }
 }
