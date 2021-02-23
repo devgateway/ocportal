@@ -103,11 +103,9 @@ public class PrequalificationSchemaItemPanel extends ListViewSectionPanel<Prequa
 
     @Override
     public void populateCompoundListItem(final ListItem<PrequalificationSchemaItem> item) {
-        GenericBootstrapFormComponent<String, TextField<String>> code = ComponentUtil.addTextField(item, "code")
-                .required();
+        GenericBootstrapFormComponent<String, TextField<String>> code = ComponentUtil.addTextField(item, "code");
         code.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        GenericBootstrapFormComponent<String, TextField<String>> name = ComponentUtil.addTextField(item, "name")
-                .required();
+        GenericBootstrapFormComponent<String, TextField<String>> name = ComponentUtil.addTextField(item, "name");
         name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         ComponentUtil.addSelect2MultiChoiceField(item, "companyCategories", targetGroupService).required();
     }

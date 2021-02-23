@@ -34,7 +34,7 @@ public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEnti
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     @Size(min = 1, groups = NonDraft.class, message =
-            "{org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItemsSize.message}")
+      "{org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItemCompanyCategories.message}")
     private List<TargetGroup> companyCategories = new ArrayList<>();
 
     @Override

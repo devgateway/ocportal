@@ -33,13 +33,11 @@ public class EditPrequalificationSchemaPage extends AbstractEditStatusEntityPage
         name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         ComponentUtil.addUniquePropertyEntryValidator(name.getField(), PrequalificationSchema_.name, jpaService,
                 editForm.getModel(), getString("uniqueName"));
-        name.required();
         return name;
     }
 
     public TextFieldBootstrapFormComponent<String> createPrefixField() {
         final TextFieldBootstrapFormComponent<String> prefix = ComponentUtil.addTextField(editForm, "prefix");
-        prefix.required();
         prefix.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         ComponentUtil.addUniquePropertyEntryValidator(prefix.getField(), PrequalificationSchema_.prefix, jpaService,
                 editForm.getModel(), getString("uniquePrefix"));
@@ -48,6 +46,7 @@ public class EditPrequalificationSchemaPage extends AbstractEditStatusEntityPage
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("prequalificationSchemaForm");
         super.onInitialize();
         editForm.add(createNameField());
         editForm.add(createPrefixField());
