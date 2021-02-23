@@ -22,6 +22,7 @@ import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalific
 import org.devgateway.toolkit.persistence.validator.validators.YearOrderPrequalificationYearRange;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Check;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
@@ -41,12 +42,13 @@ import javax.validation.constraints.NotNull;
 @Table(indexes = {@Index(columnList = "name")},
         uniqueConstraints = {@UniqueConstraint(columnNames = "name"),
                 @UniqueConstraint(columnNames = {"startYear", "endYear"})})
-@UniquePrequalificationYearRange(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
+@UniquePrequalificationYearRange(groups = HighLevel.class,
         message = "{org.devgateway.toolkit.persistence.dao.prequalification.UniquePrequalificationYearRange.message}")
-@NonOverlappingPrequalificationYearRange(groups = HighLevel.class, payload = Severity.NonRecoverable.class, message =
+@NonOverlappingPrequalificationYearRange(groups = HighLevel.class, message =
          "{org.devgateway.toolkit.persistence.dao.prequalification.NonOverlappingPrequalificationYearRange.message}")
-@YearOrderPrequalificationYearRange(groups = HighLevel.class, payload = Severity.NonRecoverable.class, message =
+@YearOrderPrequalificationYearRange(groups = HighLevel.class, message =
         "{org.devgateway.toolkit.persistence.dao.prequalification.YearOrderPrequalificationYearRange.message}")
+@Check(constraints = "start_year <= end_year")
 public class PrequalificationYearRange extends AbstractAuditableEntity implements Labelable {
 
     @NotNull
