@@ -26,7 +26,8 @@
 
 - name: prequalifiedSupplierForm
   enabled: yes
-  visible: yes
+  visibleDeps:
+    - prequalificationSchemaForm
 - name: prequalifiedSupplierForm.yearRange
   enabled: yes
   visible: yes

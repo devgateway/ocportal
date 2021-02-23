@@ -61,9 +61,11 @@ import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.AbstractBaseListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearBudgetPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.ListPrequalifiedSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatisticsPage;
@@ -372,14 +374,14 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     }
 
 
-    private <L extends AbstractListPage> BootstrapBookmarkablePageLink<L>
+    private <L extends AbstractBaseListPage<?>> BootstrapBookmarkablePageLink<L>
     createListMenu(Class<L> clazz, String resourceKey, IconType iconType) {
         return new MenuBookmarkablePageLink<L>(clazz, null,
                 new StringResourceModel(resourceKey, this, null))
                 .setIconType(iconType);
     }
 
-    private <L extends AbstractListPage> BootstrapBookmarkablePageLink<L>
+    private <L extends AbstractBaseListPage<?>> BootstrapBookmarkablePageLink<L>
     createAddListMenu(List<AbstractLink> list, Class<L> clazz, String resourceKey, IconType iconType) {
         BootstrapBookmarkablePageLink<L> menu = new MenuBookmarkablePageLink<L>(clazz, null,
                 new StringResourceModel(resourceKey, this, null))
@@ -388,7 +390,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         return menu;
     }
 
-    private <L extends AbstractListPage> void
+    private <L extends AbstractBaseListPage<?>> void
     createAddFmListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
                               IconType iconType) {
         if (fmService.isFeatureVisible(resourceKey)) {
@@ -396,7 +398,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         }
     }
 
-    private <L extends AbstractListPage> void
+    private <L extends AbstractBaseListPage<?>> void
     createAddListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
                               IconType iconType) {
         BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
@@ -489,6 +491,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
                 createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationYearRangePage.class,
                         "navbar.prequalificationYearRange", FontAwesomeIconType.list
+                );
+
+                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalifiedSupplierPage.class,
+                        "navbar.prequalifiedSupplierPage", FontAwesomeIconType.list
                 );
 
 
