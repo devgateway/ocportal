@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.IRequestCycle;
@@ -379,7 +380,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     private void addLabelOrInvisibleContainer(final String id, final Object o) {
         if (o != null) {
-            add(new Label(id, o.toString()));
+            add(new Label(id, o.toString() + " "
+                    + new StringResourceModel("procurementPlan", this).getObject()));
         } else {
             add(new WebMarkupContainer(id).setVisibilityAllowed(false));
         }

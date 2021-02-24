@@ -18,9 +18,11 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author idobre
@@ -59,8 +61,8 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private TargetGroup targetGroup;
+    @ManyToMany
+    private List<TargetGroup> targetGroup;
 
     @ExcelExport(useTranslation = true, name = "Target Group Value")
     private BigDecimal targetGroupValue;
@@ -125,11 +127,11 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
         this.sourceOfFunds = sourceOfFunds;
     }
 
-    public TargetGroup getTargetGroup() {
+    public List<TargetGroup> getTargetGroup() {
         return targetGroup;
     }
 
-    public void setTargetGroup(final TargetGroup targetGroup) {
+    public void setTargetGroup(List<TargetGroup> targetGroup) {
         this.targetGroup = targetGroup;
     }
 
@@ -196,5 +198,5 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     public String toString() {
         return getLabel();
     }
-    
+
 }
