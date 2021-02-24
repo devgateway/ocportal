@@ -1,12 +1,10 @@
 package org.devgateway.toolkit.forms.wicket.page.edit;
 
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -20,13 +18,12 @@ import org.devgateway.toolkit.forms.wicket.page.edit.panel.PrequalifiedSupplierI
 import org.devgateway.toolkit.forms.wicket.page.lists.ListPrequalifiedSupplierPage;
 import org.devgateway.toolkit.forms.wicket.providers.AddNewAdapter;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
-import org.devgateway.toolkit.persistence.dao.GenericPersistable;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplierContact;
-import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplierItem;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationYearRangeService;
@@ -66,6 +63,10 @@ public class EditPrequalifiedSupplierPage extends AbstractEditPage<PrequalifiedS
 
         super.onInitialize();
 
+        if (!editForm.getModelObject().getYearRange().getSchema().getStatus().equals(DBConstants.Status.SUBMITTED)) {
+            throw new RestartResponseException(ListPrequalifiedSupplierPage.class);
+        }
+
         IModel<List<SupplierContact>> supplierContactsModel = editForm.getModel()
                 .map(PrequalifiedSupplier::getSupplier)
                 .map(Supplier::getContacts)
@@ -75,34 +76,11 @@ public class EditPrequalifiedSupplierPage extends AbstractEditPage<PrequalifiedS
         items = new PrequalifiedSupplierItemListPanel("items", supplierContactsModel);
         editForm.add(items);
 
-        editForm.add(new Select2ChoiceBootstrapFormComponent<PrequalificationYearRange>("yearRange",
-                new GenericPersistableJpaTextChoiceProvider<>(yearRangeService)) {
-            @Override
-            protected void onInitialize() {
-                super.onInitialize();
-                field.getSettings().setAllowClear(false);
-            }
-
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-                setEnabled(editForm.getModelObject().isNew());
-            }
-
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                super.onUpdate(target);
-
-                PrequalifiedSupplier prequalifiedSupplier = editForm.getModelObject();
-                PrequalificationYearRange yearRange = prequalifiedSupplier.getYearRange();
-                for (PrequalifiedSupplierItem item : prequalifiedSupplier.getItems()) {
-                    if (item.getItem() != null && !item.getItem().getParent().equals(yearRange.getSchema())) {
-                        item.setItem(null);
-                    }
-                }
-                target.add(items);
-            }
-        });
+        Select2ChoiceBootstrapFormComponent<PrequalificationYearRange> yearRange;
+        yearRange = new Select2ChoiceBootstrapFormComponent<>("yearRange",
+                new GenericPersistableJpaTextChoiceProvider<>(yearRangeService));
+        yearRange.setEnabled(false);
+        editForm.add(yearRange);
 
         NewContactAlert<PrequalifiedSupplierContact> alert = new NewContactAlert<>("newContactAlert",
                 editForm.getModel().map(PrequalifiedSupplier::getContact), supplierContactsModel);
