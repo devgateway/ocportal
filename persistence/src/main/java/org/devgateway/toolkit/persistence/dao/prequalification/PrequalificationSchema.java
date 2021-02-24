@@ -2,9 +2,9 @@ package org.devgateway.toolkit.persistence.dao.prequalification;
 
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.Labelable;
-import org.devgateway.toolkit.persistence.validator.Severity;
 import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchema;
 import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchemaItems;
@@ -105,5 +105,9 @@ public class PrequalificationSchema extends AbstractStatusAuditableEntity implem
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    public boolean isSelectable() {
+        return DBConstants.Status.SUBMITTED.equals(getStatus());
     }
 }

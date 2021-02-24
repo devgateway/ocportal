@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
 import org.apache.poi.ss.usermodel.Cell;
@@ -104,6 +106,12 @@ public class ListPrequalificationYearRangePage extends AbstractListPage<Prequali
             downloadExcel.setIconType(FontAwesomeIconType.file_excel_o);
             downloadExcel.setSize(Buttons.Size.Small);
             downloadExcel.setLabel(new ResourceModel("download"));
+            if (!entity.getSchema().isSelectable()) {
+                add(new TooltipBehavior(new ResourceModel("tooltipSchemaInDraft"),
+                        new TooltipConfig().withPlacement(TooltipConfig.Placement.left)));
+                downloadExcel.setEnabled(false);
+            }
+
             add(ajaxDownload);
             add(downloadExcel);
         }
