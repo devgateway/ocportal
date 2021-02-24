@@ -77,6 +77,9 @@
   enabled: yes
   visible: yes
 
+
+- name: prequalificationSchemaList.filterToolbar.filter
+  visible: yes
 - name: prequalificationSchemaList
   visible: yes
 - name: prequalificationSchemaList.filterToolbar
