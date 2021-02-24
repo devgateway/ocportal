@@ -8,9 +8,11 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
@@ -27,6 +29,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -56,8 +59,10 @@ import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationYearRangeService;
+import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierExporter;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierItemService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
+import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -66,7 +71,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -188,6 +195,46 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         deleteModal = createDeleteModal();
         add(deleteModal);
+
+        AjaxDownloadBehavior excelExportBehavior = new AjaxDownloadBehavior(new AbstractResource() {
+            @Override
+            protected ResourceResponse newResourceResponse(Attributes attributes) {
+
+                PrequalifiedSupplierExporter exporter = new PrequalifiedSupplierExporter();
+
+                long size = getDataProvider().size();
+                Iterator<? extends PrequalifiedSupplierItem> iterator = getDataProvider().iterator(0, size);
+                List<PrequalifiedSupplierItem> items = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    items.add(iterator.next());
+                }
+
+                XSSFWorkbook workbook = exporter.export(items);
+
+                ResourceResponse response = new ResourceResponse();
+                response.setContentType(Constants.ContentType.XLSX);
+                response.setFileName("Prequalified Suppliers.xslx");
+                response.setWriteCallback(new WriteCallback() {
+                    @Override
+                    public void writeData(Attributes attributes) throws IOException {
+                        workbook.write(attributes.getResponse().getOutputStream());
+                    }
+                });
+
+                return response;
+            }
+        });
+        filterForm.add(excelExportBehavior);
+
+        LaddaAjaxLink<Void> exportLink = new LaddaAjaxLink<Void>("excelExport", Buttons.Type.Warning) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                excelExportBehavior.initiate(target);
+            }
+        };
+        exportLink.setLabel(new StringResourceModel("excelExport.label", this));
+        exportLink.setIconType(FontAwesomeIconType.file_excel_o);
+        filterForm.add(exportLink);
     }
 
     protected AbstractDataProvider<PrequalifiedSupplierItem> createDataProvider() {
@@ -388,7 +435,6 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         return button
                 .setIconType(FontAwesomeIconType.plus_circle)
-                .setSize(Buttons.Size.Large)
                 .setLabel(new StringResourceModel("new"));
     }
 
