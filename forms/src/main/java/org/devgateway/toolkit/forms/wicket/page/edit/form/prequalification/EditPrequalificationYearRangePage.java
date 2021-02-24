@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -11,6 +12,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationYearRangePage;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
@@ -108,6 +110,13 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
         return schemaField;
     }
 
+    protected void checkAndDisableFormPrequalifiedSuppliersExist() {
+        if (editForm.getModelObject() != null && !editForm.getModelObject().isNew()
+                && !editForm.getModelObject().getPrequalifiedSuppliers().isEmpty()) {
+            send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
+            saveButton.setEnabled(false);
+        }
+    }
 
     @Override
     protected void onInitialize() {
@@ -118,6 +127,7 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
         editForm.add(createEndYearField());
         editForm.add(new YearOrderValidator());
         editForm.add(new NonOverlappingYearValidator());
+        checkAndDisableFormPrequalifiedSuppliersExist();
     }
 
 }
