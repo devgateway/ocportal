@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.prequalification;
 
+import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
@@ -54,7 +55,8 @@ public class PrequalificationSchemaServiceImpl extends BaseJpaServiceImpl<Prequa
         PrequalificationSchema existingSchema = byId.get();
 
         PrequalificationSchema schemaCopy = newInstance();
-        schemaCopy.setName("Copy of " + existingSchema.getName());
+        schemaCopy.setName(StringUtils.abbreviate("Copy of " + existingSchema.getName(),
+                DBConstants.STD_DEFAULT_TEXT_LENGTH));
         schemaCopy.setPrefix(existingSchema.getPrefix());
         existingSchema.getItems().stream().map(i -> {
             PrequalificationSchemaItem item = new PrequalificationSchemaItem();
