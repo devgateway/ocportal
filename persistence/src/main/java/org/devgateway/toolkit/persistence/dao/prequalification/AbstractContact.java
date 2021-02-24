@@ -1,7 +1,8 @@
 package org.devgateway.toolkit.persistence.dao.prequalification;
 
+import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
-import org.devgateway.toolkit.persistence.dao.AbstractChildAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -13,7 +14,7 @@ import java.util.StringJoiner;
  */
 @MappedSuperclass
 public abstract class AbstractContact<P extends AbstractAuditableEntity>
-        extends AbstractChildAuditableEntity<P> {
+        extends AbstractChildExpandableAuditEntity<P> {
 
     @NotBlank
     @Column(nullable = false)
@@ -73,9 +74,9 @@ public abstract class AbstractContact<P extends AbstractAuditableEntity>
     @Override
     public String toString() {
         return new StringJoiner(" / ")
-                .add(directors)
-                .add(email)
-                .add(phoneNumber)
+                .add(StringUtils.defaultString(directors, "<missing director>"))
+                .add(StringUtils.defaultString(email, "<missing email>"))
+                .add(StringUtils.defaultString(phoneNumber, "<missing phone number>"))
                 .toString();
     }
 }

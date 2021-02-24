@@ -4,7 +4,7 @@
 <wicket:extend>
     <div wicket:id="deleteModal"></div>
 
-    <form wicket:id="form">
+    <form wicket:id="form" class="form-group">
         <div class="row">
             <div wicket:id="yearRange" class="col-sm-3"></div>
             <div wicket:id="items" class="col-sm-9"></div>
@@ -17,7 +17,13 @@
             <div wicket:id="wards" class="col-sm-3"></div>
         </div>
         <button wicket:id="submit">[[submit]]</button>
+
+        <a wicket:id="excelExport">[[excel export]]</a>
     </form>
+
+    <div wicket:id="draftSchemaWarning" class="alert alert-warning" role="alert">
+        <wicket:message key="draftSchemaWarning" />
+    </div>
 </wicket:extend>
 </body>
 </html>

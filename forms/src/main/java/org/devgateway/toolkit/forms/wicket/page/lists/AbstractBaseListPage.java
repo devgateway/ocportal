@@ -43,6 +43,10 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
 
     protected Boolean filterGoReset = false;
 
+    private Component addButton;
+
+    private Component topAddButton;
+
     /**
      * Construct.
      *
@@ -67,8 +71,11 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
         filterForm.add(dataTable);
         add(filterForm);
 
-        add(createAddButton("new"));
-        add(createTopAddButton("newTop"));
+        addButton = createAddButton("new");
+        add(addButton);
+
+        topAddButton = createTopAddButton("newTop");
+        add(topAddButton);
     }
 
     private Form<?> createFilterForm() {
@@ -156,7 +163,15 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
         return new WebMarkupContainer(id).setVisibilityAllowed(false);
     }
 
+    public Component getAddButton() {
+        return addButton;
+    }
+
     protected Component createTopAddButton(String id) {
         return new WebMarkupContainer(id).setVisibilityAllowed(false);
+    }
+
+    public Component getTopAddButton() {
+        return topAddButton;
     }
 }

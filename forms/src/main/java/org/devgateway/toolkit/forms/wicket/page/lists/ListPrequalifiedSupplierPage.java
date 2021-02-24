@@ -3,17 +3,21 @@ package org.devgateway.toolkit.forms.wicket.page.lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -21,9 +25,11 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -33,12 +39,14 @@ import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier_;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
+import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
@@ -51,8 +59,10 @@ import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationYearRangeService;
+import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierExporter;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierItemService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
+import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -61,7 +71,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +111,8 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
     private IModel<PrequalifiedSupplierItem> itemToDeleteModel;
 
+    private IModel<Boolean> submittedSchemaModel;
+
     public ListPrequalifiedSupplierPage(PageParameters parameters) {
         super(parameters);
 
@@ -109,11 +123,23 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
     protected void onInitialize() {
         attachFm("prequalifiedSupplierList");
 
+        Filter filter = filterModel.getObject();
+        filter.setYearRange(prequalificationYearRangeService.findDefault());
+
+        submittedSchemaModel = Model.of(filter.getYearRange() != null
+                && filter.getYearRange().getSchema().getStatus().equals(DBConstants.Status.SUBMITTED));
+
         super.onInitialize();
 
-        Filter filter = filterModel.getObject();
-
-        filter.setYearRange(prequalificationYearRangeService.findDefault());
+        WebMarkupContainer draftSchemaWarning = new WebMarkupContainer("draftSchemaWarning") {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisibilityAllowed(!submittedSchemaModel.getObject());
+            }
+        };
+        draftSchemaWarning.setOutputMarkupId(true);
+        add(draftSchemaWarning);
 
         Form<Filter> filterForm = new Form<>("form", new CompoundPropertyModel<>(filterModel));
 
@@ -157,7 +183,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 getDataTable().setCurrentPage(0);
-                target.add(getDataTable());
+
+                PrequalificationSchema schema = filterForm.getModelObject().getYearRange().getSchema();
+                submittedSchemaModel.setObject(schema.getStatus().equals(DBConstants.Status.SUBMITTED));
+
+                target.add(getDataTable(), getAddButton(), draftSchemaWarning);
             }
         });
 
@@ -165,6 +195,46 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         deleteModal = createDeleteModal();
         add(deleteModal);
+
+        AjaxDownloadBehavior excelExportBehavior = new AjaxDownloadBehavior(new AbstractResource() {
+            @Override
+            protected ResourceResponse newResourceResponse(Attributes attributes) {
+
+                PrequalifiedSupplierExporter exporter = new PrequalifiedSupplierExporter();
+
+                long size = getDataProvider().size();
+                Iterator<? extends PrequalifiedSupplierItem> iterator = getDataProvider().iterator(0, size);
+                List<PrequalifiedSupplierItem> items = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    items.add(iterator.next());
+                }
+
+                XSSFWorkbook workbook = exporter.export(items);
+
+                ResourceResponse response = new ResourceResponse();
+                response.setContentType(Constants.ContentType.XLSX);
+                response.setFileName("Prequalified Suppliers.xslx");
+                response.setWriteCallback(new WriteCallback() {
+                    @Override
+                    public void writeData(Attributes attributes) throws IOException {
+                        workbook.write(attributes.getResponse().getOutputStream());
+                    }
+                });
+
+                return response;
+            }
+        });
+        filterForm.add(excelExportBehavior);
+
+        LaddaAjaxLink<Void> exportLink = new LaddaAjaxLink<Void>("excelExport", Buttons.Type.Warning) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                excelExportBehavior.initiate(target);
+            }
+        };
+        exportLink.setLabel(new StringResourceModel("excelExport.label", this));
+        exportLink.setIconType(FontAwesomeIconType.file_excel_o);
+        filterForm.add(exportLink);
     }
 
     protected AbstractDataProvider<PrequalifiedSupplierItem> createDataProvider() {
@@ -343,6 +413,13 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
     @Override
     protected Component createAddButton(String id) {
         BootstrapAjaxLink<Void> button = new BootstrapAjaxLink<Void>(id, Buttons.Type.Success) {
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setEnabled(submittedSchemaModel.getObject());
+            }
+
             @Override
             public void onClick(AjaxRequestTarget target) {
                 PageParameters params = new PageParameters();
@@ -353,10 +430,18 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 setResponsePage(EditPrequalifiedSupplierPage.class, params);
             }
         };
+
+        button.add(newDraftSchemaWarningTooltipBehavior());
+
         return button
                 .setIconType(FontAwesomeIconType.plus_circle)
-                .setSize(Buttons.Size.Large)
                 .setLabel(new StringResourceModel("new"));
+    }
+
+    private TooltipBehavior newDraftSchemaWarningTooltipBehavior() {
+        StringResourceModel warning = new StringResourceModel("draftSchemaWarning", this);
+        return new TooltipBehavior(
+                submittedSchemaModel.combineWith(warning, (submitted, msg) -> submitted ? "" : msg));
     }
 
     @Override
@@ -372,9 +457,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             PageParameters params = new PageParameters();
             params.add("id", model.getObject().getParent().getId());
 
-            BootstrapBookmarkablePageLink<EditPrequalifiedSupplierPage> editPageLink =
-                    new BootstrapBookmarkablePageLink<>(
-                            "edit", EditPrequalifiedSupplierPage.class, params, Buttons.Type.Primary);
+            BootstrapBookmarkablePageLink<EditPrequalifiedSupplierPage> editPageLink;
+            editPageLink = new BootstrapBookmarkablePageLink<>(
+                    "edit", EditPrequalifiedSupplierPage.class, params, Buttons.Type.Primary);
+            editPageLink.setEnabled(submittedSchemaModel.getObject());
+            editPageLink.add(newDraftSchemaWarningTooltipBehavior());
             editPageLink.setIconType(FontAwesomeIconType.edit)
                     .setSize(Buttons.Size.Small)
                     .setLabel(new StringResourceModel("edit", ListPrequalifiedSupplierPage.this, null));
@@ -387,6 +474,8 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                     deleteModal.show(target);
                 }
             };
+            deleteItemLink.setEnabled(submittedSchemaModel.getObject());
+            deleteItemLink.add(newDraftSchemaWarningTooltipBehavior());
             deleteItemLink.setIconType(FontAwesomeIconType.trash)
                     .setSize(Buttons.Size.Small)
                     .setLabel(new StringResourceModel("delete", ListPrequalifiedSupplierPage.this, null));

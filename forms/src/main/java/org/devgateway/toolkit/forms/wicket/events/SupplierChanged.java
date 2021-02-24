@@ -5,15 +5,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 /**
  * @author Octavian Ciubotaru
  */
-public final class SupplierChanged {
-
-    private final AjaxRequestTarget target;
+public final class SupplierChanged extends AjaxUpdateEvent {
 
     public SupplierChanged(AjaxRequestTarget target) {
-        this.target = target;
-    }
-
-    public AjaxRequestTarget getTarget() {
-        return target;
+        super(target);
     }
 }

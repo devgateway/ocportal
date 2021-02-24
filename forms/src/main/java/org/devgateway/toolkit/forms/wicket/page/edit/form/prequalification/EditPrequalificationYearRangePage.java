@@ -85,14 +85,14 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
     public TextFieldBootstrapFormComponent<Integer> createStartYearField() {
         TextFieldBootstrapFormComponent<Integer> startYear = ComponentUtil.addIntegerTextField(editForm, "startYear");
         startYear.integer().required();
-        startYear.add(new RangeValidator<>(1990, 2030));
+        startYear.getField().add(new RangeValidator<>(1990, 2030));
         return startYear;
     }
 
     public TextFieldBootstrapFormComponent<Integer> createEndYearField() {
         TextFieldBootstrapFormComponent<Integer> endYear = ComponentUtil.addIntegerTextField(editForm, "endYear");
         endYear.integer().required();
-        endYear.add(new RangeValidator<>(1990, 2030));
+        endYear.getField().add(new RangeValidator<>(1990, 2030));
         return endYear;
     }
 

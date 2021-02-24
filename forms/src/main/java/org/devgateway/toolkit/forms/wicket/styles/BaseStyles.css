@@ -223,6 +223,11 @@ button.list-edit-button {
     min-width: 70px;
 }
 
+button.list-delete-button {
+    margin-bottom: 5px;
+    min-width: 70px;
+}
+
 /* Edit Entity Styles
 -------------------------------------------------- */
 .revision-data-div {
