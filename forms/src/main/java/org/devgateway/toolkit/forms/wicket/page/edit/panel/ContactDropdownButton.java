@@ -6,7 +6,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.DropDownButton;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -15,6 +14,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.devgateway.toolkit.forms.wicket.behaviors.RefreshOnEventBehavior;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.SupplierChanged;
 import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
@@ -66,6 +66,8 @@ public abstract class ContactDropdownButton<T extends AbstractContact<?>> extend
         add(button);
 
         setOutputMarkupPlaceholderTag(true);
+
+        add(new RefreshOnEventBehavior<>(SupplierChanged.class));
     }
 
     @Override
@@ -99,16 +101,6 @@ public abstract class ContactDropdownButton<T extends AbstractContact<?>> extend
             super(id, "linkContent", ContactDropdownButton.this);
             add(new Label("line1", line1));
             add(new Label("line2", line2));
-        }
-    }
-
-    @Override
-    public void onEvent(IEvent<?> event) {
-        super.onEvent(event);
-
-        if (event.getPayload() instanceof SupplierChanged) {
-            event.dontBroadcastDeeper();
-            ((SupplierChanged) event.getPayload()).getTarget().add(this);
         }
     }
 }
