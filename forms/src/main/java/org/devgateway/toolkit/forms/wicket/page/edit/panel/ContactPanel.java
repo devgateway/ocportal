@@ -2,6 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.devgateway.toolkit.forms.wicket.components.CompoundSectionPanel;
@@ -15,6 +16,10 @@ public class ContactPanel<T extends AbstractContact<?>> extends CompoundSectionP
 
     public ContactPanel(String id) {
         super(id);
+    }
+
+    public ContactPanel(String id, IModel<T> model) {
+        super(id, model);
     }
 
     @Override

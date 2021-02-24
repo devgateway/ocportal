@@ -31,6 +31,9 @@ public class Supplier extends Category {
     @ManyToOne
     private TargetGroup targetGroup;
 
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
+    private String agpoRegistrationId;
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupplierContact> contacts = new ArrayList<>();
@@ -57,6 +60,14 @@ public class Supplier extends Category {
 
     public void setTargetGroup(final TargetGroup targetGroup) {
         this.targetGroup = targetGroup;
+    }
+
+    public String getAgpoRegistrationId() {
+        return agpoRegistrationId;
+    }
+
+    public void setAgpoRegistrationId(String agpoRegistrationId) {
+        this.agpoRegistrationId = agpoRegistrationId;
     }
 
     public List<SupplierContact> getContacts() {

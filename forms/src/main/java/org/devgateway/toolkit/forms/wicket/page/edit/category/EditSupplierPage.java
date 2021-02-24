@@ -4,13 +4,18 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.category;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
@@ -57,8 +62,19 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
 
         ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", targetGroupService);
 
-        ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+        Select2MultiChoiceBootstrapFormComponent<Ward> wards;
+        wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
 
-        ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+        Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
+        subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+        subcounties.getField()
+                .add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                        LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards,
+                        "change"
+                ));
+
+        ComponentUtil.addTextField(editForm, "agpoRegistrationId");
+
+        editForm.add(new SupplierContactsPanel("contacts"));
     }
 }
