@@ -143,7 +143,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             sourceOfFunds.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             sourceOfFunds.getField().add(new SourceOfFundsValidator());
 
-            ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
+            ComponentUtil.addSelect2MultiChoiceField(item, "targetGroup", targetGroupService);
             ComponentUtil.addBigDecimalField(item, "targetGroupValue")
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
