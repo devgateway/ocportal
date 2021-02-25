@@ -8,7 +8,9 @@ import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethodRationale;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.persistence.validator.Severity;
@@ -24,6 +26,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
@@ -67,6 +70,16 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Subcounty> subcounties;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Wards")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Ward> wards = new ArrayList<>();
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -274,5 +287,21 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @Override
     public boolean hasDownstreamForms() {
         return getTenderProcess().hasFormsDependingOnTender();
+    }
+
+    public List<Subcounty> getSubcounties() {
+        return subcounties;
+    }
+
+    public void setSubcounties(List<Subcounty> subcounties) {
+        this.subcounties = subcounties;
+    }
+
+    public List<Ward> getWards() {
+        return wards;
+    }
+
+    public void setWards(List<Ward> wards) {
+        this.wards = wards;
     }
 }
