@@ -689,7 +689,7 @@
   "header:help:intro": "HELP",
   "header:totalContracts": "Total Contracts",
   "header:totalContracts:intro": "This shows the total number of tenders that have been contracted that are published on the portal.",
-  "header:totalContractsAmount": "Total Contract Amount",
+  "header:totalContractsAmount": "Total Contract Amount (KES)",
   "header:totalContractsAmount:intro": "This shows the total contracted amount.",
   "docs:resources": "Resources",
   "docs:portalVideos:heading": "Portal Walkthrough and Videos",
