@@ -1,7 +1,9 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -74,6 +76,11 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
         }
     }
 
+    public Component createDraftSchemaWarning() {
+        return new WebMarkupContainer("draftSchemaWarning")
+                .setVisibilityAllowed(shouldDisableFormPrequalifiedSuppliersExist());
+    }
+
 
     public TextFieldBootstrapFormComponent<String> createNameField() {
         final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
@@ -110,9 +117,13 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
         return schemaField;
     }
 
-    protected void checkAndDisableFormPrequalifiedSuppliersExist() {
-        if (editForm.getModelObject() != null && !editForm.getModelObject().isNew()
-                && !editForm.getModelObject().getPrequalifiedSuppliers().isEmpty()) {
+    protected boolean shouldDisableFormPrequalifiedSuppliersExist() {
+        return editForm.getModelObject() != null && !editForm.getModelObject().isNew()
+                && !editForm.getModelObject().getPrequalifiedSuppliers().isEmpty();
+    }
+
+    protected void disableFormPrequalifiedSuppliersExist() {
+        if (shouldDisableFormPrequalifiedSuppliersExist()) {
             send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
             saveButton.setEnabled(false);
         }
@@ -127,7 +138,8 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
         editForm.add(createEndYearField());
         editForm.add(new YearOrderValidator());
         editForm.add(new NonOverlappingYearValidator());
-        checkAndDisableFormPrequalifiedSuppliersExist();
+        editForm.add(createDraftSchemaWarning());
+        disableFormPrequalifiedSuppliersExist();
     }
 
 }
