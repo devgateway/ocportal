@@ -38,7 +38,7 @@
 - name: awardNotificationForm.items.lettersOfRegret
   mandatory: no
   enabled: yes
-  visible: no
+  visible: yes
 - name: awardNotificationForm.items.newButton
   enabled: yes
   visible: yes
