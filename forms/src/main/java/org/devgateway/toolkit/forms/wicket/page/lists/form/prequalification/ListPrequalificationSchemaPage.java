@@ -63,12 +63,13 @@ public class ListPrequalificationSchemaPage extends AbstractListStatusEntityPage
     protected void onInitialize() {
         attachFm("prequalificationSchemaList");
         super.onInitialize();
-        addOrReplace(createImportNewPageLink());
+        addOrReplace(createImportNewPageLink("new"));
+        addOrReplace(createImportNewPageLink("newTop"));
     }
 
-    protected BootstrapBookmarkablePageLink<Object> createImportNewPageLink() {
+    protected BootstrapBookmarkablePageLink<Object> createImportNewPageLink(String id) {
         BootstrapBookmarkablePageLink<Object> link = new BootstrapBookmarkablePageLink<>(
-                "new", ImportPrequalificationSchemaPage.class, Buttons.Type.Success);
+                id, ImportPrequalificationSchemaPage.class, Buttons.Type.Success);
         link.setIconType(FontAwesomeIconType.plus_circle).setSize(Buttons.Size.Large)
                 .setLabel(new StringResourceModel("new", ListPrequalificationSchemaPage.this));
         return link;
