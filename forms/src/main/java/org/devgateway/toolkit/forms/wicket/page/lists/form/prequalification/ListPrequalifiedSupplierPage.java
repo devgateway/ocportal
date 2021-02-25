@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.page.lists;
+package org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
@@ -34,7 +34,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.page.edit.EditPrequalifiedSupplierPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification.EditPrequalifiedSupplierPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.AbstractBaseListPage;
 import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
