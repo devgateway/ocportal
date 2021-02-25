@@ -25,6 +25,7 @@ import java.util.List;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @UniquePrequalifiedSupplier(groups = HighLevel.class)
+@UniquePrequalifiedSupplierItem
 public class PrequalifiedSupplier extends AbstractAuditableEntity {
 
     @NotNull
