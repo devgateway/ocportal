@@ -150,8 +150,7 @@ const Buyer = ({
         <section>
           {state && (
             <h2>
-              Procurements by
-              {state.info.name}
+              {t('crd:procuringEntity:procurementsBy', { name: state.info.name })}
             </h2>
           )}
           <ProcurementsTable
