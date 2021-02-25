@@ -11,4 +11,6 @@ import org.devgateway.toolkit.persistence.service.BaseJpaService;
 public interface PrequalifiedSupplierService extends BaseJpaService<PrequalifiedSupplier> {
 
     boolean isSupplierPrequalified(Supplier supplier, PrequalificationYearRange yearRange, Long exceptId);
+
+    PrequalifiedSupplier find(Supplier supplier, PrequalificationYearRange yearRange);
 }

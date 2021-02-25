@@ -74,6 +74,13 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
 
+    @ExcelExport(useTranslation = true, name = "Contract Extension Date")
+    private Date contractExtensionDate;
+
+    @ExcelExport(useTranslation = true, name = "Reason for Extension")
+    @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
+    private String reasonForExtension;
+
     public BigDecimal getContractValue() {
         return contractValue;
     }
@@ -128,6 +135,22 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
 
     public void setContractDocs(final List<ContractDocument> contractDocs) {
         this.contractDocs = contractDocs;
+    }
+
+    public Date getContractExtensionDate() {
+        return contractExtensionDate;
+    }
+
+    public void setContractExtensionDate(Date contractExtensionDate) {
+        this.contractExtensionDate = contractExtensionDate;
+    }
+
+    public String getReasonForExtension() {
+        return reasonForExtension;
+    }
+
+    public void setReasonForExtension(String reasonForExtension) {
+        this.reasonForExtension = reasonForExtension;
     }
 
     @Override

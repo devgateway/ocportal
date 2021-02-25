@@ -1,30 +1,51 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.validators.NonZeroBigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.basic.MultiLineLabel;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
+import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
+import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationYearRangeService;
+import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluation> {
     @SpringBean
     protected SupplierService supplierService;
 
-    private GenericSleepFormComponent supplierID = null;
+    @SpringBean
+    private PrequalificationYearRangeService prequalificationYearRangeService;
+
+    @SpringBean
+    private PrequalifiedSupplierService prequalifiedSupplierService;
+
+    private GenericSleepFormComponent<String> supplierID = null;
+    private GenericSleepFormComponent<TargetGroup> targetGroup;
+    private GenericSleepFormComponent<List<String>> prequalifiedItems;
 
     public BidPanel(final String id) {
         super(id);
@@ -45,14 +66,27 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         Select2ChoiceBootstrapFormComponent<Supplier> supplier = ComponentUtil.addSelect2ChoiceField(item, "supplier",
                 supplierService);
         supplier.getField().add(new SupplierUpdatingBehavior("change"));
-        supplierID = new GenericSleepFormComponent<>("supplierID", (IModel<String>) () -> {
-            if (supplier.getModelObject() != null) {
-                return supplier.getModelObject().getCode();
-            }
-            return null;
-        });
+
+        supplierID = new GenericSleepFormComponent<>("supplierID",
+                item.getModel().map(Bid::getSupplier).map(Category::getCode));
         supplierID.setOutputMarkupId(true);
         item.add(supplierID);
+
+        targetGroup = new GenericSleepFormComponent<>("targetGroup",
+                item.getModel().map(Bid::getSupplier).map(Supplier::getTargetGroup));
+        targetGroup.setOutputMarkupId(true);
+        item.add(targetGroup);
+
+        prequalifiedItems = new GenericSleepFormComponent<List<String>>("prequalifiedItems",
+                new PrequalifiedItemsModel(item.getModel())) {
+
+            @Override
+            protected Component newValueComponent(String id) {
+                return new MultiLineLabel(id, getModel());
+            }
+        };
+        prequalifiedItems.setOutputMarkupId(true);
+        item.add(prequalifiedItems);
 
         ComponentUtil.addBigDecimalField(item, "quotedAmount")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new NonZeroBigDecimalValidator());
@@ -63,6 +97,43 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         item.add(responsiveness);
     }
 
+    private final class PrequalifiedItemsModel extends LoadableDetachableModel<List<String>> {
+
+        private final IModel<Bid> bidModel;
+
+        private PrequalifiedItemsModel(IModel<Bid> bidModel) {
+            this.bidModel = bidModel;
+        }
+
+        @Override
+        protected List<String> load() {
+            Bid bid = bidModel.getObject();
+
+            Supplier supplier = bid.getSupplier();
+
+            if (supplier == null) {
+                return Collections.emptyList();
+            }
+
+            Date tenderInvitationDate = bid.getParent().getTenderProcess().getSingleTender().getInvitationDate();
+            PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+
+            if (yearRange == null) {
+                return Collections.emptyList();
+            }
+
+            PrequalifiedSupplier prequalifiedSupplier = prequalifiedSupplierService.find(supplier, yearRange);
+
+            if (prequalifiedSupplier == null) {
+                return Collections.emptyList();
+            }
+
+            return prequalifiedSupplier.getItems().stream()
+                    .map(i -> i.getItem().toString(yearRange))
+                    .collect(Collectors.toList());
+        }
+    }
+
     private class SupplierUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
         SupplierUpdatingBehavior(final String event) {
             super(event);
@@ -70,8 +141,7 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
 
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierID);
-
+            target.add(supplierID, targetGroup, prequalifiedItems);
         }
     }
 }

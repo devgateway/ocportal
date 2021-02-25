@@ -21,7 +21,6 @@ import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -84,6 +83,9 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         addSupplierInfo();
 
         editForm.add(new ContractDocumentPanel("contractDocs"));
+
+        ComponentUtil.addDateField(editForm, "contractExtensionDate");
+        ComponentUtil.addTextField(editForm, "reasonForExtension");
     }
 
     @Override

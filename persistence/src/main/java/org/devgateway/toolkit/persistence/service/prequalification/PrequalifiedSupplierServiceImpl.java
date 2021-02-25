@@ -5,12 +5,14 @@ import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplierItem;
+import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier_;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.prequalification.PrequalifiedSupplierRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -88,5 +90,14 @@ public class PrequalifiedSupplierServiceImpl
                 .forEach(supplier::addContact);
 
         supplierService.save(supplier);
+    }
+
+    @Override
+    public PrequalifiedSupplier find(Supplier supplier, PrequalificationYearRange yearRange) {
+        return repository
+                .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
+                        cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),
+                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)))
+                .orElse(null);
     }
 }

@@ -34,6 +34,15 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: tenderQuotationEvaluationForm.bids.targetGroup
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderQuotationEvaluationForm.bids.prequalifiedItems
+  mandatory: no
+  enabled: yes
+  visibleDeps:
+    - prequalifiedSupplierForm
 - name: tenderQuotationEvaluationForm.bids.supplierResponsiveness
   mandatory: yes
   enabled: yes
