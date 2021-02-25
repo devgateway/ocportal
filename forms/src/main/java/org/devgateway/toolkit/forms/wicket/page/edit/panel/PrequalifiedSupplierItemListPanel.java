@@ -5,11 +5,15 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -23,7 +27,9 @@ import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSuppl
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplierItemContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Octavian Ciubotaru
@@ -36,6 +42,37 @@ public class PrequalifiedSupplierItemListPanel
     public PrequalifiedSupplierItemListPanel(String id, IModel<List<SupplierContact>> supplierContactsModel) {
         super(id);
         this.supplierContactsModel = supplierContactsModel;
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
+        findParent(Form.class).add(new UniquePrequalifiedSupplierItemValidator());
+    }
+
+    private class UniquePrequalifiedSupplierItemValidator implements IFormValidator {
+
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            Set<PrequalificationSchemaItem> schemaItems = new HashSet<>();
+            for (PrequalifiedSupplierItem item : getModelObject()) {
+                if (!schemaItems.add(item.getItem())) {
+                    form.error(getErrorMessage());
+                    return;
+                }
+            }
+        }
+
+        private String getErrorMessage() {
+            PrequalifiedSupplierItemListPanel component = PrequalifiedSupplierItemListPanel.this;
+            return new StringResourceModel("UniqueSupplierPrequalifiedItem.message", component).getString();
+        }
     }
 
     @Override

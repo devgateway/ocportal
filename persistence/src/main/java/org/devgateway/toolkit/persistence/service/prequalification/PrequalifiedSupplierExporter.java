@@ -25,7 +25,7 @@ public class PrequalifiedSupplierExporter {
         private static final int MAILING_ADDRESS = 3;
         private static final int EMAIL = 4;
         private static final int DIRECTORS = 5;
-        private static final int AGPO_CATEGORIES = 6;
+        private static final int TARGET_GROUPS = 6;
         private static final int LOCATION = 7;
     }
 
@@ -42,7 +42,7 @@ public class PrequalifiedSupplierExporter {
         sheet.setColumnWidth(Indexes.MAILING_ADDRESS, numCharsToWidth(25));
         sheet.setColumnWidth(Indexes.EMAIL, numCharsToWidth(20));
         sheet.setColumnWidth(Indexes.DIRECTORS, numCharsToWidth(30));
-        sheet.setColumnWidth(Indexes.AGPO_CATEGORIES, numCharsToWidth(20));
+        sheet.setColumnWidth(Indexes.TARGET_GROUPS, numCharsToWidth(20));
         sheet.setColumnWidth(Indexes.LOCATION, numCharsToWidth(30));
 
         for (int i = 0, itemsSize = items.size(); i < itemsSize; i++) {
@@ -66,7 +66,7 @@ public class PrequalifiedSupplierExporter {
         row.createCell(Indexes.MAILING_ADDRESS).setCellValue("Mailing Address");
         row.createCell(Indexes.EMAIL).setCellValue("Email");
         row.createCell(Indexes.DIRECTORS).setCellValue("Directors");
-        row.createCell(Indexes.AGPO_CATEGORIES).setCellValue("AGPO Categories");
+        row.createCell(Indexes.TARGET_GROUPS).setCellValue("Target Groups");
         row.createCell(Indexes.LOCATION).setCellValue("Location");
     }
 
@@ -91,7 +91,7 @@ public class PrequalifiedSupplierExporter {
         XSSFCell directorsCell = row.createCell(Indexes.DIRECTORS);
         directorsCell.setCellValue(item.getNonNullContact().getDirectors());
 
-        XSSFCell agpoCategoriesCell = row.createCell(Indexes.AGPO_CATEGORIES);
+        XSSFCell agpoCategoriesCell = row.createCell(Indexes.TARGET_GROUPS);
         agpoCategoriesCell.setCellValue(supplier.getTargetGroup().getLabel());
 
         XSSFCell locationCell = row.createCell(Indexes.LOCATION);
