@@ -586,7 +586,7 @@
   "meReport:remarks": "Remarks",
   "meReport:contractorContact": "Contractor Contact",
   "meReport:contractDate": "Contract Date",
-  "meReport:expiryDate": "Contract Completion Date",
+  "meReport:expiryDate": "Contract Expirity Date",
   "meReport:amountBudgeted": "Revised Budget",
   "general:noData": "No Data",
   "notification:subject": "Notification",
