@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.repository.form.TenderItemRepository;
@@ -30,6 +31,11 @@ public class TenderItemServiceImpl extends BaseJpaServiceImpl<TenderItem> implem
     @Override
     public List<TenderItem> findByPurchaseItemIn(final Collection<PurchaseItem> purchaseItem) {
         return repository.findByPurchaseItemIn(purchaseItem);
+    }
+
+    @Override
+    public List<TenderItem> findByPlanItem(PlanItem planItem) {
+        return repository.findByPlanItem(planItem);
     }
 
     @Override
