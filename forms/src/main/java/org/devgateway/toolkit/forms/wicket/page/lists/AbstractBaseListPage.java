@@ -6,6 +6,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.GoAndClearFilter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn;
@@ -31,11 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Octavian Ciubotaru
+ * @author Octavian Ciubotaru, mpostelnicu
  */
 public abstract class AbstractBaseListPage<T extends GenericPersistable & Serializable> extends BasePage {
 
-    private AjaxFallbackBootstrapDataTable<T, String> dataTable;
+    private DataTable<T, String> dataTable;
 
     private AbstractDataProvider<T> dataProvider;
 
@@ -43,7 +44,7 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
 
     protected Boolean filterGoReset = false;
 
-    private Component addButton;
+    private Component bottomAddButton;
 
     private Component topAddButton;
 
@@ -56,6 +57,10 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
         super(parameters);
     }
 
+    protected DataTable<T, String> createDatatable() {
+        return new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
@@ -63,7 +68,7 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
         dataProvider = createDataProvider();
         dataProvider.setFilterState(newFilterState());
 
-        dataTable = new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
+        dataTable = createDatatable();
 
         initializeColumns();
 
@@ -71,10 +76,10 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
         filterForm.add(dataTable);
         add(filterForm);
 
-        addButton = createAddButton("new");
-        add(addButton);
+        bottomAddButton = createBottomAddButton();
+        add(bottomAddButton);
 
-        topAddButton = createTopAddButton("newTop");
+        topAddButton = createTopAddButton();
         add(topAddButton);
     }
 
@@ -114,13 +119,13 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
         return filterForm;
     }
 
-    protected AjaxFallbackBootstrapDataTable<T, String> getDataTable() {
+    protected final DataTable<T, String> getDataTable() {
         return dataTable;
     }
 
     protected abstract AbstractDataProvider<T> createDataProvider();
 
-    public AbstractDataProvider<T> getDataProvider() {
+    protected final AbstractDataProvider<T> getDataProvider() {
         return dataProvider;
     }
 
@@ -159,19 +164,29 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
     protected void addActionColumn() {
     }
 
+    protected final Component createBottomAddButton() {
+       return createAddButton("new");
+    }
+
+    /**
+     * Method that creates both new buttons, since in all cases these buttons must have exactly the same functionality
+     *ccc
+     * @param id
+     * @return
+     */
     protected Component createAddButton(String id) {
         return new WebMarkupContainer(id).setVisibilityAllowed(false);
     }
 
-    public Component getAddButton() {
-        return addButton;
+    protected final Component getBottomAddButton() {
+        return bottomAddButton;
     }
 
-    protected Component createTopAddButton(String id) {
-        return new WebMarkupContainer(id).setVisibilityAllowed(false);
+    protected final Component createTopAddButton() {
+        return createAddButton("newTop");
     }
 
-    public Component getTopAddButton() {
+    protected final Component getTopAddButton() {
         return topAddButton;
     }
 }
