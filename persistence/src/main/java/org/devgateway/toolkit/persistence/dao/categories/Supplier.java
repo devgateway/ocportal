@@ -39,11 +39,11 @@ public class Supplier extends Category {
     private List<SupplierContact> contacts = new ArrayList<>();
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Subcounty> subcounties = new ArrayList<>();
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Ward> wards = new ArrayList<>();
 
     public String getAddress() {
