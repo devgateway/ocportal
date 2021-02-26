@@ -57,7 +57,7 @@
 - name: projectForm.subcounties
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: projectForm.submitAndNext
   enabled: yes
   visible: yes
@@ -71,7 +71,7 @@
 - name: projectForm.wards
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
   visibleDeps:
     - projectForm.subcounties
   enabledDeps:
