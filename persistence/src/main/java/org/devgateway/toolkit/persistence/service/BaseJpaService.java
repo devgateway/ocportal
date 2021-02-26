@@ -8,11 +8,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public interface BaseJpaService<T extends GenericPersistable & Serializable> {
+
     List<T> findAll();
 
     List<T> findAll(Sort sort);
@@ -50,4 +52,8 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
     void delete(T entity);
 
     T newInstance();
+
+    Collection<String> getRelatedCollectionCaches();
+
+    void flushRelatedCollectionCaches();
 }
