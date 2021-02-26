@@ -188,7 +188,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 PrequalificationSchema schema = filterForm.getModelObject().getYearRange().getSchema();
                 submittedSchemaModel.setObject(schema.getStatus().equals(DBConstants.Status.SUBMITTED));
 
-                target.add(getDataTable(), getAddButton(), draftSchemaWarning);
+                target.add(getDataTable(), getBottomAddButton(), draftSchemaWarning);
             }
         });
 

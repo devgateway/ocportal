@@ -144,19 +144,6 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
     }
 
     @Override
-    protected Component createTopAddButton(String id) {
-        if (hasNewPage) {
-            BootstrapBookmarkablePageLink<T> button;
-            button = new BootstrapBookmarkablePageLink<>(id, editPageClass, Buttons.Type.Success);
-            button.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
-                    .setLabel(new StringResourceModel("new", AbstractListPage.this, null));
-            return button;
-        } else {
-            return super.createTopAddButton(id);
-        }
-    }
-
-    @Override
     protected void addActionColumn() {
         // add the 'Edit' button
         if (hasEditPage) {
