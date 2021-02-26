@@ -2,7 +2,8 @@
 - name: deptOverview.fiscalYearBudget
   visible: yes
 - name: deptOverview.cabinetPaper
-  visible: yes
+  visibleDeps:
+    - cabinetPaperForm
 - name: deptOverview.project
   visible: no
 - name: deptOverview.tenderProcess
