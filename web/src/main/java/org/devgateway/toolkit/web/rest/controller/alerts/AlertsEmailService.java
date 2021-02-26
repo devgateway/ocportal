@@ -58,8 +58,8 @@ public class AlertsEmailService {
             msg.setTo(parent.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("You've received a reply to your feedback message!");
-            msg.setText("Click on the link below to view your message on the Government of Makueni County Open"
-                    + " Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
+            msg.setText("Click on the link below to view your message on the Government of " + INSTANCE_NAME
+                    + " County Open Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
         };
         try {
             emailSendingService.send(messagePreparator);

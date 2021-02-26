@@ -31,6 +31,7 @@ import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_USER;
 
 /**
@@ -152,10 +153,10 @@ public class SendEmailServiceImpl implements SendEmailService {
                     + "at least 1 special character.\n"
                     + "2. Subsequently you may change your password on a need basis.\n\n"
                     + "Kind regards,\n"
-                    + "Makueni Team";
+                    + INSTANCE_NAME + " Team";
             msg.setTo(person.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
-            msg.setSubject("Your Makueni Account");
+            msg.setSubject("Your " + INSTANCE_NAME + " Account");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
 

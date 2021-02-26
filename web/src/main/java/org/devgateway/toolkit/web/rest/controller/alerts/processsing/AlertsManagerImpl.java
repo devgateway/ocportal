@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
@@ -192,7 +193,7 @@ public class AlertsManagerImpl implements AlertsManager {
                         + "\" please visit the website to see the update: \n\n"
                         + tenderLinks.toString() + "\n"
                         + "Thanks,\n"
-                        + "Makueni Portal Team \n\n\n"
+                        + INSTANCE_NAME + " Portal Team \n\n\n"
                         + "If you do not want to receive our email alerts anymore please click on the following link: "
                         + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
                         + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
@@ -205,7 +206,7 @@ public class AlertsManagerImpl implements AlertsManager {
                         + "The following tender(s) have been published: \n\n"
                         + tenderLinks.toString() + "\n"
                         + "Thanks,\n"
-                        + "Makueni Portal Team \n\n\n"
+                        + INSTANCE_NAME + " Portal Team \n\n\n"
                         + "If you do not want to receive our email alerts anymore please click on the following link: "
                         + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
                         + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
