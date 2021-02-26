@@ -155,8 +155,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         alertTerminated.setVisibilityAllowed(false);
         editForm.add(alertTerminated);
 
-        enableDisableAutosaveFields(null);
-
 //        extraStatusEntityButtons = new Fragment("extraStatusEntityButtons", "extraStatusButtons", this);
 //        entityButtonsFragment.replace(extraStatusEntityButtons);
 //        extraStatusEntityButtons.add(revertToDraftModal);

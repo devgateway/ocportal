@@ -142,6 +142,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             addButton(button);
             button.setDefaultFormProcessing(false);
             button.setLabel(buttonModel);
+            enableDisableAutosaveFields(null);
         }
     }
 
