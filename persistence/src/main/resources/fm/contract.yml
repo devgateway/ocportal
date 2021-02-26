@@ -103,6 +103,8 @@
 - name: contractsList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - contractForm
 - name: contractsList.department
   visible: yes
   visibleDeps:

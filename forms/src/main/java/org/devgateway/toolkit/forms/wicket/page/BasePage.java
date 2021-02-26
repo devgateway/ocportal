@@ -30,6 +30,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCs
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -64,7 +65,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractBaseListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearBudgetPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalifiedSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatisticsPage;
@@ -103,6 +103,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationSchemaPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationYearRangePage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalifiedSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -156,6 +157,15 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 "googleAnalyticsTracker", settingsUtils.getGoogleAnalyticsTrackingId());
         googleAnalyticsTracker.setVisibilityAllowed(settingsUtils.getGoogleAnalyticsTrackingId() != null);
         add(googleAnalyticsTracker);
+    }
+
+    /**
+     * Do not allow access to pages that are attached to invisible features
+     */
+    protected void redirectForInvisibleFm() {
+        if (!isFmVisible()) {
+            throw new RestartResponseException(Homepage.class);
+        }
     }
 
     @SpringBean
@@ -786,5 +796,11 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         // file upload improvement script
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
                 BaseStyles.class, "assets/js/fileupload.js")));
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        redirectForInvisibleFm();
     }
 }

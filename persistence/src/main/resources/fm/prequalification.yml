@@ -82,6 +82,8 @@
   visible: yes
 - name: prequalificationSchemaList
   visible: yes
+  visibleDeps:
+    - prequalificationSchemaForm
 - name: prequalificationSchemaList.filterToolbar
   mandatory: no
   enabled: yes
@@ -175,6 +177,8 @@
 
 - name: prequalifiedSupplierList
   visible: yes
+  visibleDeps:
+    - prequalifiedSupplierForm
 - name: prequalifiedSupplierList.companyCategories
   visible: yes
 - name: prequalifiedSupplierList.items
