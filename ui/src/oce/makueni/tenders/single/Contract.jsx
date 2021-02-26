@@ -53,6 +53,24 @@ const Contract = (props) => {
           col={4}
         />
         )}
+
+        {isFeatureVisible('publicView.contract.wards')
+        && (
+        <Item
+          label={t('contract:wards')}
+          value={contract.wards && contract.wards.map((item) => item.label).join(', ')}
+          col={4}
+        />
+        )}
+
+        {isFeatureVisible('publicView.contract.subcounties')
+        && (
+        <Item
+          label={t('contract:subcounties')}
+          value={contract.subcounties && contract.subcounties.map((item) => item.label).join(', ')}
+          col={4}
+        />
+        )}
       </div>
 
       {
