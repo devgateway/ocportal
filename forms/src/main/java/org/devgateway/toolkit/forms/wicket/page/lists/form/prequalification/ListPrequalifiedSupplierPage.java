@@ -47,7 +47,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier_;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
@@ -139,7 +138,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 setVisibilityAllowed(!submittedSchemaModel.getObject());
             }
         };
-        draftSchemaWarning.setOutputMarkupId(true);
+        draftSchemaWarning.setOutputMarkupPlaceholderTag(true);
         add(draftSchemaWarning);
 
         Form<Filter> filterForm = new Form<>("form", new CompoundPropertyModel<>(filterModel));
@@ -185,10 +184,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             protected void onSubmit(AjaxRequestTarget target) {
                 getDataTable().setCurrentPage(0);
 
-                PrequalificationSchema schema = filterForm.getModelObject().getYearRange().getSchema();
-                submittedSchemaModel.setObject(schema.getStatus().equals(DBConstants.Status.SUBMITTED));
+                Long id = filterForm.getModelObject().getYearRange().getId();
+                PrequalificationYearRange yearRange = prequalificationYearRangeService.findById(id).orElse(null);
+                submittedSchemaModel.setObject(yearRange.getSchema().getStatus().equals(DBConstants.Status.SUBMITTED));
 
-                target.add(getDataTable(), getBottomAddButton(), draftSchemaWarning);
+                target.add(getDataTable(), getTopAddButton(), getBottomAddButton(), draftSchemaWarning);
             }
         });
 
@@ -214,7 +214,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
                 ResourceResponse response = new ResourceResponse();
                 response.setContentType(Constants.ContentType.XLSX);
-                response.setFileName("Prequalified Suppliers.xslx");
+                response.setFileName("Prequalified Suppliers.xlsx");
                 response.setWriteCallback(new WriteCallback() {
                     @Override
                     public void writeData(Attributes attributes) throws IOException {
