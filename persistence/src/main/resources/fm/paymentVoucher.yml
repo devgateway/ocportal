@@ -105,6 +105,8 @@
 - name: paymentVouchersList
   enabled: yes
   visible: yes
+  visibleDeps:
+  - paymentVoucherForm
 - name: paymentVouchersList.approvedDate
   mandatory: yes
   enabled: yes
