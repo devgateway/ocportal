@@ -68,7 +68,12 @@ public class SendEmailServiceImpl implements SendEmailService {
                 mimeMessagePreparator.prepare(mimeMessage);
                 MimeMessageParser parser = new MimeMessageParser(mimeMessage);
                 parser.parse();
-                logger.info("Prepared MimeMessage: " + parser.getPlainContent());
+                if (parser.hasPlainContent()) {
+                    logger.info("Prepared Plain Message: " + parser.getPlainContent());
+                }
+                if (parser.hasHtmlContent()) {
+                    logger.info("Prepared Html Message: " + parser.getHtmlContent());
+                }
 
             } catch (Exception e) {
                 throw new MailPreparationException(e);

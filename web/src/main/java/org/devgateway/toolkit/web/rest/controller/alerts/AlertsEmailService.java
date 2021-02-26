@@ -24,6 +24,8 @@ import org.springframework.util.ObjectUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
+
 /**
  * @author idobre
  * @since 23/08/2019
@@ -50,7 +52,7 @@ public class AlertsEmailService {
     private AdminSettingsRepository adminSettingsRepository;
 
     @Transactional
-    private void sendFeedbackAlertEmails(ReplyableFeedbackMessage parent, FeedbackMessage message) {
+    protected void sendFeedbackAlertEmails(ReplyableFeedbackMessage parent, FeedbackMessage message) {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(parent.getEmail());
@@ -108,17 +110,20 @@ public class AlertsEmailService {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
             final String content = "Hello,\n\n"
-                    + "Before you can receive Elgeyo Marakwet Alerts we need to validate your email address.\n"
+                    + "You have subscribed to receive " + INSTANCE_NAME + " Alerts about: \n"
+                    + (!alert.getDepartments().isEmpty() ? "New tenders in departments: \n"
+                    + alert.getDepartments() + "\n" : "")
+                    + (!alert.getItems().isEmpty() ? "New tenders with items: " + alert.getItems() + "\n" : "")
                     + "You can do this by simply clicking on the link below: \n\n"
                     + "Verify email url: <a style=\"color: #3060ED; text-decoration: none;\" href=\""
                     + url + "\">" + url + "</a>\n\n"
                     + "If you have problems, please paste the above URL into your browser.\n\n"
                     + "Thanks,\n"
-                    + "Elgeyo Marakwet Portal Team";
+                    + INSTANCE_NAME + " Portal Team";
 
             msg.setTo(alert.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
-            msg.setSubject("Elgeyo Marakwet OC Portal - Please Verify Email Address");
+            msg.setSubject(INSTANCE_NAME + " OC Portal - Please Verify Email Address");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
         try {
