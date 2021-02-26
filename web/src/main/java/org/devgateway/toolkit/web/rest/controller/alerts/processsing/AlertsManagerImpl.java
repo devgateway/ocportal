@@ -167,11 +167,11 @@ public class AlertsManagerImpl implements AlertsManager {
 
         final StringBuilder tenderLinks = new StringBuilder();
         for (final Document document : documents) {
-            final Document project = (Document) document.get("projects");
-            final Document purchaseReq = (Document) project.get("tenderProcesses");
-            final Long purchaseReqId = (Long) purchaseReq.get("_id");
+            //final Document project = (Document) document.get("projects");
+            final Document tenderProcess = (Document) document.get("tenderProcesses");
+            final Long tenderProcessId = (Long) tenderProcess.get("_id");
 
-            final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, purchaseReqId);
+            final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, tenderProcessId);
             tenderLinks.append("* <a style=\"color: #3060ED; text-decoration: none;\" href=\""
                     + tenderUrl + "\">" + tenderUrl + "</a>\n");
         }
