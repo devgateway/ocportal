@@ -19,10 +19,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.time.Duration;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
@@ -108,7 +108,8 @@ public class ListPrequalificationYearRangePage extends AbstractListPage<Prequali
             downloadExcel.setLabel(new ResourceModel("download"));
             if (!entity.getSchema().isSelectable()) {
                 add(new TooltipBehavior(new ResourceModel("tooltipSchemaInDraft"),
-                        new TooltipConfig().withPlacement(TooltipConfig.Placement.left)));
+                        new TooltipConfig().withPlacement(TooltipConfig.Placement.left).withDelay(
+                                Duration.milliseconds(200))));
                 downloadExcel.setEnabled(false);
             }
 
