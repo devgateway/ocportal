@@ -28,6 +28,7 @@ import de.agilecoders.wicket.core.markup.html.themes.bootstrap.BootstrapCssRefer
 import de.agilecoders.wicket.core.util.CssClassNames;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
@@ -490,7 +491,8 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
         MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PMC_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER,
+                StringUtils.join(PMC_METADATA_ROLES, ","));
         return metadataMenu;
     }
 
