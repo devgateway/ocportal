@@ -65,6 +65,7 @@ public final class MongoConstants {
         public static final String CONTRACTS_IMPL_TRANSACTIONS = "contracts.implementation.transactions";
         public static final String CONTRACTS_IMPL_TRANSACTIONS_AMOUNT = "contracts.implementation.transactions.amount"
                 + ".amount";
+        public static final String CONTRACTS_VALUE_AMOUNT = "contracts.value.amount";
         public static final String CONTRACTS_CONTRACTOR_ID = "contracts.contractor._id";
         public static final String CONTRACTS_MILESTONES = "contracts.implementation.milestones";
         public static final String CONTRACTS_STATUS = "contracts.status";
