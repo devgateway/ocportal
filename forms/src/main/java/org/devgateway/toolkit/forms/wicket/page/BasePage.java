@@ -27,6 +27,7 @@ import de.agilecoders.wicket.core.markup.html.themes.bootstrap.BootstrapCssRefer
 import de.agilecoders.wicket.core.util.CssClassNames;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
@@ -101,9 +102,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_METADATA_ROLES;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
@@ -329,6 +332,16 @@ public abstract class BasePage extends GenericWebPage<Void> {
         MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
     }
 
+    private <L extends AbstractListPage> void
+    createAddListMenuWithRoles(List<AbstractLink> list, Collection<String> roles, Class<L> clazz, String resourceKey,
+                               IconType iconType) {
+        BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
+        for (String role : roles) {
+            MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+        }
+    }
+
+
 
     private NavbarDropDownButton newMetadataMenu() {
         // metadata menu
@@ -380,11 +393,11 @@ public abstract class BasePage extends GenericWebPage<Void> {
                         "navbar.stafflist", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListPMCStaffPage.class,
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListPMCStaffPage.class,
                         "navbar.pmcStaffList", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListDesignationPage.class,
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListDesignationPage.class,
                         "navbar.designations", FontAwesomeIconType.certificate
                 );
 
@@ -415,7 +428,8 @@ public abstract class BasePage extends GenericWebPage<Void> {
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
         MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PMC_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER,
+                StringUtils.join(PMC_METADATA_ROLES, ","));
         return metadataMenu;
     }
 
