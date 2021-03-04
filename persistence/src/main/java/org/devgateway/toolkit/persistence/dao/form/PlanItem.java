@@ -21,6 +21,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
+    @Size(max = 1)
     private List<TargetGroup> targetGroup;
 
     @ExcelExport(useTranslation = true, name = "Target Group Value")
