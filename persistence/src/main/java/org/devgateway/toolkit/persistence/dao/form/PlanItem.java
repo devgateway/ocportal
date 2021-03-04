@@ -63,7 +63,7 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
-    @Size(max = 1)
+    //@Size(max = 1)
     private List<TargetGroup> targetGroup;
 
     @ExcelExport(useTranslation = true, name = "AGPO Category Value")
