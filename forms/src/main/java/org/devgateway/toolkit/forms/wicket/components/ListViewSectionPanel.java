@@ -184,7 +184,8 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
                         if (accordion != null) {
                             final Label showDetailsLink =
-                                    (Label) accordion.get(ID_ACCORDION_TOGGLE).get("showDetailsLink");
+                                    (Label) accordion.get(ID_ACCORDION_TOGGLE).get("showDetailsLink")
+                                            .get("showDetailsLabel");
 
                             if (show) {
                                 showSection(list.getModelObject().get(i), target,
@@ -253,9 +254,10 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     }
 
     private void addAcordion(final ListItem<T> item) {
-        final Label showDetailsLink = new Label("showDetailsLink", new ResourceModel("showDetailsLink"));
-        showDetailsLink.setOutputMarkupId(true);
-        showDetailsLink.setVisibilityAllowed(!ComponentUtil.isPrintMode());
+
+        final Label showDetailsLabel = new Label("showDetailsLabel", new ResourceModel("showDetailsLabel"));
+        showDetailsLabel.setOutputMarkupId(true);
+        showDetailsLabel.setVisibilityAllowed(!ComponentUtil.isPrintMode());
 
         // the section that will collapse
         final TransparentWebMarkupContainer hideableContainer =
@@ -263,21 +265,24 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         hideableContainer.setOutputMarkupId(true);
         hideableContainer.setOutputMarkupPlaceholderTag(true);
 
-        final TransparentWebMarkupContainer accordion = new TransparentWebMarkupContainer(ID_ACCORDION);
-        accordion.setOutputMarkupId(true);
-        item.add(accordion);
-
-        final AjaxLink<Void> accordionToggle = new AjaxLink<Void>(ID_ACCORDION_TOGGLE) {
+        final AjaxLink<Void> showDetailsLink = new AjaxLink<Void>("showDetailsLink") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 final T modelObject = item.getModelObject();
                 if (modelObject.getExpanded()) {
-                    hideSection(modelObject, target, hideableContainer, showDetailsLink);
+                    hideSection(modelObject, target, hideableContainer, showDetailsLabel);
                 } else {
-                    showSection(modelObject, target, hideableContainer, showDetailsLink);
+                    showSection(modelObject, target, hideableContainer, showDetailsLabel);
                 }
             }
         };
+        showDetailsLink.add(showDetailsLabel);
+
+        final TransparentWebMarkupContainer accordion = new TransparentWebMarkupContainer(ID_ACCORDION);
+        accordion.setOutputMarkupId(true);
+        item.add(accordion);
+
+        final WebMarkupContainer accordionToggle = new WebMarkupContainer(ID_ACCORDION_TOGGLE);
         accordionToggle.setEnabled(!ComponentUtil.isPrintMode());
         accordionToggle.setOutputMarkupId(true);
         accordion.add(accordionToggle);
@@ -312,13 +317,13 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             // jump to top of the new item
             final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
             if (target.isPresent()) {
-                goToComponent(target.get(), accordion.getMarkupId());
+                goToComponent(target.get(), item.getMarkupId());
             }
         }
 
         if (item.getModelObject().getExpanded() ||  ComponentUtil.isPrintMode()) {
             hideableContainer.add(new AttributeModifier("class", new Model<>("panel-body panel-collapse collapse in")));
-            showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLink"));
+            showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLabel"));
         }
     }
 
@@ -330,7 +335,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('show')");
         item.setExpanded(true);
 
-        showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLink"));
+        showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLabel"));
         target.add(showDetailsLink);
     }
 
@@ -342,7 +347,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         target.prependJavaScript("$('#" + hideableContainer.getMarkupId() + "').collapse('hide')");
         item.setExpanded(false);
 
-        showDetailsLink.setDefaultModel(new ResourceModel("showDetailsLink"));
+        showDetailsLink.setDefaultModel(new ResourceModel("showDetailsLabel"));
         target.add(showDetailsLink);
     }
 
@@ -437,7 +442,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     }
 
     private static void goToComponent(final AjaxRequestTarget target, final String markupId) {
-        target.appendJavaScript(JQueryUtil.animateScrollTop("#" + markupId, 500));
+        target.appendJavaScript(JQueryUtil.animateScrollTop("#" + markupId, 100, 500));
     }
 
     /**
