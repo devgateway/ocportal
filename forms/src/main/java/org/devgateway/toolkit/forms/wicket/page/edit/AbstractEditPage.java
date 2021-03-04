@@ -532,7 +532,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             final TransparentWebMarkupContainer accordion =
                     (TransparentWebMarkupContainer) component.get(ListViewSectionPanel.ID_ACCORDION);
             final Label showDetailsLink =
-                    (Label) accordion.get(ListViewSectionPanel.ID_ACCORDION_TOGGLE).get("showDetailsLink");
+                    (Label) accordion.get(ListViewSectionPanel.ID_ACCORDION_TOGGLE)
+                            .get("showDetailsLink").get("showDetailsLabel");
 
             final ListViewItem listViewItem = (ListViewItem) ((ListItem) component).getModelObject();
             sectionPanel.showSection(listViewItem, target,

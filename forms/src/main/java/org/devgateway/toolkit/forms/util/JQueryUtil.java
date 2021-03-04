@@ -16,6 +16,7 @@ public final class JQueryUtil {
      *
      * @return the script
      */
+    @Deprecated
     public static String animateScrollTop(final String selector, final int duration) {
         return "$('html, body').animate({ scrollTop: $(\"" + selector + "\").offset().top - 50 }, " + duration + ");";
     }
