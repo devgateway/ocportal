@@ -107,7 +107,7 @@ public class PrequalificationSchemaItemPanel extends ListViewSectionPanel<Prequa
         code.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         GenericBootstrapFormComponent<String, TextField<String>> name = ComponentUtil.addTextField(item, "name");
         name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
-        ComponentUtil.addSelect2MultiChoiceField(item, "companyCategories", targetGroupService).required();
+        ComponentUtil.addSelect2MultiChoiceField(item, "targetGroups", targetGroupService).required();
     }
 
     @Override

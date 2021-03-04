@@ -171,7 +171,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("suppliers",
                 new GenericPersistableJpaTextChoiceProvider<>(supplierService)));
 
-        filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("companyCategories",
+        filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("targetGroups",
                 new GenericPersistableJpaTextChoiceProvider<>(targetGroupService)));
 
         filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("subcounties",
@@ -251,7 +251,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         private List<Supplier> suppliers = new ArrayList<>();
 
-        private List<TargetGroup> companyCategories = new ArrayList<>();
+        private List<TargetGroup> targetGroups = new ArrayList<>();
 
         private List<Subcounty> subcounties = new ArrayList<>();
 
@@ -282,13 +282,12 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             this.suppliers = suppliers;
         }
 
-        public List<TargetGroup> getCompanyCategories() {
-            return companyCategories;
+        public List<TargetGroup> getTargetGroups() {
+            return targetGroups;
         }
 
-        public void setCompanyCategories(
-                List<TargetGroup> companyCategories) {
-            this.companyCategories = companyCategories;
+        public void setTargetGroups(List<TargetGroup> targetGroups) {
+            this.targetGroups = targetGroups;
         }
 
         public List<Subcounty> getSubcounties() {
@@ -323,9 +322,9 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
                 Join<PrequalifiedSupplier, Supplier> supplierJoin = subRoot.join(PrequalifiedSupplier_.supplier);
 
-                if (!companyCategories.isEmpty()) {
+                if (!targetGroups.isEmpty()) {
                     ListJoin<Supplier, TargetGroup> targetGroupJoin = supplierJoin.join(Supplier_.targetGroups);
-                    subPredicates.add(targetGroupJoin.in(companyCategories));
+                    subPredicates.add(targetGroupJoin.in(targetGroups));
                 }
 
                 if (!suppliers.isEmpty()) {
@@ -376,7 +375,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 new StringResourceModel("supplier", this), "parent.supplier"));
 
         columns.add(new LambdaColumn<>(
-                new StringResourceModel("companyCategory", this),
+                new StringResourceModel("targetGroup", this),
                 item -> item.getParent().getSupplier().getTargetGroups().stream()
                         .map(Category::toString)
                         .collect(Collectors.joining(", "))));
