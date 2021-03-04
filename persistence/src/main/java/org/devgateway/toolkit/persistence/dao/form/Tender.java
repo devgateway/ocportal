@@ -104,7 +104,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @ExcelExport(useTranslation = true, name = "Tender Value")
     private BigDecimal tenderValue;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;

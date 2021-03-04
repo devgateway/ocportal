@@ -9,7 +9,7 @@ import org.devgateway.ocds.persistence.mongo.excel.annotation.ExcelExport;
 public class MakueniOrganization extends Organization {
 
     @JsonProperty("targetGroup")
-    @JsonPropertyDescription("The name of the target group. Eg PWD, Women, Youth, etc.")
+    @JsonPropertyDescription("The name of the AGPO Category. Eg PWD, Women, Youth, etc.")
     @ExcelExport
     private String targetGroup;
 

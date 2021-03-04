@@ -49,8 +49,8 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
     public static final String TARGET_GROUP_MARGIN_OF_PREFERENCE = "Margin of Preference for Local Contractor";
     public static final String NON_AGPO = "Non-AGPO";
 
-    @ApiOperation(value = "Percent awarded for each target group by following the formula: (sum=(Awarded value for "
-            + "procurements won by each target group))/sum(Total awarded value of all awards))*100")
+    @ApiOperation(value = "Percent awarded for each AGPO Category by following the formula: (sum=(Awarded value for "
+            + "procurements won by each AGPO Category))/sum(Total awarded value of all awards))*100")
     @RequestMapping(value = "/api/shareProcurementsAwardedAgpo",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
 
