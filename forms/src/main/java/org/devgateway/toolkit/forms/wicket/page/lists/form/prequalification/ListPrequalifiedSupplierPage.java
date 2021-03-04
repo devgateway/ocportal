@@ -68,6 +68,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -323,7 +324,8 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 Join<PrequalifiedSupplier, Supplier> supplierJoin = subRoot.join(PrequalifiedSupplier_.supplier);
 
                 if (!companyCategories.isEmpty()) {
-                    subPredicates.add(supplierJoin.get(Supplier_.targetGroup).in(companyCategories));
+                    ListJoin<Supplier, TargetGroup> targetGroupJoin = supplierJoin.join(Supplier_.targetGroups);
+                    subPredicates.add(targetGroupJoin.in(companyCategories));
                 }
 
                 if (!suppliers.isEmpty()) {
@@ -373,8 +375,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         columns.add(new PropertyColumn<>(
                 new StringResourceModel("supplier", this), "parent.supplier"));
 
-        columns.add(new PropertyColumn<>(
-                new StringResourceModel("companyCategory", this), "parent.supplier.targetGroup"));
+        columns.add(new LambdaColumn<>(
+                new StringResourceModel("companyCategory", this),
+                item -> item.getParent().getSupplier().getTargetGroups().stream()
+                        .map(Category::toString)
+                        .collect(Collectors.joining(", "))));
 
         columns.add(new LambdaColumn<>(
                 new StringResourceModel("subcounties", this),

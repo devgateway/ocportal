@@ -42,6 +42,10 @@
   mandatory: yes
   enabled: yes
   visible: yes
+- name: contractForm.targetGroup
+  mandatory: yes
+  enabled: yes
+  visible: yes
 - name: contractForm.delete
   enabled: yes
   visible: yes

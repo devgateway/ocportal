@@ -11,7 +11,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +27,8 @@ public class Supplier extends Category {
 
     @ExcelExport(justExport = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private TargetGroup targetGroup;
+    @ManyToMany
+    private List<TargetGroup> targetGroups = new ArrayList<>();
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String agpoRegistrationId;
@@ -54,12 +53,12 @@ public class Supplier extends Category {
         this.address = address;
     }
 
-    public TargetGroup getTargetGroup() {
-        return targetGroup;
+    public List<TargetGroup> getTargetGroups() {
+        return targetGroups;
     }
 
-    public void setTargetGroup(final TargetGroup targetGroup) {
-        this.targetGroup = targetGroup;
+    public void setTargetGroups(List<TargetGroup> targetGroups) {
+        this.targetGroups = targetGroups;
     }
 
     public String getAgpoRegistrationId() {
