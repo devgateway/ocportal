@@ -166,7 +166,7 @@ public class ListPrequalificationYearRangePage extends AbstractListPage<Prequali
                             itemDescription.setCellValue(i.getName());
                             Cell targetGroup = r.createCell(2);
                             targetGroup.setCellType(CellType.STRING);
-                            targetGroup.setCellValue(i.getCompanyCategories().toString());
+                            targetGroup.setCellValue(i.getTargetGroups().toString());
                         });
                         for (int x = 0; x <= 2; x++) {
                             sheet.autoSizeColumn(x);

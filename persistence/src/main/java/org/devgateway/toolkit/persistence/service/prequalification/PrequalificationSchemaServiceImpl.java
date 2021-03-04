@@ -63,7 +63,7 @@ public class PrequalificationSchemaServiceImpl extends BaseJpaServiceImpl<Prequa
             item.setName(i.getName());
             item.setCode(i.getCode());
             item.setParent(schemaCopy);
-            item.getCompanyCategories().addAll(i.getCompanyCategories());
+            item.getTargetGroups().addAll(i.getTargetGroups());
             return item;
         }).collect(Collectors.toCollection(schemaCopy::getItems));
         schemaCopy.setStatus(DBConstants.Status.DRAFT);

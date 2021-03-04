@@ -68,6 +68,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -170,7 +171,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("suppliers",
                 new GenericPersistableJpaTextChoiceProvider<>(supplierService)));
 
-        filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("companyCategories",
+        filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("targetGroups",
                 new GenericPersistableJpaTextChoiceProvider<>(targetGroupService)));
 
         filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("subcounties",
@@ -250,7 +251,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         private List<Supplier> suppliers = new ArrayList<>();
 
-        private List<TargetGroup> companyCategories = new ArrayList<>();
+        private List<TargetGroup> targetGroups = new ArrayList<>();
 
         private List<Subcounty> subcounties = new ArrayList<>();
 
@@ -281,13 +282,12 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             this.suppliers = suppliers;
         }
 
-        public List<TargetGroup> getCompanyCategories() {
-            return companyCategories;
+        public List<TargetGroup> getTargetGroups() {
+            return targetGroups;
         }
 
-        public void setCompanyCategories(
-                List<TargetGroup> companyCategories) {
-            this.companyCategories = companyCategories;
+        public void setTargetGroups(List<TargetGroup> targetGroups) {
+            this.targetGroups = targetGroups;
         }
 
         public List<Subcounty> getSubcounties() {
@@ -322,8 +322,9 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
                 Join<PrequalifiedSupplier, Supplier> supplierJoin = subRoot.join(PrequalifiedSupplier_.supplier);
 
-                if (!companyCategories.isEmpty()) {
-                    subPredicates.add(supplierJoin.get(Supplier_.targetGroup).in(companyCategories));
+                if (!targetGroups.isEmpty()) {
+                    ListJoin<Supplier, TargetGroup> targetGroupJoin = supplierJoin.join(Supplier_.targetGroups);
+                    subPredicates.add(targetGroupJoin.in(targetGroups));
                 }
 
                 if (!suppliers.isEmpty()) {
@@ -373,8 +374,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         columns.add(new PropertyColumn<>(
                 new StringResourceModel("supplier", this), "parent.supplier"));
 
-        columns.add(new PropertyColumn<>(
-                new StringResourceModel("companyCategory", this), "parent.supplier.targetGroup"));
+        columns.add(new LambdaColumn<>(
+                new StringResourceModel("targetGroup", this),
+                item -> item.getParent().getSupplier().getTargetGroups().stream()
+                        .map(Category::toString)
+                        .collect(Collectors.joining(", "))));
 
         columns.add(new LambdaColumn<>(
                 new StringResourceModel("subcounties", this),

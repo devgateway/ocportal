@@ -92,7 +92,9 @@ public class PrequalifiedSupplierExporter {
         directorsCell.setCellValue(item.getNonNullContact().getDirectors());
 
         XSSFCell agpoCategoriesCell = row.createCell(Indexes.TARGET_GROUPS);
-        agpoCategoriesCell.setCellValue(supplier.getTargetGroup().getLabel());
+        agpoCategoriesCell.setCellValue(supplier.getTargetGroups().stream()
+                .map(Category::getLabel)
+                .collect(Collectors.joining(", ")));
 
         XSSFCell locationCell = row.createCell(Indexes.LOCATION);
         locationCell.setCellValue(
