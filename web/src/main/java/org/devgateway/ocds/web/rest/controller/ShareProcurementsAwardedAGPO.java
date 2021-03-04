@@ -45,11 +45,12 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
 
-    private static final String YOUTH = "Youth";
-    private static final String WOMEN = "Women";
-    private static final String PWD = "PWD";
+    private static final String CITIZEN_CONTRACTOR = "Citizen Contractor";
+    private static final String MARGIN_OF_PREFERENCE = "Margin of Preference for Local Contractor";
+    private static final String GENERAL = "General";
 
-    private static final Set<String> AGPO_GROUPS = ImmutableSet.of(YOUTH, WOMEN, PWD);
+    private static final Set<String> NON_AGPO_GROUPS =
+            ImmutableSet.of(CITIZEN_CONTRACTOR, MARGIN_OF_PREFERENCE, GENERAL);
 
     public static final String NON_AGPO = "Non-AGPO";
 
@@ -66,12 +67,13 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
                 match(where(FieldNames.CONTRACTS_VALUE_AMOUNT).exists(true)),
                 project()
                         .and(FieldNames.CONTRACTS_VALUE_AMOUNT).as("amount")
-                        .and(when(where(FieldNames.CONTRACTS_TARGET_GROUP).nin(AGPO_GROUPS))
+                        .and(when(where(FieldNames.CONTRACTS_TARGET_GROUP).in(NON_AGPO_GROUPS))
                                 .then(NON_AGPO)
                                 .otherwiseValueOf(ifNull(FieldNames.CONTRACTS_TARGET_GROUP).then(NON_AGPO)))
                         .as("targetGroup"),
                 group("targetGroup").sum("amount").as("amount")
         );
+        logger.warn(agg.toString());
         return releaseAgg(agg);
     }
 }
