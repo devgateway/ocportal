@@ -19,6 +19,10 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: awardNotificationForm.items.tenderAwardDate
+  mandatory: no
+  enabled: yes
+  visible: yes
 - name: awardNotificationForm.items.awardDate
   mandatory: yes
   enabled: yes

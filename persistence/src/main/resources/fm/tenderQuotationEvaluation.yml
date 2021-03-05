@@ -45,6 +45,10 @@
   mandatory: yes
   enabled: yes
   visible: yes
+- name: tenderQuotationEvaluationForm.openingDate
+  mandatory: no
+  enabled: yes
+  visible: yes
 - name: tenderQuotationEvaluationForm.delete
   enabled: yes
   visible: yes
