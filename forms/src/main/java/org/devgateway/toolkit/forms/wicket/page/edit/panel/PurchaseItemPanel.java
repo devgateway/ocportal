@@ -3,8 +3,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -28,8 +26,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.events.AjaxUpdateEvent;
-import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -188,12 +184,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                         return item.getModelObject().getPlanItem().getUnitOfIssue();
                     }
                     return null;
-                }) {
-            @Override
-            public void onEvent(IEvent<?> event) {
-                AjaxUpdateEvent.refreshIfPayloadMatches(event, this, "unit");
-            }
-        };
+                });
+        unit.receiveUpdatesFrom("planItem");
         unit.setOutputMarkupId(true);
         item.add(unit);
 
@@ -240,13 +232,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",
-                            new GenericChoiceProvider<>(planItems)) {
-                        @Override
-                        protected void onUpdate(final AjaxRequestTarget target) {
-                            send(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent(),
-                                    Broadcast.BREADTH, new AjaxUpdateEvent(target, "unit"));
-                        }
-                    };
+                            new GenericChoiceProvider<>(planItems));
+            planItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent());
             planItem.required();
             planItem.add(new StopEventPropagationBehavior());
 
