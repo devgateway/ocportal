@@ -34,7 +34,6 @@ public class PMCReportOffline implements Serializable {
 
     private ZonedDateTime lastModifiedDate;
 
-    @NotEmpty(groups = NonDraft.class)
     private List<PMCNotesOffline> pmcNotes = new ArrayList<>();
     private List<StatusChangedCommentOffline> statusComments = new ArrayList<>();
 
