@@ -30,7 +30,7 @@
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.inspectionReport
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
   visibleDeps:
@@ -44,7 +44,7 @@
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.pmcReport
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
   visibleDeps:
