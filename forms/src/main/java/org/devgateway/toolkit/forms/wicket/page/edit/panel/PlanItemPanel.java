@@ -69,8 +69,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     private final PlanItemFilterBean listFilterBean;
 
-    private GenericSleepFormComponent totalCost;
-
     public PlanItemPanel(final String id) {
         super(id);
 
@@ -101,6 +99,17 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
+        GenericSleepFormComponent<String> totalCost = new GenericSleepFormComponent<>("totalCost",
+                        (IModel<String>) () -> {
+                            if (item.getModelObject() != null && item.getModelObject().getEstimatedCost() != null
+                                    && item.getModelObject().getQuantity() != null) {
+                                return ComponentUtil.formatNumber(
+                                        item.getModelObject().getEstimatedCost().multiply(
+                                                item.getModelObject().getQuantity()));
+                            }
+                            return null;
+                        });
+        totalCost.setOutputMarkupId(true);
         final PlanItem planItem = item.getModelObject();
             ComponentUtil.addSelect2ChoiceField(item, "unitOfIssue", unitService);
 
@@ -125,16 +134,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             estimatedCost.decimal();
             estimatedCost.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             item.add(estimatedCost);
-
-            totalCost = new GenericSleepFormComponent<>("totalCost",
-                    (IModel<String>) () -> {
-                        if (quantity.getModelObject() != null && estimatedCost.getModelObject() != null) {
-                            return ComponentUtil.formatNumber(
-                                    estimatedCost.getModelObject().multiply(quantity.getModelObject()));
-                        }
-                        return null;
-                    });
-            totalCost.setOutputMarkupId(true);
             item.add(totalCost);
 
         ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService);

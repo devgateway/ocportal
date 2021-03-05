@@ -26,6 +26,7 @@ import org.devgateway.toolkit.persistence.dao.categories.SupplierResponse;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
+import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.service.category.SupplierResponseService;
 
 import java.math.BigDecimal;
@@ -35,9 +36,6 @@ import java.util.List;
  * @author mpostelnicu
  */
 public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptanceItem, AwardAcceptance> {
-
-    private GenericSleepFormComponent<String> supplierID;
-    private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
 
     @SpringBean
     protected SupplierResponseService supplierResponseService;
@@ -150,18 +148,6 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
         return child;
     }
 
-    class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        AwardeeAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
-        }
-
-        @Override
-        protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierID);
-        }
-    }
-
-
     @Override
     public void populateCompoundListItem(final ListItem<AwardAcceptanceItem> item) {
         TextFieldBootstrapFormComponent<BigDecimal> acceptedValue = ComponentUtil.addBigDecimalField(
@@ -193,23 +179,24 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
     }
 
     private void addSupplierInfo(ListItem<AwardAcceptanceItem> item) {
-        awardeeSelector = new Select2ChoiceBootstrapFormComponent<>(
-                "awardee",
-                new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
-                        item.getModelObject().getParent().getTenderProcess(), true))
-        );
-        awardeeSelector.getField().add(new AwardAcceptanceItemPanel.AwardeeAjaxComponentUpdatingBehavior("change"));
-        item.add(awardeeSelector);
-
-        supplierID = new GenericSleepFormComponent<>("supplierID", (IModel<String>) () -> {
-            if (awardeeSelector.getModelObject() != null) {
-                return awardeeSelector.getModelObject().getCode();
-            }
-            return null;
-        });
+        GenericSleepFormComponent<String> supplierID = new GenericSleepFormComponent<>("supplierID",
+                item.getModel().map(AwardAcceptanceItem::getAwardee).map(Supplier::getCode));
         supplierID.setOutputMarkupId(true);
         item.add(supplierID);
 
+        Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector =
+                new Select2ChoiceBootstrapFormComponent<Supplier>(
+                "awardee",
+                new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
+                        item.getModelObject().getParent().getTenderProcess(), true))
+        ) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                super.onUpdate(target);
+                target.add(supplierID);
+            }
+        };
+        item.add(awardeeSelector);
     }
 
 

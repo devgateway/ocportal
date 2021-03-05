@@ -74,6 +74,16 @@ public final class ComponentUtil {
 
     }
 
+    public static Component findFirstParentById(Component component, String id) {
+        if (component == null) {
+            return null;
+        }
+        if (component.getId().equals(id)) {
+            return component;
+        }
+        return findFirstParentById(component.getParent(), id);
+    }
+
     public static AJAXDownload createAJAXDownload(String filePath, String contentType, Class<?> caller) {
         return new AJAXDownload() {
             @Override
