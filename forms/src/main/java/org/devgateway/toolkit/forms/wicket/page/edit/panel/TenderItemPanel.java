@@ -2,6 +2,8 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -21,6 +23,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.events.AjaxUpdateEvent;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -31,14 +34,10 @@ import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
-    private GenericSleepFormComponent unit;
-
-    private GenericSleepFormComponent totalCost;
 
     public TenderItemPanel(final String id) {
         super(id);
@@ -121,11 +120,15 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
 
     @Override
     public void populateCompoundListItem(final ListItem<TenderItem> item) {
+        GenericSleepFormComponent<Unit> unit;
+        GenericSleepFormComponent<String> totalCost;
         final TextFieldBootstrapFormComponent<BigDecimal> quantity =
                 new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
-                        target.add(totalCost);
+                        super.onUpdate(target);
+                        send(this.getParent(), Broadcast.BREADTH, new AjaxUpdateEvent(target, "totalCost"));
+
                     }
                 };
         quantity.decimal();
@@ -133,7 +136,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         //quantity.required();
         item.add(quantity);
 
-        unit = new GenericSleepFormComponent<>("unit",
+        unit = new GenericSleepFormComponent<Unit>("unit",
                 (IModel<Unit>) () -> {
                     if (item.getModelObject().getPurchaseItem() != null
                             && item.getModelObject().getPurchaseItem().getPlanItem() != null
@@ -147,7 +150,12 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                         }
                     }
                     return null;
-                });
+                }) {
+            @Override
+            public void onEvent(IEvent<?> event) {
+                AjaxUpdateEvent.refreshIfPayloadMatches(event, this, "unit");
+            }
+        };
         unit.setOutputMarkupId(true);
         item.add(unit);
 
@@ -156,7 +164,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 new TextFieldBootstrapFormComponent<BigDecimal>("unitPrice") {
                     @Override
                     protected void onUpdate(final AjaxRequestTarget target) {
-                        target.add(totalCost);
+                        send(this.getParent(), Broadcast.BREADTH, new AjaxUpdateEvent(target, "totalCost"));
                     }
                 };
         price.decimal();
@@ -164,13 +172,18 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         price.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         item.add(price);
 
-        totalCost = new GenericSleepFormComponent<>("totalCost",
+        totalCost = new GenericSleepFormComponent<String>("totalCost",
                 (IModel<String>) () -> {
                     if (quantity.getModelObject() != null && price.getModelObject() != null) {
                         return ComponentUtil.formatNumber(price.getModelObject().multiply(quantity.getModelObject()));
                     }
                     return null;
-                });
+                }) {
+            @Override
+            public void onEvent(IEvent<?> event) {
+                AjaxUpdateEvent.refreshIfPayloadMatches(event, this, "totalCost");
+            }
+        };
         totalCost.setOutputMarkupId(true);
         item.add(totalCost);
     }
@@ -206,7 +219,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     )) {
                         @Override
                         protected void onUpdate(final AjaxRequestTarget target) {
-                            target.add(unit);
+                            super.onUpdate(target);
+                            send(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent(),
+                                    Broadcast.BREADTH, new AjaxUpdateEvent(target, "unit"));
                         }
                     };
             //purchaseItem.required();
@@ -219,7 +234,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                             parentObject.getTenderProcess().getProcurementPlan().getPlanItems())) {
                         @Override
                         protected void onUpdate(final AjaxRequestTarget target) {
-                            target.add(unit);
+                            super.onUpdate(target);
+                            send(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent(),
+                                    Broadcast.BREADTH, new AjaxUpdateEvent(target, "unit"));
                         }
                     };
             //purchaseItem.required();
