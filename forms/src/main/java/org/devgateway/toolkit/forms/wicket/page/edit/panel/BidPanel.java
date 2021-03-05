@@ -28,8 +28,6 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
     @SpringBean
     protected SupplierService supplierService;
 
-    private GenericSleepFormComponent supplierID = null;
-
     public BidPanel(final String id) {
         super(id);
     }
@@ -76,15 +74,12 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         Select2ChoiceBootstrapFormComponent<Supplier> supplier = ComponentUtil.addSelect2ChoiceField(item, "supplier",
                 supplierService);
         supplier.required();
-        supplier.getField().add(new SupplierUpdatingBehavior("change"));
-        supplierID = new GenericSleepFormComponent<>("supplierID", (IModel<String>) () -> {
-            if (supplier.getModelObject() != null) {
-                return supplier.getModelObject().getCode();
-            }
-            return null;
-        });
+        GenericSleepFormComponent<String> supplierID =
+                new GenericSleepFormComponent<>("supplierID",
+                        item.getModel().map(Bid::getSupplier).map(Supplier::getCode));
         supplierID.setOutputMarkupId(true);
         item.add(supplierID);
+        supplier.getField().add(new SupplierUpdatingBehavior("change", supplierID));
 
         ComponentUtil.addBigDecimalField(item, "quotedAmount")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new NonZeroBigDecimalValidator());
@@ -102,13 +97,16 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
     }
 
     private class SupplierUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        SupplierUpdatingBehavior(final String event) {
+        private final GenericSleepFormComponent<String> supplierId;
+
+        SupplierUpdatingBehavior(final String event, GenericSleepFormComponent<String> supplierID) {
             super(event);
+            this.supplierId = supplierID;
         }
 
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierID);
+            target.add(supplierId);
 
         }
     }
