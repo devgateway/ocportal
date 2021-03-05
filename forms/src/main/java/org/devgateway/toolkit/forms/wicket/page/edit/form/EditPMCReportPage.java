@@ -138,18 +138,18 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         formDocs.getField().setRequireAtLeastOneItem(false);
     }
 
-//    @Override
-//    protected void addSaveButtonsPermissions(final Component button) {
-//        addDefaultAllButtonsPermissions(button);
-//        button.setVisibilityAllowed(button.isVisibilityAllowed()
-//                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
-//    }
-//
-//    @Override
-//    protected void onBeforeRender() {
-//        super.onBeforeRender();
-//        deleteButton.setEnabled(true);
-//    }
+    @Override
+    protected void addSaveButtonsPermissions(final Component button) {
+        addDefaultAllButtonsPermissions(button);
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+    }
+
+    @Override
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        deleteButton.setEnabled(true);
+    }
 
     @Override
     protected void onBeforeRevertToDraft(AjaxRequestTarget target) {
