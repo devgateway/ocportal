@@ -184,12 +184,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                         return item.getModelObject().getPlanItem().getUnitOfIssue();
                     }
                     return null;
-                }) {
-            @Override
-            public void onEvent(IEvent<?> event) {
-                AjaxUpdateEvent.refreshIfPayloadMatches(event, this, "unit");
-            }
-        };
+                });
+        unit.receiveUpdatesFrom("planItem");
         unit.setOutputMarkupId(true);
         item.add(unit);
 
@@ -235,13 +231,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",
-                            new GenericChoiceProvider<>(planItems)) {
-                        @Override
-                        protected void onUpdate(final AjaxRequestTarget target) {
-                            send(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent(),
-                                    Broadcast.BREADTH, new AjaxUpdateEvent(target, "unit"));
-                        }
-                    };
+                            new GenericChoiceProvider<>(planItems));
+            planItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent());
             planItem.add(new StopEventPropagationBehavior());
 
             final Component description = ComponentUtil.addTextField(this, "description");
