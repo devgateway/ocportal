@@ -123,14 +123,8 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         GenericSleepFormComponent<Unit> unit;
         GenericSleepFormComponent<String> totalCost;
         final TextFieldBootstrapFormComponent<BigDecimal> quantity =
-                new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
-                    @Override
-                    protected void onUpdate(final AjaxRequestTarget target) {
-                        super.onUpdate(target);
-                        send(this.getParent(), Broadcast.BREADTH, new AjaxUpdateEvent(target, "totalCost"));
-
-                    }
-                };
+                new TextFieldBootstrapFormComponent<BigDecimal>("quantity");
+        quantity.broadcastUpdate(this.getParent());
         quantity.decimal();
         quantity.getField().add(RangeValidator.minimum(BigDecimal.ONE), new BigDecimalValidator());
         //quantity.required();
@@ -150,23 +144,15 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                         }
                     }
                     return null;
-                }) {
-            @Override
-            public void onEvent(IEvent<?> event) {
-                AjaxUpdateEvent.refreshIfPayloadMatches(event, this, "unit");
-            }
-        };
+                });
+        unit.receiveUpdatesFrom("planItem", "purchaseItem");
         unit.setOutputMarkupId(true);
         item.add(unit);
 
 
         final TextFieldBootstrapFormComponent<BigDecimal> price =
-                new TextFieldBootstrapFormComponent<BigDecimal>("unitPrice") {
-                    @Override
-                    protected void onUpdate(final AjaxRequestTarget target) {
-                        send(this.getParent(), Broadcast.BREADTH, new AjaxUpdateEvent(target, "totalCost"));
-                    }
-                };
+                new TextFieldBootstrapFormComponent<BigDecimal>("unitPrice");
+        price.broadcastUpdate(this.getParent());
         price.decimal();
         //price.required();
         price.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
@@ -178,12 +164,8 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                         return ComponentUtil.formatNumber(price.getModelObject().multiply(quantity.getModelObject()));
                     }
                     return null;
-                }) {
-            @Override
-            public void onEvent(IEvent<?> event) {
-                AjaxUpdateEvent.refreshIfPayloadMatches(event, this, "totalCost");
-            }
-        };
+                });
+        totalCost.receiveUpdatesFrom("quantity", "unitPrice");
         totalCost.setOutputMarkupId(true);
         item.add(totalCost);
     }
@@ -216,14 +198,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                             parentObject.getTenderProcess()
                                     .getPurchaseRequisition().stream().flatMap(pr -> pr.getPurchaseItems().stream())
                                     .collect(Collectors.toList())
-                    )) {
-                        @Override
-                        protected void onUpdate(final AjaxRequestTarget target) {
-                            super.onUpdate(target);
-                            send(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent(),
-                                    Broadcast.BREADTH, new AjaxUpdateEvent(target, "unit"));
-                        }
-                    };
+                    ));
+                    purchaseItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(),
+                            ID_ACCORDION).getParent());
             //purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
 
@@ -231,14 +208,8 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>(
                             "planItem", new GenericChoiceProvider<>(
-                            parentObject.getTenderProcess().getProcurementPlan().getPlanItems())) {
-                        @Override
-                        protected void onUpdate(final AjaxRequestTarget target) {
-                            super.onUpdate(target);
-                            send(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent(),
-                                    Broadcast.BREADTH, new AjaxUpdateEvent(target, "unit"));
-                        }
-                    };
+                            parentObject.getTenderProcess().getProcurementPlan().getPlanItems()));
+            planItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent());
             //purchaseItem.required();
             planItem.add(new StopEventPropagationBehavior());
 
