@@ -446,6 +446,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         link.setEnabled(fiscalYearBudgetModel.getObject() == null);
         link.add(new TooltipBehavior(new StringResourceModel("addFiscalYearBudget.tooltip", this)));
+        link.add(new DgFmBehavior("deptOverview.fiscalYearBudget"));
         add(link);
         link.setVisibilityAllowed(canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
     }
