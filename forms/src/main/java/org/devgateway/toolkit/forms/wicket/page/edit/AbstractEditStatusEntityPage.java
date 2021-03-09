@@ -12,6 +12,8 @@
 package org.devgateway.toolkit.forms.wicket.page.edit;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
+import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
@@ -36,6 +38,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
@@ -50,11 +53,18 @@ import org.devgateway.toolkit.forms.wicket.components.form.OptionallyRequiredTex
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
+import org.devgateway.toolkit.forms.wicket.events.EditingEnabledEvent;
+import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
+import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.dao.form.Terminatable;
+import org.devgateway.toolkit.persistence.service.LockableService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.devgateway.toolkit.web.security.SecurityUtil;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.datetime.markup.html.basic.DateLabel;
 import org.wicketstuff.select2.Select2Choice;
@@ -178,6 +188,16 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     @Override
+    protected void checkIn(T saveable) {
+        super.checkIn(saveable);
+
+        T object = editForm.getModelObject();
+        if (object instanceof Lockable) {
+            ((Lockable) object).setOwner(null);
+        }
+    }
+
+    @Override
     protected void beforeSaveEntity(T saveable) {
         super.beforeSaveEntity(saveable);
 
@@ -242,7 +262,92 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         applyDraftSaveBehavior(saveDraftContinueButton);
         applyDraftSaveBehavior(revertToDraftPageButton);
 
-        setButtonsPermissions();
+        editForm.add(createCheckoutModal());
+        editForm.add(createCheckedOutByOtherAlert());
+    }
+
+    protected Component createCheckedOutByOtherAlert() {
+        Person principal = SecurityUtil.getCurrentAuthenticatedPerson();
+
+        T object = editForm.getModelObject();
+        Person owner = object instanceof Lockable ? ((Lockable) object).getOwner() : null;
+
+        StringResourceModel message = new StringResourceModel("createCheckedOutByOtherAlert", this)
+                .setParameters(owner == null ? "" : owner.getUsername());
+
+        return new Alert("createCheckedOutByOtherAlert", message)
+                .type(Alert.Type.Danger)
+                .setVisibilityAllowed(owner != null && !owner.equals(principal));
+    }
+
+    protected Modal<String> createCheckoutModal() {
+        TextContentModal modal = new TextContentModal("checkoutModal", new ResourceModel("checkoutModal.text")) {
+
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+
+                show(isCheckoutModalVisible());
+            }
+        };
+        modal.addCloseButton(new ResourceModel("checkoutModal.view"));
+
+        final LaddaAjaxButton checkoutButton = new LaddaAjaxButton("button", Buttons.Type.Primary) {
+
+            @Override
+            protected void onSubmit(final AjaxRequestTarget target) {
+                super.onSubmit(target);
+                checkout(target);
+                modal.close(target);
+            }
+        };
+        checkoutButton.setDefaultFormProcessing(false);
+        checkoutButton.setLabel(new ResourceModel("checkoutModal.edit"));
+
+        modal.addButton(checkoutButton);
+
+        modal.setFadeIn(false);
+
+        return modal;
+    }
+
+    protected boolean isCheckoutModalVisible() {
+        T object = editForm.getModelObject();
+        return object instanceof Lockable
+                && !object.isNew()
+                && ((Lockable) object).getOwner() == null
+                && DBConstants.Status.DRAFT.equals(object.getStatus())
+                && !isViewMode();
+    }
+
+    private void checkout(AjaxRequestTarget target) {
+        try {
+            T object = editForm.getModelObject();
+            ((Lockable) object).setOwner(SecurityUtil.getCurrentAuthenticatedPerson());
+
+            T savedObject = jpaService.save(object);
+            editForm.setModelObject(savedObject);
+
+            target.add(editForm);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            showSaveFailedModal(target, "optimistic_lock_error_message");
+        }
+    }
+
+    @Override
+    protected void onCancel(AjaxRequestTarget target) {
+        if (jpaService instanceof LockableService && !editForm.getModelObject().isNew()) {
+            ((LockableService<?>) jpaService).unlock(editForm.getModelObject().getId());
+        }
+    }
+
+    @Override
+    protected T newInstance() {
+        T newEntity = super.newInstance();
+        if (newEntity instanceof Lockable) {
+            ((Lockable) newEntity).setOwner(SecurityUtil.getCurrentAuthenticatedPerson());
+        }
+        return newEntity;
     }
 
     @Override
@@ -263,18 +368,30 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     protected void onBeforeRender() {
         super.onBeforeRender();
 
-        checkAndSendEventForDisableEditing();
-
         this.statusLabel.setVisibilityAllowed(editForm.getModelObject().getVisibleStatusLabel());
     }
 
     protected void checkAndSendEventForDisableEditing() {
+        Object payload;
         if (isDisableEditingEvent()) {
-            send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
+            payload = new EditingDisabledEvent();
+        } else {
+            payload = new EditingEnabledEvent();
         }
+        send(getPage(), Broadcast.BREADTH, payload);
     }
 
-    public abstract boolean isDisableEditingEvent();
+    public boolean isDisableEditingEvent() {
+        if (editForm.getModelObject() instanceof Lockable && !isCheckedOutByPrincipal()) {
+            return true;
+        }
+        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
+    }
+
+    private boolean isCheckedOutByPrincipal() {
+        Person principal = SecurityUtil.getCurrentAuthenticatedPerson();
+        return principal != null && principal.equals(((Lockable) editForm.getModelObject()).getOwner());
+    }
 
     protected abstract boolean isViewMode();
 
@@ -314,28 +431,21 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
 
-    protected void enableDisableAutosaveFields(final AjaxRequestTarget target) {
-        addAutosaveBehavior(target);
+    protected void enableDisableAutosaveFields() {
+        addAutosaveBehavior();
 
         saveButton.setEnabled(true);
         saveDraftContinueButton.setEnabled(true);
         submitAndNext.setEnabled(true);
         saveSubmitButton.setEnabled(true);
-
-        if (target != null) {
-            target.add(saveButton, saveSubmitButton, saveDraftContinueButton, submitAndNext);
-        }
     }
 
-    private void addAutosaveBehavior(final AjaxRequestTarget target) {
+    private void addAutosaveBehavior() {
         // enable autosave
         if (!ComponentUtil.isPrintMode()
                 && Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT)) {
             saveDraftContinueButton.add(getAutosaveBehavior());
             autoSaveLabel.setVisibilityAllowed(true);
-            if (target != null) {
-                target.add(autoSaveLabel);
-            }
         }
     }
 
@@ -415,6 +525,17 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     private TextAreaFieldBootstrapFormComponent<String> getNewStatusCommentField() {
         final TextAreaFieldBootstrapFormComponent<String> comment =
                 new OptionallyRequiredTextAreaFieldComponent<String>("newStatusComment") {
+
+                    @Override
+                    protected void onConfigure() {
+                        super.onConfigure();
+
+                        T object = editForm.getModelObject();
+                        setVisibilityAllowed(!(object instanceof Lockable)
+                                || (object.getStatus().equals(DBConstants.Status.DRAFT) && isCheckedOutByPrincipal())
+                                || !object.getStatus().equals(DBConstants.Status.DRAFT));
+                    }
+
                     @Override
                     public boolean isRequired() {
                         return editForm.getRootForm().findSubmittingButton() == saveTerminateButton;
@@ -578,6 +699,11 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             protected PageParameters getParameterPage() {
                 return getPageParameters();
             }
+
+            @Override
+            protected boolean checkInBeforeSave() {
+                return false;
+            }
         };
 
         button.setIconType(FontAwesomeIconType.tasks);
@@ -625,7 +751,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 setStatusAppendComment(DBConstants.Status.DRAFT);
                 super.onSubmit(target);
                 target.add(editForm);
-                setButtonsPermissions();
                 onAfterRevertToDraft(target);
             }
         };

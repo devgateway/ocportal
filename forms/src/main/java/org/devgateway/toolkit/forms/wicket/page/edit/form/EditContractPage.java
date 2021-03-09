@@ -78,8 +78,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         editForm.attachFm("contractForm");
         super.onInitialize();
 
-        submitAndNext.setVisibilityAllowed(false);
-
         ComponentUtil.addTextField(editForm, "referenceNumber");
         ComponentUtil.addBigDecimalField(editForm, "contractValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
@@ -105,6 +103,13 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
                 LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        submitAndNext.setVisibilityAllowed(false);
     }
 
     @Override

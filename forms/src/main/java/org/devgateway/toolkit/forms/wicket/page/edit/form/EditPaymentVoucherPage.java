@@ -85,16 +85,23 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         ComponentUtil.addDateField(editForm, "approvedDate");
 
         formDocs.maxFiles(1);
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
 
         saveTerminateButton.setVisibilityAllowed(false);
     }
 
     private <X extends AbstractImplTenderProcessMakueniEntity> GenericChoiceProvider<X>
     submittedAndWithinTenderProcessProvider(AbstractMakueniEntityService<X> service) {
-        return new GenericChoiceProvider<>(service.findAll().stream().filter(x -> x.getContract().equals(
-                editForm.getModelObject().getTenderProcess().getSingleContract())
-                && (x.getStatus().equals(DBConstants.Status.SUBMITTED) || x.getStatus()
-                .equals(DBConstants.Status.APPROVED))).collect(Collectors.toList()));
+        return new GenericChoiceProvider<>(service.findAll().stream().filter(x ->
+                (x.getStatus().equals(DBConstants.Status.SUBMITTED)
+                        || x.getStatus().equals(DBConstants.Status.APPROVED))
+                && (x.getContract() != null // OCMAKU-711 delete this null check
+                        && x.getContract().equals(editForm.getModelObject().getTenderProcess().getSingleContract())))
+                .collect(Collectors.toList()));
     }
 
     @Override

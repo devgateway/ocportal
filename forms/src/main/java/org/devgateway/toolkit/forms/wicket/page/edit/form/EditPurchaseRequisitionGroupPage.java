@@ -90,6 +90,11 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
 //        editForm.add(new PurchaseItemPanel("purchaseItems"));
 
         editForm.add(new PurchRequisitionPanel("purchRequisitions"));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
 
         saveTerminateButton.setVisibilityAllowed(false);
     }
@@ -107,15 +112,6 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
         return pr.isTerminated();
     }
 
-//    @Override
-//    protected void beforeSaveEntity(final TenderProcess tenderProcess) {
-//        super.beforeSaveEntity(tenderProcess);
-//
-//        final Project project = tenderProcess.getProject();
-//        project.addTenderProcess(tenderProcess);
-//        projectService.save(project);
-//    }
-
     @Override
     protected void afterSaveEntity(final PurchaseRequisitionGroup saveable) {
         super.afterSaveEntity(saveable);
@@ -128,16 +124,6 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
             jpaService.save(saveable);
         }
     }
-
-
-//    @Override
-//    protected void beforeDeleteEntity(final TenderProcess tenderProcess) {
-//        super.beforeDeleteEntity(tenderProcess);
-//
-//        final Project project = tenderProcess.getProject();
-//        project.remoteTenderProcess(tenderProcess);
-//        projectService.save(project);
-//    }
 
     @Override
     protected void beforeSaveEntity(final PurchaseRequisitionGroup entity) {
