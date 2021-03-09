@@ -381,18 +381,24 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
     private <L extends AbstractListPage> BootstrapBookmarkablePageLink<L>
     createAddListMenu(List<AbstractLink> list, Class<L> clazz, String resourceKey, IconType iconType) {
-        BootstrapBookmarkablePageLink<L> menu = new MenuBookmarkablePageLink<L>(clazz, null,
-                new StringResourceModel(resourceKey, this, null))
-                .setIconType(iconType);
-        list.add(menu);
-        return menu;
+
+        if (fmService.isFeatureVisible(resourceKey)) {
+            BootstrapBookmarkablePageLink<L> menu = new MenuBookmarkablePageLink<L>(clazz, null,
+                    new StringResourceModel(resourceKey, this, null))
+                    .setIconType(iconType);
+            list.add(menu);
+            return menu;
+        }
+        return null;
     }
 
     private <L extends AbstractListPage> void
     createAddListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
                               IconType iconType) {
         BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
-        MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+        if (menu != null) {
+            MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+        }
     }
 
     private <L extends AbstractListPage> void
