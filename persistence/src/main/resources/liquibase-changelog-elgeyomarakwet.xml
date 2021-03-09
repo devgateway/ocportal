@@ -1,0 +1,79 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="OCMAKU-916-elgeyo-wards-subcounties" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender_wards"/>
+            <tableExists tableName="tender_subcounties"/>
+            <tableExists tableName="contract_wards"/>
+            <tableExists tableName="contract_subcounties"/>
+        </preConditions>
+        <sql>delete from tender_wards</sql>
+        <sql>delete from tender_subcounties</sql>
+        <sql>delete from contract_wards</sql>
+        <sql>delete from contract_subcounties</sql>
+        <sql>delete from mereport_subwards</sql>
+        <sql>delete from mereport_wards</sql>
+        <sql>delete from mereport_subcounties</sql>
+        <sql>delete from pmcreport_wards</sql>
+        <sql>delete from pmcreport_subcounties</sql>
+        <sql>delete from project_wards</sql>
+        <sql>delete from project_subcounties</sql>
+        <sql>delete from alerts_subscription_wards</sql>
+        <sql>delete from alerts_subscription_subcounties</sql>
+        <sql>delete from category where dtype='SubWard'</sql>
+        <sql>delete from category where dtype='Ward'</sql>
+        <sql>delete from category where dtype='Subcounty'</sql>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Keiyo North"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Keiyo South"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Marakwet East"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Marakwet West"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <sql>
+            SELECT insertWard('Kamariny', 'Keiyo North');
+            SELECT insertWard('Kapchemutwa', 'Keiyo North');
+            SELECT insertWard('Emsoo', 'Keiyo North');
+            SELECT insertWard('Tambach', 'Keiyo North');
+        </sql>
+        <sql>
+            SELECT insertWard('Metkei', 'Keiyo South');
+            SELECT insertWard('Kabiemit', 'Keiyo South');
+            SELECT insertWard('Chepkorio', 'Keiyo South');
+            SELECT insertWard('Soy North', 'Keiyo South');
+            SELECT insertWard('Soy South', 'Keiyo South');
+            SELECT insertWard('Kaptwarakwa', 'Keiyo South');
+        </sql>
+        <sql>
+            SELECT insertWard('Embobut/Embolot', 'Marakwet East');
+            SELECT insertWard('Sambirir', 'Marakwet East');
+            SELECT insertWard('Endo', 'Marakwet East');
+            SELECT insertWard('Kapyego', 'Marakwet East');
+        </sql>
+        <sql>
+            SELECT insertWard('Kapsowar', 'Marakwet West');
+            SELECT insertWard('Sengwer', 'Marakwet West');
+            SELECT insertWard('Cherangany/Chebororwa', 'Marakwet West');
+            SELECT insertWard('Lelan', 'Marakwet West');
+            SELECT insertWard('Aror', 'Marakwet West');
+            SELECT insertWard('Moiben/Kuserwo', 'Marakwet West');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
