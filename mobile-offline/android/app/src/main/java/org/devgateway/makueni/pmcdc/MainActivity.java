@@ -14,6 +14,8 @@ import android.webkit.WebView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.devgateway.elgeyo.pmcdc.R;
+
 public class MainActivity extends AppCompatActivity {
 
     private WebView mWebView;
