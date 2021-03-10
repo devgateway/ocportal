@@ -25,8 +25,12 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: paymentVoucherForm.completionCertificate
+  mandatory: no
+  enabled: yes
+  visible: yes
 - name: paymentVoucherForm.inspectionReport
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
   visibleDeps:
@@ -40,7 +44,7 @@
   enabled: yes
   visible: yes
 - name: paymentVoucherForm.pmcReport
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
   visibleDeps:
@@ -153,43 +157,49 @@
   visible: yes
   visibleDeps:
     - paymentVoucherForm
-- name: publicView.paymentVoucher.pmcReport
+- name: publicView.paymentVoucher.paymentStatus
   visible: yes
+- name: publicView.paymentVoucher.pmcReport
+  visible: no
   visibleDeps:
     - paymentVoucherForm.pmcReport
 - name: publicView.paymentVoucher.inspectionReport
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.inspectionReport
 - name: publicView.paymentVoucher.administratorReport
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.administratorReport
 - name: publicView.paymentVoucher.totalAmount
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.totalAmount
 - name: publicView.paymentVoucher.lastPayment
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.lastPayment
 - name: publicView.paymentVoucher.contractRefNum
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.tenderProcess.singleContract.referenceNumber
 - name: publicView.paymentVoucher.tenderTitle
-  visible: yes
+  visible: no
 - name: publicView.paymentVoucher.contractor
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.tenderProcess.singleContract.awardee
 - name: publicView.paymentVoucher.fiscalYear
-  visible: yes
+  visible: no
 - name: publicView.paymentVoucher.approvedDate
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.approvedDate
 - name: publicView.paymentVoucher.formDocs
-  visible: yes
+  visible: no
   visibleDeps:
     - paymentVoucherForm.formDocs
+- name: publicView.paymentVoucher.completionCertificate
+  visible: yes
+  visibleDeps:
+    - paymentVoucherForm.completionCertificate
