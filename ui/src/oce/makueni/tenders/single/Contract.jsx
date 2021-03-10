@@ -54,6 +54,15 @@ const Contract = (props) => {
         />
         )}
 
+        {isFeatureVisible('publicView.contract.description')
+        && (
+          <Item
+            label={t('contract:description')}
+            value={contract.description}
+            col={12}
+          />
+        )}
+
         {isFeatureVisible('publicView.contract.wards')
         && (
         <Item

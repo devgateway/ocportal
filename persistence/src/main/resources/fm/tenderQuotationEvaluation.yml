@@ -121,6 +121,10 @@
   visible: yes
   visibleDeps:
     - tenderQuotationEvaluationForm
+- name: publicView.tenderQuotationEvaluation.openingDate
+  visible: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm.openingDate
 - name: publicView.tenderQuotationEvaluation.closingDate
   visible: yes
   visibleDeps:
