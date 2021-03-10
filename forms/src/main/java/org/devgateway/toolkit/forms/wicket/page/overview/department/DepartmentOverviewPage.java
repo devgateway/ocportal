@@ -55,16 +55,19 @@ import org.devgateway.toolkit.forms.wicket.page.edit.ProcurementPlanInputSelectP
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListCabinetPaperPage;
 import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
+import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.Statusable;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
@@ -82,6 +85,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -313,9 +317,47 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         addEditFiscalYearBudgetButton();
         addLabelOrInvisibleContainer("procurementPlanLabel", getProcurementPlan());
 
+        addAmountRemaining();
+
         add(new ProjectOverviewPanel("projectOverview"));
 
         add(new TenderProcessOverviewPanel("tenderProcessOverview"));
+    }
+
+    private void addAmountRemaining() {
+        BigDecimal amount = computeAmountRemaining(getProcurementPlan());
+        Label label = new Label("amountRemaining",
+                new StringResourceModel("amountRemaining").setParameters(amount));
+        label.setVisibilityAllowed(amount != null);
+        label.add(new TooltipBehavior(new StringResourceModel("amountRemaining.tooltip")));
+        add(label);
+    }
+
+    private BigDecimal computeAmountRemaining(ProcurementPlan procurementPlan) {
+        if (procurementPlan == null || !isSubmittedOrApproved(procurementPlan)) {
+            return null;
+        }
+
+        BigDecimal amountPlanned = BigDecimal.ZERO;
+        for (PlanItem item : getProcurementPlan().getPlanItems()) {
+            amountPlanned = amountPlanned.add(item.getEstimatedCost().multiply(item.getQuantity()));
+        }
+
+        BigDecimal amountSpent = BigDecimal.ZERO;
+        for (TenderProcess tenderProcess : getProcurementPlan().getTenderProcesses()) {
+            for (Contract contract : tenderProcess.getContract()) {
+                if (isSubmittedOrApproved(contract)) {
+                    amountSpent = amountSpent.add(contract.getContractValue());
+                }
+            }
+        }
+
+        return amountPlanned.subtract(amountSpent);
+    }
+
+    private boolean isSubmittedOrApproved(Statusable statusable) {
+        return statusable.getStatus().equals(DBConstants.Status.SUBMITTED)
+                || statusable.getStatus().equals(DBConstants.Status.APPROVED);
     }
 
     /**
@@ -404,6 +446,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         };
         link.setEnabled(fiscalYearBudgetModel.getObject() == null);
         link.add(new TooltipBehavior(new StringResourceModel("addFiscalYearBudget.tooltip", this)));
+        link.add(new DgFmBehavior("deptOverview.fiscalYearBudget"));
         add(link);
         link.setVisibilityAllowed(canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
     }

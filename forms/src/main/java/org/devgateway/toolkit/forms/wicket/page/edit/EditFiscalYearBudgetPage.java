@@ -72,6 +72,7 @@ public class EditFiscalYearBudgetPage extends AbstractEditPage<FiscalYearBudget>
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("fiscalYearBudgetForm");
         checkInitParameters();
         super.onInitialize();
         editForm.add(new GenericSleepFormComponent<>("department"));
