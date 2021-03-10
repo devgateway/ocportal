@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "org.devgateway.makueni.pmcdc"
+        applicationId "org.devgateway.elgeyo.pmcdc"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

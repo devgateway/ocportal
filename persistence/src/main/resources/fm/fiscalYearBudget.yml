@@ -1,0 +1,49 @@
+# FISCAL YEAR BUDGET FORM
+
+- name: fiscalYearBudgetForm
+  mandatory: no
+  enabled: yes
+  visible: no
+- name: fiscalYearBudgetForm.amountBudgeted
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetForm.cancel
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetForm.delete
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetForm.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetForm.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetForm.save
+  mandatory: no
+  enabled: yes
+  visible: yes
+
+# FISCAL YEAR BUDGET LIST
+
+- name: fiscalYearBudgetsList
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetsList.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetsList.filterToolbar
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: fiscalYearBudgetsList.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
