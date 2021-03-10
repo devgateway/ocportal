@@ -169,6 +169,10 @@
   visible: yes
   visibleDeps:
     - contractForm.awardee
+- name: publicView.contract.targetGroup
+  visible: yes
+  visibleDeps:
+    - contractForm.targetGroup
 - name: publicView.contract.contractValue
   visible: yes
   visibleDeps:
