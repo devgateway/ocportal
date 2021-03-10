@@ -17,10 +17,13 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditPMCStaffPage;
 import org.devgateway.toolkit.persistence.dao.categories.PMCStaff;
 import org.devgateway.toolkit.persistence.service.category.PMCStaffService;
-import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_PMC_ADMIN)
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_IMPLEMENTATION_USER;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_VALIDATOR;
+
+@AuthorizeInstantiation({ROLE_PMC_ADMIN, ROLE_PMC_VALIDATOR, ROLE_IMPLEMENTATION_USER })
 @MountPath
 public class ListPMCStaffPage extends AbstractListCategoryPage<PMCStaff> {
 

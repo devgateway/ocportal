@@ -20,6 +20,7 @@
         <swagger.version>3.0.0</swagger.version>
         <jminix.version>1.2.0</jminix.version>
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
+        <commons-email.version>1.5</commons-email.version>
     </properties>
 
     <parent>
@@ -32,6 +33,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>${commons-email.version}</version>
         </dependency>
 
         <dependency>
