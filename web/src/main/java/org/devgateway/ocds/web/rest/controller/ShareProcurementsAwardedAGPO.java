@@ -66,12 +66,12 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
                 unwind("contracts"),
                 match(where(FieldNames.CONTRACTS_VALUE_AMOUNT).exists(true)),
                 project()
-                        .and(FieldNames.CONTRACTS_VALUE_AMOUNT).as("amount")
+                        .and(FieldNames.CONTRACTS_VALUE_AMOUNT).as("value")
                         .and(when(where(FieldNames.CONTRACTS_TARGET_GROUP).in(NON_AGPO_GROUPS))
                                 .then(NON_AGPO)
                                 .otherwiseValueOf(ifNull(FieldNames.CONTRACTS_TARGET_GROUP).then(NON_AGPO)))
                         .as("targetGroup"),
-                group("targetGroup").sum("amount").as("amount")
+                group("targetGroup").sum("value").as("value")
         );
         logger.warn(agg.toString());
         return releaseAgg(agg);
