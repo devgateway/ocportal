@@ -3,25 +3,32 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
+import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.EntityListChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.service.category.SubcountyService;
+import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -45,7 +52,15 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     @SpringBean
     protected TenderProcessService tenderProcessService;
 
+    @SpringBean
+    protected SubcountyService subcountyService;
+
+    @SpringBean
+    protected WardService wardService;
+
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
+    private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
+    private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
 
     private GenericSleepFormComponent<String> supplierAddress;
     private Select2ChoiceBootstrapFormComponent<TargetGroup> targetGroup;
@@ -85,6 +100,12 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         addSupplierInfo();
 
         editForm.add(new ContractDocumentPanel("contractDocs"));
+
+        wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+        subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
+        ));
     }
 
     @Override
