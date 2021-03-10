@@ -423,7 +423,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         }
     }
 
-    private <L extends AbstractListPage> void
+    private <L extends AbstractBaseListPage<?>> void
     createAddListMenuWithRoles(List<AbstractLink> list, Collection<String> roles, Class<L> clazz, String resourceKey,
                                IconType iconType) {
         BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
