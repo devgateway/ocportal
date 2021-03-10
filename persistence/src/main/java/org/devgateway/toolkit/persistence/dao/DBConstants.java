@@ -23,6 +23,7 @@ public final class DBConstants {
 
     public static final String FROM_EMAIL = "noreply@dgstg.org";
 
+    public static final String INSTANCE_NAME = "Elgeyo Marakwet";
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
