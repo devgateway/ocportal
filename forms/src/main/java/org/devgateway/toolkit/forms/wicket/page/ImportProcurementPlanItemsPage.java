@@ -229,7 +229,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             Workbook wb = WorkbookFactory.create(new ByteArrayInputStream(file.getContent().getBytes()));
             Sheet sh = wb.getSheetAt(0);
             for (Row r : sh) {
-                if (rn++ < 7 || r.getLastCellNum() == -1) {
+                if (rn++ < 7 || isEmptyRow(r)) {
                     continue;
                 }
                 PlanItem pi = new PlanItem();
@@ -272,6 +272,17 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         }
 
         return pp;
+    }
+
+    private boolean isEmptyRow(Row r) {
+        short lastCellNum = r.getLastCellNum();
+        for (int col = r.getFirstCellNum(); col < lastCellNum; col++) {
+            Cell cell = r.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+            if (cell != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private String toSingleLine(String value) {
