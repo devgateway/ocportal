@@ -1,6 +1,8 @@
 # Department Overview
 - name: deptOverview.fiscalYearBudget
   visible: yes
+  visibleDeps:
+    - fiscalYearBudgetForm
 - name: deptOverview.cabinetPaper
   visibleDeps:
     - cabinetPaperForm
