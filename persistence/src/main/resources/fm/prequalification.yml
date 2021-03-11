@@ -1,5 +1,5 @@
 - name: prequalificationSchemaForm
-  visible: yes
+  visible: no
 - name: prequalificationSchemaForm.approve
   mandatory: no
   enabled: yes
