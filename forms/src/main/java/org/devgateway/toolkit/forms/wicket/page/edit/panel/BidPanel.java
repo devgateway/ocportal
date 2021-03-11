@@ -63,11 +63,6 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         item.add(responsiveness);
     }
 
-    @Override
-    protected boolean filterListItem(final Bid tenderItem) {
-        return true;
-    }
-
     private class SupplierUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
         SupplierUpdatingBehavior(final String event) {
             super(event);

@@ -34,19 +34,13 @@ public abstract class AbstractListStatusEntityPage<T extends AbstractStatusAudit
         super(parameters);
     }
 
-    @Override
-    protected void onInitialize() {
-        addStatusColumn();
-
-        super.onInitialize();
-    }
-
     private List<String> getStatusDropdownValues() {
         return DBConstants.Status.ALL_LIST;
     }
 
-    private void addStatusColumn() {
+    @Override
+    protected void addColumns() {
         addFmColumn("status", 1, new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("status", this),
-                "status", "status", new ListModel(getStatusDropdownValues()), dataTable));
+                "status", "status", new ListModel(getStatusDropdownValues()), getDataTable()));
     }
 }

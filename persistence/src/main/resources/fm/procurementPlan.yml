@@ -121,6 +121,8 @@
 - name: procurementPlansList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - procurementPlanForm
 - name: procurementPlansList.department
   visible: yes
   visibleDeps:
