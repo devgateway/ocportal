@@ -89,7 +89,7 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     private List<ContractDocument> contractDocs = new ArrayList<>();
 
     @ManyToOne
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     private TargetGroup targetGroup;
 
     public BigDecimal getContractValue() {
