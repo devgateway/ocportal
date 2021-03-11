@@ -34,7 +34,6 @@ public class TenderItem extends AbstractChildExpandableAuditEntity<Tender> imple
     private PurchaseItem purchaseItem;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Plan Item")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     @org.springframework.data.annotation.Transient
     private PlanItem planItem;

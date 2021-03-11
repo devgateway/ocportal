@@ -16,9 +16,9 @@
     </properties>
 
     <parent>
-        <groupId>org.devgateway.toolkit</groupId>
+        <groupId>org.devgateway.makueni</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.12.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <dependencies>

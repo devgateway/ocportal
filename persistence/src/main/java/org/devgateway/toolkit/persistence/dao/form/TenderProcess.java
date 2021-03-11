@@ -42,7 +42,6 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
     @org.springframework.data.annotation.Transient

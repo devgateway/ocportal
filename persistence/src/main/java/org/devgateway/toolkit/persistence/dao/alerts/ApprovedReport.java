@@ -22,7 +22,6 @@ public class ApprovedReport extends AbstractAuditableEntity {
     @ManyToOne
     private MEReport meReport;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PMCReport pmcReport;
 
