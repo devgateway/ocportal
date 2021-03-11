@@ -43,7 +43,7 @@
     "Organization": {
       "properties": {
         "targetGroup": {
-          "title": "Target Group",
+          "title": "AGPO Category",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TargetGroup"
