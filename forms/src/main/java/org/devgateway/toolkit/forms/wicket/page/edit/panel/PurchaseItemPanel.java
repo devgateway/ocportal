@@ -197,12 +197,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
     }
 
     @Override
-    protected boolean filterListItem(final PurchaseItem purchaseItem) {
-        return true;
-    }
-
-    @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<PurchaseItem> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<PurchaseItem> compoundModel) {
         return new PurchaseItemHeaderPanel(id, compoundModel);
     }
 

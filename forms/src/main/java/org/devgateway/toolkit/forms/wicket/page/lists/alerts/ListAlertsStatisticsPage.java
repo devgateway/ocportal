@@ -34,14 +34,10 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
     }
 
     @Override
-    protected void onInitialize() {
-
-        hasNewPage = false;
-
+    protected void addColumns() {
         columns.add(new SimpleDateProperyColumn<>(new StringResourceModel("sendingDate", this),
                 "createdDate", "createdDate",
                 t -> t.getLastModifiedDate().orElse(null), "yyyy-MM-dd HH:mm:ss"));
-
         columns.add(new PropertyColumn<>(new StringResourceModel("numAlertsSent", this),
                 "numberSentAlerts", "numberSentAlerts"));
         columns.add(new PropertyColumn<>(new StringResourceModel("numErrors", this),
@@ -50,7 +46,5 @@ public class ListAlertsStatisticsPage extends AbstractListPage<AlertsStatistics>
                 "dbTime", "dbTime"));
         columns.add(new PropertyColumn<>(new StringResourceModel("sendingTimeInSec", this),
                 "sendingTime", "sendingTime"));
-
-        super.onInitialize();
     }
 }

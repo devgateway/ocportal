@@ -27,6 +27,8 @@
 - name: cabinetPapersList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - cabinetPaperForm
 - name: cabinetPapersList.department
   visible: yes
 - name: cabinetPapersList.downloadFile

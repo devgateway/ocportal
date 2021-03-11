@@ -1483,6 +1483,30 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-953" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="category" columnName="target_group_id"/>
+            <columnExists tableName="contract" columnName="target_group_id"/>
+            <tableExists tableName="category_target_groups"/>
+        </preConditions>
+        <sql><![CDATA[
+            INSERT INTO category_target_groups
+            SELECT id, target_group_id
+            FROM category
+            WHERE dtype = 'Supplier'
+              AND target_group_id IS NOT NULL;
+
+            UPDATE contract
+            SET target_group_id=s.target_group_id
+            FROM category s
+            WHERE contract.awardee_id = s.id
+              AND contract.target_group_id IS NULL;
+
+            ALTER TABLE category
+                DROP COLUMN target_group_id;
+        ]]></sql>
+    </changeSet>
+
     <!--Change Set Placeholder 1-->
 
     <!--Change Set Placeholder 2-->

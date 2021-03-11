@@ -82,21 +82,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         }
     }
 
-    protected class AwardNotificationItemCountValidator implements IFormValidator {
-        @Override
-        public FormComponent<?>[] getDependentFormComponents() {
-            return new FormComponent[0];
-        }
-
-        @Override
-        public void validate(Form<?> form) {
-            List<AwardNotificationItem> items = AwardNotificationItemPanel.this.getModelObject();
-            if (items.size() == 0) {
-                form.error(getString("atLeastOneAwardNotification"));
-            }
-
-        }
-    }
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
@@ -109,7 +94,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         super.onInitialize();
         final Form<?> form = findParent(Form.class);
         form.add(new  WrongDistinctCountValidator());
-        form.add(new AwardNotificationItemCountValidator());
     }
 
     @Override
@@ -181,12 +165,4 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         supplierAddress.setOutputMarkupId(true);
         item.add(supplierAddress);
     }
-
-
-    @Override
-    protected boolean filterListItem(final AwardNotificationItem purchaseItem) {
-        return true;
-    }
-
-
 }
