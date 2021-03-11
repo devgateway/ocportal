@@ -2,6 +2,8 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -21,6 +23,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.events.AjaxUpdateEvent;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -35,9 +38,6 @@ import java.util.Optional;
 import java.util.Set;
 
 public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
-    private GenericSleepFormComponent unit;
-
-    private GenericSleepFormComponent totalCost;
 
     public TenderItemPanel(final String id) {
         super(id);
@@ -112,19 +112,17 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
 
     @Override
     public void populateCompoundListItem(final ListItem<TenderItem> item) {
+        GenericSleepFormComponent<Unit> unit;
+        GenericSleepFormComponent<String> totalCost;
         final TextFieldBootstrapFormComponent<BigDecimal> quantity =
-                new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
-                    @Override
-                    protected void onUpdate(final AjaxRequestTarget target) {
-                        target.add(totalCost);
-                    }
-                };
+                new TextFieldBootstrapFormComponent<BigDecimal>("quantity");
+        quantity.broadcastUpdate(this.getParent());
         quantity.decimal();
         quantity.getField().add(RangeValidator.minimum(BigDecimal.ONE), new BigDecimalValidator());
         quantity.required();
         item.add(quantity);
 
-        unit = new GenericSleepFormComponent<>("unit",
+        unit = new GenericSleepFormComponent<Unit>("unit",
                 (IModel<Unit>) () -> {
                     if (item.getModelObject().getPurchaseItem() != null
                             && item.getModelObject().getPurchaseItem().getPlanItem() != null
@@ -133,29 +131,27 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                     }
                     return null;
                 });
+        unit.receiveUpdatesFrom("purchaseItem");
         unit.setOutputMarkupId(true);
         item.add(unit);
 
 
         final TextFieldBootstrapFormComponent<BigDecimal> price =
-                new TextFieldBootstrapFormComponent<BigDecimal>("unitPrice") {
-                    @Override
-                    protected void onUpdate(final AjaxRequestTarget target) {
-                        target.add(totalCost);
-                    }
-                };
+                new TextFieldBootstrapFormComponent<BigDecimal>("unitPrice");
+        price.broadcastUpdate(this.getParent());
         price.decimal();
         price.required();
         price.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         item.add(price);
 
-        totalCost = new GenericSleepFormComponent<>("totalCost",
+        totalCost = new GenericSleepFormComponent<String>("totalCost",
                 (IModel<String>) () -> {
                     if (quantity.getModelObject() != null && price.getModelObject() != null) {
                         return ComponentUtil.formatNumber(price.getModelObject().multiply(quantity.getModelObject()));
                     }
                     return null;
                 });
+        totalCost.receiveUpdatesFrom("quantity", "unitPrice");
         totalCost.setOutputMarkupId(true);
         item.add(totalCost);
     }
@@ -185,14 +181,12 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
 
             final Select2ChoiceBootstrapFormComponent<PurchaseItem> purchaseItem =
                     new Select2ChoiceBootstrapFormComponent<PurchaseItem>(
-                            "purchaseItem", new GenericChoiceProvider<>(purchaseItems)) {
-                        @Override
-                        protected void onUpdate(final AjaxRequestTarget target) {
-                            target.add(unit);
-                        }
-                    };
+                            "purchaseItem", new GenericChoiceProvider<>(purchaseItems));
+                    purchaseItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(),
+                            ID_ACCORDION).getParent());
             purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
+
 
             final Component description = ComponentUtil.addTextField(this, "description");
             description.add(new StopEventPropagationBehavior());

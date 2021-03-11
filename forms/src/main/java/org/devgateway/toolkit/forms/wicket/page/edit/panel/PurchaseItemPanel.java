@@ -48,9 +48,7 @@ import java.util.Set;
  * @since 2019-04-17
  */
 public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchRequisition> {
-    private GenericSleepFormComponent unit;
 
-    private GenericSleepFormComponent totalCost;
 
     @SpringBean
     private TenderItemService tenderItemService;
@@ -155,6 +153,18 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
 
     @Override
     public void populateCompoundListItem(final ListItem<PurchaseItem> item) {
+         GenericSleepFormComponent<Unit> unit;
+
+        GenericSleepFormComponent<String> totalCost = new GenericSleepFormComponent<>("totalCost",
+                (IModel<String>) () -> {
+                    if (item.getModelObject() != null && item.getModelObject().getQuantity() != null
+                            && item.getModelObject().getAmount() != null) {
+                        return ComponentUtil.formatNumber(item.getModelObject().getAmount().multiply(
+                                item.getModelObject().getQuantity()));
+                    }
+                    return null;
+                });
+        totalCost.setOutputMarkupId(true);
         final TextFieldBootstrapFormComponent<BigDecimal> quantity =
                 new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
                     @Override
@@ -167,7 +177,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
         quantity.required();
         item.add(quantity);
 
-        unit = new GenericSleepFormComponent<>("unit",
+        unit = new GenericSleepFormComponent<Unit>("unit",
                 (IModel<Unit>) () -> {
                     if (item.getModelObject().getPlanItem() != null
                             && item.getModelObject().getPlanItem().getUnitOfIssue() != null) {
@@ -175,6 +185,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                     }
                     return null;
                 });
+        unit.receiveUpdatesFrom("planItem");
         unit.setOutputMarkupId(true);
         item.add(unit);
 
@@ -190,14 +201,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
         amount.required();
         item.add(amount);
 
-        totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<String>) () -> {
-                    if (quantity.getModelObject() != null && amount.getModelObject() != null) {
-                        return ComponentUtil.formatNumber(amount.getModelObject().multiply(quantity.getModelObject()));
-                    }
-                    return null;
-                });
-        totalCost.setOutputMarkupId(true);
+
         item.add(totalCost);
     }
 
@@ -228,12 +232,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",
-                            new GenericChoiceProvider<>(planItems)) {
-                        @Override
-                        protected void onUpdate(final AjaxRequestTarget target) {
-                            target.add(unit);
-                        }
-                    };
+                            new GenericChoiceProvider<>(planItems));
+            planItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent());
             planItem.required();
             planItem.add(new StopEventPropagationBehavior());
 
