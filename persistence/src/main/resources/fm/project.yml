@@ -1,7 +1,7 @@
 # PROJECT FORM PAGE
 - name: projectForm
   enabled: yes
-  visible: no
+  visible: yes
 - name: projectForm.amountBudgeted
   mandatory: no
   enabled: yes

@@ -6,9 +6,9 @@
 - name: deptOverview.cabinetPaper
   visible: yes
 - name: deptOverview.project
-  visible: no
-- name: deptOverview.tenderProcess
   visible: yes
+- name: deptOverview.tenderProcess
+  visible: no
 
 # Department Overview - Tender Process
 - name: deptOverview.tenderProcess.purchaseRequisition
