@@ -66,7 +66,7 @@ public class PrequalifiedSupplierExporter {
         row.createCell(Indexes.MAILING_ADDRESS).setCellValue("Mailing Address");
         row.createCell(Indexes.EMAIL).setCellValue("Email");
         row.createCell(Indexes.DIRECTORS).setCellValue("Directors");
-        row.createCell(Indexes.TARGET_GROUPS).setCellValue("Target Groups");
+        row.createCell(Indexes.TARGET_GROUPS).setCellValue("AGPO Categories");
         row.createCell(Indexes.LOCATION).setCellValue("Location");
     }
 
