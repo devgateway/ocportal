@@ -4,13 +4,14 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
+import org.devgateway.toolkit.persistence.dao.form.Project_;
 import org.devgateway.toolkit.persistence.repository.form.ProjectRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 
 /**
@@ -25,11 +26,6 @@ public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project
 
     @Override
     protected BaseJpaRepository<Project, Long> repository() {
-        return projectRepository;
-    }
-
-    @Override
-    public TextSearchableRepository<Project, Long> textRepository() {
         return projectRepository;
     }
 
@@ -58,5 +54,10 @@ public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project
     @Override
     public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return projectRepository.countByProcurementPlanDepartmentAndProcurementPlanFiscalYear(department, fiscalYear);
+    }
+
+    @Override
+    public SingularAttribute<? super Project, String> getTextAttribute() {
+        return Project_.projectTitle;
     }
 }

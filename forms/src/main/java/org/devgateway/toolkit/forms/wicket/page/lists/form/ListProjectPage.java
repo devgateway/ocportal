@@ -37,13 +37,20 @@ public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
 
         attachFm("projectList");
 
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
         addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("department", this),
-                "procurementPlan.department", "procurementPlan.department", new ListModel(departments), dataTable));
+                "procurementPlan.department", "procurementPlan.department",
+                new ListModel<>(departments), getDataTable()));
 
         addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("fiscalYears", this),
-                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear", new ListModel(fiscalYears), dataTable));
+                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
+                new ListModel<>(fiscalYears), getDataTable()));
 
         addFmColumn("projectTitle", new TextFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("projectTitle", this),
@@ -51,9 +58,8 @@ public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
 
         addLastModifiedDateColumn();
 
-        super.onInitialize();
+        super.addColumns();
     }
-
 
     @Override
     public JpaFilterState<Project> newFilterState() {

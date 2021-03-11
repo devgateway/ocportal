@@ -20,8 +20,6 @@ import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstra
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditDepartmentPage;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
-import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
-import org.devgateway.toolkit.persistence.service.filterstate.category.GenericCategoryFilterState;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -40,15 +38,10 @@ public class ListDepartmentPage extends AbstractListCategoryPage<Department> {
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("code", ListDepartmentPage.this)).getString()), "code", "code"));
 
-        super.onInitialize();
-    }
-
-    @Override
-    public JpaFilterState<Department> newFilterState() {
-        return new GenericCategoryFilterState();
+        super.addColumns();
     }
 }
