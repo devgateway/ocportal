@@ -63,3 +63,12 @@
 - name: navbar.wardlist
 - name: navbar.subwardlist
 - name: navbar.unitlist
+- name:  navbar.prequalificationSchema
+  visibleDeps:
+    - prequalificationSchemaForm
+- name:  navbar.prequalificationYearRange
+  visibleDeps:
+    - prequalificationSchemaForm
+- name:  navbar.prequalifiedSupplierPage
+  visibleDeps:
+    - prequalifiedSupplierForm

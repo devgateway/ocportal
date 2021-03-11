@@ -1,19 +1,24 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author mpostelnicu
@@ -46,6 +51,11 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
 
     @ExcelExport(useTranslation = true)
     private Boolean lastPayment;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Completion Certificate")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FileMetadata> completionCertificate = new HashSet<>();
 
     @Override
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
@@ -100,5 +110,13 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
 
     public void setLastPayment(Boolean lastPayment) {
         this.lastPayment = lastPayment;
+    }
+
+    public Set<FileMetadata> getCompletionCertificate() {
+        return completionCertificate;
+    }
+
+    public void setCompletionCertificate(Set<FileMetadata> completionCertificate) {
+        this.completionCertificate = completionCertificate;
     }
 }

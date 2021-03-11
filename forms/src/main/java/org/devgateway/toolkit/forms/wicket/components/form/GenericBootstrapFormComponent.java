@@ -15,10 +15,13 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.FormGroup;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.InputBehavior;
 import de.agilecoders.wicket.core.util.Attributes;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -31,9 +34,11 @@ import org.apache.wicket.model.ResourceModel;
 import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.models.SubComponentWrapModel;
 import org.devgateway.toolkit.forms.models.ViewModeConverterModel;
+import org.devgateway.toolkit.forms.wicket.behaviors.ComponentAjaxUpdateBehavior;
 import org.devgateway.toolkit.forms.wicket.components.FieldPanel;
 import org.devgateway.toolkit.forms.wicket.components.TooltipLabel;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.events.ComponentAjaxUpdateEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.hibernate.envers.AuditReader;
@@ -49,7 +54,9 @@ import java.util.List;
  * @author mpostelnicu
  */
 public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComponent<TYPE>>
-        extends FieldPanel<TYPE> implements DgFmFormComponentSubject {
+        extends FieldPanel<TYPE> implements DgFmFormComponentSubject, ComponentAjaxUpdateSubscriber,
+        ComponentAjaxUpdateProducer {
+
     private static final long serialVersionUID = -7051128382707812456L;
 
     protected FormGroup border;
@@ -62,6 +69,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
     private Boolean showTooltip = true;
 
     private final IModel<String> labelModel;
+    private IEventSink broadcastUpdateSink;
 
     public GenericBootstrapFormComponent(final String id) {
         this(id, null);
@@ -211,8 +219,15 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
             @Override
             protected void onUpdate(final AjaxRequestTarget target) {
                 GenericBootstrapFormComponent.this.onUpdate(target);
+                sendBroadcastUpdate(target);
             }
         });
+    }
+
+
+    @Override
+    public final Component getAjaxUpdateSubscriberComponent() {
+        return getField();
     }
 
     /**
@@ -237,6 +252,7 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
             protected void onUpdate(final AjaxRequestTarget target) {
                 target.add(border);
                 GenericBootstrapFormComponent.this.onUpdate(target);
+                sendBroadcastUpdate(target);
             }
 
             @Override
@@ -294,5 +310,15 @@ public abstract class GenericBootstrapFormComponent<TYPE, FIELD extends FormComp
 
     public void setShowTooltip(final Boolean showTooltip) {
         this.showTooltip = showTooltip;
+    }
+
+    @Override
+    public IEventSink getBroadcastUpdateSink() {
+        return broadcastUpdateSink;
+    }
+
+    @Override
+    public void setBroadcastUpdateSink(IEventSink sink) {
+        this.broadcastUpdateSink = sink;
     }
 }

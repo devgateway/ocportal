@@ -70,15 +70,15 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
         this.departments = departmentService.findAll();
         this.jpaService = repository;
         this.editPageClass = EditFeedbackMessagePage.class;
+        hasNewPage = false;
     }
 
     @Override
-    protected void onInitialize() {
-        hasNewPage = false;
+    protected void addColumns() {
         columns.add(new PropertyColumn<>(new StringResourceModel("pageUrl", this),
                 "url", "url"));
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
-                "department", "department", new ListModel(departments), dataTable
+                "department", "department", new ListModel(departments), getDataTable()
         ));
         columns.add(new PropertyColumn<>(new StringResourceModel("visible", this),
                 "visible", "visible"));
@@ -90,8 +90,6 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
                 "lastModifiedDate", "lastModifiedDate.get"));
         columns.add(new PropertyColumn<>(new StringResourceModel("replies", this),
                 null, "replies.size"));
-        super.onInitialize();
-
     }
 
     @Override

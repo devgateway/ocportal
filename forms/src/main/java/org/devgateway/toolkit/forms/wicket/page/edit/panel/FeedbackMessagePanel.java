@@ -76,9 +76,4 @@ public class FeedbackMessagePanel extends ListViewSectionPanel<FeedbackMessage, 
             comment.setEnabled(false);
         }
     }
-
-    @Override
-    protected boolean filterListItem(final FeedbackMessage contractDocuments) {
-        return true;
-    }
 }

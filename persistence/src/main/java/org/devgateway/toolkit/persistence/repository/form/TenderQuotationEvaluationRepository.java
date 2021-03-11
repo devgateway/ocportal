@@ -15,6 +15,6 @@ public interface TenderQuotationEvaluationRepository
         extends AbstractTenderProcessMakueniEntityRepository<TenderQuotationEvaluation> {
 
     @Query("select te from  #{#entityName} te JOIN te.tenderProcess pr JOIN pr.tender t "
-            + " where lower(t.tenderTitle) like %:name%")
+            + " where lower(t.tenderTitle) like %:name%") //TODO: this does not seem to be used
     Page<TenderQuotationEvaluation> searchText(@Param("name") String name, Pageable page);
 }
