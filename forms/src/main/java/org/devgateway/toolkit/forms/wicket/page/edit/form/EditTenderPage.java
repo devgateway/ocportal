@@ -5,6 +5,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
@@ -18,10 +19,12 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.validators.EarlierThanDateFieldValidator;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
+import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.TenderItemPanel;
@@ -29,13 +32,17 @@ import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementR
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodRationaleService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
+import org.devgateway.toolkit.persistence.service.category.SubcountyService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
+import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -63,6 +70,11 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
     @SpringBean
     protected ProcurementMethodService procurementMethodService;
 
+    @SpringBean
+    protected SubcountyService subcountyService;
+
+    @SpringBean
+    protected WardService wardService;
 
     @SpringBean
     protected ProcurementMethodRationaleService procurementMethodRationaleService;
@@ -77,6 +89,9 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
     private GenericSleepFormComponent procuringEntityEmail;
 
     private GenericSleepFormComponent procuringEntityAddress;
+
+    private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
+    private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
 
     public EditTenderPage(final PageParameters parameters) {
         super(parameters);
@@ -150,6 +165,12 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         editForm.add(formDocs);
 
         editForm.add(new FileInputBootstrapFormComponent("billOfQuantities"));
+
+        wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+        subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
+        ));
     }
 
     private void addProcuringEntitySection() {
@@ -175,18 +196,6 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         });
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
-    }
-
-    @Override
-    protected PageParameters parametersAfterSubmitAndNext() {
-        final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getTenderQuotationEvaluation())) {
-            pp.set(WebConstants.PARAM_ID,
-                    PersistenceUtil.getNext(editForm.getModelObject().getTenderProcess()
-                            .getTenderQuotationEvaluation()).getId());
-        }
-
-        return pp;
     }
 
     private IValidator<String> tenderDocOrTenderLinkRequiredValidator() {

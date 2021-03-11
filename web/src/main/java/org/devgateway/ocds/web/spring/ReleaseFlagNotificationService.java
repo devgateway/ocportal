@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -61,7 +60,7 @@ public class ReleaseFlagNotificationService {
     private FlaggedReleaseRepository flaggedReleaseRepository;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private SendEmailService emailSendingService;
 
     @Value("${serverURL}")
     private String serverURL;
@@ -105,7 +104,7 @@ public class ReleaseFlagNotificationService {
                             || !latestReleaseFlagHistory.get().getFlagged().contains(f))) {
                         addDepartmentFlagReleaseId(
                                 Long.valueOf(flaggedRelease.getBuyer().getId().replaceAll(
-                                        MongoConstants.OCDSSchemes.X_KE_OCMAKUENI + "-", "")),
+                                        MongoConstants.OCDSSchemes.X_KE_INTERNAL_SCHEMA + "-", "")),
                                 f, flaggedRelease.getId()
                         );
 
@@ -184,7 +183,7 @@ public class ReleaseFlagNotificationService {
             msg.setText(createDepartmentContent(department), true);
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send red flag notification email for: " + strings, e);
             throw e;
@@ -206,7 +205,7 @@ public class ReleaseFlagNotificationService {
 
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send red flag notification email for: " + strings, e);
             throw e;
