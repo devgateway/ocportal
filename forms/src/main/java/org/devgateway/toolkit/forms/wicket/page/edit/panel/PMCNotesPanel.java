@@ -35,9 +35,4 @@ public class PMCNotesPanel extends ListViewSectionPanel<PMCNotes, PMCReport> {
     public void populateCompoundListItem(final ListItem<PMCNotes> item) {
         ComponentUtil.addTextAreaField(item, "text");
     }
-
-    @Override
-    protected boolean filterListItem(final PMCNotes member) {
-        return true;
-    }
 }

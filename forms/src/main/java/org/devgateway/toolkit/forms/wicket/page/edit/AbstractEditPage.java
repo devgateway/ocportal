@@ -647,8 +647,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected void onInitialize() {
         super.onInitialize();
 
-        createPrintLink();
-
         // we cant do anything if we dont have a jpaService here
         if (jpaService == null) {
             throw new NullJpaServiceException();
@@ -674,6 +672,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             editForm.setCompoundPropertyModel(model);
         }
 
+        add(createPrintLink("printLink"));
+
         afterLoad(model);
     }
 
@@ -685,5 +685,14 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         if (!ComponentUtil.isPrintMode()) {
             response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
         }
+    }
+
+    @Override
+    protected Component createPrintLink(String id) {
+        Component printLink = super.createPrintLink(id);
+        if (editForm.getModelObject().isNew()) {
+            printLink.setVisibilityAllowed(false);
+        }
+        return printLink;
     }
 }

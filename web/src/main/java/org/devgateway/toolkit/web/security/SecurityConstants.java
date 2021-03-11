@@ -47,6 +47,10 @@ public final class SecurityConstants {
         
         public static final List<String> PMC_ROLES = Collections.unmodifiableList(Arrays.asList(Roles.ROLE_PMC_ADMIN,
                 Roles.ROLE_PMC_USER, Roles.ROLE_PMC_VALIDATOR));
+
+        public static final List<String> PMC_METADATA_ROLES =
+                Collections.unmodifiableList(Arrays.asList(ROLE_PMC_ADMIN, ROLE_PMC_VALIDATOR,
+                        ROLE_IMPLEMENTATION_USER));
     }
 
 
