@@ -1,13 +1,17 @@
 package org.devgateway.toolkit.persistence.service.form;
 
+import org.devgateway.toolkit.persistence.dao.categories.Item_;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
+import org.devgateway.toolkit.persistence.dao.form.PlanItem_;
 import org.devgateway.toolkit.persistence.repository.form.PlanItemRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.metamodel.SingularAttribute;
 
 /**
  * @author idobre
@@ -26,12 +30,18 @@ public class PlanItemServiceImpl extends BaseJpaServiceImpl<PlanItem> implements
     }
 
     @Override
-    public TextSearchableRepository<PlanItem, Long> textRepository() {
-        return planItemRepository;
+    public PlanItem newInstance() {
+        return new PlanItem();
     }
 
     @Override
-    public PlanItem newInstance() {
-        return new PlanItem();
+    public SingularAttribute<? super PlanItem, String> getTextAttribute() {
+       throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Specification<PlanItem> getTextSpecification(String text) {
+        return (root, query, cb) -> cb.like(cb.lower(root.join(PlanItem_.item)
+                .get(Item_.label)), "%" + text.toLowerCase() + "%");
     }
 }

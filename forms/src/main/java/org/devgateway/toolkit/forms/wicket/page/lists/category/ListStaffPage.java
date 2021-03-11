@@ -40,11 +40,11 @@ public class ListStaffPage extends AbstractListCategoryPage<Staff> {
     }
 
     @Override
-    protected void onInitialize() {  
+    protected void addColumns() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("title", ListStaffPage.this)).getString()), "title",
                 "title"));
-        super.onInitialize();
+        super.addColumns();
     }
 
     @Override

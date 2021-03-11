@@ -31,14 +31,18 @@ public class ListTenderQuotationEvaluationPage extends ListAbstractTenderProcess
 
     @Override
     protected void onInitialize() {
-
         attachFm("tenderQuotationEvaluationsList");
+
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        super.addColumns();
 
         addTenderTitleColumn();
 
         addFileDownloadColumn();
-
-        super.onInitialize();
     }
 
     @Override

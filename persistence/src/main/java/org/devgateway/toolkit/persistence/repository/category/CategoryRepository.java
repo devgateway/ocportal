@@ -12,10 +12,9 @@
 package org.devgateway.toolkit.persistence.repository.category;
 
 import org.devgateway.toolkit.persistence.dao.categories.Category;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
+import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @author mpostelnicu
  */
 @Transactional
-public interface CategoryRepository<T extends Category> extends TextSearchableRepository<T, Long> {
+public interface CategoryRepository<T extends Category> extends BaseJpaRepository<T, Long> {
 
-    @Override
-    @Query("select cat from  #{#entityName} cat where lower(cat.label) like %:code%")
-    Page<T> searchText(@Param("code") String code, Pageable page);
+    Page<T> findByLabel(@Param("label") String label, Pageable page);
+
+    T findFirstByLabel(String label);
 }

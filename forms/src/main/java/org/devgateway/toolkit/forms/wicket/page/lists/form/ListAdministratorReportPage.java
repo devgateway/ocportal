@@ -31,16 +31,20 @@ public class ListAdministratorReportPage extends ListAbstractImplTenderProcessMa
     protected void onInitialize() {
         attachFm("administratorReportsList");
 
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
 //        columns.add(new TextFilteredBootstrapPropertyColumn<>(
 //                new Model<>((new StringResourceModel("title", ListAdministratorReportPage.this)).getString()),
 //                "tenderTitle", "tenderTitle"
 //        ));
         addTenderTitleColumn();
         addAuthorizePaymentColumn();
-
-        super.onInitialize();
     }
-
 
     @Override
     public JpaFilterState<AdministratorReport> newFilterState() {

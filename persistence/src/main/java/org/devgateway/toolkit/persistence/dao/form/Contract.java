@@ -7,6 +7,7 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
@@ -87,6 +88,10 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
 
+    @ManyToOne
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
+    private TargetGroup targetGroup;
+
     public BigDecimal getContractValue() {
         return contractValue;
     }
@@ -141,6 +146,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
 
     public void setContractDocs(final List<ContractDocument> contractDocs) {
         this.contractDocs = contractDocs;
+    }
+
+    public TargetGroup getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(TargetGroup targetGroup) {
+        this.targetGroup = targetGroup;
     }
 
     @Override
