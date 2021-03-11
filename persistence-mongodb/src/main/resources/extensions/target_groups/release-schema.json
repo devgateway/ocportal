@@ -32,7 +32,7 @@
     "Contract": {
       "properties": {
         "targetGroup": {
-          "title": "Target Group",
+          "title": "AGPO Category",
           "$ref": "#/definitions/TargetGroup"
         }
       }
@@ -40,7 +40,7 @@
     "Organization": {
       "properties": {
         "targetGroup": {
-          "title": "Target Group",
+          "title": "AGPO Category",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TargetGroup"

@@ -1,7 +1,7 @@
 # CABINET PAPER FORM PAGE
 - name: cabinetPaperForm
   enabled: yes
-  visible: yes
+  visible: no
 - name: cabinetPaperForm.cancel
   enabled: yes
   visible: yes
