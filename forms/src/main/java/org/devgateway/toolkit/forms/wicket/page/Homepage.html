@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12 homepage-intro">
             <p class="intro-text">
-                Select which Open Contracting Portal Module you would like to navigate to
+                <wicket:message key="selectModule" />
             </p>
             <p>
 
@@ -20,33 +20,32 @@
             <ul class="homepage-menu">
                 <li class="data-entry">
                     <a wicket:id="dataEntryLink" type="button" class="btn btn-text">
-                        Data Entry
+                        <wicket:message key="dataEntry" />
                     </a>
                 </li>
 
                 <li class="me-dash">
                     <a wicket:id="publicPortalLink" type="button" class="btn btn-text">
-                        M&E Dashboard
+                        <wicket:message key="publicPortal" />
                     </a>
                 </li>
 
                 <li class="corruption-dash">
                     <a type="button" class="btn btn-text" wicket:id="corruptionRiskDashboard">
-                        Corruption Risk Dashboard
+                        <wicket:message key="corruptionRiskDashboard" />
                     </a>
                 </li>
 
                 <li class="data-export">
                     <a wicket:id="dataExport" type="button" class="btn btn-text">
-                        Data Export
+                        <wicket:message key="dataExport" />
                     </a>
                 </li>
             </ul>
         </div>
 
         <div class="col-md-12 homepage-footer">
-            <p>The Open Contracting Portal in an initiative by the County Government of Makueni to ensure openness and
-                transparency of the procurement process</p>
+            <p><wicket:message key="footer" /></p>
         </div>
 
     </div>

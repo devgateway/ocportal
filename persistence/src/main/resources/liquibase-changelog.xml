@@ -12,7 +12,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="add-default-group" author="mpostelnicu">
         <preConditions onFail="CONTINUE">
@@ -1150,6 +1150,352 @@
             <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
             <column name="AUTHORITY" value="ROLE_PMC_ADMIN"/>
         </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-731" author="mpostelnicu">
+        <sql>update tender set tender_process_id = null where id=87066</sql>
+        <sql>update tender set tender_process_id = null where id=50732</sql>
+        <sql>update tender set tender_process_id = null where id=64385</sql>
+        <sql>update tender set tender_process_id = null where id=96667</sql>
+
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=91030</sql>
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=91024</sql>
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=95537</sql>
+        <sql>update tender_quotation_evaluation set tender_process_id = null where id=95100</sql>
+
+        <sql>update professional_opinion set tender_process_id = null where id = 66733</sql>
+        <sql>update professional_opinion set tender_process_id = null where id = 98641</sql>
+
+        <sql>update award_notification set tender_process_id = null where id = 42932</sql>
+        <sql>update award_notification set tender_process_id = null where id = 100943</sql>
+        <sql>update award_notification set tender_process_id = null where id = 64519</sql>
+
+        <sql>update award_acceptance set tender_process_id = null where id = 103163</sql>
+        <sql>update award_acceptance set tender_process_id = null where id = 99745</sql>
+
+        <sql>update contract set tender_process_id = null where id = 51303</sql>
+        <sql>update contract set tender_process_id = null where id = 27675</sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-739" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="PLAN_ITEM"/>
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+        <sql>
+            update plan_item set item_id = (select id from category where dtype='Item' and code='S000000319')
+            where id = 20195 and item_id is null
+        </sql>
+        <sql>
+            update plan_item set quantity = 3 where id = 16286 and quantity is null
+        </sql>
+        <sql>
+            delete from category where id = 8672 and dtype='Item' and label is null
+        </sql>
+        <sql>
+            ALTER TABLE category ALTER COLUMN label SET NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-725-sms-alerts" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY" />
+            <columnExists tableName="CATEGORY" columnName="code" />
+        </preConditions>
+
+        <update tableName="CATEGORY">
+            <column name="code" value="stalled"/>
+            <where>dtype='MEStatus' and label='Stalled'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="delayed"/>
+            <where>dtype='MEStatus' and label='Delayed'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="completedNotInUse"/>
+            <where>dtype='MEStatus' and label='Completed not in use'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="completeInUse"/>
+            <where>dtype='MEStatus' and label='Complete in use'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="ongoing"/>
+            <where>dtype='MEStatus' and label='Ongoing'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="notStarted"/>
+            <where>dtype='MEStatus' and label='Not started'</where>
+        </update>
+
+        <update tableName="CATEGORY">
+            <column name="code" value="atRisk"/>
+            <where>dtype='PMCStatus' and label='At Risk'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="onTrack"/>
+            <where>dtype='PMCStatus' and label='On Track'</where>
+        </update>
+        <update tableName="CATEGORY">
+            <column name="code" value="offTrack"/>
+            <where>dtype='PMCStatus' and label='Off Track'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="OCMAKU-725-sms-alerts-2" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="approved_report" />
+        </preConditions>
+        <sql><![CDATA[
+            ALTER TABLE approved_report
+            ADD CONSTRAINT non_null_report
+            CHECK ((me_report_id IS NULL) != (pmc_report_id IS NULL));
+        ]]></sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-727-rename" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+        </preConditions>
+
+        <update tableName="CATEGORY">
+            <column name="label" value="Completed to scope"/>
+            <where>dtype='MEStatus' and label='Completed not in use'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="OCMAKU-776-covid-remove-roads" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender"/>
+            <tableExists tableName="tender_process"/>
+            <tableExists tableName="project"/>
+            <tableExists tableName="procurement_plan"/>
+            <tableExists tableName="category"/>
+        </preConditions>
+        <sql>update tender set procurement_method_rationale_id = null where
+            procurement_method_rationale_id = (select id from category where label='COVID-19' and
+            dtype='ProcurementMethodRationale') and id in (select t.id from tender t, tender_process tp, project p,
+            procurement_plan pp, category c
+            where t.tender_process_id=tp.id and tp.project_id = p.id and p.procurement_plan_id=pp.id and
+            pp.department_id =c.id and c.dtype='Department' and c.label='Roads, Transport, Energy and Public Works')
+        </sql>
+
+    </changeSet>
+
+    <changeSet id="OCMAKU-770" author="mpostelnicu">
+        <addNotNullConstraint tableName="administrator_report" columnName="status"/>
+        <addNotNullConstraint tableName="award_acceptance" columnName="status"/>
+        <addNotNullConstraint tableName="award_notification" columnName="status"/>
+        <addNotNullConstraint tableName="cabinet_paper" columnName="status"/>
+        <addNotNullConstraint tableName="contract" columnName="status"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="status"/>
+        <addNotNullConstraint tableName="mereport" columnName="status"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="status"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="status"/>
+        <addNotNullConstraint tableName="procurement_plan" columnName="status"/>
+        <addNotNullConstraint tableName="professional_opinion" columnName="status"/>
+        <addNotNullConstraint tableName="project" columnName="status"/>
+        <addNotNullConstraint tableName="tender" columnName="status"/>
+        <addNotNullConstraint tableName="tender_process" columnName="status"/>
+        <addNotNullConstraint tableName="tender_quotation_evaluation" columnName="status"/>
+    </changeSet>
+    <changeSet id="OCMAKU-786" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="administrator_report"/>
+            <tableExists tableName="pmcreport"/>
+            <tableExists tableName="inspection_report"/>
+            <tableExists tableName="mereport"/>
+            <tableExists tableName="payment_voucher"/>
+        </preConditions>
+
+        <sql>update pmcreport as r set contract_id = c.id from contract as c
+            where r.tender_process_id =c.tender_process_id and r.contract_id is null;
+        </sql>
+
+        <addNotNullConstraint tableName="administrator_report" columnName="contract_id"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="contract_id"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="contract_id"/>
+        <addNotNullConstraint tableName="mereport" columnName="contract_id"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="contract_id"/>
+
+        <addNotNullConstraint tableName="administrator_report" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="pmcreport" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="inspection_report" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="mereport" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="payment_voucher" columnName="tender_process_id"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-785-tp" author="mpostelnicu">
+        <sqlFile path="sql/OCMAKU-785-cleanup-tp.sql"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-785-constraints" author="mpostelnicu">
+        <addNotNullConstraint tableName="award_acceptance" columnName="tender_process_id"/>
+<!--        <addNotNullConstraint tableName="award_acceptance_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="award_notification" columnName="tender_process_id"/>
+        <!--        <addNotNullConstraint tableName="award_notification_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="contract" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="professional_opinion" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender_quotation_evaluation" columnName="tender_process_id"/>
+        <addNotNullConstraint tableName="tender_process" columnName="project_id"/>
+        <addNotNullConstraint tableName="project" columnName="procurement_plan_id"/>
+        <addNotNullConstraint tableName="cabinet_paper" columnName="procurement_plan_id"/>
+        <addNotNullConstraint tableName="person" columnName="username"/>
+        <addNotNullConstraint tableName="person" columnName="email"/>
+        <addNotNullConstraint tableName="person" columnName="first_name"/>
+        <addNotNullConstraint tableName="person" columnName="last_name"/>
+        <addNotNullConstraint tableName="person" columnName="password"/>
+        <!--        <addNotNullConstraint tableName="bid" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="contract_document" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="feedback_message" columnName="email"/>
+        <addNotNullConstraint tableName="feedback_message" columnName="name"/>
+        <addNotNullConstraint tableName="feedback_message" columnName="comment"/>
+        <addNotNullConstraint tableName="file_metadata" columnName="content_id"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="name"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="start_date"/>
+        <addNotNullConstraint tableName="fiscal_year" columnName="end_date"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="amount_budgeted"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="department_id"/>
+        <addNotNullConstraint tableName="fiscal_year_budget" columnName="fiscal_year_id"/>
+        <!--        <addNotNullConstraint tableName="plan_item" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="pmcmember" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="pmcnotes" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="private_sector_request" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="procurement_plan" columnName="department_id"/>
+        <addNotNullConstraint tableName="procurement_plan" columnName="fiscal_year_id"/>
+        <addNotNullConstraint tableName="professional_opinion_item" columnName="parent_id"/>
+        <!--        <addNotNullConstraint tableName="purch_requisition" columnName="parent_id"/>-->
+        <!--        <addNotNullConstraint tableName="purchase_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="status_changed_comment" columnName="status"/>
+        <!--        <addNotNullConstraint tableName="tender_item" columnName="parent_id"/>-->
+        <addNotNullConstraint tableName="tender_process" columnName="project_id"/>
+    </changeSet>
+
+    <changeSet id="OCMAKU-814-remove-projects" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="tender_process" columnName="procurement_plan_id"/>
+        </preConditions>
+        <sql>
+            update tender_process set procurement_plan_id = project.procurement_plan_id from project
+            where tender_process.project_id = project.id;
+        </sql>
+        <sql>
+            alter table tender_process alter column project_id drop not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-814-remove-projects-2" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="professional_opinion_item" />
+        </preConditions>
+        <sql>
+            alter table professional_opinion_item alter column parent_id drop not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-1" author="mpostelnicu">
+        <sql>alter table purch_requisition rename column parent_id to old_parent_id</sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-2" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="purchase_requisition_group"/>
+        </preConditions>
+        <sql>insert into purchase_requisition_group (id, tender_process_id,
+            created_by, created_date, last_modified_by, last_modified_date, status, approved_date,
+            purchase_request_number) (select nextval('hibernate_sequence'), id,
+            created_by, created_date, last_modified_by, last_modified_date, status, approved_date,
+            purchase_request_number from tender_process);
+        </sql>
+        <sql>
+            update purch_requisition set parent_id = purchase_requisition_group.id
+            from purchase_requisition_group where purch_requisition.old_parent_id=
+            purchase_requisition_group.tender_process_id;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-824-remove-purchase-reqs-3" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="purchase_requisition_group"/>
+        </preConditions>
+        <addNotNullConstraint tableName="purchase_requisition_group" columnName="tender_process_id"/>
+        <sql>alter table tender_process alter column status drop not null;</sql>
+        <sql>alter table tender_process alter column procurement_plan_id set not null;</sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-842" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Satisfactory"/>
+            <column name="DTYPE" value="InspectionReportOutcome"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="Unsatisfactory"/>
+            <column name="DTYPE" value="InspectionReportOutcome"/>
+        </insert>
+    </changeSet>
+    <changeSet id="OCMAKU-896" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <foreignKeyConstraintExists foreignKeyName="fk1thmycnkpijd9t97s05q88ohy"/>
+        </preConditions>
+        <sql>
+            alter table contract drop constraint fk1thmycnkpijd9t97s05q88ohy;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-874" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <sql><![CDATA[
+            UPDATE category
+            SET code=REPLACE(REPLACE(code, CHR(10), ' '), CHR(13), '')
+            WHERE dtype = 'Item'
+              AND STRPOS(code, CHR(10)) > 0;
+
+            UPDATE category
+            SET label=REPLACE(REPLACE(label, CHR(10), ' '), CHR(13), '')
+            WHERE dtype = 'Item'
+              AND STRPOS(label, CHR(10)) > 0;
+        ]]></sql>
+    </changeSet>
+    <changeSet id="OCMAKU-916-insert-ward-function" author="mpostelnicu">
+        <sql>
+            CREATE FUNCTION insertWard(text, text) RETURNS void
+            AS '
+            INSERT INTO category (id, label, subcounty_id, dtype) VALUES (nextval(''hibernate_sequence''),
+            $1, (select id from category where dtype = ''Subcounty'' and label = $2), ''Ward'');
+            ' LANGUAGE SQL VOLATILE;
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-953" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="category" columnName="target_group_id"/>
+            <columnExists tableName="contract" columnName="target_group_id"/>
+            <tableExists tableName="category_target_groups"/>
+        </preConditions>
+        <sql><![CDATA[
+            INSERT INTO category_target_groups
+            SELECT id, target_group_id
+            FROM category
+            WHERE dtype = 'Supplier'
+              AND target_group_id IS NOT NULL;
+
+            UPDATE contract
+            SET target_group_id=s.target_group_id
+            FROM category s
+            WHERE contract.awardee_id = s.id
+              AND contract.target_group_id IS NULL;
+
+            ALTER TABLE category
+                DROP COLUMN target_group_id;
+        ]]></sql>
     </changeSet>
 
 </databaseChangeLog>

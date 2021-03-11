@@ -7,8 +7,10 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.CascadeType;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
  * @since 2019-04-01
  */
 @MappedSuperclass
+@Audited
 public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity
         implements Labelable, SingleFileMetadatable {
     @ExcelExport(useTranslation = true,

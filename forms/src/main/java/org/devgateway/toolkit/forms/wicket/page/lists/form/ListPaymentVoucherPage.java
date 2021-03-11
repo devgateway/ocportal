@@ -29,11 +29,17 @@ public class ListPaymentVoucherPage extends ListAbstractImplTenderProcessMakueni
 
     @Override
     protected void onInitialize() {
-        addTenderTitleColumn();
+        attachFm("paymentVouchersList");
 
         super.onInitialize();
     }
 
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
+        addTenderTitleColumn();
+    }
 
     @Override
     public JpaFilterState<PaymentVoucher> newFilterState() {

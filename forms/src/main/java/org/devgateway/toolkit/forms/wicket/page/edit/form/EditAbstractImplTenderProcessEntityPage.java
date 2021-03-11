@@ -30,14 +30,12 @@ public abstract class EditAbstractImplTenderProcessEntityPage<T extends Abstract
 
         editForm.replace(abstractImplExtraFields);
 
-        addFormDocs().required();
+        addFormDocs();
         submitAndNext.setVisibilityAllowed(false);
     }
 
     @Override
-    protected void beforeSaveEntity(T saveable) {
-        super.beforeSaveEntity(saveable);
-        saveable.setContract(saveable.getTenderProcess().getSingleContract());
+    protected PageParameters parametersAfterSubmitAndNext() {
+        return getPageParameters();
     }
-
 }

@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.service.category;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.StatusChangedComment;
 import org.devgateway.toolkit.persistence.dao.categories.ProjectClosureHandover;
@@ -24,6 +25,7 @@ import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -195,6 +197,11 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
             pmc = pmcReportService.newInstance();
             Tender tender = loadObjectById(pmco.getTenderId(), tenderService);
             pmc.setTenderProcess(tender.getTenderProcess());
+            if (ObjectUtils.isEmpty(tender.getTenderProcess().getContract())
+                    || !DBConstants.Status.APPROVED.equals(tender.getTenderProcess().getSingleContract().getStatus())) {
+                throw new RuntimeException("Cannot create a PMC Report inside a Tender Process with no "
+                        + "approved Contract");
+            }
             pmc.setCreatedBy(person.getUsername());
             pmc.setCreatedDate(ZonedDateTime.now());
         }
@@ -264,8 +271,9 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
     @Override
     public List<PMCReportOffline> getPMCReports(Long userId) {
         Person user = loadPersonById(userId, personService);
-        return pmcReportService.getPMCReportsForDepartments(
-                user.getDepartments()).stream().map(this::convertToOffline).collect(Collectors.toList());
+        return pmcReportService.getPMCReportsCreatedBy(user.getUsername()).stream()
+                .map(this::convertToOffline)
+                .collect(Collectors.toList());
     }
     
 }

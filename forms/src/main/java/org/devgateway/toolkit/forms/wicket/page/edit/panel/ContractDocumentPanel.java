@@ -40,17 +40,10 @@ public class ContractDocumentPanel extends ListViewSectionPanel<ContractDocument
     public void populateCompoundListItem(final ListItem<ContractDocument> item) {
         Select2ChoiceBootstrapFormComponent<ContractDocumentType> contractDocumentType = ComponentUtil
                 .addSelect2ChoiceField(item, "contractDocumentType", contractDocumentTypeService);
-        contractDocumentType.required();
         item.add(contractDocumentType);
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         formDocs.maxFiles(1);
-        formDocs.required();
         item.add(formDocs);
-    }
-
-    @Override
-    protected boolean filterListItem(final ContractDocument contractDocuments) {
-        return true;
     }
 }

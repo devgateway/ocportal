@@ -1,9 +1,7 @@
 package org.devgateway.ocds.web.rest.controller.flags;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
-import org.devgateway.ocds.persistence.mongo.spring.json.Views;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -35,10 +33,10 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public abstract class AbstractFlagReleaseSearchController extends AbstractFlagController {
 
 
-    @JsonView(Views.Internal.class)
-    public List<Document> releaseFlagSearch(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+    protected List<Document> releaseFlagSearch(String flagProperty,
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
         Aggregation agg = newAggregation(
-                match(where("flags.flaggedStats.0").exists(true).and(getFlagProperty()).is(true)
+                match(where("flags.flaggedStats.0").exists(true).and(flagProperty).is(true)
                         .andOperator(getYearDefaultFilterCriteria(filter,
                                 MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
                 project("ocid", TENDER_PROCURING_ENTITY_NAME, TENDER_PERIOD, "flags",
@@ -54,10 +52,10 @@ public abstract class AbstractFlagReleaseSearchController extends AbstractFlagCo
         return releaseAgg(agg);
     }
 
-    @JsonView(Views.Internal.class)
-    public List<Document> releaseFlagCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+    protected List<Document> releaseFlagCount(String flagProperty,
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
         Aggregation agg = newAggregation(
-                match(where("flags.flaggedStats.0").exists(true).and(getFlagProperty()).is(true)
+                match(where("flags.flaggedStats.0").exists(true).and(flagProperty).is(true)
                         .andOperator(getYearDefaultFilterCriteria(filter,
                                 MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
                 group().count().as("count")

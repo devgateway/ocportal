@@ -29,11 +29,14 @@
                             <button type="button" class="btn btn-edit" wicket:id="editProcurementPlan"></button>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <h5 wicket:id="amountRemaining"></h5>
+                    </div>
                 </div>
 
-                <div class="row header-section">
+                <div class="row header-section" wicket:id="cabinetMinisterialPaperRow">
                     <div class="col-md-6">
-                        <h5><span wicket:id="fiscalYear"></span>&nbsp;-&nbsp;Cabinet / Ministerial Paper</h5>
+                        <h5><span wicket:id="cabinetMinisterialPaper"></span></h5>
                     </div>
                     <div class="col-md-6">
                         <div class="header-buttons">
@@ -43,10 +46,9 @@
                     </div>
                 </div>
 
-                <div class="row header-section">
+                <div class="row header-section" wicket:enclosure="budget">
                     <div class="col-md-6">
-                        <h5><span wicket:id="fiscalYear2"></span>&nbsp;-&nbsp;Fiscal Year Budget <span
-                                wicket:id="fiscalBudget"></span></h5>
+                        <h5><span wicket:id="budget"></span></h5>
                     </div>
                     <div class="col-md-6">
                         <div class="header-buttons">
@@ -60,58 +62,9 @@
             </div>
         </div>
 
-        <!-- start: search panel -->
-        <div class="search-panel">
+        <div wicket:id="projectOverview"/>
+        <div wicket:id="tenderProcessOverview"/>
 
-            <!-- start: search panel title -->
-            <div class="row search-panel-header">
-                <div class="col-md-8">
-                    <h3>Ministry Projects</h3>
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-add" wicket:id="addNewProject"></button>
-                </div>
-            </div>
-            <!-- start: search panel title -->
-
-            <div class="search-form">
-                <div class="col-md-9 no-padding">
-                    <input tabindex="1" class="form-control project-search" wicket:id="searchBox"
-                           placeholder="Search by Project Title"/>
-                </div>
-                <div class="col-md-3 no-padding">
-
-                    <select wicket:id="years" class="btn btn-default project-year"></select>
-
-                    <form wicket:id="excelForm">
-                        <button wicket:id="excelButton" type="button" class="btn btn-default download"></button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="status-bar department row">
-            <div class="col-md-12">
-              <span class="status approved">
-              Approved
-              </span>
-                <span class="status terminated">
-              Terminated
-              </span>
-                <span class="status submitted">
-              Submitted
-              </span>
-                <span class="status draft">
-              Draft
-              </span>
-            </div>
-        </div>
-
-        <div class="ministry" wicket:id="projectsOverview"></div>
-
-        <div wicket:id="noData" class="row col-md-offset-5 col-col-md-2">
-            <h3>NO DATA</h3>
-        </div>
     </div>
 </wicket:extend>
 </body>

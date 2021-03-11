@@ -14,6 +14,7 @@ package org.devgateway.toolkit.forms.wicket.page.user;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -57,6 +58,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.devgateway.toolkit.persistence.dao.DBConstants.PASSWORD_PATTERN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_ROLES;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
@@ -117,12 +120,11 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
     @Override
     protected void onInitialize() {
-        final Person person = FormSecurityUtil.getCurrentAuthenticatedPerson();
-
-        if (!FormSecurityUtil.isCurrentUserAdmin() && !FormSecurityUtil.isCurrentUserPmcAdmin()) {
-            if (person.getId() != getPageParameters().get(WebConstants.PARAM_ID).toLong()) {
-                setResponsePage(getApplication().getHomePage());
-            }
+        if (!isAuthorized()) {
+            getApplication()
+                    .getSecuritySettings()
+                    .getUnauthorizedComponentInstantiationListener()
+                    .onUnauthorizedInstantiation(this);
         }
 
         super.onInitialize();
@@ -139,7 +141,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
             username.getField().add(new UniqueUsernameValidator());
         }
         editForm.add(username);
-        MetaDataRoleAuthorizationStrategy.authorize(username, Component.ENABLE, ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(username, Component.ENABLE, ROLE_PMC_ADMIN);
 
         firstName = ComponentUtil.addTextField(editForm, "firstName");
         firstName.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
@@ -162,7 +164,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
 
         departments = ComponentUtil.addSelect2MultiChoiceField(editForm, "departments", departmentService);
         departments.required();
-        FormSecurityUtil.authorizeEnable(departments, ROLE_ADMIN, ROLE_PMC_ADMIN);
+        FormSecurityUtil.authorizeEnable(departments, ROLE_PMC_ADMIN);
 
         roles = ComponentUtil.addSelect2MultiChoiceField(editForm, "roles", roleService);
         roles.getField().add(new RoleAjaxFormComponentUpdatingBehavior("change"));
@@ -196,19 +198,19 @@ public class EditUserPage extends AbstractEditPage<Person> {
         if (editForm.getModelObject().getRoles() != null) {
             final List<String> authority = editForm.getModelObject().getRoles().stream()
                     .map(Role::getAuthority)
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
             if (authority.contains(ROLE_ADMIN)) {
                 departments.setVisibilityAllowed(false);
             }
         }
-        FormSecurityUtil.authorizeRender(roles, ROLE_ADMIN, ROLE_PMC_ADMIN);
+        FormSecurityUtil.authorizeRender(roles, ROLE_PMC_ADMIN);
 
         enabled = ComponentUtil.addCheckToggle(editForm, "enabled");
-        MetaDataRoleAuthorizationStrategy.authorize(enabled, Component.RENDER, ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(enabled, Component.RENDER, ROLE_PMC_ADMIN);
 
         changePasswordNextSignIn = ComponentUtil.addCheckToggle(editForm, "changePasswordNextSignIn");
-        MetaDataRoleAuthorizationStrategy.authorize(changePasswordNextSignIn, Component.RENDER, ROLE_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(changePasswordNextSignIn, Component.RENDER, ROLE_PMC_ADMIN);
 
         changeProfilePassword = new CheckBoxToggleBootstrapFormComponent("changeProfilePassword") {
             @Override
@@ -234,7 +236,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
         plainPasswordCheck.required().setVisibilityAllowed(false);
         plainPasswordCheck.getField().setResetPassword(false);
 
-        if (FormSecurityUtil.isCurrentUserAdmin() && idPerson.isNull()) {
+        if ((FormSecurityUtil.isCurrentUserAdmin() || FormSecurityUtil.isCurrentUserPmcAdmin()) && idPerson.isNull()) {
             // hide the change password checkbox and set it's model to true
             editForm.getModelObject().setChangeProfilePassword(true);
             changeProfilePassword.setVisibilityAllowed(false);
@@ -252,39 +254,71 @@ public class EditUserPage extends AbstractEditPage<Person> {
         MetaDataRoleAuthorizationStrategy.authorize(deleteButton, Component.RENDER, ROLE_ADMIN);
     }
 
+    private boolean isAuthorized() {
+        if (FormSecurityUtil.isCurrentUserAdmin()) {
+            return true;
+        }
+
+        final Person principal = FormSecurityUtil.getCurrentAuthenticatedPerson();
+        if (principal.getId().equals(entityId)) {
+            return true;
+        }
+
+        if (FormSecurityUtil.isCurrentUserPmcAdmin()) {
+            if (entityId != null) {
+                Person person = jpaService.findById(entityId).orElse(null);
+                return person != null && !intersection(PMC_ROLES, getRolesAsStrings(person)).isEmpty();
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<String> getRolesAsStrings(Person person) {
+        return person.getRoles().stream()
+                .map(Role::getAuthority)
+                .collect(toList());
+    }
+
+    @Override
+    protected void beforeSaveEntity(Person person) {
+        super.beforeSaveEntity(person);
+
+        // encode the password
+        if (person.getChangeProfilePassword()) {
+            person.setPassword(passwordEncoder.encode(plainPassword.getField().getModelObject()));
+        }
+
+        // user just changed his password so don't force him to change it again next time
+        if (isChangePassPage()) {
+            person.setChangePasswordNextSignIn(false);
+        }
+    }
+
+    @Override
+    protected void afterSaveEntity(Person person) {
+        super.afterSaveEntity(person);
+
+        updateCurrentAuthenticatedUserData(person);
+
+        // Is this a new user? Send a notification email.
+        if (entityId == null) {
+            sendEmailService.sendNewAccountNotification(person, plainPassword.getField().getModelObject());
+        }
+    }
+
     @Override
     public SaveEditPageButton getSaveEditPageButton() {
         return new SaveEditPageButton("save", new StringResourceModel("save", EditUserPage.this, null)) {
-            private static final long serialVersionUID = 5214537995514151323L;
 
             @Override
-            protected void onSubmit(final AjaxRequestTarget target) {
-                super.onSubmit(target);
-
-                final Person person = editForm.getModelObject();
-                // encode the password
-                if (person.getChangeProfilePassword()) {
-                    person.setPassword(passwordEncoder.encode(plainPassword.getField().getModelObject()));
-                }
-
-                // user just changed his password so don't force him to change it again next time
-                if (isChangePassPage()) {
-                    person.setChangePasswordNextSignIn(false);
-                }
-
-                Person saved = jpaService.save(person);
-                updateCurrentAuthenticatedUserData(saved);
-
-                // Is this a new user? Send a notification email.
-                if (entityId == null) {
-                    sendEmailService.sendNewAccountNotification(person, plainPassword.getField().getModelObject());
-                }
-
-
+            protected Class<? extends Page> getResponsePage() {
                 if (!FormSecurityUtil.isCurrentUserAdmin()) {
-                    setResponsePage(Homepage.class);
+                    return Homepage.class;
                 } else {
-                    setResponsePage(listPageClass);
+                    return listPageClass;
                 }
             }
         };
@@ -328,7 +362,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
         protected void onUpdate(final AjaxRequestTarget target) {
             final List<String> authority = roles.getModelObject().stream()
                     .map(Role::getAuthority)
-                    .collect(Collectors.toList());
+                    .collect(toList());
 
             if (authority.contains(ROLE_ADMIN)) {
                 departments.setVisibilityAllowed(false);

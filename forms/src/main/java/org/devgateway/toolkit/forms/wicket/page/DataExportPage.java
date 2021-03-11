@@ -8,7 +8,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -149,7 +149,7 @@ public class DataExportPage extends BasePage {
             add(download);
 
             final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton",
-                    new Model<>("Data Export"),
+                    new StringResourceModel("export", this),
                     Buttons.Type.Success) {
                 @Override
                 protected void onConfigure() {
@@ -167,7 +167,7 @@ public class DataExportPage extends BasePage {
                             procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
 
                     if (procurementPlan == null) {
-                        feedbackPanel.error("There is no Procurement Plan for the selected filters!");
+                        feedbackPanel.error(getString("procurementPlan.notFound"));
                     } else {
                         // initiate the file download
                         download.initiate(target);

@@ -31,12 +31,13 @@ import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -106,11 +107,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent().getParent().getParent().getParent().getParent();
-        if (form != null) {
-            form.add(new ListItemsValidator());
-        }
+        final Form<?> form = findParent(Form.class);
+        form.add(new ListItemsValidator());
     }
 
     @Override
@@ -132,7 +130,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
             protected void onSubmit(final AjaxRequestTarget target) {
                 List<TenderItem> tenderItems = null;
                 if (!item.isNew()) {
-                    tenderItems = tenderItemService.findByPurchaseItem(item);
+                    tenderItems = tenderItemService.findByPurchaseItemIn(Arrays.asList(item));
                 }
 
                 if (!ObjectUtils.isEmpty(tenderItems)) {
@@ -163,7 +161,6 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                 };
         quantity.decimal();
         quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        quantity.required();
         item.add(quantity);
 
         unit = new GenericSleepFormComponent<>("unit",
@@ -186,7 +183,6 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                 };
         amount.decimal();
         amount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        amount.required();
         item.add(amount);
 
         totalCost = new GenericSleepFormComponent<>("totalCost",
@@ -201,12 +197,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
     }
 
     @Override
-    protected boolean filterListItem(final PurchaseItem purchaseItem) {
-        return true;
-    }
-
-    @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<PurchaseItem> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<PurchaseItem> compoundModel) {
         return new PurchaseItemHeaderPanel(id, compoundModel);
     }
 
@@ -220,10 +211,10 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
             super.onInitialize();
 
             // filtered the list based on form Procurement Plan
-            final TenderProcess parentObject =
-                    (TenderProcess) PurchaseItemPanel.this.getParent().getParent().getParent()
+            final PurchaseRequisitionGroup parentObject =
+                    (PurchaseRequisitionGroup) PurchaseItemPanel.this.getParent().getParent().getParent()
                             .getParent().getParent().getDefaultModelObject();
-            final List<PlanItem> planItems = parentObject.getProject().getProcurementPlan().getPlanItems();
+            final List<PlanItem> planItems = parentObject.getProcurementPlan().getPlanItems();
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",
@@ -233,7 +224,6 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                             target.add(unit);
                         }
                     };
-            planItem.required();
             planItem.add(new StopEventPropagationBehavior());
 
             final Component description = ComponentUtil.addTextField(this, "description");

@@ -1,14 +1,22 @@
 package org.devgateway.toolkit.persistence.service;
 
+import com.google.common.collect.ImmutableSet;
+import net.sf.ehcache.CacheManager;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
+import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +27,9 @@ import java.util.Set;
  * @since 2019-03-04
  */
 public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializable> implements BaseJpaService<T> {
+
+    @Autowired
+    private Validator validator;
 
     @Override
     public List<T> findAll() {
@@ -94,27 +105,58 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     @Override
     @Transactional
     public <S extends T> S save(final S entity) {
-        return repository().save(entity);
+        assertEntityIsValid(entity);
+        S save = repository().save(entity);
+        flushRelatedCollectionCaches();
+        return save;
     }
 
     @Override
     @Transactional(readOnly = false)
     public <S extends T> List<S> saveAll(final Iterable<S> entities) {
-        return repository().saveAll(entities);
+        for (S entity : entities) {
+            assertEntityIsValid(entity);
+        }
+        List<S> s = repository().saveAll(entities);
+        flushRelatedCollectionCaches();
+        return s;
     }
 
     @Override
     @Transactional
     public <S extends T> S saveAndFlush(final S entity) {
-        return repository().saveAndFlush(entity);
+        assertEntityIsValid(entity);
+        S s = repository().saveAndFlush(entity);
+        flushRelatedCollectionCaches();
+        return s;
+    }
+
+    private <S extends T> void assertEntityIsValid(S entity) {
+        Set<ConstraintViolation<S>> violations = validator.validate(entity, Default.class, HighLevel.class);
+        if (!violations.isEmpty()) {
+            throw new InvalidObjectException(new HashSet<>(violations));
+        }
     }
 
     @Override
     @Transactional
     public void delete(final T entity) {
         repository().delete(entity);
+        flushRelatedCollectionCaches();
+    }
+
+    @Override
+    public Collection<String> getRelatedCollectionCaches() {
+        return null;
+    }
+
+    @Override
+    public void flushRelatedCollectionCaches() {
+        CacheManager cm = CacheManager.getInstance();
+        if (cm != null && getRelatedCollectionCaches() != null) {
+            getRelatedCollectionCaches().forEach(cm::clearAllStartingWith);
+        }
     }
 
     protected abstract BaseJpaRepository<T, Long> repository();
-
 }

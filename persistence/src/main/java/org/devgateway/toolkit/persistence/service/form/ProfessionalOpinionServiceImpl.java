@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-04-24
  */
 @Service
-@Transactional(readOnly = true)
-public class ProfessionalOpinionServiceImpl extends AbstractMakueniEntityServiceImpl<ProfessionalOpinion>
+@Transactional
+public class ProfessionalOpinionServiceImpl extends AbstractTenderProcessEntityServiceImpl<ProfessionalOpinion>
         implements ProfessionalOpinionService {
 
     @Autowired

@@ -4,10 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.ArrayUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.Form;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
+import org.devgateway.toolkit.persistence.validator.Severity;
+import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.devgateway.toolkit.persistence.validator.validators.UniqueTenderProcessEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -18,10 +24,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,8 +42,13 @@ import java.util.List;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "tender_process_id")})
+@Table(indexes = {@Index(columnList = "tender_process_id")},
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form(featureName = "contractForm")
+@UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
+        message = "{org.devgateway.toolkit.persistence.dao.form.UniqueContract.message}")
 public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
@@ -57,9 +70,15 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Procuring Entity Name")
-    @ManyToOne
-    private ProcuringEntity procuringEntity;
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Subcounty> subcounties;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Wards")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Ward> wards = new ArrayList<>();
 
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Contract Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -67,6 +86,10 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
+
+    @ManyToOne
+    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    private TargetGroup targetGroup;
 
     public BigDecimal getContractValue() {
         return contractValue;
@@ -116,20 +139,20 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
         this.referenceNumber = referenceNumber;
     }
 
-    public ProcuringEntity getProcuringEntity() {
-        return procuringEntity;
-    }
-
-    public void setProcuringEntity(final ProcuringEntity procuringEntity) {
-        this.procuringEntity = procuringEntity;
-    }
-
     public List<ContractDocument> getContractDocs() {
         return contractDocs;
     }
 
     public void setContractDocs(final List<ContractDocument> contractDocs) {
         this.contractDocs = contractDocs;
+    }
+
+    public TargetGroup getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(TargetGroup targetGroup) {
+        this.targetGroup = targetGroup;
     }
 
     @Override
@@ -146,13 +169,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     public boolean isTerminatedWithImplementation() {
         return PersistenceUtil.checkTerminated(
-                ArrayUtils.add(getDirectChildrenEntitiesNotNull().toArray(new Statusable[]{}), this));
+                ArrayUtils.add(getDirectChildrenEntities().toArray(new Statusable[]{}), this));
     }
 
-    @Override
+
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
+    @Override
     protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
         children.addAll(getTenderProcessNotNull().getAdministratorReports());
@@ -161,5 +185,31 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
         children.addAll(getTenderProcessNotNull().getMeReports());
         children.addAll(getTenderProcessNotNull().getPaymentVouchers());
         return children;
+    }
+
+    @Override
+    public Class<?> getNextForm() {
+        return null;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return false;
+    }
+
+    public List<Subcounty> getSubcounties() {
+        return subcounties;
+    }
+
+    public void setSubcounties(List<Subcounty> subcounties) {
+        this.subcounties = subcounties;
+    }
+
+    public List<Ward> getWards() {
+        return wards;
+    }
+
+    public void setWards(List<Ward> wards) {
+        this.wards = wards;
     }
 }

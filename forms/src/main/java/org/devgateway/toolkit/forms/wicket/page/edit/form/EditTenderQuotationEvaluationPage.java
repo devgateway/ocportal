@@ -6,10 +6,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
@@ -44,19 +42,14 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("tenderQuotationEvaluationForm");
         super.onInitialize();
 
-        ComponentUtil.addDateField(editForm, "closingDate").required();
+        ComponentUtil.addDateField(editForm, "closingDate");
         editForm.add(new BidPanel("bids"));
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         editForm.add(formDocs);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return editForm.getModelObject().getTenderProcess().getSingleProfessionalOpinion();
     }
 
     @Override
@@ -83,22 +76,5 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
         final TenderProcess tenderProcess = tenderQuotationEvaluation.getTenderProcess();
         tenderProcess.removeTenderQuotationEvaluation(tenderQuotationEvaluation);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return EditProfessionalOpinionPage.class;
-    }
-
-    @Override
-    protected PageParameters parametersAfterSubmitAndNext() {
-        final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getProfessionalOpinion())) {
-            pp.set(WebConstants.PARAM_ID,
-                    PersistenceUtil.getNext(editForm.getModelObject().getTenderProcess()
-                            .getProfessionalOpinion()).getId());
-        }
-
-        return pp;
     }
 }

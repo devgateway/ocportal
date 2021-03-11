@@ -6,6 +6,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIc
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -16,14 +17,21 @@ import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
+import org.devgateway.toolkit.forms.fm.DgFmAttachingVisitor;
+import org.devgateway.toolkit.forms.fm.DgFmFormComponentSubject;
 import org.devgateway.toolkit.forms.util.JQueryUtil;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
@@ -33,10 +41,12 @@ import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditStatusEntityPage;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +60,36 @@ import java.util.Optional;
  */
 
 public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & ListViewItem,
-        PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> {
+        PARENT extends AbstractAuditableEntity> extends CompoundSectionPanel<List<T>> implements
+        DgFmFormComponentSubject {
     private static final Logger logger = LoggerFactory.getLogger(ListViewSectionPanel.class);
+
+    private static final MetaDataKey<Boolean> HEADER = new MetaDataKey<Boolean>() { };
+
+    @SpringBean
+    protected DgFmService fmService;
+
+    private ListItemsValidator listItemsValidator;
+    private AjaxLink<Void> showHideAllEntries;
+
+    @Override
+    public DgFmService getFmService() {
+        return fmService;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isFmEnabled(super::isEnabled);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isFmVisible(super::isVisible);
+    }
+
+    protected WebMarkupContainer listWrapper;
+
+    protected ListView<T> listView;
 
     public static final String ID_ACCORDION = "accordion";
 
@@ -59,14 +97,18 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
     public static final String ID_ACCORDION_TOGGLE = "accordionToggle";
 
-    protected WebMarkupContainer listWrapper;
-
-    protected ListView<T> listView;
-
     protected NotificationPanel addButtonNotificationPanel;
+
+    private final Boolean foldable;
 
     public ListViewSectionPanel(final String id) {
         super(id);
+        this.foldable = true;
+    }
+
+    public ListViewSectionPanel(final String id, final Boolean foldable) {
+        super(id);
+        this.foldable = foldable;
     }
 
     protected void checkAndSendEventForDisableEditing(IEventSink sink) {
@@ -77,6 +119,21 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         }
     }
 
+    protected class ListItemsValidator implements IFormValidator {
+        @Override
+        public FormComponent<?>[] getDependentFormComponents() {
+            return new FormComponent[0];
+        }
+
+        @Override
+        public void validate(Form<?> form) {
+            List<T> bids = ListViewSectionPanel.this.getModelObject();
+            if (bids.size() == 0 && isFmMandatory()) {
+                form.error(getString("atLeastOneItem"), Collections.singletonMap("objectType",
+                        ListViewSectionPanel.this.getClass().getSimpleName()));
+            }
+        }
+    }
 
     protected void addErrorAndRefreshComponents(List<GenericBootstrapFormComponent<?, ?>> components, String key) {
         components.stream().map(GenericBootstrapFormComponent::getField)
@@ -90,15 +147,26 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         listView.forEach(c -> ret.add((GenericBootstrapFormComponent<?, ?>) c.get(name)));
         return ret;
     }
-    
+
+    protected void addMandatoryValidator() {
+        final Form<?> form = findParent(Form.class);
+        listItemsValidator = new ListItemsValidator();
+        form.add(listItemsValidator);
+    }
+
+    protected void removeMandatoryValidator() {
+        final Form<?> form = findParent(Form.class);
+        form.remove(listItemsValidator);
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
+        addMandatoryValidator();
         setOutputMarkupId(true);
         setOutputMarkupPlaceholderTag(true);
 
-        addFilterPanel();
+        //addFilterPanel();
 
         listWrapper = new TransparentWebMarkupContainer("listWrapper");
         listWrapper.setOutputMarkupId(true);
@@ -107,9 +175,10 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         listWrapper.add(new Label("panelTitle", title));
 
         listWrapper.add(new Label("totalEntries",
-                (IModel<Integer>) () -> ListViewSectionPanel.this.getModel().getObject().size()));
+                new StringResourceModel("totalEntries", this).setParameters(
+                        (IModel<Integer>) () -> ListViewSectionPanel.this.getModel().getObject().size())));
 
-        final AjaxLink<Void> showHideAllEntries = new AjaxLink<Void>("showHideAllEntries") {
+        showHideAllEntries = new AjaxLink<Void>("showHideAllEntries") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 // take the list of elements from the path: listWrapper/list
@@ -142,6 +211,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             }
         };
         listWrapper.add(showHideAllEntries);
+        showHideAllEntries.setVisibilityAllowed(foldable && !ComponentUtil.isPrintMode());
 
         final IModel listModel = new FilteredListModel<T>(getModel()) {
             @Override
@@ -165,17 +235,19 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 // we add the header #
                 item.add(new Label("headerNo", 1 + item.getIndex()));
 
-                // just keep the last element editable and expanded
-                if (item.getIndex() == getModel().getObject().size() - 1) {
+                // just keep the last element editable and expanded, unless non foldable
+                if (!foldable || item.getIndex() == getModel().getObject().size() - 1) {
                     item.getModelObject().setExpanded(true);
                     item.getModelObject().setEditable(true);
                 }
+
 
                 // we add the rest of the items in the listItem
                 populateCompoundListItem(item);
 
                 addAcordion(item);
 
+                item.visitChildren(new DgFmAttachingVisitor());
                 checkAndSendEventForDisableEditing(item);
             }
         };
@@ -193,9 +265,17 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         add(addButtonNotificationPanel);
     }
 
-    private void addAcordion(final ListItem<T> item) {
+    protected Label createShowDetailsLink() {
         final Label showDetailsLink = new Label("showDetailsLink", new ResourceModel("showDetailsLink"));
         showDetailsLink.setOutputMarkupId(true);
+        showDetailsLink.setOutputMarkupPlaceholderTag(true);
+        showDetailsLink.setVisibilityAllowed(foldable && !ComponentUtil.isPrintMode());
+        return showDetailsLink;
+    }
+
+
+    private void addAcordion(final ListItem<T> item) {
+        Label showDetailsLink = createShowDetailsLink();
 
         // the section that will collapse
         final TransparentWebMarkupContainer hideableContainer =
@@ -210,6 +290,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         final AjaxLink<Void> accordionToggle = new AjaxLink<Void>(ID_ACCORDION_TOGGLE) {
             @Override
             public void onClick(final AjaxRequestTarget target) {
+                if (!foldable) {
+                    return;
+                }
                 final T modelObject = item.getModelObject();
                 if (modelObject.getExpanded()) {
                     hideSection(modelObject, target, hideableContainer, showDetailsLink);
@@ -218,11 +301,14 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 }
             }
         };
+        accordionToggle.setEnabled(!ComponentUtil.isPrintMode());
         accordionToggle.setOutputMarkupId(true);
         accordion.add(accordionToggle);
 
         // we add the special header field
-        accordionToggle.add(getHeaderField("headerField", new CompoundPropertyModel<>(item.getModel())));
+        Component headerField = createHeaderField("headerField", new CompoundPropertyModel<>(item.getModel()));
+        headerField.setMetaData(HEADER, true);
+        accordionToggle.add(headerField);
 
         accordionToggle.add(showDetailsLink);
         accordion.add(hideableContainer);
@@ -255,7 +341,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
             }
         }
 
-        if (item.getModelObject().getExpanded()) {
+        if (item.getModelObject().getExpanded() ||  ComponentUtil.isPrintMode()) {
             hideableContainer.add(new AttributeModifier("class", new Model<>("panel-body panel-collapse collapse in")));
             showDetailsLink.setDefaultModel(new ResourceModel("hideDetailsLink"));
         }
@@ -283,6 +369,12 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
         showDetailsLink.setDefaultModel(new ResourceModel("showDetailsLink"));
         target.add(showDetailsLink);
+    }
+
+    @Override
+    protected void onRemove() {
+        super.onRemove();
+        removeMandatoryValidator();
     }
 
     /**
@@ -360,13 +452,16 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
-            final T newChild = createNewChild(
-                    (IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel());
+            final T newChild = createNewChild(getParentModel());
             ListViewSectionPanel.this.getModelObject().add(newChild);
 
             listView.removeAll();
             target.add(listWrapper);
         }
+    }
+
+    protected IModel<PARENT> getParentModel() {
+        return (IModel<PARENT>) ListViewSectionPanel.this.getParent().getDefaultModel();
     }
 
     private static void goToComponent(final AjaxRequestTarget target, final String markupId) {
@@ -382,10 +477,18 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         add(hiddenForm);
     }
 
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<T> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<T> compoundModel) {
         return new TransparentWebMarkupContainer(id);
     }
 
+    protected Component findHeaderField(final ListItem<T> item) {
+        return item.visitChildren((object, visit) -> {
+            Boolean value = object.getMetaData(HEADER);
+            if (value != null && value) {
+                visit.stop(object);
+            }
+        });
+    }
 
     /**
      * Use the constructor for new children and return the entity after setting its parent.
@@ -401,5 +504,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
      */
     public abstract void populateCompoundListItem(ListItem<T> item);
 
-    protected abstract boolean filterListItem(T t);
+    protected boolean filterListItem(T t) {
+        return true;
+    }
 }

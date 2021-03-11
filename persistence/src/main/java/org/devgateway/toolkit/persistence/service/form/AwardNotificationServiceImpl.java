@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gmutuhu
  */
 @Service
-@Transactional(readOnly = true)
-public class AwardNotificationServiceImpl extends AbstractMakueniEntityServiceImpl<AwardNotification>
+@Transactional
+public class AwardNotificationServiceImpl extends AbstractTenderProcessEntityServiceImpl<AwardNotification>
         implements AwardNotificationService {
 
     @Autowired

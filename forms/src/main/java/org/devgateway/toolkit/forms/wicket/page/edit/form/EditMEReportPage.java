@@ -15,7 +15,6 @@ import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRol
 import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.MEStatusService;
@@ -75,6 +74,7 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("meReportForm");
         super.onInitialize();
 
         Fragment inspectionExtraFields = new Fragment("childExtraFields", "meExtraFields", this);
@@ -86,27 +86,26 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
         ComponentUtil.addIntegerTextField(editForm, "sno");
         ComponentUtil.addBigDecimalBudgetAmountField(editForm, "lpoAmount");
         ComponentUtil.addTextField(editForm, "lpoNumber");
-        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "expenditure").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "expenditure");
         ComponentUtil.addBigDecimalBudgetAmountField(editForm, "uncommitted");
         ComponentUtil.addTextAreaField(editForm, "projectScope");
         ComponentUtil.addTextAreaField(editForm, "output");
         ComponentUtil.addTextAreaField(editForm, "outcome");
-        ComponentUtil.addTextAreaField(editForm, "projectProgress").required();
-        ComponentUtil.addIntegerTextField(editForm, "directBeneficiariesTarget").required();
-        ComponentUtil.addTextAreaField(editForm, "wayForward").required();
+        ComponentUtil.addTextAreaField(editForm, "projectProgress");
+        ComponentUtil.addIntegerTextField(editForm, "directBeneficiariesTarget");
+        ComponentUtil.addTextAreaField(editForm, "wayForward");
         ComponentUtil.addDateField(editForm, "byWhen");
-        ComponentUtil.addYesNoToggle(editForm, "inspected", true).required();
-        ComponentUtil.addYesNoToggle(editForm, "invoiced", true).required();
-        ComponentUtil.addTextField(editForm, "officerResponsible").required();
-        ComponentUtil.addSelect2ChoiceField(editForm, "meStatus", meStatusService).required();
-        ComponentUtil.addTextAreaField(editForm, "remarks").required();
+        ComponentUtil.addYesNoToggle(editForm, "inspected", true);
+        ComponentUtil.addYesNoToggle(editForm, "invoiced", true);
+        ComponentUtil.addTextField(editForm, "officerResponsible");
+        ComponentUtil.addSelect2ChoiceField(editForm, "meStatus", meStatusService);
+        ComponentUtil.addTextAreaField(editForm, "remarks");
         ComponentUtil.addTextField(editForm, "contractorContact");
 
 
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
+        ComponentUtil.addDateField(editForm, "approvedDate");
 
         subwards = ComponentUtil.addSelect2MultiChoiceField(editForm, "subwards", subWardService);
-        subwards.required();
 
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
         wards.getField()
@@ -114,8 +113,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
                         LoadableDetachableModel.of(() -> subWardService), editForm.getModelObject()::setSubwards,
                         "change"
                 ));
-        wards.required();
-
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
         subcounties.getField()
                 .add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
@@ -129,7 +126,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
                 target.add(subwards);
             }
         });
-        subcounties.required();
     }
 
     @Override
@@ -151,8 +147,8 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
     }
 
     @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
+    protected void onApproved() {
+        super.onApproved();
+        service.onApproved(editForm.getModelObject());
     }
-
 }

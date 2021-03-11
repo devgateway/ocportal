@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
@@ -167,11 +168,11 @@ public class AlertsManagerImpl implements AlertsManager {
 
         final StringBuilder tenderLinks = new StringBuilder();
         for (final Document document : documents) {
-            final Document project = (Document) document.get("projects");
-            final Document purchaseReq = (Document) project.get("tenderProcesses");
-            final Long purchaseReqId = (Long) purchaseReq.get("_id");
+            //final Document project = (Document) document.get("projects");
+            final Document tenderProcess = (Document) document.get("tenderProcesses");
+            final Long tenderProcessId = (Long) tenderProcess.get("_id");
 
-            final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, purchaseReqId);
+            final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, tenderProcessId);
             tenderLinks.append("* <a style=\"color: #3060ED; text-decoration: none;\" href=\""
                     + tenderUrl + "\">" + tenderUrl + "</a>\n");
         }
@@ -192,7 +193,7 @@ public class AlertsManagerImpl implements AlertsManager {
                         + "\" please visit the website to see the update: \n\n"
                         + tenderLinks.toString() + "\n"
                         + "Thanks,\n"
-                        + "Makueni Portal Team \n\n\n"
+                        + INSTANCE_NAME + " Portal Team \n\n\n"
                         + "If you do not want to receive our email alerts anymore please click on the following link: "
                         + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
                         + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
@@ -205,7 +206,7 @@ public class AlertsManagerImpl implements AlertsManager {
                         + "The following tender(s) have been published: \n\n"
                         + tenderLinks.toString() + "\n"
                         + "Thanks,\n"
-                        + "Makueni Portal Team \n\n\n"
+                        + INSTANCE_NAME + " Portal Team \n\n\n"
                         + "If you do not want to receive our email alerts anymore please click on the following link: "
                         + "<a style=\"color: #3060ED; text-decoration: none;\" href=\""
                         + unsubscribeURL + "\">" + unsubscribeURL + "</a>\n";
@@ -225,13 +226,12 @@ public class AlertsManagerImpl implements AlertsManager {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
         final Aggregation aggregation = newAggregation(
-                project("_id", "department", "fiscalYear", "projects"),
-                unwind("projects"),
-                unwind("projects.tenderProcesses"),
-                match(where("projects.tenderProcesses._id").is(alert.getPurchaseReq().getId())),
-                unwind("projects.tenderProcesses.tender"),
-                match(where("projects.tenderProcesses.tender.closingDate").gte(new Date())),
-                match(where("projects.tenderProcesses.lastModifiedDate")
+                project("_id", "department", "fiscalYear", "tenderProcesses"),
+                unwind("tenderProcesses"),
+                match(where("tenderProcesses._id").is(alert.getPurchaseReq().getId())),
+                unwind("tenderProcesses.tender"),
+                match(where("tenderProcesses.tender.closingDate").gte(new Date())),
+                match(where("tenderProcesses.lastModifiedDate")
                         .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))));
 
         final List<Document> documents = mongoTemplate.aggregate(
@@ -253,20 +253,21 @@ public class AlertsManagerImpl implements AlertsManager {
         }
         if (!alert.getItems().isEmpty()) {
             criteriaList.add(createFilterCriteria(
-                    "projects.tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                    "tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
                     alert.getItems()));
         }
 
         final Criteria criteria = new Criteria().orOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 
         final Aggregation aggregation = newAggregation(
-                project("_id", "department", "fiscalYear", "projects"),
-                unwind("projects"),
-                unwind("projects.tenderProcesses"),
-                unwind("projects.tenderProcesses.tender"),
-                match(where("projects.tenderProcesses.tender.closingDate").gte(new Date())),
-                match(where("projects.tenderProcesses.lastModifiedDate")    // change to "lte" for local testing
-                        .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))),
+                project("_id", "department", "fiscalYear", "tenderProcesses"),
+                unwind("tenderProcesses"),
+                unwind("tenderProcesses.tender"),
+                match(where("tenderProcesses.tender.closingDate").gte(new Date())),
+                match(where("tenderProcesses.lastModifiedDate")    // change to "lte" for local testing
+                        .gte(alert.getLastChecked() != null
+                                ? Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant())
+                                : new Date(0))),
                 match(criteria));
 
         final List<Document> documents = mongoTemplate.aggregate(

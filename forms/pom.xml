@@ -21,42 +21,56 @@
     <description>Makueni Forms</description>
 
     <parent>
-        <groupId>org.devgateway.toolkit</groupId>
+        <groupId>org.devgateway.makueni</groupId>
         <artifactId>makueni</artifactId>
-        <version>1.12.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <wicket.version>8.7.0</wicket.version>
-        <wicketstuff.version>8.7.0</wicketstuff.version>
+        <wicket.version>8.9.0</wicket.version>
+        <wicketstuff.version>8.9.0</wicketstuff.version>
         <wicket.bootstrap.version>2.0.12</wicket.bootstrap.version>
         <zt.zip.version>1.13</zt.zip.version>
-        <wicket.webjars.version>2.0.17</wicket.webjars.version>
-        <closure.compiler.version>v20200112</closure.compiler.version>
+        <wicket.webjars.version>2.0.18</wicket.webjars.version>
+        <closure.compiler.version>v20200406</closure.compiler.version>
         <cglib.version>3.1</cglib.version>
         <yuicompressor.version>2.4.8</yuicompressor.version>
-        <javamelody.version>1.81.0</javamelody.version>
+        <javamelody.version>1.85.0</javamelody.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.devgateway.makueni</groupId>
+            <artifactId>web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>persistence-mongodb</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
+            <groupId>org.devgateway.makueni</groupId>
             <artifactId>ui</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.danekja</groupId>
+            <artifactId>jdk-serializable-functional</artifactId>
+            <version>${jdk-serializable-functional.version}</version>
         </dependency>
 
         <dependency>
@@ -93,12 +107,6 @@
 
 
         <dependency>
-            <groupId>org.devgateway.toolkit</groupId>
-            <artifactId>web</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-integration</artifactId>
             <exclusions>
@@ -131,11 +139,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-rest-hal-browser</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-remoting</artifactId>
         </dependency>
@@ -144,6 +147,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -261,22 +270,6 @@
             <version>${poi.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-serializer-fast2</artifactId>
-            <version>${wicketstuff.version}</version>
-        </dependency>
-
-        <!--
-            Fst 2.43 has a bug in serializing self-referencing arrays. Fst is imported indirectly through
-            wicketstuff-serializer-fast2. At the time there is no update to wicketstuff-serializer-fast2 that
-            uses fst 2.44 or newer. Enforcing latest available release of fst. -->
-        <dependency>
-            <groupId>de.ruedigermoeller</groupId>
-            <artifactId>fst</artifactId>
-            <version>2.56</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -290,6 +283,7 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.css</include>
+                    <include>**/*.yml</include>
                     <include>**/*.js</include>
                     <include>**/*.png</include>
                     <include>**/*.gif</include>

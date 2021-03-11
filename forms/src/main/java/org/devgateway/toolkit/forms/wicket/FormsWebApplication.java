@@ -43,20 +43,21 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
-import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
 import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.Folder;
+import org.devgateway.toolkit.forms.serializer.SpringDevToolsSerializer;
 import org.devgateway.toolkit.forms.service.SessionFinderService;
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteJpaStorageService;
 import org.devgateway.toolkit.forms.wicket.converters.NonNumericFilteredBigDecimalConverter;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
+import org.devgateway.toolkit.forms.wicket.page.lists.fm.ListFeatureFilePage;
 import org.devgateway.toolkit.forms.wicket.page.user.LoginPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
+import org.devgateway.toolkit.persistence.fm.DgFmProperties;
 import org.devgateway.toolkit.persistence.spring.SpringLiquibaseRunner;
-import org.nustaq.serialization.FSTConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
-import org.wicketstuff.pageserializer.fast2.Fast2WicketSerializer;
 import org.wicketstuff.select2.ApplicationSettings;
 
 import javax.persistence.EntityManagerFactory;
@@ -103,6 +103,9 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
     @Autowired
     private SummernoteJpaStorageService summernoteJpaStorageService;
+
+    @Autowired
+    private DgFmProperties fmProperties;
 
     private static final Logger logger = LoggerFactory.getLogger(FormsWebApplication.class);
 
@@ -186,26 +189,18 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         // -Dwicket.configuration=deployment
         // The default is Development, so this code is not used
         if (usesDeploymentConfig()) {
-            getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy("-v-",
-                    new CachingResourceVersion(new Adler32ResourceVersion())
-            ));
             getResourceSettings().setJavaScriptCompressor(
                     new GoogleClosureJavaScriptCompressor(CompilationLevel.SIMPLE_OPTIMIZATIONS));
             getResourceSettings().setCssCompressor(new YuiCssCompressor());
             getResourceSettings().setUseMinifiedResources(true);
 
-            // getFrameworkSettings().setSerializer(new DeflatedJavaSerializer(getApplicationKey()));
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
-
             getMarkupSettings().setStripComments(true);
             getMarkupSettings().setCompressWhitespace(true);
             getMarkupSettings().setStripWicketTags(true);
-        } else {
-            getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
-            final FSTConfiguration fstConfiguration = Fast2WicketSerializer.getDefaultFSTConfiguration();
-            getFrameworkSettings().setSerializer(new Fast2WicketSerializer(fstConfiguration));
         }
+
+        getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy("-v-",
+                new CachingResourceVersion(new Adler32ResourceVersion())));
 
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
         // be sure that we have added Dozer Listener
@@ -237,7 +232,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
     protected void init() {
         super.init();
 
-        // add allowed woff2 extension
+
         IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
         if (packageResourceGuard instanceof SecurePackageResourceGuard) {
             SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
@@ -245,12 +240,18 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             guard.addPattern("+*.xlsx");
         }
 
+        getFrameworkSettings().setSerializer(new SpringDevToolsSerializer());
+
         //this ensures that spring DI works for wicket components and pages
         //see @SpringBean annotation
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
 
         //this will scan packages for pages with @MountPath annotations and automatically create URLs for them
         new AnnotatedMountScanner().scanPackage(BASE_PACKAGE_FOR_PAGES).mount(this);
+
+        if (fmProperties.isAllowReconfiguration()) {
+            mountPage("ListFeatureFilePage", ListFeatureFilePage.class);
+        }
 
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
         getApplicationSettings().setAccessDeniedPage(Homepage.class);

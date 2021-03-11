@@ -29,12 +29,18 @@ public class ListAwardAcceptancePage extends ListAbstractTenderProcessMakueniEnt
 
     @Override
     protected void onInitialize() {
-        addTenderTitleColumn();
-        addAwardeeColumn();
-        super.onInitialize();
+        attachFm("awardAcceptanceList");
 
+        super.onInitialize();
     }
 
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
+        addTenderTitleColumn();
+        addAwardeeColumn();
+    }
 
     @Override
     public JpaFilterState<AwardAcceptance> newFilterState() {

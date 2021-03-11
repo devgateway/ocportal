@@ -4,10 +4,8 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
@@ -42,15 +40,11 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("awardNotificationForm");
         super.onInitialize();
 
         AwardNotificationItemPanel items = new AwardNotificationItemPanel("items");
         editForm.add(items);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return editForm.getModelObject().getTenderProcess().getSingleAwardAcceptance();
     }
 
     @Override
@@ -78,24 +72,5 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
         tenderProcess.removeAwardNotification(awardNotification);
         tenderProcessService.save(tenderProcess);
     }
-
-    @Override
-    protected Class<? extends BasePage> pageAfterSubmitAndNext() {
-        return EditAwardAcceptancePage.class;
-    }
-
-    @Override
-    protected PageParameters parametersAfterSubmitAndNext() {
-        final PageParameters pp = new PageParameters();
-        if (!ObjectUtils.isEmpty(editForm.getModelObject().getTenderProcess().getAwardAcceptance())) {
-            pp.set(WebConstants.PARAM_ID,
-                    PersistenceUtil.getNext(
-                            editForm.getModelObject().getTenderProcess().getAwardAcceptance()).getId());
-        }
-
-        return pp;
-    }
-
-
 
 }

@@ -4,11 +4,6 @@
  */
 
 html {
-    /*
-     * Always show page scroll-bar to prevent side-movement when hovering over items that are extending their height and
-     * suddenly the content doesn't fit above the fold.
-     */
-    overflow-y: scroll;
     position: relative;
     min-height: 100%;
 }
@@ -16,6 +11,11 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 50px !important;
+    /*
+     * Always show page scroll-bar to prevent side-movement when hovering over items that are extending their height and
+     * suddenly the content doesn't fit above the fold.
+     */
+    overflow-y: scroll;
 }
 
 .mainHeader.with-navbar-default .navbar-default {
@@ -39,6 +39,17 @@ body {
      */
     min-height: 50px;
     margin-bottom: 20px;
+	  height: 60px;
+	  overflow: visible;
+    position: fixed;
+	  top: 0;
+    z-index: 1001;
+}
+
+@media only screen and (max-width: 767px){
+  .mainHeader.with-navbar-fixed-top{
+		position: relative;
+	}
 }
 
 .mainHeader .navbar {
@@ -51,6 +62,12 @@ body {
 .mainHeader .navbar.navbar-inverse {
     border-color: #223a49;
 }
+@media only screen and (max-width: 767px){
+  .mainHeader .navbar.navbar-inverse{
+		position: relative;
+		width: 100%;
+	}
+}
 
 .mainHeader .navbar.navbar-inverse .navbar-nav > .active > a {
     background-color: transparent;
@@ -60,12 +77,19 @@ body {
     width: 100%;
 }
 
+@media (min-width: 768px){
+	.navbar-right {
+    float: right !important;
+    margin-right: -5px;
+  }
+}
 
 .mainContainer {
     /*
      * The main page content should have some height.
      */
     min-height: 20em;
+    padding-bottom: 15px;
 }
 @media (min-width: 1025px){
   .mainContainer{
@@ -74,12 +98,12 @@ body {
 }
 @media (max-width: 1024px){
   .mainContainer{
-    margin-top: 10%;
+    margin-top: 0;
   }
 }
 @media (max-width: 768px){
   .mainContainer{
-    margin-top: 15%;
+    margin-top: 0;
   }
 }
 @media (max-width:412px){
@@ -135,14 +159,17 @@ body {
 
 .navbar-header .navbar-brand img {
     display: inline-block;
-    width: 60px;
+    width: 45px;
     margin-left: 20px;
-    margin-top: -8px;
+    margin-top: 5px;
 }
 
 .navbar-header .navbar-brand span {
     display: inline-block;
-    padding-left: 10px;
+    font-size: 1.1vw;
+    font-weight: 700;
+    margin-top: 10px;
+    padding-left: 0;
     color: #fff;
 }
 
@@ -163,12 +190,24 @@ body {
 }
 
 h1.pageTitle {
-    border-bottom: 1px solid #eeeeee;
-    font-size: 23px;
-    font-weight: 400;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    text-align:center
+  border-bottom: 1px solid #eeeeee;
+  font-size: 23px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  text-align:center
+}
+
+.navbar-inverse .navbar-nav > li > a{
+  font-size: 1vw;
+  padding-left: 7px;
+	padding-right: 7px;
+}
+
+.navbar-inverse .navbar-nav > li > a{
+  font-size: 1vw;
+  padding-left: 10px;
+	padding-right: 10px;
 }
 
 /* file upload
@@ -180,6 +219,11 @@ h1.pageTitle {
 /* List View Styles
 -------------------------------------------------- */
 button.list-edit-button {
+    margin-bottom: 5px;
+    min-width: 70px;
+}
+
+button.list-delete-button {
     margin-bottom: 5px;
     min-width: 70px;
 }
@@ -214,6 +258,11 @@ hr.edit-separator {
     margin-top: 20px;
     margin-bottom: 20px;
     border-bottom: 1px solid #eeeeee;
+}
+
+
+.red-icon {
+    color: red;
 }
 
 .pane {
@@ -372,7 +421,7 @@ hr.edit-separator {
     border-radius: 0;
 }
 
-.form-wrapper .panel-default > .panel-heading {
+.form-wrapper .panel-group > .panel-default > .panel-heading {
     background-color: #f6f6f6;
     border-radius: 0;
     padding: 0;
@@ -610,3 +659,15 @@ hr.edit-separator {
 
 /*
 -------------------------------------------------- */
+
+.p-t-xs { padding-top: .25em; }
+
+.row.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row.display-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}

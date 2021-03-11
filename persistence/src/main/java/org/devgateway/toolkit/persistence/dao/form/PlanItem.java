@@ -192,11 +192,5 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     public String toString() {
         return getLabel();
     }
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public Boolean getEditable() {
-        return editable;
-    }
+    
 }

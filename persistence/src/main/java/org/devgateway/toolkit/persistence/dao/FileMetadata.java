@@ -23,7 +23,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 /**
  * @author idobre
@@ -37,7 +36,7 @@ import java.io.Serializable;
 @Table(indexes = {@Index(columnList = "name")})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileMetadata extends AbstractAuditableEntity {
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, optional = false)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @org.springframework.data.annotation.Transient
     @JsonIgnore

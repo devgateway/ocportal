@@ -22,6 +22,7 @@ import org.devgateway.toolkit.persistence.service.form.PaymentVoucherService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.ProfessionalOpinionService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
+import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionGroupService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
@@ -100,6 +101,9 @@ public class SubmittedAlertService {
     private TenderProcessService tenderProcessService;
 
     @Autowired
+    private PurchaseRequisitionGroupService purchaseRequisitionGroupService;
+
+    @Autowired
     private TenderService tenderService;
 
     @Autowired
@@ -145,7 +149,7 @@ public class SubmittedAlertService {
                 contractService,
                 procurementPlanService, //not pr
                 professionalOpinionService,
-                tenderProcessService, //not pr
+                purchaseRequisitionGroupService, //not pr
                 tenderService,
                 tenderQuotationEvaluationService));
     }

@@ -12,7 +12,7 @@
 package org.devgateway.toolkit.forms.wicket.page.lists;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -50,6 +50,7 @@ public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget>
         this.editPageClass = EditFiscalYearBudgetPage.class;
         this.departments = departmentService.findAll();
         this.fiscalYears = fiscalYearService.findAll();
+        this.hasNewPage = false;
     }
 
     protected final List<Department> departments;
@@ -58,17 +59,22 @@ public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget>
 
     @Override
     protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "department", "department", new ListModel<>(departments), dataTable
-        ));
-
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
-                "fiscalYear", "fiscalYear", new ListModel<>(fiscalYears), dataTable
-        ));
+        attachFm("fiscalYearBudgetsList");
 
         super.onInitialize();
-        editPageLink.setVisibilityAllowed(false);
-        topEditPageLink.setVisibilityAllowed(false);
+    }
+
+    @Override
+    protected void addColumns() {
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
+                "department", "department", new ListModel<>(departments), getDataTable()
+        ));
+
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYear", this),
+                "fiscalYear", "fiscalYear", new ListModel<>(fiscalYears), getDataTable()
+        ));
     }
 
     @Override

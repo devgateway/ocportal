@@ -12,15 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
  * @author gmutuhu
  */
 @Service
-@Transactional(readOnly = true)
-public class ContractServiceImpl extends AbstractMakueniEntityServiceImpl<Contract>
+@Transactional
+public class ContractServiceImpl extends AbstractTenderProcessEntityServiceImpl<Contract>
         implements ContractService {
 
     @Autowired
     private ContractRepository contractRepository;
 
     @Override
-    protected BaseJpaRepository<Contract, Long> repository() {
+    public BaseJpaRepository<Contract, Long> repository() {
         return contractRepository;
     }
 

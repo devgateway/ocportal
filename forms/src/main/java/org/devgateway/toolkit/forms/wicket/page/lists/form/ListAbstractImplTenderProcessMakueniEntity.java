@@ -27,7 +27,8 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
 
     @Override
     protected void addAwardeeColumn() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<T, AbstractImplTenderProcessFilterState<T>, String>(
+        addFmColumn("awardee", new SelectFilteredBootstrapPropertyColumn<T,
+                AbstractImplTenderProcessFilterState<T>, String>(
                 new Model<>(
                         (new StringResourceModel(
                                 "awardee",
@@ -35,7 +36,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
                         )).getString()),
                 "tenderProcess.contract.awardee",
                 "tenderProcess.singleContract.awardee",
-                new ListModel(awardees), dataTable, false
+                new ListModel(awardees), getDataTable(), false
         ) {
             @Override
             protected IModel<AbstractImplTenderProcessFilterState<T>> getFilterModel(FilterForm form) {
@@ -47,7 +48,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
     }
 
     protected void addAuthorizePaymentColumn() {
-        columns.add(new PropertyColumn<>(new Model<>(
+        addFmColumn("authorizePayment", new PropertyColumn<>(new Model<>(
                 (new StringResourceModel(
                         "authorizePayment",
                         ListAbstractImplTenderProcessMakueniEntity.this
@@ -55,16 +56,16 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
+        super.addColumns();
+
         addAwardeeColumn();
 
-        columns.add(new SimpleDateProperyColumn<>(new StringResourceModel(
+        addFmColumn("approvedDate", new SimpleDateProperyColumn<>(new StringResourceModel(
                 "approvedDate",
                 ListAbstractImplTenderProcessMakueniEntity.this),
                 "approvedDate", "approvedDate",
                 t -> PersistenceUtil.convertDateToZonedDateTime(t.getApprovedDate())
         ));
-
-        super.onInitialize();
     }
 }

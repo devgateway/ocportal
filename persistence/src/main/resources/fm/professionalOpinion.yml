@@ -1,0 +1,129 @@
+# PROFESSIONAL OPINION FORM PAGE
+- name: professionalOpinionForm
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.approve
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.cancel
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.delete
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items.approvedDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items.awardee
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items.newButton
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items.professionalOpinionDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items.recommendedAwardAmount
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.items.remove
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.revertToDraft
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.save
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.tenderProcess.procurementPlan.department
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.tenderProcess.procurementPlan.fiscalYear
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.terminate
+  enabled: yes
+  visible: yes
+- name: professionalOpinionForm.visibleStatusComments
+  enabled: yes
+  visible: yes
+
+# PROFESSIONAL OPINIONS LIST PAGE
+- name: professionalOpinionsList
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm
+- name: professionalOpinionsList.department
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.tenderProcess.procurementPlan.department
+- name: professionalOpinionsList.filterToolbar
+  visible: yes
+- name: professionalOpinionsList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.tenderProcess.procurementPlan.fiscalYear
+- name: professionalOpinionsList.lastModifiedDate
+  visible: yes
+- name: professionalOpinionsList.status
+  visible: yes
+- name: professionalOpinionsList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.professionalOpinions
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm
+- name: publicView.professionalOpinions.items
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.items
+- name: publicView.professionalOpinions.items.professionalOpinionDate
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.items.professionalOpinionDate
+- name: publicView.professionalOpinions.items.awardee
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.items.awardee
+- name: publicView.professionalOpinions.items.recommendedAwardAmount
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.items.recommendedAwardAmount
+- name: publicView.professionalOpinions.items.formDocs
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.items.formDocs
+- name: publicView.professionalOpinions.items.approvedDate
+  visible: yes
+  visibleDeps:
+    - professionalOpinionForm.items.approvedDate

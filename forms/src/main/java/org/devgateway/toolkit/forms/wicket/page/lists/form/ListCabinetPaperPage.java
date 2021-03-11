@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -40,30 +39,32 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
 
     @Override
     protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
+        attachFm("cabinetPapersList");
+
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
                 "procurementPlan.department", "procurementPlan.department",
-                new ListModel(departments), dataTable,
+                new ListModel<>(departments), getDataTable(),
                 isPreselected() && !FormSecurityUtil.isCurrentUserAdmin()
         ));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Years"),
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYears", this),
                 "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
-                new ListModel(fiscalYears), dataTable
+                new ListModel<>(fiscalYears), getDataTable()
         ));
 
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(
-                new Model<>((new StringResourceModel("number", ListCabinetPaperPage.this)).getString()), "number",
+        addFmColumn("number", new TextFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("number", this), "number",
                 "number"
         ));
-        //columns.add(new TextFilteredBootstrapPropertyColumn<>(
-        //new Model<>((new StringResourceModel("name", ListCabinetPaperPage.this)).getString()), "name", "name"));
-
 
         addFileDownloadColumn();
-
-        super.onInitialize();
-
-        columns.remove(1); // remove the status column
     }
 
     @Override

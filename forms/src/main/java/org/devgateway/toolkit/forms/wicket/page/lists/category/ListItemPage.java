@@ -35,14 +35,15 @@ public class ListItemPage extends AbstractListCategoryPage<Item> {
 
         this.jpaService = itemService;
         this.editPageClass = EditItemPage.class;
+        filterGoReset = true;
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("code", ListItemPage.this)).getString()), "code",
                 "code"));
 
-        super.onInitialize();
+        super.addColumns();
     }
 }

@@ -2,7 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
@@ -31,9 +31,9 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Professional Opinion"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newProfessionalOpinion", this));
     }
-
+    
     @Override
     public ProfessionalOpinionItem createNewChild(final IModel<ProfessionalOpinion> parentModel) {
         final ProfessionalOpinionItem child = new ProfessionalOpinionItem();
@@ -47,31 +47,21 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
     public void populateCompoundListItem(final ListItem<ProfessionalOpinionItem> item) {
         Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector =
                 new Select2ChoiceBootstrapFormComponent<>(
-                "awardee",
+                        "awardee",
                         new GenericChoiceProvider<>(ComponentUtil.getSuppliersInTenderQuotation(
                                 item.getModelObject().getParent().getTenderProcess(), true))
-        );
-        awardeeSelector.required();
+                );
         item.add(awardeeSelector);
 
-        ComponentUtil.addDateField(item, "professionalOpinionDate").required();
+        ComponentUtil.addDateField(item, "professionalOpinionDate");
 
         final TextFieldBootstrapFormComponent<BigDecimal> recommendedAwardAmount =
                 ComponentUtil.addBigDecimalField(item, "recommendedAwardAmount");
-        recommendedAwardAmount.required();
         recommendedAwardAmount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
-        ComponentUtil.addDateField(item, "approvedDate").required();
+        ComponentUtil.addDateField(item, "approvedDate");
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
-
-    @Override
-    protected boolean filterListItem(final ProfessionalOpinionItem purchaseItem) {
-        return true;
-    }
-
-
 }

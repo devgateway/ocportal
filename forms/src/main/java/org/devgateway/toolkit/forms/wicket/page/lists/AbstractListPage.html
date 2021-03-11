@@ -3,33 +3,13 @@
 <body>
 <wicket:extend>
     <div class="row">
-        <div class="col-md-12">
-            <button wicket:id="newTop" type="button" class="">
-                Add entity
-            </button>
-        </div>
-    </div>
-
-    <div class="row">
         <div class="col-md-1 col-md-offset-10">
             <form wicket:id="excelForm">
                 <button wicket:id="excelButton" type="button" id="excelButton" class="pull-right btn btn-warning">
                     <i class="fa fa-file-excel-o"></i>
-                    Excel export
+                    [[Excel export]]
                 </button>
             </form>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <form wicket:id="filterForm">
-                <button wicket:id="submit" type="submit" style="display: none;">Submit</button>
-                <table class="table table-hover " wicket:id="table"></table>
-            </form>
-            <button wicket:id="new" type="button" class="">
-                Add entity
-            </button>
         </div>
     </div>
 </wicket:extend>

@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -9,9 +10,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @MappedSuperclass
+@Audited
 public abstract class AbstractImplTenderProcessMakueniEntity extends AbstractTenderProcessMakueniEntity {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @ExcelExport(name = "Contract", justExport = true)
     private Contract contract;
 
@@ -34,5 +36,15 @@ public abstract class AbstractImplTenderProcessMakueniEntity extends AbstractTen
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    @Override
+    public Class<?> getNextForm() {
+        return null;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return false;
     }
 }

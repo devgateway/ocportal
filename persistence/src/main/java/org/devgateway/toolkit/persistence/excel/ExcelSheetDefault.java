@@ -1,13 +1,17 @@
 package org.devgateway.toolkit.persistence.excel;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.excel.service.TranslateService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +40,8 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
 
     private final TranslateService translateService;
 
+    private final DgFmService fmService;
+
     private final Sheet excelSheet;
 
     private final String excelSheetName;
@@ -57,11 +63,12 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
      *
      */
     public ExcelSheetDefault(final Workbook workbook, final TranslateService translateService,
-                             final String excelSheetName) {
+            final DgFmService fmService, final String excelSheetName) {
         super(workbook);
 
         this.excelSheetName = excelSheetName;
         this.translateService = translateService;
+        this.fmService = fmService;
         this.headerPrefix = new Stack<>();
 
         // it's possible that this sheet was created by other object
@@ -87,15 +94,15 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
      * but with the additional possibility to create a link back to Object's Parent sheet.
      *
      */
-    ExcelSheetDefault(final Workbook workbook, final TranslateService translateService,
+    ExcelSheetDefault(final Workbook workbook, final TranslateService translateService, final DgFmService fmService,
                       final String excelSheetName, final Map<String, Object> parentInfo) {
-        this(workbook, translateService, excelSheetName);
+        this(workbook, translateService, fmService, excelSheetName);
 
         this.parentInfo = parentInfo;
     }
 
     @Override
-    public void writeRow(final Class clazz, final Object object, final Row row) {
+    public void writeRow(final Class clazz, final Object object, final Row row, final String parentFeatureName) {
         final Iterator<Field> fields = ExcelFieldService.getFields(clazz);
 
         // if we have a parent then the first row should be the parent name with a link.
@@ -113,6 +120,16 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
             final Field field = fields.next();
             final FieldType fieldType = ExcelFieldService.getFieldType(field);
 
+            Class<?> fieldClass = ExcelFieldService.getFieldClass(field);
+            Form form = fieldClass.getAnnotation(Form.class);
+            String featureName = form != null
+                    ? form.featureName()
+                    : String.format("%s.%s", parentFeatureName, field.getName());
+            if (fmService.hasFeature(featureName) && !fmService.isFeatureVisible(featureName)) {
+                logger.warn("not exporting: " + featureName);
+                continue;
+            }
+
             try {
                 switch (fieldType) {
                     case basic:
@@ -124,21 +141,23 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
 
                     case object:
                         headerPrefix.push(ExcelFieldService.getFieldName(clazz, field, translateService));
-                        Class fieldClass = ExcelFieldService.getFieldClass(field);
 
                         if (ExcelFieldService.isCollection(field)) {
                             final List<Object> flattenObjects = new ArrayList();
                             flattenObjects.addAll((Collection) getFieldValue(field, object));
-                            writeRowFlattenObject(fieldClass, flattenObjects, row);
+                            writeRowFlattenObject(fieldClass, flattenObjects, row, featureName);
                         } else {
-                            writeRow(fieldClass, getFieldValue(field, object), row);
+                            writeRow(fieldClass, getFieldValue(field, object), row, featureName);
                         }
 
                         headerPrefix.pop();
                         break;
 
                     case objectSeparateSheet:
-                        fieldClass = ExcelFieldService.getFieldClass(field);
+                        if (isInvisibleForm(fieldClass)) {
+                            logger.warn("not exporting FORM: " + fieldClass.getName());
+                            break;
+                        }
 
                         // add some informations about the parent
                         final Map<String, Object> info = new HashMap();
@@ -147,7 +166,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
                         info.put(PARENTROWNUMBER, row.getRowNum() + 1);
 
                         final ExcelSheet objectSepareteSheet = new ExcelSheetDefault(getWorkbook(),
-                                this.translateService, fieldClass.getSimpleName().toLowerCase(), info);
+                                this.translateService, fmService, getSheetNameFor(clazz, field, fieldClass), info);
                         final List<Object> newObjects = new ArrayList();
                         final Object value = getFieldValue(field, object);
 
@@ -161,9 +180,10 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
 
                         coll = getFreeColl(row);
                         writeHeaderLabel(clazz, field, row, coll);
-                        final int rowNumber = objectSepareteSheet.writeSheetGetLink(fieldClass, newObjects);
+                        final int rowNumber = objectSepareteSheet.writeSheetGetLink(fieldClass, newObjects,
+                                featureName);
                         if (rowNumber != -1) {
-                            writeCellLink(field.getName(), row, coll,
+                            writeCellLink(objectSepareteSheet.getExcelSheetName(), row, coll,
                                     objectSepareteSheet.getExcelSheetName(), rowNumber);
                         } else {
                             writeCell(null, row, coll);
@@ -179,6 +199,34 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
                 logger.error("writeRow Error!", e);
             }
         }
+    }
+
+    private boolean isInvisibleForm(Class<?> type) {
+        Form form = type.getAnnotation(Form.class);
+        if (form == null) {
+            return false;
+        }
+        return !fmService.isFeatureVisible(form.featureName());
+    }
+
+    /**
+     * Generate sheet name by either looking for the field label or the form name.
+     */
+    private String getSheetNameFor(Class clazz, Field field, Class fieldClass) {
+        String sheetName = null;
+        if (TenderProcess.class.isAssignableFrom(fieldClass)) {
+            sheetName = "Tender Process";
+        }
+        if (translateService != null && StringUtils.isEmpty(sheetName)) {
+            sheetName = translateService.getTranslation(clazz, field);
+        }
+        if (translateService != null && StringUtils.isEmpty(sheetName)) {
+            sheetName = translateService.getTranslation(fieldClass);
+        }
+        if (StringUtils.isEmpty(sheetName)) {
+            sheetName = fieldClass.getSimpleName().toLowerCase();
+        }
+        return sheetName;
     }
 
     /**
@@ -199,12 +247,19 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
      * @param objects
      * @param row
      */
-    private void writeRowFlattenObject(final Class clazz, final List<Object> objects, final Row row) {
+    private void writeRowFlattenObject(final Class clazz, final List<Object> objects, final Row row,
+            final String parentFeatureName) {
         final Iterator<Field> fields = ExcelFieldService.getFields(clazz);
 
         while (fields.hasNext()) {
             final Field field = fields.next();
             final FieldType fieldType = ExcelFieldService.getFieldType(field);
+
+            String featureName = String.format("%s.%s", parentFeatureName, field.getName());
+            if (!fmService.isFeatureVisible(featureName)) {
+                logger.warn("not exporting: " + featureName);
+                continue;
+            }
 
             try {
                 switch (fieldType) {
@@ -239,7 +294,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
                                 }
                             }
 
-                            writeRowFlattenObject(fieldClass, newObjects, row);
+                            writeRowFlattenObject(fieldClass, newObjects, row, featureName);
                             headerPrefix.pop();
                         }
 
@@ -261,7 +316,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
     }
 
     @Override
-    public void writeSheet(final Class clazz, final List<Object> objects) {
+    public void writeSheet(final Class clazz, final List<Object> objects, String parentFeatureName) {
         for (Object obj : objects) {
             // apply rules for exporting Makueni Forms (see: OCMAKU-200)
             if (obj instanceof Statusable && !(obj instanceof CabinetPaper)) {
@@ -274,12 +329,12 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
             int lastRow = excelSheet.getLastRowNum();
             final Row row = createRow(excelSheet, ++lastRow);
 
-            writeRow(clazz, obj, row);
+            writeRow(clazz, obj, row, parentFeatureName);
         }
     }
 
     @Override
-    public int writeSheetGetLink(final Class clazz, final List<Object> objects) {
+    public int writeSheetGetLink(final Class clazz, final List<Object> objects, String parentFeatureName) {
         if (objects == null || objects.isEmpty()) {
             return -1;
         }
@@ -287,7 +342,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
         // check if this is first time when we created this sheet and skip header row
         // also add 2 since the getLastRowNum() function is 0-based and Excel is 1-based
         int lastRow = excelSheet.getLastRowNum() == 0 ? 2 : (excelSheet.getLastRowNum() + 2);
-        this.writeSheet(clazz, objects);
+        this.writeSheet(clazz, objects, parentFeatureName);
 
         return lastRow;
     }

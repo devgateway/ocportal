@@ -20,18 +20,13 @@ import java.util.List;
 @RestController
 @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
 @Cacheable
-public class FlagI077StatsController extends AbstractFlagStatsController {
-
-    @Override
-    protected String getFlagProperty() {
-        return FlagsConstants.I077_VALUE;
-    }
+public class FlagI077StatsController extends AbstractSingleFlagStatsController {
 
     @Override
     @ApiOperation(value = "Stats for flag i077")
     @RequestMapping(value = "/api/flags/i077/stats",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public List<Document> flagStats(@ModelAttribute @Valid YearFilterPagingRequest filter) {
-        return super.flagStats(filter);
+        return super.flagStats(FlagsConstants.I077_VALUE, filter);
     }
 }

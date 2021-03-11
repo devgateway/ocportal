@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.category;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -38,12 +38,12 @@ public class ListSubWardPage extends AbstractListCategoryPage<SubWard> {
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
         final List<Ward> wards = wardService.findAll();
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Ward"),
-                "ward", "ward", new ListModel<>(wards), dataTable));
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("ward", this),
+                "ward", "ward", new ListModel<>(wards), getDataTable()));
 
-        super.onInitialize();
+        super.addColumns();
     }
 
     @Override

@@ -12,7 +12,6 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.ocds.persistence.dao.UserDashboard;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -25,9 +24,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,25 +38,33 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "username")})
+@Table(indexes = {@Index(columnList = "username")},
+        uniqueConstraints = {@UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")}
+)
 public class Person extends AbstractAuditableEntity implements UserDetails, Labelable {
     private static final long serialVersionUID = 109780377848343674L;
 
     @ExcelExport
+    @NotNull
     private String username;
 
     @ExcelExport
+    @NotNull
     private String firstName;
 
     @ExcelExport
+    @NotNull
     private String lastName;
 
     private String title;
 
     @ExcelExport
+    @NotNull
     private String email;
 
     @JsonIgnore
+    @NotNull
     private String password;
 
     @Transient
@@ -74,14 +83,9 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @Size(min = 1)
     private List<Role> roles = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private UserDashboard defaultDashboard;
-
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToMany(fetch = FetchType.EAGER,  mappedBy = "users")
-    private Set<UserDashboard> dashboards = new HashSet<>();
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
@@ -241,26 +245,7 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
 
     @Override
     public String getLabel() {
-      return username;
+        return username;
     }
 
-    public UserDashboard getDefaultDashboard() {
-        return defaultDashboard;
-    }
-
-    public void setDefaultDashboard(UserDashboard defaultDashboard) {
-        this.defaultDashboard = defaultDashboard;
-    }
-
-    public Set<UserDashboard> getDashboards() {
-        return dashboards;
-    }
-
-    public void setDashboards(Set<UserDashboard> dashboards) {
-        this.dashboards = dashboards;
-    }
-
-    public boolean isChangeProfilePassword() {
-        return changeProfilePassword;
-    }
 }

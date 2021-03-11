@@ -4,14 +4,17 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PrivateSectorRequestPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.TechAdminRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.form.InspectionReport;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.repository.category.InspectionReportOutcomeRepository;
+import org.devgateway.toolkit.persistence.service.category.InspectionReportOutcomeService;
 import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -31,6 +34,9 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
     @SpringBean
     protected TenderProcessService tenderProcessService;
 
+    @SpringBean
+    protected InspectionReportOutcomeService inspectionReportOutcomeService;
+
     public EditInspectionReportPage(PageParameters parameters) {
         super(parameters);
         this.jpaService = inspectionReportService;
@@ -49,6 +55,7 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("inspectionReportForm");
         super.onInitialize();
 
         Fragment inspectionExtraFields = new Fragment("childExtraFields", "inspectionExtraFields", this);
@@ -58,12 +65,16 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
         ComponentUtil.addYesNoToggle(editForm, "authorizePayment", true).required();
 
         TextAreaFieldBootstrapFormComponent<String> comment = ComponentUtil.addTextAreaField(editForm, "comments");
-        comment.required();
         editForm.add(comment);
 
         ComponentUtil.addDateField(editForm, "approvedDate").required();
 
+        ComponentUtil.addSelect2ChoiceField(editForm, "outcome",
+                new GenericPersistableJpaTextChoiceProvider<>(inspectionReportOutcomeService));
+
         editForm.add(new PrivateSectorRequestPanel("privateSectorRequests"));
+
+        editForm.add(new FileInputBootstrapFormComponent("picture"));
     }
 
     @Override
@@ -82,11 +93,6 @@ public class EditInspectionReportPage extends EditAbstractImplTenderProcessEntit
         final TenderProcess tenderProcess = report.getTenderProcess();
         tenderProcess.removeInspectonReport(report);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
     }
 
 }

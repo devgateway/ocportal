@@ -4,13 +4,13 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
@@ -65,6 +65,7 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("paymentVoucherForm");
         super.onInitialize();
 
         Fragment inspectionExtraFields = new Fragment("childExtraFields", "paymentExtraFields", this);
@@ -72,22 +73,24 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         inspectionExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.referenceNumber"));
 
 
-        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "totalAmount").required();
+        ComponentUtil.addBigDecimalBudgetAmountField(editForm, "totalAmount");
 
 
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcReport",
-                submittedAndWithinTenderProcessProvider(pmcReportService)
-        ).required();
+                submittedAndWithinTenderProcessProvider(pmcReportService));
         ComponentUtil.addSelect2ChoiceField(editForm, "inspectionReport",
-                submittedAndWithinTenderProcessProvider(inspectionReportService)
-        ).required();
+                submittedAndWithinTenderProcessProvider(inspectionReportService));
         ComponentUtil.addSelect2ChoiceField(editForm, "administratorReport",
-                submittedAndWithinTenderProcessProvider(administratorReportService)
-        ).required();
-        ComponentUtil.addYesNoToggle(editForm, "lastPayment", true).required();
-        ComponentUtil.addDateField(editForm, "approvedDate").required();
+                submittedAndWithinTenderProcessProvider(administratorReportService));
+        ComponentUtil.addYesNoToggle(editForm, "lastPayment", true);
+        ComponentUtil.addDateField(editForm, "approvedDate");
 
         formDocs.maxFiles(1);
+
+        FileInputBootstrapFormComponent completionCertificate =
+                new FileInputBootstrapFormComponent("completionCertificate");
+        completionCertificate.maxFiles(1);
+        editForm.add(completionCertificate);
 
         saveTerminateButton.setVisibilityAllowed(false);
     }
@@ -116,11 +119,6 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         final TenderProcess tenderProcess = report.getTenderProcess();
         tenderProcess.removePaymentVoucher(report);
         tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected AbstractTenderProcessMakueniEntity getNextForm() {
-        return null;
     }
 
 }

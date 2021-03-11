@@ -10,8 +10,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
@@ -24,10 +24,12 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.ChargeAccount;
 import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.devgateway.toolkit.persistence.dao.form.PurchRequisition;
+import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
+import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.select2.Select2Choice;
 
@@ -37,7 +39,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-17
  */
-public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition, TenderProcess> {
+public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition, PurchaseRequisitionGroup> {
 
     @SpringBean
     protected StaffService staffService;
@@ -45,12 +47,14 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     @SpringBean
     protected ChargeAccountService chargeAccountService;
 
+    @SpringBean
+    protected TenderItemService tenderItemService;
 
     public PurchRequisitionPanel(final String id) {
         super(id);
     }
 
-    protected class ListItemsValidator implements IFormValidator {
+    protected class PurchRequisitionItemCountValidator implements IFormValidator {
         @Override
         public FormComponent<?>[] getDependentFormComponents() {
             return new FormComponent[0];
@@ -58,58 +62,27 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
 
         @Override
         public void validate(Form<?> form) {
-//            final Set<PlanItem> planItems = new HashSet<>();
-//            final List<PurchaseItem> purchaseItems = PRequisitionPanel.this.getModelObject();
-//            for (final PurchaseItem purchaseItem : purchaseItems) {
-//                if (purchaseItem.getPlanItem() != null) {
-//                    planItems.add(purchaseItem.getPlanItem());
-//                }
-//            }
-//
-//            if (purchaseItems.size() != 0 && purchaseItems.size() != planItems.size()) {
-//                final ListView<PurchaseItem> list = (ListView<PurchaseItem>) PRequisitionPanel.this
-//                        .get("listWrapper").get("list");
-//                if (list != null) {
-//                    for (int i = 0; i < list.size(); i++) {
-//                        final TransparentWebMarkupContainer accordion =
-//                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
-//
-//                        final GenericBootstrapFormComponent planItem =
-//                                (GenericBootstrapFormComponent) accordion.get(ID_ACCORDION_TOGGLE)
-//                                        .get("headerField").get("planItem");
-//
-//                        if (planItem != null) {
-//                            planItem.getField().error(getString("uniqueItem"));
-//
-//                          final Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
-//                            if (target.isPresent()) {
-//                                target.get().add(planItem.getBorder());
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            List<PurchRequisition> items = PurchRequisitionPanel.this.getModelObject();
+            if (items.size() == 0) {
+                form.error(getString("atLeastOnePurchRequisition"));
+            }
+
         }
     }
-
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", Model.of("New Purchase Requisition"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newPurchaseRequisition", this));
     }
 
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        final Form form = (Form) getParent();
-        if (form != null) {
-            form.add(new ListItemsValidator());
-        }
+        findParent(Form.class).add(new PurchRequisitionItemCountValidator());
     }
 
     @Override
-    public PurchRequisition createNewChild(final IModel<TenderProcess> parentModel) {
+    public PurchRequisition createNewChild(final IModel<PurchaseRequisitionGroup> parentModel) {
         final PurchRequisition child = new PurchRequisition();
         child.setParent(parentModel.getObject());
         child.setExpanded(true);
@@ -125,9 +98,9 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 List<TenderItem> tenderItems = null;
-//                if (!item.isNew()) {
-//                    tenderItems = tenderItemService.findByPurchaseItem(item);
-//                }
+                if (!item.isNew()) {
+                    tenderItems = tenderItemService.findByPurchaseItemIn(item.getPurchaseItems());
+                }
 
                 if (!ObjectUtils.isEmpty(tenderItems)) {
                     final ValidationError error = new ValidationError();
@@ -148,23 +121,18 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
 
     @Override
     public void populateCompoundListItem(final ListItem<PurchRequisition> item) {
-        ComponentUtil.addDateField(item, "requestApprovalDate").required();
+        ComponentUtil.addDateField(item, "requestApprovalDate");
         item.add(new PurchaseItemPanel("purchaseItems"));
 
-        ComponentUtil.addDateField(item, "approvedDate").required();
+        ComponentUtil.addDateField(item, "approvedDate");
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
-        formDocs.required();
         item.add(formDocs);
     }
 
     @Override
-    protected boolean filterListItem(final PurchRequisition purchaseItem) {
-        return true;
-    }
-
-    @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<PurchRequisition> compoundModel) {
+    protected Component createHeaderField(final String id,
+            final CompoundPropertyModel<PurchRequisition> compoundModel) {
         return new PurchRequisitionHeaderPanel(id, compoundModel);
     }
 
@@ -180,12 +148,12 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
             GenericBootstrapFormComponent<Staff, Select2Choice<Staff>> requestedBy =
                     ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "requestedBy",
                             staffService
-                    ).required();
+                    );
             requestedBy.add(new StopEventPropagationBehavior());
             GenericBootstrapFormComponent<ChargeAccount, Select2Choice<ChargeAccount>> chargeAccount =
                     ComponentUtil.addSelect2ChoiceField(PurchRequisitionHeaderPanel.this, "chargeAccount",
                             chargeAccountService
-                    ).required();
+                    );
             chargeAccount.add(new StopEventPropagationBehavior());
         }
     }

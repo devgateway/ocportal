@@ -17,6 +17,6 @@ public interface AbstractImplTenderProcessMakueniEntityRepository<T extends Abst
 
     @Override
     @Query("select c from  #{#entityName} c "
-            + " where c.tenderProcess.project.procurementPlan.fiscalYear = :fiscalYear")
+            + " where c.tenderProcess.procurementPlan.fiscalYear = :fiscalYear")
     List<T> findByFiscalYear(@Param("fiscalYear") FiscalYear fiscalYear);
 }

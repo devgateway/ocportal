@@ -32,7 +32,6 @@ public class PrivateSectorRequestPanel extends ListViewSectionPanel<PrivateSecto
     @Override
     public void populateCompoundListItem(final ListItem<PrivateSectorRequest> item) {
         FileInputBootstrapFormComponent upload = new FileInputBootstrapFormComponent("upload");
-        upload.required();
         upload.maxFiles(1);
         item.add(upload);
 
@@ -41,10 +40,4 @@ public class PrivateSectorRequestPanel extends ListViewSectionPanel<PrivateSecto
         requestDate.getField().add(new AfterThanDateValidator(item.getModel().map(PrivateSectorRequest::getParent)
                 .map(InspectionReport::getApprovedDate)));
     }
-
-    @Override
-    protected boolean filterListItem(PrivateSectorRequest privateSectorRequest) {
-        return true;
-    }
-
 }

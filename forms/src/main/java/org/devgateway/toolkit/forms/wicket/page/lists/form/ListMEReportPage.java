@@ -37,19 +37,26 @@ public class ListMEReportPage extends ListAbstractImplTenderProcessMakueniEntity
 
     @Override
     protected void onInitialize() {
-        addTenderTitleColumn();
-        addMEStatusColumn();
+        attachFm("meReportsList");
 
         super.onInitialize();
     }
 
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
+        addTenderTitleColumn();
+        addMEStatusColumn();
+    }
+
     protected void addMEStatusColumn() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(
+        addFmColumn("meStatus", new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>(
                         (new StringResourceModel("meStatus", ListMEReportPage.this)).getString()),
                 "meStatus",
                 "meStatus",
-                LoadableDetachableModel.of(() -> meStatusService.findAll()), dataTable, false
+                LoadableDetachableModel.of(() -> meStatusService.findAll()), getDataTable(), false
         ));
     }
 

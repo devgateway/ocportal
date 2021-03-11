@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.lists.form;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -36,21 +35,31 @@ public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
     @Override
     protected void onInitialize() {
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "procurementPlan.department", "procurementPlan.department", new ListModel(departments), dataTable));
-
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
-                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear", new ListModel(fiscalYears), dataTable));
-
-        columns.add(new TextFilteredBootstrapPropertyColumn<>(
-                new Model<>((new StringResourceModel("projectTitle", ListProjectPage.this)).getString()),
-                "projectTitle", "projectTitle"));
-
-        addLastModifiedDateColumn();
+        attachFm("projectList");
 
         super.onInitialize();
     }
 
+    @Override
+    protected void addColumns() {
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
+                "procurementPlan.department", "procurementPlan.department",
+                new ListModel<>(departments), getDataTable()));
+
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYears", this),
+                "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
+                new ListModel<>(fiscalYears), getDataTable()));
+
+        addFmColumn("projectTitle", new TextFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("projectTitle", this),
+                "projectTitle", "projectTitle"));
+
+        addLastModifiedDateColumn();
+
+        super.addColumns();
+    }
 
     @Override
     public JpaFilterState<Project> newFilterState() {

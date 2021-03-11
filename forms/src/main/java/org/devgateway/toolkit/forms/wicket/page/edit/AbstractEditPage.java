@@ -18,13 +18,14 @@ import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.GenericWebPage;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -33,7 +34,6 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -44,6 +44,7 @@ import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.exceptions.NullJpaServiceException;
 import org.devgateway.toolkit.forms.exceptions.NullListPageClassException;
+import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
 import org.devgateway.toolkit.forms.util.MarkupCacheService;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
@@ -57,13 +58,18 @@ import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
+import org.devgateway.toolkit.persistence.validator.Severity;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.service.InvalidObjectException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolation;
 import java.io.Serializable;
+import java.util.stream.Collectors;
 
 /**
  * @author mpostelnicu Page used to make editing easy, extend to get easy access
@@ -137,6 +143,13 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal deleteFailedModal;
 
+    protected TextContentModal errorModal;
+
+    /**
+     * Set when the current object cannot be saved or created.
+     */
+    private boolean hasNonRecoverableError;
+
     @SpringBean
     private EntityManager entityManager;
 
@@ -172,7 +185,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected TextContentModal createDeleteModal() {
         final TextContentModal modal = new TextContentModal("deleteModal",
-                Model.of("DELETE is an irreversible operation. Are you sure?"));
+                new StringResourceModel("confirmDeleteModal.content", this));
         modal.addCloseButton();
 
         final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
@@ -186,24 +199,37 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             }
         };
         deleteButton.setDefaultFormProcessing(false);
-        deleteButton.setLabel(Model.of("DELETE"));
+        deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
         modal.addButton(deleteButton);
 
         return modal;
     }
 
+    protected TextContentModal createErrorModal() {
+        final TextContentModal modal = new TextContentModal("errorModal", Model.of()) {
+            @Override
+            protected void onClose(IPartialPageRequestHandler target) {
+                super.onClose(target);
+                setResponsePage(listPageClass);
+            }
+        };
+        modal.addCloseButton();
+        modal.setUseCloseHandler(true);
+        return modal;
+    }
+
     protected TextContentModal createDeleteFailedModal() {
         final TextContentModal modal = new TextContentModal("deleteFailedModal",
-                new ResourceModel("delete_error_message"));
-        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+                new StringResourceModel("deleteFailedModal.content", this));
+        final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
             }
         };
-        deleteButton.setDefaultFormProcessing(false);
-        deleteButton.setLabel(Model.of("OK"));
-        modal.addButton(deleteButton);
+        okButton.setDefaultFormProcessing(false);
+        okButton.setLabel(new StringResourceModel("deleteFailedModal.ok", this));
+        modal.addButton(okButton);
 
         modal.add(new AjaxEventBehavior("hidden.bs.modal") {
             @Override
@@ -263,8 +289,26 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
 
-    public class EditForm extends BootstrapForm<T> {
+    public class EditForm extends BootstrapForm<T> implements DgFmComponentSubject {
         private static final long serialVersionUID = -9127043819229346784L;
+
+        @SpringBean
+        protected DgFmService fmService;
+
+        @Override
+        public DgFmService getFmService() {
+            return fmService;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isFmEnabled(super::isEnabled);
+        }
+
+        @Override
+        public boolean isVisible() {
+            return isFmVisible(super::isVisible);
+        }
 
         /**
          * wrap the model with a {@link CompoundPropertyModel} to ease editing
@@ -339,37 +383,59 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
-            // save the object and go back to the list page
-            final T saveable = editForm.getModelObject();
+            try {
+                // save the object and go back to the list page
+                final T saveable = editForm.getModelObject();
 
-            beforeSaveEntity(saveable);
+                beforeSaveEntity(saveable);
 
-            // saves the entity and flushes the changes
-            jpaService.saveAndFlush(saveable);
-            getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
+                // saves the entity and flushes the changes
+                jpaService.saveAndFlush(saveable);
+                getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
 
-            // clears session and detaches all entities that are currently
-            // attached
-            entityManager.clear();
+                // clears session and detaches all entities that are currently
+                // attached
+                entityManager.clear();
 
-            // we flush the mondrian/wicket/reports cache to ensure it gets
-            // rebuilt
-            flushReportingCaches();
+                // we flush the mondrian/wicket/reports cache to ensure it gets
+                // rebuilt
+                flushReportingCaches();
 
-            afterSaveEntity(saveable);
+                afterSaveEntity(saveable);
 
-            // only redirect if redirect is true
-            if (redirectToSelf) {
-                // we need to close the blockUI if it's opened and enable all the buttons
-                target.appendJavaScript("$.unblockUI();");
-                target.appendJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', false);");
-            } else if (redirect) {
-                setResponsePage(getResponsePage(), getParameterPage());
+                // only redirect if redirect is true
+                if (redirectToSelf) {
+                    // we need to close the blockUI if it's opened and enable all the buttons
+                    target.appendJavaScript("$.unblockUI();");
+                    target.appendJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', false);");
+                } else if (redirect) {
+                    setResponsePage(getResponsePage(), getParameterPage());
+                }
+
+                // redirect is set back to true, which is the default behavior
+                redirect = true;
+                redirectToSelf = false;
+            } catch (InvalidObjectException e) {
+                hasNonRecoverableError = e.getViolations().stream().anyMatch(this::nonRecoverableError);
+                if (hasNonRecoverableError) {
+                    String errors = e.getViolations().stream()
+                            .filter(this::nonRecoverableError)
+                            .map(ConstraintViolation::getMessage)
+                            .collect(Collectors.joining("\n"));
+
+                    errorModal.setModelObject(errors);
+                    target.add(errorModal);
+
+                    errorModal.show(target);
+                } else {
+                    e.getViolations().forEach(v -> editForm.error(v.getMessage()));
+                    target.add(feedbackPanel);
+                }
             }
+        }
 
-            // redirect is set back to true, which is the default behavior
-            redirect = true;
-            redirectToSelf = false;
+        private boolean nonRecoverableError(ConstraintViolation<?> violation) {
+            return violation.getConstraintDescriptor().getPayload().contains(Severity.NonRecoverable.class);
         }
 
         /**
@@ -377,7 +443,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
          *
          * @return
          */
-        protected Class<? extends GenericWebPage<Void>> getResponsePage() {
+        protected Class<? extends Page> getResponsePage() {
             return listPageClass;
         }
 
@@ -567,6 +633,13 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         // this fragment ensures extra buttons are added below the wicket:child section in child
         final Fragment fragment = new Fragment("extraButtons", "noButtons", this);
         editForm.add(fragment);
+
+        errorModal = createErrorModal();
+        add(errorModal);
+    }
+
+    public boolean hasNonRecoverableError() {
+        return hasNonRecoverableError;
     }
 
     @Override
@@ -598,6 +671,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             editForm.setCompoundPropertyModel(model);
         }
 
+        add(createPrintLink("printLink"));
+
         afterLoad(model);
     }
 
@@ -606,6 +681,17 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         super.renderHead(response);
 
         // block UI
-        response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
+        if (!ComponentUtil.isPrintMode()) {
+            response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
+        }
+    }
+
+    @Override
+    protected Component createPrintLink(String id) {
+        Component printLink = super.createPrintLink(id);
+        if (editForm.getModelObject().isNew()) {
+            printLink.setVisibilityAllowed(false);
+        }
+        return printLink;
     }
 }

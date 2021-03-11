@@ -1,0 +1,294 @@
+# TENDER FORM PAGE
+- name: tenderForm
+  enabled: yes
+  visible: yes
+- name: tenderForm.address
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.approve
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.cancel
+  enabled: yes
+  visible: yes
+- name: tenderForm.closingDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.delete
+  enabled: yes
+  visible: yes
+- name: tenderForm.emailAddress
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.formDocs
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.invitationDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.issuedBy
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.objective
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.procurementMethod
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.procurementMethodRationale
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.revertToDraft
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.save
+  enabled: yes
+  visible: yes
+- name: tenderForm.saveContinue
+  enabled: yes
+  visible: yes
+- name: tenderForm.saveSubmit
+  enabled: yes
+  visible: yes
+- name: tenderForm.submitAndNext
+  enabled: yes
+  visible: yes
+- name: tenderForm.targetGroup
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.description
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.newButton
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.purchaseItem
+  mandatory: yes
+  enabled: yes
+  visible: no
+- name: tenderForm.tenderItems.planItem
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.quantity
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.remove
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.totalCost
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.unit
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderItems.unitPrice
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderLink
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderNumber
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderProcess.procurementPlan.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderProcess.procurementPlan.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderTitle
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: tenderForm.tenderValue
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tenderForm.billOfQuantities
+  mandatory: no
+  enabled: yes
+  visible: no
+- name: tenderForm.terminate
+  enabled: yes
+  visible: yes
+- name: tenderForm.wards
+  mandatory: yes
+  enabled: yes
+  visible: no
+  visibleDeps:
+    - tenderForm.subcounties
+  enabledDeps:
+    - tenderForm.subcounties
+- name: tenderForm.subcounties
+  mandatory: yes
+  enabled: yes
+  visible: no
+
+# TENDERS LIST PAGE
+- name: tenderForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: tendersList
+  visible: yes
+  visibleDeps:
+    - tenderForm
+- name: tendersList.department
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderProcess.procurementPlan.department
+- name: tendersList.downloadFile
+  visible: yes
+- name: tendersList.downloadOcds
+  visible: yes
+  visibleDeps:
+    - tenderForm.formDocs
+- name: tendersList.filterToolbar
+  visible: yes
+- name: tendersList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderProcess.procurementPlan.fiscalYear
+- name: tendersList.lastModifiedDate
+  visible: yes
+- name: tendersList.status
+  visible: yes
+- name: tendersList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.tender
+  visible: yes
+  visibleDeps:
+    - tenderForm
+- name: publicView.tender.tenderTitle
+  visible: yes
+- name: publicView.tender.tenderNumber
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderNumber
+- name: publicView.tender.tenderCode
+  visible: yes
+- name: publicView.tender.procurementMethod
+  visible: yes
+  visibleDeps:
+    - tenderForm.procurementMethod
+- name: publicView.tender.procurementMethodRationale
+  visible: yes
+  visibleDeps:
+    - tenderForm.procurementMethodRationale
+- name: publicView.tender.invitationDate
+  visible: yes
+  visibleDeps:
+    - tenderForm.invitationDate
+- name: publicView.tender.closingDate
+  visible: yes
+  visibleDeps:
+    - tenderForm.closingDate
+- name: publicView.tender.issuedBy.label
+  visible: yes
+  visibleDeps:
+    - tenderForm.issuedBy
+- name: publicView.tender.issuedBy.address
+  visible: yes
+  visibleDeps:
+    - tenderForm.issuedBy
+- name: publicView.tender.issuedBy.emailAddress
+  visible: yes
+  visibleDeps:
+    - tenderForm.issuedBy
+- name: publicView.tender.tenderValue
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderValue
+- name: publicView.tender.billOfQuantities
+  visible: yes
+  visibleDeps:
+    - tenderForm.billOfQuantities
+- name: publicView.tender.targetGroup
+  visible: yes
+  visibleDeps:
+    - tenderForm.targetGroup
+- name: publicView.tender.objective
+  visible: yes
+  visibleDeps:
+    - tenderForm.objective
+- name: publicView.tender.tenderItems
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems
+- name: publicView.tender.tenderItems.item
+  visible: yes
+- name: publicView.tender.tenderItems.description
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.description
+- name: publicView.tender.tenderItems.purchaseItem
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.purchaseItem
+- name: publicView.tender.tenderItems.quantity
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.quantity
+- name: publicView.tender.tenderItems.unitPrice
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.unitPrice
+- name: publicView.tender.tenderItems.totalCost
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderItems.totalCost
+- name: publicView.tender.formDocs
+  visible: yes
+  visibleDeps:
+    - tenderForm.formDocs
+- name: publicView.tender.tenderLink
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderLink
+- name: publicView.tender.receiveAlertsButton
+  visible: yes
+  visibleDeps:
+    - publicView.subscribeToAlertsButton
+- name: publicView.tender.wards
+  visible: yes
+  visibleDeps:
+    - tenderForm.wards
+- name: publicView.tender.subcounties
+  visible: yes
+  visibleDeps:
+    - tenderForm.subcounties

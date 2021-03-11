@@ -70,22 +70,26 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
         this.departments = departmentService.findAll();
         this.jpaService = repository;
         this.editPageClass = EditFeedbackMessagePage.class;
+        hasNewPage = false;
     }
 
     @Override
-    protected void onInitialize() {
-        hasNewPage = false;
-        columns.add(new PropertyColumn<>(new Model<>("Page URL"), "url", "url"));
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "department", "department", new ListModel(departments), dataTable
+    protected void addColumns() {
+        columns.add(new PropertyColumn<>(new StringResourceModel("pageUrl", this),
+                "url", "url"));
+        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
+                "department", "department", new ListModel(departments), getDataTable()
         ));
-        columns.add(new PropertyColumn<>(new Model<>("Visible"), "visible", "visible"));
-        columns.add(new PropertyColumn<>(new Model<>("Contributor Name"), "name", "name"));
-        columns.add(new PropertyColumn<>(new Model<>("Date Created"), "createdDate", "createdDate.get"));
-        columns.add(new PropertyColumn<>(new Model<>("Date Modified"), "lastModifiedDate", "lastModifiedDate.get"));
-        columns.add(new PropertyColumn<>(new Model<>("Replies"), null, "replies.size"));
-        super.onInitialize();
-
+        columns.add(new PropertyColumn<>(new StringResourceModel("visible", this),
+                "visible", "visible"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("contributorName", this),
+                "name", "name"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("dateCreated", this),
+                "createdDate", "createdDate.get"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("dateModified", this),
+                "lastModifiedDate", "lastModifiedDate.get"));
+        columns.add(new PropertyColumn<>(new StringResourceModel("replies", this),
+                null, "replies.size"));
     }
 
     @Override

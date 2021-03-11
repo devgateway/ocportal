@@ -3,12 +3,19 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethodRationale;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
+import org.devgateway.toolkit.persistence.validator.Severity;
+import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.devgateway.toolkit.persistence.validator.validators.UniqueTenderProcessEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -19,16 +26,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -39,8 +50,12 @@ import java.util.function.Consumer;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id"),
         @Index(columnList = "tenderTitle"),
-        @Index(columnList = "tenderNumber")})
+        @Index(columnList = "tenderNumber")}, uniqueConstraints =
+@UniqueConstraint(columnNames = "tender_process_id"))
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Form(featureName = "tenderForm")
+@UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
+        message = "{org.devgateway.toolkit.persistence.dao.form.UniqueTender.message}")
 public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable {
     @ExcelExport(useTranslation = true, name = "Tender ID")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
@@ -55,6 +70,16 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Subcounty> subcounties;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Wards")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Ward> wards = new ArrayList<>();
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
     @ManyToOne
@@ -90,6 +115,11 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<TenderItem> tenderItems = new ArrayList<>();
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Bill of Quantities")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FileMetadata> billOfQuantities = new HashSet<>();
 
     @Override
     public void setLabel(final String label) {
@@ -212,6 +242,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @Override
     @Transactional
     protected Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getTenderQuotationEvaluation()));
     }
@@ -234,5 +265,39 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     public void setProcurementMethodRationale(ProcurementMethodRationale procurementMethodRationale) {
         this.procurementMethodRationale = procurementMethodRationale;
+    }
+
+    public Set<FileMetadata> getBillOfQuantities() {
+        return billOfQuantities;
+    }
+
+    public void setBillOfQuantities(Set<FileMetadata> billOfQuantities) {
+        this.billOfQuantities = billOfQuantities;
+    }
+
+    @Override
+    public Class<?> getNextForm() {
+        return TenderQuotationEvaluation.class;
+    }
+
+    @Override
+    public boolean hasDownstreamForms() {
+        return getTenderProcess().hasFormsDependingOnTender();
+    }
+
+    public List<Subcounty> getSubcounties() {
+        return subcounties;
+    }
+
+    public void setSubcounties(List<Subcounty> subcounties) {
+        this.subcounties = subcounties;
+    }
+
+    public List<Ward> getWards() {
+        return wards;
+    }
+
+    public void setWards(List<Ward> wards) {
+        this.wards = wards;
     }
 }

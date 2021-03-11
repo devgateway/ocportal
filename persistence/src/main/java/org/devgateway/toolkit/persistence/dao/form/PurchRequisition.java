@@ -27,7 +27,8 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(indexes = {@Index(columnList = "parent_id")})
-public class PurchRequisition extends AbstractDocsChildExpAuditEntity<TenderProcess> implements ListViewItem {
+public class PurchRequisition extends AbstractDocsChildExpAuditEntity
+        <PurchaseRequisitionGroup> implements ListViewItem {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
     @ManyToOne

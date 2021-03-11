@@ -32,8 +32,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeSet;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -91,8 +93,45 @@ public class FrequentTenderersController extends GenericOCDSController {
     @RequestMapping(value = "/api/activeAwardsCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    public List<Document> activeAwardsCount(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
-        Assert.notNull(filter.getBidderId(), "Bidder must not be null");
+    public List<List<Integer>> getActiveAwardsCountInBatch(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
+        Assert.notNull(filter.getLeftBidderIds(), "Left bidder ids must not be null");
+        Assert.notNull(filter.getRightBidderIds(), "Right bidder ids must not be null");
+        Assert.notNull(filter.getLeftBidderIds().size() == filter.getRightBidderIds().size(),
+                "Left and right bidders must have the same size");
+
+        ArrayList<String> leftBidderIds = filter.getLeftBidderIds();
+        ArrayList<String> rightBidderIds = filter.getRightBidderIds();
+        filter.setLeftBidderIds(null);
+        filter.setRightBidderIds(null);
+
+        List<List<Integer>> allCounts = new ArrayList<>();
+        for (int i = 0; i < leftBidderIds.size(); i++) {
+            String leftBidderId = leftBidderIds.get(i);
+            String rightBidderId = rightBidderIds.get(i);
+
+            TreeSet<String> bidderId = new TreeSet<>();
+            bidderId.add(leftBidderId);
+            bidderId.add(rightBidderId);
+            filter.setBidderId(bidderId);
+
+            TreeSet<String> supplierId = new TreeSet<>();
+            supplierId.add(leftBidderId);
+            filter.setSupplierId(supplierId);
+
+            List<Integer> counts = new ArrayList<>();
+            counts.add(activeAwardsCount(filter));
+
+            supplierId.clear();
+            supplierId.add(rightBidderId);
+            counts.add(activeAwardsCount(filter));
+
+            allCounts.add(counts);
+        }
+        return allCounts;
+    }
+
+    private Integer activeAwardsCount(YearFilterPagingRequest filter) {
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.AWARDS_STATUS).is(Award.Status.active.toString())
                         .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()))),
@@ -111,7 +150,12 @@ public class FrequentTenderersController extends GenericOCDSController {
                 group().count().as("cnt")
         );
 
-        return releaseAgg(agg);
+        List<Document> docs = releaseAgg(agg);
+        if (docs.isEmpty()) {
+            return 0;
+        } else {
+            return docs.get(0).getInteger("cnt");
+        }
     }
 
 }

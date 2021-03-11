@@ -1,0 +1,47 @@
+# CABINET PAPER FORM PAGE
+- name: cabinetPaperForm
+  enabled: yes
+  visible: yes
+- name: cabinetPaperForm.cancel
+  enabled: yes
+  visible: yes
+- name: cabinetPaperForm.delete
+  enabled: yes
+  visible: yes
+- name: cabinetPaperForm.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: cabinetPaperForm.name
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: cabinetPaperForm.number
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: cabinetPaperForm.save
+  enabled: yes
+  visible: yes
+# CABINET PAPERS LIST PAGE
+- name: cabinetPapersList
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - cabinetPaperForm
+- name: cabinetPapersList.department
+  visible: yes
+- name: cabinetPapersList.downloadFile
+  visible: yes
+  visibleDeps:
+    - cabinetPaperForm.formDocs
+- name: cabinetPapersList.filterToolbar
+  visible: yes
+- name: cabinetPapersList.fiscalYear
+  visible: yes
+- name: cabinetPapersList.number
+  visible: yes
+  visibleDeps:
+    - cabinetPaperForm.number
+- name: cabinetPapersList.status
+  visible: yes

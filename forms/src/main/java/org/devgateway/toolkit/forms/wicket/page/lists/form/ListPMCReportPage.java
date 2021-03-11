@@ -29,12 +29,18 @@ public class ListPMCReportPage extends ListAbstractImplTenderProcessMakueniEntit
 
     @Override
     protected void onInitialize() {
-        addTenderTitleColumn();
-        addAuthorizePaymentColumn();
+        attachFm("pmcReportsList");
 
         super.onInitialize();
     }
 
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
+        addTenderTitleColumn();
+        addAuthorizePaymentColumn();
+    }
 
     @Override
     public JpaFilterState<PMCReport> newFilterState() {

@@ -15,7 +15,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -144,7 +144,9 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             try {
                 createProcurementPlan();
             } catch (Exception e) {
-                form.error(getString("ExcelImportErrorValidator") + e.getMessage());
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("message", e.getMessage());
+                form.error(getString("ExcelImportErrorValidator"), map);
             }
         }
     }
@@ -160,7 +162,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 download.initiate(target);
             }
         };
-        downloadLink.setLabel(Model.of("Download Template"));
+        downloadLink.setLabel(new StringResourceModel("downloadTemplate", this));
         form.add(downloadLink);
     }
 
@@ -227,23 +229,27 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             Workbook wb = WorkbookFactory.create(new ByteArrayInputStream(file.getContent().getBytes()));
             Sheet sh = wb.getSheetAt(0);
             for (Row r : sh) {
-                if (rn++ < 7 || r.getLastCellNum() == -1) {
+                if (rn++ < 7 || isEmptyRow(r)) {
                     continue;
                 }
                 PlanItem pi = new PlanItem();
-                Item item = itemService.findByCode(r.getCell(2).getStringCellValue());
+                String itemCode = toSingleLine(r.getCell(2).getStringCellValue());
+                Item item = itemService.findByCode(itemCode);
                 if (item == null) {
-                    item = createItem(r);
+                    String itemLabel = toSingleLine(r.getCell(3).getStringCellValue());
+                    item = createItem(itemCode, itemLabel);
                 }
                 pi.setItem(item);
                 pp.getPlanItems().add(pi);
                 pi.setEstimatedCost(BigDecimal.valueOf(r.getCell(4).getNumericCellValue()));
 
-                Unit unit = unitService.findByLabelIgnoreCase(r.getCell(5).getStringCellValue());
+                String unitName = r.getCell(5).getStringCellValue();
+                Unit unit = unitService.findByLabelIgnoreCase(unitName);
                 if (unit == null) {
-                    throw new RuntimeException("Unit " + r.getCell(5).getStringCellValue() + " is not supported. "
-                            + "Use standard UNCEFACT unit names and make sure they are added in the admin->metadata "
-                            + "first");
+                    String message = new StringResourceModel("import.unknownUnit")
+                            .setParameters(unitName)
+                            .getString();
+                    throw new RuntimeException(message);
                 }
 
                 pi.setUnitOfIssue(unit);
@@ -259,10 +265,32 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Exception processing row " + (rn + 2) + " " + e.toString());
+            String message = new StringResourceModel("import.exceptionAtRow", this)
+                    .setParameters((rn + 2), e.toString())
+                    .getString();
+            throw new RuntimeException(message);
         }
 
         return pp;
+    }
+
+    private boolean isEmptyRow(Row r) {
+        short lastCellNum = r.getLastCellNum();
+        for (int col = r.getFirstCellNum(); col < lastCellNum; col++) {
+            Cell cell = r.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+            if (cell != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String toSingleLine(String value) {
+        if (value == null) {
+            return null;
+        }
+        return value.replace('\n', ' ')
+                .replace("\r", "");
     }
 
     private ProcurementMethod getProcurementMethod(Row r) {
@@ -270,7 +298,10 @@ public class ImportProcurementPlanItemsPage extends BasePage {
 
         ProcurementMethod pm = procurementMethodService.findByLabel(pmText);
         if (pm == null) {
-            throw new RuntimeException("Procurement method " + pmText + " is not mapped");
+            String message = new StringResourceModel("import.unmappedProcurementMethod", this)
+                    .setParameters(pmText)
+                    .getString();
+            throw new RuntimeException(message);
         }
         return pm;
     }
@@ -301,15 +332,16 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         return t;
     }
 
-    protected Item createItem(Row r) {
+    protected Item createItem(String code, String label) {
         Item item = new Item();
-        item.setCode(r.getCell(2).getStringCellValue());
-        item.setLabel(r.getCell(3).getStringCellValue());
+        item.setCode(code);
+        item.setLabel(label);
         return itemService.save(item);
     }
 
     protected void createImportButton() {
-        BootstrapSubmitButton importButton = new BootstrapSubmitButton("import", Model.of("Import Data")) {
+        StringResourceModel importModel = new StringResourceModel("import", this);
+        BootstrapSubmitButton importButton = new BootstrapSubmitButton("import", importModel) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 ProcurementPlan procurementPlan = createProcurementPlan();

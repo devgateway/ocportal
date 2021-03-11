@@ -1,0 +1,163 @@
+# EDIT PAGE
+- name: awardAcceptanceForm
+  enabled: yes
+  visible: no
+- name: awardAcceptanceForm.approve
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.cancel
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.delete
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.acceptanceDate
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.acceptedAwardValue
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.awardee
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.formDocs
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.newButton
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.remove
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.supplierID
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.items.supplierResponse
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.newStatusComment
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.revertToDraft
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.save
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.saveContinue
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.saveSubmit
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.submitAndNext
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm
+    - professionalOpinionForm
+- name: awardAcceptanceForm.tenderNumber
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.tenderProcess.procurementPlan.department
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.tenderProcess.procurementPlan.fiscalYear
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.tenderTitle
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.terminate
+  mandatory: no
+  enabled: yes
+  visible: yes
+- name: awardAcceptanceForm.visibleStatusComments
+  mandatory: no
+  enabled: yes
+  visible: yes
+
+# LIST PAGE
+- name: awardAcceptanceList
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm
+- name: awardAcceptanceList.awardee
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.awardee
+- name: awardAcceptanceList.department
+  visibleDeps:
+    - awardAcceptanceForm.tenderProcess.procurementPlan.department
+  visible: yes
+- name: awardAcceptanceList.filterToolbar
+  visible: yes
+- name: awardAcceptanceList.fiscalYear
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.tenderProcess.procurementPlan.fiscalYear
+- name: awardAcceptanceList.lastModifiedDate
+  visible: yes
+- name: awardAcceptanceList.status
+  visible: yes
+- name: awardAcceptanceList.tenderTitle
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+
+# PUBLIC VIEW
+- name: publicView.awardAcceptance
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm
+- name: publicView.awardAcceptance.items
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items
+- name: publicView.awardAcceptance.items.supplierResponse
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.supplierResponse
+- name: publicView.awardAcceptance.items.acceptedAwardValue
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.acceptedAwardValue
+- name: publicView.awardAcceptance.items.acceptanceDate
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.acceptanceDate
+- name: publicView.awardAcceptance.items.awardee.label
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.awardee
+- name: publicView.awardAcceptance.items.awardee.code
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.awardee
+- name: publicView.awardAcceptance.items.formDocs
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.formDocs

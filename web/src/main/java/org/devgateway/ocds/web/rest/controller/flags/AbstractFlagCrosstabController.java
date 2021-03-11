@@ -48,7 +48,7 @@ public abstract class AbstractFlagCrosstabController extends AbstractFlagControl
         return group;
     }
 
-    protected DBObject getProjectPercentage(final YearFilterPagingRequest filter) {
+    protected DBObject getProjectPercentage(String flagProperty, final YearFilterPagingRequest filter) {
         DBObject project2 = new BasicDBObject();
 
         project2.put(Fields.UNDERSCORE_ID, 0);
@@ -57,12 +57,12 @@ public abstract class AbstractFlagCrosstabController extends AbstractFlagControl
             project2.put(GenericKeys.PERCENT + "." + getFlagDesignation(f),
                     new BasicDBObject("$cond",
                             Arrays.asList(new BasicDBObject("$eq",
-                                            Arrays.asList(ref(getFlagDesignation(getFlagProperty())),
+                                            Arrays.asList(ref(getFlagDesignation(flagProperty)),
                                                     0)), new BasicDBObject("$literal", 0),
                                     new BasicDBObject("$multiply",
                                             Arrays.asList(new BasicDBObject("$divide",
                                                     Arrays.asList(ref(getFlagDesignation(f)),
-                                                            ref(getFlagDesignation(getFlagProperty())))), 100))
+                                                            ref(getFlagDesignation(flagProperty)))), 100))
                             ))
 
             );
@@ -74,19 +74,19 @@ public abstract class AbstractFlagCrosstabController extends AbstractFlagControl
         return project2;
     }
 
-    protected List<Document> flagStats(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
-
+    protected List<Document> flagStats(String flagProperty,
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
         DBObject projectPrepare = getProjectPrepare(filter);
 
         DBObject group = getGroup(filter);
 
-        DBObject projectPercentage = getProjectPercentage(filter);
+        DBObject projectPercentage = getProjectPercentage(flagProperty, filter);
 
         Aggregation agg = newAggregation(
                 match(getYearDefaultFilterCriteria(filter, getTenderDateField())
                         .and(getTenderDateField()).exists(true)
-                        .and(getFlagProperty()).is(true)),
+                        .and(flagProperty).is(true)),
                 new CustomProjectionOperation(projectPrepare),
                 new CustomGroupingOperation(group),
                 new CustomProjectionOperation(projectPercentage)

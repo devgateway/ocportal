@@ -1,14 +1,15 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
+import org.devgateway.toolkit.persistence.dao.form.CabinetPaper_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.repository.form.CabinetPaperRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  *
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<CabinetPaper>
         implements CabinetPaperService {
 
@@ -25,11 +26,6 @@ public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<Ca
 
     @Override
     protected BaseJpaRepository<CabinetPaper, Long> repository() {
-        return cabinetPaperRepository;
-    }
-
-    @Override
-    public TextSearchableRepository<CabinetPaper, Long> textRepository() {
         return cabinetPaperRepository;
     }
 
@@ -50,4 +46,8 @@ public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<Ca
     }
 
 
+    @Override
+    public SingularAttribute<? super CabinetPaper, String> getTextAttribute() {
+        return CabinetPaper_.name;
+    }
 }

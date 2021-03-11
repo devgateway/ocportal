@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,14 +28,15 @@ import java.util.Collections;
 public class FiscalYearBudget extends AbstractMakueniEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private FiscalYear fiscalYear;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Department department;
 
     @ExcelExport(useTranslation = true, name = "Amount Budgeted")
+    @NotNull
     private BigDecimal amountBudgeted;
 
     public FiscalYear getFiscalYear() {

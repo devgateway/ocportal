@@ -49,7 +49,12 @@ public class TextAreaFieldBootstrapFormComponent<TYPE> extends GenericBootstrapF
 
     @Override
     protected TextArea<TYPE> inputField(final String id, final IModel<TYPE> model) {
-        TextArea<TYPE> textArea = new TextArea<TYPE>(id, initFieldModel());
+        TextArea<TYPE> textArea = new TextArea<TYPE>(id, initFieldModel()) {
+            @Override
+            public boolean isRequired() {
+                return isFmMandatory(super::isRequired);
+            }
+        };
         return textArea;
     }
 

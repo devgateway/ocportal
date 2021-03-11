@@ -54,10 +54,17 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
 
     @Override
     protected void onInitialize() {
+        attachFm("contractsList");
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
         addTenderTitleColumn();
         addFileDownloadColumn();
         addAwardeeColumn();
-        super.onInitialize();
     }
 
     @Override
@@ -67,7 +74,7 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
                         (new StringResourceModel("awardee", ListContractPage.this)).getString()),
                 "awardee",
                 "awardee",
-                new ListModel<>(awardees), dataTable, false
+                new ListModel<>(awardees), getDataTable(), false
         ));
     }
 
@@ -108,7 +115,7 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
                 }
             };
 
-            downloadLink.add(new Label("downloadText", "Download documents"));
+            downloadLink.add(new Label("downloadText", new StringResourceModel("downloadDocuments", this)));
             downloadLink.add(new TooltipBehavior(
                     new StringResourceModel("downloadUploadedFileTooltip", ListContractPage.this, null)));
             add(downloadLink);
@@ -118,14 +125,14 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
     @Override
     protected void addFileDownloadColumn() {
         Component trn = this;
-        columns.add(new AbstractColumn<Contract, String>(
+        addFmColumn("downloadFile", new AbstractColumn<Contract, String>(
                 new StringResourceModel("downloadFile", trn)) {
             @Override
             public void populateItem(final Item<ICellPopulator<Contract>> cellItem, final String componentId,
                                      final IModel<Contract> model) {
 
                 if (!ObjectUtils.isEmpty(model.getObject().getContractDocs())) {
-                    cellItem.add(new DownloadPanel(componentId,  model));
+                    cellItem.add(new DownloadPanel(componentId, model));
                 } else {
                     cellItem.add(new Label(componentId));
                 }

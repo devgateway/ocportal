@@ -18,7 +18,7 @@ public final class MongoConstants {
 
 
     public static final class OCDSSchemes {
-        public static final String X_KE_OCMAKUENI = "X-KE-OCMAKUENI";
+        public static final String X_KE_INTERNAL_SCHEMA = "X-KE-OCMAKUENI";
         public static final String X_KE_IFMIS = "x_KE-IFMIS";
         public static final String KE_IFMIS = "KE-IFMIS";
         public static final String UNCEFACT = "UNCEFACT";
@@ -74,6 +74,8 @@ public final class MongoConstants {
                 + ".authorizePayment";
         public static final String CONTRACTS_MILESTONE_CODE = "contracts.implementation.milestones"
                 + ".code";
+        public static final String CONTRACTS_TARGET_GROUP = "contracts.targetGroup";
+        public static final String CONTRACTS_VALUE_AMOUNT = "contracts.value.amount";
         public static final String TENDER_PERIOD_END_DATE = "tender.tenderPeriod.endDate";
         public static final String TENDER_VALUE = "tender.value";
         public static final String TENDER_VALUE_AMOUNT = "tender.value.amount";

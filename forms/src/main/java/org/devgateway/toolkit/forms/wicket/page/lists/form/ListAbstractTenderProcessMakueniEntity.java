@@ -43,23 +43,28 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
     }
 
     @Override
-    protected void onInitialize() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Department"),
-                "tenderProcess.project.procurementPlan.department",
-                "tenderProcess.project.procurementPlan.department",
-                new ListModel(departments), dataTable));
+    protected void addColumns() {
+        super.addColumns();
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new Model<>("Fiscal Year"),
-                "tenderProcess.project.procurementPlan.fiscalYear",
-                "tenderProcess.project.procurementPlan.fiscalYear",
-                new ListModel(fiscalYears), dataTable));
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
+                "tenderProcess.procurementPlan.department",
+                "tenderProcess.procurementPlan.department",
+                new ListModel<>(departments), getDataTable()));
 
-        columns.add(new PropertyColumn<T, String>(new Model<>("Last Updated Date"),
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYear", this),
+                "tenderProcess.procurementPlan.fiscalYear",
+                "tenderProcess.procurementPlan.fiscalYear",
+                new ListModel<>(fiscalYears), getDataTable()));
+
+        addFmColumn("lastModifiedDate", new PropertyColumn<T, String>(
+                new StringResourceModel("lastUpdatedDate", this),
                 "lastModifiedDate", "lastModifiedDate") {
             @Override
             public void populateItem(final Item<ICellPopulator<T>> item,
-                                     final String componentId,
-                                     final IModel<T> rowModel) {
+                    final String componentId,
+                    final IModel<T> rowModel) {
                 final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
 
                 if (lastModifiedDate.isPresent()) {
@@ -70,23 +75,22 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
 
             }
         });
-
-        super.onInitialize();
     }
 
     protected void addAwardeeColumn() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(
+        addFmColumn("awardee", new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>(
                         (new StringResourceModel("awardee", ListAbstractTenderProcessMakueniEntity.this)).getString()),
                 "items.awardee",
                 "awardee",
-                new ListModel(awardees), dataTable, false
+                new ListModel<>(awardees), getDataTable(), false
         ));
     }
 
     protected void addTenderTitleColumn() {
 
-        columns.add(new TextFilteredBootstrapPropertyColumn<T, AbstractTenderProcessMakueniFilterState<T>, String>(
+        addFmColumn("tenderTitle", new TextFilteredBootstrapPropertyColumn<T,
+                AbstractTenderProcessMakueniFilterState<T>, String>(
                 new Model<>(
                         (new StringResourceModel("title", ListAbstractTenderProcessMakueniEntity.this)).getString()),
                 null, "tenderProcess.tender.iterator.next.tenderTitle"

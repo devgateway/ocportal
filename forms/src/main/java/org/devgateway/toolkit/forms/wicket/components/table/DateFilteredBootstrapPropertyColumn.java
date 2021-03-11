@@ -35,6 +35,7 @@ public class DateFilteredBootstrapPropertyColumn<T, S> extends TextFilteredPrope
         final DateFieldBootstrapFormComponent dateField =
                 new DateFieldBootstrapFormComponent(componentId, getFilterModel(form));
         dateField.hideLabel();
+        dateField.fmNoAutoAttach();
         dateField.getField().add(AttributeModifier.replace("onchange", "this.form.submit();"));
         return dateField;
     }

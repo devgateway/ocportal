@@ -19,7 +19,7 @@ import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProcurementPlanPag
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProfessionalOpinionPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditProjectPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderProcessPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditPurchaseRequisitionGroupPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardAcceptanceItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
@@ -60,7 +60,7 @@ public class TranslateField {
                     .put("ProcurementPlan", EditProcurementPlanPage.class)
                     .put("Project", EditProjectPage.class)
                     .put("CabinetPaper", EditCabinetPaperPage.class)
-                    .put("TenderProcess", EditTenderProcessPage.class)
+                    .put("PurchaseRequisitionGroup", EditPurchaseRequisitionGroupPage.class)
                     .put("Tender", EditTenderPage.class)
                     .put("TenderQuotationEvaluation", EditTenderQuotationEvaluationPage.class)
                     .put("ProfessionalOpinion", EditProfessionalOpinionPage.class)
@@ -113,7 +113,7 @@ public class TranslateField {
                         genericComponent = translationsGenericPanel.getConstructor(String.class).newInstance("id");
                     }
                 } else {
-                    logger.error("We didn't found any class for entity: " + this.entitySimpleName);
+                    logger.warn("We didn't found any class for entity: " + this.entitySimpleName);
                 }
 
             }
@@ -123,12 +123,17 @@ public class TranslateField {
     }
 
     public String getFieldLabel(final Field field) {
+        return getString(field.getName() + ".label");
+    }
+
+    public String getString(String key) {
         final Component component = genericWebPage != null ? genericWebPage : genericComponent;
-        final String fieldName = field.getName() + ".label";
-        final String string = new StringResourceModel(fieldName, component).getString();
+        StringResourceModel stringResourceModel = new StringResourceModel(key, component);
+        stringResourceModel.setDefaultValue("");
+        final String string = stringResourceModel.getString();
 
         if (ObjectUtils.isEmpty(string)) {
-            logger.error("We did not find the translation for " + fieldName + " from class: " + this.entitySimpleName);
+            logger.warn("We did not find the translation for " + key + " from class: " + this.entitySimpleName);
         }
 
         return string;

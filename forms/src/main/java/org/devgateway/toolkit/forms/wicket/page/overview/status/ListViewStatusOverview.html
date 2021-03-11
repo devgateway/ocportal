@@ -5,15 +5,18 @@
     <wicket:fragment wicket:id="headerFragment">
         <span wicket:id="procurementPlan.department" class="division">[[department]]</span>
         <span wicket:id="procurementPlan.fiscalYear" class="year">[[year]]</span>
-        <span wicket:id="projectCount" class="projects-number">[[count]]</span><label>Projects</label>
+        <span wicket:id="rowCount" class="projects-number">[[count]]</span>
+        <label>
+            <span wicket:id="countLabel"/>
+        </label>
     </wicket:fragment>
 
 
     <wicket:fragment wicket:id="containerFragment">
         <ul class="project-details">
-            <li wicket:id="projects">
+            <li wicket:id="rows">
                 <div class="col-md-6 project-title">
-                    <a href="#" wicket:id="title" class="title-uppercase"><span wicket:id="projectTitle"></span></a>
+                    <a href="#" wicket:id="titleLink" class="title-uppercase"><span wicket:id="title"></span></a>
                     <span class="status" wicket:id="projectStatus"></span>
                 </div>
 

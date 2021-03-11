@@ -52,6 +52,7 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> impleme
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("cabinetPaperForm");
 
         // check if this is a new object and redirect user to dashboard page if we don't have all the needed info
         if (entityId == null && sessionMetadataService.getSessionPP() == null) {
@@ -66,7 +67,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> impleme
         }
 
         final TextFieldBootstrapFormComponent<String> name = ComponentUtil.addTextField(editForm, "name");
-        name.required();
         name.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
         name.getField().add(uniqueName());
 
@@ -80,7 +80,6 @@ public class EditCabinetPaperPage extends AbstractEditPage<CabinetPaper> impleme
 
         final FileInputBootstrapFormComponent doc = new FileInputBootstrapFormComponent("formDocs");
         doc.maxFiles(1);
-        doc.required();
         editForm.add(doc);
     }
 

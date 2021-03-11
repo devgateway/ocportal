@@ -176,7 +176,7 @@ public class OcdsController extends GenericOCDSController {
     @JsonView(Views.Public.class)
     public List<Release> ocdsReleases(@ModelAttribute @Valid final YearFilterPagingRequest releaseRequest) {
 
-        Pageable pageRequest = new PageRequest(releaseRequest.getPageNumber(), releaseRequest.getPageSize(),
+        Pageable pageRequest = PageRequest.of(releaseRequest.getPageNumber(), releaseRequest.getPageSize(),
                 Direction.ASC, "id"
         );
 
@@ -202,7 +202,7 @@ public class OcdsController extends GenericOCDSController {
     @Cacheable
     public Long ocdsReleasesCount(@ModelAttribute @Valid final YearFilterPagingRequest releaseRequest) {
 
-        Pageable pageRequest = new PageRequest(releaseRequest.getPageNumber(), releaseRequest.getPageSize(),
+        Pageable pageRequest = PageRequest.of(releaseRequest.getPageNumber(), releaseRequest.getPageSize(),
                 Direction.ASC, "id"
         );
 
@@ -228,7 +228,7 @@ public class OcdsController extends GenericOCDSController {
     public List<FlaggedRelease> flaggedOcdsReleases(
             @ModelAttribute @Valid final YearFilterPagingRequest releaseRequest) {
 
-        Pageable pageRequest = new PageRequest(releaseRequest.getPageNumber(), releaseRequest.getPageSize(),
+        Pageable pageRequest = PageRequest.of(releaseRequest.getPageNumber(), releaseRequest.getPageSize(),
                 Direction.DESC, MongoConstants.FieldNames.FLAGS_TOTAL_FLAGGED
         );
 
@@ -249,7 +249,6 @@ public class OcdsController extends GenericOCDSController {
     @ApiOperation(value = "Counts all available releases with flags, filtered by the given criteria.")
     @RequestMapping(value = "/api/flaggedRelease/count", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
-    @JsonView(Views.Internal.class)
     @Cacheable
     public Long countFlaggedOcdsReleases(
             @ModelAttribute @Valid final YearFilterPagingRequest releaseRequest) {
