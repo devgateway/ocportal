@@ -266,7 +266,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         add(addButtonNotificationPanel);
     }
 
-    protected Label createShowDetailsLink() {
+    protected Label createShowDetailsLabel() {
         final Label showDetailsLabel = new Label("showDetailsLabel", new ResourceModel("showDetailsLabel"));
         showDetailsLabel.setOutputMarkupId(true);
         showDetailsLabel.setOutputMarkupPlaceholderTag(true);
@@ -276,7 +276,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
 
 
     private void addAcordion(final ListItem<T> item) {
-        Label showDetailsLabel = createShowDetailsLink();
+        Label showDetailsLabel = createShowDetailsLabel();
 
         // the section that will collapse
         final TransparentWebMarkupContainer hideableContainer =
