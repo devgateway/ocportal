@@ -94,6 +94,8 @@
 - name: awardNotificationsList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - awardNotificationForm
 - name: awardNotificationsList.awardee
   visible: yes
   visibleDeps:

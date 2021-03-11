@@ -23,6 +23,8 @@ public final class DBConstants {
 
     public static final String FROM_EMAIL = "noreply@opencontracting.makueni.go.ke";
 
+    public static final String INSTANCE_NAME = "Makueni";
+
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 

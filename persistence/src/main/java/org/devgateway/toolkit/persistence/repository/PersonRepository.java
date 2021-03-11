@@ -14,11 +14,7 @@ package org.devgateway.toolkit.persistence.repository;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -28,7 +24,7 @@ import java.util.List;
  * @author mpostelnicu
  */
 @Transactional
-public interface PersonRepository extends BaseJpaRepository<Person, Long>, TextSearchableRepository<Person, Long> {
+public interface PersonRepository extends BaseJpaRepository<Person, Long>  {
 
     @Query("select p from Person p where p.username = ?1")
     List<Person> findByName(String username);
@@ -43,8 +39,4 @@ public interface PersonRepository extends BaseJpaRepository<Person, Long>, TextS
 
     @Query("select p from #{#entityName} p JOIN p.roles as r WHERE r.authority IN (?1)")
     List<Person> findByRoleIn(Collection<String> roles);
-
-    @Override
-    @Query("select p from Person p where lower(p.firstName) like %:name% or lower(p.lastName) like %:name%")
-    Page<Person> searchText(@Param("name")  String name, Pageable page);
 }
