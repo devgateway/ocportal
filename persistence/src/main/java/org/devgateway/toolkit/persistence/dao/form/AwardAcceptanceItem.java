@@ -43,7 +43,7 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
     @ManyToOne
     private SupplierResponse supplierResponse;
 
-    @ExcelExport(useTranslation = true, name = "Accepted Award Value")
+    @ExcelExport(useTranslation = true, name = "Accepted Award Value (KES)")
     private BigDecimal acceptedAwardValue;
 
     public Date getAcceptanceDate() {

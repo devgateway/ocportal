@@ -31,7 +31,7 @@ public class AwardNotificationItem extends AbstractDocsChildExpAuditEntity<Award
     @ExcelExport(useTranslation = true, name = "Date")
     private Date awardDate;
 
-    @ExcelExport(useTranslation = true, name = "Award Value")
+    @ExcelExport(useTranslation = true, name = "Award Value (KES)")
     private BigDecimal awardValue;
 
     @ExcelExport(name = "Supplier")
