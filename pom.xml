@@ -262,9 +262,9 @@
                     </executions>
                     <dependencies>
                         <dependency>
-                            <groupId>org.devgateway.toolkit</groupId>
+                            <groupId>org.devgateway.makueni</groupId>
                             <artifactId>pmd-rules</artifactId>
-                            <version>1.12.1-SNAPSHOT</version>
+                            <version>${revision}</version>
                         </dependency>
                     </dependencies>
                 </plugin>

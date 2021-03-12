@@ -18,7 +18,6 @@ import org.hibernate.envers.Audited;
 @Audited
 public class ApprovedReport extends AbstractAuditableEntity {
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private MEReport meReport;
 
