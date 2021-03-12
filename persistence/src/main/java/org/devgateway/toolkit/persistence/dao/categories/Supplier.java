@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.form.PlanItem;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -22,6 +22,7 @@ import java.util.List;
  */
 @Entity
 @Audited
+@Form(featureName = "supplierForm")
 public class Supplier extends Category {
     @ExcelExport(name = "Address")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)

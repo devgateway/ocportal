@@ -62,6 +62,8 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("supplierForm");
+
         super.onInitialize();
 
         if (editForm.getModelObject().isNew()) {
