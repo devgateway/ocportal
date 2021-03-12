@@ -433,6 +433,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             };
         }
 
+
         @Override
         protected void onInitialize() {
             super.onInitialize();

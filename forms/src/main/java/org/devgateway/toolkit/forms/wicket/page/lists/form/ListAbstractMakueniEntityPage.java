@@ -129,6 +129,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         // just replace the page title with the name of the class
         // instead of having .properties files only for the page title
         autoPageTitle();
+
         super.onInitialize();
     }
 }
