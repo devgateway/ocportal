@@ -530,7 +530,7 @@
   "contract:expiryDate": "Expiry Date",
   "contract:awardee:label": "Supplier Name",
   "contract:awardee:address": "Supplier Postal Address",
-  "contract:targetGroup": "Target Group",
+  "contract:targetGroup": "AGPO Category",
   "contract:procuringEntity:label": "Procuring Entity Name",
   "contract:contractValue": "Contract Value",
   "contract:contractApprovalDate": "Contract Approved Date",
