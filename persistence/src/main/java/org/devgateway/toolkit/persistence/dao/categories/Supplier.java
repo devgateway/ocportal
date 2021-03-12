@@ -25,7 +25,7 @@ public class Supplier extends Category {
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String address;
 
-    @ExcelExport(justExport = true, name = "Target Group")
+    @ExcelExport(justExport = true, name = "AGPO Categories")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<TargetGroup> targetGroups = new ArrayList<>();
