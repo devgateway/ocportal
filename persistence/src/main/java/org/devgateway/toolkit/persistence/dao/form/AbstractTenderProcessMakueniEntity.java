@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -21,13 +20,6 @@ public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueni
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     protected TenderProcess tenderProcess;
-
-    @Override
-    @JsonIgnore
-    @org.springframework.data.annotation.Transient
-    public AbstractAuditableEntity getParent() {
-        return tenderProcess;
-    }
 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
