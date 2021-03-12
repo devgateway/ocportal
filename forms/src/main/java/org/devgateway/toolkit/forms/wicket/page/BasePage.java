@@ -77,6 +77,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcurementMethodRationalePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProjectClosureHandoverPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
@@ -490,6 +491,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
                 createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListDesignationPage.class,
                         "navbar.designations", FontAwesomeIconType.certificate
+                );
+
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListProjectClosureHandoverPage.class,
+                        "navbar.projectClosureHandover", FontAwesomeIconType.list
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
