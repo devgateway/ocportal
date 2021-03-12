@@ -14,6 +14,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -35,6 +36,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification.EditPrequalifiedSupplierPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification.EditPrequalifiedSupplierSelectorPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractBaseListPage;
 import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
@@ -240,7 +242,10 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
     }
 
     protected AbstractDataProvider<PrequalifiedSupplierItem> createDataProvider() {
-        return new SortableJpaServiceDataProvider<>(prequalifiedSupplierItemService);
+        SortableJpaServiceDataProvider<PrequalifiedSupplierItem> provider =
+                new SortableJpaServiceDataProvider<>(prequalifiedSupplierItemService);
+        provider.setSort("item.code", SortOrder.ASCENDING);
+        return provider;
     }
 
     private static final class Filter extends JpaFilterState<PrequalifiedSupplierItem> {
@@ -356,7 +361,8 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
     @Override
     protected void addColumns() {
-        columns.add(new AbstractColumn<PrequalifiedSupplierItem, String>(new StringResourceModel("item", this)) {
+        StringResourceModel itemLabel = new StringResourceModel("item", this);
+        columns.add(new AbstractColumn<PrequalifiedSupplierItem, String>(itemLabel, "item.code") {
 
             @Override
             public void populateItem(Item<ICellPopulator<PrequalifiedSupplierItem>> cellItem, String componentId,
@@ -432,7 +438,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 if (yearRange != null) {
                     params.add("yearRangeId", yearRange.getId());
                 }
-                setResponsePage(EditPrequalifiedSupplierPage.class, params);
+                setResponsePage(EditPrequalifiedSupplierSelectorPage.class, params);
             }
         };
 

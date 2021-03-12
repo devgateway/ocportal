@@ -6,6 +6,7 @@ import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplierItem;
+import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier_;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.repository.prequalification.PrequalifiedSupplierRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -50,6 +52,14 @@ public class PrequalifiedSupplierServiceImpl
     @Override
     public boolean isSupplierPrequalified(Supplier supplier, PrequalificationYearRange yearRange, Long exceptId) {
         return repository.countPrequalifiedSuppliers(supplier, yearRange, exceptId) > 0;
+    }
+
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
+        return repository.findOne((r, q, cb) ->
+                cb.and(
+                        cb.equal(r.get(PrequalifiedSupplier_.yearRange), yearRange),
+                        cb.equal(r.get(PrequalifiedSupplier_.supplier), supplier)));
     }
 
     @Override
