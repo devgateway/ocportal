@@ -1498,4 +1498,16 @@
         ]]></sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-965" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+        <columnExists tableName="category" columnName="non_performing"/>
+        </preConditions>
+        <update tableName="category">
+            <column name="non_performing" valueBoolean="false"/>
+            <where>dtype='Supplier'</where>
+        </update>
+    </changeSet>
+
+
+
 </databaseChangeLog>
