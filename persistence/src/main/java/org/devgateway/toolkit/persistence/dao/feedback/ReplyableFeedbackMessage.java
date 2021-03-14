@@ -31,7 +31,6 @@ public class ReplyableFeedbackMessage extends FeedbackMessage {
     @JsonIgnore
     private String phoneNumber;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     @JsonIgnore
     private Department department;
