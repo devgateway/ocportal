@@ -42,6 +42,10 @@ import java.util.List;
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueTenderQuotationEvaluation.message}")
 public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntity {
+
+    @ExcelExport(useTranslation = true, name = "Tender Opening Date")
+    private Date openingDate;
+
     @ExcelExport(useTranslation = true, name = "Closing Date")
     private Date closingDate;
 
@@ -51,6 +55,14 @@ public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntit
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<Bid> bids = new ArrayList<>();
+
+    public Date getOpeningDate() {
+        return openingDate;
+    }
+
+    public void setOpeningDate(Date openingDate) {
+        this.openingDate = openingDate;
+    }
 
     public Date getClosingDate() {
         return closingDate;

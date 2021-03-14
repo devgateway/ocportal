@@ -112,6 +112,8 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
             awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
         }
 
+        ComponentUtil.addDateField(item, "tenderAwardDate");
+
         ComponentUtil.addIntegerTextField(item, "acknowledgementDays")
                 .getField().add(RangeValidator.minimum(0));
 
