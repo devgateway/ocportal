@@ -12,7 +12,6 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.devgateway.ocds.persistence.dao.UserDashboard;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -25,7 +24,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -88,12 +86,6 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
     @Size(min = 1)
     private List<Role> roles = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private UserDashboard defaultDashboard;
-
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<UserDashboard> dashboards = new HashSet<>();
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
@@ -256,23 +248,4 @@ public class Person extends AbstractAuditableEntity implements UserDetails, Labe
         return username;
     }
 
-    public UserDashboard getDefaultDashboard() {
-        return defaultDashboard;
-    }
-
-    public void setDefaultDashboard(UserDashboard defaultDashboard) {
-        this.defaultDashboard = defaultDashboard;
-    }
-
-    public Set<UserDashboard> getDashboards() {
-        return dashboards;
-    }
-
-    public void setDashboards(Set<UserDashboard> dashboards) {
-        this.dashboards = dashboards;
-    }
-
-    public boolean isChangeProfilePassword() {
-        return changeProfilePassword;
-    }
 }

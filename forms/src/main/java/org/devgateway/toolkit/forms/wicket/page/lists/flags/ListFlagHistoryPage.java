@@ -39,8 +39,7 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
     }
 
     @Override
-    protected void onInitialize() {
-
+    protected void addColumns() {
         columns.add(new SimpleDateProperyColumn<>(new StringResourceModel("flaggedDate", this),
                 "flaggedDate", "flaggedDate",
                 ReleaseFlagHistory::getFlaggedDate, "yyyy-MM-dd HH:mm:ss"));
@@ -49,8 +48,8 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
                 "releaseId", "releaseId") {
             @Override
             public void populateItem(final Item<ICellPopulator<ReleaseFlagHistory>> item,
-                                     final String componentId,
-                                     final IModel<ReleaseFlagHistory> rowModel) {
+                    final String componentId,
+                    final IModel<ReleaseFlagHistory> rowModel) {
                 item.add(new Label(componentId, Model.of(releaseFlagNotificationService.getReleaseTitle(
                         rowModel.getObject().getReleaseId()))));
             }
@@ -58,9 +57,5 @@ public class ListFlagHistoryPage extends AbstractListPage<ReleaseFlagHistory> {
 
         columns.add(new PropertyColumn<>(new StringResourceModel("tenderCode", this), "releaseId", "releaseId"));
         columns.add(new PropertyColumn<>(new StringResourceModel("flagsSet", this), "flagged", "flagged"));
-
-        super.onInitialize();
-
-        //columns.remove(6);
     }
 }

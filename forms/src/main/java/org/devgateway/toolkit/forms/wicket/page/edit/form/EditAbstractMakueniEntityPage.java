@@ -13,7 +13,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
@@ -74,11 +73,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected boolean isViewMode() {
         return SecurityConstants.Action.VIEW
                 .equals(permissionEntityRenderableService.getAllowedAccess(this, editForm.getModelObject()));
-    }
-
-    @Override
-    public boolean isDisableEditingEvent() {
-        return !Strings.isEqual(editForm.getModelObject().getStatus(), DBConstants.Status.DRAFT) || isViewMode();
     }
 
     @Override
@@ -160,8 +154,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         alertTerminated.setVisibilityAllowed(false);
         editForm.add(alertTerminated);
 
-        enableDisableAutosaveFields(null);
-
 //        extraStatusEntityButtons = new Fragment("extraStatusEntityButtons", "extraStatusButtons", this);
 //        entityButtonsFragment.replace(extraStatusEntityButtons);
 //        extraStatusEntityButtons.add(revertToDraftModal);
@@ -170,56 +162,39 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @Override
     protected void addSaveButtonsPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
+        super.addSaveButtonsPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getCommaCombinedRoles());
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
     }
 
     @Override
     protected void addTerminateButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
+        super.addTerminateButtonPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getValidatorRole());
-        if (editForm.getModelObject().isNew()) {
-            button.setVisibilityAllowed(false);
-        }
     }
 
     @Override
     protected void addApproveButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
+        super.addApproveButtonPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(
                 button, Component.RENDER, getValidatorRole());
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && DBConstants.Status.SUBMITTED.equals(editForm.getModelObject().getStatus()));
     }
 
     @Override
     protected void addSaveRevertButtonPermissions(final Component button) {
-        addDefaultAllButtonsPermissions(button);
+        super.addSaveRevertButtonPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getValidatorRole());
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, getCommaCombinedRoles());
-        button.setVisibilityAllowed(button.isVisibilityAllowed()
-                && !DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
 
         // additionally normal users should not revert anything that was already validated
         if (FormSecurityUtil.isCurrentRoleOnlyUser(getUserRole(), getValidatorRole())
                 && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus())) {
             button.setVisibilityAllowed(false);
-        } else
-
-            //admins can revert anything, including terminated, but only on the terminated form, not elsewhere!
-            if (FormSecurityUtil.isCurrentUserAdmin()
-                    && ((!isTerminated() && DBConstants.Status.APPROVED.equals(editForm.getModelObject().getStatus()))
-                    || DBConstants.Status.TERMINATED.equals(editForm.getModelObject().getStatus()))) {
-                button.setVisibilityAllowed(true);
-            }
+        }
     }
 
     @Override
     protected void addDeleteButtonPermissions(final Component button) {
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_ADMIN);
-        button.setVisibilityAllowed(entityId != null && !isTerminated() && !isViewMode());
+        super.addDeleteButtonPermissions(button);
         MetaDataRoleAuthorizationStrategy.authorize(
                 button, Component.RENDER, getCommaCombinedRoles());
     }

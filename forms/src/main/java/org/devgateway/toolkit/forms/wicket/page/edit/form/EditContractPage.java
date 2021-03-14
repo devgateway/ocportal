@@ -3,7 +3,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -20,9 +19,11 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
+import org.devgateway.toolkit.forms.wicket.providers.EntityListChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
@@ -63,7 +64,8 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
     private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
 
-    private GenericSleepFormComponent supplierAddress;
+    private GenericSleepFormComponent<String> supplierAddress;
+    private Select2ChoiceBootstrapFormComponent<TargetGroup> targetGroup;
 
     public EditContractPage() {
         this(new PageParameters());
@@ -78,8 +80,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     protected void onInitialize() {
         editForm.attachFm("contractForm");
         super.onInitialize();
-
-        submitAndNext.setVisibilityAllowed(false);
 
         ComponentUtil.addTextField(editForm, "referenceNumber");
 
@@ -110,6 +110,13 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
                 LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        submitAndNext.setVisibilityAllowed(false);
     }
 
     @Override
@@ -157,28 +164,36 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
                 new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
         );
         awardeeSelector.setEnabled(!editForm.getModelObject().getTenderProcess().hasNonDraftImplForms());
-        awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
+        awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior());
         editForm.add(awardeeSelector);
 
-        supplierAddress = new GenericSleepFormComponent<>("supplierAddress", (IModel<String>) () -> {
-            if (awardeeSelector.getModelObject() != null) {
-                return awardeeSelector.getModelObject().getAddress();
-            }
-            return null;
-        });
+        targetGroup = ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", new EntityListChoiceProvider<>(
+                editForm.getModel().map(Contract::getAwardee).map(Supplier::getTargetGroups)));
+
+        supplierAddress = new GenericSleepFormComponent<>("supplierAddress",
+                editForm.getModel().map(Contract::getAwardee).map(Supplier::getAddress));
         supplierAddress.setOutputMarkupId(true);
         editForm.add(supplierAddress);
 
     }
 
     class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        AwardeeAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
+        AwardeeAjaxComponentUpdatingBehavior() {
+            super("change");
         }
 
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierAddress);
+            Contract contract = editForm.getModelObject();
+            if (contract.getTargetGroup() != null && contract.getAwardee() != null
+                    && !contract.getAwardee().getTargetGroups().contains(contract.getTargetGroup())) {
+                contract.setTargetGroup(null);
+            }
+            if (contract.getAwardee() != null && contract.getAwardee().getTargetGroups().size() == 1) {
+                contract.setTargetGroup(contract.getAwardee().getTargetGroups().get(0));
+                targetGroup.getField().clearInput();
+            }
+            target.add(targetGroup, supplierAddress);
         }
     }
 }

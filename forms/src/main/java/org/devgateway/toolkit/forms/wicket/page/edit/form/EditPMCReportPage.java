@@ -102,6 +102,11 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
     }
 
     @Override
+    protected boolean isCheckoutModalVisible() {
+        return false;
+    }
+
+    @Override
     protected void onInitialize() {
         editForm.attachFm("pmcReportForm");
         super.onInitialize();

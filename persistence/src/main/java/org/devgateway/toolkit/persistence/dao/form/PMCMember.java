@@ -28,12 +28,10 @@ import javax.persistence.Table;
 public class PMCMember extends AbstractChildExpandableAuditEntity<PMCReport> implements ListViewItem, Labelable {
 
     @ExcelExport(name = "PMC Member")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PMCStaff staff;
 
     @ExcelExport(name = "Designation")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Designation designation;
 
