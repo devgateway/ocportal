@@ -259,7 +259,7 @@
                     </executions>
                     <dependencies>
                         <dependency>
-                            <groupId>org.devgateway.makueni</groupId>
+                            <groupId>org.devgateway.ocportal.elgeyo</groupId>
                             <artifactId>pmd-rules</artifactId>
                             <version>${revision}</version>
                         </dependency>
