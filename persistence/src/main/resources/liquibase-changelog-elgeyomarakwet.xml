@@ -76,4 +76,15 @@
         </sql>
     </changeSet>
 
+    <changeSet id="OCMAKU-953-2" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="category"/>
+        </preConditions>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="LABEL" value="General"/>
+            <column name="DTYPE" value="TargetGroup"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

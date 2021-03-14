@@ -22,7 +22,6 @@ public class FeedbackMessageServiceImpl extends BaseJpaServiceImpl<FeedbackMessa
         return repository;
     }
 
-
     @Override
     public FeedbackMessage newInstance() {
         return new FeedbackMessage();

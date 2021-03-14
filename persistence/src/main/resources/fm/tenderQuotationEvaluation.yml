@@ -90,9 +90,13 @@
   mandatory: no
   enabled: yes
   visible: yes
+
+#LIST
 - name: tenderQuotationEvaluationsList
   visible: yes
   enabled: yes
+  visibleDeps:
+    - tenderQuotationEvaluationForm
 - name: tenderQuotationEvaluationsList.department
   visible: yes
   visibleDeps:

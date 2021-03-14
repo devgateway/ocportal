@@ -144,6 +144,8 @@
 - name: pmcReportsList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - pmcReportForm
 - name: pmcReportsList.approvedDate
   visible: yes
 - name: pmcReportsList.authorizePayment

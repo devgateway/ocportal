@@ -14,6 +14,7 @@
  */
 package org.devgateway.toolkit.forms.wicket.providers;
 
+import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 
@@ -41,11 +43,27 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
 
     private final TextSearchableService<T> textSearchableService;
 
+    private Specification<T> specification;
+
+    private SerializableFunction<String, Specification<T>> textSpecification;
 
     private Sort sort;
 
     public GenericPersistableJpaTextChoiceProvider(final TextSearchableService<T> textSearchableService) {
         this.textSearchableService = textSearchableService;
+        this.textSpecification = textSearchableService::getTextSpecification;
+    }
+
+    public void setSpecification(final Specification<T> specification) {
+        this.specification = specification;
+    }
+
+    public void setTextSpecification(final SerializableFunction<String, Specification<T>> textSpecification) {
+        this.textSpecification = textSpecification;
+    }
+
+    public Specification<T> getSpecification() {
+        return specification;
     }
 
     @Override
@@ -73,14 +91,15 @@ public class GenericPersistableJpaTextChoiceProvider<T extends GenericPersistabl
         final PageRequest pageRequest = sort == null
                 ? PageRequest.of(page, WebConstants.SELECT_PAGE_SIZE)
                 : PageRequest.of(page, WebConstants.SELECT_PAGE_SIZE, sort);
-        return textSearchableService.searchText(term, pageRequest);
+        return textSearchableService.findAllByTextCombinedSpecification(specification,
+                textSpecification.apply(term), pageRequest);
     }
 
     private Page<T> findAll(final int page) {
         final PageRequest pageRequest = sort == null
                 ? PageRequest.of(page, WebConstants.SELECT_PAGE_SIZE)
                 : PageRequest.of(page, WebConstants.SELECT_PAGE_SIZE, sort);
-        return textSearchableService.findAll(pageRequest);
+        return textSearchableService.findAll(getSpecification(), pageRequest);
     }
 
 
