@@ -31,12 +31,10 @@ public class PurchRequisition extends AbstractDocsChildExpAuditEntity
         <PurchaseRequisitionGroup> implements ListViewItem {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Requested By")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Staff requestedBy;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Charge Account")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ChargeAccount chargeAccount;
 

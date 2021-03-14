@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data
+        xmlns="http://pmd.sourceforge.net/rule-tests"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+
+    <test-code>
+        <description>uncached association</description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+public class Foo {
+@ManyToOne
+X x;
+}
+    ]]></code>
+    </test-code>
+
+    <test-code>
+        <description>cached association</description>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>3</expected-linenumbers>
+        <code><![CDATA[
+public class Foo {
+@ManyToOne @Cache
+X x;
+}
+    ]]></code>
+    </test-code>
+
+    <test-code>
+        <description>cached association, fully qualified</description>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>3</expected-linenumbers>
+        <code><![CDATA[
+public class Foo {
+@javax.persistence.ManyToOne @org.hibernate.annotations.Cache
+X x;
+}
+    ]]></code>
+    </test-code>
+
+</test-data>
