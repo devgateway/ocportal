@@ -46,11 +46,9 @@ import java.util.Set;
 public class TenderProcess extends AbstractAuditableEntity implements Labelable, ProjectAttachable,
         ProcurementPlanAttachable, DepartmentAttachable, Terminatable {
     @ManyToOne(fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
     @org.springframework.data.annotation.Transient
@@ -167,7 +165,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
                 || hasNonDraftImplForms(pmcReports) || hasNonDraftImplForms(meReports)
                 || hasNonDraftImplForms(paymentVouchers);
     }
-    
+
     @Transactional(readOnly = true)
     protected boolean hasNonDraftImplForms(Set<? extends AbstractImplTenderProcessMakueniEntity> s) {
         return s.stream().anyMatch(f -> !DBConstants.Status.DRAFT.equals(f.getStatus()));

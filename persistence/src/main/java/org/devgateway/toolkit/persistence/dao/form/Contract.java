@@ -54,7 +54,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     private BigDecimal contractValue;
 
     @ExcelExport(name = "Supplier")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
