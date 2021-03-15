@@ -31,10 +31,16 @@ public class ListProfessionalOpinionPage extends ListAbstractTenderProcessMakuen
     @Override
     protected void onInitialize() {
         attachFm("professionalOpinionsList");
-        addTenderTitleColumn();
+
         super.onInitialize();
     }
 
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
+        addTenderTitleColumn();
+    }
 
     @Override
     public JpaFilterState<ProfessionalOpinion> newFilterState() {

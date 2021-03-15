@@ -244,6 +244,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.danekja</groupId>
+            <artifactId>jdk-serializable-functional</artifactId>
+            <version>${jdk-serializable-functional.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -322,6 +327,10 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.ArrayUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.persistence.validator.Severity;
@@ -21,6 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
@@ -50,7 +54,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     private BigDecimal contractValue;
 
     @ExcelExport(name = "Supplier")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
@@ -67,12 +70,30 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
 
+    @ExcelExport(useTranslation = true, name = "Description")
+    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
+    private String description;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Subcounty> subcounties;
+
+    @ExcelExport(justExport = true, useTranslation = true, name = "Wards")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    private List<Ward> wards = new ArrayList<>();
+
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Contract Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_id")
     @OrderColumn(name = "index")
     private List<ContractDocument> contractDocs = new ArrayList<>();
+
+    @ManyToOne
+    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    private TargetGroup targetGroup;
 
     public BigDecimal getContractValue() {
         return contractValue;
@@ -106,6 +127,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
         this.contractDate = contractDate;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Date getExpiryDate() {
         return expiryDate;
     }
@@ -128,6 +157,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
 
     public void setContractDocs(final List<ContractDocument> contractDocs) {
         this.contractDocs = contractDocs;
+    }
+
+    public TargetGroup getTargetGroup() {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(TargetGroup targetGroup) {
+        this.targetGroup = targetGroup;
     }
 
     @Override
@@ -170,5 +207,21 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @Override
     public boolean hasDownstreamForms() {
         return false;
+    }
+
+    public List<Subcounty> getSubcounties() {
+        return subcounties;
+    }
+
+    public void setSubcounties(List<Subcounty> subcounties) {
+        this.subcounties = subcounties;
+    }
+
+    public List<Ward> getWards() {
+        return wards;
+    }
+
+    public void setWards(List<Ward> wards) {
+        this.wards = wards;
     }
 }
