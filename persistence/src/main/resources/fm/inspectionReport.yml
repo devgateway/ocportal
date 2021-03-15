@@ -115,6 +115,8 @@
 - name: inspectionReportsList
   enabled: yes
   visible: yes
+  visibleDeps:
+  - inspectionReportForm
 - name: inspectionReportsList.department
   visible: yes
   visibleDeps:

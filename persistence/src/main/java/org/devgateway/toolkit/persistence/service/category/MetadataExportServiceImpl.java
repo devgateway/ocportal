@@ -16,8 +16,8 @@ import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.Contract_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
-import org.devgateway.toolkit.persistence.dao.form.Project_;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
@@ -28,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Join;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -92,12 +93,13 @@ public class MetadataExportServiceImpl implements MetadataExportService {
     }
 
     protected <C extends Tender> List<C> getTenderList(BaseJpaService<C> service, Collection<Department> deps) {
-        return service.findAll((r, cq, cb) -> cb.and(
-                r.join(Tender_.tenderProcess).join(TenderProcess_.project).join(Project_.procurementPlan)
-                        .join(ProcurementPlan_.department).in(deps),
-                cb.equal(r.join(Tender_.tenderProcess).join(TenderProcess_.contract).get(Contract_.STATUS),
-                        DBConstants.Status.APPROVED),
-                cb.equal(r.get(Tender_.STATUS), DBConstants.Status.APPROVED)), Sort.by("id"));
+        return service.findAll((r, cq, cb) -> {
+            Join<C, TenderProcess> tpJoin = r.join(Tender_.tenderProcess);
+            return cb.and(
+                    tpJoin.join(TenderProcess_.procurementPlan).join(ProcurementPlan_.department).in(deps),
+                    cb.equal(tpJoin.join(TenderProcess_.contract).get(Contract_.STATUS), DBConstants.Status.APPROVED),
+                    cb.equal(r.get(Tender_.STATUS), DBConstants.Status.APPROVED));
+        }, Sort.by("id"));
     }
 
     protected <C extends AbstractAuditableEntity & Labelable> void convertAndAddPairListToMap(

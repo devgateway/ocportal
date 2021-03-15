@@ -55,8 +55,8 @@ public class TranslateField {
     /**
      * Don't use reflection to get the Wicket class for all entities because it's very slow.
      */
-    public static final ImmutableMap<String, Class<? extends GenericWebPage>> MAP_BEAN_WICKET_PAGE =
-            new ImmutableMap.Builder<String, Class<? extends GenericWebPage>>()
+    public static final ImmutableMap<String, Class<? extends GenericWebPage<?>>> MAP_BEAN_WICKET_PAGE =
+            new ImmutableMap.Builder<String, Class<? extends GenericWebPage<?>>>()
                     .put("ProcurementPlan", EditProcurementPlanPage.class)
                     .put("Project", EditProjectPage.class)
                     .put("CabinetPaper", EditCabinetPaperPage.class)

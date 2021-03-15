@@ -33,7 +33,6 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
 
@@ -41,7 +40,6 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     private BigDecimal estimatedCost;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Unit Of Issue")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Unit unitOfIssue;
 
@@ -49,7 +47,6 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     private BigDecimal quantity;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
@@ -58,23 +55,22 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     private String sourceOfFunds;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TargetGroup targetGroup;
 
-    @ExcelExport(useTranslation = true, name = "Target Group Value")
+    @ExcelExport(useTranslation = true, name = "Target Group Value (KES)")
     private BigDecimal targetGroupValue;
 
-    @ExcelExport(useTranslation = true, name = "1st Quarter")
+    @ExcelExport(useTranslation = true, name = "1st Quarter (KES)")
     private BigDecimal quarter1st;
 
-    @ExcelExport(useTranslation = true, name = "2nd Quarter")
+    @ExcelExport(useTranslation = true, name = "2nd Quarter (KES)")
     private BigDecimal quarter2nd;
 
-    @ExcelExport(useTranslation = true, name = "3rd Quarter")
+    @ExcelExport(useTranslation = true, name = "3rd Quarter (KES)")
     private BigDecimal quarter3rd;
 
-    @ExcelExport(useTranslation = true, name = "4th Quarter")
+    @ExcelExport(useTranslation = true, name = "4th Quarter (KES)")
     private BigDecimal quarter4th;
 
     public Item getItem() {

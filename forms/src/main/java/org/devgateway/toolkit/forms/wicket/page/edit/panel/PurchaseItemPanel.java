@@ -3,6 +3,8 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -26,6 +28,8 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
+import org.devgateway.toolkit.forms.wicket.events.AjaxUpdateEvent;
+import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -48,9 +52,7 @@ import java.util.Set;
  * @since 2019-04-17
  */
 public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchRequisition> {
-    private GenericSleepFormComponent unit;
 
-    private GenericSleepFormComponent totalCost;
 
     @SpringBean
     private TenderItemService tenderItemService;
@@ -152,6 +154,18 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
 
     @Override
     public void populateCompoundListItem(final ListItem<PurchaseItem> item) {
+         GenericSleepFormComponent<Unit> unit;
+
+        GenericSleepFormComponent<String> totalCost = new GenericSleepFormComponent<>("totalCost",
+                (IModel<String>) () -> {
+                    if (item.getModelObject() != null && item.getModelObject().getQuantity() != null
+                            && item.getModelObject().getAmount() != null) {
+                        return ComponentUtil.formatNumber(item.getModelObject().getAmount().multiply(
+                                item.getModelObject().getQuantity()));
+                    }
+                    return null;
+                });
+        totalCost.setOutputMarkupId(true);
         final TextFieldBootstrapFormComponent<BigDecimal> quantity =
                 new TextFieldBootstrapFormComponent<BigDecimal>("quantity") {
                     @Override
@@ -163,7 +177,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
         quantity.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         item.add(quantity);
 
-        unit = new GenericSleepFormComponent<>("unit",
+        unit = new GenericSleepFormComponent<Unit>("unit",
                 (IModel<Unit>) () -> {
                     if (item.getModelObject().getPlanItem() != null
                             && item.getModelObject().getPlanItem().getUnitOfIssue() != null) {
@@ -171,6 +185,7 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
                     }
                     return null;
                 });
+        unit.receiveUpdatesFrom("planItem");
         unit.setOutputMarkupId(true);
         item.add(unit);
 
@@ -185,24 +200,12 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
         amount.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
         item.add(amount);
 
-        totalCost = new GenericSleepFormComponent<>("totalCost",
-                (IModel<String>) () -> {
-                    if (quantity.getModelObject() != null && amount.getModelObject() != null) {
-                        return ComponentUtil.formatNumber(amount.getModelObject().multiply(quantity.getModelObject()));
-                    }
-                    return null;
-                });
-        totalCost.setOutputMarkupId(true);
+
         item.add(totalCost);
     }
 
     @Override
-    protected boolean filterListItem(final PurchaseItem purchaseItem) {
-        return true;
-    }
-
-    @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<PurchaseItem> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<PurchaseItem> compoundModel) {
         return new PurchaseItemHeaderPanel(id, compoundModel);
     }
 
@@ -223,12 +226,8 @@ public class PurchaseItemPanel extends ListViewSectionPanel<PurchaseItem, PurchR
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>("planItem",
-                            new GenericChoiceProvider<>(planItems)) {
-                        @Override
-                        protected void onUpdate(final AjaxRequestTarget target) {
-                            target.add(unit);
-                        }
-                    };
+                            new GenericChoiceProvider<>(planItems));
+            planItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent());
             planItem.add(new StopEventPropagationBehavior());
 
             final Component description = ComponentUtil.addTextField(this, "description");

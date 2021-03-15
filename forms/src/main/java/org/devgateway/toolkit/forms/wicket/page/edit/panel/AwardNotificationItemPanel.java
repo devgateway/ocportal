@@ -34,10 +34,6 @@ import java.util.List;
  */
 public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotificationItem, AwardNotification> {
 
-    private GenericSleepFormComponent<String> supplierID;
-    private GenericSleepFormComponent<String> supplierAddress;
-    private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
-
     public AwardNotificationItemPanel(final String id) {
         super(id);
     }
@@ -82,21 +78,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         }
     }
 
-    protected class AwardNotificationItemCountValidator implements IFormValidator {
-        @Override
-        public FormComponent<?>[] getDependentFormComponents() {
-            return new FormComponent[0];
-        }
-
-        @Override
-        public void validate(Form<?> form) {
-            List<AwardNotificationItem> items = AwardNotificationItemPanel.this.getModelObject();
-            if (items.size() == 0) {
-                form.error(getString("atLeastOneAwardNotification"));
-            }
-
-        }
-    }
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
@@ -109,7 +90,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         super.onInitialize();
         final Form<?> form = findParent(Form.class);
         form.add(new  WrongDistinctCountValidator());
-        form.add(new AwardNotificationItemCountValidator());
     }
 
     @Override
@@ -119,18 +99,6 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
         child.setExpanded(true);
         child.setEditable(true);
         return child;
-    }
-
-    class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        AwardeeAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
-        }
-
-        @Override
-        protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierID);
-            target.add(supplierAddress);
-        }
     }
 
     @Override
@@ -144,6 +112,8 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
             awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
         }
 
+        ComponentUtil.addDateField(item, "tenderAwardDate");
+
         ComponentUtil.addIntegerTextField(item, "acknowledgementDays")
                 .getField().add(RangeValidator.minimum(0));
 
@@ -154,39 +124,32 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
     }
 
     private void addSupplierInfo(ListItem<AwardNotificationItem> item) {
-        awardeeSelector = new Select2ChoiceBootstrapFormComponent<>(
+        GenericSleepFormComponent<String> supplierID = new GenericSleepFormComponent<>("supplierID",
+                item.getModel().map(AwardNotificationItem::getAwardee)
+                        .map(Supplier::getCode));
+        supplierID.setOutputMarkupId(true);
+        item.add(supplierID);
+
+        GenericSleepFormComponent<String> supplierAddress = new GenericSleepFormComponent<>("supplierAddress",
+                item.getModel().map(AwardNotificationItem::getAwardee)
+                        .map(Supplier::getAddress));
+        supplierAddress.setOutputMarkupId(true);
+        item.add(supplierAddress);
+
+        Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector
+                = new Select2ChoiceBootstrapFormComponent<Supplier>(
                 "awardee",
                 new GenericChoiceProvider<>(
                         ComponentUtil.getSuppliersInTenderQuotation(
                                 item.getModelObject().getParent().getTenderProcess(), true))
-        );
-        awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
+        ) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                super.onUpdate(target);
+                target.add(supplierID, supplierAddress);
+            }
+        };
         item.add(awardeeSelector);
 
-        supplierID = new GenericSleepFormComponent<>("supplierID", (IModel<String>) () -> {
-            if (awardeeSelector.getModelObject() != null) {
-                return awardeeSelector.getModelObject().getCode();
-            }
-            return null;
-        });
-        supplierID.setOutputMarkupId(true);
-        item.add(supplierID);
-
-        supplierAddress = new GenericSleepFormComponent<>("supplierAddress", (IModel<String>) () -> {
-            if (awardeeSelector.getModelObject() != null) {
-                return awardeeSelector.getModelObject().getAddress();
-            }
-            return null;
-        });
-        supplierAddress.setOutputMarkupId(true);
-        item.add(supplierAddress);
     }
-
-
-    @Override
-    protected boolean filterListItem(final AwardNotificationItem purchaseItem) {
-        return true;
-    }
-
-
 }
