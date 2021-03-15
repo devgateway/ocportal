@@ -40,10 +40,4 @@ public class PrivateSectorRequestPanel extends ListViewSectionPanel<PrivateSecto
         requestDate.getField().add(new AfterThanDateValidator(item.getModel().map(PrivateSectorRequest::getParent)
                 .map(InspectionReport::getApprovedDate)));
     }
-
-    @Override
-    protected boolean filterListItem(PrivateSectorRequest privateSectorRequest) {
-        return true;
-    }
-
 }

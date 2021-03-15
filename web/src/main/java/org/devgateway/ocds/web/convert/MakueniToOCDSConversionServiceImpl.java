@@ -721,7 +721,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryToIdentifier,
                 this::convertToLocalIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
-        safeSet(ocdsOrg::setTargetGroup, supplier::getTargetGroup, this::categoryLabel);
+        safeSetEach(ocdsOrg.getTargetGroups()::add, supplier::getTargetGroups, this::categoryLabel);
         return ocdsOrg;
     }
 
@@ -1152,6 +1152,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertOrganization);
         safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
+        safeSet(ocdsContract::setTargetGroup, contract::getTargetGroup, Category::getLabel);
 
         return ocdsContract;
     }

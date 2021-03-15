@@ -59,7 +59,7 @@
   enabled: yes
   visible: yes
 - name: pmcReportForm.pmcNotes
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
 - name: pmcReportForm.pmcNotes.newButton
@@ -144,6 +144,8 @@
 - name: pmcReportsList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - pmcReportForm
 - name: pmcReportsList.approvedDate
   visible: yes
 - name: pmcReportsList.authorizePayment

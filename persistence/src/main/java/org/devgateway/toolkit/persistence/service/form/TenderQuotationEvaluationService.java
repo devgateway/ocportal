@@ -9,7 +9,6 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
  *
  */
 public interface TenderQuotationEvaluationService
-        extends AbstractTenderProcessEntityService<TenderQuotationEvaluation>,
-        TextSearchableService<TenderQuotationEvaluation> {
+        extends AbstractTenderProcessEntityService<TenderQuotationEvaluation> {
     TenderQuotationEvaluation findByTenderProcess(TenderProcess tenderProcess);
 }

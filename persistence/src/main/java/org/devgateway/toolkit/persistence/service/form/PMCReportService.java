@@ -8,8 +8,7 @@ import java.util.List;
 /**
  * @author mpostelnicu
  */
-public interface PMCReportService extends AbstractImplTenderProcessMakueniEntityService<PMCReport>,
-        TextSearchableService<PMCReport> {
+public interface PMCReportService extends AbstractImplTenderProcessMakueniEntityService<PMCReport> {
 
     List<PMCReport> getPMCReportsCreatedBy(String username);
 

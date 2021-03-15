@@ -131,12 +131,8 @@ public class PurchRequisitionPanel extends ListViewSectionPanel<PurchRequisition
     }
 
     @Override
-    protected boolean filterListItem(final PurchRequisition purchaseItem) {
-        return true;
-    }
-
-    @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<PurchRequisition> compoundModel) {
+    protected Component createHeaderField(final String id,
+            final CompoundPropertyModel<PurchRequisition> compoundModel) {
         return new PurchRequisitionHeaderPanel(id, compoundModel);
     }
 

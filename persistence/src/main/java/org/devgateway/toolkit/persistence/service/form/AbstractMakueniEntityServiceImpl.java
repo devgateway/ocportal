@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityRepository;
@@ -34,5 +35,22 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
     @Override
     public Stream<? extends AbstractMakueniEntity> getAllSubmitted() {
         return makueniRepository().findByStatus(DBConstants.Status.SUBMITTED);
+    }
+
+    @Override
+    public List<T> getAllLocked(Person person) {
+        return makueniRepository().getAllLocked(person);
+    }
+
+    @Override
+    public List<T> getAllLocked() {
+        return makueniRepository().getAllLocked();
+    }
+
+    @Override
+    @Transactional
+    public void unlock(Long id) {
+        T one = makueniRepository().getOne(id);
+        one.setOwner(null);
     }
 }

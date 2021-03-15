@@ -43,26 +43,28 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
+        super.addColumns();
+
         addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("department", this),
                 "tenderProcess.procurementPlan.department",
                 "tenderProcess.procurementPlan.department",
-                new ListModel(departments), dataTable));
+                new ListModel<>(departments), getDataTable()));
 
         addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("fiscalYear", this),
                 "tenderProcess.procurementPlan.fiscalYear",
                 "tenderProcess.procurementPlan.fiscalYear",
-                new ListModel(fiscalYears), dataTable));
+                new ListModel<>(fiscalYears), getDataTable()));
 
         addFmColumn("lastModifiedDate", new PropertyColumn<T, String>(
                 new StringResourceModel("lastUpdatedDate", this),
                 "lastModifiedDate", "lastModifiedDate") {
             @Override
             public void populateItem(final Item<ICellPopulator<T>> item,
-                                     final String componentId,
-                                     final IModel<T> rowModel) {
+                    final String componentId,
+                    final IModel<T> rowModel) {
                 final Optional<ZonedDateTime> lastModifiedDate = rowModel.getObject().getLastModifiedDate();
 
                 if (lastModifiedDate.isPresent()) {
@@ -73,8 +75,6 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
 
             }
         });
-
-        super.onInitialize();
     }
 
     protected void addAwardeeColumn() {
@@ -83,7 +83,7 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
                         (new StringResourceModel("awardee", ListAbstractTenderProcessMakueniEntity.this)).getString()),
                 "items.awardee",
                 "awardee",
-                new ListModel(awardees), dataTable, false
+                new ListModel<>(awardees), getDataTable(), false
         ));
     }
 

@@ -64,11 +64,4 @@ public class ProfessionalOpinionItemPanel extends ListViewSectionPanel<Professio
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         item.add(formDocs);
     }
-
-    @Override
-    protected boolean filterListItem(final ProfessionalOpinionItem purchaseItem) {
-        return true;
-    }
-
-
 }

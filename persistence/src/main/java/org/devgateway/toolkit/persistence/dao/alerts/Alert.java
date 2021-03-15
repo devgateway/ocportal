@@ -65,7 +65,6 @@ public class Alert extends AbstractAuditableEntity {
     @ManyToMany
     private Set<Item> items = new HashSet<>();
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private TenderProcess purchaseReq;
 
