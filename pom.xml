@@ -42,6 +42,7 @@
         <swagger.version>3.0.0</swagger.version>
         <jdk-serializable-functional.version>1.8.6</jdk-serializable-functional.version>
         <commons-io.version>2.6</commons-io.version>
+        <maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
     </properties>
 
     <modules>
@@ -50,6 +51,7 @@
         <module>ui</module>
         <module>forms</module>
         <module>persistence-mongodb</module>
+        <module>pmd-rules</module>
     </modules>
 
     <inceptionYear>2015</inceptionYear>
@@ -235,6 +237,33 @@
                         <source>1.8</source>
                         <target>1.8</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${maven-pmd-plugin.version}</version>
+                    <configuration>
+                        <analysisCache>true</analysisCache>
+                        <printFailingErrors>true</printFailingErrors>
+                        <rulesets>
+                            <ruleset>${project.basedir}/../pmd.xml</ruleset>
+                        </rulesets>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.devgateway.makueni</groupId>
+                            <artifactId>pmd-rules</artifactId>
+                            <version>${revision}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
