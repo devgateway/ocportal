@@ -46,9 +46,4 @@ public class ContractDocumentPanel extends ListViewSectionPanel<ContractDocument
         formDocs.maxFiles(1);
         item.add(formDocs);
     }
-
-    @Override
-    protected boolean filterListItem(final ContractDocument contractDocuments) {
-        return true;
-    }
 }

@@ -34,6 +34,9 @@ const Notification = (props) => {
                   {isFeatureVisible('publicView.awardNotification.items.awardValue')
                   && <Item label={t('notification:awardValue')} value={currencyFormatter(i.awardValue)} col={4} />}
 
+                  {isFeatureVisible('publicView.awardNotification.items.tenderAwardDate')
+                  && <Item label={t('notification:tenderAwardDate')} value={formatDate(i.tenderAwardDate)} col={4} />}
+
                   {isFeatureVisible('publicView.awardNotification.items.awardDate')
                   && <Item label={t('notification:awardDate')} value={formatDate(i.awardDate)} col={4} />}
 

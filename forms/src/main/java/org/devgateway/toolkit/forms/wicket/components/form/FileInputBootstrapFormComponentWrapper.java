@@ -320,6 +320,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                         FileInputBootstrapFormComponentWrapper.this.getModel().setObject((T) filesModel);
 
                         target.add(pendingFiles);
+                        FileInputBootstrapFormComponentWrapper.this.onUpdate(target);
                     }
                 };
                 delete.add(new IconBehavior(FontAwesomeIconType.trash));
@@ -419,6 +420,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
                 target.add(fileUploadFeedback);
                 target.add(pendingFiles);
+                FileInputBootstrapFormComponentWrapper.this.onUpdate(target);
             }
         };
 
@@ -476,6 +478,9 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
          * } else { this.upload.clear(); if(upload != null) {
          * this.upload.addAll(upload); } }
          */
+    }
+
+    protected void onUpdate(final AjaxRequestTarget target) {
     }
 
     public void setVisibleOnlyToAdmin(final Boolean visibleOnlyToAdmin) {

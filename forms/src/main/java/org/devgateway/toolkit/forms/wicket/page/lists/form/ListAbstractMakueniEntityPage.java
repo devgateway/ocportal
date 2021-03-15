@@ -51,6 +51,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         super(parameters);
 
         filterGoReset = true;
+        hasNewPage = false;
         this.departments = departmentService.findAll();
         this.fiscalYears = fiscalYearService.findAll();
     }
@@ -128,10 +129,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         // just replace the page title with the name of the class
         // instead of having .properties files only for the page title
         autoPageTitle();
-        super.onInitialize();
 
-        // don't allow users to add new entities from the listing pages for AbstractMakueniEntity.
-        editPageLink.setVisibilityAllowed(false);
-        topEditPageLink.setVisibilityAllowed(false);
+        super.onInitialize();
     }
 }

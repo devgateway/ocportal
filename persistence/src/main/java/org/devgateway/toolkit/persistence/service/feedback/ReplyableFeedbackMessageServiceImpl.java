@@ -27,7 +27,6 @@ public class ReplyableFeedbackMessageServiceImpl extends BaseJpaServiceImpl<Repl
         return repository;
     }
 
-
     @Override
     public ReplyableFeedbackMessage newInstance() {
         return new ReplyableFeedbackMessage();

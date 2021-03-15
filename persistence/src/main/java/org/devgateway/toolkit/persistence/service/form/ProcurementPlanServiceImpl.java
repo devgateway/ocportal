@@ -1,15 +1,19 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.Department_;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
 import org.devgateway.toolkit.persistence.repository.form.ProcurementPlanRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.stream.Stream;
 
 /**
@@ -38,11 +42,6 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     }
 
     @Override
-    public TextSearchableRepository<ProcurementPlan, Long> textRepository() {
-        return procurementPlanRepository;
-    }
-
-    @Override
     public ProcurementPlan newInstance() {
         return new ProcurementPlan();
     }
@@ -50,5 +49,21 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     @Override
     public ProcurementPlan findByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.findByDepartmentAndFiscalYear(department, fiscalYear);
+    }
+
+    @Override
+    public SingularAttribute<? super ProcurementPlan, String> getTextAttribute() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Specification<ProcurementPlan> getTextSpecification(String text) {
+        return (root, query, cb) ->
+                cb.or(
+                        cb.like(cb.lower(root.join(ProcurementPlan_.department).get(Department_.label)), "%"
+                                + text.toLowerCase() + "%"),
+                        cb.like(cb.lower(root.join(ProcurementPlan_.fiscalYear).get(FiscalYear_.name)), "%"
+                                + text.toLowerCase() + "%")
+                );
     }
 }

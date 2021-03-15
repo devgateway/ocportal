@@ -23,4 +23,5 @@ public class AjaxUpdateEvent {
     public AjaxRequestTarget getAjaxRequestTarget() {
         return target;
     }
+
 }

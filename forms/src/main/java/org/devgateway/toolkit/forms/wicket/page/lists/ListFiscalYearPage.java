@@ -38,7 +38,7 @@ public class ListFiscalYearPage extends AbstractListPage<FiscalYear> {
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
         columns.add(new PropertyColumn<>(
                 new Model<>((new StringResourceModel("name", ListFiscalYearPage.this)).getString()), "name", "name"));
 
@@ -49,8 +49,5 @@ public class ListFiscalYearPage extends AbstractListPage<FiscalYear> {
         columns.add(new PropertyColumn<>(
                 new Model<>((new StringResourceModel("endDate", ListFiscalYearPage.this)).getString()), "endDate",
                 "endDate"));
-
-        super.onInitialize();
     }
-
 }
