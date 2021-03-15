@@ -53,7 +53,7 @@ class ExpenditureTodateVsBudget extends Chart {
         hoverformat: hoverFormat,
       },
       yaxis: {
-        title: this.t('charts:expenditureToDateVsBudget:xAxisName'),
+        title: this.t('charts:expenditureToDateVsBudget:yAxisName'),
         type: 'category',
       },
     };
