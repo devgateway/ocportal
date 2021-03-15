@@ -102,7 +102,6 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity {
     private String officerResponsible;
 
     @ExcelExport(name = "M&E Status")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private MEStatus meStatus;
 

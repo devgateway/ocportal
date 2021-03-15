@@ -34,12 +34,10 @@ public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAc
     private Date acceptanceDate;
 
     @ExcelExport(name = "Supplier")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
     @ExcelExport(name = "Supplier Response")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private SupplierResponse supplierResponse;
 
