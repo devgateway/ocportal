@@ -2,8 +2,6 @@ package org.devgateway.toolkit.persistence.dao.form;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.ManyToOne;
@@ -15,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 @Audited
 public abstract class AbstractImplTenderProcessMakueniEntity extends AbstractTenderProcessMakueniEntity {
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(optional = false)
     @ExcelExport(name = "Contract", justExport = true)
     private Contract contract;

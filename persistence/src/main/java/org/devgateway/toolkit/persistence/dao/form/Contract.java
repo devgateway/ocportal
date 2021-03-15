@@ -54,7 +54,6 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     private BigDecimal contractValue;
 
     @ExcelExport(name = "Supplier")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
@@ -70,6 +69,10 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @ExcelExport(useTranslation = true, name = "Reference Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String referenceNumber;
+
+    @ExcelExport(useTranslation = true, name = "Description")
+    @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
+    private String description;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -122,6 +125,14 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
 
     public void setContractDate(final Date contractDate) {
         this.contractDate = contractDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getExpiryDate() {

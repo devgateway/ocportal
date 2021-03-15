@@ -231,7 +231,7 @@ public class AlertsManagerImpl implements AlertsManager {
                 match(where("tenderProcesses._id").is(alert.getPurchaseReq().getId())),
                 unwind("tenderProcesses.tender"),
                 match(where("tenderProcesses.tender.closingDate").gte(new Date())),
-                match(where("tenderProcesses.lastModifiedDate")
+                match(where("tenderProcesses.lastModifiedDateInclChildren")
                         .gte(Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant()))));
 
         final List<Document> documents = mongoTemplate.aggregate(
@@ -264,7 +264,7 @@ public class AlertsManagerImpl implements AlertsManager {
                 unwind("tenderProcesses"),
                 unwind("tenderProcesses.tender"),
                 match(where("tenderProcesses.tender.closingDate").gte(new Date())),
-                match(where("tenderProcesses.lastModifiedDate")    // change to "lte" for local testing
+                match(where("tenderProcesses.lastModifiedDateInclChildren")    // change to "lte" for local testing
                         .gte(alert.getLastChecked() != null
                                 ? Date.from(alert.getLastChecked().atZone(ZoneId.systemDefault()).toInstant())
                                 : new Date(0))),

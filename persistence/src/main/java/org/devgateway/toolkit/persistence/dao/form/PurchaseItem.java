@@ -32,7 +32,6 @@ import java.math.BigDecimal;
 public class PurchaseItem extends AbstractChildExpandableAuditEntity<PurchRequisition> implements ListViewItem,
         Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PlanItem planItem;
 

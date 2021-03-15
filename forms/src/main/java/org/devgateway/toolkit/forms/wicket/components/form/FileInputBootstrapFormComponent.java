@@ -12,6 +12,7 @@
 package org.devgateway.toolkit.forms.wicket.components.form;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -90,6 +91,12 @@ public class FileInputBootstrapFormComponent extends GenericBootstrapFormCompone
                     requireAtLeastOneItem();
                 }
                 return fmMandatory;
+            }
+
+            @Override
+            protected void onUpdate(final AjaxRequestTarget target) {
+                super.onUpdate(target);
+                target.add(FileInputBootstrapFormComponent.this);
             }
         };
 

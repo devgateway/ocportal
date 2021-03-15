@@ -7,6 +7,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
@@ -14,6 +15,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
@@ -79,9 +81,11 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         editForm.attachFm("contractForm");
         super.onInitialize();
 
-        submitAndNext.setVisibilityAllowed(false);
-
         ComponentUtil.addTextField(editForm, "referenceNumber");
+
+        TextFieldBootstrapFormComponent<String> description = ComponentUtil.addTextField(editForm, "description");
+        description.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+
         ComponentUtil.addBigDecimalField(editForm, "contractValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
@@ -106,6 +110,13 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
                 LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        submitAndNext.setVisibilityAllowed(false);
     }
 
     @Override
