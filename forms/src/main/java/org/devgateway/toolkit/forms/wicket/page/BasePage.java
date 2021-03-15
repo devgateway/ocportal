@@ -77,6 +77,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcurementMethodRationalePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProjectClosureHandoverPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
@@ -492,6 +493,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                         "navbar.designations", FontAwesomeIconType.certificate
                 );
 
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListProjectClosureHandoverPage.class,
+                        "navbar.projectClosureHandover", FontAwesomeIconType.list
+                );
+
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
                         "navbar.procuringentitylist", FontAwesomeIconType.list
                 );
@@ -742,6 +747,13 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
                 list.add(alertsStatistics);
 
+                BootstrapBookmarkablePageLink<AllWorkPage> allWork =
+                        new MenuBookmarkablePageLink<AllWorkPage>(AllWorkPage.class,
+                                new StringResourceModel("navbar.allWork", BasePage.this, null)
+                        ).setIconType(FontAwesomeIconType.briefcase);
+                MetaDataRoleAuthorizationStrategy.authorize(allWork, Component.RENDER, ROLE_ADMIN);
+                list.add(allWork);
+
                 if (WebApplication.get().usesDevelopmentConfig()) {
                     BootstrapBookmarkablePageLink<ListFeaturesPage> features =
                             new MenuBookmarkablePageLink<ListFeaturesPage>(ListFeaturesPage.class,
@@ -758,6 +770,14 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         adminMenu.setIconType(FontAwesomeIconType.cog);
         FormSecurityUtil.authorizeRender(adminMenu, ROLE_ADMIN, ROLE_PMC_ADMIN);
         return adminMenu;
+    }
+
+    private NavbarButton<MyWorkPage> newMyWorkMenu() {
+        NavbarButton<MyWorkPage> button = new NavbarButton<>(MyWorkPage.class,
+                new StringResourceModel("navbar.myWork", this, null));
+        button.setIconType(FontAwesomeIconType.briefcase);
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+        return button;
     }
 
     /**
@@ -785,7 +805,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         navbar.addComponents(
                 NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newProcurementFormMenu(),
                         newImplementationFormMenu(),
-                        newMetadataMenu(), newAdminMenu(), newAccountMenu(), newLogoutMenu()
+                        newMetadataMenu(), newAdminMenu(), newMyWorkMenu(), newAccountMenu(), newLogoutMenu()
                 ));
 
         // navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));

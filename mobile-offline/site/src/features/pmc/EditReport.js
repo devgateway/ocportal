@@ -31,7 +31,7 @@ export function EditReport(props) {
     const fiscalYears = metadata.ref["FiscalYear"];
     const departments = metadata.ref["Department"];
     const tenders = metadata.ref["Tender"];
-    const tendersById = metadata.refById["Tender"] || {};
+    const tendersById = metadata.refById["Tender"];
     const wards = metadata.ref["Ward"];
     const pmcStaff = metadata.ref["PMCStaff"];
     const pmcStatus = metadata.ref["PMCStatus"];
@@ -113,7 +113,6 @@ export function EditReport(props) {
         notNull(errors, report, 'emergingComplaints', 'Required');
         notNull(errors, report, 'pmcChallenges', 'Required');
 
-        nonEmptyArray(errors, report, 'pmcNotes', 'Please add at least one note');
         if (report.pmcNotes && report.pmcNotes.length) {
             errors.pmcNotesArray = report.pmcNotes.map(note => {
                 let noteErrors = {};

@@ -42,12 +42,10 @@ import java.util.Set;
 @Form(featureName = "procurementPlanForm")
 public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Department department;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private FiscalYear fiscalYear;
 

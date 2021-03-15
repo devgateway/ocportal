@@ -1,18 +1,19 @@
 package org.devgateway.toolkit.persistence.service.filterstate.form;
 
 import org.apache.commons.lang3.StringUtils;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
+import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity_;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
-import org.devgateway.toolkit.persistence.dao.form.Project;
-import org.devgateway.toolkit.persistence.dao.form.Project_;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,23 +44,20 @@ public abstract class AbstractTenderProcessMakueniFilterState<T extends Abstract
             }
 
             if (tenderProcess != null) {
-                final Project project = tenderProcess.getProject();
+                final ProcurementPlan procurementPlan = tenderProcess.getProcurementPlan();
 
-                if (project != null) {
-                    final ProcurementPlan procurementPlan = project.getProcurementPlan();
+                if (procurementPlan != null) {
+                    Path<ProcurementPlan> pp = root.join(AbstractTenderProcessMakueniEntity_.tenderProcess)
+                            .join(TenderProcess_.procurementPlan);
 
-                    if (procurementPlan != null) {
-                        if (procurementPlan.getDepartment() != null) {
-                            predicates.add(cb.equal(root.get(AbstractTenderProcessMakueniEntity_.tenderProcess)
-                                    .get(TenderProcess_.project).get(Project_.procurementPlan)
-                                    .get(ProcurementPlan_.department), procurementPlan.getDepartment()));
-                        }
+                    Department department = procurementPlan.getDepartment();
+                    if (department != null) {
+                        predicates.add(cb.equal(pp.get(ProcurementPlan_.department), department));
+                    }
 
-                        if (procurementPlan.getFiscalYear() != null) {
-                            predicates.add(cb.equal(root.get(AbstractTenderProcessMakueniEntity_.tenderProcess)
-                                    .get(TenderProcess_.project).get(Project_.procurementPlan)
-                                    .get(ProcurementPlan_.fiscalYear), procurementPlan.getFiscalYear()));
-                        }
+                    FiscalYear fiscalYear = procurementPlan.getFiscalYear();
+                    if (fiscalYear != null) {
+                        predicates.add(cb.equal(pp.get(ProcurementPlan_.fiscalYear), fiscalYear));
                     }
                 }
             }
