@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
@@ -17,7 +15,6 @@ import javax.persistence.ManyToOne;
 public class Staff extends Category {
     private String title;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department department;
 

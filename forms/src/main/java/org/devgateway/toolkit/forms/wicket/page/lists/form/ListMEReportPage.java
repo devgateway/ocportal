@@ -38,10 +38,16 @@ public class ListMEReportPage extends ListAbstractImplTenderProcessMakueniEntity
     @Override
     protected void onInitialize() {
         attachFm("meReportsList");
-        addTenderTitleColumn();
-        addMEStatusColumn();
 
         super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
+        addTenderTitleColumn();
+        addMEStatusColumn();
     }
 
     protected void addMEStatusColumn() {
@@ -50,7 +56,7 @@ public class ListMEReportPage extends ListAbstractImplTenderProcessMakueniEntity
                         (new StringResourceModel("meStatus", ListMEReportPage.this)).getString()),
                 "meStatus",
                 "meStatus",
-                LoadableDetachableModel.of(() -> meStatusService.findAll()), dataTable, false
+                LoadableDetachableModel.of(() -> meStatusService.findAll()), getDataTable(), false
         ));
     }
 

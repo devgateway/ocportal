@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="form-wrapper">
+        <div class="row">
+            <div wicket:id="yearRange" class="col-md-6"></div>
+            <div wicket:id="supplier" class="col-md-6"></div>
+        </div>
+
+        <label class="control-label">
+            <wicket:message key="defaultContact">[[Default contact information]]</wicket:message>
+        </label>
+
+        <div wicket:id="selectContact"></div>
+
+        <div wicket:id="contact"></div>
+
+        <div wicket:id="newContactAlert"></div>
+
+        <div wicket:id="items" class="form-group"></div>
+    </div>
+</wicket:extend>
+</body>
+</html>

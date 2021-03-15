@@ -36,7 +36,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
                         )).getString()),
                 "tenderProcess.contract.awardee",
                 "tenderProcess.singleContract.awardee",
-                new ListModel(awardees), dataTable, false
+                new ListModel(awardees), getDataTable(), false
         ) {
             @Override
             protected IModel<AbstractImplTenderProcessFilterState<T>> getFilterModel(FilterForm form) {
@@ -56,7 +56,9 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
+        super.addColumns();
+
         addAwardeeColumn();
 
         addFmColumn("approvedDate", new SimpleDateProperyColumn<>(new StringResourceModel(
@@ -65,7 +67,5 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
                 "approvedDate", "approvedDate",
                 t -> PersistenceUtil.convertDateToZonedDateTime(t.getApprovedDate())
         ));
-
-        super.onInitialize();
     }
 }

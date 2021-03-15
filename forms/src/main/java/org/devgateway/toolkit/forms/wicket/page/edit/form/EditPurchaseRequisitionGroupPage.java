@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -90,6 +91,11 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
 //        editForm.add(new PurchaseItemPanel("purchaseItems"));
 
         editForm.add(new PurchRequisitionPanel("purchRequisitions"));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
 
         saveTerminateButton.setVisibilityAllowed(false);
     }
@@ -107,15 +113,6 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
         return pr.isTerminated();
     }
 
-//    @Override
-//    protected void beforeSaveEntity(final TenderProcess tenderProcess) {
-//        super.beforeSaveEntity(tenderProcess);
-//
-//        final Project project = tenderProcess.getProject();
-//        project.addTenderProcess(tenderProcess);
-//        projectService.save(project);
-//    }
-
     @Override
     protected void afterSaveEntity(final PurchaseRequisitionGroup saveable) {
         super.afterSaveEntity(saveable);
@@ -128,16 +125,6 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
             jpaService.save(saveable);
         }
     }
-
-
-//    @Override
-//    protected void beforeDeleteEntity(final TenderProcess tenderProcess) {
-//        super.beforeDeleteEntity(tenderProcess);
-//
-//        final Project project = tenderProcess.getProject();
-//        project.remoteTenderProcess(tenderProcess);
-//        projectService.save(project);
-//    }
 
     @Override
     protected void beforeSaveEntity(final PurchaseRequisitionGroup entity) {

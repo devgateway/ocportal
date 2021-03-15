@@ -4,6 +4,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.annotations.Aut
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRoleAssignable;
@@ -85,16 +86,28 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         ComponentUtil.addDateField(editForm, "approvedDate");
 
         formDocs.maxFiles(1);
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        FileInputBootstrapFormComponent completionCertificate =
+                new FileInputBootstrapFormComponent("completionCertificate");
+        completionCertificate.maxFiles(1);
+        editForm.add(completionCertificate);
 
         saveTerminateButton.setVisibilityAllowed(false);
     }
 
     private <X extends AbstractImplTenderProcessMakueniEntity> GenericChoiceProvider<X>
     submittedAndWithinTenderProcessProvider(AbstractMakueniEntityService<X> service) {
-        return new GenericChoiceProvider<>(service.findAll().stream().filter(x -> x.getContract().equals(
-                editForm.getModelObject().getTenderProcess().getSingleContract())
-                && (x.getStatus().equals(DBConstants.Status.SUBMITTED) || x.getStatus()
-                .equals(DBConstants.Status.APPROVED))).collect(Collectors.toList()));
+        return new GenericChoiceProvider<>(service.findAll().stream().filter(x ->
+                (x.getStatus().equals(DBConstants.Status.SUBMITTED)
+                        || x.getStatus().equals(DBConstants.Status.APPROVED))
+                && (x.getContract() != null // OCMAKU-711 delete this null check
+                        && x.getContract().equals(editForm.getModelObject().getTenderProcess().getSingleContract())))
+                .collect(Collectors.toList()));
     }
 
     @Override

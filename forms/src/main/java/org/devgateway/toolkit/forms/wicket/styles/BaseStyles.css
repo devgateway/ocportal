@@ -4,11 +4,6 @@
  */
 
 html {
-    /*
-     * Always show page scroll-bar to prevent side-movement when hovering over items that are extending their height and
-     * suddenly the content doesn't fit above the fold.
-     */
-    overflow-y: scroll;
     position: relative;
     min-height: 100%;
 }
@@ -16,6 +11,11 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 50px !important;
+    /*
+     * Always show page scroll-bar to prevent side-movement when hovering over items that are extending their height and
+     * suddenly the content doesn't fit above the fold.
+     */
+    overflow-y: scroll;
 }
 
 .mainHeader.with-navbar-default .navbar-default {
@@ -89,6 +89,7 @@ body {
      * The main page content should have some height.
      */
     min-height: 20em;
+    padding-bottom: 15px;
 }
 @media (min-width: 1025px){
   .mainContainer{
@@ -167,6 +168,7 @@ body {
     display: inline-block;
     font-size: 1.1vw;
     font-weight: 700;
+    margin-top: 10px;
     padding-left: 0;
     color: #fff;
 }
@@ -202,6 +204,12 @@ h1.pageTitle {
 	padding-right: 7px;
 }
 
+.navbar-inverse .navbar-nav > li > a{
+  font-size: 1vw;
+  padding-left: 10px;
+	padding-right: 10px;
+}
+
 /* file upload
 -------------------------------------------------- */
 .file-preview.loading {
@@ -211,6 +219,11 @@ h1.pageTitle {
 /* List View Styles
 -------------------------------------------------- */
 button.list-edit-button {
+    margin-bottom: 5px;
+    min-width: 70px;
+}
+
+button.list-delete-button {
     margin-bottom: 5px;
     min-width: 70px;
 }
@@ -408,7 +421,7 @@ hr.edit-separator {
     border-radius: 0;
 }
 
-.form-wrapper .panel-default > .panel-heading {
+.form-wrapper .panel-group > .panel-default > .panel-heading {
     background-color: #f6f6f6;
     border-radius: 0;
     padding: 0;

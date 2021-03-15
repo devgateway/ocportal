@@ -43,7 +43,7 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 Maven can build this project and generate the proper jar to be imported in forms module.
 
-To build it just execute: `mvn package` 
+To build it just execute: `mvn package`
 
 ## Learn More
 
@@ -79,8 +79,8 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 
 1. _Enable ESLint_. Open Settings, search ESLint and then check the Automatic ESLint configuration.
 2. _Exclude ui/node and ui/build folder from being indexed_. Right-click on the folder you want to exclude,
-click on _Mark Directory as_ then _Excluded_.
-   
+   click on _Mark Directory as_ then _Excluded_.
+
 ## Analyzing the bundle size
 
 In order to analyze the bundle size, we need first to make a production build

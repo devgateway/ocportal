@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
+import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,8 @@ import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+
+import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
 
 /**
  * @author idobre
@@ -35,7 +37,7 @@ public class AlertsEmailService {
     private static final Logger logger = LoggerFactory.getLogger(AlertsEmailService.class);
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private SendEmailService emailSendingService;
 
     @Autowired
     private SMSMessageService smsMessageService;
@@ -50,17 +52,17 @@ public class AlertsEmailService {
     private AdminSettingsRepository adminSettingsRepository;
 
     @Transactional
-    private void sendFeedbackAlertEmails(ReplyableFeedbackMessage parent, FeedbackMessage message) {
+    protected void sendFeedbackAlertEmails(ReplyableFeedbackMessage parent, FeedbackMessage message) {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(parent.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("You've received a reply to your feedback message!");
-            msg.setText("Click on the link below to view your message on the Government of Makueni County Open"
-                    + " Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
+            msg.setText("Click on the link below to view your message on the Government of " + INSTANCE_NAME
+                    + " County Open Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send alert email for feedback message from " + message.getEmail());
             throw e;
@@ -108,21 +110,24 @@ public class AlertsEmailService {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
             final String content = "Hello,\n\n"
-                    + "Before you can receive Makueni Alerts we need to validate your email address.\n"
+                    + "You have subscribed to receive " + INSTANCE_NAME + " Alerts about: \n"
+                    + (!alert.getDepartments().isEmpty() ? "New tenders in departments: \n"
+                    + alert.getDepartments() + "\n" : "")
+                    + (!alert.getItems().isEmpty() ? "New tenders with items: " + alert.getItems() + "\n" : "")
                     + "You can do this by simply clicking on the link below: \n\n"
                     + "Verify email url: <a style=\"color: #3060ED; text-decoration: none;\" href=\""
                     + url + "\">" + url + "</a>\n\n"
                     + "If you have problems, please paste the above URL into your browser.\n\n"
                     + "Thanks,\n"
-                    + "Makueni Portal Team";
+                    + INSTANCE_NAME + " Portal Team";
 
             msg.setTo(alert.getEmail());
             msg.setFrom(DBConstants.FROM_EMAIL);
-            msg.setSubject("Makueni OC Portal - Please Verify Email Address");
+            msg.setSubject(INSTANCE_NAME + " OC Portal - Please Verify Email Address");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send verification email for: " + alert.getEmail(), e);
             throw e;
@@ -131,7 +136,7 @@ public class AlertsEmailService {
 
     public void sendEmailAlert(final Alert alert, final MimeMessagePreparator message) throws MailException {
         try {
-            javaMailSender.send(message);
+            emailSendingService.send(message);
         } catch (MailException e) {
             logger.error("Failed to send email alert for for: " + alert.getEmail(), e);
             throw e;

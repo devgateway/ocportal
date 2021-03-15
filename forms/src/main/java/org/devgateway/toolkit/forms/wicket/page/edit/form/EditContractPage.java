@@ -3,25 +3,34 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
+import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
+import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
+import org.devgateway.toolkit.forms.wicket.providers.EntityListChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
-import org.devgateway.toolkit.persistence.service.category.ProcuringEntityService;
+import org.devgateway.toolkit.persistence.service.category.SubcountyService;
+import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -45,9 +54,18 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     @SpringBean
     protected TenderProcessService tenderProcessService;
 
-    private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
+    @SpringBean
+    protected SubcountyService subcountyService;
 
-    private GenericSleepFormComponent supplierAddress;
+    @SpringBean
+    protected WardService wardService;
+
+    private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
+    private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
+    private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
+
+    private GenericSleepFormComponent<String> supplierAddress;
+    private Select2ChoiceBootstrapFormComponent<TargetGroup> targetGroup;
 
     public EditContractPage() {
         this(new PageParameters());
@@ -63,9 +81,11 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         editForm.attachFm("contractForm");
         super.onInitialize();
 
-        submitAndNext.setVisibilityAllowed(false);
-
         ComponentUtil.addTextField(editForm, "referenceNumber");
+
+        TextFieldBootstrapFormComponent<String> description = ComponentUtil.addTextField(editForm, "description");
+        description.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
+
         ComponentUtil.addBigDecimalField(editForm, "contractValue")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
@@ -84,6 +104,19 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         addSupplierInfo();
 
         editForm.add(new ContractDocumentPanel("contractDocs"));
+
+        wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+        subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
+        subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
+                LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
+        ));
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        submitAndNext.setVisibilityAllowed(false);
     }
 
     @Override
@@ -131,28 +164,36 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
                 new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
         );
         awardeeSelector.setEnabled(!editForm.getModelObject().getTenderProcess().hasNonDraftImplForms());
-        awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior("change"));
+        awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior());
         editForm.add(awardeeSelector);
 
-        supplierAddress = new GenericSleepFormComponent<>("supplierAddress", (IModel<String>) () -> {
-            if (awardeeSelector.getModelObject() != null) {
-                return awardeeSelector.getModelObject().getAddress();
-            }
-            return null;
-        });
+        targetGroup = ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", new EntityListChoiceProvider<>(
+                editForm.getModel().map(Contract::getAwardee).map(Supplier::getTargetGroups)));
+
+        supplierAddress = new GenericSleepFormComponent<>("supplierAddress",
+                editForm.getModel().map(Contract::getAwardee).map(Supplier::getAddress));
         supplierAddress.setOutputMarkupId(true);
         editForm.add(supplierAddress);
 
     }
 
     class AwardeeAjaxComponentUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        AwardeeAjaxComponentUpdatingBehavior(final String event) {
-            super(event);
+        AwardeeAjaxComponentUpdatingBehavior() {
+            super("change");
         }
 
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierAddress);
+            Contract contract = editForm.getModelObject();
+            if (contract.getTargetGroup() != null && contract.getAwardee() != null
+                    && !contract.getAwardee().getTargetGroups().contains(contract.getTargetGroup())) {
+                contract.setTargetGroup(null);
+            }
+            if (contract.getAwardee() != null && contract.getAwardee().getTargetGroups().size() == 1) {
+                contract.setTargetGroup(contract.getAwardee().getTargetGroups().get(0));
+                targetGroup.getField().clearInput();
+            }
+            target.add(targetGroup, supplierAddress);
         }
     }
 }
