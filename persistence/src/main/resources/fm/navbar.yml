@@ -58,6 +58,7 @@
 - name: navbar.stafflist
 - name: navbar.pmcStaffList
 - name: navbar.designations
+- name: navbar.projectClosureHandover
 - name: navbar.procuringentitylist
 - name: navbar.subcountylist
 - name: navbar.wardlist
