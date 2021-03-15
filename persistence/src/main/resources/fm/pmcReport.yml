@@ -59,7 +59,7 @@
   enabled: yes
   visible: yes
 - name: pmcReportForm.pmcNotes
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
 - name: pmcReportForm.pmcNotes.newButton
@@ -104,7 +104,7 @@
 - name: pmcReportForm.subcounties
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: pmcReportForm.submitAndNext
   enabled: yes
   visible: yes
@@ -138,7 +138,7 @@
 - name: pmcReportForm.wards
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 
 # PMC REPORTS LIST PAGE
 - name: pmcReportsList
