@@ -149,7 +149,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private StringBuffer validationErrors;
 
-    private static final String OCID_PREFIX = "ocds-muq5cl-";
+    private static final String OCID_PREFIX = "ocds-udd159-";
 
     private ImmutableMap<String, Tender.ProcurementMethod> procurementMethodMap;
 
