@@ -28,14 +28,16 @@ import java.util.stream.Stream;
 public class AwardNotificationItem extends AbstractDocsChildExpAuditEntity<AwardNotification>
         implements ListViewItem {
 
-    @ExcelExport(useTranslation = true, name = "Date")
+    @ExcelExport(useTranslation = true, name = "Tender Award Date")
+    private Date tenderAwardDate;
+
+    @ExcelExport(useTranslation = true, name = "Award Notification Date")
     private Date awardDate;
 
     @ExcelExport(useTranslation = true, name = "Award Value (KES)")
     private BigDecimal awardValue;
 
     @ExcelExport(name = "Supplier")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 
@@ -49,6 +51,14 @@ public class AwardNotificationItem extends AbstractDocsChildExpAuditEntity<Award
                 .flatMap(a -> a.getItems().stream()).filter(a -> a.getAwardee().equals(awardee))
                 .findFirst().orElse(null);
 
+    }
+
+    public Date getTenderAwardDate() {
+        return tenderAwardDate;
+    }
+
+    public void setTenderAwardDate(Date tenderAwardDate) {
+        this.tenderAwardDate = tenderAwardDate;
     }
 
     public Date getAwardDate() {

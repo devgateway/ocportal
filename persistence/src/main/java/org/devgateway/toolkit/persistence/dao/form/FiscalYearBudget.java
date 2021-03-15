@@ -28,12 +28,10 @@ import java.util.Collections;
 public class FiscalYearBudget extends AbstractMakueniEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(optional = false)
     private FiscalYear fiscalYear;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne(optional = false)
     private Department department;
 
