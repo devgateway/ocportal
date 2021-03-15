@@ -50,6 +50,7 @@ public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget>
         this.editPageClass = EditFiscalYearBudgetPage.class;
         this.departments = departmentService.findAll();
         this.fiscalYears = fiscalYearService.findAll();
+        this.hasNewPage = false;
     }
 
     protected final List<Department> departments;
@@ -60,19 +61,20 @@ public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget>
     protected void onInitialize() {
         attachFm("fiscalYearBudgetsList");
 
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
         addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("department", this),
-                "department", "department", new ListModel<>(departments), dataTable
+                "department", "department", new ListModel<>(departments), getDataTable()
         ));
 
         addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("fiscalYear", this),
-                "fiscalYear", "fiscalYear", new ListModel<>(fiscalYears), dataTable
+                "fiscalYear", "fiscalYear", new ListModel<>(fiscalYears), getDataTable()
         ));
-
-        super.onInitialize();
-        editPageLink.setVisibilityAllowed(false);
-        topEditPageLink.setVisibilityAllowed(false);
     }
 
     @Override

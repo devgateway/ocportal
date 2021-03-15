@@ -8,7 +8,7 @@ import defaultSingleTenderTabTypes from './singleUtil';
 
 const ImplReport = (props) => {
   const {
-    department, reportName, fmPrefix, childElements,
+    department, reportName, fmPrefix, childElements, header,
   } = props;
   const {
     fiscalYear, data, tenderTitle, isFeatureVisible,
@@ -30,8 +30,9 @@ const ImplReport = (props) => {
   const getImplReport = () => (
     <div>
       <div className="padding-top-10">
+        {header}
         {
-          data.sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
+          data.slice().sort((a, b) => new Date(a.approvedDate) - new Date(b.approvedDate))
             .map((i) => (
               <div key={i._id} className="box">
                 <div className="row">

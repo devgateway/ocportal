@@ -39,11 +39,18 @@ public class ListSupplierPage extends AbstractListCategoryPage<Supplier> {
 
     @Override
     protected void onInitialize() {
+        attachFm("supplierList");
+
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("code", ListSupplierPage.this)).getString()), "code",
                 "code"));
 
-        super.onInitialize();
+        super.addColumns();
     }
 
 }

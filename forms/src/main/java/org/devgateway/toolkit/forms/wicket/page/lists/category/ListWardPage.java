@@ -39,12 +39,12 @@ public class ListWardPage extends AbstractListCategoryPage<Ward> {
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
         final List<Subcounty> subcounties = subcountyService.findAll();
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("subCounty", this),
-                "subcounty", "subcounty", new ListModel(subcounties), dataTable));
+                "subcounty", "subcounty", new ListModel(subcounties), getDataTable()));
 
-        super.onInitialize();
+        super.addColumns();
     }
 
     @Override

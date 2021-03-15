@@ -27,6 +27,15 @@ const TenderQuotation = (props) => {
   const getQuotationView = (tenderQuotationEvaluation) => (
     <div>
       <div className="row">
+        {isFeatureVisible('publicView.tenderQuotationEvaluation.openingDate')
+        && (
+          <Item
+            label={t('tenderQuotation:openingDate')}
+            value={formatDate(tenderQuotationEvaluation.openingDate)}
+            col={6}
+          />
+        )}
+
         {isFeatureVisible('publicView.tenderQuotationEvaluation.closingDate')
         && (
         <Item

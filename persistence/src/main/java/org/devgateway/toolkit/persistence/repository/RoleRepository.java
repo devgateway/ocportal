@@ -12,10 +12,7 @@
 package org.devgateway.toolkit.persistence.repository;
 
 import org.devgateway.toolkit.persistence.dao.Role;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
+import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -25,11 +22,7 @@ import java.util.List;
  * @author mpostelnicu
  */
 @Transactional
-public interface RoleRepository extends TextSearchableRepository<Role, Long> {
-
-    @Override
-    @Query("select role from  Role role where lower(role.authority) like %?1%")
-    Page<Role> searchText(String code, Pageable page);
+public interface RoleRepository extends BaseJpaRepository<Role, Long> {
 
     Role findByAuthority(String authority);
 

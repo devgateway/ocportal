@@ -7,6 +7,8 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -18,6 +20,7 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
+import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstrapFormComponent;
@@ -35,6 +38,7 @@ import org.devgateway.toolkit.forms.wicket.events.EditingEnabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
+import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.Labelable;
@@ -42,6 +46,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
+import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -49,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.select2.ChoiceProvider;
 
+import javax.persistence.metamodel.SingularAttribute;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,6 +78,16 @@ public final class ComponentUtil {
 
     private ComponentUtil() {
 
+    }
+
+    public static Component findFirstParentById(Component component, String id) {
+        if (component == null) {
+            return null;
+        }
+        if (component.getId().equals(id)) {
+            return component;
+        }
+        return findFirstParentById(component.getParent(), id);
     }
 
     public static AJAXDownload createAJAXDownload(String filePath, String contentType, Class<?> caller) {
@@ -308,6 +324,19 @@ public final class ComponentUtil {
         parent.add(field);
 
         return field;
+    }
+
+    public static <C extends AbstractAuditableEntity>
+    void addUniquePropertyEntryValidator(FormComponent<String> field,
+                                         SingularAttribute<C, String> singularAttribute,
+                                         BaseJpaService<C> jpaService,
+                                         IModel<C> formModel,
+                                         String message) {
+        field.add(new UniquePropertyEntryValidator<>(message,
+                jpaService::findAll,
+                (o, v) -> (root, query, cb) -> cb.equal(cb.lower(root.get(singularAttribute)),
+                        v.trim().toLowerCase()),
+                formModel));
     }
 
     public static DateFieldBootstrapFormComponent addDateField(

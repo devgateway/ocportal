@@ -31,16 +31,20 @@ public class ListInspectionReportPage extends ListAbstractImplTenderProcessMakue
     protected void onInitialize() {
         attachFm("inspectionReportsList");
 
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
+        super.addColumns();
+
 //        columns.add(new TextFilteredBootstrapPropertyColumn<>(
 //                new Model<>((new StringResourceModel("title", ListAdministratorReportPage.this)).getString()),
 //                "tenderTitle", "tenderTitle"
 //        ));
         addTenderTitleColumn();
         addAuthorizePaymentColumn();
-
-        super.onInitialize();
     }
-
 
     @Override
     public JpaFilterState<InspectionReport> newFilterState() {

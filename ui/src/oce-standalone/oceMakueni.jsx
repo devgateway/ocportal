@@ -28,8 +28,8 @@ class OCEMakueni extends OCApp {
     this.registerTab(OverviewTab);
     this.registerTab(OCEDemoLocation);
     this.registerTab(CompetitivenessTab);
-    this.registerTab(Implementation);
     this.registerTab(EfficiencyTab);
+    this.registerTab(Implementation);
     // this.registerTab(EProcurementTab);
   }
 

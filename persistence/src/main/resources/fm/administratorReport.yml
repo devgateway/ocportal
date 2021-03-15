@@ -75,6 +75,8 @@
 - name: administratorReportsList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - administratorReportForm
 - name: administratorReportsList.department
   visible: yes
   visibleDeps:

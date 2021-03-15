@@ -1,7 +1,6 @@
 package org.devgateway.ocds.web.util;
 
 import org.devgateway.toolkit.persistence.dao.AdminSettings;
-import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.AdminSettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
-import java.util.List;
 
 /**
  * @author idobre
@@ -25,8 +22,6 @@ public class SettingsUtils {
     @Autowired
     private AdminSettingsService adminSettingsService;
 
-    private AdminSettings setting;
-
     @Value("${gaId:#{null}}")
     private String googleAnalyticsTrackingId;
 
@@ -35,33 +30,19 @@ public class SettingsUtils {
     }
 
     public int getAutosaveTime() {
-        init();
-        if (ObjectUtils.isEmpty(setting.getAutosaveTime())) {
+        Integer autosaveTime = getSettings().getAutosaveTime();
+        if (ObjectUtils.isEmpty(autosaveTime)) {
             return AUTOSAVE_TIME_DEFAULT;
         }
-        return setting.getAutosaveTime();
+        return autosaveTime;
     }
 
     public boolean getRebootServer() {
-        init();
-        if (setting.getRebootServer() == null) {
+        Boolean rebootServer = getSettings().getRebootServer();
+        if (rebootServer == null) {
             return false;
         }
-        return setting.getRebootServer();
-    }
-
-    public AdminSettings getSetting() {
-        init();
-        return setting;
-    }
-
-    private void init() {
-        final List<AdminSettings> list = adminSettingsService.findAll();
-        if (list.size() == 0) {
-            setting = new AdminSettings();
-        } else {
-            setting = list.get(0);
-        }
+        return rebootServer;
     }
 
 
@@ -71,16 +52,8 @@ public class SettingsUtils {
 
     private static final Integer DAYS_SUBMITTED_REMINDER_DEFAULT = 14;
 
-    @Autowired
-    private AdminSettingsRepository adminSettingsRepository;
-
     public AdminSettings getSettings() {
-        List<AdminSettings> list = adminSettingsRepository.findAll();
-        if (list.size() == 0) {
-            return new AdminSettings();
-        } else {
-            return list.get(0);
-        }
+        return adminSettingsService.getSettings();
     }
 
     public Integer getExcelBatchSize() {

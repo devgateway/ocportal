@@ -41,9 +41,4 @@ public class PMCMemberPanel extends ListViewSectionPanel<PMCMember, PMCReport> {
         ComponentUtil.addSelect2ChoiceField(item, "staff", pmcStaffService);
         ComponentUtil.addSelect2ChoiceField(item, "designation", designationService);
     }
-
-    @Override
-    protected boolean filterListItem(final PMCMember member) {
-        return true;
-    }
 }

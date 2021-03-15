@@ -40,32 +40,31 @@ public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetP
     @Override
     protected void onInitialize() {
         attachFm("cabinetPapersList");
+
+        super.onInitialize();
+    }
+
+    @Override
+    protected void addColumns() {
         addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("department", this),
                 "procurementPlan.department", "procurementPlan.department",
-                new ListModel(departments), dataTable,
+                new ListModel<>(departments), getDataTable(),
                 isPreselected() && !FormSecurityUtil.isCurrentUserAdmin()
         ));
 
         addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("fiscalYears", this),
                 "procurementPlan.fiscalYear", "procurementPlan.fiscalYear",
-                new ListModel(fiscalYears), dataTable
+                new ListModel<>(fiscalYears), getDataTable()
         ));
 
         addFmColumn("number", new TextFilteredBootstrapPropertyColumn<>(
                 new StringResourceModel("number", this), "number",
                 "number"
         ));
-        //columns.add(new TextFilteredBootstrapPropertyColumn<>(
-        //new Model<>((new StringResourceModel("name", ListCabinetPaperPage.this)).getString()), "name", "name"));
-
 
         addFileDownloadColumn();
-
-        super.onInitialize();
-
-        columns.remove(1); // remove the status column
     }
 
     @Override
