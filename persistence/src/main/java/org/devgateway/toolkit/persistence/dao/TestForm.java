@@ -62,7 +62,6 @@ public class TestForm extends AbstractStatusAuditableEntity {
 
     private String colorPicker;
 
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Department entitySelect;
 

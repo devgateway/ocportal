@@ -21,7 +21,6 @@ import javax.persistence.Transient;
 @Table(indexes = {@Index(columnList = "test_form_id")})
 public class TestFormChild extends AbstractAuditableEntity implements ListViewItem {
     @ManyToOne
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private TestForm testForm;
 
     private String header;
