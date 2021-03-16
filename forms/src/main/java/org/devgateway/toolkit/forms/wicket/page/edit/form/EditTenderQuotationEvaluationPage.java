@@ -45,6 +45,7 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
         editForm.attachFm("tenderQuotationEvaluationForm");
         super.onInitialize();
 
+        ComponentUtil.addDateField(editForm, "openingDate");
         ComponentUtil.addDateField(editForm, "closingDate");
         editForm.add(new BidPanel("bids"));
 

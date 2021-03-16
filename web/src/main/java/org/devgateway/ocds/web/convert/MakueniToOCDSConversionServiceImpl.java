@@ -48,6 +48,7 @@ import org.devgateway.ocds.persistence.mongo.repository.main.MakueniLocationRepo
 import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.ocds.web.rest.controller.OcdsController;
+import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
@@ -92,7 +93,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -165,13 +165,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private MakueniLocationRepository makueniLocationRepository;
 
     @Autowired
-    private FiscalYearBudgetService fiscalYearBudgetService;
-
-    @Autowired
     private AdminSettingsRepository adminSettingsRepository;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private SendEmailService emailSendingService;
 
     @Autowired
     private PersonService personService;
@@ -191,7 +188,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
             msg.setText(txt);
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send ocds validation failure emails ", e);
             throw e;
@@ -559,16 +556,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public MakueniBudgetBreakdown createPlanningBudgetBreakdown(TenderProcess tenderProcess) {
-        FiscalYearBudget fiscalYearBudget = fiscalYearBudgetService.findByDepartmentAndFiscalYear(
-                tenderProcess.getDepartment(), tenderProcess.getProcurementPlan().getFiscalYear());
-        MakueniBudgetBreakdown budgetBreakdown = null;
-        if (fiscalYearBudget != null) {
-            budgetBreakdown = new MakueniBudgetBreakdown();
-            safeSet(budgetBreakdown::setAmount, fiscalYearBudget::getAmountBudgeted, this::convertAmount);
-            safeSet(budgetBreakdown::setSourceParty, tenderProcess::getDepartment, this::convertBuyer);
-            safeSet(budgetBreakdown::setId, fiscalYearBudget::getId, this::longIdToString);
-            safeSet(budgetBreakdown::setPeriod, fiscalYearBudget::getFiscalYear, this::createBudgetPeriod);
-        }
+        ProcurementPlan procurementPlan = tenderProcess.getProcurementPlan();
+
+        MakueniBudgetBreakdown budgetBreakdown = new MakueniBudgetBreakdown();
+
+        safeSet(budgetBreakdown::setAmount,
+                () -> procurementPlan.getPlanItems().stream()
+                        .map(pi -> pi.getQuantity().multiply(pi.getEstimatedCost()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add),
+                this::convertAmount);
+        safeSet(budgetBreakdown::setSourceParty, tenderProcess::getDepartment, this::convertBuyer);
+        safeSet(budgetBreakdown::setId, procurementPlan::getId, this::longIdToString);
+        safeSet(budgetBreakdown::setPeriod, procurementPlan::getFiscalYear, this::createBudgetPeriod);
+
         return budgetBreakdown;
     }
 
@@ -721,7 +721,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsOrg.getAdditionalIdentifiers()::add, () -> supplier, this::convertCategoryToIdentifier,
                 this::convertToLocalIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
-        safeSet(ocdsOrg::setTargetGroup, supplier::getTargetGroup, this::categoryLabel);
+        safeSetEach(ocdsOrg.getTargetGroups()::add, supplier::getTargetGroups, this::categoryLabel);
         return ocdsOrg;
     }
 
@@ -1152,6 +1152,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setContractor, contract::getAwardee, this::convertOrganization);
         safeSet(ocdsContract::setStatus, () -> contract, this::createContractStatus);
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
+        safeSet(ocdsContract::setTargetGroup, contract::getTargetGroup, Category::getLabel);
 
         return ocdsContract;
     }

@@ -3,14 +3,16 @@ package org.devgateway.toolkit.persistence.service;
 import com.google.common.collect.Sets;
 import org.apache.logging.log4j.util.Strings;
 import org.devgateway.toolkit.persistence.dao.Person;
+import org.devgateway.toolkit.persistence.dao.Person_;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.repository.PersonRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -58,8 +60,15 @@ public class PersonServiceImpl extends BaseJpaServiceImpl<Person> implements Per
     }
 
     @Override
-    public TextSearchableRepository<Person, Long> textRepository() {
-        return personRepository;
+    public Specification<Person> getTextSpecification(String text) {
+        return (root, query, cb) -> cb.or(
+                cb.like(cb.lower(root.get(Person_.firstName)), "%" + text.toLowerCase() + "%"),
+                        cb.like(cb.lower(root.get(Person_.lastName)), "%" + text.toLowerCase() + "%"));
+    }
+
+    @Override
+    public SingularAttribute<? super Person, String> getTextAttribute() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

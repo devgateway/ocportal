@@ -29,7 +29,6 @@ public class ProfessionalOpinionItem extends AbstractDocsChildExpAuditEntity<Pro
     private Date professionalOpinionDate;
 
     @ExcelExport(useTranslation = true, name = "Awardee")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier awardee;
 

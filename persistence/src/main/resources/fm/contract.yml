@@ -9,6 +9,10 @@
   mandatory: yes
   enabled: yes
   visible: yes
+- name: contractForm.description
+  mandatory: no
+  enabled: yes
+  visible: yes
 - name: contractForm.cancel
   enabled: yes
   visible: yes
@@ -39,6 +43,10 @@
   enabled: yes
   visible: yes
 - name: contractForm.contractValue
+  mandatory: yes
+  enabled: yes
+  visible: yes
+- name: contractForm.targetGroup
   mandatory: yes
   enabled: yes
   visible: yes
@@ -98,11 +106,25 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: contractForm.wards
+  mandatory: yes
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - contractForm.subcounties
+  enabledDeps:
+    - contractForm.subcounties
+- name: contractForm.subcounties
+  mandatory: yes
+  enabled: yes
+  visible: yes
 
 # LIST PAGE
 - name: contractsList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - contractForm
 - name: contractsList.department
   visible: yes
   visibleDeps:
@@ -151,6 +173,10 @@
   visible: yes
   visibleDeps:
     - contractForm.awardee
+- name: publicView.contract.targetGroup
+  visible: yes
+  visibleDeps:
+    - contractForm.targetGroup
 - name: publicView.contract.contractValue
   visible: yes
   visibleDeps:
@@ -159,6 +185,18 @@
   visible: yes
   visibleDeps:
     - contractForm.contractApprovalDate
+- name: publicView.contract.description
+  visible: yes
+  visibleDeps:
+    - contractForm.description
+- name: publicView.contract.wards
+  visible: yes
+  visibleDeps:
+    - contractForm.wards
+- name: publicView.contract.subcounties
+  visible: yes
+  visibleDeps:
+    - contractForm.subcounties
 - name: publicView.contract.contractDocs
   visible: yes
   visibleDeps:

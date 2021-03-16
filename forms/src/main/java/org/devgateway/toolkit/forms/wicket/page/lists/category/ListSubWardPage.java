@@ -38,12 +38,12 @@ public class ListSubWardPage extends AbstractListCategoryPage<SubWard> {
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
         final List<Ward> wards = wardService.findAll();
         columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("ward", this),
-                "ward", "ward", new ListModel<>(wards), dataTable));
+                "ward", "ward", new ListModel<>(wards), getDataTable()));
 
-        super.onInitialize();
+        super.addColumns();
     }
 
     @Override

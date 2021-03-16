@@ -4,13 +4,24 @@ import { Item } from './Item';
 import ImplReport from './ImplReport';
 import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
+import FileDownloadLinks from './FileDownloadLinks';
+
+const getPaymentStatus = (paymentVouchers) => {
+  if (paymentVouchers.find((el) => el.status === 'APPROVED' && el.lastPayment)) {
+    return 'paymentVoucher:paymentStatus:paidInFull';
+  }
+  if (paymentVouchers.find((el) => el.status === 'APPROVED')) {
+    return 'paymentVoucher:paymentStatus:partiallyPaid';
+  }
+  return 'paymentVoucher:paymentStatus:nonePaid';
+};
 
 const PaymentVoucher = (props) => {
-  const t = tCreator(props.translations);
+  const { translations, isFeatureVisible, data } = props;
+  const t = tCreator(translations);
 
   const childElements = (i) => {
     const { currencyFormatter, formatBoolean } = props.styling.tables;
-    const { isFeatureVisible } = props;
     return (
       <div>
         <div className="row display-flex">
@@ -37,10 +48,28 @@ const PaymentVoucher = (props) => {
           col={3}
         />
         )}
+
+          {isFeatureVisible('publicView.paymentVoucher.completionCertificate')
+          && (
+            <Item label={t('paymentVoucher:completionCertificate')} col={12}>
+              <FileDownloadLinks files={i.completionCertificate} useDash />
+            </Item>
+          )}
         </div>
       </div>
     );
   };
+
+  const header = (
+    <>
+      {isFeatureVisible('publicView.paymentVoucher.completionCertificate')
+      && (
+        <div className="row display-flex">
+          <Item label={t('paymentVoucher:paymentStatus')} value={t(getPaymentStatus(data))} col={3} />
+        </div>
+      )}
+    </>
+  );
 
   return (
     <ImplReport
@@ -48,6 +77,7 @@ const PaymentVoucher = (props) => {
       fmPrefix="publicView.paymentVoucher"
       reportName={t('paymentVoucher:label')}
       childElements={childElements}
+      header={header}
     />
   );
 };

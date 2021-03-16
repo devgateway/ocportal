@@ -32,11 +32,13 @@ import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
+import org.devgateway.toolkit.persistence.dao.form.TenderItem;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.category.UnitService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseItemService;
+import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -62,9 +64,10 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     @SpringBean
     private PurchaseItemService purchaseItemService;
 
-    private final PlanItemFilterBean listFilterBean;
+    @SpringBean
+    private TenderItemService tenderItemService;
 
-    private GenericSleepFormComponent totalCost;
+    private final PlanItemFilterBean listFilterBean;
 
     public PlanItemPanel(final String id) {
         super(id);
@@ -96,6 +99,17 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     public void populateCompoundListItem(final ListItem<PlanItem> item) {
+        GenericSleepFormComponent<String> totalCost = new GenericSleepFormComponent<>("totalCost",
+                        (IModel<String>) () -> {
+                            if (item.getModelObject() != null && item.getModelObject().getEstimatedCost() != null
+                                    && item.getModelObject().getQuantity() != null) {
+                                return ComponentUtil.formatNumber(
+                                        item.getModelObject().getEstimatedCost().multiply(
+                                                item.getModelObject().getQuantity()));
+                            }
+                            return null;
+                        });
+        totalCost.setOutputMarkupId(true);
         final PlanItem planItem = item.getModelObject();
             ComponentUtil.addSelect2ChoiceField(item, "unitOfIssue", unitService);
 
@@ -120,16 +134,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             estimatedCost.decimal();
             estimatedCost.getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
             item.add(estimatedCost);
-
-            totalCost = new GenericSleepFormComponent<>("totalCost",
-                    (IModel<String>) () -> {
-                        if (quantity.getModelObject() != null && estimatedCost.getModelObject() != null) {
-                            return ComponentUtil.formatNumber(
-                                    estimatedCost.getModelObject().multiply(quantity.getModelObject()));
-                        }
-                        return null;
-                    });
-            totalCost.setOutputMarkupId(true);
             item.add(totalCost);
 
         ComponentUtil.addSelect2ChoiceField(item, "procurementMethod", procurementMethodService);
@@ -154,7 +158,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     }
 
     @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<PlanItem> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<PlanItem> compoundModel) {
         return new PlanItemHeaderPanel(id, compoundModel);
     }
 
@@ -217,19 +221,28 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                 new ResourceModel("removeButton")) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
-                final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
-
-                if (purchaseItems.size() > 0) {
-                    final ValidationError error = new ValidationError();
-                    error.addKey("planItemError");
-                    error(error);
-                } else {
-                    PlanItemPanel.this.getModelObject().remove(item);
-                    listView.removeAll();
-                    target.add(listWrapper);
-                }
-
                 target.add(removeButtonNotificationPanel);
+                if (!item.isNew()) {
+                    final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
+
+                    if (purchaseItems.size() > 0) {
+                        final ValidationError error = new ValidationError();
+                        error.addKey("planItemErrorPurchase");
+                        error(error);
+                        return;
+                    }
+
+                    final List<TenderItem> tenderItems = tenderItemService.findByPlanItem(item);
+                    if (tenderItems.size() > 0) {
+                        final ValidationError error = new ValidationError();
+                        error.addKey("planItemErrorTender");
+                        error(error);
+                        return;
+                    }
+                }
+                PlanItemPanel.this.getModelObject().remove(item);
+                listView.removeAll();
+                target.add(listWrapper);
             }
         };
 

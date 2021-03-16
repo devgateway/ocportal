@@ -57,12 +57,19 @@ public class ListUserPage extends AbstractListPage<Person> {
 
     @Override
     protected void onInitialize() {
+        super.onInitialize();
+        // enable excel download
+        excelForm.setVisibilityAllowed(true);
+    }
+
+    @Override
+    protected void addColumns() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(new StringResourceModel("name", this),
                 "username", "username"));
 
         final List<Department> departments = departmentService.findAll();
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new StringResourceModel("departments", this),
-                "departments", new ListModel<>(departments), dataTable));
+                "departments", new ListModel<>(departments), getDataTable()));
 
         List<Role> roles = null;
         if (FormSecurityUtil.isCurrentUserAdmin()) {
@@ -73,12 +80,8 @@ public class ListUserPage extends AbstractListPage<Person> {
             }
         }
         columns.add(new SelectMultiFilteredBootstrapPropertyColumn<>(new StringResourceModel("roles", this),
-                "roles", new ListModel<>(roles), dataTable,
+                "roles", new ListModel<>(roles), getDataTable(),
                 !FormSecurityUtil.isCurrentUserPmcAdmin()));
-
-        super.onInitialize();
-        // enable excel download
-        excelForm.setVisibilityAllowed(true);
     }
 
     @Override

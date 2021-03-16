@@ -29,11 +29,22 @@
         }
       }
     },
+    "Contract": {
+      "properties": {
+        "targetGroup": {
+          "title": "AGPO Category",
+          "$ref": "#/definitions/TargetGroup"
+        }
+      }
+    },
     "Organization": {
       "properties": {
         "targetGroup": {
-          "title": "Target Group",
-          "$ref": "#/definitions/TargetGroup"
+          "title": "AGPO Category",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TargetGroup"
+          }
         }
       }
     }
