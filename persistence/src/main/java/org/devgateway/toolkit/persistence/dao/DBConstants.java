@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,6 +64,12 @@ public final class DBConstants {
         public static final String REJECTED = "Rejected";
         public static final String[] ALL = {ACCEPTED, REJECTED};
         public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
+    }
+
+
+
+    public static final class Reports {
+        public static final long DIRECT_PROCUREMENT_THRESHOLD = 500000;
     }
 
     public static final int MAX_DEFAULT_TEXT_LENGTH = 32000;

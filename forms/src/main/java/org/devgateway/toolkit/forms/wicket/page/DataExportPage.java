@@ -10,7 +10,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.devgateway.toolkit.forms.wicket.components.export.DirectProcurementsAboveReportPanel;
 import org.devgateway.toolkit.forms.wicket.components.export.GeneralDepartmentReportPanel;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -41,6 +43,7 @@ public class DataExportPage extends BasePage {
             protected List<AbstractLink> newSubMenuButtons(String buttonMarkupId) {
                 List<AbstractLink> links = new ArrayList<>();
                 links.add(createGeneralDepartmentExportMenuItem(buttonMarkupId));
+                links.add(createDirectProcurementsAbove(buttonMarkupId));
                 return links;
             }
         });
@@ -56,6 +59,30 @@ public class DataExportPage extends BasePage {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 exportPanel = exportPanel.replaceWith(new GeneralDepartmentReportPanel("exportPanel") {
+                    @Override
+                    public void onSubmit(AjaxRequestTarget target) {
+                        super.onSubmit(target);
+                        target.add(feedbackPanel);
+                    }
+
+                    @Override
+                    public void onError(AjaxRequestTarget target) {
+                        super.onError(target);
+                        target.add(feedbackPanel);
+                    }
+                });
+                target.add(exportPanel);
+            }
+        };
+    }
+
+    private AbstractLink createDirectProcurementsAbove(String id) {
+        StringResourceModel labelModel = new StringResourceModel("directProcurementsAbove")
+                .setParameters(DBConstants.Reports.DIRECT_PROCUREMENT_THRESHOLD);
+        return new BootstrapAjaxLink<Void>(id, null, Buttons.Type.Link, labelModel) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                exportPanel = exportPanel.replaceWith(new DirectProcurementsAboveReportPanel("exportPanel") {
                     @Override
                     public void onSubmit(AjaxRequestTarget target) {
                         super.onSubmit(target);
