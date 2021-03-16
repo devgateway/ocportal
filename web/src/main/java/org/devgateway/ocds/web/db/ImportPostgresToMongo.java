@@ -194,6 +194,7 @@ public class ImportPostgresToMongo {
                     pr.setInspectionReports(new HashSet<>(filterNotExportable(pr.getInspectionReports())));
                     pr.getInspectionReports().stream().forEach(doc -> {
                         self.storeMakueniFormFiles(doc.getFormDocs());
+                        self.storeMakueniFormFiles(doc.getPicture());
                         doc.getPrivateSectorRequests().stream()
                                 .forEach(psr -> self.storeMakueniFormFiles(psr.getUpload()));
                     });
@@ -205,7 +206,10 @@ public class ImportPostgresToMongo {
                     pr.getMeReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
                     pr.setPaymentVouchers(new HashSet<>(filterNotExportable(pr.getPaymentVouchers())));
-                    pr.getPaymentVouchers().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
+                    pr.getPaymentVouchers().stream().forEach(doc -> {
+                        self.storeMakueniFormFiles(doc.getFormDocs());
+                        self.storeMakueniFormFiles(doc.getCompletionCertificate());
+                    });
                 });
 
                 pp.getProjects().stream().flatMap(p->p.getCabinetPapers().stream()).
