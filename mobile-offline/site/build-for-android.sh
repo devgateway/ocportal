@@ -2,6 +2,8 @@
 
 cd "${BASH_SOURCE%/*}" || exit
 
+npm install
+
 PUBLIC_URL=file:///android_asset/www \
   npm run build
 
