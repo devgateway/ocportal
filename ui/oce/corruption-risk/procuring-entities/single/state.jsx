@@ -14,11 +14,7 @@ export const PEFilters = PEState.mapping({
   name: 'PEFilters',
   deps: [datefulFilters, PEId],
   mapper: (filters, PEId) =>
-    filters.update(
-      'procuringEntityId',
-      Set(),
-      PEIds => PEIds.add(PEId)
-    )
+    filters.set('procuringEntityId', Set.of(PEId))
 });
 
 const PEInfoUrl = PEState.mapping({
