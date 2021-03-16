@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.devgateway.ocds.persistence.mongo.constants;
 
+import com.google.common.collect.ImmutableMap;
+import org.devgateway.ocds.persistence.mongo.Tender;
+
 public final class MongoConstants {
 
     private MongoConstants() {
@@ -148,4 +151,21 @@ public final class MongoConstants {
     }
 
     public static final Integer MONGO_DECIMAL_SCALE = 2;
+
+    public static final ImmutableMap<String, Tender.ProcurementMethod> PROCUREMENT_METHOD_MAP =
+            ImmutableMap.<String, Tender.ProcurementMethod>builder()
+                    .put("Direct Procurement", Tender.ProcurementMethod.direct)
+                    .put("Open Tender - National", Tender.ProcurementMethod.open)
+                    .put("Request for Proposal", Tender.ProcurementMethod.limited)
+                    .put("Request for Quotation", Tender.ProcurementMethod.selective)
+                    .put("Restricted Tender", Tender.ProcurementMethod.limited)
+                    .put("Specially Permitted", Tender.ProcurementMethod.limited)
+                    .put("Low Value Procurement", Tender.ProcurementMethod.direct)
+                    .put("Framework Agreement", Tender.ProcurementMethod.direct)
+                    .put("Two-stage Tendering", Tender.ProcurementMethod.selective)
+                    .put("Design Competition", Tender.ProcurementMethod.selective)
+                    .put("Force Account", Tender.ProcurementMethod.direct)
+                    .put("Electronic Reverse Auction", Tender.ProcurementMethod.selective)
+                    .put("Open Tender - International", Tender.ProcurementMethod.open)
+                    .build();
 }
