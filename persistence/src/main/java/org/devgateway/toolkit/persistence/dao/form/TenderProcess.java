@@ -15,6 +15,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.AccessType;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
@@ -127,6 +128,8 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
     private Set<PaymentVoucher> paymentVouchers = new HashSet<>();
+
+    private transient ZonedDateTime lastModifiedDateInclChildren;
 
     @Override
     @JsonIgnore
@@ -450,19 +453,26 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
 
     @AccessType(AccessType.Type.PROPERTY)
     public ZonedDateTime getLastModifiedDateInclChildren() {
-        return getMax(Arrays.asList(
-                getLastModifiedDate().orElse(null),
-                getMaxLastModifiedDate(pmcReports),
-                getMaxLastModifiedDate(meReports),
-                getMaxLastModifiedDate(inspectionReports),
-                getMaxLastModifiedDate(paymentVouchers),
-                getMaxLastModifiedDate(administratorReports),
-                getMaxLastModifiedDate(awardAcceptance),
-                getMaxLastModifiedDate(awardNotification),
-                getMaxLastModifiedDate(professionalOpinion),
-                getMaxLastModifiedDate(tenderQuotationEvaluation),
-                getMaxLastModifiedDate(tender),
-                getMaxLastModifiedDate(contract)));
+        if (lastModifiedDateInclChildren == null) {
+            lastModifiedDateInclChildren = getMax(Arrays.asList(
+                    getLastModifiedDate().orElse(null),
+                    getMaxLastModifiedDate(pmcReports),
+                    getMaxLastModifiedDate(meReports),
+                    getMaxLastModifiedDate(inspectionReports),
+                    getMaxLastModifiedDate(paymentVouchers),
+                    getMaxLastModifiedDate(administratorReports),
+                    getMaxLastModifiedDate(awardAcceptance),
+                    getMaxLastModifiedDate(awardNotification),
+                    getMaxLastModifiedDate(professionalOpinion),
+                    getMaxLastModifiedDate(tenderQuotationEvaluation),
+                    getMaxLastModifiedDate(tender),
+                    getMaxLastModifiedDate(contract)));
+        }
+        return lastModifiedDateInclChildren;
+    }
+
+    public void setLastModifiedDateInclChildren(ZonedDateTime lastModifiedDateInclChildren) {
+        this.lastModifiedDateInclChildren = lastModifiedDateInclChildren;
     }
 
     private ZonedDateTime getMaxLastModifiedDate(Collection<? extends AbstractAuditableEntity> col) {
