@@ -8,6 +8,7 @@ import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import BackendDateFilterable from '../backend-date-filterable';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
+import PropTypes from 'prop-types';
 
 class CList extends PaginatedTable {
   getCustomEP() {
@@ -28,7 +29,7 @@ class CList extends PaginatedTable {
   }
 
   render() {
-    const { data, navigate } = this.props;
+    const { data, navigate, t } = this.props;
 
     if (!data) return null;
 
@@ -47,7 +48,7 @@ class CList extends PaginatedTable {
       const flags = contract.get('flags');
 
       const flagTypes = flags.get('laggedStats', List())
-        .map((flagType) => this.t(`crd:corruptionType:${flagType.get('type')}:name`))
+        .map((flagType) => t(`crd:corruptionType:${flagType.get('type')}:name`))
         .join(', ') || 'N/A';
 
       return {
@@ -73,12 +74,12 @@ class CList extends PaginatedTable {
         onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
         columns={[
           {
-            text: this.t('crd:contracts:baseInfo:status'),
+            text: t('crd:contracts:baseInfo:status'),
             dataField: 'status',
             fm: 'crd.contracts.col.status',
           },
           {
-            text: this.t('crd:procurementsTable:contractID'),
+            text: t('crd:procurementsTable:contractID'),
             dataField: 'id',
             fm: 'crd.contracts.col.contractId',
             formatter: mkContractLink(navigate),
@@ -86,41 +87,41 @@ class CList extends PaginatedTable {
             headerClasses: 'ocid',
           },
           {
-            text: this.t('crd:general:contract:title'),
+            text: t('crd:general:contract:title'),
             dataField: 'title',
             fm: 'crd.contracts.col.contractTitle',
             formatter: mkContractLink(navigate),
           },
           {
-            text: this.t('crd:contracts:list:procuringEntity'),
+            text: t('crd:contracts:list:procuringEntity'),
             dataField: 'PEName',
             fm: 'crd.contracts.col.procuringEntity',
             formatter: _3LineText,
           },
           {
-            text: this.t('crd:procurementsTable:tenderAmount'),
+            text: t('crd:procurementsTable:tenderAmount'),
             dataField: 'tenderAmount',
             fm: 'crd.contracts.col.tenderAmount',
           },
           {
-            text: this.t('crd:contracts:list:awardAmount'),
+            text: t('crd:contracts:list:awardAmount'),
             dataField: 'awardAmount',
             fm: 'crd.contracts.col.awardAmount',
           },
           {
-            text: this.t('crd:procurementsTable:tenderDate'),
+            text: t('crd:procurementsTable:tenderDate'),
             dataField: 'startDate',
             fm: 'crd.contracts.col.tenderDate',
             classes: 'date',
             headerClasses: 'date',
           },
           {
-            text: this.t('crd:procurementsTable:flagType'),
+            text: t('crd:procurementsTable:flagType'),
             dataField: 'flagTypes',
             fm: 'crd.contracts.col.flagType',
           },
           {
-            text: this.t('crd:procurementsTable:noOfFlags'),
+            text: t('crd:procurementsTable:noOfFlags'),
             dataField: 'nrFlags',
             fm: 'crd.contracts.col.nrFlags',
           },
@@ -130,9 +131,15 @@ class CList extends PaginatedTable {
   }
 }
 
+CList.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
 export default class Contracts extends CRDPage {
   render() {
-    const { searchQuery, doSearch, navigate } = this.props;
+    const {
+      searchQuery, doSearch, navigate, t,
+    } = this.props;
     return (
       <BackendDateFilterable
         {...wireProps(this)}
@@ -142,7 +149,7 @@ export default class Contracts extends CRDPage {
           doSearch={doSearch}
           navigate={navigate}
           className="contracts-page"
-          topSearchPlaceholder={this.t('crd:contracts:top-search')}
+          topSearchPlaceholder={t('crd:contracts:top-search')}
           List={CList}
           dataEP="flaggedRelease/all"
           countEP="flaggedRelease/count"

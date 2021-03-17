@@ -1,4 +1,5 @@
 import CenterTextDonut from '../index';
+import PropTypes from 'prop-types';
 
 class PercentPESpending extends CenterTextDonut {
   getCenterText() {
@@ -14,9 +15,14 @@ class PercentPESpending extends CenterTextDonut {
   }
 
   getTitle() {
-    return this.t('crd:contract:percentPEspending:name');
+    const { t } = this.props;
+    return t('crd:contract:percentPEspending:name');
   }
 }
+
+PercentPESpending.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 PercentPESpending.Donut = class extends CenterTextDonut.Donut {
   getCustomEP() {
@@ -56,10 +62,11 @@ PercentPESpending.Donut = class extends CenterTextDonut.Donut {
     if (!data || !data.count()) return [];
     const toSuppliers = data.get('toSuppliers');
     const total = data.get('total');
+    const { t } = this.props;
     return [{
       labels: [
-        this.t('crd:contract:percentPEspending:this'),
-        this.t('crd:contract:percentPEspending:match'),
+        t('crd:contract:percentPEspending:this'),
+        t('crd:contract:percentPEspending:match'),
       ],
       values: [toSuppliers, total - toSuppliers],
       hoverlabel: {
@@ -81,6 +88,10 @@ PercentPESpending.Donut = class extends CenterTextDonut.Donut {
       paper_bgcolor: 'rgba(0,0,0,0)',
     };
   }
+};
+
+PercentPESpending.Donut.propTypes = {
+  t: PropTypes.func.isRequired,
 };
 
 export default PercentPESpending;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { tCreator } from '../../../translatable';
+import { useTranslation } from 'react-i18next';
 import flag from '../../../resources/icons/flag.svg';
 
 class Cell extends React.PureComponent {
@@ -19,11 +19,11 @@ class Cell extends React.PureComponent {
 }
 
 const Info = ({
-  info, flagsCount, buyers, contractsCount, unflaggedContractsCount, translations,
+  info, flagsCount, buyers, contractsCount, unflaggedContractsCount,
 }) => {
   const { address, contactPoint } = info;
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   return (
     <div className="pe-page">

@@ -1,11 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthImplReport from './AuthImplReport';
-import { tCreator } from '../../../translatable';
 import fmConnect from '../../../fm/fm';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const AdministratorReport = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   return (
     <AuthImplReport

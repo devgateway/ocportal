@@ -1,13 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import NoDataMessage from './NoData';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const ProfessionalOpinion = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
   const { data, isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
 
@@ -72,7 +72,7 @@ const ProfessionalOpinion = (props) => {
     </div>
   );
 
-  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getProfessionalOpinion(data[0]));
+  return (data === undefined ? <NoDataMessage /> : getProfessionalOpinion(data[0]));
 };
 
 ProfessionalOpinion.propTypes = defaultSingleTenderTabTypes;

@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CustomPopupChart from '../custom-popup-chart';
 import { pluckImm } from '../../tools';
-import translatable from '../../translatable';
 import CRDPage from '../page';
 import { colorLuminance, sortByField } from '../tools';
 import ProcurementsTable from './table';
 import fmConnect from '../../fm/fm';
+import { tMonth } from '../../translatable';
 
 class IndividualIndicatorChart extends CustomPopupChart {
   getCustomEP() {
@@ -17,14 +18,14 @@ class IndividualIndicatorChart extends CustomPopupChart {
     let data = super.getData();
     const { traceColors } = this.props.styling.charts;
     if (!data) return [];
-    const { monthly, years } = this.props;
+    const { monthly, years, t } = this.props;
 
     data = data.sort(sortByField(monthly ? 'month' : 'year'));
 
     const dates = monthly
       ? data.map((datum) => {
         const month = datum.get('month');
-        return this.tMonth(month, years);
+        return tMonth(t, month, years);
       }).toJS()
       : data.map(pluckImm('year')).toJS();
 
@@ -45,7 +46,7 @@ class IndividualIndicatorChart extends CustomPopupChart {
       y: totalTrueValues,
       type: 'scatter',
       fill: 'tonexty',
-      name: this.t('crd:individualIndicatorChart:flaggedProcurements'),
+      name: t('crd:individualIndicatorChart:flaggedProcurements'),
       hoverinfo: 'none',
       fillcolor: traceColors[0],
       line: {
@@ -56,7 +57,7 @@ class IndividualIndicatorChart extends CustomPopupChart {
       y: totalPrecondMetValues,
       type: 'scatter',
       fill: 'tonexty',
-      name: this.t('crd:individualIndicatorChart:eligibleProcurements'),
+      name: t('crd:individualIndicatorChart:eligibleProcurements'),
       hoverinfo: 'none',
       fillcolor: traceColors[1],
       line: {
@@ -84,14 +85,15 @@ class IndividualIndicatorChart extends CustomPopupChart {
   }
 
   getPopupWidth() {
-    const label = this.t('crd:indicatorPage:individualIndicatorChart:popup:percentEligible');
+    const { t } = this.props;
+    const label = t('crd:indicatorPage:individualIndicatorChart:popup:percentEligible');
     return label.length > 23
       ? 500
       : 350;
   }
 
   getPopup() {
-    const { monthly, years } = this.props;
+    const { monthly, years, t } = this.props;
     const { popup } = this.state;
     const { year } = popup;
     const data = super.getData();
@@ -101,7 +103,7 @@ class IndividualIndicatorChart extends CustomPopupChart {
     if (monthly) {
       datum = data.find((datum) => {
         const month = datum.get('month');
-        return year === this.tMonth(month, years);
+        return year === tMonth(t, month, years);
       });
     } else {
       datum = data.find((datum) => datum.get('year') === year);
@@ -124,15 +126,15 @@ class IndividualIndicatorChart extends CustomPopupChart {
             <hr />
           </div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:indicatorPage:individualIndicatorChart:popup:procurementsFlagged')}
+            {t('crd:indicatorPage:individualIndicatorChart:popup:procurementsFlagged')}
           </div>
           <div className="col-sm-4 text-left info">{datum.get('totalTrue')}</div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:indicatorPage:individualIndicatorChart:popup:eligibleProcurements')}
+            {t('crd:indicatorPage:individualIndicatorChart:popup:eligibleProcurements')}
           </div>
           <div className="col-sm-4 text-left info">{datum.get('totalPrecondMet')}</div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:indicatorPage:individualIndicatorChart:popup:percentOfEligibleFlagged')}
+            {t('crd:indicatorPage:individualIndicatorChart:popup:percentOfEligibleFlagged')}
           </div>
           <div className="col-sm-4 text-left info">
             {datum.get('percentTruePrecondMet').toFixed(2)}
@@ -140,7 +142,7 @@ class IndividualIndicatorChart extends CustomPopupChart {
             %
           </div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:indicatorPage:individualIndicatorChart:popup:percentEligible')}
+            {t('crd:indicatorPage:individualIndicatorChart:popup:percentEligible')}
           </div>
           <div className="col-sm-4 text-left info">
             {datum.get('percentPrecondMet').toFixed(2)}
@@ -154,7 +156,11 @@ class IndividualIndicatorChart extends CustomPopupChart {
   }
 }
 
-class IndividualIndicatorPage extends translatable(CRDPage) {
+IndividualIndicatorChart.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
+class IndividualIndicatorPage extends CRDPage {
   constructor(...args) {
     super(...args);
     this.state = {};
@@ -163,43 +169,43 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
   render() {
     const { chart, table } = this.state;
     const {
-      corruptionType, indicator, translations, filters, years, monthly, months, width,
+      corruptionType, indicator, t, filters, years, monthly, months, width,
       styling, navigate, isFeatureVisible,
     } = this.props;
 
     return (
       <div className="page-individual-indicator">
-        <h2 className="page-header">{this.t(`crd:indicators:${indicator}:name`)}</h2>
+        <h2 className="page-header">{t(`crd:indicators:${indicator}:name`)}</h2>
         <p className="definition">
-          <strong>{this.t('crd:indicators:general:indicator')}</strong>
+          <strong>{t('crd:indicators:general:indicator')}</strong>
           &nbsp;
-          {this.t(`crd:indicators:${indicator}:indicator`)}
+          {t(`crd:indicators:${indicator}:indicator`)}
         </p>
         <p className="definition">
-          <strong>{this.t('crd:indicators:general:eligibility')}</strong>
+          <strong>{t('crd:indicators:general:eligibility')}</strong>
           &nbsp;
-          {this.t(`crd:indicators:${indicator}:eligibility`)}
+          {t(`crd:indicators:${indicator}:eligibility`)}
         </p>
         <p className="definition">
-          <strong>{this.t('crd:indicators:general:thresholds')}</strong>
+          <strong>{t('crd:indicators:general:thresholds')}</strong>
           &nbsp;
-          {this.t(`crd:indicators:${indicator}:thresholds`)}
+          {t(`crd:indicators:${indicator}:thresholds`)}
         </p>
         <p className="definition">
-          <strong>{this.t('crd:indicators:general:description')}</strong>
+          <strong>{t('crd:indicators:general:description')}</strong>
           &nbsp;
-          {this.t(`crd:indicators:${indicator}:description`)}
+          {t(`crd:indicators:${indicator}:description`)}
         </p>
         {isFeatureVisible('crd.flag.indicator.chart')
         && (
           <section>
             <h3 className="page-header">
-              {this.t('crd:indicatorPage:individualIndicatorChart:title')
-                .replace('$#$', this.t(`crd:indicators:${indicator}:name`))}
+              {t('crd:indicatorPage:individualIndicatorChart:title')
+                .replace('$#$', t(`crd:indicators:${indicator}:name`))}
             </h3>
             <IndividualIndicatorChart
               indicator={indicator}
-              translations={translations}
+              t={t}
               filters={filters}
               years={years}
               monthly={monthly}
@@ -218,8 +224,8 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
         && (
           <section className="table-section">
             <h3 className="page-header">
-              {this.t('crd:indicatorPage:projectTable:title')
-                .replace('$#$', this.t(`crd:indicators:${indicator}:name`))}
+              {t('crd:indicatorPage:projectTable:title')
+                .replace('$#$', t(`crd:indicators:${indicator}:name`))}
             </h3>
             <ProcurementsTable
               dataEP={`flags/${indicator}/releases?flagType=${corruptionType}`}
@@ -228,7 +234,7 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
               corruptionType={corruptionType}
               requestNewData={(_, data) => this.setState({ table: data })}
               data={table}
-              translations={translations}
+              t={t}
               filters={filters}
               years={years}
               monthly={monthly}
@@ -241,5 +247,9 @@ class IndividualIndicatorPage extends translatable(CRDPage) {
     );
   }
 }
+
+IndividualIndicatorPage.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(IndividualIndicatorPage);

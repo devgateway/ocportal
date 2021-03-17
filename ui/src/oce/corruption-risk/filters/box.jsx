@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
-import { tCreator } from '../../translatable';
+import { useTranslation } from 'react-i18next';
 
 const DROPDOWN_WIDTH = 500;
 
 const FilterBox = (props) => {
   const {
-    title, open, active, onClick, onApply, onReset, translations,
+    title, open, active, onClick, onApply, onReset,
   } = props;
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const box = useRef();
 
