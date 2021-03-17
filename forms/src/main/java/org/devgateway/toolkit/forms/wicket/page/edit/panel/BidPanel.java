@@ -72,14 +72,15 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         targetGroup.setOutputMarkupId(true);
         item.add(targetGroup);
 
-        GenericSleepFormComponent<List<String>> prequalifiedItems = new GenericSleepFormComponent<List<String>>("prequalifiedItems",
-                new PrequalifiedItemsModel(item.getModel())) {
+        GenericSleepFormComponent<List<String>> prequalifiedItems =
+                new GenericSleepFormComponent<List<String>>("prequalifiedItems",
+                        new PrequalifiedItemsModel(item.getModel())) {
 
-            @Override
-            protected Component newValueComponent(String id) {
-                return new MultiLineLabel(id, getModel());
-            }
-        };
+                    @Override
+                    protected Component newValueComponent(String id) {
+                        return new MultiLineLabel(id, getModel());
+                    }
+                };
         prequalifiedItems.setOutputMarkupId(true);
         item.add(prequalifiedItems);
 
