@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -11,7 +12,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ import java.util.List;
  */
 @Entity
 @Audited
+@Form(featureName = "supplierForm")
 public class Supplier extends Category {
     @ExcelExport(name = "Address")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
@@ -28,8 +29,8 @@ public class Supplier extends Category {
 
     @ExcelExport(justExport = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private TargetGroup targetGroup;
+    @ManyToMany
+    private List<TargetGroup> targetGroups = new ArrayList<>();
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String agpoRegistrationId;
@@ -39,11 +40,11 @@ public class Supplier extends Category {
     private List<SupplierContact> contacts = new ArrayList<>();
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Subcounty> subcounties = new ArrayList<>();
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Ward> wards = new ArrayList<>();
 
     public String getAddress() {
@@ -54,12 +55,12 @@ public class Supplier extends Category {
         this.address = address;
     }
 
-    public TargetGroup getTargetGroup() {
-        return targetGroup;
+    public List<TargetGroup> getTargetGroups() {
+        return targetGroups;
     }
 
-    public void setTargetGroup(final TargetGroup targetGroup) {
-        this.targetGroup = targetGroup;
+    public void setTargetGroups(List<TargetGroup> targetGroups) {
+        this.targetGroups = targetGroups;
     }
 
     public String getAgpoRegistrationId() {

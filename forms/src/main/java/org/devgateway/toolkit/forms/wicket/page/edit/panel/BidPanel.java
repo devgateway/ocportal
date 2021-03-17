@@ -18,7 +18,6 @@ import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Category;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
@@ -43,10 +42,6 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
     @SpringBean
     private PrequalifiedSupplierService prequalifiedSupplierService;
 
-    private GenericSleepFormComponent<String> supplierID = null;
-    private GenericSleepFormComponent<TargetGroup> targetGroup;
-    private GenericSleepFormComponent<List<String>> prequalifiedItems;
-
     public BidPanel(final String id) {
         super(id);
     }
@@ -65,19 +60,19 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
     public void populateCompoundListItem(final ListItem<Bid> item) {
         Select2ChoiceBootstrapFormComponent<Supplier> supplier = ComponentUtil.addSelect2ChoiceField(item, "supplier",
                 supplierService);
-        supplier.getField().add(new SupplierUpdatingBehavior("change"));
 
-        supplierID = new GenericSleepFormComponent<>("supplierID",
-                item.getModel().map(Bid::getSupplier).map(Category::getCode));
+        GenericSleepFormComponent<String> supplierID =
+                new GenericSleepFormComponent<>("supplierID",
+                        item.getModel().map(Bid::getSupplier).map(Supplier::getCode));
         supplierID.setOutputMarkupId(true);
         item.add(supplierID);
 
-        targetGroup = new GenericSleepFormComponent<>("targetGroup",
-                item.getModel().map(Bid::getSupplier).map(Supplier::getTargetGroup));
+        GenericSleepFormComponent<String> targetGroup = new GenericSleepFormComponent<>("targetGroup",
+                item.getModel().map(Bid::getSupplier).map(Supplier::getTargetGroups).map(Category::categoryLabels));
         targetGroup.setOutputMarkupId(true);
         item.add(targetGroup);
 
-        prequalifiedItems = new GenericSleepFormComponent<List<String>>("prequalifiedItems",
+        GenericSleepFormComponent<List<String>> prequalifiedItems = new GenericSleepFormComponent<List<String>>("prequalifiedItems",
                 new PrequalifiedItemsModel(item.getModel())) {
 
             @Override
@@ -87,6 +82,9 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         };
         prequalifiedItems.setOutputMarkupId(true);
         item.add(prequalifiedItems);
+
+        supplier.getField().add(new SupplierUpdatingBehavior("change",
+                supplierID, targetGroup, prequalifiedItems));
 
         ComponentUtil.addBigDecimalField(item, "quotedAmount")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new NonZeroBigDecimalValidator());
@@ -135,13 +133,17 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
     }
 
     private class SupplierUpdatingBehavior extends AjaxFormComponentUpdatingBehavior {
-        SupplierUpdatingBehavior(final String event) {
+
+        private final Component[] components;
+
+        SupplierUpdatingBehavior(final String event, Component... components) {
             super(event);
+            this.components = components;
         }
 
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
-            target.add(supplierID, targetGroup, prequalifiedItems);
+            target.add(components);
         }
     }
 }

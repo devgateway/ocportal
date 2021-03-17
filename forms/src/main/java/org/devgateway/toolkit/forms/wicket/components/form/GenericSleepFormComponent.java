@@ -12,7 +12,8 @@ import org.devgateway.toolkit.forms.wicket.components.FieldPanel;
  * @author idobre
  * @since 2019-04-10
  */
-public class GenericSleepFormComponent<T> extends FieldPanel<T> implements DgFmFormComponentSubject {
+public class GenericSleepFormComponent<T> extends FieldPanel<T> implements DgFmFormComponentSubject,
+        ComponentAjaxUpdateSubscriber {
     public GenericSleepFormComponent(final String id) {
         super(id);
     }
@@ -45,5 +46,10 @@ public class GenericSleepFormComponent<T> extends FieldPanel<T> implements DgFmF
         Label value = new Label(id, new ViewModeConverterModel<>(getModel()));
         value.setEscapeModelStrings(false);
         return value;
+    }
+
+    @Override
+    public Component getAjaxUpdateSubscriberComponent() {
+        return this;
     }
 }

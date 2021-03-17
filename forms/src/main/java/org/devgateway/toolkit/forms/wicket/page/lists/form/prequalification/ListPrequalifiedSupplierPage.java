@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.page.lists;
+package org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
@@ -34,7 +34,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.page.edit.EditPrequalifiedSupplierPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification.EditPrequalifiedSupplierPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.AbstractBaseListPage;
 import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
@@ -46,7 +47,6 @@ import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier_;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
@@ -68,6 +68,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -138,7 +139,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 setVisibilityAllowed(!submittedSchemaModel.getObject());
             }
         };
-        draftSchemaWarning.setOutputMarkupId(true);
+        draftSchemaWarning.setOutputMarkupPlaceholderTag(true);
         add(draftSchemaWarning);
 
         Form<Filter> filterForm = new Form<>("form", new CompoundPropertyModel<>(filterModel));
@@ -170,7 +171,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("suppliers",
                 new GenericPersistableJpaTextChoiceProvider<>(supplierService)));
 
-        filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("companyCategories",
+        filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("targetGroups",
                 new GenericPersistableJpaTextChoiceProvider<>(targetGroupService)));
 
         filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("subcounties",
@@ -184,10 +185,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             protected void onSubmit(AjaxRequestTarget target) {
                 getDataTable().setCurrentPage(0);
 
-                PrequalificationSchema schema = filterForm.getModelObject().getYearRange().getSchema();
-                submittedSchemaModel.setObject(schema.getStatus().equals(DBConstants.Status.SUBMITTED));
+                Long id = filterForm.getModelObject().getYearRange().getId();
+                PrequalificationYearRange yearRange = prequalificationYearRangeService.findById(id).orElse(null);
+                submittedSchemaModel.setObject(yearRange.getSchema().getStatus().equals(DBConstants.Status.SUBMITTED));
 
-                target.add(getDataTable(), getAddButton(), draftSchemaWarning);
+                target.add(getDataTable(), getTopAddButton(), getBottomAddButton(), draftSchemaWarning);
             }
         });
 
@@ -213,7 +215,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
                 ResourceResponse response = new ResourceResponse();
                 response.setContentType(Constants.ContentType.XLSX);
-                response.setFileName("Prequalified Suppliers.xslx");
+                response.setFileName("Prequalified Suppliers.xlsx");
                 response.setWriteCallback(new WriteCallback() {
                     @Override
                     public void writeData(Attributes attributes) throws IOException {
@@ -249,7 +251,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
         private List<Supplier> suppliers = new ArrayList<>();
 
-        private List<TargetGroup> companyCategories = new ArrayList<>();
+        private List<TargetGroup> targetGroups = new ArrayList<>();
 
         private List<Subcounty> subcounties = new ArrayList<>();
 
@@ -280,13 +282,12 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             this.suppliers = suppliers;
         }
 
-        public List<TargetGroup> getCompanyCategories() {
-            return companyCategories;
+        public List<TargetGroup> getTargetGroups() {
+            return targetGroups;
         }
 
-        public void setCompanyCategories(
-                List<TargetGroup> companyCategories) {
-            this.companyCategories = companyCategories;
+        public void setTargetGroups(List<TargetGroup> targetGroups) {
+            this.targetGroups = targetGroups;
         }
 
         public List<Subcounty> getSubcounties() {
@@ -321,8 +322,9 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
 
                 Join<PrequalifiedSupplier, Supplier> supplierJoin = subRoot.join(PrequalifiedSupplier_.supplier);
 
-                if (!companyCategories.isEmpty()) {
-                    subPredicates.add(supplierJoin.get(Supplier_.targetGroup).in(companyCategories));
+                if (!targetGroups.isEmpty()) {
+                    ListJoin<Supplier, TargetGroup> targetGroupJoin = supplierJoin.join(Supplier_.targetGroups);
+                    subPredicates.add(targetGroupJoin.in(targetGroups));
                 }
 
                 if (!suppliers.isEmpty()) {
@@ -372,8 +374,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         columns.add(new PropertyColumn<>(
                 new StringResourceModel("supplier", this), "parent.supplier"));
 
-        columns.add(new PropertyColumn<>(
-                new StringResourceModel("companyCategory", this), "parent.supplier.targetGroup"));
+        columns.add(new LambdaColumn<>(
+                new StringResourceModel("targetGroup", this),
+                item -> item.getParent().getSupplier().getTargetGroups().stream()
+                        .map(Category::toString)
+                        .collect(Collectors.joining(", "))));
 
         columns.add(new LambdaColumn<>(
                 new StringResourceModel("subcounties", this),

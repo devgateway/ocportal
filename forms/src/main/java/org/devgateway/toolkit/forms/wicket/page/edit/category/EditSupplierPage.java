@@ -50,6 +50,8 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
 
     @Override
     protected void onInitialize() {
+        editForm.attachFm("supplierForm");
+
         super.onInitialize();
 
         if (editForm.getModelObject().isNew()) {
@@ -60,7 +62,7 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
         final TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
         address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT);
 
-        ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", targetGroupService);
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "targetGroups", targetGroupService);
 
         Select2MultiChoiceBootstrapFormComponent<Ward> wards;
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);

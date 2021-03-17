@@ -20,7 +20,7 @@ import java.util.List;
  * @since 12/20/16
  */
 public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilteredPropertyColumn<T, Y, S> {
-    private DataTable dataTable;
+    private DataTable<T, String> dataTable;
     private boolean disableFilter = false;
     private ChoiceProvider<Y> choiceProvider;
 
@@ -28,7 +28,7 @@ public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilter
                                                  final S sortProperty,
                                                  final String propertyExpression,
                                                  final ChoiceProvider<Y> choiceProvider,
-                                                 final DataTable dataTable) {
+                                                 final DataTable<T, String> dataTable) {
         this(displayModel, sortProperty, propertyExpression, choiceProvider, dataTable, false);
     }
 
@@ -36,7 +36,7 @@ public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilter
                                                  final S sortProperty,
                                                  final String propertyExpression,
                                                  final IModel<? extends List<? extends Y>> filterChoices,
-                                                 final DataTable dataTable) {
+                                                 final DataTable<T, String> dataTable) {
         this(displayModel, sortProperty, propertyExpression, filterChoices, dataTable, false);
     }
 
@@ -44,7 +44,7 @@ public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilter
                                                  final S sortProperty,
                                                  final String propertyExpression,
                                                  final ChoiceProvider<Y> choiceProvider,
-                                                 final DataTable dataTable,
+                                                 final DataTable<T, String> dataTable,
                                                  final boolean disableFilter) {
         super(displayModel, sortProperty, propertyExpression, null);
         this.disableFilter = disableFilter;
@@ -57,7 +57,7 @@ public class SelectFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilter
                                                  final S sortProperty,
                                                  final String propertyExpression,
                                                  final IModel<? extends List<? extends Y>> filterChoices,
-                                                 final DataTable dataTable,
+                                                 final DataTable<T, String> dataTable,
                                                  final boolean disableFilter) {
         super(displayModel, sortProperty, propertyExpression, filterChoices);
         this.disableFilter = disableFilter;

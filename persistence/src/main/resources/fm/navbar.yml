@@ -44,6 +44,26 @@
 - name: navbar.paymentVoucher
   visibleDeps:
     - paymentVoucherForm
+- name: navbar.departments
+- name: navbar.procurementMethodRationale
+- name: navbar.fiscalYearBudget
+  visibleDeps:
+    - fiscalYearBudgetForm
+- name: navbar.fiscalyear
+- name: navbar.targetgroup
+- name: navbar.ContractDocumentType
+- name: navbar.items
+- name: navbar.chargeaccounts
+- name: navbar.suppliers
+- name: navbar.stafflist
+- name: navbar.pmcStaffList
+- name: navbar.designations
+- name: navbar.projectClosureHandover
+- name: navbar.procuringentitylist
+- name: navbar.subcountylist
+- name: navbar.wardlist
+- name: navbar.subwardlist
+- name: navbar.unitlist
 - name:  navbar.prequalificationSchema
   visibleDeps:
     - prequalificationSchemaForm
