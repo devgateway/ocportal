@@ -469,7 +469,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     }
 
     private static void goToComponent(final AjaxRequestTarget target, final String markupId) {
-        target.appendJavaScript(JQueryUtil.animateScrollTop("#" + markupId, 100, 500));
+        target.appendJavaScript(JQueryUtil.animateScrollTop("#" + markupId, 130, 500));
     }
 
     /**
