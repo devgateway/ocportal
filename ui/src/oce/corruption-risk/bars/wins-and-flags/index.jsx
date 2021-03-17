@@ -9,12 +9,12 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
-import { tCreator } from '../../../translatable';
 import Popup from './popup';
 import { renderTopLeftLabel } from '../../archive/tools';
+import { useTranslation } from 'react-i18next';
 
 const WinsAndFlags = ({
-  translations, zoomed, data, length,
+  zoomed, data, length,
 }) => {
   let height = 350;
   let slicedData = data;
@@ -31,7 +31,7 @@ const WinsAndFlags = ({
     height = Math.max(length * 70, 200);
   }
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   return (
     <div className="oce-chart">
@@ -56,7 +56,7 @@ const WinsAndFlags = ({
             >
               <XAxis type="number" />
               <YAxis type="category" hide dataKey="name" />
-              <Tooltip content={<Popup />} translations={translations} cursor={false} />
+              <Tooltip content={<Popup />} t={t} cursor={false} />
               <Legend
                 align="left"
                 verticalAlign="top"

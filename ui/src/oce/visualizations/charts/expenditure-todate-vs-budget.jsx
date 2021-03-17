@@ -1,5 +1,6 @@
 import Chart from './index';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
 import { pluckImm } from '../../tools';
 
 class ExpenditureTodateVsBudget extends Chart {
@@ -17,26 +18,27 @@ class ExpenditureTodateVsBudget extends Chart {
         namelength: -1,
       },
     };
+    const { t } = this.props;
     return [{
       ...commonOpts,
       x: data.map(pluckImm('expensedAmount')).toArray(),
-      name: this.t('charts:expenditureToDateVsBudget:cat:contracted'),
+      name: t('charts:expenditureToDateVsBudget:cat:contracted'),
       marker: {
         color: this.props.styling.charts.traceColors[0],
       },
     }, {
       ...commonOpts,
       x: data.map(pluckImm('unabsorbedAmount')).toArray(),
-      name: this.t('charts:expenditureToDateVsBudget:cat:unabsorbed'),
-      hovertext: this.t('charts:expenditureToDateVsBudget:cat:unabsorbedDesc'),
+      name: t('charts:expenditureToDateVsBudget:cat:unabsorbed'),
+      hovertext: t('charts:expenditureToDateVsBudget:cat:unabsorbedDesc'),
       marker: {
         color: this.props.styling.charts.traceColors[2],
       },
     }, {
       ...commonOpts,
       x: data.map(pluckImm('overspentAmount')).toArray(),
-      name: this.t('charts:expenditureToDateVsBudget:cat:overspent'),
-      hovertext: this.t('charts:expenditureToDateVsBudget:cat:overspentDesc'),
+      name: t('charts:expenditureToDateVsBudget:cat:overspent'),
+      hovertext: t('charts:expenditureToDateVsBudget:cat:overspentDesc'),
       marker: {
         color: this.props.styling.charts.traceColors[1],
       },
@@ -45,15 +47,16 @@ class ExpenditureTodateVsBudget extends Chart {
 
   getLayout() {
     const { hoverFormat } = this.props.styling.charts;
+    const { t } = this.props;
     return {
       barmode: 'stack',
       hovermode: 'closest',
       xaxis: {
-        title: this.t('charts:expenditureToDateVsBudget:xAxisName'),
+        title: t('charts:expenditureToDateVsBudget:xAxisName'),
         hoverformat: hoverFormat,
       },
       yaxis: {
-        title: this.t('charts:expenditureToDateVsBudget:yAxisName'),
+        title: t('charts:expenditureToDateVsBudget:yAxisName'),
         type: 'category',
       },
     };
@@ -62,5 +65,9 @@ class ExpenditureTodateVsBudget extends Chart {
 
 ExpenditureTodateVsBudget.endpoint = 'expenditureToDateVsBudget';
 ExpenditureTodateVsBudget.horizontal = true;
+
+ExpenditureTodateVsBudget.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(ExpenditureTodateVsBudget, 'viz.me.chart.expenditureToDateVsBudget');

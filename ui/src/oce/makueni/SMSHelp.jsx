@@ -14,7 +14,6 @@ class SMSHelp extends CRDPage {
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          translations={this.props.translations}
           onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="smshelp"
@@ -200,7 +199,7 @@ class SMSHelp extends CRDPage {
             </div>
           </div>
         </div>
-        <Footer translations={this.props.translations} />
+        <Footer />
       </div>
     );
   }

@@ -3,6 +3,7 @@ import Table from './index';
 import orgnamesFetching from '../../orgnames-fetching';
 import { pluckImm } from '../../tools';
 import ContractsList from '../../makueni/ContractsList';
+import PropTypes from 'prop-types';
 
 class TopImplSupplier extends orgnamesFetching(Table) {
   constructor(...args) {
@@ -44,6 +45,7 @@ class TopImplSupplier extends orgnamesFetching(Table) {
     const { contractorId } = this.state;
     const { contractListEndpoint } = this.constructor;
     if (!this.props.data) return null;
+    const { t } = this.props;
     if (contractorId) {
       return (
         <ContractsList
@@ -57,8 +59,8 @@ class TopImplSupplier extends orgnamesFetching(Table) {
       <table className="table table-striped table-hover suppliers-table">
         <thead>
           <tr>
-            <th>{this.t('tables:topImplSupplier:supplierName')}</th>
-            <th>{this.t('tables:topImplSupplier:noNotPay')}</th>
+            <th>{t('tables:topImplSupplier:supplierName')}</th>
+            <th>{t('tables:topImplSupplier:noNotPay')}</th>
           </tr>
         </thead>
         <tbody>
@@ -68,5 +70,9 @@ class TopImplSupplier extends orgnamesFetching(Table) {
     );
   }
 }
+
+TopImplSupplier.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default TopImplSupplier;

@@ -1,22 +1,32 @@
 import URI from 'urijs';
 import { fromJS } from 'immutable';
 import PropTypes from 'prop-types';
-import translatable from './translatable';
 import Component from './pure-render-component';
 import { fetchEP } from './tools';
 
 const API_ROOT = '/api';
 
-class Visualization extends translatable(Component) {
+class Visualization extends Component {
   constructor(...args) {
     super(...args);
     this.state = this.state || {};
     this.state.loading = true;
   }
 
-  buildUrl(ep) {
-    const { filters } = this.props;
-    return new URI(`${API_ROOT}/${ep}`).addSearch(filters);
+  componentDidMount() {
+    this.fetch();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.filters !== prevProps.filters) this.fetch();
+  }
+
+  getData() {
+    return this.props.data;
+  }
+
+  transform(data) {
+    return data;
   }
 
   fetch() {
@@ -50,20 +60,9 @@ class Visualization extends translatable(Component) {
       .then(() => this.setState({ loading: false }));
   }
 
-  transform(data) {
-    return data;
-  }
-
-  getData() {
-    return this.props.data;
-  }
-
-  componentDidMount() {
-    this.fetch();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.filters !== prevProps.filters) this.fetch();
+  buildUrl(ep) {
+    const { filters } = this.props;
+    return new URI(`${API_ROOT}/${ep}`).addSearch(filters);
   }
 }
 

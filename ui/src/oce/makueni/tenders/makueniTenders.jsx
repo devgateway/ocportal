@@ -11,9 +11,9 @@ import fmConnect from '../../fm/fm';
 import FileDownloadLinks from './single/FileDownloadLinks';
 import { getTenders } from '../../api/Api';
 import PropTypes from 'prop-types';
-import { tCreator } from '../../translatable';
 import { useImmer } from 'use-immer';
 import { setImmer } from '../../tools';
+import { useTranslation } from 'react-i18next';
 
 const MakueniTenders = (props) => {
   useEffect(() => window.scrollTo(0, 0), []);
@@ -42,11 +42,10 @@ const MakueniTenders = (props) => {
     <FiltersTendersWrapper
       filters={filters}
       applyFilters={setImmer(updateFilters)}
-      translations={props.translations}
     />
   );
 
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const showDataStep = () => {
     introJsCount += 1;
@@ -158,7 +157,6 @@ const MakueniTenders = (props) => {
     <div className="container-fluid dashboard-default">
 
       <Header
-        translations={props.translations}
         onSwitch={props.onSwitch}
         styling={props.styling}
         selected="tender"
@@ -197,7 +195,6 @@ const MakueniTenders = (props) => {
               id={id}
               navigate={navigate}
               onSwitch={props.onSwitch}
-              translations={props.translations}
               styling={props.styling}
             />
           )}
@@ -206,7 +203,6 @@ const MakueniTenders = (props) => {
             <Project
               id={id}
               navigate={navigate}
-              translations={props.translations}
               styling={props.styling}
             />
           )}
@@ -244,7 +240,7 @@ const MakueniTenders = (props) => {
         </div>
       </div>
       )}
-      <Footer translations={props.translations} />
+      <Footer />
     </div>
   );
 };
