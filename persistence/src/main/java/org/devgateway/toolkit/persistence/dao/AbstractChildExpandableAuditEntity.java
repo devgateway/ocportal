@@ -13,12 +13,12 @@ public abstract class AbstractChildExpandableAuditEntity<P extends AbstractAudit
     @Transient
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Boolean expanded = false;
+    protected Boolean expanded = true;
 
     @Transient
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Boolean editable = false;
+    protected Boolean editable = true;
 
     @Override
     @JsonIgnore

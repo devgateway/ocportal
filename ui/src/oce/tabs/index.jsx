@@ -99,7 +99,7 @@ class Tab extends Visualization {
                   styling={styling}
                   wrapRendered={this.maybeWrap(Component, ref)}
                   margin={{
-                    t: 10, l: 100, b: 80, r: 20, pad: 20,
+                    t: 10, l: 100, b: 80, r: 25, pad: 20,
                   }}
                 />
               </div>
