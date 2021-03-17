@@ -58,12 +58,21 @@ public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget>
     protected final List<FiscalYear> fiscalYears;
 
     @Override
+    protected void onInitialize() {
+        attachFm("fiscalYearBudgetsList");
+
+        super.onInitialize();
+    }
+
+    @Override
     protected void addColumns() {
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("department", this),
+        addFmColumn("department", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("department", this),
                 "department", "department", new ListModel<>(departments), getDataTable()
         ));
 
-        columns.add(new SelectFilteredBootstrapPropertyColumn<>(new StringResourceModel("fiscalYear", this),
+        addFmColumn("fiscalYear", new SelectFilteredBootstrapPropertyColumn<>(
+                new StringResourceModel("fiscalYear", this),
                 "fiscalYear", "fiscalYear", new ListModel<>(fiscalYears), getDataTable()
         ));
     }

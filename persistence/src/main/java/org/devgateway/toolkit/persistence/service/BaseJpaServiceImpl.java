@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service;
 
+import com.google.common.collect.ImmutableSet;
+import net.sf.ehcache.CacheManager;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
@@ -14,6 +16,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -103,7 +106,9 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     @Transactional
     public <S extends T> S save(final S entity) {
         assertEntityIsValid(entity);
-        return repository().save(entity);
+        S save = repository().save(entity);
+        flushRelatedCollectionCaches();
+        return save;
     }
 
     @Override
@@ -112,14 +117,18 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
         for (S entity : entities) {
             assertEntityIsValid(entity);
         }
-        return repository().saveAll(entities);
+        List<S> s = repository().saveAll(entities);
+        flushRelatedCollectionCaches();
+        return s;
     }
 
     @Override
     @Transactional
     public <S extends T> S saveAndFlush(final S entity) {
         assertEntityIsValid(entity);
-        return repository().saveAndFlush(entity);
+        S s = repository().saveAndFlush(entity);
+        flushRelatedCollectionCaches();
+        return s;
     }
 
     private <S extends T> void assertEntityIsValid(S entity) {
@@ -133,6 +142,20 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
     @Transactional
     public void delete(final T entity) {
         repository().delete(entity);
+        flushRelatedCollectionCaches();
+    }
+
+    @Override
+    public Collection<String> getRelatedCollectionCaches() {
+        return null;
+    }
+
+    @Override
+    public void flushRelatedCollectionCaches() {
+        CacheManager cm = CacheManager.getInstance();
+        if (cm != null && getRelatedCollectionCaches() != null) {
+            getRelatedCollectionCaches().forEach(cm::clearAllStartingWith);
+        }
     }
 
     protected abstract BaseJpaRepository<T, Long> repository();

@@ -20,7 +20,7 @@
   mandatory: yes
   enabled: yes
   visible: yes
-- name: prequalificationSchemaForm.items.companyCategories
+- name: prequalificationSchemaForm.items.targetGroups
   mandatory: yes
   enabled: yes
   visible: yes
@@ -82,6 +82,8 @@
   visible: yes
 - name: prequalificationSchemaList
   visible: yes
+  visibleDeps:
+    - prequalificationSchemaForm
 - name: prequalificationSchemaList.filterToolbar
   mandatory: no
   enabled: yes
@@ -175,7 +177,9 @@
 
 - name: prequalifiedSupplierList
   visible: yes
-- name: prequalifiedSupplierList.companyCategories
+  visibleDeps:
+    - prequalifiedSupplierForm
+- name: prequalifiedSupplierList.targetGroups
   visible: yes
 - name: prequalifiedSupplierList.items
   visible: yes

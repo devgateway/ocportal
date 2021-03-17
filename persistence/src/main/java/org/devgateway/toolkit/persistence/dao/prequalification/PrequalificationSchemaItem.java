@@ -34,8 +34,8 @@ public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEnti
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     @Size(min = 1, groups = NonDraft.class, message =
-      "{org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItemCompanyCategories.message}")
-    private List<TargetGroup> companyCategories = new ArrayList<>();
+      "{org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItemTargetGroups.message}")
+    private List<TargetGroup> targetGroups = new ArrayList<>();
 
     @Override
     public void setLabel(String label) {
@@ -63,12 +63,12 @@ public class PrequalificationSchemaItem extends AbstractChildExpandableAuditEnti
         this.name = name;
     }
 
-    public List<TargetGroup> getCompanyCategories() {
-        return companyCategories;
+    public List<TargetGroup> getTargetGroups() {
+        return targetGroups;
     }
 
-    public void setCompanyCategories(List<TargetGroup> companyCategories) {
-        this.companyCategories = companyCategories;
+    public void setTargetGroups(List<TargetGroup> targetGroups) {
+        this.targetGroups = targetGroups;
     }
 
     public String toString(PrequalificationYearRange yearRange) {

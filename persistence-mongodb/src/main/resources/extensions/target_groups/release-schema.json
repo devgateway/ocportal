@@ -29,11 +29,22 @@
         }
       }
     },
-    "Organization": {
+    "Contract": {
       "properties": {
         "targetGroup": {
           "title": "Target Group",
           "$ref": "#/definitions/TargetGroup"
+        }
+      }
+    },
+    "Organization": {
+      "properties": {
+        "targetGroup": {
+          "title": "Target Group",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TargetGroup"
+          }
         }
       }
     }

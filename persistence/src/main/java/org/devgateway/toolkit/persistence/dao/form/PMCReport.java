@@ -73,7 +73,6 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
     private List<PMCNotes> pmcNotes = new ArrayList<>();
 
     @ExcelExport(name = "PMC Status")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private PMCStatus pmcStatus;
 

@@ -13,7 +13,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
@@ -154,8 +153,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
         alertTerminated = new TransparentWebMarkupContainer("alertTerminated");
         alertTerminated.setVisibilityAllowed(false);
         editForm.add(alertTerminated);
-
-        enableDisableAutosaveFields(null);
 
 //        extraStatusEntityButtons = new Fragment("extraStatusEntityButtons", "extraStatusButtons", this);
 //        entityButtonsFragment.replace(extraStatusEntityButtons);

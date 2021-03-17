@@ -28,8 +28,10 @@ import de.agilecoders.wicket.core.markup.html.themes.bootstrap.BootstrapCssRefer
 import de.agilecoders.wicket.core.util.CssClassNames;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -62,10 +64,8 @@ import org.devgateway.toolkit.forms.wicket.components.GoogleAnalyticsTracker;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractBaseListPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearBudgetPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearPage;
-import org.devgateway.toolkit.forms.wicket.page.lists.ListPrequalifiedSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListUserPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.alerts.ListAlertsStatisticsPage;
@@ -77,6 +77,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.category.ListItemPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListPMCStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcurementMethodRationalePage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProcuringEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.category.ListProjectClosureHandoverPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListStaffPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubWardPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSubcountyPage;
@@ -104,6 +105,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.ListTenderQuotationEvaluationPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationSchemaPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalificationYearRangePage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalifiedSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
@@ -114,9 +116,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_METADATA_ROLES;
 import static org.devgateway.toolkit.forms.WebConstants.PARAM_PRINT;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
@@ -157,6 +161,15 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 "googleAnalyticsTracker", settingsUtils.getGoogleAnalyticsTrackingId());
         googleAnalyticsTracker.setVisibilityAllowed(settingsUtils.getGoogleAnalyticsTrackingId() != null);
         add(googleAnalyticsTracker);
+    }
+
+    /**
+     * Do not allow access to pages that are attached to invisible features
+     */
+    protected void redirectForInvisibleFm() {
+        if (!isFmVisible()) {
+            throw new RestartResponseException(Homepage.class);
+        }
     }
 
     @SpringBean
@@ -383,11 +396,15 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
     private <L extends AbstractBaseListPage<?>> BootstrapBookmarkablePageLink<L>
     createAddListMenu(List<AbstractLink> list, Class<L> clazz, String resourceKey, IconType iconType) {
-        BootstrapBookmarkablePageLink<L> menu = new MenuBookmarkablePageLink<L>(clazz, null,
-                new StringResourceModel(resourceKey, this, null))
-                .setIconType(iconType);
-        list.add(menu);
-        return menu;
+
+        if (fmService.isFeatureVisible(resourceKey)) {
+            BootstrapBookmarkablePageLink<L> menu = new MenuBookmarkablePageLink<L>(clazz, null,
+                    new StringResourceModel(resourceKey, this, null))
+                    .setIconType(iconType);
+            list.add(menu);
+            return menu;
+        }
+        return null;
     }
 
     private <L extends AbstractBaseListPage<?>> void
@@ -402,8 +419,20 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     createAddListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
                               IconType iconType) {
         BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
-        MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+        if (menu != null) {
+            MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+        }
     }
+
+    private <L extends AbstractBaseListPage<?>> void
+    createAddListMenuWithRoles(List<AbstractLink> list, Collection<String> roles, Class<L> clazz, String resourceKey,
+                               IconType iconType) {
+        BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
+        for (String role : roles) {
+            MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
+        }
+    }
+
 
 
     private NavbarDropDownButton newMetadataMenu() {
@@ -456,12 +485,16 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                         "navbar.stafflist", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListPMCStaffPage.class,
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListPMCStaffPage.class,
                         "navbar.pmcStaffList", FontAwesomeIconType.user_times
                 );
 
-                createAddListMenuWithRole(list, ROLE_PMC_ADMIN, ListDesignationPage.class,
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListDesignationPage.class,
                         "navbar.designations", FontAwesomeIconType.certificate
+                );
+
+                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListProjectClosureHandoverPage.class,
+                        "navbar.projectClosureHandover", FontAwesomeIconType.list
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
@@ -504,7 +537,8 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
         MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PMC_ADMIN);
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER,
+                StringUtils.join(PMC_METADATA_ROLES, ","));
         return metadataMenu;
     }
 
@@ -713,6 +747,13 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
                 list.add(alertsStatistics);
 
+                BootstrapBookmarkablePageLink<AllWorkPage> allWork =
+                        new MenuBookmarkablePageLink<AllWorkPage>(AllWorkPage.class,
+                                new StringResourceModel("navbar.allWork", BasePage.this, null)
+                        ).setIconType(FontAwesomeIconType.briefcase);
+                MetaDataRoleAuthorizationStrategy.authorize(allWork, Component.RENDER, ROLE_ADMIN);
+                list.add(allWork);
+
                 if (WebApplication.get().usesDevelopmentConfig()) {
                     BootstrapBookmarkablePageLink<ListFeaturesPage> features =
                             new MenuBookmarkablePageLink<ListFeaturesPage>(ListFeaturesPage.class,
@@ -729,6 +770,14 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         adminMenu.setIconType(FontAwesomeIconType.cog);
         FormSecurityUtil.authorizeRender(adminMenu, ROLE_ADMIN, ROLE_PMC_ADMIN);
         return adminMenu;
+    }
+
+    private NavbarButton<MyWorkPage> newMyWorkMenu() {
+        NavbarButton<MyWorkPage> button = new NavbarButton<>(MyWorkPage.class,
+                new StringResourceModel("navbar.myWork", this, null));
+        button.setIconType(FontAwesomeIconType.briefcase);
+        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
+        return button;
     }
 
     /**
@@ -756,7 +805,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         navbar.addComponents(
                 NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newProcurementFormMenu(),
                         newImplementationFormMenu(),
-                        newMetadataMenu(), newAdminMenu(), newAccountMenu(), newLogoutMenu()
+                        newMetadataMenu(), newAdminMenu(), newMyWorkMenu(), newAccountMenu(), newLogoutMenu()
                 ));
 
         // navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));
@@ -787,5 +836,11 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         // file upload improvement script
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
                 BaseStyles.class, "assets/js/fileupload.js")));
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        redirectForInvisibleFm();
     }
 }

@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.page.edit;
+package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -10,12 +10,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.SupplierChanged;
+import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.category.EditSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactDropdownButton;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.NewContactAlert;
-import org.devgateway.toolkit.forms.wicket.page.edit.panel.PrequalifiedSupplierItemListPanel;
-import org.devgateway.toolkit.forms.wicket.page.lists.ListPrequalifiedSupplierPage;
+import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalifiedSupplierPage;
 import org.devgateway.toolkit.forms.wicket.providers.AddNewAdapter;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;

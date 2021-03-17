@@ -5,6 +5,7 @@ import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.repository.main.ProcurementPlanMongoRepository;
 import org.devgateway.ocds.web.convert.MongoFileStorageService;
+import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
@@ -28,7 +29,6 @@ import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.TextIndexDefinition;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -82,7 +82,7 @@ public class ImportPostgresToMongo {
     private AdminSettingsRepository adminSettingsRepository;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private SendEmailService emailSendingService;
 
     @Autowired
     private DgFmService fmService;
@@ -104,7 +104,7 @@ public class ImportPostgresToMongo {
             msg.setText(sb.toString());
         };
         try {
-            javaMailSender.send(messagePreparator);
+            emailSendingService.send(messagePreparator);
         } catch (MailException e) {
             logger.error("Failed to send ocds validation failure emails ", e);
             throw e;
@@ -194,6 +194,7 @@ public class ImportPostgresToMongo {
                     pr.setInspectionReports(new HashSet<>(filterNotExportable(pr.getInspectionReports())));
                     pr.getInspectionReports().stream().forEach(doc -> {
                         self.storeMakueniFormFiles(doc.getFormDocs());
+                        self.storeMakueniFormFiles(doc.getPicture());
                         doc.getPrivateSectorRequests().stream()
                                 .forEach(psr -> self.storeMakueniFormFiles(psr.getUpload()));
                     });
@@ -205,7 +206,10 @@ public class ImportPostgresToMongo {
                     pr.getMeReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
                     pr.setPaymentVouchers(new HashSet<>(filterNotExportable(pr.getPaymentVouchers())));
-                    pr.getPaymentVouchers().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
+                    pr.getPaymentVouchers().stream().forEach(doc -> {
+                        self.storeMakueniFormFiles(doc.getFormDocs());
+                        self.storeMakueniFormFiles(doc.getCompletionCertificate());
+                    });
                 });
 
                 pp.getProjects().stream().flatMap(p->p.getCabinetPapers().stream()).

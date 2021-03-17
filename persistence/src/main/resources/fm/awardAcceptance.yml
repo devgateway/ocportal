@@ -103,6 +103,8 @@
 - name: awardAcceptanceList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - awardAcceptanceForm
 - name: awardAcceptanceList.awardee
   visible: yes
   visibleDeps:

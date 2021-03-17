@@ -14,6 +14,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.AccessType;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
@@ -23,7 +25,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,11 +47,9 @@ import java.util.Set;
 public class TenderProcess extends AbstractAuditableEntity implements Labelable, ProjectAttachable,
         ProcurementPlanAttachable, DepartmentAttachable, Terminatable {
     @ManyToOne(fetch = FetchType.EAGER)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "procurement_plan_id")
     @JsonIgnore
     @org.springframework.data.annotation.Transient
@@ -123,6 +129,8 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     @JsonIgnore
     private Set<PaymentVoucher> paymentVouchers = new HashSet<>();
 
+    private transient ZonedDateTime lastModifiedDateInclChildren;
+
     @Override
     @JsonIgnore
     @org.springframework.data.annotation.Transient
@@ -160,7 +168,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
                 || hasNonDraftImplForms(pmcReports) || hasNonDraftImplForms(meReports)
                 || hasNonDraftImplForms(paymentVouchers);
     }
-    
+
     @Transactional(readOnly = true)
     protected boolean hasNonDraftImplForms(Set<? extends AbstractImplTenderProcessMakueniEntity> s) {
         return s.stream().anyMatch(f -> !DBConstants.Status.DRAFT.equals(f.getStatus()));
@@ -441,6 +449,51 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
 
     public void setPaymentVouchers(Set<PaymentVoucher> paymentVouchers) {
         this.paymentVouchers = paymentVouchers;
+    }
+
+    @AccessType(AccessType.Type.PROPERTY)
+    public ZonedDateTime getLastModifiedDateInclChildren() {
+        if (lastModifiedDateInclChildren == null) {
+            lastModifiedDateInclChildren = getMax(Arrays.asList(
+                    getLastModifiedDate().orElse(null),
+                    getMaxLastModifiedDate(pmcReports),
+                    getMaxLastModifiedDate(meReports),
+                    getMaxLastModifiedDate(inspectionReports),
+                    getMaxLastModifiedDate(paymentVouchers),
+                    getMaxLastModifiedDate(administratorReports),
+                    getMaxLastModifiedDate(awardAcceptance),
+                    getMaxLastModifiedDate(awardNotification),
+                    getMaxLastModifiedDate(professionalOpinion),
+                    getMaxLastModifiedDate(tenderQuotationEvaluation),
+                    getMaxLastModifiedDate(tender),
+                    getMaxLastModifiedDate(contract)));
+        }
+        return lastModifiedDateInclChildren;
+    }
+
+    public void setLastModifiedDateInclChildren(ZonedDateTime lastModifiedDateInclChildren) {
+        this.lastModifiedDateInclChildren = lastModifiedDateInclChildren;
+    }
+
+    private ZonedDateTime getMaxLastModifiedDate(Collection<? extends AbstractAuditableEntity> col) {
+        ZonedDateTime max = null;
+        for (AbstractAuditableEntity e : col) {
+            if (e.getLastModifiedDate().isPresent()
+                    && (max == null || max.isBefore(e.getLastModifiedDate().get()))) {
+                max = e.getLastModifiedDate().get();
+            }
+        }
+        return max;
+    }
+
+    private ZonedDateTime getMax(Collection<ZonedDateTime> col) {
+        ZonedDateTime max = null;
+        for (ZonedDateTime e : col) {
+            if (e != null && (max == null || max.isBefore(e))) {
+                max = e;
+            }
+        }
+        return max;
     }
 
     @SuppressWarnings("unchecked")

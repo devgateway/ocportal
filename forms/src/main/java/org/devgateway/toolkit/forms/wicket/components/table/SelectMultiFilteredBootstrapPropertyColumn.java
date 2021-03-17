@@ -3,6 +3,7 @@ package org.devgateway.toolkit.forms.wicket.components.table;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.ChoiceFilteredPropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.filter.FilterForm;
 import org.apache.wicket.model.IModel;
@@ -19,14 +20,14 @@ import java.util.List;
  * A ChoiceFilteredPropertyColumn that uses Select2MultiChoiceBootstrapFormComponent as a filter.
  */
 public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceFilteredPropertyColumn<T, Y, S> {
-    private final AjaxFallbackBootstrapDataTable dataTable;
+    private final DataTable<T, String> dataTable;
     private Boolean enableInput = true;
 
     public SelectMultiFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
                                                       final S sortProperty,
                                                       final String propertyExpression,
                                                       final IModel<? extends List<? extends Y>> filterChoices,
-                                                      final AjaxFallbackBootstrapDataTable dataTable) {
+                                                      final DataTable<T, String> dataTable) {
         super(displayModel, sortProperty, propertyExpression, filterChoices);
 
         this.dataTable = dataTable;
@@ -35,7 +36,7 @@ public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceF
     public SelectMultiFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
                                                       final String propertyExpression,
                                                       final IModel<? extends List<? extends Y>> filterChoices,
-                                                      final AjaxFallbackBootstrapDataTable dataTable) {
+                                                      final DataTable<T, String> dataTable) {
         super(displayModel, propertyExpression, filterChoices);
 
         this.dataTable = dataTable;
@@ -44,7 +45,7 @@ public class SelectMultiFilteredBootstrapPropertyColumn<T, Y, S> extends ChoiceF
     public SelectMultiFilteredBootstrapPropertyColumn(final IModel<String> displayModel,
                                                       final String propertyExpression,
                                                       final IModel<? extends List<? extends Y>> filterChoices,
-                                                      final AjaxFallbackBootstrapDataTable dataTable,
+                                                      final DataTable<T, String> dataTable,
                                                       boolean enableInput) {
         this(displayModel, propertyExpression, filterChoices, dataTable);
         this.enableInput = enableInput;

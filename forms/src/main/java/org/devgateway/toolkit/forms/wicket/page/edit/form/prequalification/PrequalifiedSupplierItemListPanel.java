@@ -1,4 +1,4 @@
-package org.devgateway.toolkit.forms.wicket.page.edit.panel;
+package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -18,6 +18,9 @@ import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.SupplierChanged;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactDropdownButton;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactPanel;
+import org.devgateway.toolkit.forms.wicket.page.edit.panel.NewContactAlert;
 import org.devgateway.toolkit.forms.wicket.providers.PrequalificationSchemaItemChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;

@@ -95,8 +95,6 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         editForm.attachFm("projectForm");
         super.onInitialize();
 
-        submitAndNext.setVisibilityAllowed(false);
-
         editForm.add(new GenericSleepFormComponent<>("procurementPlan.department"));
         editForm.add(new GenericSleepFormComponent<>("procurementPlan.fiscalYear"));
 
@@ -176,7 +174,13 @@ public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
         allWards.add(new DgFmBehavior(wards));
 
         ComponentUtil.addDateField(editForm, "approvedDate");
+    }
 
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
+
+        submitAndNext.setVisibilityAllowed(false);
         saveTerminateButton.setVisibilityAllowed(false);
     }
 

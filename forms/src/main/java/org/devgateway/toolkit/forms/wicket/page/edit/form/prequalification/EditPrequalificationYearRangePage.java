@@ -77,7 +77,7 @@ public class EditPrequalificationYearRangePage extends AbstractEditPage<Prequali
     }
 
     public Component createDraftSchemaWarning() {
-        return new WebMarkupContainer("draftSchemaWarning")
+        return new WebMarkupContainer("editingDisabledWarning")
                 .setVisibilityAllowed(shouldDisableFormPrequalifiedSuppliersExist());
     }
 
