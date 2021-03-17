@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service;
 
+import java.util.List;
+
 import org.devgateway.toolkit.persistence.dao.AdminSettings;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -27,4 +29,13 @@ public class AdminSettingsServiceImpl extends BaseJpaServiceImpl<AdminSettings> 
         return new AdminSettings();
     }
 
+    @Override
+    public AdminSettings getSettings() {
+        List<AdminSettings> list = adminSettingsRepository.findAll();
+        if (list.size() == 0) {
+            return new AdminSettings();
+        } else {
+            return list.get(0);
+        }
+    }
 }

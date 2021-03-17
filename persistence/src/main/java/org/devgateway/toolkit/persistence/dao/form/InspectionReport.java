@@ -40,7 +40,6 @@ public class InspectionReport extends AbstractAuthImplTenderProcessMakueniEntity
     private String comments;
 
     @ExcelExport(name = "Satisfactory/Unsatisfactory")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private InspectionReportOutcome outcome;
 
