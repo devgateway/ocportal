@@ -8,8 +8,11 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
+import org.devgateway.toolkit.forms.wicket.components.export.AjaxFormListener;
 import org.devgateway.toolkit.forms.wicket.components.export.DirectProcurementsAboveReportPanel;
 import org.devgateway.toolkit.forms.wicket.components.export.GeneralDepartmentReportPanel;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -25,7 +28,7 @@ import java.util.List;
  */
 @MountPath("/dataExport")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-public class DataExportPage extends BasePage {
+public class DataExportPage extends BasePage implements AjaxFormListener {
 
     private Component exportPanel;
 
@@ -42,8 +45,18 @@ public class DataExportPage extends BasePage {
             @Override
             protected List<AbstractLink> newSubMenuButtons(String buttonMarkupId) {
                 List<AbstractLink> links = new ArrayList<>();
-                links.add(createGeneralDepartmentExportMenuItem(buttonMarkupId));
-                links.add(createDirectProcurementsAbove(buttonMarkupId));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("generalDepartmentExport"),
+                        () -> new GeneralDepartmentReportPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("directProcurementsAbove")
+                                .setParameters(DBConstants.Reports.DIRECT_PROCUREMENT_THRESHOLD),
+                        () -> new DirectProcurementsAboveReportPanel("exportPanel", DataExportPage.this)));
+
                 return links;
             }
         });
@@ -53,50 +66,24 @@ public class DataExportPage extends BasePage {
         add(exportPanel);
     }
 
-    private AbstractLink createGeneralDepartmentExportMenuItem(String id) {
-        StringResourceModel labelModel = new StringResourceModel("generalDepartmentExport");
+    private AbstractLink createMenuItem(String id, IModel<String> labelModel,
+            SerializableSupplier<Component> panelCreator) {
         return new BootstrapAjaxLink<Void>(id, null, Buttons.Type.Link, labelModel) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                exportPanel = exportPanel.replaceWith(new GeneralDepartmentReportPanel("exportPanel") {
-                    @Override
-                    public void onSubmit(AjaxRequestTarget target) {
-                        super.onSubmit(target);
-                        target.add(feedbackPanel);
-                    }
-
-                    @Override
-                    public void onError(AjaxRequestTarget target) {
-                        super.onError(target);
-                        target.add(feedbackPanel);
-                    }
-                });
+                exportPanel = exportPanel.replaceWith(panelCreator.get());
                 target.add(exportPanel);
             }
         };
     }
 
-    private AbstractLink createDirectProcurementsAbove(String id) {
-        StringResourceModel labelModel = new StringResourceModel("directProcurementsAbove")
-                .setParameters(DBConstants.Reports.DIRECT_PROCUREMENT_THRESHOLD);
-        return new BootstrapAjaxLink<Void>(id, null, Buttons.Type.Link, labelModel) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                exportPanel = exportPanel.replaceWith(new DirectProcurementsAboveReportPanel("exportPanel") {
-                    @Override
-                    public void onSubmit(AjaxRequestTarget target) {
-                        super.onSubmit(target);
-                        target.add(feedbackPanel);
-                    }
+    @Override
+    public void onSubmit(AjaxRequestTarget target) {
+        target.add(feedbackPanel);
+    }
 
-                    @Override
-                    public void onError(AjaxRequestTarget target) {
-                        super.onError(target);
-                        target.add(feedbackPanel);
-                    }
-                });
-                target.add(exportPanel);
-            }
-        };
+    @Override
+    public void onError(AjaxRequestTarget target) {
+        target.add(feedbackPanel);
     }
 }

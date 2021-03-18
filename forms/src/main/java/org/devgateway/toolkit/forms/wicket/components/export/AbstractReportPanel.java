@@ -29,8 +29,11 @@ public abstract class AbstractReportPanel<T> extends Panel {
 
     private BootstrapForm<T> dataExportForm;
 
-    public AbstractReportPanel(String id, IModel<T> formModel) {
+    private final AjaxFormListener ajaxFormListener;
+
+    public AbstractReportPanel(String id, AjaxFormListener ajaxFormListener, IModel<T> formModel) {
         super(id);
+        this.ajaxFormListener = ajaxFormListener;
         this.formModel = formModel;
     }
 
@@ -82,7 +85,7 @@ public abstract class AbstractReportPanel<T> extends Panel {
                     dataExportForm.error(getString("noData"));
                 }
 
-                AbstractReportPanel.this.onSubmit(target);
+                ajaxFormListener.onSubmit(target);
             }
 
             @Override
@@ -92,7 +95,7 @@ public abstract class AbstractReportPanel<T> extends Panel {
                 dataExportForm.visitChildren(GenericBootstrapFormComponent.class,
                         new GenericBootstrapValidationVisitor(target));
 
-                AbstractReportPanel.this.onError(target);
+                ajaxFormListener.onError(target);
             }
         };
         excelButton.setIconType(FontAwesomeIconType.download);
@@ -112,10 +115,4 @@ public abstract class AbstractReportPanel<T> extends Panel {
     protected abstract boolean hasData();
 
     protected abstract void export(IResource.Attributes attributes) throws IOException;
-
-    public void onSubmit(final AjaxRequestTarget target) {
-    }
-
-    public void onError(final AjaxRequestTarget target) {
-    }
 }

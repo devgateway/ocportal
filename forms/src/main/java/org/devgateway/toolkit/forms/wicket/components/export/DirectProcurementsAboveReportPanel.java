@@ -57,8 +57,8 @@ public class DirectProcurementsAboveReportPanel extends AbstractReportPanel<Dire
         }
     }
 
-    public DirectProcurementsAboveReportPanel(String id) {
-        super(id, Model.of(new Filter()));
+    public DirectProcurementsAboveReportPanel(String id, AjaxFormListener ajaxFormListener) {
+        super(id, ajaxFormListener, Model.of(new Filter()));
     }
 
     @Override
