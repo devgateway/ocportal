@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     //@Size(max = 1)
-    private List<TargetGroup> targetGroup;
+    private List<TargetGroup> targetGroup = new ArrayList<>();
 
     @ExcelExport(useTranslation = true, name = "AGPO Category Value (KES)")
     private BigDecimal targetGroupValue;
