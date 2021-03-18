@@ -1,4 +1,5 @@
 import CenterTextDonut from './index';
+import PropTypes from 'prop-types';
 
 class NrOfContractsWithPE extends CenterTextDonut {
   getClassnames() {
@@ -6,13 +7,13 @@ class NrOfContractsWithPE extends CenterTextDonut {
   }
 
   getCenterText() {
-    const { data } = this.props;
+    const { data, t } = this.props;
     if (!data) return null;
     return (
       <div>
         {data.get('thisPE')}
         <div className="secondary">
-          {this.t('crd:contract:nrContractWithPE:of')}
+          {t('crd:contract:nrContractWithPE:of')}
           &nbsp;
           {data.get('total')}
         </div>
@@ -21,9 +22,14 @@ class NrOfContractsWithPE extends CenterTextDonut {
   }
 
   getTitle() {
-    return this.t('crd:contract:nrContractWithPE:name');
+    const { t } = this.props;
+    return t('crd:contract:nrContractWithPE:name');
   }
 }
+
+NrOfContractsWithPE.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 NrOfContractsWithPE.Donut = class extends CenterTextDonut.Donut {
   getCustomEP() {
@@ -56,10 +62,11 @@ NrOfContractsWithPE.Donut = class extends CenterTextDonut.Donut {
   getData() {
     const data = super.getData();
     if (!data) return [];
+    const { t } = this.props;
     return [{
       labels: [
-        this.t('crd:contract:nrContractWithPE:match'),
-        this.t('crd:contract:nrContractWithPE:total'),
+        t('crd:contract:nrContractWithPE:match'),
+        t('crd:contract:nrContractWithPE:total'),
       ],
       values: [data.get('thisPE'), data.get('total')],
       hoverlabel: {
@@ -81,6 +88,10 @@ NrOfContractsWithPE.Donut = class extends CenterTextDonut.Donut {
       paper_bgcolor: 'rgba(0,0,0,0)',
     };
   }
+};
+
+NrOfContractsWithPE.Donut.propTypes = {
+  t: PropTypes.func.isRequired,
 };
 
 export default NrOfContractsWithPE;

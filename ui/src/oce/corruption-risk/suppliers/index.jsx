@@ -1,6 +1,7 @@
 import React from 'react';
 import URI from 'urijs';
 import { List, Map } from 'immutable';
+import PropTypes from 'prop-types';
 import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
@@ -37,7 +38,7 @@ class SList extends PaginatedTable {
   }
 
   render() {
-    const { data, navigate } = this.props;
+    const { data, navigate, t } = this.props;
 
     const count = data.get('count', 0);
 
@@ -62,34 +63,34 @@ class SList extends PaginatedTable {
         onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
         columns={[
           {
-            text: this.t('crd:suppliers:name'),
+            text: t('crd:suppliers:name'),
             dataField: 'name',
             fm: 'crd.suppliers.col.name',
             formatter: mkLink(navigate),
           },
           {
-            text: this.t('crd:suppliers:ID'),
+            text: t('crd:suppliers:ID'),
             dataField: 'id',
             fm: 'crd.suppliers.col.id',
             formatter: mkLink(navigate),
           },
           {
-            text: this.t('crd:suppliers:wins'),
+            text: t('crd:suppliers:wins'),
             dataField: 'wins',
             fm: 'crd.suppliers.col.wins',
           },
           {
-            text: this.t('crd:suppliers:losses'),
+            text: t('crd:suppliers:losses'),
             dataField: 'losses',
             fm: 'crd.suppliers.col.losses',
           },
           {
-            text: this.t('crd:suppliers:totalWon'),
+            text: t('crd:suppliers:totalWon'),
             dataField: 'winAmount',
             fm: 'crd.suppliers.col.totalWon',
           },
           {
-            text: this.t('crd:suppliers:nrFlags'),
+            text: t('crd:suppliers:nrFlags'),
             dataField: 'flags',
             fm: 'crd.suppliers.col.nrFlags',
           },
@@ -98,6 +99,10 @@ class SList extends PaginatedTable {
     );
   }
 }
+
+SList.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 class Suppliers extends CRDPage {
   constructor(...args) {
@@ -140,7 +145,7 @@ class Suppliers extends CRDPage {
 
   render() {
     const {
-      navigate, searchQuery, doSearch, data,
+      navigate, searchQuery, doSearch, data, t,
     } = this.props;
     const { winLossFlagInfo } = this.state;
     return (
@@ -154,7 +159,7 @@ class Suppliers extends CRDPage {
           doSearch={doSearch}
           navigate={navigate}
           className="suppliers-page"
-          topSearchPlaceholder={this.t('crd:suppliers:top-search')}
+          topSearchPlaceholder={t('crd:suppliers:top-search')}
           List={SList}
           dataEP="suppliersByFlags"
           countEP="suppliersByFlags/count"
@@ -163,5 +168,9 @@ class Suppliers extends CRDPage {
     );
   }
 }
+
+Suppliers.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default Suppliers;

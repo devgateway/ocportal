@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
+import { useTranslation } from 'react-i18next';
 import { Item } from '../../tenders/single/Item';
 import FileDownloadLinks from '../../tenders/single/FileDownloadLinks';
 import fmConnect from '../../../fm/fm';
-import { tCreator } from '../../../translatable';
 import { getProcurementPlan } from '../../../api/Api';
 import { setImmer } from '../../../tools';
 import feedback from '../../../resources/icons/feedback.svg';
 
 const ProcurementPlan = (props) => {
   const {
-    id, navigate, translations, isFeatureVisible,
+    id, navigate, isFeatureVisible,
   } = props;
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const [data, updateData] = useImmer(undefined);
 

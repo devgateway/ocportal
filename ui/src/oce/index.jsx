@@ -8,20 +8,11 @@ import {
 } from './tools';
 import Filters from './filters';
 import './style.scss';
-import enFlag from './resources/flags/en_US.png';
-import esFlag from './resources/flags/es_ES.png';
-import frFlag from './resources/flags/fr_FR.png';
 import exportIcon from './resources/icons/export.svg';
 
 const ROLE_ADMIN = 'ROLE_ADMIN';
 
 const EMPTY_ARRAY = [];
-
-const localeFlags = {
-  en_US: enFlag,
-  es_ES: esFlag,
-  fr_FR: frFlag,
-};
 
 // eslint-disable-next-line no-undef
 class OCApp extends React.Component {
@@ -48,12 +39,6 @@ class OCApp extends React.Component {
         isAdmin: false,
       },
     };
-    const { oceLocale } = localStorage;
-    if (oceLocale && this.constructor.TRANSLATIONS[oceLocale]) {
-      this.state.locale = oceLocale;
-    } else {
-      this.state.locale = 'en_US';
-    }
   }
 
   componentDidMount() {
@@ -70,13 +55,9 @@ class OCApp extends React.Component {
     // window.addEventListener('resize', debounce(calcYearsBarWidth));
   }
 
-  setLocale(locale) {
-    this.setState({ locale });
-    localStorage.oceLocale = locale;
-  }
-
   monthsBar() {
     const { selectedMonths } = this.state;
+    const { t } = this.props;
     return range(1, 12)
       .map((month) => (
         <a
@@ -90,7 +71,7 @@ class OCApp extends React.Component {
         >
           <i className="glyphicon glyphicon-ok-circle" />
           {' '}
-          {this.t(`general:months:${month}`)}
+          {t(`general:months:${month}`)}
         </a>
       ));
   }
@@ -103,6 +84,7 @@ class OCApp extends React.Component {
 
   yearsBar() {
     const { years, selectedYears } = this.state;
+    const { t } = this.props;
     const toggleYear = (year) => this.setState({
       selectedYears: selectedYears.has(+year)
         ? selectedYears.delete(+year)
@@ -125,7 +107,7 @@ class OCApp extends React.Component {
           {' '}
           {year}
           <span className="ctrl-click-hint">
-            {this.t('yearsBar:ctrlClickHint')}
+            {t('yearsBar:ctrlClickHint')}
           </span>
         </a>
       ))
@@ -133,9 +115,9 @@ class OCApp extends React.Component {
   }
 
   content() {
-    const { navigate } = this.props;
+    const { navigate, t } = this.props;
     const {
-      filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width, locale,
+      filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width,
     } = this.state;
     const Tab = this.tabs[currentTab];
     return (
@@ -154,7 +136,7 @@ class OCApp extends React.Component {
         bidTypes={bidTypes}
         width={width}
         navigate={navigate}
-        translations={this.constructor.TRANSLATIONS[locale]}
+        t={t}
         styling={this.constructor.STYLING}
       />
     );
@@ -173,19 +155,21 @@ class OCApp extends React.Component {
   }
 
   navigationLink({ getName }, index) {
+    const { t } = this.props;
     return (
       <a
         key={index}
         className={cn('', { active: index === this.state.currentTab })}
         onClick={() => this.setState({ currentTab: index })}
       >
-        {getName(this.t.bind(this))}
+        {getName(t)}
       </a>
     );
   }
 
   comparison() {
     const { compareBy, compareOpen } = this.state;
+    const { t } = this.props;
 
     return (
       <div className="filters col-md-12">
@@ -195,7 +179,7 @@ class OCApp extends React.Component {
             onClick={() => this.setState({ compareOpen: !compareOpen })}
           >
             <i className="glyphicon glyphicon-tasks pull-left" />
-            <div className="pull-left title">{this.t('header:comparison:title')}</div>
+            <div className="pull-left title">{t('header:comparison:title')}</div>
             <div className={`pull-right toggler ${compareOpen ? 'up' : 'down'}`} />
           </div>
 
@@ -207,7 +191,7 @@ class OCApp extends React.Component {
                     <label
                       htmlFor="comparison-criteria-select"
                     >
-                      {this.t('header:comparison:criteria')}
+                      {t('header:comparison:criteria')}
                     </label>
                   </div>
                   <div className="col-md-6">
@@ -217,7 +201,7 @@ class OCApp extends React.Component {
                       value={compareBy}
                       onChange={(e) => this.updateComparisonCriteria(e.target.value)}
                     >
-                      {this.constructor.COMPARISON_TYPES.map(({ value, label }) => <option key={value} value={value}>{this.t(label)}</option>)}
+                      {this.constructor.COMPARISON_TYPES.map(({ value, label }) => <option key={value} value={value}>{t(label)}</option>)}
                     </select>
                   </div>
                 </div>
@@ -230,13 +214,12 @@ class OCApp extends React.Component {
   }
 
   filters() {
-    const { bidTypes, locale, filters } = this.state;
+    const { bidTypes, filters } = this.state;
     return (
       <this.constructor.Filters
         onUpdate={(filters) => this.setState({ filters })}
         bidTypes={bidTypes}
         filters={filters}
-        translations={this.constructor.TRANSLATIONS[locale]}
       />
     );
   }
@@ -296,22 +279,18 @@ class OCApp extends React.Component {
       }));
   }
 
-  t(text) {
-    const { locale } = this.state;
-    return this.constructor.TRANSLATIONS[locale][text];
-  }
-
   registerTab(tab) {
     this.tabs.push(tab);
   }
 
   loginBox() {
+    const { t } = this.props;
     if (this.state.user.loggedIn) {
       return (
         <a href="/preLogout?referrer=/ui/index.html">
           <i className="glyphicon glyphicon-user" />
           {' '}
-          {this.t('general:logout')}
+          {t('general:logout')}
         </a>
       );
     }
@@ -319,28 +298,14 @@ class OCApp extends React.Component {
       <a href="/login?referrer=/ui/index.html">
         <i className="glyphicon glyphicon-user" />
         {' '}
-        {this.t('general:login')}
+        {t('general:login')}
       </a>
     );
   }
 
-  languageSwitcher() {
-    const { TRANSLATIONS } = this.constructor;
-    if (Object.keys(TRANSLATIONS).length <= 1) return null;
-    return Object.keys(TRANSLATIONS)
-      .map((locale) => (
-        <img
-          className="icon"
-          src={localeFlags[locale]}
-          alt={`${locale} flag`}
-          onClick={() => this.setLocale(locale)}
-          key={locale}
-        />
-      ));
-  }
-
   downloadExcel() {
     const { filters, selectedYears: years, selectedMonths: months } = this.state;
+    const { t } = this.props;
     const onDone = () => this.setState({ exporting: false });
     this.setState({ exporting: true });
     download({
@@ -348,7 +313,7 @@ class OCApp extends React.Component {
       filters,
       years,
       months,
-      t: this.t.bind(this),
+      t,
     })
       .then(onDone)
       .catch(onDone);
@@ -358,6 +323,7 @@ class OCApp extends React.Component {
     const {
       filters, selectedYears, locale, selectedMonths,
     } = this.state;
+    const { t } = this.props;
     let url = new URI('/api/ocds/excelExport')
       .addSearch(filters)
       .addSearch('year', selectedYears.toArray())
@@ -378,7 +344,7 @@ class OCApp extends React.Component {
             height="100%"
             alt="export"
           />
-          {this.t('export:export')}
+          {t('export:export')}
           <i className="glyphicon glyphicon-menu-down" />
         </a>
       </div>
@@ -393,13 +359,13 @@ class OCApp extends React.Component {
 
   dashboardSwitcher() {
     const { dashboardSwitcherOpen } = this.state;
-    const { onSwitch } = this.props;
+    const { onSwitch, t } = this.props;
     return (
       <div className={cn('dash-switcher-wrapper', { open: dashboardSwitcherOpen })}>
         <h1 onClick={(e) => this.toggleDashboardSwitcher(e)}>
-          {this.t('general:title')}
+          {t('general:title')}
           <i className="glyphicon glyphicon-menu-down" />
-          <small>{this.t('general:subtitle')}</small>
+          <small>{t('general:subtitle')}</small>
         </h1>
         {dashboardSwitcherOpen
         && (
@@ -416,6 +382,7 @@ class OCApp extends React.Component {
 
 OCApp.propTypes = {
   onSwitch: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 OCApp.TRANSLATIONS = {

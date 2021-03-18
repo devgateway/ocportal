@@ -6,7 +6,6 @@ const FilterTenderAmount = ({ ...otherProps }) => <Range {...otherProps} titleKe
 
 FilterTenderAmount.propTypes = {
   onChange: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired,
 };
 
 export default FilterTenderAmount;

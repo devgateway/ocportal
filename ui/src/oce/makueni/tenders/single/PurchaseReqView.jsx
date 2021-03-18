@@ -2,6 +2,7 @@ import cn from 'classnames';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
+import { useTranslation } from 'react-i18next';
 import Tender from './Tender';
 import PurchaseReq from './PurchaseReq';
 import TenderQuotation from './TenderQuotation';
@@ -12,7 +13,6 @@ import Contract from './Contract';
 import FeedbackMessageList from '../../../feedback/feedbackList';
 import AdministratorReport from './AdministratorReport';
 import fmConnect from '../../../fm/fm';
-import { tCreator } from '../../../translatable';
 import { getPurchaseRequisition } from '../../../api/Api';
 import InspectionReport from './InspectionReport';
 import PMCReport from './PMCReport';
@@ -26,7 +26,7 @@ const PurchaseReqView = (props) => {
 
   const [data, updateData] = useImmer(undefined);
   const { id, navigate, isFeatureVisible } = props;
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const maybeTrimOcidPrefix = (id) => {
     if (id.includes('ocds-muq5cl-')) {
@@ -149,7 +149,7 @@ const PurchaseReqView = (props) => {
           department={data.department}
           fiscalYear={data.fiscalYear}
           styling={props.styling}
-          translations={props.translations}
+          t={t}
           prId={data.tenderProcesses._id}
           tenderTitle={tenderTitle}
         />
@@ -215,7 +215,6 @@ PurchaseReqView.propTypes = {
   navigate: PropTypes.func.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
-  translations: PropTypes.object.isRequired,
   onSwitch: PropTypes.func.isRequired,
 };
 

@@ -6,7 +6,7 @@ import { wireProps } from './tools';
 class Archive extends CRDPage {
   render() {
     const {
-      className, searchQuery, doSearch, topSearchPlaceholder, translations, data, List, dataEP,
+      className, searchQuery, doSearch, topSearchPlaceholder, t, data, List, dataEP,
       countEP, navigate,
     } = this.props;
 
@@ -15,7 +15,7 @@ class Archive extends CRDPage {
     return (
       <div className={cn(className)}>
         <TopSearch
-          translations={translations}
+          t={t}
           searchQuery={searchQuery ? decodeURI(searchQuery) : ''}
           doSearch={doSearch}
           placeholder={topSearchPlaceholder}
@@ -25,8 +25,8 @@ class Archive extends CRDPage {
         <h3 className="page-header">
           {
             (count === 1
-              ? this.t('crd:contracts:top-search:resultsFor:sg')
-              : this.t('crd:contracts:top-search:resultsFor:pl')
+              ? t('crd:contracts:top-search:resultsFor:sg')
+              : t('crd:contracts:top-search:resultsFor:pl')
             ).replace('$#$', count).replace(
               '$#$',
               searchQuery.replace(/%22/g, '').replace(/%20/g, ' '),
