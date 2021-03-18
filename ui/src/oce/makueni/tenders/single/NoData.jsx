@@ -1,8 +1,8 @@
 import React from 'react';
-import { tCreator } from '../../../translatable';
+import { useTranslation } from 'react-i18next';
 
-const NoDataMessage = (props) => {
-  const t = tCreator(props.translations);
+const NoDataMessage = () => {
+  const { t } = useTranslation();
   return (
     <div className="no-data-wrapper">
       <h2>{t('general:noData')}</h2>

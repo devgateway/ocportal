@@ -1,8 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import ImplReport from './ImplReport';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 import FileDownloadLinks from './FileDownloadLinks';
 
@@ -17,8 +17,8 @@ const getPaymentStatus = (paymentVouchers) => {
 };
 
 const PaymentVoucher = (props) => {
-  const { translations, isFeatureVisible, data } = props;
-  const t = tCreator(translations);
+  const { isFeatureVisible, data } = props;
+  const { t } = useTranslation();
 
   const childElements = (i) => {
     const { currencyFormatter, formatBoolean } = props.styling.tables;

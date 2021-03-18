@@ -1,15 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { LOGIN_URL } from './constants';
 import { debounce } from '../tools';
-import translatable from '../translatable';
 import logo from '../resources/logo.png';
 
-class LandingPopup extends translatable(React.Component) {
+class LandingPopup extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {
       top: 0,
     };
+  }
+
+  componentDidMount() {
+    this.recalcTop();
+    this.windowResizeListener = debounce(this.recalcTop.bind(this));
+    window.addEventListener('resize', this.windowResizeListener);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.windowResizeListener);
   }
 
   onClose() {
@@ -28,18 +38,9 @@ class LandingPopup extends translatable(React.Component) {
     });
   }
 
-  componentDidMount() {
-    this.recalcTop();
-    this.windowResizeListener = debounce(this.recalcTop.bind(this));
-    window.addEventListener('resize', this.windowResizeListener);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.windowResizeListener);
-  }
-
   render() {
     const { top } = this.state;
+    const { t } = this.props;
     return (
       <div>
         <div className="crd-fullscreen-popup-overlay" onClick={this.onClose.bind(this)} />
@@ -51,7 +52,7 @@ class LandingPopup extends translatable(React.Component) {
                 <img src={logo} />
               </div>
               <div className="col-sm-9">
-                <h4 className="popup-title">{this.t('crd:title')}</h4>
+                <h4 className="popup-title">{t('crd:title')}</h4>
               </div>
               {/* <div className="col-sm-1 language-switcher"> */}
               {/*  {languageSwitcher()} */}
@@ -62,7 +63,7 @@ class LandingPopup extends translatable(React.Component) {
             </div>
             <div className="row">
               <div className="col-sm-10 col-sm-offset-1 text-column-left">
-                {this.t('crd:landing:introduction:1')}
+                {t('crd:landing:introduction:1')}
               </div>
               <div className="col-sm-1" />
 
@@ -76,7 +77,7 @@ class LandingPopup extends translatable(React.Component) {
 
               <div className="col-sm-2 end">
                 <button className="btn btn-primary" onClick={this.onClose.bind(this)}>
-                  {this.t('crd:landing:enter')}
+                  {t('crd:landing:enter')}
                 </button>
               </div>
             </div>
@@ -86,5 +87,9 @@ class LandingPopup extends translatable(React.Component) {
     );
   }
 }
+
+LandingPopup.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default LandingPopup;

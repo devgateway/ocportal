@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { tCreator } from '../../../../translatable';
+import { useTranslation } from 'react-i18next';
 import BootstrapTableWrapper from '../../../archive/bootstrap-table-wrapper';
 import { getFlaggedReleases } from './api';
 import './style.scss';
 
-const Table = ({ filters, translations }) => {
+const Table = ({ filters }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
@@ -23,7 +23,7 @@ const Table = ({ filters, translations }) => {
     });
   }, [filters, pageSize, page]);
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const formatTypes = (_, row) => (
     <div>

@@ -1,13 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import NoDataMessage from './NoData';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const Contract = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
   const { data, isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
 
@@ -128,7 +128,7 @@ const Contract = (props) => {
     </div>
   );
 
-  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getContract(data[0]));
+  return (data === undefined ? <NoDataMessage /> : getContract(data[0]));
 };
 
 Contract.propTypes = defaultSingleTenderTabTypes;

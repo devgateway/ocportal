@@ -1,9 +1,9 @@
 import React from 'react';
-import translatable from '../../translatable';
+import PropTypes from 'prop-types';
 import './style.scss';
 import fmConnect from '../../fm/fm';
 
-class TopSearch extends translatable(React.Component) {
+class TopSearch extends React.Component {
   constructor(props, ...rest) {
     super(props, ...rest);
     this.state = {
@@ -18,9 +18,7 @@ class TopSearch extends translatable(React.Component) {
   }
 
   toggleExactMatch() {
-    this.setState(
-      { exactMatch: !this.state.exactMatch },
-    );
+    this.setState((state) => ({ exactMatch: !state.exactMatch }));
 
     // const newValue = exactMatch ?
     //   inputValue.slice(1, -1) :
@@ -33,7 +31,7 @@ class TopSearch extends translatable(React.Component) {
   }
 
   render() {
-    const { doSearch, placeholder } = this.props;
+    const { doSearch, placeholder, t } = this.props;
     const { inputValue } = this.state;
     const { exactMatch } = this.state;
 
@@ -69,12 +67,16 @@ class TopSearch extends translatable(React.Component) {
           />
             &nbsp;
           <label htmlFor="exactMatch">
-            {this.t('crd:contracts:hint')}
+            {t('crd:contracts:hint')}
           </label>
         </div>
       </form>
     );
   }
 }
+
+TopSearch.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(TopSearch, 'crd.textSearch');
