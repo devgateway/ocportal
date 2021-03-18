@@ -24,7 +24,7 @@
   enabled: yes
   visible: yes
 - name: professionalOpinionForm.items.formDocs
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
 - name: professionalOpinionForm.items.newButton
