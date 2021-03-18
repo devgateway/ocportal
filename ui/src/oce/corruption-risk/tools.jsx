@@ -43,7 +43,7 @@ export const mkContractLink = (navigate) => (content, { id }) => (
   </a>
 );
 
-const ROUTINE_PROPS = ['filters', 'years', 'months', 'monthly', 'translations', 'width'];
+const ROUTINE_PROPS = ['filters', 'years', 'months', 'monthly', 'width', 't'];
 
 export const copyProps = (keys, source, target) => keys.forEach((key) => {
   // eslint-disable-next-line no-param-reassign

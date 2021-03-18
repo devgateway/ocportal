@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { fetch, subscribeToAlerts } from '../api/Api';
 import { setImmer } from '../tools';
-import { tCreator } from '../translatable';
+import { useTranslation } from 'react-i18next';
 
 const emailPattern = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
 
@@ -76,15 +76,12 @@ const Alerts = (props) => {
     }
   };
 
-  const { translations } = props;
-
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   return (
     <div className="container-fluid dashboard-default">
 
       <Header
-        translations={translations}
         onSwitch={props.onSwitch}
         styling={props.styling}
         selected=""
@@ -269,7 +266,6 @@ const Alerts = (props) => {
 
 Alerts.propTypes = {
   route: PropTypes.arrayOf(PropTypes.string),
-  translations: PropTypes.object.isRequired,
   styling: PropTypes.object.isRequired,
   onSwitch: PropTypes.func.isRequired,
 };

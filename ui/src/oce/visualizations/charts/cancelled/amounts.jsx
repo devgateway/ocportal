@@ -1,4 +1,6 @@
 import FrontendDateFilterableChart from '../frontend-date-filterable';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../../translatable';
 
 class CancelledFunding extends FrontendDateFilterableChart {
   getData() {
@@ -20,10 +22,10 @@ class CancelledFunding extends FrontendDateFilterableChart {
       trace.hoverinfo = 'text';
     }
 
-    const { years } = this.props;
+    const { years, t } = this.props;
     data.forEach((datum) => {
       const date = datum.has('month')
-        ? this.tMonth(datum.get('month'), years)
+        ? tMonth(t, datum.get('month'), years)
         : datum.get('year');
 
       const count = datum.get('totalCancelledTendersAmount');
@@ -36,18 +38,23 @@ class CancelledFunding extends FrontendDateFilterableChart {
   }
 
   getLayout() {
+    const { t } = this.props;
     return {
       xaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         type: 'category',
       },
       yaxis: {
-        title: this.t('charts:cancelledAmounts:yAxisName'),
+        title: t('charts:cancelledAmounts:yAxisName'),
         tickprefix: '   ',
       },
     };
   }
 }
+
+CancelledFunding.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 CancelledFunding.endpoint = 'totalCancelledTendersByYear';
 CancelledFunding.excelEP = 'cancelledFundingExcelChart';

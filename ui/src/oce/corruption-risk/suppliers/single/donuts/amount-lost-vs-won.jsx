@@ -1,9 +1,9 @@
 import React from 'react';
 import { pluck } from '../../../../tools';
 import Donut from '../../../donut';
-import translatable from '../../../../translatable';
+import PropTypes from 'prop-types';
 
-class CenterText extends translatable(React.PureComponent) {
+class CenterText extends React.PureComponent {
   format(number) {
     const formatted = this.props.styling.charts.hoverFormatter(number) || '';
     return (
@@ -15,7 +15,7 @@ class CenterText extends translatable(React.PureComponent) {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, t } = this.props;
     const [fst, snd] = data.map(pluck('value'));
     return (
       <div className="center-text two-rows">
@@ -24,7 +24,7 @@ class CenterText extends translatable(React.PureComponent) {
           <div className="secondary">
             {this.format(snd)}
             {' '}
-            {this.t('crd:supplier:amountLostVsWon:Lost')}
+            {t('crd:supplier:amountLostVsWon:Lost')}
           </div>
         </div>
       </div>
@@ -32,39 +32,47 @@ class CenterText extends translatable(React.PureComponent) {
   }
 }
 
-class AmountWonVsLost extends translatable(React.Component) {
+CenterText.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
+class AmountWonVsLost extends React.Component {
   transformNewData(path, data) {
-    const { styling } = this.props;
+    const { styling, t } = this.props;
     const won = data.getIn([0, 'won', 'totalAmount']);
     const lost = data.getIn([0, 'lostAmount']);
 
     this.props.requestNewData(path, [{
       color: '#2e833a',
-      label: this.t('crd:supplier:amountLostVsWon:won')
+      label: t('crd:supplier:amountLostVsWon:won')
         .replace('$#$', styling.charts.hoverFormatter(won)),
       value: won,
     }, {
       color: '#72c47e',
-      label: this.t('crd:supplier:amountLostVsWon:lost')
+      label: t('crd:supplier:amountLostVsWon:lost')
         .replace('$#$', styling.charts.hoverFormatter(lost)),
       value: lost,
     }]);
   }
 
   render() {
-    const { data } = this.props;
+    const { data, t } = this.props;
     return (
       <Donut
         {...this.props}
         requestNewData={this.transformNewData.bind(this)}
         data={data || []}
         CenterText={CenterText}
-        title={this.t('crd:supplier:amountLostVsWon:title')}
-        subtitle={this.t('crd:supplier:amountLostVsWon:subtitle')}
+        title={t('crd:supplier:amountLostVsWon:title')}
+        subtitle={t('crd:supplier:amountLostVsWon:subtitle')}
         endpoint="procurementsWonLost"
       />
     );
   }
 }
+
+AmountWonVsLost.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default AmountWonVsLost;
