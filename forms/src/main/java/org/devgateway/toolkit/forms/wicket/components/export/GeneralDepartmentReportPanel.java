@@ -60,8 +60,8 @@ public class GeneralDepartmentReportPanel extends AbstractReportPanel<GeneralDep
         }
     }
 
-    public GeneralDepartmentReportPanel(String id) {
-        super(id, Model.of(new DataExportBean()));
+    public GeneralDepartmentReportPanel(String id, AjaxFormListener ajaxFormListener) {
+        super(id, ajaxFormListener, Model.of(new DataExportBean()));
     }
 
     @Override
