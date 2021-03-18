@@ -26,6 +26,10 @@ $borderColor: #eeeeee;
         &.branding {
             height: $headerHeight;
             overflow: visible;
+            
+            @media screen and (max-width: 414px) {
+                height: 130px;
+            }
         }
 
         a.logo-wrapper {

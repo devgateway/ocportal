@@ -649,6 +649,8 @@ a.portal-logo-wrapper {
         margin-top: 3px;
         @media screen and (max-width: 992px) {
             margin-left: 10px;
+        }
+        @media screen and (max-width: 414px) {
             margin-top: 5px;
         }
 
@@ -668,11 +670,20 @@ a.portal-logo-wrapper {
 
         @media screen and (max-width: 414px) {
            display: inline;
-           font-size: 11px;
-           margin-top: 10px;
+           font-size: 9px;
         }
 
     }
+}
+
+.dashboard-corruption-risk{
+  a.portal-logo-wrapper {
+    span {
+      @media screen and (max-width: 414px) {
+         font-size: 20px;
+      }
+    }
+  }
 }
 
 
