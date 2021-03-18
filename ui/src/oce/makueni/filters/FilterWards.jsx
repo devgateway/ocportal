@@ -15,7 +15,6 @@ const FilterWards = ({ subcounty, ...otherProps }) => (
 FilterWards.propTypes = {
   subcounty: PropTypes.array,
   onChange: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired,
 };
 
 export default FilterWards;

@@ -81,7 +81,7 @@ class MapVisual extends backendFilterable(Visualization) {
 
   render() {
     const {
-      translations, filters, years, styling, months, monthly, zoom,
+      t, filters, years, styling, months, monthly, zoom,
     } = this.props;
     const { locationType, center } = this.state;
 
@@ -96,7 +96,7 @@ class MapVisual extends backendFilterable(Visualization) {
                 position={location.coords.reverse()}
                 maxAmount={this.getMaxAmount()}
                 data={location}
-                translations={translations}
+                t={t}
                 filters={filters}
                 years={years}
                 months={months}

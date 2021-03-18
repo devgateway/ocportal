@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { pluck, range, sameArray } from '../../tools';
 import { fetch } from '../../api/Api';
-import { tCreator } from '../../translatable';
 
 const FilterDateYearMonth = (props) => {
   const monthRange = range(1, 12);
   const [allYears, setAllYears] = useState([]);
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const { ep } = props;
   const years = (props.years.length > 0) ? props.years : allYears;
@@ -108,7 +108,6 @@ FilterDateYearMonth.defaultProps = {
 };
 
 FilterDateYearMonth.propTypes = {
-  translations: PropTypes.object.isRequired,
   ep: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   years: PropTypes.arrayOf(PropTypes.number),

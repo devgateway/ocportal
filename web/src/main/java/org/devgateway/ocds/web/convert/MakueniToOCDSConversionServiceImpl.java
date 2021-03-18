@@ -165,9 +165,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private MakueniLocationRepository makueniLocationRepository;
 
     @Autowired
-    private FiscalYearBudgetService fiscalYearBudgetService;
-
-    @Autowired
     private AdminSettingsRepository adminSettingsRepository;
 
     @Autowired
@@ -544,16 +541,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public MakueniBudgetBreakdown createPlanningBudgetBreakdown(TenderProcess tenderProcess) {
-        FiscalYearBudget fiscalYearBudget = fiscalYearBudgetService.findByDepartmentAndFiscalYear(
-                tenderProcess.getDepartment(), tenderProcess.getProcurementPlan().getFiscalYear());
-        MakueniBudgetBreakdown budgetBreakdown = null;
-        if (fiscalYearBudget != null) {
-            budgetBreakdown = new MakueniBudgetBreakdown();
-            safeSet(budgetBreakdown::setAmount, fiscalYearBudget::getAmountBudgeted, this::convertAmount);
-            safeSet(budgetBreakdown::setSourceParty, tenderProcess::getDepartment, this::convertBuyer);
-            safeSet(budgetBreakdown::setId, fiscalYearBudget::getId, this::longIdToString);
-            safeSet(budgetBreakdown::setPeriod, fiscalYearBudget::getFiscalYear, this::createBudgetPeriod);
-        }
+        ProcurementPlan procurementPlan = tenderProcess.getProcurementPlan();
+
+        MakueniBudgetBreakdown budgetBreakdown = new MakueniBudgetBreakdown();
+
+        safeSet(budgetBreakdown::setAmount,
+                () -> procurementPlan.getPlanItems().stream()
+                        .map(pi -> pi.getQuantity().multiply(pi.getEstimatedCost()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add),
+                this::convertAmount);
+        safeSet(budgetBreakdown::setSourceParty, tenderProcess::getDepartment, this::convertBuyer);
+        safeSet(budgetBreakdown::setId, procurementPlan::getId, this::longIdToString);
+        safeSet(budgetBreakdown::setPeriod, procurementPlan::getFiscalYear, this::createBudgetPeriod);
+
         return budgetBreakdown;
     }
 

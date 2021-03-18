@@ -1,15 +1,17 @@
 import FrontendDateFilterable from './frontend-date-filterable';
 import { pluckImm } from '../../tools';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../translatable';
 
 class PercentEbid extends FrontendDateFilterable {
   getData() {
     const data = super.getData();
     if (!data) return [];
-    const { years } = this.props;
+    const { years, t } = this.props;
 
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly
-      ? data.map(pluckImm('month')).map((month) => this.tMonth(month, years)).toArray()
+      ? data.map(pluckImm('month')).map((month) => tMonth(t, month, years)).toArray()
       : data.map(pluckImm('year')).toArray();
 
     return [{
@@ -25,13 +27,14 @@ class PercentEbid extends FrontendDateFilterable {
 
   getLayout() {
     const { hoverFormat } = this.props.styling.charts;
+    const { t } = this.props;
     return {
       xaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         type: 'category',
       },
       yaxis: {
-        title: this.t('charts:percentEBid:yAxisName'),
+        title: t('charts:percentEBid:yAxisName'),
         hoverformat: hoverFormat,
         tickprefix: '   ',
       },
@@ -43,5 +46,9 @@ PercentEbid.endpoint = 'percentTendersUsingEBid';
 PercentEbid.excelEP = 'percentTendersUsingEBidExcelChart';
 PercentEbid.getName = (t) => t('charts:percentEBid:title');
 PercentEbid.getMaxField = pluckImm('percentageTendersUsingEbid');
+
+PercentEbid.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default PercentEbid;
