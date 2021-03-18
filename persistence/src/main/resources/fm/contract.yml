@@ -173,6 +173,14 @@
   visible: yes
   visibleDeps:
     - contractForm.expiryDate
+- name: publicView.contract.contractExtensionDate
+  visible: yes
+  visibleDeps:
+    - contractForm.contractExtensionDate
+- name: publicView.contract.reasonForExtension
+  visible: yes
+  visibleDeps:
+    - contractForm.reasonForExtension
 - name: publicView.contract.awardee.label
   visible: yes
   visibleDeps:
