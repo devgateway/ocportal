@@ -64,29 +64,51 @@ const TenderQuotation = (props) => {
                   <div key={bids._id} className="box">
                     <div className="row">
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.label')
-                    && <Item label={t('tenderQuotation:bids:supplierLabel')} value={bids.supplier.label} col={6} />}
+                      && <Item label={t('tenderQuotation:bids:supplierLabel')} value={bids.supplier.label} col={6} />}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.code')
-                    && <Item label={t('tenderQuotation:bids:supplierCode')} value={bids.supplier.code} col={6} />}
+                      && <Item label={t('tenderQuotation:bids:supplierCode')} value={bids.supplier.code} col={6} />}
+                      {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.targetGroups')
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierTargetGroups')}
+                          value={(bids.supplier.targetGroups || []).map((c) => c.label).join(', ')}
+                          col={6}
+                        />
+                      )}
+                      {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.prequalifiedItems')
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierPrequalifiedItems')}
+                          value={(bids.prequalifiedItems || []).join(', ')}
+                          col={6}
+                        />
+                      )}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplierScore')
-                    && <Item label={t('tenderQuotation:bids:supplierScore')} value={bids.supplierScore} col={3} />}
+                      && <Item label={t('tenderQuotation:bids:supplierScore')} value={bids.supplierScore} col={3} />}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplierRanking')
-                    && <Item label={t('tenderQuotation:bids:supplierRanking')} value={bids.supplierRanking} col={3} />}
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierRanking')}
+                          value={bids.supplierRanking}
+                          col={3}
+                        />
+                      )}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.quotedAmount')
-                    && (
-                    <Item
-                      label={t('tenderQuotation:bids:quotedAmount')}
-                      value={currencyFormatter(bids.quotedAmount)}
-                      col={3}
-                    />
-                    )}
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:quotedAmount')}
+                          value={currencyFormatter(bids.quotedAmount)}
+                          col={3}
+                        />
+                      )}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplierResponsiveness')
-                    && (
-                    <Item
-                      label={t('tenderQuotation:bids:supplierResponsiveness')}
-                      value={bids.supplierResponsiveness}
-                      col={3}
-                    />
-                    )}
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierResponsiveness')}
+                          value={bids.supplierResponsiveness}
+                          col={3}
+                        />
+                      )}
                     </div>
                   </div>
                 ))

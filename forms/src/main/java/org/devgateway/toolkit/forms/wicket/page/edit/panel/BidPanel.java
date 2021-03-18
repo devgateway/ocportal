@@ -107,29 +107,7 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         @Override
         protected List<String> load() {
             Bid bid = bidModel.getObject();
-
-            Supplier supplier = bid.getSupplier();
-
-            if (supplier == null) {
-                return Collections.emptyList();
-            }
-
-            Date tenderInvitationDate = bid.getParent().getTenderProcess().getSingleTender().getInvitationDate();
-            PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
-
-            if (yearRange == null) {
-                return Collections.emptyList();
-            }
-
-            PrequalifiedSupplier prequalifiedSupplier = prequalifiedSupplierService.find(supplier, yearRange);
-
-            if (prequalifiedSupplier == null) {
-                return Collections.emptyList();
-            }
-
-            return prequalifiedSupplier.getItems().stream()
-                    .map(i -> i.getItem().toString(yearRange))
-                    .collect(Collectors.toList());
+            return prequalifiedSupplierService.findItemsForBid(bid);
         }
     }
 
