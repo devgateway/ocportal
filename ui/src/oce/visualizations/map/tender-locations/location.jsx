@@ -4,7 +4,6 @@ import cn from 'classnames';
 import React from 'react';
 import Location from '../location/marker';
 import Component from '../../../pure-render-component';
-import translatable from '../../../translatable';
 import OverviewChart from '../../charts/overview';
 import CostEffectiveness from '../../charts/cost-effectiveness';
 import { cacheFn, download } from '../../../tools';
@@ -15,6 +14,7 @@ import ProjectCount from '../../charts/project-count';
 import AmountBudgeted from '../../charts/amount-budgeted';
 import exportMap from '../../../resources/icons/export-map.svg';
 import cameraMap from '../../../resources/icons/camera-map.svg';
+import PropTypes from 'prop-types';
 
 const addTenderDeliveryLocationId = cacheFn(
   (filters, id) => ({
@@ -23,7 +23,7 @@ const addTenderDeliveryLocationId = cacheFn(
   }),
 );
 
-class Tab extends translatable(Component) {}
+class Tab extends Component {}
 
 export class ChartTab extends Tab {
   constructor(props) {
@@ -46,7 +46,7 @@ export class ChartTab extends Tab {
 
   render() {
     const {
-      filters, styling, years, translations, data, monthly, months,
+      filters, styling, years, t, data, monthly, months,
     } = this.props;
     const decoratedFilters = addTenderDeliveryLocationId(filters, data._id);
     return (
@@ -57,7 +57,7 @@ export class ChartTab extends Tab {
           years={years}
           monthly={monthly}
           months={months}
-          translations={translations}
+          t={t}
           data={this.state.chartData}
           requestNewData={(_, chartData) => this.setState({ chartData })}
           height={250}
@@ -73,7 +73,7 @@ export class ChartTab extends Tab {
   }
 }
 
-class LocationWrapper extends translatable(Component) {
+class LocationWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -84,7 +84,7 @@ class LocationWrapper extends translatable(Component) {
   doExcelExport() {
     const { currentTab } = this.state;
     const {
-      data, filters, years, months,
+      data, filters, years, months, t,
     } = this.props;
     const CurrentTab = this.constructor.TABS[currentTab];
     download({
@@ -92,17 +92,16 @@ class LocationWrapper extends translatable(Component) {
       filters: addTenderDeliveryLocationId(filters, data._id),
       years,
       months,
-      t: (translationKey) => this.t(translationKey),
+      t,
     });
   }
 
   render() {
     const { currentTab } = this.state;
     const {
-      data, translations, filters, years, styling, monthly, months,
+      data, t, filters, years, styling, monthly, months,
     } = this.props;
     const CurrentTab = this.constructor.TABS[currentTab];
-    const t = (translationKey) => this.t(translationKey);
     return (
       <Location {...this.props}>
         <Popup className="tender-locations-popup">
@@ -150,7 +149,7 @@ class LocationWrapper extends translatable(Component) {
               <div className="col-xs-8">
                 <CurrentTab
                   data={data}
-                  translations={translations}
+                  t={t}
                   filters={filters}
                   years={years}
                   monthly={monthly}
@@ -167,24 +166,28 @@ class LocationWrapper extends translatable(Component) {
   }
 }
 
+LocationWrapper.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
 export class OverviewTab extends Tab {
   static getName(t) { return t('maps:tenderLocations:tabs:overview:title'); }
 
   render() {
-    const { data } = this.props;
+    const { data, t } = this.props;
     const { count, totalProjectsAmount } = data;
     return (
       <div>
         {/* <p> */}
-        {/*  <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count} */}
+        {/*  <strong>{t('maps:tenderLocations:tabs:overview:nrOfTenders')}</strong> {count} */}
         {/* </p> */}
         <p>
-          <strong>{this.t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong>
+          <strong>{t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong>
           {' '}
           {count}
         </p>
         <p>
-          <strong>{this.t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong>
+          <strong>{t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong>
           {' '}
           {totalProjectsAmount.toLocaleString()}
         </p>
@@ -192,6 +195,10 @@ export class OverviewTab extends Tab {
     );
   }
 }
+
+OverviewTab.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export class OverviewChartTab extends ChartTab {
   static getName(t) { return t('charts:overview:title'); }

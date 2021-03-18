@@ -2,6 +2,7 @@ import cn from 'classnames';
 import Crosstab from '../crosstab';
 import './style.scss';
 import { colorLuminance } from '../tools';
+import PropTypes from 'prop-types';
 
 class ClickableCrosstab extends Crosstab {
   constructor(...args) {
@@ -12,7 +13,8 @@ class ClickableCrosstab extends Crosstab {
 
   row(rowData, rowIndicatorID) {
     const { currentlySelected } = this.state;
-    const rowIndicatorName = this.t(`crd:indicators:${rowIndicatorID}:name`);
+    const { t } = this.props;
+    const rowIndicatorName = t(`crd:indicators:${rowIndicatorID}:name`);
     return (
       <tr key={rowIndicatorID}>
         <td>{rowIndicatorName}</td>
@@ -54,10 +56,12 @@ class ClickableCrosstab extends Crosstab {
     const row = this.props.data.get(rowIndicatorID);
     const datum = row.get(indicatorID);
 
-    const rowIndicatorName = this.t(`crd:indicators:${rowIndicatorID}:name`);
-    const rowIndicatorDescription = this.t(`crd:indicators:${rowIndicatorID}:indicator`);
-    const indicatorDescription = this.t(`crd:indicators:${indicatorID}:indicator`);
-    const indicatorName = this.t(`crd:indicators:${indicatorID}:name`);
+    const { t } = this.props;
+
+    const rowIndicatorName = t(`crd:indicators:${rowIndicatorID}:name`);
+    const rowIndicatorDescription = t(`crd:indicators:${rowIndicatorID}:indicator`);
+    const indicatorDescription = t(`crd:indicators:${indicatorID}:indicator`);
+    const indicatorName = t(`crd:indicators:${indicatorID}:name`);
     const count = datum.get('count');
     const percent = datum.get('percent');
 
@@ -65,13 +69,13 @@ class ClickableCrosstab extends Crosstab {
       <div className="crosstab-box text-left">
         <div className="row">
           <div className="col-sm-12 title">
-            {this.t('crd:corruptionType:crosstab:popup:percents')
+            {t('crd:corruptionType:crosstab:popup:percents')
               .replace('$#$', percent.toFixed(2))
               .replace('$#$', rowIndicatorName)
               .replace('$#$', indicatorName)}
           </div>
           <div className="col-sm-12">
-            <h5>{this.t('crd:corruptionType:crosstab:popup:count').replace('$#$', count)}</h5>
+            <h5>{t('crd:corruptionType:crosstab:popup:count').replace('$#$', count)}</h5>
             <p>
               <strong>{rowIndicatorName}</strong>
               :
@@ -112,5 +116,9 @@ class ClickableCrosstab extends Crosstab {
     );
   }
 }
+
+ClickableCrosstab.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default ClickableCrosstab;

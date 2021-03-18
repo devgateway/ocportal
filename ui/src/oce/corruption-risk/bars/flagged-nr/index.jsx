@@ -9,9 +9,9 @@ import {
   LabelList,
   Tooltip,
 } from 'recharts';
-import translatable, { tCreator } from '../../../translatable';
 import { renderTopLeftLabel } from '../../archive/tools';
 import Popup from './popup';
+import { useTranslation } from 'react-i18next';
 
 const corruptionTypeColors = {
   FRAUD: '#299df4',
@@ -49,7 +49,7 @@ function mkGradient(id, colors) {
   );
 }
 
-class TaggedBar extends translatable(Bar) {
+class TaggedBar extends Bar {
   maybeGetGradients(types) {
     return mkGradient(
       this.getGradientId(types),
@@ -84,7 +84,7 @@ class TaggedBar extends translatable(Bar) {
 }
 
 const FlaggedNr = ({
-  data, length, zoomed, translations,
+  data, length, zoomed,
 }) => {
   let height = 350;
   let slicedData;
@@ -109,7 +109,7 @@ const FlaggedNr = ({
     ),
   );
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const legendPayload = [...corruptionTypes].map(
     (corruptionType) => ({
@@ -142,7 +142,7 @@ const FlaggedNr = ({
             >
               <XAxis type="number" />
               <YAxis type="category" dataKey="indicatorId" hide />
-              <Tooltip content={<Popup />} translations={translations} cursor={false} />
+              <Tooltip content={<Popup />} cursor={false} />
               <Legend
                 align="left"
                 verticalAlign="top"

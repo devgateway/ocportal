@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import PropTypes from 'prop-types';
 import Table from '../visualizations/tables/index';
 
 class Crosstab extends Table {
@@ -44,16 +45,17 @@ class Crosstab extends Table {
   }
 
   row(rowData, rowIndicatorID) {
-    const rowIndicatorName = this.t(`crd:indicators:${rowIndicatorID}:name`);
-    const rowIndicatorDescription = this.t(`crd:indicators:${rowIndicatorID}:indicator`);
+    const { t } = this.props;
+    const rowIndicatorName = t(`crd:indicators:${rowIndicatorID}:name`);
+    const rowIndicatorDescription = t(`crd:indicators:${rowIndicatorID}:indicator`);
     const lastKey = rowData.lastKeyOf(rowData.last());
     return (
       <tr key={rowIndicatorID}>
         <td>{rowIndicatorName}</td>
         <td className="nr-flags">{rowData.getIn([rowIndicatorID, 'count'])}</td>
         {rowData.map((datum, indicatorID) => {
-          const indicatorName = this.t(`crd:indicators:${indicatorID}:name`);
-          const indicatorDescription = this.t(`crd:indicators:${indicatorID}:indicator`);
+          const indicatorName = t(`crd:indicators:${indicatorID}:name`);
+          const indicatorDescription = t(`crd:indicators:${indicatorID}:indicator`);
           if (indicatorID === rowIndicatorID) {
             return <td className="not-applicable" key={indicatorID}>&mdash;</td>;
           }
@@ -70,7 +72,7 @@ class Crosstab extends Table {
               <div className="crd-popup text-left">
                 <div className="row">
                   <div className="col-sm-12 info">
-                    {this.t('crd:corruptionType:crosstab:popup:percents')
+                    {t('crd:corruptionType:crosstab:popup:percents')
                       .replace('$#$', percent.toFixed(2))
                       .replace('$#$', rowIndicatorName)
                       .replace('$#$', indicatorName)}
@@ -79,14 +81,14 @@ class Crosstab extends Table {
                     <hr />
                   </div>
                   <div className="col-sm-12 info">
-                    <h4>{this.t('crd:corruptionType:crosstab:popup:count').replace('$#$', count)}</h4>
+                    <h4>{t('crd:corruptionType:crosstab:popup:count').replace('$#$', count)}</h4>
                     <p>
                       <strong>{rowIndicatorName}</strong>
                       :
                       {' '}
                       {rowIndicatorDescription}
                     </p>
-                    <p className="and">{this.t('crd:corruptionType:crosstab:popup:and')}</p>
+                    <p className="and">{t('crd:corruptionType:crosstab:popup:and')}</p>
                     <p>
                       <strong>{indicatorName}</strong>
                       :
@@ -105,7 +107,7 @@ class Crosstab extends Table {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, t } = this.props;
     if (!data) return null;
     if (!data.count()) return null;
     return (
@@ -116,7 +118,7 @@ class Crosstab extends Table {
               <th className="name-column" />
               <th className="flags-column"># Flags</th>
               {data.map((_, indicatorID) => (
-                <th className="percent-column" key={indicatorID}>{this.t(`crd:indicators:${indicatorID}:name`)}</th>
+                <th className="percent-column" key={indicatorID}>{t(`crd:indicators:${indicatorID}:name`)}</th>
               )).toArray()}
             </tr>
           </thead>
@@ -130,5 +132,9 @@ class Crosstab extends Table {
 }
 
 Crosstab.endpoint = 'flags/crosstab';
+
+Crosstab.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default Crosstab;

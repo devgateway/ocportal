@@ -39,7 +39,6 @@ const FiltersProcurementPlanWrapper = (props) => {
       groups={groups}
       filters={props.filters}
       applyFilters={props.applyFilters}
-      translations={props.translations}
     />
   );
 };
