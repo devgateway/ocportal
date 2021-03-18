@@ -44,8 +44,7 @@ header.branding {
     z-index: 1002;
     @media screen and (max-width: 992px) {
         position: relative;
-    }
-    @media screen and (max-width: 767px) {
+        display: block;
         height: 125px;
     }
     @media screen and (max-width: 414px) {
@@ -438,6 +437,10 @@ footer.main-footer {
         font-size: 12px;
         text-align: center;
 
+        @media screen and (max-width:992px) {
+            font-size: 10px;
+        }
+
         &:hover, &.active {
             background-color: $active-tab-color;
 
@@ -643,8 +646,10 @@ a.portal-logo-wrapper {
     img {
         width: 55px;
         margin-left: 20px;
-        @media screen and (max-width: 767px) {
+        margin-top: 3px;
+        @media screen and (max-width: 992px) {
             margin-left: 10px;
+            margin-top: 5px;
         }
 
     }
@@ -654,6 +659,13 @@ a.portal-logo-wrapper {
         color: #fff;
         line-height: 20px;
         font-weight: lighter !important;
+
+        @media screen and (max-width: 992px) {
+           display: block;
+           font-size: 21px;
+           margin-top: 10px;
+        }
+
     }
 }
 
