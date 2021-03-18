@@ -661,13 +661,20 @@ a.portal-logo-wrapper {
         font-weight: lighter !important;
 
         @media screen and (max-width: 992px) {
-           display: block;
+           display: inline-block;
            font-size: 21px;
+           margin-top: 10px;
+        }
+
+        @media screen and (max-width: 414px) {
+           display: inline;
+           font-size: 11px;
            margin-top: 10px;
         }
 
     }
 }
+
 
 .language-switcher {
     display: flex;
