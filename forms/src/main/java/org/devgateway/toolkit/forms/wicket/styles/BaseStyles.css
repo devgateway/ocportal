@@ -623,6 +623,12 @@ hr.edit-separator {
   width: 215%;
 }
 
+@media (max-width: 768px) {
+  .toggle-group label.btn {
+    margin-bottom: 0 !important;
+  }
+}
+
 /* Submitted Page styles
 -------------------------------------------------- */
 
@@ -655,6 +661,15 @@ hr.edit-separator {
 .fa.fa-frown-o.unsubscribe {
     font-size: 7em;
     color: #333;
+}
+
+@media (max-width: 768px) {
+  .row.bottom-form-btns{
+    padding-bottom: 30px;
+  }
+  .row.list-form-wrapper{
+    padding-bottom: 50px;
+  }
 }
 
 /*
