@@ -257,7 +257,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 pi.setQuantity(BigDecimal.valueOf(r.getCell(6).getNumericCellValue()));
                 pi.setProcurementMethod(getProcurementMethod(r));
                 pi.setSourceOfFunds(r.getCell(8).getStringCellValue());
-                pi.setTargetGroup(getTargetGroup(r));
+                pi.getTargetGroup().add(getTargetGroup(r));
                 pi.setQuarter1st(BigDecimal.valueOf(r.getCell(13).getNumericCellValue()));
                 pi.setQuarter2nd(BigDecimal.valueOf(r.getCell(14).getNumericCellValue()));
                 pi.setQuarter3rd(BigDecimal.valueOf(r.getCell(15).getNumericCellValue()));
