@@ -20,12 +20,10 @@ public abstract class AbstractListCategoryPage<T extends Category> extends Abstr
     }
 
     @Override
-    protected void onInitialize() {
+    protected void addColumns() {
         columns.add(new TextFilteredBootstrapPropertyColumn<>(
                 new Model<>((new StringResourceModel("label", AbstractListCategoryPage.this)).getString()),
                 "label", "label"));
-
-        super.onInitialize();
     }
 
     @Override

@@ -1,13 +1,14 @@
 package org.devgateway.toolkit.persistence.service;
 
 import org.devgateway.toolkit.persistence.dao.Role;
+import org.devgateway.toolkit.persistence.dao.Role_;
 import org.devgateway.toolkit.persistence.repository.RoleRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,11 +28,6 @@ public class RoleServiceImpl extends BaseJpaServiceImpl<Role> implements RoleSer
     }
 
     @Override
-    public TextSearchableRepository<Role, Long> textRepository() {
-        return roleRepository;
-    }
-
-    @Override
     public Role newInstance() {
         return new Role();
     }
@@ -44,5 +40,10 @@ public class RoleServiceImpl extends BaseJpaServiceImpl<Role> implements RoleSer
     @Override
     public List<Role> findByAuthorityIn(Collection<String> authority) {
         return roleRepository.findByAuthorityIn(authority);
+    }
+
+    @Override
+    public SingularAttribute<? super Role, String> getTextAttribute() {
+        return Role_.authority;
     }
 }

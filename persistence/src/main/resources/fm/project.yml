@@ -81,6 +81,8 @@
 - name: projectList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - projectForm
 - name: projectList.department
   visible: yes
   visibleDeps:

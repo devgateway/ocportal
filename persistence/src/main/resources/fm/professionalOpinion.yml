@@ -77,6 +77,8 @@
 - name: professionalOpinionsList
   enabled: yes
   visible: yes
+  visibleDeps:
+    - professionalOpinionForm
 - name: professionalOpinionsList.department
   visible: yes
   visibleDeps:

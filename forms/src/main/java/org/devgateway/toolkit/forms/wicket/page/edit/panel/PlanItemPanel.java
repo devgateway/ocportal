@@ -159,7 +159,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
     }
 
     @Override
-    protected Component getHeaderField(final String id, final CompoundPropertyModel<PlanItem> compoundModel) {
+    protected Component createHeaderField(final String id, final CompoundPropertyModel<PlanItem> compoundModel) {
         return new PlanItemHeaderPanel(id, compoundModel);
     }
 

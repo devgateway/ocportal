@@ -5,7 +5,6 @@ import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.repository.form.PurchaseRequisitionGroupRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
-import org.devgateway.toolkit.persistence.repository.norepository.TextSearchableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +23,6 @@ public class PurchaseRequisitionGroupServiceImpl
 
     @Override
     protected BaseJpaRepository<PurchaseRequisitionGroup, Long> repository() {
-        return purchaseRequisitionGroupRepository;
-    }
-
-    @Override
-    public TextSearchableRepository<PurchaseRequisitionGroup, Long> textRepository() {
         return purchaseRequisitionGroupRepository;
     }
 

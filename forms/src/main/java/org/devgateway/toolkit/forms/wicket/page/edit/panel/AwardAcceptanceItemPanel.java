@@ -211,12 +211,4 @@ public class AwardAcceptanceItemPanel extends ListViewSectionPanel<AwardAcceptan
         item.add(supplierID);
 
     }
-
-
-    @Override
-    protected boolean filterListItem(final AwardAcceptanceItem purchaseItem) {
-        return true;
-    }
-
-
 }
