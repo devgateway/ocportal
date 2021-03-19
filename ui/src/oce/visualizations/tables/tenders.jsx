@@ -1,5 +1,6 @@
 import Table from './index';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
 
 // safely gets the date from the data and formats it
 const getDate = (obj/* tender obj */, key/* date key */) => (obj.hasIn(['tenderPeriod', key])
@@ -32,16 +33,17 @@ class Tenders extends Table {
 
   render() {
     if (!this.props.data) return null;
+    const { t } = this.props;
     return (
       <table className="table table-striped table-hover tenders-table">
         <thead>
           <tr>
-            {/* <th>{this.t('tables:top10tenders:number')}</th> */}
-            <th>{this.t('tables:top10tenders:startDate')}</th>
-            <th>{this.t('tables:top10tenders:endDate')}</th>
-            <th>{this.t('tables:top10tenders:buyer')}</th>
-            <th>{this.t('tables:top10tenders:tenderTitle')}</th>
-            <th>{this.t('tables:top10tenders:estimatedValue')}</th>
+            {/* <th>{t('tables:top10tenders:number')}</th> */}
+            <th>{t('tables:top10tenders:startDate')}</th>
+            <th>{t('tables:top10tenders:endDate')}</th>
+            <th>{t('tables:top10tenders:buyer')}</th>
+            <th>{t('tables:top10tenders:tenderTitle')}</th>
+            <th>{t('tables:top10tenders:estimatedValue')}</th>
           </tr>
         </thead>
         <tbody>
@@ -54,5 +56,9 @@ class Tenders extends Table {
 
 Tenders.getName = (t) => t('tables:top10tenders:title');
 Tenders.endpoint = 'topTenLargestTenders';
+
+Tenders.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(Tenders, 'viz.me.table.tenders');

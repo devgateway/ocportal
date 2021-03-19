@@ -1,6 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
-import { tCreator } from '../../../translatable';
+import { useTranslation } from 'react-i18next';
 import flag from '../../../resources/icons/flag.svg';
 
 class Cell extends React.PureComponent {
@@ -20,12 +20,11 @@ class Cell extends React.PureComponent {
 }
 
 const Info = ({
-  info, flagsCount, prs, contractsCount, unflaggedContractsCount, translations,
+  info, flagsCount, prs, contractsCount, unflaggedContractsCount,
 }) => {
+  const { t } = useTranslation();
   if (!info) return null;
   const { address, contactPoint } = info;
-
-  const t = tCreator(translations);
 
   const showBottomTable = address || contactPoint;
 

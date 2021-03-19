@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { Item } from './Item';
 import ImplReport from './ImplReport';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const AuthImplReport = (props) => {
   const { authChildren, fmPrefix, childElements } = props;
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const authChildElements = (i) => {
     const { formatBoolean } = props.styling.tables;

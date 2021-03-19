@@ -1,8 +1,8 @@
 import React from 'react';
 import { List } from 'immutable';
 import Donut from '../../../donut';
-import translatable from '../../../../translatable';
 import { pluck } from '../../../../tools';
+import PropTypes from 'prop-types';
 
 class CenterText extends React.PureComponent {
   render() {
@@ -23,14 +23,15 @@ class CenterText extends React.PureComponent {
 
 const COLORS = ['#fbc42c', '#3372b2', '#30a0f5'];
 
-class TotalFlags extends translatable(React.PureComponent) {
+class TotalFlags extends React.PureComponent {
   render() {
+    const { t } = this.props;
     const data = (this.props.data || List()).map((datum, index) => {
       const value = datum.get('indicatorCount');
-      const indicatorName = this.t(`crd:corruptionType:${datum.get('type')}:name`);
+      const indicatorName = t(`crd:corruptionType:${datum.get('type')}:name`);
       const label = value === 1
-        ? this.t('crd:supplier:nrFlags:label:sg')
-        : this.t('crd:supplier:nrFlags:label:pl');
+        ? t('crd:supplier:nrFlags:label:sg')
+        : t('crd:supplier:nrFlags:label:pl');
 
       return {
         color: COLORS[index],
@@ -44,11 +45,15 @@ class TotalFlags extends translatable(React.PureComponent) {
         data={data}
         CenterText={CenterText}
         endpoint="totalFlaggedIndicatorsByIndicatorType"
-        title={this.t('crd:supplier:nrFlags:title')}
-        subtitle={this.t('crd:supplier:nrFlags:subtitle')}
+        title={t('crd:supplier:nrFlags:title')}
+        subtitle={t('crd:supplier:nrFlags:subtitle')}
       />
     );
   }
 }
+
+TotalFlags.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default TotalFlags;

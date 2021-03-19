@@ -1,8 +1,8 @@
 import { FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { fetch } from '../../api/Api';
-import { tCreator } from '../../translatable';
 
 const FilterItemSingleSelect = (props) => {
   const [data, setData] = useState([]);
@@ -17,7 +17,7 @@ const FilterItemSingleSelect = (props) => {
     fetch(props.ep).then((data) => setData(data));
   }, [props.ep]);
 
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const label = props.labelKey ? t(props.labelKey) : 'Select a Value';
 
@@ -37,7 +37,6 @@ const FilterItemSingleSelect = (props) => {
 };
 
 FilterItemSingleSelect.propTypes = {
-  translations: PropTypes.object.isRequired,
   ep: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };

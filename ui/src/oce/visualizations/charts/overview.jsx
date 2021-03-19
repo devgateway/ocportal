@@ -1,6 +1,8 @@
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { yearlyResponse2obj, monthlyResponse2obj, pluckImm } from '../../tools';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../translatable';
 
 class OverviewChart extends FrontendDateFilterableChart {
   transform([tendersResponse, awardsResponse]) {
@@ -24,16 +26,17 @@ class OverviewChart extends FrontendDateFilterableChart {
   getData() {
     const data = super.getData();
     if (!data) return [];
+    const { t } = this.props;
     const LINES = {
-      award: this.t('charts:overview:traces:award'),
-      tender: this.t('charts:overview:traces:tender'),
+      award: t('charts:overview:traces:award'),
+      tender: t('charts:overview:traces:tender'),
     };
 
     const { years } = this.props;
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly
       ? data.map(pluckImm('month'))
-        .map((month) => this.tMonth(month, years))
+        .map((month) => tMonth(t, month, years))
         .toArray()
       : data.map(pluckImm('year'))
         .toArray();
@@ -52,9 +55,10 @@ class OverviewChart extends FrontendDateFilterableChart {
   }
 
   getLayout() {
+    const { t } = this.props;
     return {
       xaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         titlefont: {
           color: '#223a49',
         },
@@ -62,7 +66,7 @@ class OverviewChart extends FrontendDateFilterableChart {
       },
       yaxis: {
         title: {
-          text: this.t('charts:overview:yAxisName'),
+          text: t('charts:overview:yAxisName'),
           font: {
             color: '#223a49',
           },
@@ -78,5 +82,9 @@ OverviewChart.endpoints = ['countTendersByYear', 'countAwardsByYear'];
 OverviewChart.excelEP = 'procurementActivityExcelChart';
 
 OverviewChart.getName = (t) => t('charts:overview:title');
+
+OverviewChart.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(OverviewChart, 'viz.me.chart.overview');

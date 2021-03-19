@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import cn from 'classnames';
 import { Map } from 'immutable';
-import translatable from '../translatable';
+import PropTypes from 'prop-types';
 import TotalFlags from './total-flags';
 import { CORRUPTION_TYPES } from './constants';
 import overviewBlue from '../resources/icons/blue/overview.svg';
@@ -29,7 +29,7 @@ const corruptionTypeIcons = {
 };
 
 // eslint-disable-next-line no-undef
-class Sidebar extends translatable(React.PureComponent) {
+class Sidebar extends React.PureComponent {
   componentDidMount() {
     const el = ReactDOM.findDOMNode(this);
     const scrollTarget = el.querySelector('div');
@@ -57,7 +57,7 @@ class Sidebar extends translatable(React.PureComponent) {
 
   render() {
     const {
-      page, indicatorTypesMapping, filters, years, monthly, months, navigate, translations,
+      page, indicatorTypesMapping, filters, years, monthly, months, navigate, t,
       data, requestNewData, route, isFeatureVisible,
     } = this.props;
 
@@ -74,11 +74,11 @@ class Sidebar extends translatable(React.PureComponent) {
                 >
                   <img className="blue" src={overviewBlue} alt="Overview icon" />
                   <img className="white" src={overviewWhite} alt="Overview icon" />
-                  {this.t('tabs:overview:title')}
+                  {t('tabs:overview:title')}
                 </a>
 
                 <p className="crd-description">
-                  {this.t('crd:description')}
+                  {t('crd:description')}
                 </p>
               </>
             )}
@@ -103,7 +103,7 @@ class Sidebar extends translatable(React.PureComponent) {
                 >
                   <img className="blue" src={corruptionTypeIcons.blue[slug]} alt="Tab icon" />
                   <img className="white" src={corruptionTypeIcons.white[slug]} alt="Tab icon" />
-                  {this.t(`crd:corruptionType:${slug}:name`)}
+                  {t(`crd:corruptionType:${slug}:name`)}
                   {/* <span className="count">({count})</span> */}
                 </a>
               );
@@ -118,7 +118,7 @@ class Sidebar extends translatable(React.PureComponent) {
               >
                 <img className="blue" src={suppliersBlue} alt="Suppliers icon" />
                 <img className="white" src={suppliersWhite} alt="Suppliers icon" />
-                {this.t('crd:contracts:baseInfo:suppliers')}
+                {t('crd:contracts:baseInfo:suppliers')}
               </a>
             )}
 
@@ -131,7 +131,7 @@ class Sidebar extends translatable(React.PureComponent) {
               >
                 <img className="blue" src={peBlue} alt="Procuring entities icon" />
                 <img className="white" src={peWhite} alt="Procuring entities icon" />
-                {this.t('crd:contracts:menu:procuringEntities')}
+                {t('crd:contracts:menu:procuringEntities')}
               </a>
             )}
 
@@ -144,7 +144,7 @@ class Sidebar extends translatable(React.PureComponent) {
               >
                 <img className="blue" src={buyersBlue} alt="Procuring entities icon" />
                 <img className="white" src={buyersWhite} alt="Procuring entities icon" />
-                {this.t('crd:contracts:menu:buyers')}
+                {t('crd:contracts:menu:buyers')}
               </a>
             )}
 
@@ -158,14 +158,14 @@ class Sidebar extends translatable(React.PureComponent) {
               >
                 <img className="blue" src={contractsBlue} alt="Contracts icon" />
                 <img className="white" src={contractsWhite} alt="Contracts icon" />
-                {this.t('crd:general:contracts')}
+                {t('crd:general:contracts')}
               </a>
             )}
           </section>
           <TotalFlags
             filters={filters}
             requestNewData={(path, newData) => requestNewData(['totalFlags'].concat(path), newData)}
-            translations={translations}
+            t={t}
             data={data.get('totalFlags', Map())}
             years={years}
             months={months}
@@ -177,5 +177,9 @@ class Sidebar extends translatable(React.PureComponent) {
     );
   }
 }
+
+Sidebar.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(Sidebar);

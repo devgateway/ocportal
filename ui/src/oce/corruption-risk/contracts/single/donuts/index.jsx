@@ -3,9 +3,8 @@ import cn from 'classnames';
 import backendYearFilterable from '../../../../backend-year-filterable';
 import Chart from '../../../../visualizations/charts/index';
 import './style.scss';
-import translatable from '../../../../translatable';
 
-class CenterTextDonut extends translatable(React.PureComponent) {
+class CenterTextDonut extends React.PureComponent {
   getClassnames() {
     return ['center-text-donut'];
   }
