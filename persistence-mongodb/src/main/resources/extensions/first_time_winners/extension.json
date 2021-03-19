@@ -6,7 +6,7 @@
     "en": "Award flagged as first time winner, should any of the suppliers be first time winners. In case of Makueni we only have one supplier"
   },
   "documentationUrl": {
-    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/first_time_winners"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/first_time_winners"
   },
   "compatibility": [
     "1.1"
