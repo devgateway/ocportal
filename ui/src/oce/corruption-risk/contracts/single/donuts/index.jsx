@@ -16,7 +16,7 @@ class CenterTextDonut extends React.PureComponent {
         <div>
           <Donut
             layout={{
-              autosize: false,
+              autosize: true,
             }}
             margin={{
               b: 0, t: 0, r: 0, l: 0, pad: 0,
