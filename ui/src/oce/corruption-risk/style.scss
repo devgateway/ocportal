@@ -26,9 +26,9 @@ $borderColor: #eeeeee;
         &.branding {
             height: $headerHeight;
             overflow: visible;
-            
+
             @media screen and (max-width: 414px) {
-                height: 130px;
+                height: 90px;
             }
         }
 
@@ -109,6 +109,9 @@ $borderColor: #eeeeee;
             justify-content: flex-end;
             @media (max-width: 768px) {
                 margin-top: 0;
+            }
+            @media screen and (max-width: 414px) {
+                margin-top: 5px;
             }
 
             .login-wrapper {
