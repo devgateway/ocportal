@@ -1,7 +1,9 @@
 import { Map } from 'immutable';
+import PropTypes from 'prop-types';
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { pluckImm, yearlyResponse2obj, monthlyResponse2obj } from '../../tools';
 import fmConnect from '../../fm/fm';
+import { tMonth } from '../../translatable';
 
 const ensureNonNegative = (a) => (a < 0 ? 0 : a);
 
@@ -25,17 +27,17 @@ class BidPeriod extends FrontendDateFilterableChart {
   getData() {
     const data = super.getData();
     if (!data) return [];
-    const { years } = this.props;
+    const { years, t } = this.props;
 
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly
-      ? data.map(pluckImm('month')).map((month) => this.tMonth(month, years)).toArray()
+      ? data.map(pluckImm('month')).map((month) => tMonth(t, month, years)).toArray()
       : data.map(pluckImm('year')).toArray();
 
     return [{
       x: data.map(pluckImm('tender')).map(ensureNonNegative).toArray(),
       y: dates,
-      name: this.t('charts:bidPeriod:traces:tender'),
+      name: t('charts:bidPeriod:traces:tender'),
       type: 'bar',
       orientation: 'h',
       marker: {
@@ -44,7 +46,7 @@ class BidPeriod extends FrontendDateFilterableChart {
     }, {
       x: data.map(pluckImm('award')).map(ensureNonNegative).toArray(),
       y: dates,
-      name: this.t('charts:bidPeriod:traces:award'),
+      name: t('charts:bidPeriod:traces:award'),
       type: 'bar',
       orientation: 'h',
       marker: {
@@ -57,6 +59,7 @@ class BidPeriod extends FrontendDateFilterableChart {
     const { hoverFormat } = this.props.styling.charts;
     let annotations = [];
     const data = super.getData();
+    const { t } = this.props;
     if (data) {
       annotations = data.map((imm, index) => {
         const sum = imm.reduce((sum, val, key) => (key === 'year' || key === 'month' ? sum : sum + ensureNonNegative(val)), 0).toFixed(2);
@@ -65,7 +68,7 @@ class BidPeriod extends FrontendDateFilterableChart {
           x: sum,
           xanchor: 'left',
           yanchor: 'middle',
-          text: `${this.t('charts:bidPeriod:traces:total')} ${sum}`,
+          text: `${t('charts:bidPeriod:traces:total')} ${sum}`,
           showarrow: false,
         };
       }).toArray();
@@ -75,11 +78,11 @@ class BidPeriod extends FrontendDateFilterableChart {
       annotations,
       barmode: 'stack',
       xaxis: {
-        title: this.t('charts:bidPeriod:xAxisTitle'),
+        title: t('charts:bidPeriod:xAxisTitle'),
         hoverformat: hoverFormat,
       },
       yaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         type: 'category',
       },
     };
@@ -93,5 +96,9 @@ BidPeriod.horizontal = true;
 
 BidPeriod.getFillerDatum = (seed) => Map(seed).set('tender', 0).set('award', 0);
 BidPeriod.getMaxField = (imm) => imm.get('tender', 0) + imm.get('award', 0);
+
+BidPeriod.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(BidPeriod, 'viz.me.chart.bidPeriod');

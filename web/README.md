@@ -29,7 +29,6 @@ A good howto can be found [here](https://www.baeldung.com/spring-boot-devtools)
 To enable devtools you need to start the application using java startup property
 `spring.devtools.restart.enabled=true`
 
-
 # Endpoints
 
 ## A word about format for filters

@@ -22,6 +22,7 @@ class CatChart extends backendYearFilterable(Chart) {
   getData() {
     const data = super.getData();
     if (!data) return [];
+    const { t } = this.props;
     const { traceColors, hoverFormatter } = this.props.styling.charts;
     const trace = {
       x: [],
@@ -39,7 +40,7 @@ class CatChart extends backendYearFilterable(Chart) {
     }
 
     data.forEach((datum) => {
-      const catName = this.constructor.getCatName(datum, this.t.bind(this));
+      const catName = this.constructor.getCatName(datum, t);
       const value = datum.get(this.constructor.CAT_VALUE_FIELD);
       if (this.orientation() === 'h') {
         trace.y.push(catName);
@@ -58,7 +59,7 @@ class CatChart extends backendYearFilterable(Chart) {
 class CatChartComparison extends Comparison {
   render() {
     const {
-      compareBy, comparisonData, comparisonCriteriaValues, filters, requestNewComparisonData, years, translations,
+      compareBy, comparisonData, comparisonCriteriaValues, filters, requestNewComparisonData, years, t,
       styling, width, months, monthly,
     } = this.props;
     if (!comparisonCriteriaValues.length) return null;
@@ -116,7 +117,7 @@ class CatChartComparison extends Comparison {
         filters: comparisonFilters,
         years,
         months,
-        t: this.t.bind(this),
+        t,
       });
       return (
         <div className="col-md-6 comparison" key={index} ref={ref}>
@@ -129,7 +130,7 @@ class CatChartComparison extends Comparison {
             months={months}
             monthly={monthly}
             title={this.getTitle(index)}
-            translations={translations}
+            t={t}
             styling={styling}
             width={width / 2}
             {...rangeProp}

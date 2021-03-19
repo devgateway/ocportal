@@ -1,7 +1,6 @@
 import React from 'react';
-import translatable from '../../../translatable';
 
-class Popup extends translatable(React.PureComponent) {
+class Popup extends React.PureComponent {
   render() {
     const {
       coordinate, active, viewBox, payload,

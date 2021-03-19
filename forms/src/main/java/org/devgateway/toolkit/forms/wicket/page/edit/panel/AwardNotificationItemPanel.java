@@ -112,6 +112,8 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
             awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
         }
 
+        ComponentUtil.addDateField(item, "tenderAwardDate");
+
         ComponentUtil.addIntegerTextField(item, "acknowledgementDays")
                 .getField().add(RangeValidator.minimum(0));
 
@@ -119,6 +121,9 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         item.add(formDocs);
+
+        final FileInputBootstrapFormComponent lettersOfRegret = new FileInputBootstrapFormComponent("lettersOfRegret");
+        item.add(lettersOfRegret);
     }
 
     private void addSupplierInfo(ListItem<AwardNotificationItem> item) {

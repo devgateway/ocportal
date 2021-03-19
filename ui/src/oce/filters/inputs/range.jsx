@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { tCreator } from '../../translatable';
 import RCRange from 'rc-slider/lib/Range';
 import 'rc-slider/assets/index.css';
 import {
   Col, ControlLabel, FormControl, FormGroup, Row,
 } from 'react-bootstrap';
 import { useImmer } from 'use-immer';
+import { useTranslation } from 'react-i18next';
 import { fetch } from '../../api/Api';
 
 const FormattedNumberInput = ({ value, onChange, ...otherProps }) => {
@@ -27,15 +27,16 @@ const FormattedNumberInput = ({ value, onChange, ...otherProps }) => {
 };
 
 export const Range = ({
-  titleKey, min, max, minValue, maxValue, translations, onChange,
+  titleKey, min, max, minValue, maxValue, onChange,
 }) => {
+  const { t } = useTranslation();
+
   if (!min && !max) {
     return null;
   }
 
   const actualMinValue = minValue || min;
   const actualMaxValue = maxValue || max;
-  const t = tCreator(translations);
 
   const handleOnChange = ({ minValue, maxValue }) => onChange({
     minValue: minValue === min ? undefined : minValue,
@@ -87,7 +88,6 @@ export const Range = ({
 
 Range.propTypes = {
   titleKey: PropTypes.string.isRequired,
-  translations: PropTypes.object.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
   minValue: PropTypes.number,
@@ -116,5 +116,4 @@ export const RemoteRange = ({
 RemoteRange.propTypes = {
   ep: PropTypes.string.isRequired,
   titleKey: PropTypes.string.isRequired,
-  translations: PropTypes.object.isRequired,
 };

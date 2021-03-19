@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import NoDataMessage from './NoData';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import { commonTenderTabTypes } from './singleUtil';
 
 const PurchaseReq = (props) => {
   const { data, isFeatureVisible } = props;
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
   const { currencyFormatter, formatDate } = props.styling.tables;
 
   // eslint-disable-next-line no-unused-vars
@@ -129,7 +129,7 @@ const PurchaseReq = (props) => {
     </div>
   );
 
-  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getPurchaseReq(data[0]));
+  return (data === undefined ? <NoDataMessage /> : getPurchaseReq(data[0]));
 };
 
 PurchaseReq.propTypes = {
