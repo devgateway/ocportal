@@ -2,6 +2,7 @@ import Table from './index';
 import { pluckImm } from '../../tools';
 import orgnamesFetching from '../../orgnames-fetching';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
 
 class Suppliers extends orgnamesFetching(Table) {
   getOrgsWithoutNamesIds() {
@@ -25,14 +26,15 @@ class Suppliers extends orgnamesFetching(Table) {
 
   render() {
     if (!this.props.data) return null;
+    const { t } = this.props;
     return (
       <table className="table table-striped table-hover suppliers-table">
         <thead>
           <tr>
-            <th>{this.t('tables:top10suppliers:supplierName')}</th>
-            <th>{this.t('tables:top10suppliers:nrAwardsWon')}</th>
-            <th>{this.t('tables:top10suppliers:nrPE')}</th>
-            <th>{this.t('tables:top10suppliers:totalAwardedValue')}</th>
+            <th>{t('tables:top10suppliers:supplierName')}</th>
+            <th>{t('tables:top10suppliers:nrAwardsWon')}</th>
+            <th>{t('tables:top10suppliers:nrPE')}</th>
+            <th>{t('tables:top10suppliers:totalAwardedValue')}</th>
           </tr>
         </thead>
         <tbody>
@@ -45,5 +47,9 @@ class Suppliers extends orgnamesFetching(Table) {
 
 Suppliers.getName = (t) => t('tables:top10suppliers:title');
 Suppliers.endpoint = 'topTenSuppliers';
+
+Suppliers.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(Suppliers, 'viz.me.table.suppliers');

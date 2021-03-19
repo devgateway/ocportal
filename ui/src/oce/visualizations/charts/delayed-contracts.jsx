@@ -1,6 +1,8 @@
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { pluckImm } from '../../tools';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../translatable';
 
 class DelayedContracts extends FrontendDateFilterableChart {
   getRawData() {
@@ -10,16 +12,16 @@ class DelayedContracts extends FrontendDateFilterableChart {
   getData() {
     const data = super.getData();
     if (!data) return [];
-    const { years } = this.props;
+    const { years, t } = this.props;
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly
-      ? data.map(pluckImm('month')).map((month) => this.tMonth(month, years)).toArray()
+      ? data.map(pluckImm('month')).map((month) => tMonth(t, month, years)).toArray()
       : data.map(pluckImm('year')).toArray();
 
     return [{
       x: data.map(pluckImm('countOnTime')).toArray(),
       y: dates,
-      name: this.t('charts:delayedContracts:traces:countOnTime'),
+      name: t('charts:delayedContracts:traces:countOnTime'),
       type: 'bar',
       orientation: 'h',
       marker: {
@@ -28,7 +30,7 @@ class DelayedContracts extends FrontendDateFilterableChart {
     }, {
       x: data.map(pluckImm('countDelayed')).toArray(),
       y: dates,
-      name: this.t('charts:delayedContracts:traces:countDelayed'),
+      name: t('charts:delayedContracts:traces:countDelayed'),
       type: 'bar',
       orientation: 'h',
       text: data.map(pluckImm('percentDelayed')).map(this.props.styling.charts.hoverFormatter).map((x) => `${x}% delayed`).toArray(),
@@ -39,6 +41,7 @@ class DelayedContracts extends FrontendDateFilterableChart {
   }
 
   getLayout() {
+    const { t } = this.props;
     const { hoverFormat } = this.props.styling.charts;
     let annotations = [];
     const data = super.getData();
@@ -50,7 +53,7 @@ class DelayedContracts extends FrontendDateFilterableChart {
           x: sum,
           xanchor: 'left',
           yanchor: 'middle',
-          text: `${this.t('charts:delayedContracts:traces:total')} ${sum}`,
+          text: `${t('charts:delayedContracts:traces:total')} ${sum}`,
           showarrow: false,
         };
       }).toArray();
@@ -60,11 +63,11 @@ class DelayedContracts extends FrontendDateFilterableChart {
       annotations,
       barmode: 'stack',
       xaxis: {
-        title: this.t('charts:delayedContracts:yAxisTitle'),
+        title: t('charts:delayedContracts:yAxisTitle'),
         hoverformat: hoverFormat,
       },
       yaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         type: 'category',
       },
     };
@@ -78,5 +81,9 @@ DelayedContracts.horizontal = true;
 
 // BidPeriod.getFillerDatum = seed => Map(seed).set('tender', 0).set('award', 0);
 // BidPeriod.getMaxField = imm => imm.get('tender', 0) + imm.get('award', 0);
+
+DelayedContracts.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(DelayedContracts, 'viz.me.chart.delayedContracts');

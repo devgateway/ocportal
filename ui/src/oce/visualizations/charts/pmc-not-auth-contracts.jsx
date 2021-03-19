@@ -1,6 +1,8 @@
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { pluckImm } from '../../tools';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../translatable';
 
 class PmcNotAuthContracts extends FrontendDateFilterableChart {
   getRawData() {
@@ -11,15 +13,15 @@ class PmcNotAuthContracts extends FrontendDateFilterableChart {
     const data = super.getData();
     if (!data) return [];
     const monthly = data.hasIn([0, 'month']);
-    const { years } = this.props;
+    const { years, t } = this.props;
     const dates = monthly
-      ? data.map(pluckImm('month')).map((month) => this.tMonth(month, years)).toArray()
+      ? data.map(pluckImm('month')).map((month) => tMonth(t, month, years)).toArray()
       : data.map(pluckImm('year')).toArray();
 
     return [{
       x: data.map(pluckImm('countAuthorized')).toArray(),
       y: dates,
-      name: this.t('charts:pmcNotAuthContracts:traces:countAuthorized'),
+      name: t('charts:pmcNotAuthContracts:traces:countAuthorized'),
       type: 'bar',
       orientation: 'h',
       marker: {
@@ -28,7 +30,7 @@ class PmcNotAuthContracts extends FrontendDateFilterableChart {
     }, {
       x: data.map(pluckImm('countNotAuthorized')).toArray(),
       y: dates,
-      name: this.t('charts:pmcNotAuthContracts:traces:countNotAuthorized'),
+      name: t('charts:pmcNotAuthContracts:traces:countNotAuthorized'),
       type: 'bar',
       orientation: 'h',
       text: data.map(pluckImm('percentNotAuthorized')).map(this.props.styling.charts.hoverFormatter).map((x) => `${x}% not authorized`).toArray(),
@@ -40,6 +42,7 @@ class PmcNotAuthContracts extends FrontendDateFilterableChart {
 
   getLayout() {
     const { hoverFormat } = this.props.styling.charts;
+    const { t } = this.props;
     let annotations = [];
     const data = super.getData();
     if (data) {
@@ -50,7 +53,7 @@ class PmcNotAuthContracts extends FrontendDateFilterableChart {
           x: sum,
           xanchor: 'left',
           yanchor: 'middle',
-          text: `${this.t('charts:pmcNotAuthContracts:traces:total')} ${sum}`,
+          text: `${t('charts:pmcNotAuthContracts:traces:total')} ${sum}`,
           showarrow: false,
         };
       }).toArray();
@@ -60,11 +63,11 @@ class PmcNotAuthContracts extends FrontendDateFilterableChart {
       annotations,
       barmode: 'stack',
       xaxis: {
-        title: this.t('charts:pmcNotAuthContracts:yAxisTitle'),
+        title: t('charts:pmcNotAuthContracts:yAxisTitle'),
         hoverformat: hoverFormat,
       },
       yaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         type: 'category',
       },
     };
@@ -78,5 +81,9 @@ PmcNotAuthContracts.horizontal = true;
 
 // BidPeriod.getFillerDatum = seed => Map(seed).set('tender', 0).set('award', 0);
 // BidPeriod.getMaxField = imm => imm.get('tender', 0) + imm.get('award', 0);
+
+PmcNotAuthContracts.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(PmcNotAuthContracts, 'viz.me.chart.pmcNotAuthContracts');

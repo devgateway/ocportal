@@ -13,7 +13,6 @@ const FilterSubcounties = ({ ...otherProps }) => (
 
 FilterSubcounties.propTypes = {
   onChange: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired,
 };
 
 export default FilterSubcounties;

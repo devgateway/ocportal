@@ -1,8 +1,8 @@
 import React from 'react';
 import { useImmer } from 'use-immer';
 import cn from 'classnames';
-import { tCreator } from '../../translatable';
 import fmConnect from '../../fm/fm';
+import { useTranslation } from 'react-i18next';
 
 export const singlePropertyRendererCreator = (FilterItem, property) => ({ filters, onChange, ...props }) => <FilterItem value={filters[property]} onChange={(value) => onChange({ [property]: value })} {...props} />;
 
@@ -60,10 +60,10 @@ const FiltersWrapper = (props) => {
     props.applyFilters(localFilters);
   };
 
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const listItems = () => {
-    const { translations, isFeatureVisible } = props;
+    const { isFeatureVisible } = props;
 
     return props.groups
       .filter((group) => !group.fm || isFeatureVisible(group.fm))
@@ -88,7 +88,6 @@ const FiltersWrapper = (props) => {
                   {filter.render({
                     filters: localFilters,
                     onChange: (filters) => updateLocalFilters((draft) => ({ ...draft, ...filters })),
-                    translations,
                   })}
                 </React.Fragment>
               ))}

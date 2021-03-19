@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ViewSwitcher from '../oce/switcher';
@@ -7,9 +8,6 @@ import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
 import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 import { enableMapSet } from 'immer';
-import enTranslations from '../languages/en_US.json';
-import esTranslations from '../languages/es_ES.json';
-import frTranslations from '../languages/fr_FR.json';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
@@ -20,12 +18,7 @@ import SMSHelp from '../oce/makueni/SMSHelp';
 import PortalVideos from '../oce/makueni/PortalVideos';
 
 import store from '../oce/app/store';
-
-const translations = {
-  en_US: enTranslations,
-  es_ES: esTranslations,
-  fr_FR: frTranslations,
-};
+import { useTranslation } from 'react-i18next';
 
 enableMapSet();
 
@@ -87,7 +80,6 @@ const styling = {
 };
 
 OCEMakueni.STYLING = styling;
-OCEMakueni.TRANSLATIONS = translations;
 
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
 CorruptionRickDashboard.STYLING.charts.traceColors = ['#3371b1', '#2b9ff6', '#5db7fb', '#86cafd', '#bbe2ff'];
@@ -106,12 +98,17 @@ OceSwitcher.views.alerts = Alerts;
 OceSwitcher.views['m-and-e'] = OCEMakueni;
 OceSwitcher.views.crd = CorruptionRickDashboard;
 
+// this could be replaced with Suspense
+const OceSwitcherLoader = () => {
+  const { t, i18n, ready } = useTranslation();
+  return ready
+    ? <OceSwitcher t={t} i18n={i18n} styling={styling} />
+    : null;
+};
+
 ReactDOM.render(
   <Provider store={store}>
-    <OceSwitcher
-      translations={translations.en_US}
-      styling={styling}
-    />
+    <OceSwitcherLoader />
   </Provider>,
   document.getElementById('dg-container'),
 );

@@ -1,6 +1,6 @@
 import { List, Map } from 'immutable';
+import { withTranslation } from 'react-i18next';
 import PureRenderCompoent from './pure-render-component';
-import translatable from './translatable';
 import { max, cacheFn, download } from './tools';
 import orgNamesFetching from './orgnames-fetching';
 import exportBlack from './resources/icons/export-black.svg';
@@ -10,15 +10,16 @@ import camera from './resources/icons/camera.svg';
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 
-class Comparison extends orgNamesFetching(translatable(PureRenderCompoent)) {
+class Comparison extends orgNamesFetching(PureRenderCompoent) {
   getComponent() {
     return this.props.Component;
   }
 
   wrap(children) {
+    const { t } = this.props;
     return (
       <div>
-        <h3 className="page-header">{this.getComponent().getName(this.t.bind(this))}</h3>
+        <h3 className="page-header">{this.getComponent().getName(t)}</h3>
         <div className="row">
           {children}
         </div>
@@ -34,20 +35,22 @@ class Comparison extends orgNamesFetching(translatable(PureRenderCompoent)) {
   }
 
   getTitle(index) {
-    const { compareBy, bidTypes, comparisonCriteriaValues } = this.props;
+    const {
+      compareBy, bidTypes, comparisonCriteriaValues, t,
+    } = this.props;
     if (compareBy == 'bidTypeId') {
-      return bidTypes.get(comparisonCriteriaValues[index], this.t('general:comparison:other'));
+      return bidTypes.get(comparisonCriteriaValues[index], t('general:comparison:other'));
     } if (compareBy == 'procuringEntityId') {
       const orgId = comparisonCriteriaValues[index];
-      return this.state.orgNames[orgId] || orgId || this.t('general:comparison:other');
+      return this.state.orgNames[orgId] || orgId || t('general:comparison:other');
     }
-    return comparisonCriteriaValues[index] || this.t('general:comparison:other');
+    return comparisonCriteriaValues[index] || t('general:comparison:other');
   }
 
   render() {
     const {
       compareBy, comparisonData, comparisonCriteriaValues, filters, requestNewComparisonData, years, width,
-      translations, styling, monthly, months,
+      t, styling, monthly, months,
     } = this.props;
     if (!comparisonCriteriaValues.length) return null;
     const Component = this.getComponent();
@@ -77,7 +80,7 @@ class Comparison extends orgNamesFetching(translatable(PureRenderCompoent)) {
         filters: comparisonFilters,
         years,
         months,
-        t: this.t.bind(this),
+        t,
       });
       return (
         <div className="col-md-6 comparison" key={index} ref={ref}>
@@ -90,7 +93,7 @@ class Comparison extends orgNamesFetching(translatable(PureRenderCompoent)) {
             months={months}
             title={this.getTitle(index)}
             width={width / 2}
-            translations={translations}
+            t={t}
             styling={styling}
             legend="h"
             {...rangeProp}
@@ -138,4 +141,4 @@ Comparison.decorateFilters = cacheFn((filters, compareBy, comparisonCriteriaValu
   .map((criteriaValue) => filters.set(compareBy, criteriaValue))
   .push(filters.set(getInverseFilter(compareBy), comparisonCriteriaValues)));
 
-export default Comparison;
+export default withTranslation()(Comparison);

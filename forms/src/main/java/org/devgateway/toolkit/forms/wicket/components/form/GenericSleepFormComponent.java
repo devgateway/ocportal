@@ -39,9 +39,13 @@ public class GenericSleepFormComponent<T> extends FieldPanel<T> implements DgFmF
         final IModel<String> labelModel = new ResourceModel(getId() + ".label");
         add(new Label("label", labelModel));
 
-        final Label value = new Label("value", new ViewModeConverterModel<>(getModel()));
+        add(newValueComponent("value"));
+    }
+
+    protected Component newValueComponent(String id) {
+        Label value = new Label(id, new ViewModeConverterModel<>(getModel()));
         value.setEscapeModelStrings(false);
-        add(value);
+        return value;
     }
 
     @Override

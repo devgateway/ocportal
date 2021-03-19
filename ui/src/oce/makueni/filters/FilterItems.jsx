@@ -6,7 +6,6 @@ const FilterItems = ({ ...otherProps }) => <FilterItemTypeAhead ep="/makueni/fil
 
 FilterItems.propTypes = {
   onChange: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired,
 };
 
 export default FilterItems;

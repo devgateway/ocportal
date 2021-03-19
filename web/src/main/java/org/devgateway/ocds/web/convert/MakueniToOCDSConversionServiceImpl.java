@@ -165,9 +165,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private MakueniLocationRepository makueniLocationRepository;
 
     @Autowired
-    private FiscalYearBudgetService fiscalYearBudgetService;
-
-    @Autowired
     private AdminSettingsRepository adminSettingsRepository;
 
     @Autowired
@@ -559,16 +556,19 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public MakueniBudgetBreakdown createPlanningBudgetBreakdown(TenderProcess tenderProcess) {
-        FiscalYearBudget fiscalYearBudget = fiscalYearBudgetService.findByDepartmentAndFiscalYear(
-                tenderProcess.getDepartment(), tenderProcess.getProcurementPlan().getFiscalYear());
-        MakueniBudgetBreakdown budgetBreakdown = null;
-        if (fiscalYearBudget != null) {
-            budgetBreakdown = new MakueniBudgetBreakdown();
-            safeSet(budgetBreakdown::setAmount, fiscalYearBudget::getAmountBudgeted, this::convertAmount);
-            safeSet(budgetBreakdown::setSourceParty, tenderProcess::getDepartment, this::convertBuyer);
-            safeSet(budgetBreakdown::setId, fiscalYearBudget::getId, this::longIdToString);
-            safeSet(budgetBreakdown::setPeriod, fiscalYearBudget::getFiscalYear, this::createBudgetPeriod);
-        }
+        ProcurementPlan procurementPlan = tenderProcess.getProcurementPlan();
+
+        MakueniBudgetBreakdown budgetBreakdown = new MakueniBudgetBreakdown();
+
+        safeSet(budgetBreakdown::setAmount,
+                () -> procurementPlan.getPlanItems().stream()
+                        .map(pi -> pi.getQuantity().multiply(pi.getEstimatedCost()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add),
+                this::convertAmount);
+        safeSet(budgetBreakdown::setSourceParty, tenderProcess::getDepartment, this::convertBuyer);
+        safeSet(budgetBreakdown::setId, procurementPlan::getId, this::longIdToString);
+        safeSet(budgetBreakdown::setPeriod, procurementPlan::getFiscalYear, this::createBudgetPeriod);
+
         return budgetBreakdown;
     }
 
@@ -923,20 +923,17 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeConvert(() -> y.orElse(null), converter3).ifPresent(consumer);
     }
 
-    public <S, C, X> void safeSetEach(Consumer<C> consumer, Supplier<Collection<S>> supplier,
-                                      Function<S, X> converter1,
-                                      Function<X, C> converter2) {
+    private <C, S, X> void safeSetEach(Consumer<C> consumer,
+                                       Supplier<S> supplier,
+                                       Function<S, Collection<X>> converter1,
+                                       Function<X, C> converter2) {
         if (supplier == null || consumer == null || converter1 == null || converter2 == null) {
             return;
         }
-
-        Collection<S> o = supplier.get();
-        if (!ObjectUtils.isEmpty(o)) {
-            o.stream().filter(e -> !(e instanceof Statusable) || ((Statusable) e).isExportable()).
-                    map(converter1).filter(Objects::nonNull).
-                    map(converter2).filter(Objects::nonNull).
-                    forEach(consumer);
-        }
+        Optional<Collection<X>> o = safeConvert(supplier, converter1);
+        o.ifPresent(xes -> xes.stream().filter(e -> !(e instanceof Statusable) || ((Statusable) e).isExportable()).
+                map(converter2).filter(Objects::nonNull).
+                forEach(consumer));
     }
 
     public <S, C, X, Y> void safeSetEach(Consumer<C> consumer,
@@ -1022,9 +1019,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, BigDecimal::doubleValue);
         safeSet(ocdsItem::setClassification, purchaseItem::getPlanItem, this::createPlanItemClassification);
-        safeSet(ocdsItem::setTargetGroup, purchaseItem::getPlanItem, PlanItem::getTargetGroup,
-                this::categoryLabel
-        );
+        safeSetEach(ocdsItem.getTargetGroup()::add, purchaseItem::getPlanItem,
+                PlanItem::getTargetGroup, this::categoryLabel);
         safeSet(ocdsItem::setTargetGroupValue, purchaseItem::getPlanItem, PlanItem::getTargetGroupValue,
                 this::convertAmount
         );

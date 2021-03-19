@@ -86,16 +86,16 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         ComponentUtil.addDateField(editForm, "approvedDate");
 
         formDocs.maxFiles(1);
-    }
-
-    @Override
-    protected void setButtonsPermissions() {
-        super.setButtonsPermissions();
 
         FileInputBootstrapFormComponent completionCertificate =
                 new FileInputBootstrapFormComponent("completionCertificate");
         completionCertificate.maxFiles(1);
         editForm.add(completionCertificate);
+    }
+
+    @Override
+    protected void setButtonsPermissions() {
+        super.setButtonsPermissions();
 
         saveTerminateButton.setVisibilityAllowed(false);
     }

@@ -1,9 +1,9 @@
-import { tCreator } from '../../translatable';
 import React, { useEffect } from 'react';
-import { fetch } from '../../api/Api';
 import { Checkbox, ControlLabel, FormGroup } from 'react-bootstrap';
-import './styles.css';
 import { useImmer } from 'use-immer';
+import { useTranslation } from 'react-i18next';
+import { fetch } from '../../api/Api';
+import './styles.css';
 
 const MultipleSelect = (props) => {
   const { ep, value = [], onChange } = props;
@@ -25,7 +25,7 @@ const MultipleSelect = (props) => {
   const totalOptions = options.length;
   const selectedCount = options.filter((option, key) => selected.has(getId(option, key))).length;
 
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const onToggle = (id) => {
     if (selected.has(id)) {

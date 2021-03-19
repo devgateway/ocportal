@@ -12,7 +12,10 @@
       "properties": {
         "targetGroup": {
           "title": "Target Group",
-          "$ref": "#/definitions/TargetGroup"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TargetGroup"
+          }
         },
         "targetGroupValue": {
           "title": "Target Group Value",
