@@ -2,14 +2,14 @@ import React from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, LabelList, ResponsiveContainer, Tooltip,
 } from 'recharts';
-import { tCreator } from '../../../translatable';
 import Popup from './popup';
 import { renderTopLeftLabel } from '../../archive/tools';
+import { useTranslation } from 'react-i18next';
 
 const ProcurementsByStatus = ({
-  data, length, translations, zoomed,
+  data, length, zoomed,
 }) => {
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   let height = 350;
   let slicedData;
@@ -49,7 +49,7 @@ const ProcurementsByStatus = ({
             >
               <XAxis type="number" />
               <YAxis type="category" hide dataKey="status" />
-              <Tooltip content={<Popup />} translations={translations} cursor={false} />
+              <Tooltip content={<Popup />} cursor={false} />
               <Bar
                 name={t('crd:procuringEntities:byStatus:title')}
                 dataKey="count"

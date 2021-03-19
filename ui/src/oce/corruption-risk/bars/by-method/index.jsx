@@ -8,14 +8,14 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import { tCreator } from '../../../translatable';
 import Popup from './popup';
 import { renderTopLeftLabel } from '../../archive/tools';
+import { useTranslation } from 'react-i18next';
 
 const ProcurementsByMethod = ({
-  data, length, translations, zoomed,
+  data, length, zoomed,
 }) => {
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   let height = 350;
   let slicedData;
@@ -55,7 +55,7 @@ const ProcurementsByMethod = ({
             >
               <XAxis type="number" />
               <YAxis type="category" hide dataKey="status" />
-              <Tooltip content={<Popup />} translations={translations} cursor={false} />
+              <Tooltip content={<Popup />} t={t} cursor={false} />
               <Bar
                 name={t('crd:procuringEntities:byMethod:title')}
                 dataKey="count"

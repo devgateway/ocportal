@@ -2,9 +2,9 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ControlLabel, FormGroup } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { fetch } from '../../api/Api';
 import { identity } from '../../tools';
-import { tCreator } from '../../translatable';
 
 const FilterItemTypeAhead = (props) => {
   const [options, setOptions] = useState([]);
@@ -26,7 +26,7 @@ const FilterItemTypeAhead = (props) => {
     }
   };
 
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   return (
     <FormGroup>
@@ -47,7 +47,6 @@ const FilterItemTypeAhead = (props) => {
 };
 
 FilterItemTypeAhead.propTypes = {
-  translations: PropTypes.object.isRequired,
   ep: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   multiple: PropTypes.bool,

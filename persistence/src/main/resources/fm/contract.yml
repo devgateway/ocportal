@@ -24,6 +24,14 @@
   mandatory: yes
   enabled: yes
   visible: yes
+- name: contractForm.contractExtensionDate
+  mandatory: no
+  enabled: yes
+  visible: no
+- name: contractForm.reasonForExtension
+  mandatory: no
+  enabled: yes
+  visible: no
 - name: contractForm.contractDocs
   mandatory: no
   enabled: yes
@@ -165,6 +173,14 @@
   visible: yes
   visibleDeps:
     - contractForm.expiryDate
+- name: publicView.contract.contractExtensionDate
+  visible: yes
+  visibleDeps:
+    - contractForm.contractExtensionDate
+- name: publicView.contract.reasonForExtension
+  visible: yes
+  visibleDeps:
+    - contractForm.reasonForExtension
 - name: publicView.contract.awardee.label
   visible: yes
   visibleDeps:

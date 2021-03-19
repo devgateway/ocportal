@@ -1,6 +1,8 @@
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import { pluckImm } from '../../tools';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../translatable';
 
 class NrCancelled extends FrontendDateFilterableChart {
   static getName(t) { return t('charts:nrCancelled:title'); }
@@ -8,11 +10,11 @@ class NrCancelled extends FrontendDateFilterableChart {
   getData() {
     const data = super.getData();
     if (!data) return [];
-    const { years } = this.props;
+    const { years, t } = this.props;
 
     const monthly = data.hasIn([0, 'month']);
     const dates = monthly
-      ? data.map(pluckImm('month')).map((month) => this.tMonth(month, years)).toArray()
+      ? data.map(pluckImm('month')).map((month) => tMonth(t, month, years)).toArray()
       : data.map(pluckImm('year')).toArray();
 
     return [{
@@ -28,13 +30,14 @@ class NrCancelled extends FrontendDateFilterableChart {
 
   getLayout() {
     const { hoverFormat } = this.props.styling.charts;
+    const { t } = this.props;
     return {
       xaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         type: 'category',
       },
       yaxis: {
-        title: this.t('charts:nrCancelled:yAxisTitle'),
+        title: t('charts:nrCancelled:yAxisTitle'),
         hoverformat: hoverFormat,
         tickprefix: '   ',
       },
@@ -45,5 +48,9 @@ class NrCancelled extends FrontendDateFilterableChart {
 NrCancelled.endpoint = 'percentTendersCancelled';
 NrCancelled.excelEP = 'numberCancelledFundingExcelChart';
 NrCancelled.getMaxField = (imm) => imm.get('totalCancelled');
+
+NrCancelled.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(NrCancelled, 'viz.me.chart.nrCancelled');

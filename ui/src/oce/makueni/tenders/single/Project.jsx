@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
+import { useTranslation } from 'react-i18next';
 import { Item } from './Item';
 import fmConnect from '../../../fm/fm';
 import FileDownloadLinks from './FileDownloadLinks';
 import { getProject } from '../../../api/Api';
-import { tCreator } from '../../../translatable';
 import { setImmer } from '../../../tools';
 
 const Project = (props) => {
   const [data, updateData] = useImmer(undefined);
   const { navigate, isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getProject({ id: props.id }).then(setImmer(updateData));
@@ -103,7 +103,6 @@ Project.propTypes = {
   navigate: PropTypes.func.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
-  translations: PropTypes.object.isRequired,
 };
 
 export default fmConnect(Project);
