@@ -1,14 +1,14 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import NoDataMessage from './NoData';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const TenderQuotation = (props) => {
   const { data, isFeatureVisible } = props;
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
   const { currencyFormatter, formatDate } = props.styling.tables;
 
   // eslint-disable-next-line no-unused-vars
@@ -64,29 +64,51 @@ const TenderQuotation = (props) => {
                   <div key={bids._id} className="box">
                     <div className="row">
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.label')
-                    && <Item label={t('tenderQuotation:bids:supplierLabel')} value={bids.supplier.label} col={6} />}
+                      && <Item label={t('tenderQuotation:bids:supplierLabel')} value={bids.supplier.label} col={6} />}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.code')
-                    && <Item label={t('tenderQuotation:bids:supplierCode')} value={bids.supplier.code} col={6} />}
+                      && <Item label={t('tenderQuotation:bids:supplierCode')} value={bids.supplier.code} col={6} />}
+                      {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.targetGroups')
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierTargetGroups')}
+                          value={(bids.supplier.targetGroups || []).map((c) => c.label).join(', ')}
+                          col={6}
+                        />
+                      )}
+                      {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplier.prequalifiedItems')
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierPrequalifiedItems')}
+                          value={(bids.prequalifiedItems || []).join(', ')}
+                          col={6}
+                        />
+                      )}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplierScore')
-                    && <Item label={t('tenderQuotation:bids:supplierScore')} value={bids.supplierScore} col={3} />}
+                      && <Item label={t('tenderQuotation:bids:supplierScore')} value={bids.supplierScore} col={3} />}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplierRanking')
-                    && <Item label={t('tenderQuotation:bids:supplierRanking')} value={bids.supplierRanking} col={3} />}
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierRanking')}
+                          value={bids.supplierRanking}
+                          col={3}
+                        />
+                      )}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.quotedAmount')
-                    && (
-                    <Item
-                      label={t('tenderQuotation:bids:quotedAmount')}
-                      value={currencyFormatter(bids.quotedAmount)}
-                      col={3}
-                    />
-                    )}
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:quotedAmount')}
+                          value={currencyFormatter(bids.quotedAmount)}
+                          col={3}
+                        />
+                      )}
                       {isFeatureVisible('publicView.tenderQuotationEvaluation.bids.supplierResponsiveness')
-                    && (
-                    <Item
-                      label={t('tenderQuotation:bids:supplierResponsiveness')}
-                      value={bids.supplierResponsiveness}
-                      col={3}
-                    />
-                    )}
+                      && (
+                        <Item
+                          label={t('tenderQuotation:bids:supplierResponsiveness')}
+                          value={bids.supplierResponsiveness}
+                          col={3}
+                        />
+                      )}
                     </div>
                   </div>
                 ))
@@ -107,7 +129,7 @@ const TenderQuotation = (props) => {
     </div>
   );
 
-  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getQuotationView(data[0]));
+  return (data === undefined ? <NoDataMessage /> : getQuotationView(data[0]));
 };
 
 TenderQuotation.propTypes = defaultSingleTenderTabTypes;

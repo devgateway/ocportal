@@ -4,11 +4,11 @@ import URI from 'urijs';
 import Cookies from 'universal-cookie';
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
+import { useTranslation } from 'react-i18next';
 import './header.scss';
 import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { tCreator } from '../translatable';
 import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
 import makueniLogo from '../resources/makueni-logo.png';
@@ -50,9 +50,9 @@ const handleIntroJS = () => {
 };
 
 const Header = ({
-  translations, onSwitch, selected, styling, isFeatureVisible,
+  onSwitch, selected, styling, isFeatureVisible,
 }) => {
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const tabs = [
     {
@@ -205,7 +205,6 @@ const Header = ({
 };
 
 Header.propTypes = {
-  translations: PropTypes.object.isRequired,
   selected: PropTypes.string,
   onSwitch: PropTypes.func.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,

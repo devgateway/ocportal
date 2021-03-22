@@ -1,15 +1,15 @@
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useImmer } from 'use-immer';
+import { useTranslation } from 'react-i18next';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import '../makueni.scss';
 import ProcurementPlan from './single/procurementPlan';
-import React, { useEffect } from 'react';
 import Footer from '../../layout/footer';
 import FileDownloadLinks from '../tenders/single/FileDownloadLinks';
 import FiltersProcurementPlanWrapper from '../filters/FiltersProcurementPlanWrapper';
-import { tCreator } from '../../translatable';
 import { getProcurementPlans } from '../../api/Api';
-import PropTypes from 'prop-types';
-import { useImmer } from 'use-immer';
 import fmConnect from '../../fm/fm';
 
 const MakueniProcurementPlans = (props) => {
@@ -55,11 +55,10 @@ const MakueniProcurementPlans = (props) => {
     <FiltersProcurementPlanWrapper
       filters={state.filters}
       applyFilters={setFilters}
-      translations={props.translations}
     />
   );
 
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const ppLink = (navigate) => (ppId, data, formatExtraData, r) => (
     <a
@@ -113,7 +112,6 @@ const MakueniProcurementPlans = (props) => {
     <div className="container-fluid dashboard-default">
 
       <Header
-        translations={props.translations}
         onSwitch={props.onSwitch}
         styling={props.styling}
         selected="procurement-plan"
@@ -151,7 +149,6 @@ const MakueniProcurementPlans = (props) => {
               <ProcurementPlan
                 id={id}
                 navigate={navigate}
-                translations={props.translations}
                 styling={props.styling}
               />
             )
@@ -190,7 +187,7 @@ const MakueniProcurementPlans = (props) => {
         </div>
       </div>
       )}
-      <Footer translations={props.translations} />
+      <Footer />
     </div>
   );
 };

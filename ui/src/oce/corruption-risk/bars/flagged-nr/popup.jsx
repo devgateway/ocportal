@@ -1,10 +1,10 @@
 import React from 'react';
-import translatable from '../../../translatable';
+import { withTranslation } from 'react-i18next';
 
-class Popup extends translatable(React.PureComponent) {
+class Popup extends React.PureComponent {
   render() {
     const {
-      coordinate, active, viewBox, payload,
+      coordinate, active, viewBox, payload, t,
     } = this.props;
     if (!active || payload == null || !payload[0]) return null;
 
@@ -20,10 +20,10 @@ class Popup extends translatable(React.PureComponent) {
     };
 
     const label = count === 1
-      ? this.t('crd:supplier:flaggedNr:popup:sg')
-      : this.t('crd:supplier:flaggedNr:popup:pl');
+      ? t('crd:supplier:flaggedNr:popup:sg')
+      : t('crd:supplier:flaggedNr:popup:pl');
 
-    const indicatorName = this.t(`crd:indicators:${indicatorId}:name`);
+    const indicatorName = t(`crd:indicators:${indicatorId}:name`);
 
     return (
       <div>
@@ -40,4 +40,4 @@ class Popup extends translatable(React.PureComponent) {
   }
 }
 
-export default Popup;
+export default withTranslation()(Popup);

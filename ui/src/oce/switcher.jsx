@@ -13,7 +13,7 @@ class OCESwitcher extends React.Component {
   }
 
   render() {
-    const { translations, styling } = this.props;
+    const { styling, t, i18n } = this.props;
     const { views } = this.constructor;
 
     const [optDashboard, ...route] = this.state.route;
@@ -23,17 +23,17 @@ class OCESwitcher extends React.Component {
     return (
       <CurrentView
         onSwitch={navigate}
-        translations={translations}
         styling={styling}
         route={route}
         navigate={navigate.bind(null, dashboard)}
+        t={t}
+        i18n={i18n}
       />
     );
   }
 }
 
 OCESwitcher.propTypes = {
-  translations: PropTypes.object.isRequired,
   styling: PropTypes.object.isRequired,
 };
 

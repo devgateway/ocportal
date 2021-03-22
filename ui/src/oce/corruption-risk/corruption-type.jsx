@@ -3,27 +3,26 @@ import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { cacheFn, pluckImm } from '../tools';
 import CustomPopupChart from './custom-popup-chart';
-import translatable from '../translatable';
 import CRDPage from './page';
 import { colorLuminance, sortByField } from './tools';
 import Crosstab from './crosstab';
 import Visualization from '../visualization';
 import frontendDateFilterable from '../visualizations/frontend-date-filterable';
 import fmConnect from '../fm/fm';
+import { tMonth } from '../translatable';
 
 class IndicatorTile extends CustomPopupChart {
   getData() {
     const color = this.props.styling.charts.traceColors[2];
     let data = super.getData();
     if (!data) return [];
-    const { monthly } = this.props;
-    const { years } = this.props;
+    const { monthly, years, t } = this.props;
     data = data.sort(sortByField(monthly ? 'month' : 'year'));
 
     const dates = monthly
       ? data.map((datum) => {
         const month = datum.get('month');
-        return this.tMonth(month, years);
+        return tMonth(t, month, years);
       }).toJS()
       : data.map(pluckImm('year')).toJS();
 
@@ -73,7 +72,7 @@ class IndicatorTile extends CustomPopupChart {
   }
 
   getPopup() {
-    const { monthly } = this.props;
+    const { monthly, t } = this.props;
     const { popup } = this.state;
     const { year } = popup;
     const data = super.getData();
@@ -82,7 +81,7 @@ class IndicatorTile extends CustomPopupChart {
     if (monthly) {
       datum = data.find((datum) => {
         const month = datum.get('month');
-        return year === this.t(`general:months:${month}`);
+        return year === t(`general:months:${month}`);
       });
     } else {
       datum = data.find((datum) => datum.get('year') === year);
@@ -98,15 +97,15 @@ class IndicatorTile extends CustomPopupChart {
             <hr />
           </div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:corruptionType:indicatorTile:procurementsFlagged')}
+            {t('crd:corruptionType:indicatorTile:procurementsFlagged')}
           </div>
           <div className="col-sm-4 text-left info">{datum.get('totalTrue')}</div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:corruptionType:indicatorTile:eligibleProcurements')}
+            {t('crd:corruptionType:indicatorTile:eligibleProcurements')}
           </div>
           <div className="col-sm-4 text-left info">{datum.get('totalPrecondMet')}</div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:corruptionType:indicatorTile:percentEligibleFlagged')}
+            {t('crd:corruptionType:indicatorTile:percentEligibleFlagged')}
           </div>
           <div className="col-sm-4 text-left info">
             {datum.get('percentTruePrecondMet').toFixed(2)}
@@ -114,7 +113,7 @@ class IndicatorTile extends CustomPopupChart {
             %
           </div>
           <div className="col-sm-8 text-right title">
-            {this.t('crd:corruptionType:indicatorTile:percentProcurementsEligible')}
+            {t('crd:corruptionType:indicatorTile:percentProcurementsEligible')}
           </div>
           <div className="col-sm-4 text-left info">
             {datum.get('percentPrecondMet').toFixed(2)}
@@ -127,6 +126,10 @@ class IndicatorTile extends CustomPopupChart {
     );
   }
 }
+
+IndicatorTile.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 function groupBy3(arr) {
   if (arr.length === 0) return [];
@@ -167,7 +170,7 @@ class AllTiles extends frontendDateFilterable(Visualization) {
 
   render() {
     const {
-      indicators, onGotoIndicator, corruptionType, translations, filters, years, months, monthly, width, styling,
+      indicators, onGotoIndicator, corruptionType, t, filters, years, months, monthly, width, styling,
       indicatorTiles,
     } = this.props;
 
@@ -176,8 +179,8 @@ class AllTiles extends frontendDateFilterable(Visualization) {
         {groupBy3(indicators).map((row) => (
           <div className="row" key={row.join()}>
             {row.map((indicator) => {
-              const indicatorName = this.t(`crd:indicators:${indicator}:name`);
-              const indicatorDescription = this.t(`crd:indicators:${indicator}:shortDescription`);
+              const indicatorName = t(`crd:indicators:${indicator}:name`);
+              const indicatorDescription = t(`crd:indicators:${indicator}:shortDescription`);
               const stats = getStatsForFlag(indicatorTiles, indicator);
               return (
                 <div
@@ -192,7 +195,7 @@ class AllTiles extends frontendDateFilterable(Visualization) {
                     <p>{indicatorDescription}</p>
                     <IndicatorTile
                       indicator={indicator}
-                      translations={translations}
+                      t={t}
                       filters={filters}
                       data={stats}
                       requestNewData={() => null}
@@ -217,9 +220,13 @@ class AllTiles extends frontendDateFilterable(Visualization) {
   }
 }
 
+AllTiles.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
 AllTiles.endpoint = 'flags/stats';
 
-class CorruptionType extends translatable(CRDPage) {
+class CorruptionType extends CRDPage {
   constructor() {
     super();
     this.state = {
@@ -236,7 +243,7 @@ class CorruptionType extends translatable(CRDPage) {
   render() {
     const {
       indicators, onGotoIndicator, corruptionType, filters, years, monthly, months,
-      translations, width, styling, isFeatureVisible,
+      t, width, styling, isFeatureVisible,
     } = this.props;
     const { crosstab, indicatorTiles } = this.state;
     if (!indicators || !indicators.length) return null;
@@ -246,10 +253,10 @@ class CorruptionType extends translatable(CRDPage) {
         {isFeatureVisible('crd.flag.overview.charts')
         && (
           <>
-            <h2 className="page-header">{this.t(`crd:corruptionType:${corruptionType}:pageTitle`)}</h2>
+            <h2 className="page-header">{t(`crd:corruptionType:${corruptionType}:pageTitle`)}</h2>
             <p
               className="introduction"
-              dangerouslySetInnerHTML={{ __html: this.t(`crd:corruptionType:${corruptionType}:introduction`) }}
+              dangerouslySetInnerHTML={{ __html: t(`crd:corruptionType:${corruptionType}:introduction`) }}
             />
             <AllTiles
               corruptionType={corruptionType}
@@ -262,7 +269,7 @@ class CorruptionType extends translatable(CRDPage) {
               monthly={monthly}
               width={width}
               styling={styling}
-              translations={translations}
+              t={t}
               requestNewData={(_, data) => this.setState({ indicatorTiles: data })}
             />
           </>
@@ -271,9 +278,9 @@ class CorruptionType extends translatable(CRDPage) {
         && (
           <section>
             <h3 className="page-header">
-              {this.t(`crd:corruptionType:${corruptionType}:crosstabTitle`)}
+              {t(`crd:corruptionType:${corruptionType}:crosstabTitle`)}
             </h3>
-            <p className="introduction">{this.t(`crd:corruptionType:${corruptionType}:crosstab`)}</p>
+            <p className="introduction">{t(`crd:corruptionType:${corruptionType}:crosstab`)}</p>
             <Crosstab
               styling={styling}
               filters={filters}
@@ -283,7 +290,7 @@ class CorruptionType extends translatable(CRDPage) {
               indicators={indicators}
               data={crosstab}
               requestNewData={(_, data) => this.setState({ crosstab: data })}
-              translations={translations}
+              t={t}
             />
           </section>
         )}
@@ -294,6 +301,7 @@ class CorruptionType extends translatable(CRDPage) {
 
 CorruptionType.propTypes = {
   isFeatureVisible: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 export default fmConnect(CorruptionType);
