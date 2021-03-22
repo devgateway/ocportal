@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.service.prequalification;
 import com.google.common.collect.ImmutableSet;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
@@ -119,14 +120,14 @@ public class PrequalifiedSupplierServiceImpl
     }
 
     @Override
-    public List<String> findItemsForBid(Bid bid) {
+    public List<String> findItemsForBid(Bid bid, Tender tender) {
         Supplier supplier = bid.getSupplier();
 
         if (supplier == null) {
             return Collections.emptyList();
         }
 
-        Date tenderInvitationDate = bid.getParent().getTenderProcess().getSingleTender().getInvitationDate();
+        Date tenderInvitationDate = tender.getInvitationDate();
         PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
 
         if (yearRange == null) {

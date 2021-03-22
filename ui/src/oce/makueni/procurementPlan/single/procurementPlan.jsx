@@ -148,7 +148,7 @@ const ProcurementPlan = (props) => {
                       && (
                       <Item
                         label={t('procurementPlan:item:targetGroup')}
-                        value={(planItem.targetGroup || {}).label}
+                        value={planItem.targetGroup && planItem.targetGroup.map((item) => item.label).join(', ')}
                         col={3}
                       />
                       )}
