@@ -58,13 +58,13 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
-    @Size(max = 1)
+    //@Size(max = 1)
     private List<TargetGroup> targetGroup = new ArrayList<>();
 
-    @ExcelExport(useTranslation = true, name = "Target Group Value (KES)")
+    @ExcelExport(useTranslation = true, name = "AGPO Category Value (KES)")
     private BigDecimal targetGroupValue;
 
     @ExcelExport(useTranslation = true, name = "1st Quarter (KES)")
