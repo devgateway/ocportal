@@ -1547,4 +1547,14 @@
 
     <!--Change Set Placeholder 20-->
 
+
+    <changeSet id="OCMAKU-945-multiple-planitem-target-groups" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="plan_item_target_group"/>
+        </preConditions>
+    <sql>
+        insert into plan_item_target_group (plan_item_id, target_group_id)
+        (select id,target_group_id from plan_item where target_group_id is not null)
+    </sql>
+    </changeSet>
 </databaseChangeLog>

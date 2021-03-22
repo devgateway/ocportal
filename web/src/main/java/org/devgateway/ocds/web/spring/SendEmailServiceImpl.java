@@ -134,9 +134,8 @@ public class SendEmailServiceImpl implements SendEmailService {
             String url;
             if (person.getRoles().stream().anyMatch(r -> r.getAuthority().equals(ROLE_PMC_USER))) {
                 url = "\nPlease install PMC Reporter app from Google Play\n"
-                        + "<a href='https://play.google.com/store/apps/details?id=org.devgateway.makueni.pmcdc&hl="
-                        + "en&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>"
-                        + "<img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/"
+                        + "<a href='https://play.google.com/store/apps/details?id=" + DBConstants.ANDROID_PACKAGE_NAME
+                        + "'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/"
                         + "images/badges/en_badge_web_generic.png' style='width: 250px;'/>"
                         + "</a>";
             } else {

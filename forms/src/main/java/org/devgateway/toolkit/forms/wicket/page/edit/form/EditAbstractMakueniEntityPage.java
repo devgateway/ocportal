@@ -26,7 +26,6 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
-import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +45,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
-
-    @SpringBean
-    protected MakueniEntityServiceResolver makeniEntityServiceResolver;
 
     private Fragment extraStatusEntityButtons;
 
