@@ -145,10 +145,10 @@ public class DirectProcurementsAboveExporter {
         sheet.setDefaultColumnStyle(CONTRACT_COMPLETION_DATE, dateCellStyle);
 
         sheet.setDefaultColumnWidth(12);
-        sheet.setColumnWidth(TENDER_OBJECTIVE, 18*256);
-        sheet.setColumnWidth(TENDER_OPEN_DATE, 18*256);
-        sheet.setColumnWidth(AWARD_NOTIFICATION_DATE, 18*256);
-        sheet.setColumnWidth(CONTRACT_COMPLETION_DATE, 18*256);
+        sheet.setColumnWidth(TENDER_OBJECTIVE, 18 * 256);
+        sheet.setColumnWidth(TENDER_OPEN_DATE, 18 * 256);
+        sheet.setColumnWidth(AWARD_NOTIFICATION_DATE, 18 * 256);
+        sheet.setColumnWidth(CONTRACT_COMPLETION_DATE, 18 * 256);
 
         XSSFRow hRow = sheet.createRow(0);
         hRow.setRowStyle(headerCellStyle);
