@@ -27,6 +27,9 @@ public final class DBConstants {
 
     public static final String INSTANCE_NAME = "Elgeyo Marakwet";
 
+    public static final String ANDROID_PACKAGE_NAME = "org.devgateway.makueni.pmcdc";
+
+
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     private DBConstants() {
@@ -51,7 +54,7 @@ public final class DBConstants {
 
         public static final List<String> EXPORTABLE = Collections.unmodifiableList(Arrays.asList(APPROVED, TERMINATED));
     }
-    
+
     public static final class SupplierResponsiveness {
         public static final String FAIL = "Fail";
         public static final String PASS = "Pass";

@@ -121,6 +121,9 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         item.add(formDocs);
+
+        final FileInputBootstrapFormComponent lettersOfRegret = new FileInputBootstrapFormComponent("lettersOfRegret");
+        item.add(lettersOfRegret);
     }
 
     private void addSupplierInfo(ListItem<AwardNotificationItem> item) {

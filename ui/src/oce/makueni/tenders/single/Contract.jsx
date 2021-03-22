@@ -36,6 +36,12 @@ const Contract = (props) => {
         {isFeatureVisible('publicView.contract.expiryDate')
         && <Item label={t('contract:expiryDate')} value={formatDate(contract.expiryDate)} col={4} />}
 
+        {isFeatureVisible('publicView.contract.contractExtensionDate')
+        && <Item label={t('contract:contractExtensionDate')} value={formatDate(contract.contractExtensionDate)} col={4} />}
+
+        {isFeatureVisible('publicView.contract.reasonForExtension')
+        && <Item label={t('contract:reasonForExtension')} value={contract.reasonForExtension} col={4} />}
+
         {isFeatureVisible('publicView.contract.awardee.label')
         && <Item label={t('contract:awardee:label')} value={contract.awardee.label} col={4} />}
 
