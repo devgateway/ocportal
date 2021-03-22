@@ -8,21 +8,21 @@ import java.util.Set;
 
 public class MakueniItem extends Item {
     /**
-     * target Group
+     * AGPO Category
      * <p>
-     * TThe name of the target group. Eg PWD, Women, Youth, etc.
+     * The name of the AGPO Category. Eg PWD, Women, Youth, etc.
      */
     @JsonProperty("targetGroup")
-    @JsonPropertyDescription("The name of the target group. Eg PWD, Women, Youth, etc.")
+    @JsonPropertyDescription("The name of the AGPO Category. Eg PWD, Women, Youth, etc.")
     @ExcelExport
     private Set<String> targetGroup;
 
     /**
-     * The monetary value of a single unit, allocated to the target group
+     * The monetary value of a single unit, allocated to the AGPO Category
      */
     @JsonProperty("targetGroupValue")
     @ExcelExport
-    @JsonPropertyDescription("The monetary value of a single unit, allocated to the target group")
+    @JsonPropertyDescription("The monetary value of a single unit, allocated to the AGPO Category")
     private Amount targetGroupValue;
 
     public Set<String> getTargetGroup() {

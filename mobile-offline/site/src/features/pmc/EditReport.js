@@ -113,7 +113,6 @@ export function EditReport(props) {
         notNull(errors, report, 'emergingComplaints', 'Required');
         notNull(errors, report, 'pmcChallenges', 'Required');
 
-        nonEmptyArray(errors, report, 'pmcNotes', 'Please add at least one note');
         if (report.pmcNotes && report.pmcNotes.length) {
             errors.pmcNotesArray = report.pmcNotes.map(note => {
                 let noteErrors = {};
