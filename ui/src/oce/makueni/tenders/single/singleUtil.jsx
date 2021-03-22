@@ -4,7 +4,6 @@ export const commonTenderTabTypes = {
   styling: PropTypes.object.isRequired,
   fiscalYear: PropTypes.object.isRequired,
   department: PropTypes.object.isRequired,
-  translations: PropTypes.object.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
 };
 

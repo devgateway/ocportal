@@ -4,6 +4,8 @@ import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationY
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.persistence.service.TextSearchableService;
 
+import java.util.Date;
+
 public interface PrequalificationYearRangeService extends BaseJpaService<PrequalificationYearRange>,
         TextSearchableService<PrequalificationYearRange> {
 
@@ -12,4 +14,6 @@ public interface PrequalificationYearRangeService extends BaseJpaService<Prequal
     long countByName(PrequalificationYearRange range);
 
     long countByOverlapping(PrequalificationYearRange range);
+
+    PrequalificationYearRange findByDate(Date date);
 }

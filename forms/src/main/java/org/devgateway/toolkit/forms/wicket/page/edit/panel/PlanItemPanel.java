@@ -25,10 +25,12 @@ import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
@@ -142,8 +144,10 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             sourceOfFunds.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             sourceOfFunds.getField().add(new SourceOfFundsValidator());
 
-            ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
-            ComponentUtil.addBigDecimalField(item, "targetGroupValue")
+        Select2MultiChoiceBootstrapFormComponent<TargetGroup> targetGroup =
+                ComponentUtil.addSelect2MultiChoiceField(item, "targetGroup", targetGroupService);
+        //targetGroup.getField().getSettings().setMultiple(false);
+        ComponentUtil.addBigDecimalField(item, "targetGroupValue")
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
             ComponentUtil.addBigDecimalField(item, "quarter1st")

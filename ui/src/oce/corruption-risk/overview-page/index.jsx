@@ -6,6 +6,8 @@ import { colorLuminance, wireProps } from '../tools';
 import ProcurementsTable from './table';
 import { POPUP_HEIGHT } from '../constants';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../translatable';
 
 const TRACES = ['COLLUSION', 'RIGGING'];
 
@@ -16,13 +18,13 @@ class CorruptionType extends CustomPopupChart {
       grouped[trace] = {};
     });
 
-    const { monthly, years } = this.props;
+    const { monthly, years, t } = this.props;
     data.forEach((datum) => {
       const type = datum.get('type');
       let date;
       if (monthly) {
         const month = datum.get('month');
-        date = this.tMonth(month, years);
+        date = tMonth(t, month, years);
       } else {
         date = datum.get('year');
       }
@@ -37,7 +39,7 @@ class CorruptionType extends CustomPopupChart {
     const data = super.getData();
     if (!data) return [];
     const {
-      styling, months, monthly, years,
+      styling, months, monthly, years, t,
     } = this.props;
     const grouped = this.groupData(data);
 
@@ -57,7 +59,7 @@ class CorruptionType extends CustomPopupChart {
         if (monthly) {
           dates = range(1, 12)
             .filter((month) => months.includes(month))
-            .map((month) => this.tMonth(month, years));
+            .map((month) => tMonth(t, month, years));
 
           values = dates.map((month) => (dataForType[month] ? dataForType[month].flaggedCount : 0));
         } else if (years.length) {
@@ -80,7 +82,7 @@ class CorruptionType extends CustomPopupChart {
           y: values,
           type: 'scatter',
           fill: 'tonexty',
-          name: this.t(`crd:corruptionType:${type}:name`),
+          name: t(`crd:corruptionType:${type}:name`),
           fillcolor: styling.charts.traceColors[index],
           line: {
             color: colorLuminance(styling.charts.traceColors[index], -0.3),
@@ -110,7 +112,7 @@ class CorruptionType extends CustomPopupChart {
     const { popup } = this.state;
     const { year, traceIndex } = popup;
     const corruptionType = TRACES[traceIndex];
-    const { indicatorTypesMapping } = this.props;
+    const { indicatorTypesMapping, t } = this.props;
     const data = this.groupData(super.getData());
     if (!data[corruptionType]) return null;
     const dataForPoint = data[corruptionType][year];
@@ -118,7 +120,7 @@ class CorruptionType extends CustomPopupChart {
     const indicatorCount = Object.keys(indicatorTypesMapping)
       .filter((indicatorId) => indicatorTypesMapping[indicatorId].types.indexOf(dataForPoint.type) > -1).length;
 
-    const percentFlaggedLabel = this.t('crd:overview:overTimeChart:percentFlagged');
+    const percentFlaggedLabel = t('crd:overview:overTimeChart:percentFlagged');
 
     let height = POPUP_HEIGHT;
     let { top } = popup;
@@ -143,19 +145,19 @@ class CorruptionType extends CustomPopupChart {
           <div
             className="col-sm-7 text-right title"
           >
-            {this.t('crd:overview:overTimeChart:indicators')}
+            {t('crd:overview:overTimeChart:indicators')}
           </div>
           <div className="col-sm-5 text-left info">{indicatorCount}</div>
           <div
             className="col-sm-7 text-right title"
           >
-            {this.t('crd:overview:overTimeChart:totalFlags')}
+            {t('crd:overview:overTimeChart:totalFlags')}
           </div>
           <div className="col-sm-5 text-left info">{dataForPoint.flaggedCount}</div>
           <div
             className="col-sm-7 text-right title"
           >
-            {this.t('crd:overview:overTimeChart:totalProcurementsFlagged')}
+            {t('crd:overview:overTimeChart:totalProcurementsFlagged')}
           </div>
           <div className="col-sm-5 text-left info">{dataForPoint.flaggedProjectCount}</div>
           <div className="col-sm-7 text-right title">{percentFlaggedLabel}</div>
@@ -182,14 +184,14 @@ class OverviewPage extends CRDPage {
 
   render() {
     const {
-      indicatorTypesMapping, styling, width, navigate, isFeatureVisible,
+      indicatorTypesMapping, styling, width, navigate, isFeatureVisible, t,
     } = this.props;
     return (
       <div className="page-overview">
         {isFeatureVisible('crd.overview.chart')
         && (
           <section className="chart-corruption-types">
-            <h3 className="page-header">{this.t('crd:overview:overTimeChart:title')}</h3>
+            <h3 className="page-header">{t('crd:overview:overTimeChart:title')}</h3>
             <CorruptionType
               {...wireProps(this, 'corruptionType')}
               styling={styling}
@@ -204,7 +206,7 @@ class OverviewPage extends CRDPage {
         {isFeatureVisible('crd.overview.procurementProcesses')
         && (
           <section>
-            <h3 className="page-header">{this.t('crd:overview:topFlagged:title')}</h3>
+            <h3 className="page-header">{t('crd:overview:topFlagged:title')}</h3>
             <ProcurementsTable
               {...wireProps(this, 'topFlaggedContracts')}
               dataEP="corruptionRiskOverviewTable"
@@ -218,5 +220,9 @@ class OverviewPage extends CRDPage {
     );
   }
 }
+
+OverviewPage.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(OverviewPage);

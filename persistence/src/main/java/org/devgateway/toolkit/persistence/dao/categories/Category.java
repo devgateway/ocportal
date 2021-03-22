@@ -24,6 +24,8 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author idobre
@@ -88,4 +90,7 @@ public class Category extends AbstractAuditableEntity implements Labelable {
         return null;
     }
 
+    public static String categoryLabels(Collection<? extends Category> categories) {
+        return categories.stream().map(Category::getLabel).collect(Collectors.joining(", "));
+    }
 }
