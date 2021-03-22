@@ -12,6 +12,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.java.util.function.serializable.SerializableSupplier;
+import org.devgateway.toolkit.forms.wicket.components.export.AGPOContractsReportPanel;
 import org.devgateway.toolkit.forms.wicket.components.export.AjaxFormListener;
 import org.devgateway.toolkit.forms.wicket.components.export.DirectProcurementsAboveReportPanel;
 import org.devgateway.toolkit.forms.wicket.components.export.GeneralDepartmentReportPanel;
@@ -56,6 +57,11 @@ public class DataExportPage extends BasePage implements AjaxFormListener {
                         new StringResourceModel("directProcurementsAbove")
                                 .setParameters(DBConstants.Reports.DIRECT_PROCUREMENT_THRESHOLD),
                         () -> new DirectProcurementsAboveReportPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("agpoContracts"),
+                        () -> new AGPOContractsReportPanel("exportPanel", DataExportPage.this)));
 
                 return links;
             }

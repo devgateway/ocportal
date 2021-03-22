@@ -3,6 +3,7 @@ package org.devgateway.toolkit.persistence.service.prequalification;
 import com.google.common.collect.ImmutableSet;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -117,29 +119,39 @@ public class PrequalifiedSupplierServiceImpl
             return Collections.emptyList();
         }
 
-        Date tenderInvitationDate = bid.getParent().getTenderProcess().getSingleTender().getInvitationDate();
-        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+        return find(supplier, bid.getParent().getTenderProcess())
+                .map(this::formatItems)
+                .orElse(Collections.emptyList());
+    }
 
-        if (yearRange == null) {
-            return Collections.emptyList();
-        }
-
-        PrequalifiedSupplier prequalifiedSupplier = find(supplier, yearRange);
-
-        if (prequalifiedSupplier == null) {
-            return Collections.emptyList();
-        }
+    private List<String> formatItems(PrequalifiedSupplier prequalifiedSupplier) {
+        PrequalificationYearRange yearRange = prequalifiedSupplier.getYearRange();
 
         return prequalifiedSupplier.getItems().stream()
                 .map(i -> i.getItem().toString(yearRange))
                 .collect(Collectors.toList());
     }
 
-    private PrequalifiedSupplier find(Supplier supplier, PrequalificationYearRange yearRange) {
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, TenderProcess tenderProcess) {
+        if (supplier == null) {
+            return Optional.empty();
+        }
+
+        Date tenderInvitationDate = tenderProcess.getSingleTender().getInvitationDate();
+        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+
+        if (yearRange == null) {
+            return Optional.empty();
+        }
+
+        return find(supplier, yearRange);
+    }
+
+    private Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
         return repository
                 .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
                         cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),
-                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)))
-                .orElse(null);
+                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)));
     }
 }
