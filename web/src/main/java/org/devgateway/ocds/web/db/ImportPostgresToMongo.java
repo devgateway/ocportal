@@ -13,6 +13,7 @@ import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
@@ -167,6 +168,8 @@ public class ImportPostgresToMongo {
                     pr.getPurchaseRequisition().stream().forEach(item -> self.storeMakueniFormFiles(
                             item.getFormDocs()));
 
+                    Tender tender = pr.getSingleTender();
+
                     pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getBillOfQuantities()));
@@ -175,7 +178,7 @@ public class ImportPostgresToMongo {
                             filterNotExportable(pr.getTenderQuotationEvaluation())));
                     pr.getTenderQuotationEvaluation()
                             .forEach(item -> {
-                                item.getBids().forEach(this::computePrequalifiedItems);
+                                item.getBids().forEach(b -> computePrequalifiedItems(b, tender));
                                 self.storeMakueniFormFiles(item.getFormDocs());
                             });
 
@@ -269,8 +272,8 @@ public class ImportPostgresToMongo {
         logger.info("Mongo import ended in: " + stopWatch.getTime() + "ms");
     }
 
-    private void computePrequalifiedItems(Bid bid) {
-        bid.setPrequalifiedItems(prequalifiedSupplierService.findItemsForBid(bid));
+    private void computePrequalifiedItems(Bid bid, Tender tender) {
+        bid.setPrequalifiedItems(prequalifiedSupplierService.findItemsForBid(bid, tender));
     }
 
     public void storeMakueniFormFiles(final Set<FileMetadata> formDocs) {
