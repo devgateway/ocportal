@@ -44,6 +44,7 @@ public final class SecurityConstants {
         public static final String ROLE_ME_PAYMENT_VALIDATOR = "ROLE_ME_PAYMENT_VALIDATOR";
         public static final String ROLE_PROCUREMENT_VALIDATOR = "ROLE_PROCUREMENT_VALIDATOR";
         public static final String ROLE_PROCURING_ENTITY = "ROLE_PROCURING_ENTITY";
+        public static final String ROLE_VALIDATOR_ALL = "ROLE_VALIDATOR_ALL";
         
         public static final List<String> PMC_ROLES = Collections.unmodifiableList(Arrays.asList(Roles.ROLE_PMC_ADMIN,
                 Roles.ROLE_PMC_USER, Roles.ROLE_PMC_VALIDATOR));
