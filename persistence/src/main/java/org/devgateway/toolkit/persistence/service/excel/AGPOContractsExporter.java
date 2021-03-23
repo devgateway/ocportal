@@ -118,7 +118,7 @@ public class AGPOContractsExporter {
 
         row.createCell(COMPANY_NAME).setCellValue(awardee.getLabel());
         row.createCell(DIRECTORS).setCellValue(prequalifiedSupplierService.find(awardee, tenderProcess)
-                .map(this::extractDirectors)
+                .map(ExporterUtil::extractDirectors)
                 .orElse(null));
         row.createCell(SCHEME).setCellValue("AGPO");
         row.createCell(CATEGORY).setCellValue(
@@ -135,15 +135,6 @@ public class AGPOContractsExporter {
         row.createCell(PROCUREMENT_METHOD).setCellValue(tender.getProcurementMethod().getLabel());
         row.createCell(CONTRACT_NO).setCellValue(contract.getReferenceNumber());
         row.createCell(CONTRACT_VALUE).setCellValue(contract.getContractValue().doubleValue());
-    }
-
-    private String extractDirectors(PrequalifiedSupplier prequalifiedSupplier) {
-        return prequalifiedSupplier.getItems().stream()
-                .map(PrequalifiedSupplierItem::getNonNullContact)
-                .map(AbstractContact::getDirectors)
-                .distinct()
-                .sorted()
-                .collect(Collectors.joining(", "));
     }
 
     private Specification<TenderProcess> getSpecification(Date from, Date to) {
