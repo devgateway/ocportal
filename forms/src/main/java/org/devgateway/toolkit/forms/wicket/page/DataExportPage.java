@@ -14,6 +14,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.danekja.java.util.function.serializable.SerializableSupplier;
 import org.devgateway.toolkit.forms.wicket.components.export.AGPOContractsReportPanel;
 import org.devgateway.toolkit.forms.wicket.components.export.AGPOSectionAPanel;
+import org.devgateway.toolkit.forms.wicket.components.export.AGPOSectionBPanel;
 import org.devgateway.toolkit.forms.wicket.components.export.AjaxFormListener;
 import org.devgateway.toolkit.forms.wicket.components.export.DirectProcurementsAboveReportPanel;
 import org.devgateway.toolkit.forms.wicket.components.export.GeneralDepartmentReportPanel;
@@ -68,6 +69,11 @@ public class DataExportPage extends BasePage implements AjaxFormListener {
                         buttonMarkupId,
                         new StringResourceModel("agpoSectionA"),
                         () -> new AGPOSectionAPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("agpoSectionB"),
+                        () -> new AGPOSectionBPanel("exportPanel", DataExportPage.this)));
 
                 return links;
             }
