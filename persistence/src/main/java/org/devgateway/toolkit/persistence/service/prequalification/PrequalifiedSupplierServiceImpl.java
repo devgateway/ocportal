@@ -15,7 +15,6 @@ import org.devgateway.toolkit.persistence.repository.prequalification.Prequalifi
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -134,7 +133,7 @@ public class PrequalifiedSupplierServiceImpl
             return Collections.emptyList();
         }
 
-        PrequalifiedSupplier prequalifiedSupplier = find(supplier, yearRange);
+        PrequalifiedSupplier prequalifiedSupplier = find(supplier, yearRange).orElse(null);
 
         if (prequalifiedSupplier == null) {
             return Collections.emptyList();
@@ -143,13 +142,5 @@ public class PrequalifiedSupplierServiceImpl
         return prequalifiedSupplier.getItems().stream()
                 .map(i -> i.getItem().toString(yearRange))
                 .collect(Collectors.toList());
-    }
-
-    private PrequalifiedSupplier find(Supplier supplier, PrequalificationYearRange yearRange) {
-        return repository
-                .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
-                        cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),
-                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)))
-                .orElse(null);
     }
 }
