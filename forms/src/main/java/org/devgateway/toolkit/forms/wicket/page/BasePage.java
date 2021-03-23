@@ -526,7 +526,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                         "navbar.prequalificationYearRange", FontAwesomeIconType.list
                 );
 
-                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalifiedSupplierPage.class,
+                createAddFmListMenuWithRole(list, ROLE_USER, ListPrequalifiedSupplierPage.class,
                         "navbar.prequalifiedSupplierPage", FontAwesomeIconType.list
                 );
 
@@ -536,9 +536,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         };
 
         metadataMenu.setIconType(FontAwesomeIconType.code);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_PROCUREMENT_USER);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER,
-                StringUtils.join(PMC_METADATA_ROLES, ","));
+        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_USER);
         return metadataMenu;
     }
 
