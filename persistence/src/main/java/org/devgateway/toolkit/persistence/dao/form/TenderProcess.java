@@ -62,7 +62,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     @JsonIgnore
     private Set<Tender> tender = new HashSet<>();
 
-    @ExcelExport(separateSheet = true, name = "Tender Quotation Evaluation")
+    @ExcelExport(separateSheet = true, name = "Tender Evaluation")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore

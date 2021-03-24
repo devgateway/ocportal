@@ -6,7 +6,7 @@
     "en": "Allowing Item elements in Planning section"
   },
   "documentationUrl": {
-    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/planning_items"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/planning_items"
   },
   "compatibility": [
     "1.1"
