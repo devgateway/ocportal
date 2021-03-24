@@ -214,6 +214,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 XSSFWorkbook workbook = exporter.export(items);
 
                 ResourceResponse response = new ResourceResponse();
+                response.disableCaching();
                 response.setContentType(Constants.ContentType.XLSX);
                 response.setFileName("Prequalified Suppliers.xlsx");
                 response.setWriteCallback(new WriteCallback() {
