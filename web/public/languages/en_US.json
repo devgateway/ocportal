@@ -782,7 +782,7 @@
   "publicationPolicy:ocdsMapping:text": "We have created an $#$ outlining how the data maps to OCDS, and $#$.",
   "publicationPolicy:ocdsMapping:text:link1": "Excel spreadsheet",
   "publicationPolicy:ocdsMapping:text:link2": "a separate page for the non-OCDS fields",
-  "alerts:title": "Subscribe to Makueni OC Portal Alerts",
+  "alerts:title": "Subscribe to Elgeyo Marakwet OC Portal Alerts",
   "alerts:subtitle": "Sign up for Alerts",
   "alerts:email": "Enter your email address",
   "alerts:invalidEmail": "Email is invalid",
