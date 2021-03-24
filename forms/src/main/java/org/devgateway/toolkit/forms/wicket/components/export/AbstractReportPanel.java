@@ -51,6 +51,7 @@ public abstract class AbstractReportPanel<T> extends Panel {
             @Override
             protected ResourceResponse newResourceResponse(Attributes attributes) {
                 ResourceResponse response = new ResourceResponse();
+                response.disableCaching();
                 response.setContentType(Constants.ContentType.XLSX);
                 response.setFileName(getFileName());
                 response.setWriteCallback(new WriteCallback() {
