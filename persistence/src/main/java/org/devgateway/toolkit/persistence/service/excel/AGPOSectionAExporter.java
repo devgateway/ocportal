@@ -13,6 +13,7 @@ import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.Contract_;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
+import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.dto.NamedDateRange;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
@@ -164,6 +165,8 @@ public class AGPOSectionAExporter {
                 predicates.add(cb.between(contractJoin.get(Contract_.contractApprovalDate), range.getStartDate(),
                         range.getEndDate()));
             }
+
+            predicates.add(cb.equal(r.join(TenderProcess_.tender).get(Tender_.status), DBConstants.Status.APPROVED));
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
