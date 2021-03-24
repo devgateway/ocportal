@@ -13,9 +13,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,8 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
 
     private final CellStyle dataStyleCell;
 
+    private final CellStyle dataDateStyleCell;
+
     private final CellStyle headerStyleCell;
 
     private final CellStyle linkStyleCell;
@@ -53,8 +56,9 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
         // get the styles from workbook without creating them again (by default the workbook has already 1 style)
         if (workbook.getNumCellStyles() > 1) {
             this.dataStyleCell = workbook.getCellStyleAt((short) 1);
-            this.headerStyleCell = workbook.getCellStyleAt((short) 2);
-            this.linkStyleCell = workbook.getCellStyleAt((short) 3);
+            this.dataDateStyleCell = workbook.getCellStyleAt((short) 2);
+            this.headerStyleCell = workbook.getCellStyleAt((short) 3);
+            this.linkStyleCell = workbook.getCellStyleAt((short) 4);
         } else {
             // init the fonts and styles
             this.dataFont = this.workbook.createFont();
@@ -80,6 +84,15 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
             this.dataStyleCell.setVerticalAlignment(VerticalAlignment.CENTER);
             this.dataStyleCell.setWrapText(true);
             this.dataStyleCell.setFont(this.dataFont);
+
+            XSSFWorkbook xssfWorkbook = ((SXSSFWorkbook) workbook).getXSSFWorkbook();
+            short dateFmtIdx = (short) xssfWorkbook.getStylesSource().putNumberFormat("dd/mm/yy");
+
+            this.dataDateStyleCell = this.workbook.createCellStyle();
+            this.dataDateStyleCell.setAlignment(HorizontalAlignment.LEFT);
+            this.dataDateStyleCell.setVerticalAlignment(VerticalAlignment.CENTER);
+            this.dataDateStyleCell.setDataFormat(dateFmtIdx);
+            this.dataDateStyleCell.setFont(this.dataFont);
 
             this.headerStyleCell = this.workbook.createCellStyle();
             this.headerStyleCell.setAlignment(HorizontalAlignment.CENTER);
@@ -130,10 +143,8 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
                             cell.setCellValue(((Boolean) value) ? "Yes" : "No");
                         } else {
                             if (value instanceof Date) {
-                                final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
                                 cell = row.createCell(column);
-                                cell.setCellValue(sdf.format((Date) value));
+                                cell.setCellValue((Date) value);
                             } else {
                                 cell = row.createCell(column, CellType.STRING);
                                 cell.setCellValue(value.toString());
@@ -143,7 +154,7 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
                 }
             }
 
-            cell.setCellStyle(dataStyleCell);
+            cell.setCellStyle((value instanceof Date) ? dataDateStyleCell : dataStyleCell);
         } else {
             // create a CellType.BLANK
             row.createCell(column);
