@@ -11,15 +11,15 @@
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devgateway.makueni</groupId>
-    <artifactId>makueni</artifactId>
-    <version>${revision}</version>
+    <groupId>org.devgateway.ocportal.elgeyo</groupId>
+    <artifactId>elgeyo</artifactId>
+    <version>2.0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Makueni</name>
+    <name>Elgeyo Marakwet</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
     <properties>
-        <revision>1.13.2-SNAPSHOT</revision>
+        <revision>2.0.5-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <liquibase.version>3.8.5</liquibase.version>
@@ -65,7 +65,7 @@
     </issueManagement>
     <ciManagement>
         <system>Jenkins</system>
-        <url>https://ocmakueni.dgstg.org/ci</url>
+        <url>https://elgeyomarakwet.dgstg.org/ci</url>
     </ciManagement>
 
     <scm>
@@ -77,9 +77,9 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-devgateway-oc-makueni</id>
-            <name>devgateway-oc-makueni</name>
-            <url>https://api.bintray.com/maven/devgateway/oc-makueni/oc-makueni/;publish=1</url>
+            <id>bintray-devgateway-oc-elgeyo</id>
+            <name>devgateway-oc-elgeyo</name>
+            <url>https://api.bintray.com/maven/devgateway/oc-elgeyo/oc-elgeyo/;publish=1</url>
         </repository>
     </distributionManagement>
 
@@ -123,27 +123,27 @@
                 <version>${pg.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>persistence</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>persistence-mongodb</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>ui</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>web</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>forms</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -205,9 +205,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>${maven-release-plugin.version}</version>
-                <configuration>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -262,7 +259,7 @@
                     </executions>
                     <dependencies>
                         <dependency>
-                            <groupId>org.devgateway.makueni</groupId>
+                            <groupId>org.devgateway.ocportal.elgeyo</groupId>
                             <artifactId>pmd-rules</artifactId>
                             <version>${revision}</version>
                         </dependency>
