@@ -88,7 +88,7 @@ public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntit
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return "Tender Quotation Evaluation for tender process " + getTenderProcessNotNull().getLabel();
+        return "Tender Evaluation for tender process " + getTenderProcessNotNull().getLabel();
     }
 
     @Override
