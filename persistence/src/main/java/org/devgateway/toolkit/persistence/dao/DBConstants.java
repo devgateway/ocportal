@@ -25,8 +25,7 @@ public final class DBConstants {
 
     public static final String INSTANCE_NAME = "Elgeyo Marakwet";
 
-    public static final String ANDROID_PACKAGE_NAME = "org.devgateway.makueni.pmcdc";
-
+    public static final String ANDROID_PACKAGE_NAME = "org.devgateway.elgeyo.pmcdc";
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
