@@ -2,6 +2,10 @@
   visible: yes
 - name: publicView.filter.fiscalYear
   visible: yes
+- name: publicView.filter.procurementMethodRationale
+  visible: yes
+  visibleDeps:
+    - tenderForm.procurementMethodRationale
 - name: publicView.filter.titleSearch
   visible: yes
 - name: publicView.filter.items
