@@ -28,13 +28,13 @@
   enabled: yes
   visible: yes
 - name: meReportForm.expenditure
-  mandatory: yes
+  mandatory: no
   enabled: yes
   visible: yes
 - name: meReportForm.formDocs
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: meReportForm.inspected
   mandatory: yes
   enabled: yes
@@ -102,14 +102,14 @@
 - name: meReportForm.subcounties
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: meReportForm.submitAndNext
   enabled: yes
   visible: yes
 - name: meReportForm.subwards
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: meReportForm.tenderProcess.project.amountBudgeted
   mandatory: no
   enabled: yes
@@ -163,7 +163,7 @@
 - name: meReportForm.wards
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: meReportForm.wayForward
   mandatory: yes
   enabled: yes
