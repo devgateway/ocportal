@@ -20,6 +20,9 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
     @ApiModelProperty(value = "Item identifier")
     private Long item;
 
+    @ApiModelProperty(value = "Procurement Method Rationale identifier")
+    private Long procurementMethodRationale;
+
     @ApiModelProperty(value = "Subcounty identifier")
     private TreeSet<Long> subcounty;
 
@@ -116,5 +119,14 @@ public class MakueniFilterPagingRequest extends TextSearchRequest {
 
     public void setMonth(final TreeSet<Integer> month) {
         this.month = month;
+    }
+
+
+    public Long getProcurementMethodRationale() {
+        return procurementMethodRationale;
+    }
+
+    public void setProcurementMethodRationale(Long procurementMethodRationale) {
+        this.procurementMethodRationale = procurementMethodRationale;
     }
 }

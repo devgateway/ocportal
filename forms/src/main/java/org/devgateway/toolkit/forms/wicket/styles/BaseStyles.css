@@ -126,19 +126,7 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 50px;
     background-color: #095a14;
-}
-@media (max-width: 1024px){
-  .mainFooter{
-    height: 60px;
-  }
-}
-@media (max-width: 767px){
-  .mainFooter{
-    height: 90px;
-  }
 }
 
 .mainFooter a{
@@ -148,7 +136,8 @@ body {
   color: #eeeeee;
 }
 .mainFooter .text-muted {
-    padding-top: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     color: #eeeeee;
 }
 
