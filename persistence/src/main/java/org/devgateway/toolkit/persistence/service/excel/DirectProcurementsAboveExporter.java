@@ -1,6 +1,9 @@
 package org.devgateway.toolkit.persistence.service.excel;
 
+import static org.devgateway.toolkit.persistence.service.excel.ExporterUtil.createCell;
+
 import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -66,6 +69,12 @@ public class DirectProcurementsAboveExporter {
 
         XSSFWorkbook wb = new XSSFWorkbook();
 
+        XSSFCellStyle dateCellStyle = wb.createCellStyle();
+        dateCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("d-mmm-yy"));
+
+        XSSFCellStyle numberCellStyle = wb.createCellStyle();
+        numberCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0.00"));
+
         XSSFSheet sheet = createSheet(wb);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
@@ -74,30 +83,30 @@ public class DirectProcurementsAboveExporter {
         for (TenderProcess process : list) {
             XSSFRow row = sheet.createRow(rowNum++);
 
-            writeRow(sdf, process, row);
+            writeRow(sdf, process, row, dateCellStyle, numberCellStyle);
         }
 
         return wb;
     }
 
-    private void writeRow(SimpleDateFormat sdf, TenderProcess process, XSSFRow row) {
+    private void writeRow(SimpleDateFormat sdf, TenderProcess process, XSSFRow row,
+            XSSFCellStyle dateCellStyle, XSSFCellStyle numberCellStyle) {
         Tender tender = process.getSingleTender();
         Contract contract = process.getSingleContract();
         TenderQuotationEvaluation tenderQuotationEvaluation = process.getSingleTenderQuotationEvaluation();
         AwardNotification award = process.getSingleAwardNotification();
 
-
         row.createCell(TENDER_NR).setCellValue(tender.getTenderNumber());
         row.createCell(DEPARTMENT).setCellValue(process.getDepartment().getLabel());
         row.createCell(TENDER_OBJECTIVE).setCellValue(tender.getObjective());
-        row.createCell(TENDER_OPEN_DATE).setCellValue(tenderQuotationEvaluation.getOpeningDate());
-        row.createCell(EVALUATION_END_DATE).setCellValue(tenderQuotationEvaluation.getClosingDate());
+        createCell(row, TENDER_OPEN_DATE, dateCellStyle).setCellValue(tenderQuotationEvaluation.getOpeningDate());
+        createCell(row, EVALUATION_END_DATE, dateCellStyle).setCellValue(tenderQuotationEvaluation.getClosingDate());
 
         if (award.getItems().size() == 1) {
             AwardNotificationItem item = award.getItems().get(0);
 
-            row.createCell(TENDER_AWARD_DATE).setCellValue(item.getTenderAwardDate());
-            row.createCell(AWARD_NOTIFICATION_DATE).setCellValue(item.getAwardDate());
+            createCell(row, TENDER_AWARD_DATE, dateCellStyle).setCellValue(item.getTenderAwardDate());
+            createCell(row, AWARD_NOTIFICATION_DATE, dateCellStyle).setCellValue(item.getAwardDate());
         } else {
             String tenderAwardDate = award.getItems().stream()
                     .map(AwardNotificationItem::getTenderAwardDate)
@@ -113,36 +122,21 @@ public class DirectProcurementsAboveExporter {
         }
 
         row.createCell(COMPANY_NAME).setCellValue(contract.getAwardee().getLabel());
-        row.createCell(CONTRACT_VALUE).setCellValue(contract.getContractValue().doubleValue());
-        row.createCell(CONTRACT_SIGNING_DATE).setCellValue(contract.getContractDate());
+        createCell(row, CONTRACT_VALUE, numberCellStyle).setCellValue(contract.getContractValue().doubleValue());
+        createCell(row, CONTRACT_SIGNING_DATE, dateCellStyle).setCellValue(contract.getContractDate());
         row.createCell(REFERENCE_NR).setCellValue(contract.getReferenceNumber());
         row.createCell(CONTRACT_DESCRIPTION).setCellValue(contract.getDescription());
-        row.createCell(CONTRACT_START_DATE).setCellValue(contract.getContractApprovalDate());
-        row.createCell(CONTRACT_COMPLETION_DATE).setCellValue(contract.getExpiryDate());
+        createCell(row, CONTRACT_START_DATE, dateCellStyle).setCellValue(contract.getContractApprovalDate());
+        createCell(row, CONTRACT_COMPLETION_DATE, dateCellStyle).setCellValue(contract.getExpiryDate());
     }
 
     private XSSFSheet createSheet(XSSFWorkbook wb) {
         XSSFSheet sheet = wb.createSheet();
 
-        XSSFCellStyle dateCellStyle = wb.createCellStyle();
-        dateCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("d-mmm-yy"));
-
-        XSSFCellStyle numberCellStyle = wb.createCellStyle();
-        numberCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0.00"));
-
         XSSFCellStyle headerCellStyle = wb.createCellStyle();
         headerCellStyle.setWrapText(true);
 
         sheet.createFreezePane(0, 1);
-
-        sheet.setDefaultColumnStyle(TENDER_OPEN_DATE, dateCellStyle);
-        sheet.setDefaultColumnStyle(EVALUATION_END_DATE, dateCellStyle);
-        sheet.setDefaultColumnStyle(TENDER_AWARD_DATE, dateCellStyle);
-        sheet.setDefaultColumnStyle(AWARD_NOTIFICATION_DATE, dateCellStyle);
-        sheet.setDefaultColumnStyle(CONTRACT_VALUE, numberCellStyle);
-        sheet.setDefaultColumnStyle(CONTRACT_SIGNING_DATE, dateCellStyle);
-        sheet.setDefaultColumnStyle(CONTRACT_START_DATE, dateCellStyle);
-        sheet.setDefaultColumnStyle(CONTRACT_COMPLETION_DATE, dateCellStyle);
 
         sheet.setDefaultColumnWidth(12);
         sheet.setColumnWidth(TENDER_OBJECTIVE, 18 * 256);
@@ -151,22 +145,21 @@ public class DirectProcurementsAboveExporter {
         sheet.setColumnWidth(CONTRACT_COMPLETION_DATE, 18 * 256);
 
         XSSFRow hRow = sheet.createRow(0);
-        hRow.setRowStyle(headerCellStyle);
-        hRow.setHeightInPoints(24);
-        hRow.createCell(TENDER_NR).setCellValue("Tender Number");
-        hRow.createCell(DEPARTMENT).setCellValue("Department");
-        hRow.createCell(TENDER_OBJECTIVE).setCellValue("Tender Objective/Details");
-        hRow.createCell(TENDER_OPEN_DATE).setCellValue("Tender Opening Date");
-        hRow.createCell(EVALUATION_END_DATE).setCellValue("Evaluation End Date");
-        hRow.createCell(TENDER_AWARD_DATE).setCellValue("Tender Award Date");
-        hRow.createCell(AWARD_NOTIFICATION_DATE).setCellValue("Award Notification Date");
-        hRow.createCell(COMPANY_NAME).setCellValue("Company Name");
-        hRow.createCell(CONTRACT_VALUE).setCellValue("Contract Value");
-        hRow.createCell(CONTRACT_SIGNING_DATE).setCellValue("Contract Signing Date");
-        hRow.createCell(REFERENCE_NR).setCellValue("Reference Number");
-        hRow.createCell(CONTRACT_DESCRIPTION).setCellValue("Contract Description");
-        hRow.createCell(CONTRACT_START_DATE).setCellValue("Contract Start Date");
-        hRow.createCell(CONTRACT_COMPLETION_DATE).setCellValue("Contract Completion Date");
+        hRow.setHeightInPoints(28);
+        createCell(hRow, TENDER_NR, headerCellStyle).setCellValue("Tender Number");
+        createCell(hRow, DEPARTMENT, headerCellStyle).setCellValue("Department");
+        createCell(hRow, TENDER_OBJECTIVE, headerCellStyle).setCellValue("Tender Objective/Details");
+        createCell(hRow, TENDER_OPEN_DATE, headerCellStyle).setCellValue("Tender Opening Date");
+        createCell(hRow, EVALUATION_END_DATE, headerCellStyle).setCellValue("Evaluation End Date");
+        createCell(hRow, TENDER_AWARD_DATE, headerCellStyle).setCellValue("Tender Award Date");
+        createCell(hRow, AWARD_NOTIFICATION_DATE, headerCellStyle).setCellValue("Award Notification Date");
+        createCell(hRow, COMPANY_NAME, headerCellStyle).setCellValue("Company Name");
+        createCell(hRow, CONTRACT_VALUE, headerCellStyle).setCellValue("Contract Value");
+        createCell(hRow, CONTRACT_SIGNING_DATE, headerCellStyle).setCellValue("Contract Signing Date");
+        createCell(hRow, REFERENCE_NR, headerCellStyle).setCellValue("Reference Number");
+        createCell(hRow, CONTRACT_DESCRIPTION, headerCellStyle).setCellValue("Contract Description");
+        createCell(hRow, CONTRACT_START_DATE, headerCellStyle).setCellValue("Contract Start Date");
+        createCell(hRow, CONTRACT_COMPLETION_DATE, headerCellStyle).setCellValue("Contract Completion Date");
         return sheet;
     }
 
@@ -197,6 +190,8 @@ public class DirectProcurementsAboveExporter {
             predicates.add(cb.equal(
                     r.join(TenderProcess_.tenderQuotationEvaluation).get(TenderQuotationEvaluation_.status),
                     DBConstants.Status.APPROVED));
+
+            q.distinct(true);
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };

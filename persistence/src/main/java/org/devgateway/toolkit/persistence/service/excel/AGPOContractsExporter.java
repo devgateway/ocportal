@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service.excel;
 
+import static org.devgateway.toolkit.persistence.service.excel.ExporterUtil.createCell;
+
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -18,9 +20,6 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
-import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
-import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
-import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplierItem;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,19 +81,19 @@ public class AGPOContractsExporter {
         int rowNum = 1;
         for (TenderProcess tenderProcess : tenderProcesses) {
             XSSFRow row = sheet.createRow(rowNum++);
-            writeRow(row, tenderProcess);
+            writeRow(row, tenderProcess, numberCellStyle);
         }
 
-        addTotalRow(sheet, rowNum);
+        addTotalRow(sheet, rowNum, numberCellStyle);
 
         return workbook;
     }
 
-    private void addTotalRow(XSSFSheet sheet, int rowNum) {
+    private void addTotalRow(XSSFSheet sheet, int rowNum, XSSFCellStyle numberCellStyle) {
         XSSFRow totalRow = sheet.createRow(rowNum);
         totalRow.createCell(0).setCellValue("Grand Total");
         sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, CONTRACT_VALUE - 1));
-        totalRow.createCell(CONTRACT_VALUE).setCellFormula(String.format("SUM(J2:J%s)", rowNum));
+        createCell(totalRow, CONTRACT_VALUE, numberCellStyle).setCellFormula(String.format("SUM(J2:J%s)", rowNum));
     }
 
     private void addHeaderRow(XSSFSheet sheet) {
@@ -111,7 +110,7 @@ public class AGPOContractsExporter {
         hrow.createCell(CONTRACT_VALUE).setCellValue("Contract Value");
     }
 
-    private void writeRow(XSSFRow row, TenderProcess tenderProcess) {
+    private void writeRow(XSSFRow row, TenderProcess tenderProcess, XSSFCellStyle numberCellStyle) {
         Contract contract = tenderProcess.getSingleContract();
         Tender tender = tenderProcess.getSingleTender();
         Supplier awardee = contract.getAwardee();
@@ -134,7 +133,7 @@ public class AGPOContractsExporter {
                 .collect(Collectors.joining(", ")));
         row.createCell(PROCUREMENT_METHOD).setCellValue(tender.getProcurementMethod().getLabel());
         row.createCell(CONTRACT_NO).setCellValue(contract.getReferenceNumber());
-        row.createCell(CONTRACT_VALUE).setCellValue(contract.getContractValue().doubleValue());
+        createCell(row, CONTRACT_VALUE, numberCellStyle).setCellValue(contract.getContractValue().doubleValue());
     }
 
     private Specification<TenderProcess> getSpecification(Date from, Date to) {

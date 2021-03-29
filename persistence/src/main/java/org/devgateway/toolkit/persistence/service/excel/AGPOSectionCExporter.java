@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service.excel;
 
+import static org.devgateway.toolkit.persistence.service.excel.ExporterUtil.createCell;
+
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -45,20 +47,8 @@ public class AGPOSectionCExporter {
     public XSSFWorkbook export(NamedDateRange range) {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
-        XSSFCellStyle numberCellStyle = workbook.createCellStyle();
-        numberCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0.00"));
-
-        XSSFCellStyle intCellStyle = workbook.createCellStyle();
-        intCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0"));
-
-        XSSFCellStyle percCellStyle = workbook.createCellStyle();
-        percCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0.00%"));
-
         XSSFSheet sheet = workbook.createSheet();
         sheet.setDefaultColumnWidth(35);
-        sheet.setDefaultColumnStyle(NUM_CONTRACTS, intCellStyle);
-        sheet.setDefaultColumnStyle(VALUE_OF_CONTRACTS, numberCellStyle);
-        sheet.setDefaultColumnStyle(PERCENT, percCellStyle);
 
         addHeaderRow(sheet);
 
@@ -92,6 +82,17 @@ public class AGPOSectionCExporter {
     }
 
     private void addBody(XSSFSheet sheet, NamedDateRange range) {
+        XSSFWorkbook workbook = sheet.getWorkbook();
+
+        XSSFCellStyle numberCellStyle = workbook.createCellStyle();
+        numberCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0.00"));
+
+        XSSFCellStyle intCellStyle = workbook.createCellStyle();
+        intCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0"));
+
+        XSSFCellStyle percCellStyle = workbook.createCellStyle();
+        percCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0.00%"));
+
         List<TenderProcess> tenderProcesses = tenderProcessService.findAll(getSpecification(range));
 
         Map<String, Summary> grouped = tenderProcesses.stream().collect(Collectors.groupingBy(
@@ -103,25 +104,39 @@ public class AGPOSectionCExporter {
 
         int numCats = grouped.size();
 
-        grouped.forEach((agpoCategory, summary) -> addCategoryRow(sheet, numCats, agpoCategory, summary));
+        grouped.forEach((agpoCategory, summary) ->
+                addCategoryRow(sheet, numCats, agpoCategory, summary, numberCellStyle, intCellStyle, percCellStyle));
 
-        addTotalRow(sheet);
+        addTotalRow(sheet, numberCellStyle, intCellStyle, percCellStyle);
     }
 
-    private void addCategoryRow(XSSFSheet sheet, int numCats, String agpoCategory, Summary summary) {
+    private void addCategoryRow(XSSFSheet sheet, int numCats, String agpoCategory, Summary summary,
+            XSSFCellStyle numberCellStyle, XSSFCellStyle intCellStyle, XSSFCellStyle percCellStyle) {
         XSSFRow row = sheet.createRow(sheet.getLastRowNum() + 1);
+
         row.createCell(CATEGORY).setCellValue(agpoCategory);
-        row.createCell(NUM_CONTRACTS).setCellValue(summary.count);
-        row.createCell(VALUE_OF_CONTRACTS).setCellValue(summary.amount.doubleValue());
-        row.createCell(PERCENT).setCellFormula(String.format("C%d/C%d", row.getRowNum() + 1, numCats + 2));
+
+        createCell(row, NUM_CONTRACTS, intCellStyle).setCellValue(summary.count);
+
+        createCell(row, VALUE_OF_CONTRACTS, numberCellStyle).setCellValue(summary.amount.doubleValue());
+
+        String formula = String.format("C%d/C%d", row.getRowNum() + 1, numCats + 2);
+        createCell(row, PERCENT, percCellStyle).setCellFormula(formula);
     }
 
-    private void addTotalRow(XSSFSheet sheet) {
+    private void addTotalRow(XSSFSheet sheet,
+            XSSFCellStyle numberCellStyle, XSSFCellStyle intCellStyle, XSSFCellStyle percCellStyle) {
         XSSFRow totalRow = sheet.createRow(sheet.getLastRowNum() + 1);
+
         totalRow.createCell(CATEGORY).setCellValue("Total");
-        totalRow.createCell(NUM_CONTRACTS).setCellFormula(String.format("SUM(B%d:B%d)", 2, totalRow.getRowNum()));
-        totalRow.createCell(VALUE_OF_CONTRACTS).setCellFormula(String.format("SUM(C%d:C%d)", 2, totalRow.getRowNum()));
-        totalRow.createCell(PERCENT).setCellValue(1);
+
+        String numFormula = String.format("SUM(B%d:B%d)", 2, totalRow.getRowNum());
+        createCell(totalRow, NUM_CONTRACTS, intCellStyle).setCellFormula(numFormula);
+
+        String valueFormula = String.format("SUM(C%d:C%d)", 2, totalRow.getRowNum());
+        createCell(totalRow, VALUE_OF_CONTRACTS, numberCellStyle).setCellFormula(valueFormula);
+
+        createCell(totalRow, PERCENT, percCellStyle).setCellValue(1);
     }
 
     private Specification<TenderProcess> getSpecification(NamedDateRange range) {
