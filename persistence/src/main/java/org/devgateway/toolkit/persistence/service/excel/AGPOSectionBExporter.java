@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.service.excel;
 
+import static org.devgateway.toolkit.persistence.service.excel.ExporterUtil.createCell;
+
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -70,11 +72,10 @@ public class AGPOSectionBExporter {
 
         XSSFSheet sheet = workbook.createSheet();
         sheet.setDefaultColumnWidth(20);
-        sheet.setDefaultColumnStyle(CONTRACT_VALUE, numberCellStyle);
 
         addHeaderRow(sheet);
 
-        addBody(sheet, range);
+        addBody(sheet, range, numberCellStyle);
 
         return workbook;
     }
@@ -93,7 +94,7 @@ public class AGPOSectionBExporter {
         row.createCell(PAYMENT_STATUS).setCellValue("Payment Status");
     }
 
-    private void addBody(XSSFSheet sheet, NamedDateRange range) {
+    private void addBody(XSSFSheet sheet, NamedDateRange range, XSSFCellStyle numberCellStyle) {
         List<TenderProcess> tenderProcesses = tenderProcessService.findAll(getSpecification(range));
 
         Map<String, List<TenderProcess>> grouped = tenderProcesses.stream().collect(Collectors.groupingBy(
@@ -116,11 +117,11 @@ public class AGPOSectionBExporter {
 
             for (int i = 0; i < tenderProcessesForGroup.size(); i++) {
                 TenderProcess tp = tenderProcessesForGroup.get(i);
-                addTenderProcessRow(sheet, i, tp);
+                addTenderProcessRow(sheet, i, tp, numberCellStyle);
             }
 
             int totalRowBum = sheet.getLastRowNum() + 1;
-            addAGPOSubTotalRow(sheet, agpoRowNum, totalRowBum);
+            addAGPOSubTotalRow(sheet, agpoRowNum, totalRowBum, numberCellStyle);
 
             subTotalAddresses.add(String.format("I%d", totalRowBum + 1));
         }
@@ -129,15 +130,15 @@ public class AGPOSectionBExporter {
         XSSFRow grandTotalRow = sheet.createRow(grandTotalRowNum);
         grandTotalRow.createCell(INDEX).setCellValue("Total for the Half year");
         sheet.addMergedRegion(new CellRangeAddress(grandTotalRowNum, grandTotalRowNum, INDEX, REFERENCE_NUMBER));
-        grandTotalRow.createCell(CONTRACT_VALUE).setCellFormula(
+        createCell(grandTotalRow, CONTRACT_VALUE, numberCellStyle).setCellFormula(
                 subTotalAddresses.stream().collect(Collectors.joining(",", "SUM(", ")")));
     }
 
-    private void addAGPOSubTotalRow(XSSFSheet sheet, int agpoRowNum, int totalRowBum) {
+    private void addAGPOSubTotalRow(XSSFSheet sheet, int agpoRowNum, int totalRowBum, XSSFCellStyle numberCellStyle) {
         XSSFRow agpoTotalRow = sheet.createRow(totalRowBum);
         agpoTotalRow.createCell(INDEX).setCellValue("Sub Total");
         sheet.addMergedRegion(new CellRangeAddress(totalRowBum, totalRowBum, INDEX, REFERENCE_NUMBER));
-        agpoTotalRow.createCell(CONTRACT_VALUE).setCellFormula(
+        createCell(agpoTotalRow, CONTRACT_VALUE, numberCellStyle).setCellFormula(
                 String.format("SUM(I%d:I%d)", agpoRowNum + 2, totalRowBum));
     }
 
@@ -149,7 +150,7 @@ public class AGPOSectionBExporter {
         sheet.addMergedRegion(new CellRangeAddress(rownum, rownum, INDEX, PAYMENT_STATUS));
     }
 
-    private void addTenderProcessRow(XSSFSheet sheet, int i, TenderProcess tp) {
+    private void addTenderProcessRow(XSSFSheet sheet, int i, TenderProcess tp, XSSFCellStyle numberCellStyle) {
         Contract contract = tp.getSingleContract();
         Tender tender = tp.getSingleTender();
 
@@ -170,7 +171,7 @@ public class AGPOSectionBExporter {
                 .collect(Collectors.joining(", ")));
         row.createCell(PROCUREMENT_METHOD).setCellValue(tender.getProcurementMethod().getLabel());
         row.createCell(REFERENCE_NUMBER).setCellValue(contract.getReferenceNumber());
-        row.createCell(CONTRACT_VALUE).setCellValue(contract.getContractValue().doubleValue());
+        createCell(row, CONTRACT_VALUE, numberCellStyle).setCellValue(contract.getContractValue().doubleValue());
         row.createCell(PAYMENT_STATUS).setCellValue(getPaymentStatus(tp));
     }
 

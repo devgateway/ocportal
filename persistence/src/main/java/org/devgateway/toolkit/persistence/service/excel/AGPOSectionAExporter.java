@@ -16,7 +16,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.dto.NamedDateRange;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
-import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -46,10 +45,6 @@ public class AGPOSectionAExporter {
     @Autowired
     private TenderProcessService tenderProcessService;
 
-    @Autowired
-    private PrequalifiedSupplierService prequalifiedSupplierService;
-
-
     public boolean hasData(NamedDateRange range) {
         return tenderProcessService.count(getSpecification(range, false, false)) > 0;
     }
@@ -58,16 +53,6 @@ public class AGPOSectionAExporter {
         XSSFCellStyle numberCellStyle = workbook.createCellStyle();
         numberCellStyle.setDataFormat(BuiltinFormats.getBuiltinFormat("0.00"));
         return numberCellStyle;
-    }
-
-    private void applyColumnStyles(XSSFSheet sheet) {
-        XSSFCellStyle numberCellStyle = createDefaultNumberCellStyle(sheet.getWorkbook());
-        sheet.setDefaultColumnStyle(TOTAL_PROCUREMENT_SPEND, numberCellStyle);
-        sheet.setDefaultColumnStyle(TOTAL_PROCUREMENT_RESERVED, numberCellStyle);
-        sheet.setDefaultColumnStyle(PERCENT_RESERVED, numberCellStyle);
-        sheet.setDefaultColumnStyle(NO_CONTRACTS_AGPO, numberCellStyle);
-        sheet.setDefaultColumnStyle(VALUE_CONTRACTS_AGPO, numberCellStyle);
-        sheet.setDefaultColumnStyle(PERCENT_CONTRACTS_AGPO, numberCellStyle);
     }
 
     public XSSFWorkbook export(NamedDateRange range) {
