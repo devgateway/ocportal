@@ -22,6 +22,7 @@ const getTenderAmount = (datum) => {
 
 const mapFlaggedReleases = (data) => data.map((datum) => ({
   id: datum.ocid,
+  ocid: datum.ocid,
   name: datum.tender.title || 'N/A',
   awardStatus: getAwardAmount(datum.awards) ? 'active' : 'unsuccessful',
   tenderAmount: getTenderAmount(datum),

@@ -135,6 +135,8 @@
   visible: yes
 - name: crd.supplier.procurements.col.procuringEntityName
   visible: yes
+- name: crd.supplier.procurements.col.buyerName
+  visible: no
 - name: crd.supplier.procurements.col.awardAmount
   visible: yes
 - name: crd.supplier.procurements.col.awardDate

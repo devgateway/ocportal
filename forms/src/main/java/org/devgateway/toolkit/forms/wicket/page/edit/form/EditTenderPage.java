@@ -86,9 +86,9 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
     @SpringBean
     private TargetGroupService targetGroupService;
 
-    private GenericSleepFormComponent procuringEntityEmail;
+    private GenericSleepFormComponent<String> procuringEntityEmail;
 
-    private GenericSleepFormComponent procuringEntityAddress;
+    private GenericSleepFormComponent<String> procuringEntityAddress;
 
     private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
     private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
@@ -185,6 +185,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
             }
             return null;
         });
+        procuringEntityEmail.attachFm("issuedBy");
         procuringEntityEmail.setOutputMarkupId(true);
         editForm.add(procuringEntityEmail);
 
@@ -194,6 +195,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
             }
             return null;
         });
+        procuringEntityAddress.attachFm("issuedBy");
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
     }

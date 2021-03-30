@@ -45,6 +45,8 @@ class CList extends PaginatedTable {
 
       const startDate = contract.getIn(['tender', 'tenderPeriod', 'startDate']);
 
+      const ocid = contract.get('ocid');
+
       const flags = contract.get('flags');
 
       const flagTypes = flags.get('laggedStats', List())
@@ -53,7 +55,8 @@ class CList extends PaginatedTable {
 
       return {
         status: contract.getIn(['tender', 'status'], 'N/A'),
-        id: contract.get('ocid'),
+        id: ocid,
+        ocid,
         title: contract.getIn(['tender', 'title'], 'N/A'),
         PEName: contract.getIn(['tender', 'procuringEntity', 'name'], 'N/A'),
         tenderAmount,
@@ -80,7 +83,7 @@ class CList extends PaginatedTable {
           },
           {
             text: t('crd:procurementsTable:contractID'),
-            dataField: 'id',
+            dataField: 'ocid',
             fm: 'crd.contracts.col.contractId',
             formatter: mkContractLink(navigate),
             classes: 'ocid',
