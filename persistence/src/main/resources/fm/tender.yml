@@ -35,7 +35,7 @@
 - name: tenderForm.issuedBy
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.newStatusComment
   mandatory: no
   enabled: yes
@@ -138,14 +138,14 @@
 - name: tenderForm.billOfQuantities
   mandatory: no
   enabled: yes
-  visible: no
+  visible: yes
 - name: tenderForm.terminate
   enabled: yes
   visible: yes
 - name: tenderForm.wards
   mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
   visibleDeps:
     - tenderForm.subcounties
   enabledDeps:
@@ -153,7 +153,7 @@
 - name: tenderForm.subcounties
   mandatory: yes
   enabled: yes
-  visible: no
+  visible: yes
 
 # TENDERS LIST PAGE
 - name: tenderForm.visibleStatusComments

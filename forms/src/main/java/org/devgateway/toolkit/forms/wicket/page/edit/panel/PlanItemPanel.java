@@ -146,7 +146,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
         Select2MultiChoiceBootstrapFormComponent<TargetGroup> targetGroup =
                 ComponentUtil.addSelect2MultiChoiceField(item, "targetGroup", targetGroupService);
-        targetGroup.getField().getSettings().setMultiple(false);
+        //targetGroup.getField().getSettings().setMultiple(false);
         ComponentUtil.addBigDecimalField(item, "targetGroupValue")
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
