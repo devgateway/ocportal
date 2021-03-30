@@ -87,4 +87,13 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-1016" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="tender" columnName="issued_by_id"/>
+        </preConditions>
+        <sql><![CDATA[
+            update tender set issued_by_id = null;
+        ]]></sql>
+    </changeSet>
+
 </databaseChangeLog>
