@@ -2,8 +2,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -23,7 +21,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormCompo
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.events.AjaxUpdateEvent;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -198,7 +195,9 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                             ID_ACCORDION).getParent());
             //purchaseItem.required();
             purchaseItem.add(new StopEventPropagationBehavior());
+            purchaseItem.setShowTooltip(true);
 
+            add(purchaseItem);
 
             final Select2ChoiceBootstrapFormComponent<PlanItem> planItem =
                     new Select2ChoiceBootstrapFormComponent<PlanItem>(
@@ -207,13 +206,12 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
             planItem.broadcastUpdate(ComponentUtil.findFirstParentById(this.getParent(), ID_ACCORDION).getParent());
             //purchaseItem.required();
             planItem.add(new StopEventPropagationBehavior());
+            planItem.setShowTooltip(true);
 
             add(planItem);
 
             final Component description = ComponentUtil.addTextField(this, "description");
             description.add(new StopEventPropagationBehavior());
-
-            add(purchaseItem);
         }
     }
 }
