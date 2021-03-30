@@ -19,6 +19,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxBut
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -39,6 +40,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.validation.ValidationError;
@@ -57,6 +59,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormC
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
+import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
@@ -701,7 +704,11 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         super(parameters);
 
         if (!parameters.get(WebConstants.PARAM_ID).isNull()) {
-            entityId = parameters.get(WebConstants.PARAM_ID).toLongObject();
+            try {
+                entityId = parameters.get(WebConstants.PARAM_ID).toLongObject();
+            } catch (StringValueConversionException e) {
+                throw new RestartResponseException(getApplication().getHomePage());
+            }
         }
 
         editForm = new EditForm("editForm") {
@@ -766,7 +773,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         IModel<T> model = null;
 
         if (entityId != null) {
-            model = new DozerModel<>(jpaService.findById(entityId).orElse(null));
+            model = new DozerModel<>(jpaService.findById(entityId)
+                    .orElseThrow(() -> new RestartResponseException(getApplication().getHomePage())));
         } else {
             final T instance = newInstance();
             if (instance != null) {
