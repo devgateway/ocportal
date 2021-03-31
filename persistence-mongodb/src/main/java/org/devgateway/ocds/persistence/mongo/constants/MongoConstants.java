@@ -161,11 +161,11 @@ public final class MongoConstants {
                     .put("Restricted Tender", Tender.ProcurementMethod.limited)
                     .put("Specially Permitted", Tender.ProcurementMethod.limited)
                     .put("Low Value Procurement", Tender.ProcurementMethod.direct)
-                    .put("Framework Agreement", Tender.ProcurementMethod.direct)
-                    .put("Two-stage Tendering", Tender.ProcurementMethod.selective)
-                    .put("Design Competition", Tender.ProcurementMethod.selective)
+                    .put("Framework Agreement", Tender.ProcurementMethod.selective)
+                    .put("Two-stage Tendering", Tender.ProcurementMethod.open)
+                    .put("Design Competition", Tender.ProcurementMethod.open)
                     .put("Force Account", Tender.ProcurementMethod.direct)
-                    .put("Electronic Reverse Auction", Tender.ProcurementMethod.selective)
+                    .put("Electronic Reverse Auction", Tender.ProcurementMethod.open)
                     .put("Open Tender - International", Tender.ProcurementMethod.open)
                     .build();
 }

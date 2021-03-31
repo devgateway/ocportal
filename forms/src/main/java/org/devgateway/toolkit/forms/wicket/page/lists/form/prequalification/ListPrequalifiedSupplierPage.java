@@ -81,7 +81,7 @@ import java.util.stream.Collectors;
 /**
  * @author Octavian Ciubotaru
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/prequalifiedSuppliers")
 public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<PrequalifiedSupplierItem> {
 

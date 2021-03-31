@@ -108,6 +108,7 @@ public class MakueniDataController extends GenericOCDSController {
         final Criteria criteriaTender = new Criteria().andOperator(
                 where("tender.tenderTitle").exists(true),
                 createFilterCriteria("project.subcounties._id", filter.getSubcounty()),
+                createFilterCriteria("tender.procurementMethodRationale._id", filter.getProcurementMethodRationale()),
                 createFilterCriteria("project.wards._id", filter.getWard()),
                 createFilterCriteria(
                         "tender.tenderItems.purchaseItem.planItem.item._id",
@@ -127,6 +128,7 @@ public class MakueniDataController extends GenericOCDSController {
                 project("tenderProcesses._id", "department", "fiscalYear", "tenderProcesses.tender.tenderTitle",
                         "tenderProcesses.project", "tenderProcesses.tender.closingDate", "tenderProcesses.tender._id",
                         "tenderProcesses.tender.tenderValue", "tenderProcesses.tender.formDocs",
+                        "tenderProcesses.tender.procurementMethodRationale",
                         "tenderProcesses.tender.tenderItems"),
                 match(criteriaTender));
         return operations;
@@ -391,6 +393,26 @@ public class MakueniDataController extends GenericOCDSController {
                         .append("subcountyId", item.getSubcounty().getId())));
 
         return results;
+    }
+
+    @ApiOperation(value = "Display the available Procurement Method Rationale")
+    @RequestMapping(value = "/api/makueni/filters/procurementMethodRationale", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    @Cacheable
+    public List<Document> getProcurementMethodRationale() {
+        final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
+
+        final Aggregation aggregation = newAggregation(
+                unwind("tenderProcesses"),
+                project("tenderProcesses.tender"),
+                unwind("tender"),
+                project("tender.procurementMethodRationale"),
+                match(where("procurementMethodRationale").exists(true)),
+                group("procurementMethodRationale")
+                );
+
+        return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
+                .getMappedResults();
     }
 
     @ApiOperation(value = "Display the available Procurement Plan FY.")

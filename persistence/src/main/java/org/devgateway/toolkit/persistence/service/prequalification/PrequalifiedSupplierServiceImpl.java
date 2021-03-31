@@ -3,7 +3,7 @@ package org.devgateway.toolkit.persistence.service.prequalification;
 import com.google.common.collect.ImmutableSet;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
@@ -112,14 +112,14 @@ public class PrequalifiedSupplierServiceImpl
     }
 
     @Override
-    public List<String> findItemsForBid(Bid bid) {
+    public List<String> findItemsForBid(Bid bid, Tender tender) {
         Supplier supplier = bid.getSupplier();
 
         if (supplier == null) {
             return Collections.emptyList();
         }
 
-        return find(supplier, bid.getParent().getTenderProcess())
+        return find(supplier, tender)
                 .map(this::formatItems)
                 .orElse(Collections.emptyList());
     }
@@ -133,12 +133,12 @@ public class PrequalifiedSupplierServiceImpl
     }
 
     @Override
-    public Optional<PrequalifiedSupplier> find(Supplier supplier, TenderProcess tenderProcess) {
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, Tender tender) {
         if (supplier == null) {
             return Optional.empty();
         }
 
-        Date tenderInvitationDate = tenderProcess.getSingleTender().getInvitationDate();
+        Date tenderInvitationDate = tender.getInvitationDate();
         PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
 
         if (yearRange == null) {

@@ -158,7 +158,7 @@ public class AGPOSectionBExporter {
         row.createCell(INDEX).setCellValue(i + 1);
         row.createCell(SUPPLIER).setCellValue(contract.getAwardee().getLabel());
         row.createCell(AGPO_CERT_ID).setCellValue(contract.getAwardee().getAgpoRegistrationId());
-        row.createCell(DIRECTORS).setCellValue(prequalifiedSupplierService.find(contract.getAwardee(), tp)
+        row.createCell(DIRECTORS).setCellValue(prequalifiedSupplierService.find(contract.getAwardee(), tender)
                 .map(ExporterUtil::extractDirectors)
                 .orElse(null));
         row.createCell(CONTRACT_DOC_TYPE).setCellValue(contract.getContractDocs().stream()

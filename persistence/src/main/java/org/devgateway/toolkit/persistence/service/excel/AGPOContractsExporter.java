@@ -116,7 +116,7 @@ public class AGPOContractsExporter {
         Supplier awardee = contract.getAwardee();
 
         row.createCell(COMPANY_NAME).setCellValue(awardee.getLabel());
-        row.createCell(DIRECTORS).setCellValue(prequalifiedSupplierService.find(awardee, tenderProcess)
+        row.createCell(DIRECTORS).setCellValue(prequalifiedSupplierService.find(awardee, tender)
                 .map(ExporterUtil::extractDirectors)
                 .orElse(null));
         row.createCell(SCHEME).setCellValue("AGPO");
