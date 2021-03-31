@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
  * @author mpostelnicu
@@ -46,7 +48,9 @@ public class ProcurementMethodRationaleSearchController extends GenericOCDSContr
 
         DBObject project = new BasicDBObject(MongoConstants.FieldNames.TENDER_PROC_METHOD_RATIONALE, 1);
 
-        Aggregation agg = newAggregation(new CustomOperation(new Document("$project", project)),
+        Aggregation agg = newAggregation(
+                match(where(MongoConstants.FieldNames.TENDER_PROC_METHOD_RATIONALE).exists(true)),
+                new CustomOperation(new Document("$project", project)),
                 group(ref(MongoConstants.FieldNames.TENDER_PROC_METHOD_RATIONALE)));
 
         return releaseAgg(agg);

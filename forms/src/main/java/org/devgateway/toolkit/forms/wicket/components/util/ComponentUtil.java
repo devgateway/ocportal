@@ -8,7 +8,6 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -27,6 +26,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxToggleBootstr
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxYesNoToggleBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.DateFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.DateTimeFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.DecimalTextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.PasswordFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
@@ -296,6 +296,15 @@ public final class ComponentUtil {
 
         return textField;
     }
+
+    public static DecimalTextFieldBootstrapFormComponent addDecimalField(
+            final WebMarkupContainer parent,
+            final String id) {
+        final DecimalTextFieldBootstrapFormComponent textField = new DecimalTextFieldBootstrapFormComponent(id);
+        parent.add(textField);
+        return textField;
+    }
+
 
     public static TextFieldBootstrapFormComponent<BigDecimal> addBigDecimalField(
             final WebMarkupContainer parent,

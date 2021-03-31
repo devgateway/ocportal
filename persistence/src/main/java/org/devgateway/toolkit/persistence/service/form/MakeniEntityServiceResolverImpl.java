@@ -1,16 +1,11 @@
 package org.devgateway.toolkit.persistence.service.form;
 
-
 import static java.util.stream.Collectors.toList;
 
 import com.google.common.collect.ImmutableMap;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.Lockable;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.service.AdminSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,11 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,54 +27,32 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
     private AdminSettingsService adminSettingsService;
 
     @Autowired
-    private TenderProcessEntityServiceResolver tenderProcessEntityServiceResolver;
-
-    @Autowired
-    private ProcurementPlanService procurementPlanService;
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private CabinetPaperService cabinetPaperService;
+    private List<AbstractMakueniEntityService<?>> serviceList;
 
     private Map<Class<?>, AbstractMakueniEntityService<?>> serviceMap;
 
     @PostConstruct
     public void init() {
-        serviceMap = ImmutableMap.<Class<?>, AbstractMakueniEntityService<?>>builder()
-                .put(Project.class, projectService)
-                .put(ProcurementPlan.class, procurementPlanService)
-                .put(CabinetPaper.class, cabinetPaperService)
-                .build();
-    }
-
-    public <S extends AbstractMakueniEntity> S saveAndFlushMakueniEntity(S entity) {
-        Class<? extends AbstractMakueniEntity> aClass = entity.getClass();
-        if (AbstractTenderProcessMakueniEntity.class.isAssignableFrom(aClass)) {
-            return (S) tenderProcessEntityServiceResolver.saveAndFlush((AbstractTenderProcessMakueniEntity) entity);
-        } else {
-            AbstractMakueniEntityService service = serviceMap.get(aClass);
-            return (S) service.saveAndFlush(entity);
-        }
+        serviceMap = ImmutableMap.copyOf(serviceList.stream()
+                .collect(Collectors.toMap(s -> s.newInstance().getClass(), s -> s)));
     }
 
     @Override
     public void unlock(Lockable entity) {
-        AbstractMakueniEntityService<? extends AbstractMakueniEntity> service = serviceMap.get(entity.getClass());
-        service.unlock(entity.getId());
+        serviceMap.get(entity.getClass())
+                .unlock(entity.getId());
     }
 
     @Override
     public List<? extends AbstractMakueniEntity> getAllLocked(Person person) {
-        return serviceMap.values().stream()
+        return serviceList.stream()
                 .flatMap(s -> s.getAllLocked(person).stream())
                 .collect(toList());
     }
 
     @Override
     public List<? extends AbstractMakueniEntity> getAllLocked() {
-        return serviceMap.values().stream()
+        return serviceList.stream()
                 .flatMap(s -> s.getAllLocked().stream())
                 .collect(toList());
     }

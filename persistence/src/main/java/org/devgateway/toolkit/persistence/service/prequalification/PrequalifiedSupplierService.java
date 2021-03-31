@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.service.prequalification;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
@@ -17,7 +18,11 @@ public interface PrequalifiedSupplierService extends BaseJpaService<Prequalified
 
     boolean isSupplierPrequalified(Supplier supplier, PrequalificationYearRange yearRange, Long exceptId);
 
-    Optional<PrequalifiedSupplier> find(Supplier supplier, TenderProcess tenderProcess);
+    Optional<PrequalifiedSupplier> find(Supplier supplier, Tender tender);
 
-    List<String> findItemsForBid(Bid bid);
+    default List<String> findItemsForBid(Bid bid) {
+        return findItemsForBid(bid, bid.getParent().getTenderProcess().getSingleTender());
+    }
+
+    List<String> findItemsForBid(Bid bid, Tender tender);
 }
