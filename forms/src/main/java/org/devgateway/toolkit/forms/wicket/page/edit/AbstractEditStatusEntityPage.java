@@ -55,7 +55,6 @@ import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstra
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.events.EditingEnabledEvent;
-import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -416,7 +415,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         editForm.add(maxHeight);
     }
 
-    private ModalSaveEditPageButton getSaveTerminateButton() {
+    protected ModalSaveEditPageButton getSaveTerminateButton() {
         terminateModal = createTerminateModal();
         final ModalSaveEditPageButton saveEditPageButton = new ModalSaveEditPageButton("terminate",
                 new StringResourceModel("terminate", this, null), terminateModal) {
