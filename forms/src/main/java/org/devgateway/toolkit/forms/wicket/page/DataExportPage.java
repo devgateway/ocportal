@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.DropDownButton;
@@ -92,13 +93,15 @@ public class DataExportPage extends BasePage implements AjaxFormListener {
 
     private AbstractLink createMenuItem(String id, IModel<String> labelModel,
             SerializableSupplier<Component> panelCreator) {
-        return new BootstrapAjaxLink<Void>(id, null, Buttons.Type.Link, labelModel) {
+        BootstrapAjaxLink<Void> link = new BootstrapAjaxLink<Void>(id, null, Buttons.Type.Link, labelModel) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 exportPanel = exportPanel.replaceWith(panelCreator.get());
                 target.add(exportPanel);
             }
         };
+        link.add(new CssClassNameAppender("text-left"));
+        return link;
     }
 
     @Override
