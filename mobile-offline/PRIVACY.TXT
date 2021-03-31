@@ -2,17 +2,18 @@ PMC Reporter App Data Privacy Policy
 
 1. About this Privacy Policy
 
-The PMC Reporter app is to be used by members of Makueni County Project Management Committee (PMC). It allows members
-to create and submit reports on the status of government funded projects. The data is stored offline and once a report
-is submitted and connected to the internet, the report is sent to the Government of Makueni Open Contracting Portal
-for validation. To receive a login to the app, please contact the government administrators. This tool was developed
+The PMC Reporter app is to be used by members of Elgeyo Marakwet County Project Management Committee (PMC).
+It allows members to create and submit reports on the status of government funded projects. The data is stored
+offline and once a report is submitted and connected to the internet, the report is sent to the
+Government of Elgeyo Marakwet Open Contracting Portal for validation.
+To receive a login to the app, please contact the government administrators. This tool was developed
 by Development Gateway (DG). DG is committed to keeping data safe, taking a minimalist approach to using data only
 when strictly necessary to fulfil the purpose of users interacting with the app.
 
 The PMC Reporter Data Privacy Policy is consistent with existing laws and policies that govern data protection in
 Kenya. This policy applies to all data processed through the PMC Reporter.
 
-This Privacy Policy was last updated on October 27, 2020.
+This Privacy Policy was last updated on March 8, 2021.
 
 2. Data Collection
 
