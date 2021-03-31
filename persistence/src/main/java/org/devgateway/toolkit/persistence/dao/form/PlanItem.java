@@ -18,9 +18,13 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author idobre
@@ -33,7 +37,6 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan> implements ListViewItem, Labelable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Item")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Item item;
 
@@ -41,7 +44,6 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     private BigDecimal estimatedCost;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Unit Of Issue")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Unit unitOfIssue;
 
@@ -49,7 +51,6 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     private BigDecimal quantity;
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Procurement Method")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ProcurementMethod procurementMethod;
 
@@ -59,22 +60,23 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @ManyToOne
-    private TargetGroup targetGroup;
+    @ManyToMany
+    @Size(max = 1)
+    private List<TargetGroup> targetGroup = new ArrayList<>();
 
-    @ExcelExport(useTranslation = true, name = "Target Group Value")
+    @ExcelExport(useTranslation = true, name = "Target Group Value (KES)")
     private BigDecimal targetGroupValue;
 
-    @ExcelExport(useTranslation = true, name = "1st Quarter")
+    @ExcelExport(useTranslation = true, name = "1st Quarter (KES)")
     private BigDecimal quarter1st;
 
-    @ExcelExport(useTranslation = true, name = "2nd Quarter")
+    @ExcelExport(useTranslation = true, name = "2nd Quarter (KES)")
     private BigDecimal quarter2nd;
 
-    @ExcelExport(useTranslation = true, name = "3rd Quarter")
+    @ExcelExport(useTranslation = true, name = "3rd Quarter (KES)")
     private BigDecimal quarter3rd;
 
-    @ExcelExport(useTranslation = true, name = "4th Quarter")
+    @ExcelExport(useTranslation = true, name = "4th Quarter (KES)")
     private BigDecimal quarter4th;
 
     public Item getItem() {
@@ -125,11 +127,11 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
         this.sourceOfFunds = sourceOfFunds;
     }
 
-    public TargetGroup getTargetGroup() {
+    public List<TargetGroup> getTargetGroup() {
         return targetGroup;
     }
 
-    public void setTargetGroup(final TargetGroup targetGroup) {
+    public void setTargetGroup(List<TargetGroup> targetGroup) {
         this.targetGroup = targetGroup;
     }
 
@@ -196,5 +198,5 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     public String toString() {
         return getLabel();
     }
-    
+
 }

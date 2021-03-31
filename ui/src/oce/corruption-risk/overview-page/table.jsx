@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { List } from 'immutable';
-import translatable from '../../translatable';
+import PropTypes from 'prop-types';
 import { POPUP_HEIGHT } from '../constants';
 import { getAwardAmount, mkContractLink, _3LineText } from '../tools';
 import PaginatedTable from '../paginated-table';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 // eslint-disable-next-line no-undef
-class Popup extends translatable(React.Component) {
+class Popup extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -17,19 +17,19 @@ class Popup extends translatable(React.Component) {
   }
 
   getPopup() {
-    const { type, flagIds } = this.props;
+    const { type, flagIds, t } = this.props;
     const { popupTop } = this.state;
     return (
       <div className="crd-popup text-center" style={{ top: popupTop, transform: 'none' }}>
         <div className="row">
           <div className="col-sm-12 info">
-            <h5>{this.t('crd:procurementsTable:associatedFlags').replace('$#$', this.t(`crd:corruptionType:${type}:name`))}</h5>
+            <h5>{t('crd:procurementsTable:associatedFlags').replace('$#$', t(`crd:corruptionType:${type}:name`))}</h5>
           </div>
           <div className="col-sm-12">
             <hr />
           </div>
           <div className="col-sm-12 info">
-            {flagIds.map((flagId) => <p key={flagId}>{this.t(`crd:indicators:${flagId}:name`)}</p>)}
+            {flagIds.map((flagId) => <p key={flagId}>{t(`crd:indicators:${flagId}:name`)}</p>)}
           </div>
         </div>
         <div className="arrow" />
@@ -63,21 +63,27 @@ class Popup extends translatable(React.Component) {
   }
 }
 
+Popup.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
 class ProcurementsTable extends PaginatedTable {
   renderPopup({ flaggedStats, flagType: type, flagIds }) {
-    const { translations } = this.props;
+    const { t } = this.props;
     return (
       <Popup
         flaggedStats={flaggedStats}
         type={type}
         flagIds={flagIds}
-        translations={translations}
+        t={t}
       />
     );
   }
 
   render() {
-    const { data, navigate, corruptionType } = this.props;
+    const {
+      data, navigate, corruptionType, t,
+    } = this.props;
 
     if (!data) return null;
 
@@ -115,7 +121,7 @@ class ProcurementsTable extends PaginatedTable {
         tenderAmount,
         awardsAmount: getAwardAmount(contract),
         tenderDate: `${startDate}—${endDate}`,
-        flagTypeName: this.t(`crd:corruptionType:${flagType}:name`),
+        flagTypeName: t(`crd:corruptionType:${flagType}:name`),
         // needed for the popup:
         flaggedStats,
         flagType,
@@ -133,50 +139,50 @@ class ProcurementsTable extends PaginatedTable {
         onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
         columns={[
           {
-            text: this.t('crd:procurementsTable:status'),
+            text: t('crd:procurementsTable:status'),
             dataField: 'status',
             fm: 'crd.overview.procurementProcesses.col.status',
           },
           {
-            text: this.t('crd:procurementsTable:contractID'),
+            text: t('crd:procurementsTable:contractID'),
             dataField: 'id',
             fm: 'crd.overview.procurementProcesses.col.contractId',
             formatter: mkContractLink(navigate),
           },
           {
-            text: this.t('crd:procurementsTable:title'),
+            text: t('crd:procurementsTable:title'),
             dataField: 'title',
             fm: 'crd.overview.procurementProcesses.col.title',
             formatter: mkContractLink(navigate),
           },
           {
-            text: this.t('crd:procurementsTable:procuringEntity'),
+            text: t('crd:procurementsTable:procuringEntity'),
             dataField: 'PEName',
             fm: 'crd.overview.procurementProcesses.col.procuringEntity',
             formatter: _3LineText,
           },
           {
-            text: this.t('crd:procurementsTable:tenderAmount'),
+            text: t('crd:procurementsTable:tenderAmount'),
             dataField: 'tenderAmount',
             fm: 'crd.overview.procurementProcesses.col.tenderAmount',
           },
           {
-            text: this.t('crd:procurementsTable:awardsAmount'),
+            text: t('crd:procurementsTable:awardsAmount'),
             dataField: 'awardsAmount',
             fm: 'crd.overview.procurementProcesses.col.awardsAmount',
           },
           {
-            text: this.t('crd:procurementsTable:tenderDate'),
+            text: t('crd:procurementsTable:tenderDate'),
             dataField: 'tenderDate',
             fm: 'crd.overview.procurementProcesses.col.tenderDate',
           },
           {
-            text: this.t('crd:procurementsTable:flagType'),
+            text: t('crd:procurementsTable:flagType'),
             dataField: 'flagTypeName',
             fm: 'crd.overview.procurementProcesses.col.flagType',
           },
           {
-            text: this.t('crd:procurementsTable:noOfFlags'),
+            text: t('crd:procurementsTable:noOfFlags'),
             dataField: 'flagIds',
             fm: 'crd.overview.procurementProcesses.col.nrFlags',
             formatter: (_, popupData) => this.renderPopup(popupData),
@@ -187,5 +193,9 @@ class ProcurementsTable extends PaginatedTable {
     );
   }
 }
+
+ProcurementsTable.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default ProcurementsTable;

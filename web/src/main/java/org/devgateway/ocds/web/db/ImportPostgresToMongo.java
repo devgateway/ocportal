@@ -9,14 +9,17 @@ import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
+import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +62,9 @@ public class ImportPostgresToMongo {
 
     @Autowired
     private ProcurementPlanService procurementPlanService;
+
+    @Autowired
+    private PrequalifiedSupplierService prequalifiedSupplierService;
 
     @Autowired
     private ProcurementPlanMongoRepository procurementPlanMongoRepository;
@@ -162,14 +168,19 @@ public class ImportPostgresToMongo {
                     pr.getPurchaseRequisition().stream().forEach(item -> self.storeMakueniFormFiles(
                             item.getFormDocs()));
 
+                    Tender tender = pr.getSingleTender();
+
                     pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
                     pr.getTender().stream().forEach(item -> self.storeMakueniFormFiles(item.getBillOfQuantities()));
 
                     pr.setTenderQuotationEvaluation(new HashSet<>(
                             filterNotExportable(pr.getTenderQuotationEvaluation())));
-                    pr.getTenderQuotationEvaluation().stream()
-                            .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
+                    pr.getTenderQuotationEvaluation()
+                            .forEach(item -> {
+                                item.getBids().forEach(b -> computePrequalifiedItems(b, tender));
+                                self.storeMakueniFormFiles(item.getFormDocs());
+                            });
 
                     pr.setProfessionalOpinion(new HashSet<>(filterNotExportable(pr.getProfessionalOpinion())));
                     pr.getProfessionalOpinion().stream().flatMap(i -> i.getItems().stream())
@@ -194,6 +205,7 @@ public class ImportPostgresToMongo {
                     pr.setInspectionReports(new HashSet<>(filterNotExportable(pr.getInspectionReports())));
                     pr.getInspectionReports().stream().forEach(doc -> {
                         self.storeMakueniFormFiles(doc.getFormDocs());
+                        self.storeMakueniFormFiles(doc.getPicture());
                         doc.getPrivateSectorRequests().stream()
                                 .forEach(psr -> self.storeMakueniFormFiles(psr.getUpload()));
                     });
@@ -205,7 +217,10 @@ public class ImportPostgresToMongo {
                     pr.getMeReports().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
 
                     pr.setPaymentVouchers(new HashSet<>(filterNotExportable(pr.getPaymentVouchers())));
-                    pr.getPaymentVouchers().stream().forEach(doc -> self.storeMakueniFormFiles(doc.getFormDocs()));
+                    pr.getPaymentVouchers().stream().forEach(doc -> {
+                        self.storeMakueniFormFiles(doc.getFormDocs());
+                        self.storeMakueniFormFiles(doc.getCompletionCertificate());
+                    });
                 });
 
                 pp.getProjects().stream().flatMap(p->p.getCabinetPapers().stream()).
@@ -255,6 +270,10 @@ public class ImportPostgresToMongo {
 
         stopWatch.stop();
         logger.info("Mongo import ended in: " + stopWatch.getTime() + "ms");
+    }
+
+    private void computePrequalifiedItems(Bid bid, Tender tender) {
+        bid.setPrequalifiedItems(prequalifiedSupplierService.findItemsForBid(bid, tender));
     }
 
     public void storeMakueniFormFiles(final Set<FileMetadata> formDocs) {

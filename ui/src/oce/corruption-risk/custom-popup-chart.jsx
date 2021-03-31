@@ -1,12 +1,12 @@
+import React from 'react';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
 import Chart from '../visualizations/charts/frontend-date-filterable';
 import ReactIgnore from '../react-ignore';
 import { POPUP_HEIGHT, POPUP_WIDTH } from './constants';
 import loadingBubbles from '../resources/loading-bubbles.svg';
-import translatable from '../translatable';
 
-class CustomPopupChart extends translatable(Chart) {
+class CustomPopupChart extends Chart {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -76,13 +76,14 @@ class CustomPopupChart extends translatable(Chart) {
 
   render() {
     const { loading, popup } = this.state;
+    const { t } = this.props;
     const hasNoData = !loading && this.hasNoData();
     return (
       <div className={cn('chart-container', { 'popup-left': popup.toTheLeft })}>
-        {hasNoData && <div className="message">{this.t('charts:general:noData')}</div>}
+        {hasNoData && <div className="message">{t('charts:general:noData')}</div>}
         {loading && (
         <div className="message">
-          {this.t('general:loading')}
+          {t('general:loading')}
           <br />
           <img src={loadingBubbles} alt="" />
         </div>
@@ -99,7 +100,7 @@ class CustomPopupChart extends translatable(Chart) {
 }
 
 CustomPopupChart.propTypes = {
-  translations: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 export default CustomPopupChart;

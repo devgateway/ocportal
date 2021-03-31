@@ -13,7 +13,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.string.Strings;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
@@ -27,7 +26,6 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
-import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +45,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
-
-    @SpringBean
-    protected MakueniEntityServiceResolver makeniEntityServiceResolver;
 
     private Fragment extraStatusEntityButtons;
 

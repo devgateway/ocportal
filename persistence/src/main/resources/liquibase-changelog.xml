@@ -1325,6 +1325,15 @@
         <addNotNullConstraint tableName="payment_voucher" columnName="tender_process_id"/>
     </changeSet>
 
+    <changeSet id="OCNYAN-32-admin-settings" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="admin_settings" columnName="unlock_after_hours"/>
+        </preConditions>
+        <update tableName="admin_settings">
+            <column name="unlock_after_hours" valueNumeric="8"/>
+        </update>
+    </changeSet>
+
     <changeSet id="OCMAKU-785-tp" author="mpostelnicu">
         <sqlFile path="sql/OCMAKU-785-cleanup-tp.sql"/>
     </changeSet>
@@ -1498,4 +1507,64 @@
         ]]></sql>
     </changeSet>
 
+    <!--Change Set Placeholder 1-->
+
+    <!--Change Set Placeholder 2-->
+
+    <!--Change Set Placeholder 3-->
+
+    <!--Change Set Placeholder 4-->
+
+    <!--Change Set Placeholder 5-->
+
+    <!--Change Set Placeholder 6-->
+
+    <!--Change Set Placeholder 7-->
+
+    <!--Change Set Placeholder 8-->
+
+    <!--Change Set Placeholder 9-->
+
+    <!--Change Set Placeholder 10-->
+
+    <!--Change Set Placeholder 11-->
+
+    <!--Change Set Placeholder 12-->
+
+    <!--Change Set Placeholder 13-->
+
+    <!--Change Set Placeholder 14-->
+
+    <!--Change Set Placeholder 15-->
+
+    <!--Change Set Placeholder 16-->
+
+    <!--Change Set Placeholder 17-->
+
+    <!--Change Set Placeholder 18-->
+
+    <!--Change Set Placeholder 19-->
+
+    <!--Change Set Placeholder 20-->
+
+
+    <changeSet id="OCMAKU-945-multiple-planitem-target-groups" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="plan_item_target_group"/>
+        </preConditions>
+    <sql>
+        insert into plan_item_target_group (plan_item_id, target_group_id)
+        (select id,target_group_id from plan_item where target_group_id is not null)
+    </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-1008" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="ROLE"/>
+        </preConditions>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_VALIDATOR_ALL"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.components.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
@@ -11,7 +12,8 @@ import org.devgateway.toolkit.forms.wicket.components.FieldPanel;
  * @author idobre
  * @since 2019-04-10
  */
-public class GenericSleepFormComponent<T> extends FieldPanel<T> implements DgFmFormComponentSubject {
+public class GenericSleepFormComponent<T> extends FieldPanel<T> implements DgFmFormComponentSubject,
+        ComponentAjaxUpdateSubscriber {
     public GenericSleepFormComponent(final String id) {
         super(id);
     }
@@ -37,8 +39,17 @@ public class GenericSleepFormComponent<T> extends FieldPanel<T> implements DgFmF
         final IModel<String> labelModel = new ResourceModel(getId() + ".label");
         add(new Label("label", labelModel));
 
-        final Label value = new Label("value", new ViewModeConverterModel<>(getModel()));
+        add(newValueComponent("value"));
+    }
+
+    protected Component newValueComponent(String id) {
+        Label value = new Label(id, new ViewModeConverterModel<>(getModel()));
         value.setEscapeModelStrings(false);
-        add(value);
+        return value;
+    }
+
+    @Override
+    public Component getAjaxUpdateSubscriberComponent() {
+        return this;
     }
 }

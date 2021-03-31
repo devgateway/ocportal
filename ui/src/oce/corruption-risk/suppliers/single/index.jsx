@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import TopSearch from '../../top-search';
-import translatable, { tCreator } from '../../../translatable';
 import Visualization from '../../../visualization';
 import { wirePropsPlain } from '../../tools';
 import NrLostVsWon from './donuts/nr-lost-vs-won';
@@ -22,20 +22,24 @@ import { fetchAllInfo } from './api';
 import flag from '../../../resources/icons/flag.svg';
 import fmConnect from '../../../fm/fm';
 
-class CrosstabExplanation extends translatable(React.PureComponent) {
+class CrosstabExplanation extends React.PureComponent {
   render() {
-    const { nrFlags, corruptionType } = this.props;
+    const { nrFlags, corruptionType, t } = this.props;
     return (
       <p>
-        {this.t('crd:supplier:crosstabs:explanation')
+        {t('crd:supplier:crosstabs:explanation')
           .replace('$#$', nrFlags)
-          .replace('$#$', this.t(`crd:corruptionType:${corruptionType}:pageTitle`))}
+          .replace('$#$', t(`crd:corruptionType:${corruptionType}:pageTitle`))}
       </p>
     );
   }
 }
 
-class Info extends translatable(Visualization) {
+CrosstabExplanation.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
+class Info extends Visualization {
   getCustomEP() {
     const { id } = this.props;
     return [
@@ -60,7 +64,7 @@ class Info extends translatable(Visualization) {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, t } = this.props;
 
     if (!data) return null;
 
@@ -69,7 +73,6 @@ class Info extends translatable(Visualization) {
     const contractCount = data.get('totalContracts');
 
     const address = info.get('address');
-    const contact = info.get('contactPoint');
     return (
       <section className="info">
         <table className="table table-bordered join-bottom info-table">
@@ -77,13 +80,13 @@ class Info extends translatable(Visualization) {
             <tr>
               <td>
                 <dl>
-                  <dt>{this.t('crd:supplier:ID')}</dt>
+                  <dt>{t('crd:supplier:ID')}</dt>
                   <dd>{info.get('id')}</dd>
                 </dl>
               </td>
               <td>
                 <dl>
-                  <dt>{this.t('crd:supplier:name')}</dt>
+                  <dt>{t('crd:supplier:name')}</dt>
                   <dd>{info.get('name')}</dd>
                 </dl>
               </td>
@@ -93,7 +96,7 @@ class Info extends translatable(Visualization) {
                 <span className="count">
                   {flagCount}
                   &nbsp;
-                  {this.t(flagCount === 1
+                  {t(flagCount === 1
                     ? 'crd:contracts:baseInfo:flag:sg'
                     : 'crd:contracts:baseInfo:flag:pl')}
                 </span>
@@ -101,7 +104,7 @@ class Info extends translatable(Visualization) {
                   (
                   {contractCount}
                     &nbsp;
-                  {this.t(contractCount === 1
+                  {t(contractCount === 1
                     ? 'crd:supplier:contract:sg'
                     : 'crd:supplier:contract:pl')}
                   )
@@ -115,7 +118,7 @@ class Info extends translatable(Visualization) {
             <tr>
               <td>
                 <dl className="smaller">
-                  <dt>{this.t('crd:supplier:address')}</dt>
+                  <dt>{t('crd:supplier:address')}</dt>
                   {address && (
                   <dd>
                     {address.get('streetAddress')}
@@ -129,20 +132,6 @@ class Info extends translatable(Visualization) {
                     /
                     &nbsp;
                     {address.get('countryName')}
-                  </dd>
-                  )}
-                </dl>
-              </td>
-              <td>
-                <dl className="smaller">
-                  <dt>{this.t('crd:supplier:contact')}</dt>
-                  {contact && (
-                  <dd>
-                    {contact.get('name')}
-                    <br />
-                    {contact.get('email')}
-                    <br />
-                    {contact.get('telephone')}
                   </dd>
                   )}
                 </dl>
@@ -187,10 +176,10 @@ const Supplier = (props) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
   const {
-    translations, doSearch, id, filters, years, months, data, isFeatureVisible,
+    doSearch, id, filters, years, months, data, isFeatureVisible,
   } = props;
 
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const totalFlags = data.getIn(['info', 'totalFlags']);
 
@@ -251,7 +240,7 @@ const Supplier = (props) => {
                 {t(`crd:corruptionType:${corruptionType}:pageTitle`)}
               </h3>
               <CrosstabExplanation
-                translations={translations}
+                t={t}
                 corruptionType={corruptionType}
                 nrFlags={nrFlagsByCorruptionType[corruptionType]}
               />
@@ -279,7 +268,7 @@ const Supplier = (props) => {
         && (
           <>
             <h2>{t('crd:supplier:table:procurementsWon')}</h2>
-            <SupplierTable translations={translations} filters={supplierDatefulFilter} />
+            <SupplierTable filters={supplierDatefulFilter} />
           </>
         )}
       </section>
@@ -342,7 +331,6 @@ const Supplier = (props) => {
               <Zoomable zoomedWidth={width}>
                 <TitleBelow title={t('crd:supplier:winsAndLosses:title')}>
                   <WinsAndFlags
-                    translations={translations}
                     data={flagRowState.winsAndFlagsData}
                     length={flagRowState.maxCommonDataLength}
                   />
@@ -356,7 +344,6 @@ const Supplier = (props) => {
               <Zoomable zoomedWidth={width}>
                 <TitleBelow title={t('crd:supplier:flaggedNr:title')}>
                   <FlaggedNr
-                    translations={translations}
                     data={flagRowState.flaggedNrData}
                     length={flagRowState.maxCommonDataLength}
                   />
@@ -374,7 +361,7 @@ const Supplier = (props) => {
   return (
     <div className="supplier-page">
       <TopSearch
-        translations={translations}
+        t={t}
         doSearch={doSearch}
         placeholder={t('crd:suppliers:top-search')}
       />
@@ -402,7 +389,6 @@ const Supplier = (props) => {
 
 Supplier.propTypes = {
   width: PropTypes.number.isRequired,
-  translations: PropTypes.object.isRequired,
   doSearch: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,

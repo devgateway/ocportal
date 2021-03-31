@@ -1,13 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import NoDataMessage from './NoData';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const Contract = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
   const { data, isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
 
@@ -36,6 +36,12 @@ const Contract = (props) => {
         {isFeatureVisible('publicView.contract.expiryDate')
         && <Item label={t('contract:expiryDate')} value={formatDate(contract.expiryDate)} col={4} />}
 
+        {isFeatureVisible('publicView.contract.contractExtensionDate')
+        && <Item label={t('contract:contractExtensionDate')} value={formatDate(contract.contractExtensionDate)} col={4} />}
+
+        {isFeatureVisible('publicView.contract.reasonForExtension')
+        && <Item label={t('contract:reasonForExtension')} value={contract.reasonForExtension} col={4} />}
+
         {isFeatureVisible('publicView.contract.awardee.label')
         && <Item label={t('contract:awardee:label')} value={contract.awardee.label} col={4} />}
 
@@ -55,6 +61,15 @@ const Contract = (props) => {
           value={formatDate(contract.contractApprovalDate)}
           col={4}
         />
+        )}
+
+        {isFeatureVisible('publicView.contract.description')
+        && (
+          <Item
+            label={t('contract:description')}
+            value={contract.description}
+            col={12}
+          />
         )}
 
         {isFeatureVisible('publicView.contract.wards')
@@ -119,7 +134,7 @@ const Contract = (props) => {
     </div>
   );
 
-  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getContract(data[0]));
+  return (data === undefined ? <NoDataMessage /> : getContract(data[0]));
 };
 
 Contract.propTypes = defaultSingleTenderTabTypes;

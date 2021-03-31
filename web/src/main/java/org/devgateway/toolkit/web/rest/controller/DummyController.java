@@ -140,7 +140,7 @@ public class DummyController {
                 item.setQuantity(new BigDecimal(1001));
                 item.setProcurementMethod(procurementMethods.get(random.nextInt(procurementMethods.size())));
                 item.setSourceOfFunds("dk20fk0-2-ck-sk93-0001");
-                item.setTargetGroup(targetGroups.get(random.nextInt(targetGroups.size())));
+                item.getTargetGroup().add(targetGroups.get(random.nextInt(targetGroups.size())));
                 item.setTargetGroupValue(new BigDecimal(76.12));
                 item.setQuarter1st(new BigDecimal(12.0));
                 item.setQuarter2nd(new BigDecimal(34.0));

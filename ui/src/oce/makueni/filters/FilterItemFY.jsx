@@ -6,7 +6,6 @@ const FilterItemFY = ({ ...otherProps }) => <FilterItemSingleSelect ep="/makueni
 
 FilterItemFY.propTypes = {
   onChange: PropTypes.func.isRequired,
-  translations: PropTypes.object.isRequired,
 };
 
 export default FilterItemFY;

@@ -13,7 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author gmutuhu
@@ -26,7 +28,6 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Bid extends AbstractChildExpandableAuditEntity<TenderQuotationEvaluation> implements ListViewItem {
     @ExcelExport(name = "Supplier")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private Supplier supplier;
 
@@ -35,6 +36,9 @@ public class Bid extends AbstractChildExpandableAuditEntity<TenderQuotationEvalu
 
     @ExcelExport(useTranslation = true, name = "Quoted Price")
     private BigDecimal quotedAmount;
+
+    @Transient
+    private List<String> prequalifiedItems;
 
     public Supplier getSupplier() {
         return supplier;
@@ -60,4 +64,11 @@ public class Bid extends AbstractChildExpandableAuditEntity<TenderQuotationEvalu
         this.supplierResponsiveness = supplierResponsiveness;
     }
 
+    public List<String> getPrequalifiedItems() {
+        return prequalifiedItems;
+    }
+
+    public void setPrequalifiedItems(List<String> prequalifiedItems) {
+        this.prequalifiedItems = prequalifiedItems;
+    }
 }

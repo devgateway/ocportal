@@ -10,6 +10,9 @@ export const metadataSlice = createSlice({
         loadSuccess: (state, action) => {
             state.ref = action.payload
             state.refById = getRefById(action.payload)
+            if (!state.refById["Tender"]) {
+                state.refById["Tender"] = {};
+            }
         }
     }
 });

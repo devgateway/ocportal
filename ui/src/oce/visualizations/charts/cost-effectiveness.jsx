@@ -1,6 +1,8 @@
 import { Map } from 'immutable';
 import FrontendDateFilterableChart from './frontend-date-filterable';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
+import { tMonth } from '../../translatable';
 
 class CostEffectiveness extends FrontendDateFilterableChart {
   mkTrace(name, colorIndex) {
@@ -24,9 +26,10 @@ class CostEffectiveness extends FrontendDateFilterableChart {
   getData() {
     const data = super.getData();
     if (!data) return [];
+    const { t } = this.props;
     const traces = [
-      this.mkTrace(this.t('charts:costEffectiveness:traces:tenderPrice'), 0),
-      this.mkTrace(this.t('charts:costEffectiveness:traces:awardPrice'), 1),
+      this.mkTrace(t('charts:costEffectiveness:traces:tenderPrice'), 0),
+      this.mkTrace(t('charts:costEffectiveness:traces:awardPrice'), 1),
     ];
 
     const { hoverFormatter } = this.props.styling.charts;
@@ -34,7 +37,7 @@ class CostEffectiveness extends FrontendDateFilterableChart {
 
     data.forEach((datum) => {
       const date = datum.has('month')
-        ? this.tMonth(datum.get('month'), years)
+        ? tMonth(t, datum.get('month'), years)
         : datum.get('year');
       traces.forEach((trace) => trace.x.push(date));
       const tender = datum.get('totalTenderAmount');
@@ -51,14 +54,15 @@ class CostEffectiveness extends FrontendDateFilterableChart {
   }
 
   getLayout() {
+    const { t } = this.props;
     return {
       barmode: 'group',
       xaxis: {
-        title: this.props.monthly ? this.t('general:month') : this.t('general:year'),
+        title: this.props.monthly ? t('general:month') : t('general:year'),
         type: 'category',
       },
       yaxis: {
-        title: this.t('charts:costEffectiveness:yAxisTitle'),
+        title: t('charts:costEffectiveness:yAxisTitle'),
         tickprefix: '   ',
       },
     };
@@ -71,5 +75,9 @@ CostEffectiveness.excelEP = 'costEffectivenessExcelChart';
 CostEffectiveness.getFillerDatum = (seed) => Map(seed).set('totalTenderAmount', 0).set('diffTenderAwardAmount', 0);
 
 CostEffectiveness.getMaxField = (imm) => imm.get('totalTenderAmount') + imm.get('diffTenderAwardAmount');
+
+CostEffectiveness.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(CostEffectiveness, 'viz.me.chart.costEffectiveness');

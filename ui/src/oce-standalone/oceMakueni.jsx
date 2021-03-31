@@ -1,5 +1,7 @@
+import React from 'react';
 import { Map } from 'immutable';
 import cn from 'classnames';
+import PropTypes from 'prop-types';
 import OCApp from '../oce';
 import OverviewTab from '../oce/tabs/overview';
 import LocationTab from '../oce/tabs/location';
@@ -39,14 +41,15 @@ class OCEMakueni extends OCApp {
   }
 
   loginBox() {
+    const { t } = this.props;
     let linkUrl;
     let text;
     if (this.state.user.loggedIn) {
       linkUrl = '/preLogout?referrer=/ui/index.html';
-      text = this.t('general:logout');
+      text = t('general:logout');
     } else {
       linkUrl = '/login?referrer=/ui/index.html';
-      text = this.t('general:login');
+      text = t('general:login');
     }
     return (
       <a href={linkUrl} className="login-logout">
@@ -81,6 +84,7 @@ class OCEMakueni extends OCApp {
   }
 
   exportBtn() {
+    const { t } = this.props;
     if (this.state.exporting) {
       return (
         <div className="export-progress">
@@ -90,7 +94,7 @@ class OCEMakueni extends OCApp {
               role="progressbar"
               style={{ width: '100%' }}
             >
-              {this.t('export:exporting')}
+              {t('export:exporting')}
             </div>
           </div>
         </div>
@@ -108,27 +112,11 @@ class OCEMakueni extends OCApp {
     );
   }
 
-  languageSwitcher() {
-    const { TRANSLATIONS } = this.constructor;
-    const { locale: selectedLocale } = this.state;
-    if (Object.keys(TRANSLATIONS).length <= 1) return null;
-    return Object.keys(TRANSLATIONS)
-      .map((locale) => (
-        <a
-          key={locale}
-          onClick={() => this.setLocale(locale)}
-          className={cn({ active: locale === selectedLocale })}
-        >
-          {locale.split('_')[0]}
-        </a>
-      ));
-  }
-
   render() {
+    const { t } = this.props;
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          translations={this.props.translations}
           onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="m-and-e"
@@ -143,7 +131,7 @@ class OCEMakueni extends OCApp {
               data-step="8"
             >
               <div className="filters-hint col-md-12">
-                {this.t('filters:hint')}
+                {t('filters:hint')}
               </div>
               {this.filters()}
               {/* {this.comparison()} */}
@@ -165,10 +153,14 @@ class OCEMakueni extends OCApp {
             </div>
           </div>
         </div>
-        <Footer translations={this.props.translations} />
+        <Footer />
       </div>
     );
   }
 }
+
+OCEMakueni.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default OCEMakueni;

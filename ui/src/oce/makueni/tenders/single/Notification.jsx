@@ -1,13 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import NoDataMessage from './NoData';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const Notification = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
   const { data, isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
 
@@ -33,6 +33,9 @@ const Notification = (props) => {
                 <div className="row">
                   {isFeatureVisible('publicView.awardNotification.items.awardValue')
                   && <Item label={t('notification:awardValue')} value={currencyFormatter(i.awardValue)} col={4} />}
+
+                  {isFeatureVisible('publicView.awardNotification.items.tenderAwardDate')
+                  && <Item label={t('notification:tenderAwardDate')} value={formatDate(i.tenderAwardDate)} col={4} />}
 
                   {isFeatureVisible('publicView.awardNotification.items.awardDate')
                   && <Item label={t('notification:awardDate')} value={formatDate(i.awardDate)} col={4} />}
@@ -64,7 +67,7 @@ const Notification = (props) => {
     </div>
   );
 
-  return (data === undefined ? <NoDataMessage translations={props.translations} /> : getNotification(data[0]));
+  return (data === undefined ? <NoDataMessage /> : getNotification(data[0]));
 };
 
 Notification.propTypes = defaultSingleTenderTabTypes;

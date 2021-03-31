@@ -1,8 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
@@ -16,7 +14,6 @@ import javax.persistence.ManyToOne;
 @Audited
 public class SubWard extends LocationPointCategory {
     @ManyToOne
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "ward_id")
     private Ward ward;
 

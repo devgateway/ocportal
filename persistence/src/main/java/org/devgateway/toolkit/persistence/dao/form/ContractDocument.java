@@ -29,7 +29,6 @@ import java.util.Set;
 public class ContractDocument extends AbstractChildExpandableAuditEntity<Contract> implements ListViewItem,
         SingleFileMetadatable {
     @ExcelExport(justExport = true, useTranslation = true, name = "Contract Document Type")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToOne
     private ContractDocumentType contractDocumentType;
 
