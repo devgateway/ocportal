@@ -1,12 +1,15 @@
 package org.devgateway.toolkit.forms.wicket.page.overview.department;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -350,6 +353,18 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
                     "deptOverview.tenderProcess.paymentVoucher"
             );
             panels.add(paymentVoucherPanel);
+
+            BootstrapAjaxLink<Void> deleteLink = new BootstrapAjaxLink<Void>("delete", Buttons.Type.Danger) {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    tenderProcessService.delete(item.getModelObject());
+                    throw new RestartResponseException(DepartmentOverviewPage.class);
+                }
+            };
+            deleteLink.setLabel(new StringResourceModel("deleteTenderProcess", this));
+            deleteLink.setVisibilityAllowed(tenderProcess.isDeleteAllowed());
+            containerFragment.add(deleteLink);
+
             hideableContainer.addOrReplace(containerFragment);
         } else {
             final Fragment containerFragment = new Fragment(containerFragmentId, "emptyContainerFragment", this);

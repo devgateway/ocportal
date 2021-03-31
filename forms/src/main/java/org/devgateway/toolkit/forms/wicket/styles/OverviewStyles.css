@@ -2,14 +2,6 @@
 
 /* general styles for dashboards
 -------------------------------------------------- */
-.main-content a {
-    color: #1d7abf;
-}
-
-.main-content a:hover {
-    color: #223a49;
-    text-decoration: none;
-}
 
 .container-fluid {
     padding-left: 0 !important;
@@ -925,4 +917,8 @@
 .btn[disabled]{
   opacity: .45;
   filter: grayscale(1);
+}
+
+.mb-1 {
+    margin-bottom: 10px;
 }
