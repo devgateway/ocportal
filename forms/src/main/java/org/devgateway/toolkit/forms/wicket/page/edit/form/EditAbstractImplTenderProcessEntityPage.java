@@ -22,6 +22,7 @@ public abstract class EditAbstractImplTenderProcessEntityPage<T extends Abstract
         super.onInitialize();
 
         abstractImplExtraFields = new Fragment("extraReadOnlyFields", "abstractImplExtraFields", this);
+        abstractImplExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.tender.iterator.next.tenderNumber"));
         abstractImplExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.tender.iterator.next.tenderTitle"));
         abstractImplExtraFields.add(new GenericSleepFormComponent<>("tenderProcess.singleContract.awardee"));
 
