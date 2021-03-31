@@ -671,3 +671,7 @@ hr.edit-separator {
     display: flex;
     flex-direction: column;
 }
+
+.btn.text-left {
+    text-align: left;
+}
