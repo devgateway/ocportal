@@ -101,6 +101,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         final DateFieldBootstrapFormComponent contractDate = ComponentUtil.addDateField(editForm, "contractDate");
+        contractDate.setShowTooltip(true);
 
         AwardNotificationItem acceptedNotification = editForm.getModelObject().getTenderProcess()
                 .getSingleAwardNotification().getAcceptedNotification();
@@ -109,8 +110,10 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
             contractDate.getField().add(new AfterThanDateValidator(acceptedNotification.getAwardDate()));
         }
 
-        ComponentUtil.addDateField(editForm, "contractApprovalDate");
-        ComponentUtil.addDateField(editForm, "expiryDate");
+        ComponentUtil.addDateField(editForm, "contractApprovalDate")
+                .setShowTooltip(true);
+        ComponentUtil.addDateField(editForm, "expiryDate")
+                .setShowTooltip(true);
 
         addSupplierInfo();
 
@@ -122,7 +125,8 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
                 LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
 
-        ComponentUtil.addDateField(editForm, "contractExtensionDate");
+        ComponentUtil.addDateField(editForm, "contractExtensionDate")
+                .setShowTooltip(true);
         ComponentUtil.addTextField(editForm, "reasonForExtension");
     }
 

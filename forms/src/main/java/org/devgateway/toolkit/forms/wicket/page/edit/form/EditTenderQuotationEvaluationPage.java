@@ -57,8 +57,10 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
                 tenderModel.map(Tender::getTenderTitle)));
         editForm.replace(extraFields);
 
-        ComponentUtil.addDateField(editForm, "openingDate");
-        ComponentUtil.addDateField(editForm, "closingDate");
+        ComponentUtil.addDateField(editForm, "openingDate")
+                .setShowTooltip(true);
+        ComponentUtil.addDateField(editForm, "closingDate")
+                .setShowTooltip(true);
         editForm.add(new BidPanel("bids"));
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
