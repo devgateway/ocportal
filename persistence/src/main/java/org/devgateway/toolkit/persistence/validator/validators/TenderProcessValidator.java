@@ -291,8 +291,9 @@ public class TenderProcessValidator implements Validator {
 
     public void validateDates(TenderProcess tp, Errors errors) {
         if (existsNonDraftPair(tp.getAwardNotification(), tp.getTender())) {
-            if (tp.getAwardNotification().stream().flatMap(a -> a.getItems().stream())
-                    .map(AwardNotificationItem::getAwardDate).anyMatch(
+            if (tp.getSingleTender().getInvitationDate() != null
+                    && tp.getAwardNotification().stream().flatMap(a -> a.getItems().stream())
+                    .map(AwardNotificationItem::getAwardDate).filter(Objects::nonNull).anyMatch(
                             d -> d.before(tp.getSingleTender().getInvitationDate()))) {
                 errors.reject("At least one Award Notification date is earlier than the Tender "
                         + "invitation date");
@@ -301,7 +302,8 @@ public class TenderProcessValidator implements Validator {
 
         if (existsNonDraftPair(tp.getAwardAcceptance(), tp.getContract())) {
             if (tp.getSingleAwardAcceptance().getAcceptedAcceptance() != null
-                    && tp.getContract().stream().map(Contract::getContractDate)
+                    && tp.getSingleAwardAcceptance().getAcceptedAcceptance().getAcceptanceDate() != null
+                    && tp.getContract().stream().map(Contract::getContractDate).filter(Objects::nonNull)
                     .anyMatch(
                             d -> d.before(tp.getSingleAwardAcceptance().getAcceptedAcceptance().getAcceptanceDate()))
             ) {

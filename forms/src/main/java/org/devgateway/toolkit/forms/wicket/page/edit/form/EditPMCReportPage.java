@@ -132,7 +132,8 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         ComponentUtil.addTextAreaField(editForm, "pmcChallenges");
 
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcStatus", pmcStatusService);
-        ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService);
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService)
+                .setShowTooltip(true);
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
