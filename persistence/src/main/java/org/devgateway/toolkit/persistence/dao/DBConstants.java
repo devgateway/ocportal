@@ -24,7 +24,7 @@ public final class DBConstants {
     public static final String DATE_FORMAT = "dd/MM/YYYY";
 
 
-    public static final String FROM_EMAIL = "noreply@dgstg.org";
+    public static final String FROM_EMAIL = "info@elgeyomarakwet.go.ke";
 
     public static final String INSTANCE_NAME = "Elgeyo Marakwet";
 
