@@ -16,6 +16,7 @@ import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.validators.EarlierThanDateFieldValidator;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
@@ -185,7 +186,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
             }
             return null;
         });
-        procuringEntityEmail.attachFm("issuedBy");
+        procuringEntityEmail.add(new DgFmBehavior(issuedBy));
         procuringEntityEmail.setOutputMarkupId(true);
         editForm.add(procuringEntityEmail);
 
@@ -195,7 +196,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
             }
             return null;
         });
-        procuringEntityAddress.attachFm("issuedBy");
+        procuringEntityAddress.add(new DgFmBehavior(issuedBy));
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
     }
