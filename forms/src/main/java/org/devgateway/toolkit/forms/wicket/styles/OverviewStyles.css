@@ -937,3 +937,8 @@
   opacity: .45;
   filter: grayscale(1);
 }
+
+.btn-add-float-right {
+    float: right;
+    margin-right: 17px;
+}
