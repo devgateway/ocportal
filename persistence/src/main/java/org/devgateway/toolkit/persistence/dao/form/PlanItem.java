@@ -18,9 +18,13 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author idobre
@@ -54,11 +58,13 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
-    @ManyToOne
-    private TargetGroup targetGroup;
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToMany
+    //@Size(max = 1)
+    private List<TargetGroup> targetGroup = new ArrayList<>();
 
-    @ExcelExport(useTranslation = true, name = "Target Group Value (KES)")
+    @ExcelExport(useTranslation = true, name = "AGPO Category Value (KES)")
     private BigDecimal targetGroupValue;
 
     @ExcelExport(useTranslation = true, name = "1st Quarter (KES)")
@@ -121,11 +127,11 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
         this.sourceOfFunds = sourceOfFunds;
     }
 
-    public TargetGroup getTargetGroup() {
+    public List<TargetGroup> getTargetGroup() {
         return targetGroup;
     }
 
-    public void setTargetGroup(final TargetGroup targetGroup) {
+    public void setTargetGroup(List<TargetGroup> targetGroup) {
         this.targetGroup = targetGroup;
     }
 
@@ -192,5 +198,5 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     public String toString() {
         return getLabel();
     }
-    
+
 }

@@ -1,12 +1,12 @@
 # Target Groups
 
-Procurement Plan, Tender and Organization Target Groups
+Procurement Plan, Tender and Organization AGPO Categories
 
 ```
 {
   "definitions": {
     "TargetGroup": {
-      "title": "Target Group",
+      "title": "AGPO Category",
       "description": "The name of the target group. Eg PWD, Women, Youth, etc.",
       "type": [
         "string",
@@ -16,12 +16,12 @@ Procurement Plan, Tender and Organization Target Groups
     "Item": {
       "properties": {
         "targetGroup": {
-          "title": "Target Group",
+          "title": "AGPO Category",
           "$ref": "#/definitions/TargetGroup"
         },
         "targetGroupValue": {
-          "title": "Target Group Value",
-          "description": "The monetary value of a single unit, allocated to the target group",
+          "title": "AGPO Category Value",
+          "description": "The monetary value of a single unit, allocated to the AGPO Category",
           "$ref": "#/definitions/Value"
         }
       }
@@ -29,7 +29,7 @@ Procurement Plan, Tender and Organization Target Groups
     "Tender": {
       "properties": {
         "targetGroup": {
-          "title": "Target Group",
+          "title": "AGPO Category",
           "$ref": "#/definitions/TargetGroup"
         }
       }
@@ -37,7 +37,7 @@ Procurement Plan, Tender and Organization Target Groups
     "Organization": {
       "properties": {
         "targetGroup": {
-          "title": "Target Group",
+          "title": "AGPO Category",
           "$ref": "#/definitions/TargetGroup"
         }
       }

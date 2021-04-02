@@ -97,10 +97,10 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
         ComponentUtil.addDateField(editForm, "byWhen");
         ComponentUtil.addYesNoToggle(editForm, "inspected", true);
         ComponentUtil.addYesNoToggle(editForm, "invoiced", true);
-        ComponentUtil.addTextField(editForm, "officerResponsible");
+        ComponentUtil.addTextField(editForm, "officerResponsible").setShowTooltip(true);
         ComponentUtil.addSelect2ChoiceField(editForm, "meStatus", meStatusService);
         ComponentUtil.addTextAreaField(editForm, "remarks");
-        ComponentUtil.addTextField(editForm, "contractorContact");
+        ComponentUtil.addTextField(editForm, "contractorContact").setShowTooltip(true);
 
 
         ComponentUtil.addDateField(editForm, "approvedDate");

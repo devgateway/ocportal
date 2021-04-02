@@ -4,14 +4,14 @@ import Chart from '../visualizations/charts/index';
 import { debounce, pluckImm } from '../tools';
 import backendYearFilterable from '../backend-year-filterable';
 import Visualization from '../visualization';
-import translatable from '../translatable';
 import fmConnect from '../fm/fm';
 
 class TotalFlagsChart extends backendYearFilterable(Chart) {
   getData() {
     const data = super.getData();
     if (!data || !data.count()) return [];
-    const labels = data.map((datum) => this.t(`crd:corruptionType:${datum.get('type')}:name`))
+    const { t } = this.props;
+    const labels = data.map((datum) => t(`crd:corruptionType:${datum.get('type')}:name`))
       .toJS();
     return [{
       values: data.map(pluckImm('indicatorCount'))
@@ -49,6 +49,10 @@ class TotalFlagsChart extends backendYearFilterable(Chart) {
   }
 }
 
+TotalFlagsChart.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
 TotalFlagsChart.endpoint = 'totalFlaggedIndicatorsByIndicatorType';
 
 class Counter extends backendYearFilterable(Visualization) {
@@ -71,7 +75,8 @@ class Counter extends backendYearFilterable(Visualization) {
 
 class FlagsCounter extends Counter {
   getTitle() {
-    return this.t('crd:charts:totalFlags:title');
+    const { t } = this.props;
+    return t('crd:charts:totalFlags:title');
   }
 
   getCount() {
@@ -79,11 +84,15 @@ class FlagsCounter extends Counter {
     return data.getIn([0, 'flaggedCount'], 0);
   }
 }
+FlagsCounter.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 FlagsCounter.endpoint = 'totalFlags';
 
 class ContractCounter extends Counter {
   getTitle() {
-    return this.t('crd:sidebar:totalContracts:title');
+    const { t } = this.props;
+    return t('crd:sidebar:totalContracts:title');
   }
 
   getCount() {
@@ -92,10 +101,11 @@ class ContractCounter extends Counter {
 }
 ContractCounter.propTypes = {
   data: PropTypes.number,
+  t: PropTypes.func.isRequired,
 };
 ContractCounter.endpoint = 'ocds/release/count';
 
-class TotalFlags extends translatable(React.Component) {
+class TotalFlags extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {};
@@ -119,7 +129,7 @@ class TotalFlags extends translatable(React.Component) {
 
   render() {
     const {
-      data, requestNewData, translations, filters, years, months, monthly,
+      data, requestNewData, t, filters, years, months, monthly,
     } = this.props;
     const { width } = this.state;
 
@@ -130,7 +140,7 @@ class TotalFlags extends translatable(React.Component) {
         <ContractCounter
           data={data.get('contractCounter')}
           requestNewData={(_, data) => requestNewData(['contractCounter'], data)}
-          translations={translations}
+          t={t}
           filters={filters}
           years={years}
           months={months}
@@ -140,7 +150,7 @@ class TotalFlags extends translatable(React.Component) {
         <FlagsCounter
           data={data.get('flagsCounter')}
           requestNewData={(_, data) => requestNewData(['flagsCounter'], data)}
-          translations={translations}
+          t={t}
           filters={filters}
           years={years}
           months={months}
@@ -150,7 +160,7 @@ class TotalFlags extends translatable(React.Component) {
         <TotalFlagsChart
           data={data.get('chart')}
           requestNewData={(_, data) => requestNewData(['chart'], data)}
-          translations={translations}
+          t={t}
           width={width}
           height={200}
           margin={{
@@ -164,18 +174,22 @@ class TotalFlags extends translatable(React.Component) {
         />
         <div className="crd-legend">
           {/* <div className="fraud"> */}
-          {/*  <span className="frc-label">{this.t('crd:corruptionType:FRAUD:name')}</span> */}
+          {/*  <span className="frc-label">{t('crd:corruptionType:FRAUD:name')}</span> */}
           {/* </div> */}
           <div className="rigging">
-            <span className="frc-label">{this.t('crd:corruptionType:RIGGING:name')}</span>
+            <span className="frc-label">{t('crd:corruptionType:RIGGING:name')}</span>
           </div>
           <div className="collusion">
-            <span className="frc-label">{this.t('crd:corruptionType:COLLUSION:name')}</span>
+            <span className="frc-label">{t('crd:corruptionType:COLLUSION:name')}</span>
           </div>
         </div>
       </div>
     );
   }
 }
+
+TotalFlags.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(TotalFlags, 'crd.sidebar.totalFlags');

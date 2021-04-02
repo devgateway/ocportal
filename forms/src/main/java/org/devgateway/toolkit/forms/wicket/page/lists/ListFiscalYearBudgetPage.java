@@ -27,10 +27,12 @@ import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.filterstate.category.FiscalYearBudgetFilterState;
 import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@MountPath
 public class ListFiscalYearBudgetPage extends AbstractListPage<FiscalYearBudget> {
 
     @SpringBean

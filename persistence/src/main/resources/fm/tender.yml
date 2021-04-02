@@ -35,7 +35,7 @@
 - name: tenderForm.issuedBy
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: tenderForm.newStatusComment
   mandatory: no
   enabled: yes

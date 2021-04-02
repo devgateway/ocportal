@@ -1,6 +1,7 @@
 import Table from './index';
 import { pluckImm } from '../../tools';
 import fmConnect from '../../fm/fm';
+import PropTypes from 'prop-types';
 
 class Awards extends Table {
   row(entry) {
@@ -29,14 +30,15 @@ class Awards extends Table {
 
   render() {
     if (!this.props.data) return null;
+    const { t } = this.props;
     return (
       <table className="table table-striped table-hover awards-table">
         <thead>
           <tr>
-            {/* <th>{this.t('tables:top10awards:number')}</th> */}
-            <th>{this.t('tables:top10awards:date')}</th>
-            <th>{this.t('tables:top10awards:supplier')}</th>
-            <th>{this.t('tables:top10awards:value')}</th>
+            {/* <th>{t('tables:top10awards:number')}</th> */}
+            <th>{t('tables:top10awards:date')}</th>
+            <th>{t('tables:top10awards:supplier')}</th>
+            <th>{t('tables:top10awards:value')}</th>
           </tr>
         </thead>
         <tbody>
@@ -49,5 +51,9 @@ class Awards extends Table {
 
 Awards.getName = (t) => t('tables:top10awards:title');
 Awards.endpoint = 'topTenLargestAwards';
+
+Awards.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default fmConnect(Awards, 'viz.me.table.awards');

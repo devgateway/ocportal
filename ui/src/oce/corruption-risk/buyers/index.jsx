@@ -6,6 +6,7 @@ import Archive from '../archive';
 import { wireProps } from '../tools';
 import { getBuyersTenderAndAwardCounts } from './api';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
+import PropTypes from 'prop-types';
 
 const mkLink = (navigate) => (content, { id }) => (
   <a href={`#!/crd/buyer/${id}`} onClick={() => navigate('buyer', id)}>{content}</a>
@@ -68,7 +69,7 @@ class BuyerList extends PaginatedTable {
   }
 
   render() {
-    const { data, navigate } = this.props;
+    const { data, navigate, t } = this.props;
 
     const count = data.get('count', 0);
 
@@ -97,29 +98,29 @@ class BuyerList extends PaginatedTable {
         onSizePerPageList={(newPageSize) => this.setState({ pageSize: newPageSize })}
         columns={[
           {
-            text: this.t('crd:suppliers:ID'),
+            text: t('crd:suppliers:ID'),
             dataField: 'id',
             fm: 'crd.buyers.col.id',
             formatter: mkLink(navigate),
           },
           {
-            text: this.t('crd:suppliers:name'),
+            text: t('crd:suppliers:name'),
             dataField: 'name',
             fm: 'crd.buyers.col.name',
             formatter: mkLink(navigate),
           },
           {
-            text: this.t('crd:procuringEntities:noOfTenders'),
+            text: t('crd:procuringEntities:noOfTenders'),
             dataField: 'nrTenders',
             fm: 'crd.buyers.col.nrTenders',
           },
           {
-            text: this.t('crd:procuringEntities:noOfAwards'),
+            text: t('crd:procuringEntities:noOfAwards'),
             dataField: 'nrAwards',
             fm: 'crd.buyers.col.nrAwards',
           },
           {
-            text: this.t('crd:procurementsTable:noOfFlags'),
+            text: t('crd:procurementsTable:noOfFlags'),
             dataField: 'nrFlags',
             fm: 'crd.buyers.col.nrFlags',
           },
@@ -128,6 +129,10 @@ class BuyerList extends PaginatedTable {
     );
   }
 }
+
+BuyerList.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 class Buyers extends CRDPage {
   requestNewData(path, newData) {
@@ -138,7 +143,9 @@ class Buyers extends CRDPage {
   }
 
   render() {
-    const { navigate, searchQuery, doSearch } = this.props;
+    const {
+      navigate, searchQuery, doSearch, t,
+    } = this.props;
     return (
       <Archive
         {...wireProps(this)}
@@ -147,7 +154,7 @@ class Buyers extends CRDPage {
         doSearch={doSearch}
         navigate={navigate}
         className="procuring-entities-page"
-        topSearchPlaceholder={this.t('crd:buyers:top-search')}
+        topSearchPlaceholder={t('crd:buyers:top-search')}
         List={BuyerList}
         dataEP="buyersByFlags"
         countEP="buyersByFlags/count"
@@ -155,5 +162,9 @@ class Buyers extends CRDPage {
     );
   }
 }
+
+Buyers.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default Buyers;
