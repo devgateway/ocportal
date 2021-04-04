@@ -12,4 +12,10 @@ pipeline {
             }
         }
     }
+    post {
+            always {
+                cleanWs(cleanWhenNotBuilt: false, deleteDirs: true)
+            }
+        }
+
 }
