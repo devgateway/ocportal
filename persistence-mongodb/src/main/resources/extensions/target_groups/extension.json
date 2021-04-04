@@ -1,9 +1,9 @@
 {
   "name": {
-    "en": "Target Groups"
+    "en": "AGPO Category / Target Groups"
   },
   "description": {
-    "en": "Procurement Plan, Tender and Organization Target Groups"
+    "en": "Procurement Plan, Tender and Organization AGPO Categories"
   },
   "documentationUrl": {
     "en": "https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/target_groups"

@@ -19,6 +19,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxBut
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -39,8 +40,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -52,12 +52,11 @@ import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapCancelButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapSubmitButton;
-import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.form.SummernoteBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.styles.BlockUiJavaScript;
+import org.devgateway.toolkit.forms.wicket.visitors.GenericBootstrapValidationVisitor;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.form.Lockable;
@@ -278,53 +277,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         saveFailedContentModel.setObject(getString(contentKey));
         saveFailedModal.show(true);
         target.add(saveFailedModal);
-    }
-
-    /**
-     * Traverses all fields and refreshes the ones that are not valid, so that
-     * we can see the errors
-     *
-     * @author mpostelnicu
-     */
-    public static class GenericBootstrapValidationVisitor
-            implements IVisitor<GenericBootstrapFormComponent<?, ?>, Void> {
-
-        private AjaxRequestTarget target;
-
-        private GenericBootstrapFormComponent<?, ?> lastInvalidVisitedObject;
-
-        public GenericBootstrapValidationVisitor(final AjaxRequestTarget target) {
-            this.target = target;
-        }
-
-        @Override
-        public void component(final GenericBootstrapFormComponent<?, ?> object, final IVisit<Void> visit) {
-            visit.dontGoDeeper();
-            if (object instanceof SummernoteBootstrapFormComponent) {
-                object.getField().processInput();
-            }
-            // refresh file component
-            if (object instanceof FileInputBootstrapFormComponent && object.getField().isValid()) {
-                target.add(object);
-            }
-            if (!(object instanceof SummernoteBootstrapFormComponent) && object.getField().isValid()) {
-                return;
-            }
-            target.add(object.getBorder());
-
-            // remember last invalid visited object, we used this later to
-            // trigger the visibility of its parent container, if it is folded
-            lastInvalidVisitedObject = object;
-
-            // there's no point in visiting anything else, we already have a
-            // section with error. This hugely improves speed of large forms
-            // visit.stop();
-        }
-
-        public GenericBootstrapFormComponent<?, ?> getLastInvalidVisitedObject() {
-            return lastInvalidVisitedObject;
-        }
-
     }
 
 
@@ -701,7 +653,11 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         super(parameters);
 
         if (!parameters.get(WebConstants.PARAM_ID).isNull()) {
-            entityId = parameters.get(WebConstants.PARAM_ID).toLongObject();
+            try {
+                entityId = parameters.get(WebConstants.PARAM_ID).toLongObject();
+            } catch (StringValueConversionException e) {
+                throw new RestartResponseException(getApplication().getHomePage());
+            }
         }
 
         editForm = new EditForm("editForm") {
@@ -766,7 +722,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         IModel<T> model = null;
 
         if (entityId != null) {
-            model = new DozerModel<>(jpaService.findById(entityId).orElse(null));
+            model = new DozerModel<>(jpaService.findById(entityId)
+                    .orElseThrow(() -> new RestartResponseException(getApplication().getHomePage())));
         } else {
             final T instance = newInstance();
             if (instance != null) {

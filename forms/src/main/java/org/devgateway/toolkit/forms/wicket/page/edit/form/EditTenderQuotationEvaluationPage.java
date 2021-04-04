@@ -3,7 +3,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.BidPanel;
@@ -12,9 +11,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
@@ -45,8 +42,10 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
         editForm.attachFm("tenderQuotationEvaluationForm");
         super.onInitialize();
 
-        ComponentUtil.addDateField(editForm, "openingDate");
-        ComponentUtil.addDateField(editForm, "closingDate");
+        ComponentUtil.addDateField(editForm, "openingDate")
+                .setShowTooltip(true);
+        ComponentUtil.addDateField(editForm, "closingDate")
+                .setShowTooltip(true);
         editForm.add(new BidPanel("bids"));
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");

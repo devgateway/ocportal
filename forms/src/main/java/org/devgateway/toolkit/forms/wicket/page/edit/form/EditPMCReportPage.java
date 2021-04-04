@@ -132,7 +132,8 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         ComponentUtil.addTextAreaField(editForm, "pmcChallenges");
 
         ComponentUtil.addSelect2ChoiceField(editForm, "pmcStatus", pmcStatusService);
-        ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService);
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "projectClosureHandover", projectClosureHandoverService)
+                .setShowTooltip(true);
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
 
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
@@ -143,18 +144,18 @@ public class EditPMCReportPage extends EditAbstractImplTenderProcessEntityPage<P
         formDocs.getField().setRequireAtLeastOneItem(false);
     }
 
-//    @Override
-//    protected void addSaveButtonsPermissions(final Component button) {
-//        addDefaultAllButtonsPermissions(button);
-//        button.setVisibilityAllowed(button.isVisibilityAllowed()
-//                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
-//    }
-//
-//    @Override
-//    protected void onBeforeRender() {
-//        super.onBeforeRender();
-//        deleteButton.setEnabled(true);
-//    }
+    @Override
+    protected void addSaveButtonsPermissions(final Component button) {
+        addDefaultAllButtonsPermissions(button);
+        button.setVisibilityAllowed(button.isVisibilityAllowed()
+                && DBConstants.Status.DRAFT.equals(editForm.getModelObject().getStatus()));
+    }
+
+    @Override
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        deleteButton.setEnabled(true);
+    }
 
     @Override
     protected void onBeforeRevertToDraft(AjaxRequestTarget target) {

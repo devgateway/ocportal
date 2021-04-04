@@ -151,7 +151,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private static final String OCID_PREFIX = "ocds-muq5cl-";
 
-    private ImmutableMap<String, Tender.ProcurementMethod> procurementMethodMap;
+
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
@@ -456,7 +456,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Tender.ProcurementMethod createProcurementMethod(ProcurementMethod procurementMethod) {
-        Tender.ProcurementMethod pm = procurementMethodMap.get(procurementMethod.getLabel());
+        Tender.ProcurementMethod pm = MongoConstants.PROCUREMENT_METHOD_MAP.get(procurementMethod.getLabel());
         if (pm == null) {
             throw new RuntimeException("Procurement method mapping unknown " + procurementMethod);
         }
@@ -469,21 +469,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @PostConstruct
     public void init() {
-        procurementMethodMap = ImmutableMap.<String, Tender.ProcurementMethod>builder()
-                .put("Direct Procurement", Tender.ProcurementMethod.direct)
-                .put("Open Tender - National", Tender.ProcurementMethod.open)
-                .put("Request for Proposal", Tender.ProcurementMethod.limited)
-                .put("Request for Quotation", Tender.ProcurementMethod.selective)
-                .put("Restricted Tender", Tender.ProcurementMethod.limited)
-                .put("Specially Permitted", Tender.ProcurementMethod.limited)
-                .put("Low Value Procurement", Tender.ProcurementMethod.direct)
-                .put("Framework Agreement", Tender.ProcurementMethod.direct)
-                .put("Two-stage Tendering", Tender.ProcurementMethod.selective)
-                .put("Design Competition", Tender.ProcurementMethod.selective)
-                .put("Force Account", Tender.ProcurementMethod.direct)
-                .put("Electronic Reverse Auction", Tender.ProcurementMethod.selective)
-                .put("Open Tender - International", Tender.ProcurementMethod.open).build();
-
         meMilestoneMap = ImmutableMap.<String, Milestone.Status>builder()
                 .put("completedNotInUse", Milestone.Status.MET)
                 .put("completeInUse", Milestone.Status.MET)
@@ -923,20 +908,17 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeConvert(() -> y.orElse(null), converter3).ifPresent(consumer);
     }
 
-    public <S, C, X> void safeSetEach(Consumer<C> consumer, Supplier<Collection<S>> supplier,
-                                      Function<S, X> converter1,
-                                      Function<X, C> converter2) {
+    private <C, S, X> void safeSetEach(Consumer<C> consumer,
+                                       Supplier<S> supplier,
+                                       Function<S, Collection<X>> converter1,
+                                       Function<X, C> converter2) {
         if (supplier == null || consumer == null || converter1 == null || converter2 == null) {
             return;
         }
-
-        Collection<S> o = supplier.get();
-        if (!ObjectUtils.isEmpty(o)) {
-            o.stream().filter(e -> !(e instanceof Statusable) || ((Statusable) e).isExportable()).
-                    map(converter1).filter(Objects::nonNull).
-                    map(converter2).filter(Objects::nonNull).
-                    forEach(consumer);
-        }
+        Optional<Collection<X>> o = safeConvert(supplier, converter1);
+        o.ifPresent(xes -> xes.stream().filter(e -> !(e instanceof Statusable) || ((Statusable) e).isExportable()).
+                map(converter2).filter(Objects::nonNull).
+                forEach(consumer));
     }
 
     public <S, C, X, Y> void safeSetEach(Consumer<C> consumer,
@@ -1022,9 +1004,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
         safeSet(ocdsItem::setQuantity, purchaseItem::getQuantity, BigDecimal::doubleValue);
         safeSet(ocdsItem::setClassification, purchaseItem::getPlanItem, this::createPlanItemClassification);
-        safeSet(ocdsItem::setTargetGroup, purchaseItem::getPlanItem, PlanItem::getTargetGroup,
-                this::categoryLabel
-        );
+        safeSetEach(ocdsItem.getTargetGroup()::add, purchaseItem::getPlanItem,
+                PlanItem::getTargetGroup, this::categoryLabel);
         safeSet(ocdsItem::setTargetGroupValue, purchaseItem::getPlanItem, PlanItem::getTargetGroupValue,
                 this::convertAmount
         );

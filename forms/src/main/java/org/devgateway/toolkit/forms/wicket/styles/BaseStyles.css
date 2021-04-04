@@ -126,19 +126,7 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 50px;
     background-color: #095a14;
-}
-@media (max-width: 1024px){
-  .mainFooter{
-    height: 60px;
-  }
-}
-@media (max-width: 767px){
-  .mainFooter{
-    height: 90px;
-  }
 }
 
 .mainFooter a{
@@ -148,7 +136,8 @@ body {
   color: #eeeeee;
 }
 .mainFooter .text-muted {
-    padding-top: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     color: #eeeeee;
 }
 
@@ -279,6 +268,9 @@ hr.edit-separator {
     color: #00589e;
     float: left;
 }
+.pane.title h4 .fa {
+    color: #000000;
+}
 .panel-body .pane.title h4{
   margin-left: 20px;
 }
@@ -361,6 +353,10 @@ hr.edit-separator {
     font-size: 12pt;
     font-weight: bold !important;
     margin: 25px 0 15px 0;
+}
+
+.section-title .fa {
+    color: #000000;
 }
 
 .sleep-mode {
@@ -685,4 +681,8 @@ hr.edit-separator {
 .row.display-flex > [class*='col-'] {
     display: flex;
     flex-direction: column;
+}
+
+.btn.text-left {
+    text-align: left;
 }

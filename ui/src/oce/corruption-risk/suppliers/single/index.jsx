@@ -73,7 +73,6 @@ class Info extends Visualization {
     const contractCount = data.get('totalContracts');
 
     const address = info.get('address');
-    const contact = info.get('contactPoint');
     return (
       <section className="info">
         <table className="table table-bordered join-bottom info-table">
@@ -133,20 +132,6 @@ class Info extends Visualization {
                     /
                     &nbsp;
                     {address.get('countryName')}
-                  </dd>
-                  )}
-                </dl>
-              </td>
-              <td>
-                <dl className="smaller">
-                  <dt>{t('crd:supplier:contact')}</dt>
-                  {contact && (
-                  <dd>
-                    {contact.get('name')}
-                    <br />
-                    {contact.get('email')}
-                    <br />
-                    {contact.get('telephone')}
                   </dd>
                   )}
                 </dl>
