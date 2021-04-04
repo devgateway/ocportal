@@ -1,12 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ImplReport from './ImplReport';
 import fmConnect from '../../../fm/fm';
 import { Item } from './Item';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const MEReport = (props) => {
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
 
   const childElements = (i) => {
     const { currencyFormatter, formatDate, formatBoolean } = props.styling.tables;

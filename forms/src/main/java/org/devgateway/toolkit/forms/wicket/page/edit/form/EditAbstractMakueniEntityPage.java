@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -26,7 +27,6 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
 import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
-import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +46,6 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
-
-    @SpringBean
-    protected MakueniEntityServiceResolver makeniEntityServiceResolver;
 
     private Fragment extraStatusEntityButtons;
 
@@ -211,5 +208,12 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
                 BaseStyles.class, "assets/js/formLeavingHelper.js")));
+    }
+
+    @Override
+    protected ModalSaveEditPageButton getSaveTerminateButton() {
+        ModalSaveEditPageButton button = super.getSaveTerminateButton();
+        button.add(new TooltipBehavior(new StringResourceModel("terminate.tooltip", this)));
+        return button;
     }
 }

@@ -3,11 +3,13 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.models.ModelUtils;
 import org.devgateway.toolkit.forms.validators.AfterThanDateValidator;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
@@ -20,16 +22,17 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContractDocumentPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.EntityListChoiceProvider;
-import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
+import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
@@ -60,12 +63,17 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     @SpringBean
     protected WardService wardService;
 
+    @SpringBean
+    private SupplierService supplierService;
+
     private Select2ChoiceBootstrapFormComponent<Supplier> awardeeSelector;
     private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
     private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
 
     private GenericSleepFormComponent<String> supplierAddress;
     private Select2ChoiceBootstrapFormComponent<TargetGroup> targetGroup;
+
+    private IModel<Supplier> awardeeModel;
 
     public EditContractPage() {
         this(new PageParameters());
@@ -81,6 +89,9 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         editForm.attachFm("contractForm");
         super.onInitialize();
 
+        awardeeModel = editForm.getModel().map(Contract::getAwardee)
+                .map(ModelUtils.fromSession(supplierService));
+
         ComponentUtil.addTextField(editForm, "referenceNumber");
 
         TextFieldBootstrapFormComponent<String> description = ComponentUtil.addTextField(editForm, "description");
@@ -90,6 +101,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
         final DateFieldBootstrapFormComponent contractDate = ComponentUtil.addDateField(editForm, "contractDate");
+        contractDate.setShowTooltip(true);
 
         AwardNotificationItem acceptedNotification = editForm.getModelObject().getTenderProcess()
                 .getSingleAwardNotification().getAcceptedNotification();
@@ -98,8 +110,10 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
             contractDate.getField().add(new AfterThanDateValidator(acceptedNotification.getAwardDate()));
         }
 
-        ComponentUtil.addDateField(editForm, "contractApprovalDate");
-        ComponentUtil.addDateField(editForm, "expiryDate");
+        ComponentUtil.addDateField(editForm, "contractApprovalDate")
+                .setShowTooltip(true);
+        ComponentUtil.addDateField(editForm, "expiryDate")
+                .setShowTooltip(true);
 
         addSupplierInfo();
 
@@ -110,6 +124,10 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         subcounties.getField().add(new CountyAjaxFormComponentUpdatingBehavior<>(subcounties, wards,
                 LoadableDetachableModel.of(() -> wardService), editForm.getModelObject()::setWards, "change"
         ));
+
+        ComponentUtil.addDateField(editForm, "contractExtensionDate")
+                .setShowTooltip(true);
+        ComponentUtil.addTextField(editForm, "reasonForExtension");
     }
 
     @Override
@@ -161,14 +179,15 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
 
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
-                new GenericChoiceProvider<>(getAcceptedSupplier(editForm.getModelObject().getTenderProcess()))
-        );
+                new EntityListChoiceProvider<>(editForm.getModel()
+                        .map(AbstractTenderProcessMakueniEntity::getTenderProcess)
+                        .map(EditContractPage::getAcceptedSupplier)));
         awardeeSelector.setEnabled(!editForm.getModelObject().getTenderProcess().hasNonDraftImplForms());
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior());
         editForm.add(awardeeSelector);
 
         targetGroup = ComponentUtil.addSelect2ChoiceField(editForm, "targetGroup", new EntityListChoiceProvider<>(
-                editForm.getModel().map(Contract::getAwardee).map(Supplier::getTargetGroups)));
+                awardeeModel.map(Supplier::getTargetGroups)));
 
         supplierAddress = new GenericSleepFormComponent<>("supplierAddress",
                 editForm.getModel().map(Contract::getAwardee).map(Supplier::getAddress));
@@ -185,12 +204,13 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         @Override
         protected void onUpdate(final AjaxRequestTarget target) {
             Contract contract = editForm.getModelObject();
-            if (contract.getTargetGroup() != null && contract.getAwardee() != null
-                    && !contract.getAwardee().getTargetGroups().contains(contract.getTargetGroup())) {
+            Supplier awardee = awardeeModel.getObject();
+            if (contract.getTargetGroup() != null && awardee != null
+                    && !awardee.getTargetGroups().contains(contract.getTargetGroup())) {
                 contract.setTargetGroup(null);
             }
-            if (contract.getAwardee() != null && contract.getAwardee().getTargetGroups().size() == 1) {
-                contract.setTargetGroup(contract.getAwardee().getTargetGroups().get(0));
+            if (awardee != null && awardee.getTargetGroups().size() == 1) {
+                contract.setTargetGroup(awardee.getTargetGroups().get(0));
                 targetGroup.getField().clearInput();
             }
             target.add(targetGroup, supplierAddress);

@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.devgateway.ocds.persistence.mongo.constants;
 
+import com.google.common.collect.ImmutableMap;
+import org.devgateway.ocds.persistence.mongo.Tender;
+
 public final class MongoConstants {
 
     private MongoConstants() {
@@ -65,6 +68,7 @@ public final class MongoConstants {
         public static final String CONTRACTS_IMPL_TRANSACTIONS = "contracts.implementation.transactions";
         public static final String CONTRACTS_IMPL_TRANSACTIONS_AMOUNT = "contracts.implementation.transactions.amount"
                 + ".amount";
+        public static final String CONTRACTS_VALUE_AMOUNT = "contracts.value.amount";
         public static final String CONTRACTS_CONTRACTOR_ID = "contracts.contractor._id";
         public static final String CONTRACTS_MILESTONES = "contracts.implementation.milestones";
         public static final String CONTRACTS_STATUS = "contracts.status";
@@ -75,7 +79,6 @@ public final class MongoConstants {
         public static final String CONTRACTS_MILESTONE_CODE = "contracts.implementation.milestones"
                 + ".code";
         public static final String CONTRACTS_TARGET_GROUP = "contracts.targetGroup";
-        public static final String CONTRACTS_VALUE_AMOUNT = "contracts.value.amount";
         public static final String TENDER_PERIOD_END_DATE = "tender.tenderPeriod.endDate";
         public static final String TENDER_VALUE = "tender.value";
         public static final String TENDER_VALUE_AMOUNT = "tender.value.amount";
@@ -148,4 +151,21 @@ public final class MongoConstants {
     }
 
     public static final Integer MONGO_DECIMAL_SCALE = 2;
+
+    public static final ImmutableMap<String, Tender.ProcurementMethod> PROCUREMENT_METHOD_MAP =
+            ImmutableMap.<String, Tender.ProcurementMethod>builder()
+                    .put("Direct Procurement", Tender.ProcurementMethod.direct)
+                    .put("Open Tender - National", Tender.ProcurementMethod.open)
+                    .put("Request for Proposal", Tender.ProcurementMethod.limited)
+                    .put("Request for Quotation", Tender.ProcurementMethod.selective)
+                    .put("Restricted Tender", Tender.ProcurementMethod.limited)
+                    .put("Specially Permitted", Tender.ProcurementMethod.limited)
+                    .put("Low Value Procurement", Tender.ProcurementMethod.direct)
+                    .put("Framework Agreement", Tender.ProcurementMethod.selective)
+                    .put("Two-stage Tendering", Tender.ProcurementMethod.open)
+                    .put("Design Competition", Tender.ProcurementMethod.open)
+                    .put("Force Account", Tender.ProcurementMethod.direct)
+                    .put("Electronic Reverse Auction", Tender.ProcurementMethod.open)
+                    .put("Open Tender - International", Tender.ProcurementMethod.open)
+                    .build();
 }

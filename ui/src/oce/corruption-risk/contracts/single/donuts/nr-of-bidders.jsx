@@ -1,4 +1,5 @@
 import CenterTextDonut from './index';
+import PropTypes from 'prop-types';
 
 class NrOfBidders extends CenterTextDonut {
   getClassnames() {
@@ -20,9 +21,14 @@ class NrOfBidders extends CenterTextDonut {
   }
 
   getTitle() {
-    return this.t('crd:contract:nrBiddersVsAvg:name');
+    const { t } = this.props;
+    return t('crd:contract:nrBiddersVsAvg:name');
   }
 }
+
+NrOfBidders.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 NrOfBidders.Donut = class extends CenterTextDonut.Donut {
   transform(data) {
@@ -35,12 +41,12 @@ NrOfBidders.Donut = class extends CenterTextDonut.Donut {
 
   getData() {
     const avg = super.getData();
-    const { count } = this.props;
+    const { count, t } = this.props;
     if (Number.isNaN(avg) || Number.isNaN(count)) return [];
     return [{
       labels: [
-        this.t('crd:contract:nrBiddersVsAvg:thisLabel'),
-        this.t('crd:contract:nrBiddersVsAvg:avgLabel'),
+        t('crd:contract:nrBiddersVsAvg:thisLabel'),
+        t('crd:contract:nrBiddersVsAvg:avgLabel'),
       ],
       values: [count, avg],
       hoverlabel: {
@@ -62,6 +68,10 @@ NrOfBidders.Donut = class extends CenterTextDonut.Donut {
       paper_bgcolor: 'rgba(0,0,0,0)',
     };
   }
+};
+
+NrOfBidders.Donut.propTypes = {
+  t: PropTypes.func.isRequired,
 };
 
 NrOfBidders.Donut.endpoint = 'averageNumberOfTenderers';

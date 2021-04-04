@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -18,6 +17,7 @@ import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFor
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -112,15 +112,21 @@ public class AwardNotificationItemPanel extends ListViewSectionPanel<AwardNotifi
             awardDate.getField().add(new AfterThanDateValidator(tender.getInvitationDate()));
         }
 
-        ComponentUtil.addDateField(item, "tenderAwardDate");
+        ComponentUtil.addDateField(item, "tenderAwardDate")
+                .setShowTooltip(true);
 
-        ComponentUtil.addIntegerTextField(item, "acknowledgementDays")
-                .getField().add(RangeValidator.minimum(0));
+        TextFieldBootstrapFormComponent<Integer> acknowledgementDays =
+                ComponentUtil.addIntegerTextField(item, "acknowledgementDays");
+        acknowledgementDays.getField().add(RangeValidator.minimum(0));
+        acknowledgementDays.setShowTooltip(true);
 
         addSupplierInfo(item);
 
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         item.add(formDocs);
+
+        final FileInputBootstrapFormComponent lettersOfRegret = new FileInputBootstrapFormComponent("lettersOfRegret");
+        item.add(lettersOfRegret);
     }
 
     private void addSupplierInfo(ListItem<AwardNotificationItem> item) {

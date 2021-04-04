@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import NoDataMessage from './NoData';
 import { Item } from './Item';
 import FileDownloadLinks from './FileDownloadLinks';
-import { tCreator } from '../../../translatable';
 import defaultSingleTenderTabTypes from './singleUtil';
 
 const ImplReport = (props) => {
@@ -13,7 +13,7 @@ const ImplReport = (props) => {
   const {
     fiscalYear, data, tenderTitle, isFeatureVisible,
   } = props;
-  const t = tCreator(props.translations);
+  const { t } = useTranslation();
   const { formatDate } = props.styling.tables;
 
   // eslint-disable-next-line no-unused-vars
@@ -69,7 +69,7 @@ const ImplReport = (props) => {
     </div>
   );
 
-  return data === undefined ? <NoDataMessage translations={props.translations} /> : getImplReport();
+  return data === undefined ? <NoDataMessage /> : getImplReport();
 };
 
 ImplReport.propTypes = {

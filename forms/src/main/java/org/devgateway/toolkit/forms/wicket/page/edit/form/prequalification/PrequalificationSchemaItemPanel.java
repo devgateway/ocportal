@@ -17,7 +17,6 @@ import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationS
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchemaItemsValidator;
-import org.devgateway.toolkit.persistence.validator.validators.UniquePrequalificationSchemaValidator;
 
 import java.util.List;
 
@@ -47,10 +46,10 @@ public class PrequalificationSchemaItemPanel extends ListViewSectionPanel<Prequa
 
 
     @Override
-    protected Label createShowDetailsLink() {
-        Label showDetailsLink = super.createShowDetailsLink();
-        showDetailsLink.setVisibilityAllowed(false);
-        return showDetailsLink;
+    protected Label createShowDetailsLabel() {
+        Label label = super.createShowDetailsLabel();
+        label.setVisibilityAllowed(false);
+        return label;
     }
 
     protected boolean getWrongDistinctItemNameCount() {

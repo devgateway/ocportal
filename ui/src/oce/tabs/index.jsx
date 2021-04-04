@@ -10,12 +10,14 @@ import camera from '../resources/icons/camera.svg';
 class Tab extends Visualization {
   maybeWrap(Component, ref) {
     const { dontWrap, getName } = Component;
-    const { filters, years, months } = this.props;
+    const {
+      filters, years, months, t,
+    } = this.props;
     const exportable = Component.isChart;
     return dontWrap ? null : (rendered) => (
       <section>
         <h4 className="page-header">
-          {getName(this.t.bind(this))}
+          {getName(t)}
           {exportable && Component.excelEP && false && (
           <img
             src={exportBlack}
@@ -27,7 +29,7 @@ class Tab extends Visualization {
               filters,
               years,
               months,
-              t: this.t.bind(this),
+              t,
             })}
           />
           )}
@@ -49,7 +51,7 @@ class Tab extends Visualization {
   compare(Component, index) {
     const {
       compareBy, comparisonData, comparisonCriteriaValues, filters, requestNewComparisonData, years, bidTypes,
-      width, translations, styling, monthly, months,
+      width, t, styling, monthly, months,
     } = this.props;
     const { compareWith: CustomComparison } = Component;
     const Comparison = CustomComparison || DefaultComparison;
@@ -67,7 +69,7 @@ class Tab extends Visualization {
         Component={Component}
         bidTypes={bidTypes}
         width={width}
-        translations={translations}
+        t={t}
         styling={styling}
       />
     );
@@ -75,7 +77,7 @@ class Tab extends Visualization {
 
   render() {
     const {
-      filters, compareBy, requestNewData, data, years, months, monthly, width, translations, styling, navigate,
+      filters, compareBy, requestNewData, data, years, months, monthly, width, t, styling, navigate,
     } = this.props;
     return (
       <div className="col-sm-12">
@@ -93,11 +95,11 @@ class Tab extends Visualization {
                   months={months}
                   width={width}
                   navigate={navigate}
-                  translations={translations}
+                  t={t}
                   styling={styling}
                   wrapRendered={this.maybeWrap(Component, ref)}
                   margin={{
-                    t: 10, l: 100, b: 80, r: 20, pad: 20,
+                    t: 10, l: 100, b: 80, r: 25, pad: 20,
                   }}
                 />
               </div>
@@ -144,6 +146,7 @@ Tab.propTypes = {
   comparisonCriteriaValues: PropTypes.arrayOf(PropTypes.string).isRequired,
   width: PropTypes.number.isRequired,
   onUpdate: PropTypes.func,
+  t: PropTypes.func.isRequired,
 };
 
 export default Tab;

@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { useImmer } from 'use-immer';
 import PropTypes from 'prop-types';
-import { tCreator } from '../../../translatable';
+import { useTranslation } from 'react-i18next';
 import BootstrapTableWrapper from '../../archive/bootstrap-table-wrapper';
 import { mkContractLink } from '../../tools';
 import { getFlaggedReleases } from './api';
 import { setImmer } from '../../../tools';
 
 const Table = ({
-  filters, navigate, translations, fmPrefix,
+  filters, navigate, fmPrefix,
 }) => {
-  const t = tCreator(translations);
+  const { t } = useTranslation();
 
   const formatFlags = (data) => (
     <div>

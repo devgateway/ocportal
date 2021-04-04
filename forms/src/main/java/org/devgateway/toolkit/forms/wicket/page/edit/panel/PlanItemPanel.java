@@ -1,16 +1,19 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
@@ -20,15 +23,18 @@ import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.validators.PanelValidationVisitor;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
+import org.devgateway.toolkit.forms.wicket.components.TooltipLabel;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapAddButton;
 import org.devgateway.toolkit.forms.wicket.components.form.BootstrapDeleteButton;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
+import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseItem;
@@ -142,19 +148,24 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
             sourceOfFunds.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_STD_DEFAULT_TEXT);
             sourceOfFunds.getField().add(new SourceOfFundsValidator());
 
-            ComponentUtil.addSelect2ChoiceField(item, "targetGroup", targetGroupService);
-            ComponentUtil.addBigDecimalField(item, "targetGroupValue")
+        Select2MultiChoiceBootstrapFormComponent<TargetGroup> targetGroup =
+                ComponentUtil.addSelect2MultiChoiceField(item, "targetGroup", targetGroupService);
+        //targetGroup.getField().getSettings().setMultiple(false);
+        targetGroup.setShowTooltip(true);
+        ComponentUtil.addBigDecimalField(item, "targetGroupValue")
                     .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
 
-            ComponentUtil.addBigDecimalField(item, "quarter1st")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-            ComponentUtil.addBigDecimalField(item, "quarter2nd")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-            ComponentUtil.addBigDecimalField(item, "quarter3rd")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-            ComponentUtil.addBigDecimalField(item, "quarter4th")
-                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        final TooltipLabel tooltipLabel = new TooltipLabel("tooltipLabel", "timingOfActivities");
+        item.add(tooltipLabel);
 
+        ComponentUtil.addBigDecimalField(item, "quarter1st")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        ComponentUtil.addBigDecimalField(item, "quarter2nd")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        ComponentUtil.addBigDecimalField(item, "quarter3rd")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        ComponentUtil.addBigDecimalField(item, "quarter4th")
+                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
     }
 
     @Override
