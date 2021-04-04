@@ -154,7 +154,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private static final String OCID_PREFIX = "ocds-muq5cl-";
 
-    private ImmutableMap<String, Tender.ProcurementMethod> procurementMethodMap;
+
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
@@ -459,7 +459,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Tender.ProcurementMethod createProcurementMethod(ProcurementMethod procurementMethod) {
-        Tender.ProcurementMethod pm = procurementMethodMap.get(procurementMethod.getLabel());
+        Tender.ProcurementMethod pm = MongoConstants.PROCUREMENT_METHOD_MAP.get(procurementMethod.getLabel());
         if (pm == null) {
             throw new RuntimeException("Procurement method mapping unknown " + procurementMethod);
         }
@@ -472,21 +472,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @PostConstruct
     public void init() {
-        procurementMethodMap = ImmutableMap.<String, Tender.ProcurementMethod>builder()
-                .put("Direct Procurement", Tender.ProcurementMethod.direct)
-                .put("Open Tender - National", Tender.ProcurementMethod.open)
-                .put("Request for Proposal", Tender.ProcurementMethod.limited)
-                .put("Request for Quotation", Tender.ProcurementMethod.selective)
-                .put("Restricted Tender", Tender.ProcurementMethod.limited)
-                .put("Specially Permitted", Tender.ProcurementMethod.limited)
-                .put("Low Value Procurement", Tender.ProcurementMethod.direct)
-                .put("Framework Agreement", Tender.ProcurementMethod.selective)
-                .put("Two-stage Tendering", Tender.ProcurementMethod.open)
-                .put("Design Competition", Tender.ProcurementMethod.open)
-                .put("Force Account", Tender.ProcurementMethod.direct)
-                .put("Electronic Reverse Auction", Tender.ProcurementMethod.open)
-                .put("Open Tender - International", Tender.ProcurementMethod.open).build();
-
         meMilestoneMap = ImmutableMap.<String, Milestone.Status>builder()
                 .put("completedNotInUse", Milestone.Status.MET)
                 .put("completeInUse", Milestone.Status.MET)
