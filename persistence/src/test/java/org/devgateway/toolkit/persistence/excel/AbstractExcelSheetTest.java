@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class AbstractExcelSheetTest {
 
     @Test
     public void writeCell() throws Exception {
-        final Workbook workbook = new XSSFWorkbook();
+        final Workbook workbook = new SXSSFWorkbook();
         final ExcelSheet excelSheet = new MockExcelSheet(workbook);
         final Sheet sheet = workbook.createSheet("sheet");
         final Row row = sheet.createRow(0);

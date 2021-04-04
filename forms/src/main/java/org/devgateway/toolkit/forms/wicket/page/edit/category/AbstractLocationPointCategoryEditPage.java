@@ -13,7 +13,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.category;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.DecimalTextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.persistence.dao.categories.LocationPointCategory;
 import org.locationtech.jts.geom.Coordinate;
@@ -28,8 +28,8 @@ import java.util.Objects;
 public abstract class AbstractLocationPointCategoryEditPage<T extends LocationPointCategory>
         extends AbstractCategoryEditPage<T> {
 
-    protected TextFieldBootstrapFormComponent<Double> x;
-    protected TextFieldBootstrapFormComponent<Double> y;
+    protected DecimalTextFieldBootstrapFormComponent x;
+    protected DecimalTextFieldBootstrapFormComponent y;
 
     public AbstractLocationPointCategoryEditPage(final PageParameters parameters) {
         super(parameters);
@@ -39,9 +39,9 @@ public abstract class AbstractLocationPointCategoryEditPage<T extends LocationPo
     protected void onInitialize() {
         super.onInitialize();
 
-        x = ComponentUtil.addDoubleField(editForm, "x");
+        x = ComponentUtil.addDecimalField(editForm, "x");
         x.required();
-        y = ComponentUtil.addDoubleField(editForm, "y");
+        y = ComponentUtil.addDecimalField(editForm, "y");
         y.required();
     }
 
