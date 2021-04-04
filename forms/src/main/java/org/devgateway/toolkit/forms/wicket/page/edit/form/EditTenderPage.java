@@ -46,9 +46,7 @@ import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
@@ -165,7 +163,9 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
 
-        editForm.add(new FileInputBootstrapFormComponent("billOfQuantities"));
+        FileInputBootstrapFormComponent billOfQuantities = new FileInputBootstrapFormComponent("billOfQuantities");
+        billOfQuantities.setShowTooltip(true);
+        editForm.add(billOfQuantities);
 
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
