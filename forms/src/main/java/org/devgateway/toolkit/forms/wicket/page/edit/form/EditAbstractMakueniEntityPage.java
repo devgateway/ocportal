@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -207,5 +208,12 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
                 BaseStyles.class, "assets/js/formLeavingHelper.js")));
+    }
+
+    @Override
+    protected ModalSaveEditPageButton getSaveTerminateButton() {
+        ModalSaveEditPageButton button = super.getSaveTerminateButton();
+        button.add(new TooltipBehavior(new StringResourceModel("terminate.tooltip", this)));
+        return button;
     }
 }
