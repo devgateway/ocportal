@@ -173,6 +173,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         add(listWrapper);
 
         listWrapper.add(new Label("panelTitle", title));
+        listWrapper.add(new TooltipLabel("tooltipLabel", getId()));
 
         listWrapper.add(new Label("totalEntries",
                 new StringResourceModel("totalEntries", this).setParameters(

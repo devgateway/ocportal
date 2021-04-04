@@ -1,36 +1,31 @@
 package org.devgateway.toolkit.forms.wicket.page;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.DropDownButton;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
-import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.service.category.DepartmentService;
-import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
-import org.devgateway.toolkit.persistence.service.excel.DataExportService;
-import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
-import org.devgateway.toolkit.web.Constants;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
+import org.devgateway.toolkit.forms.wicket.components.export.AGPOContractsReportPanel;
+import org.devgateway.toolkit.forms.wicket.components.export.AGPOSectionAPanel;
+import org.devgateway.toolkit.forms.wicket.components.export.AGPOSectionBPanel;
+import org.devgateway.toolkit.forms.wicket.components.export.AGPOSectionCPanel;
+import org.devgateway.toolkit.forms.wicket.components.export.AjaxFormListener;
+import org.devgateway.toolkit.forms.wicket.components.export.DirectProcurementsAboveReportPanel;
+import org.devgateway.toolkit.forms.wicket.components.export.GeneralDepartmentReportPanel;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author idobre
@@ -38,155 +33,84 @@ import java.io.Serializable;
  */
 @MountPath("/dataExport")
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
-public class DataExportPage extends BasePage {
-    private final DataExportBean dataExportBean;
+public class DataExportPage extends BasePage implements AjaxFormListener {
+
+    private Component exportPanel;
 
     public DataExportPage(PageParameters parameters) {
         super(parameters);
-
-        dataExportBean = new DataExportBean();
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
 
-        final DataExportForm dataExportForm = new DataExportForm("dataExportForm",
-                new CompoundPropertyModel<>(dataExportBean));
-        add(dataExportForm);
+        add(new DropDownButton("exportType", new StringResourceModel("exportType")) {
+
+            @Override
+            protected List<AbstractLink> newSubMenuButtons(String buttonMarkupId) {
+                List<AbstractLink> links = new ArrayList<>();
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("generalDepartmentExport"),
+                        () -> new GeneralDepartmentReportPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("directProcurementsAbove")
+                                .setParameters(DBConstants.Reports.DIRECT_PROCUREMENT_THRESHOLD),
+                        () -> new DirectProcurementsAboveReportPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("agpoContracts"),
+                        () -> new AGPOContractsReportPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("agpoSectionA"),
+                        () -> new AGPOSectionAPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("agpoSectionB"),
+                        () -> new AGPOSectionBPanel("exportPanel", DataExportPage.this)));
+
+                links.add(createMenuItem(
+                        buttonMarkupId,
+                        new StringResourceModel("agpoSectionC"),
+                        () -> new AGPOSectionCPanel("exportPanel", DataExportPage.this)));
+
+                return links;
+            }
+        });
+
+        exportPanel = new WebMarkupContainer("exportPanel");
+        exportPanel.setOutputMarkupId(true);
+        add(exportPanel);
     }
 
-    class DataExportBean implements Serializable {
-        private Department department;
-
-        private FiscalYear fiscalYear;
-
-        public Department getDepartment() {
-            return department;
-        }
-
-        public void setDepartment(final Department department) {
-            this.department = department;
-        }
-
-        public FiscalYear getFiscalYear() {
-            return fiscalYear;
-        }
-
-        public void setFiscalYear(final FiscalYear fiscalYear) {
-            this.fiscalYear = fiscalYear;
-        }
+    private AbstractLink createMenuItem(String id, IModel<String> labelModel,
+            SerializableSupplier<Component> panelCreator) {
+        BootstrapAjaxLink<Void> link = new BootstrapAjaxLink<Void>(id, null, Buttons.Type.Link, labelModel) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                exportPanel = exportPanel.replaceWith(panelCreator.get());
+                target.add(exportPanel);
+            }
+        };
+        link.add(new CssClassNameAppender("text-left"));
+        return link;
     }
 
-    class DataExportForm extends BootstrapForm<DataExportBean> {
-        private Select2ChoiceBootstrapFormComponent<Department> department;
+    @Override
+    public void onSubmit(AjaxRequestTarget target) {
+        target.add(feedbackPanel);
+    }
 
-        private Select2ChoiceBootstrapFormComponent<FiscalYear> fiscalYear;
-
-        @SpringBean
-        private DataExportService dataExportService;
-
-        @SpringBean
-        private ProcurementPlanService procurementPlanService;
-
-        @SpringBean
-        private DepartmentService departmentService;
-
-        @SpringBean
-        private FiscalYearService fiscalYearService;
-
-        DataExportForm(final String componentId, final IModel<DataExportBean> model) {
-            super(componentId, model);
-        }
-
-        @Override
-        protected void onInitialize() {
-            super.onInitialize();
-
-            department = ComponentUtil.addSelect2ChoiceField(this, "department", departmentService);
-            department.required();
-            add(department);
-
-            fiscalYear = ComponentUtil.addSelect2ChoiceField(this, "fiscalYear", fiscalYearService);
-            fiscalYear.required();
-            add(fiscalYear);
-
-            final AJAXDownload download = new AJAXDownload() {
-                @Override
-                protected IRequestHandler getHandler() {
-                    return new IRequestHandler() {
-                        @Override
-                        public void respond(final IRequestCycle requestCycle) {
-                            final HttpServletResponse response = (HttpServletResponse) requestCycle
-                                    .getResponse().getContainerResponse();
-
-                            try {
-                                final Department department = DataExportForm.this.getModelObject().getDepartment();
-                                final FiscalYear fiscalYear = DataExportForm.this.getModelObject().getFiscalYear();
-
-                                final byte[] bytes = dataExportService.generateProcurementPlanExcel(
-                                        procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear)
-                                                .getId());
-
-                                response.setContentType(
-                                        Constants.ContentType.XLSX);
-                                response.setHeader("Content-Disposition", "attachment; filename=excel-export.xlsx");
-                                response.getOutputStream().write(bytes);
-                            } catch (IOException e) {
-                                logger.error("Download error", e);
-                            }
-
-                            RequestCycle.get().scheduleRequestHandlerAfterCurrent(null);
-                        }
-
-                        @Override
-                        public void detach(final IRequestCycle requestCycle) {
-                            // do nothing;
-                        }
-                    };
-                }
-            };
-            add(download);
-
-            final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton",
-                    new StringResourceModel("export", this),
-                    Buttons.Type.Success) {
-                @Override
-                protected void onConfigure() {
-                    super.onConfigure();
-                    setDefaultFormProcessing(true);
-                }
-
-                @Override
-                protected void onSubmit(final AjaxRequestTarget target) {
-                    super.onSubmit(target);
-
-                    final Department department = DataExportForm.this.getModelObject().getDepartment();
-                    final FiscalYear fiscalYear = DataExportForm.this.getModelObject().getFiscalYear();
-                    final ProcurementPlan procurementPlan =
-                            procurementPlanService.findByDepartmentAndFiscalYear(department, fiscalYear);
-
-                    if (procurementPlan == null) {
-                        feedbackPanel.error(getString("procurementPlan.notFound"));
-                    } else {
-                        // initiate the file download
-                        download.initiate(target);
-                    }
-
-                    target.add(feedbackPanel);
-                }
-
-                @Override
-                protected void onError(final AjaxRequestTarget target) {
-                    super.onError(target);
-
-                    target.add(feedbackPanel);
-                    target.add(department);
-                    target.add(fiscalYear);
-                }
-            };
-            excelButton.setIconType(FontAwesomeIconType.download);
-            add(excelButton);
-        }
+    @Override
+    public void onError(AjaxRequestTarget target) {
+        target.add(feedbackPanel);
     }
 }

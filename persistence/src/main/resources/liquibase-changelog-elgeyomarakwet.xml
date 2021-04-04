@@ -87,4 +87,183 @@
         </insert>
     </changeSet>
 
+    <changeSet id="OCMAKU-1022" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="CATEGORY"/>
+            <columnExists tableName="CATEGORY" columnName="location_point"/>
+            <changeSetExecuted id="OCMAKU-916-elgeyo-wards-subcounties"
+                               changeLogFile="liquibase-changelog-elgeyomarakwet.xml" author="mpostelnicu"/>
+        </preConditions>
+        <comment>Imports location based information to existing Elgeyo Locations</comment>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.50806, 0.67028)"/>
+            <where>dtype='Subcounty' and label=:value</where>
+            <whereParams>
+                <param value="Keiyo North"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.55, 0.38333)"/>
+            <where>dtype='Subcounty' and label=:value</where>
+            <whereParams>
+                <param value="Keiyo South"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.58333, 1.06667)"/>
+            <where>dtype='Subcounty' and label=:value</where>
+            <whereParams>
+                <param value="Marakwet East"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.55854, 0.9789)"/>
+            <where>dtype='Subcounty' and label=:value</where>
+            <whereParams>
+                <param value="Marakwet West"/>
+            </whereParams>
+        </update>
+
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.42842, 0.6947)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Kamariny"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.55, 0.8)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Kapchemutwa"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.56667, 0.78333)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Emsoo"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.52166, 0.59103)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Tambach"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.65, 0.26667)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Metkei"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.71667, 0.41667)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Kabiemit"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.55, 0.38333)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Chepkorio"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.62029, 0.4391)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Soy North"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.63957, 0.29265)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Soy South"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.54112, 0.46465)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Kaptwarakwa"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.63333, 1.21667)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Embobut/Embolot"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.53333, 1.05)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Sambirir"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.63333, 1.16667)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Endo"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.50512, 1.15624)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Kapyego"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.55854, 0.9789)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Kapsowar"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.34508, 1.08498)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Sengwer"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.26667, 1.08333)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Cherangany/Chebororwa"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.5, 1.16667)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Lelan"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.6354, 0.96326)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Aror"/>
+            </whereParams>
+        </update>
+        <update tableName="category">
+            <column name="location_point" valueComputed="ST_Point(35.51667, 0.96667)"/>
+            <where>dtype='Ward' and label=:value</where>
+            <whereParams>
+                <param value="Moiben/Kuserwo"/>
+            </whereParams>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -118,29 +119,39 @@ public class PrequalifiedSupplierServiceImpl
             return Collections.emptyList();
         }
 
-        Date tenderInvitationDate = tender.getInvitationDate();
-        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+        return find(supplier, tender)
+                .map(this::formatItems)
+                .orElse(Collections.emptyList());
+    }
 
-        if (yearRange == null) {
-            return Collections.emptyList();
-        }
-
-        PrequalifiedSupplier prequalifiedSupplier = find(supplier, yearRange);
-
-        if (prequalifiedSupplier == null) {
-            return Collections.emptyList();
-        }
+    private List<String> formatItems(PrequalifiedSupplier prequalifiedSupplier) {
+        PrequalificationYearRange yearRange = prequalifiedSupplier.getYearRange();
 
         return prequalifiedSupplier.getItems().stream()
                 .map(i -> i.getItem().toString(yearRange))
                 .collect(Collectors.toList());
     }
 
-    private PrequalifiedSupplier find(Supplier supplier, PrequalificationYearRange yearRange) {
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, Tender tender) {
+        if (supplier == null) {
+            return Optional.empty();
+        }
+
+        Date tenderInvitationDate = tender.getInvitationDate();
+        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+
+        if (yearRange == null) {
+            return Optional.empty();
+        }
+
+        return find(supplier, yearRange);
+    }
+
+    private Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
         return repository
                 .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
                         cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),
-                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)))
-                .orElse(null);
+                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)));
     }
 }
