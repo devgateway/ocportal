@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
@@ -114,7 +115,7 @@ public class Supplier extends Category {
     @Override
     @AccessType(AccessType.Type.PROPERTY)
     public String getLabel() {
-        return nonPerforming ? label + " (non-performing)" : label;
+        return BooleanUtils.isTrue(nonPerforming) ? label + " (non-performing)" : label;
     }
 
     public String getRealLabel() {
