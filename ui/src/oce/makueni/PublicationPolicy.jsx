@@ -26,7 +26,7 @@ class Docs extends CRDPage {
             <h3>{t('publicationPolicy:pd:title')}</h3>
             {t('publicationPolicy:pd:text')}
             <div>
-              <img src={`${process.env.PUBLIC_URL}/ocmakueni-architecture.png`} />
+              <img src={`${process.env.PUBLIC_URL}/ocportal-architecture.svg`} />
               {t('publicationPolicy:pd:architecture')}
             </div>
             <h3>{t('publicationPolicy:ad:title')}</h3>
@@ -37,7 +37,7 @@ class Docs extends CRDPage {
                     <a
                       key={i}
                       className="download-file"
-                      href="https://opencontracting.makueni.go.ke/api/ocds/package/all"
+                      href="/api/ocds/package/all"
                     >
                       {t('publicationPolicy:ad:line1:link1')}
                     </a>
@@ -47,7 +47,7 @@ class Docs extends CRDPage {
                   <a
                     key={i}
                     className="download-file"
-                    href="https://opencontracting.makueni.go.ke/swagger-ui/#/ocds-controller"
+                    href="/swagger-ui/#/ocds-controller"
                   >
                     {t('publicationPolicy:ad:line1:link2')}
                   </a>
@@ -59,9 +59,9 @@ class Docs extends CRDPage {
                 <a
                   key={i}
                   className="download-file"
-                  href="https://opencontracting.makueni.go.ke"
+                  href="/"
                 >
-                  opencontracting.makueni.go.ke
+                  web address
                 </a>
               ))}
             <p />
@@ -107,7 +107,7 @@ class Docs extends CRDPage {
 
             <h3>{t('publicationPolicy:pubContact:title')}</h3>
             {reactStringReplace(t('publicationPolicy:pubContact:text'), '$#$',
-              (m, i) => <a key={i} className="download-file" href="mailto:opencontracting@makueni.go.ke">opencontracting@makueni.go.ke</a>)}
+              (m, i) => <a key={i} className="download-file" href="mailto:info@elgeyomarakwet.go.ke">info@elgeyomarakwet.go.ke</a>)}
 
             <h3>{t('publicationPolicy:disclaimer:title')}</h3>
             {t('publicationPolicy:disclaimer:text')}
