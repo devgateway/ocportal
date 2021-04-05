@@ -36,7 +36,7 @@ public class Supplier extends Category {
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String agpoRegistrationId;
 
-    private boolean nonPerforming = false;
+    private Boolean nonPerforming = false;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -103,12 +103,12 @@ public class Supplier extends Category {
         contacts.add(contact);
     }
 
-    public boolean isNonPerforming() {
-        return nonPerforming;
+    public void setNonPerforming(Boolean nonPerforming) {
+        this.nonPerforming = nonPerforming;
     }
 
-    public void setNonPerforming(boolean nonPerforming) {
-        this.nonPerforming = nonPerforming;
+    public Boolean getNonPerforming() {
+        return nonPerforming;
     }
 
     @Override
