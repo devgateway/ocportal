@@ -15,25 +15,27 @@
     <wicket:fragment wicket:id="containerFragment">
         <ul class="project-details">
             <li wicket:id="rows">
-                <div class="col-md-6 project-title">
-                    <a href="#" wicket:id="titleLink" class="title-uppercase"><span wicket:id="title"></span></a>
-                    <span class="status" wicket:id="projectStatus"></span>
-                </div>
+                <a href="#" wicket:id="titleLink">
+                    <div class="col-md-6 project-title">
+                        <span class="title-uppercase" wicket:id="title"></span>
+                        <span class="status" wicket:id="projectStatus"></span>
+                    </div>
 
-                <div class="col-md-2 tender">
-                    <span wicket:id="tenderLabel"></span>
-                    <span class="status" wicket:id="tenderProcessStatus"></span>
-                </div>
+                    <div class="col-md-2 tender">
+                        <span wicket:id="tenderLabel"></span>
+                        <span class="status" wicket:id="tenderProcessStatus"></span>
+                    </div>
 
-                <div class="col-md-2 award">
-                    <span wicket:id="awardLabel"></span>
-                    <span class="status" wicket:id="awardProcessStatus"></span>
-                </div>
+                    <div class="col-md-2 award">
+                        <span wicket:id="awardLabel"></span>
+                        <span class="status" wicket:id="awardProcessStatus"></span>
+                    </div>
 
-                <div class="col-md-2 award">
-                    <span wicket:id="implementationLabel"></span>
-                    <span class="status" wicket:id="implementationProcessStatus"></span>
-                </div>
+                    <div class="col-md-2 award">
+                        <span wicket:id="implementationLabel"></span>
+                        <span class="status" wicket:id="implementationProcessStatus"></span>
+                    </div>
+                </a>
             </li>
         </ul>
     </wicket:fragment>
