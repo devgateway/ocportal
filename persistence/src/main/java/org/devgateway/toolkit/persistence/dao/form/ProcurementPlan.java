@@ -6,7 +6,9 @@ import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
-import org.devgateway.toolkit.persistence.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.validator.Severity;
+import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.devgateway.toolkit.persistence.validator.validators.OnePlanPerDepartmentAndFY;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -22,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,10 +39,12 @@ import java.util.Set;
 @Entity
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")})
+@Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")},
+        uniqueConstraints = @UniqueConstraint(columnNames = {"department_id", "fiscal_year_id"}))
 @Document
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "procurementPlanForm")
+@OnePlanPerDepartmentAndFY(groups = HighLevel.class, payload = Severity.NonRecoverable.class)
 public class ProcurementPlan extends AbstractMakueniEntity {
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
