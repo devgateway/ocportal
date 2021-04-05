@@ -450,16 +450,13 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
                     BootstrapAjaxLink<Void> editTender = createEditButton(itemObj);
 
-                    final String buttonType;
+                    final String res;
                     if (canAccessAddNewButtons(editClazz)) {
-                        buttonType = "edit";
+                        res = itemObj == null ? "add" : "edit";
                     } else {
-                        buttonType = "view";
+                        res = "view";
                     }
-                    editTender.add(AttributeAppender.append("class", "no-text btn-" + buttonType));
-
-                    editTender.add(new TooltipBehavior(EditViewResourceModel.of(canAccessAddNewButtons(editClazz),
-                            TenderDetailPanel.this.getId() + ".entity", this)));
+                    editTender.setLabel(new StringResourceModel(res, ListViewTenderProcessOverview.this));
 
                     if (item.getModelObject() == null) {
                         editTender.setVisibilityAllowed(canAccessAddNewButtons(editClazz));
@@ -484,7 +481,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             addButton.setVisibilityAllowed(multiple);
             addButton.setEnabled(canAccessAddNewButtons(editClazz) && canEdit(tenderProcess,
                     null, previousStep, allowNullProjects));
-            addButton.add(AttributeAppender.append("class", "no-text btn-add"));
+            addButton.setLabel(new StringResourceModel("add", ListViewTenderProcessOverview.this));
             add(addButton);
         }
     }
