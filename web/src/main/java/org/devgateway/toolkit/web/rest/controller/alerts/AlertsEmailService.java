@@ -1,7 +1,6 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
 import org.devgateway.ocds.web.spring.SendEmailService;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
@@ -56,7 +55,7 @@ public class AlertsEmailService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(parent.getEmail());
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject("You've received a reply to your feedback message!");
             msg.setText("Click on the link below to view your message on the Government of " + INSTANCE_NAME
                     + " County Open Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
@@ -122,7 +121,7 @@ public class AlertsEmailService {
                     + INSTANCE_NAME + " Portal Team";
 
             msg.setTo(alert.getEmail());
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject(INSTANCE_NAME + " OC Portal - Please Verify Email Address");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
