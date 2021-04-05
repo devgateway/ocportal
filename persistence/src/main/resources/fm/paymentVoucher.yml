@@ -94,6 +94,12 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderTitle
+- name: paymentVoucherForm.tenderProcess.tender.iterator.next.tenderNumber
+  mandatory: no
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderNumber
 - name: paymentVoucherForm.terminate
   enabled: yes
   visible: yes

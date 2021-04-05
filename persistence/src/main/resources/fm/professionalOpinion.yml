@@ -66,6 +66,16 @@
 - name: professionalOpinionForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
+- name: professionalOpinionForm.tenderTitle
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: professionalOpinionForm.tenderNumber
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderNumber
 - name: professionalOpinionForm.terminate
   enabled: yes
   visible: yes

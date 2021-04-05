@@ -90,21 +90,21 @@ public class ListViewStatusOverview extends AbstractListViewStatus<StatusOvervie
                 };
                 link.add(new Label("title"));
                 item.add(link);
-                
-                item.add(addStatus("projectStatus", item.getModelObject().getProjectStatus(), ""));
 
-                item.add(addStatus("tenderLabel", item.getModelObject().getTenderProcessStatus(),
+                link.add(addStatus("projectStatus", item.getModelObject().getProjectStatus(), ""));
+
+                link.add(addStatus("tenderLabel", item.getModelObject().getTenderProcessStatus(),
                         getString("tenderProcess")));
-                item.add(addStatus("tenderProcessStatus", item.getModelObject().getTenderProcessStatus(), ""));
+                link.add(addStatus("tenderProcessStatus", item.getModelObject().getTenderProcessStatus(), ""));
 
-                item.add(addStatus("awardLabel", item.getModelObject().getAwardProcessStatus(),
+                link.add(addStatus("awardLabel", item.getModelObject().getAwardProcessStatus(),
                         getString("awardProcess")));
-                item.add(addStatus("awardProcessStatus", item.getModelObject().getAwardProcessStatus(), ""));
+                link.add(addStatus("awardProcessStatus", item.getModelObject().getAwardProcessStatus(), ""));
 
-                item.add(addStatus("implementationLabel", item.getModelObject().getImplementationStatus(),
+                link.add(addStatus("implementationLabel", item.getModelObject().getImplementationStatus(),
                         getString("implementationProcess")));
 
-                item.add(addStatus("implementationProcessStatus", item.getModelObject().getImplementationStatus(), ""));
+                link.add(addStatus("implementationProcessStatus", item.getModelObject().getImplementationStatus(), ""));
             }
 
             private Label addStatus(final String id, final String status, final String label) {
