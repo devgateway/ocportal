@@ -31,8 +31,9 @@
         <plugins>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.6.1</version>
+                <version>3.1.0</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -46,34 +47,31 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.10.4</version>
+                <version>1.11.3</version>
 
                 <executions>
                     <execution>
                         <id>install node and npm</id>
                         <goals>
-                            <goal>install-node-and-npm</goal>
+                            <goal>install-node-and-pnpm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v14.15.2</nodeVersion>
-                            <npmVersion>6.14.9</npmVersion>
+                            <nodeVersion>v14.16.0</nodeVersion>
+                            <pnpmVersion>v5.18.9</pnpmVersion>
                         </configuration>
                     </execution>
 
                     <execution>
-                        <id>npm install</id>
+                        <id>pnpm install</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>pnpm</goal>
                         </goals>
-                        <configuration>
-                            <arguments><![CDATA[--no-audit --progress=false install]]></arguments>
-                        </configuration>
                     </execution>
 
                     <execution>
-                        <id>npm run build</id>
+                        <id>pnpm run build</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>pnpm</goal>
                         </goals>
                         <configuration>
                             <arguments>run build</arguments>
