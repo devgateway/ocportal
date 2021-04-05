@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Stream;
@@ -16,6 +17,15 @@ import java.util.stream.Stream;
 public interface ProcurementPlanRepository extends AbstractMakueniEntityRepository<ProcurementPlan> {
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
+
+    @Query("select count(p) from ProcurementPlan p "
+            + "where p.department = :department "
+            + "and p.fiscalYear = :fiscalYear "
+            + "and p.id <> :id")
+    Long countByDepartmentAndFiscalYearExceptId(
+            @Param("department") Department department,
+            @Param("fiscalYear") FiscalYear fiscalYear,
+            @Param("id") Long exceptId);
 
     ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 

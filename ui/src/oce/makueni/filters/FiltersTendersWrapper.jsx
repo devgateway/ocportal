@@ -9,6 +9,7 @@ import FilterInput from './FilterInput';
 import FilterItems from './FilterItems';
 import FilterWards from './FilterWards';
 import FilterTenderAmount from './FilterTenderAmount';
+import ProcurementMethodRationaleSelect from './ProcurementMethodRationaleSelect';
 
 const wardsRendererCreator = (FilterItem) => ({ filters, onChange, ...props }) => (
   <FilterItem
@@ -31,6 +32,10 @@ const amountRendererCreator = (FilterItem) => ({ filters, onChange, ...props }) 
 const departmentRenderer = singlePropertyRendererCreator(FilterItemDep, 'department');
 
 const fyRenderer = singlePropertyRendererCreator(FilterItemFY, 'fiscalYear');
+
+const procurementMethodRationaleRenderer = singlePropertyRendererCreator(
+  ProcurementMethodRationaleSelect, 'procurementMethodRationale',
+);
 
 const titleRenderer = singlePropertyRendererCreator(FilterInput, 'text');
 
@@ -73,6 +78,16 @@ const FiltersTendersWrapper = (props) => {
       filters: [
         {
           render: fyRenderer,
+        },
+      ],
+    },
+    {
+      name: 'Procurement Method Rationale',
+      className: 'fiscal-year',
+      fm: 'publicView.filter.procurementMethodRationale',
+      filters: [
+        {
+          render: procurementMethodRationaleRenderer,
         },
       ],
     },

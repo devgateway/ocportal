@@ -8,22 +8,9 @@
 <wicket:extend>
     <br/>
     <div class="row">
-        <div class="col-md-10">
-            <form wicket:id="dataExportForm" class="well">
-                <div class="row">
-                    <div class="col-md-6" wicket:id="department"></div>
-                    <div class="col-md-6" wicket:id="fiscalYear"></div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                    <button wicket:id="excelButton" type="button" id="excelButton" class="pull-right btn">
-                        <i class="fa fa-file-excel-o"></i>
-                        [[Excel export]]
-                    </button>
-                    </div>
-                </div>
-            </form>
+        <div class="col-md-10 col-md-offset-1">
+            <div wicket:id="exportType"></div>
+            <div wicket:id="exportPanel"></div>
         </div>
     </div>
 </wicket:extend>

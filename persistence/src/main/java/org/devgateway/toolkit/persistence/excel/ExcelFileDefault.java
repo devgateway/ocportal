@@ -26,7 +26,7 @@ public class ExcelFileDefault implements ExcelFile {
     private final DgFmService fmService;
 
     public ExcelFileDefault(final List<Object> objects, final TranslateService translateService,
-            final DgFmService fmService) {
+                            final DgFmService fmService) {
         this.fmService = fmService;
         Validate.notNull(objects, "The list of objects can't be null!");
         Validate.noNullElements(objects, "The list of objects can't contain null elements!");
@@ -53,7 +53,7 @@ public class ExcelFileDefault implements ExcelFile {
             Form form = clazz.getAnnotation(Form.class);
             String sheetName = getSheetNameFor(clazz);
             final ExcelSheet excelSheet = new ExcelSheetDefault(workbook, translateService, fmService, sheetName);
-            excelSheet.writeSheet(clazz, objects, form.featureName());
+            excelSheet.writeSheet(clazz, objects, form == null ? sheetName : form.featureName());
         }
 
         return workbook;
