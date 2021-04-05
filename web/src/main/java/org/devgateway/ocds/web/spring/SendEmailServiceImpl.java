@@ -77,10 +77,16 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     public void createFromEmail() {
-        fromEmail = "noreply@" + getDomainName(serverURL, false);
+        fromEmail = "noreply@" + getDomainName(serverURL);
     }
 
-    public static String getDomainName(final String url, final Boolean useTopDomain) {
+    /**
+     * Gets domain name. Returns to toplevel domain if the server runs on dgstg.org, returns full domain otherwise
+     *
+     * @param url
+     * @return
+     */
+    public static String getDomainName(final String url) {
         URI uri = null;
         try {
             uri = new URI(url);
@@ -97,7 +103,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         }
 
         InternetDomainName fromDomain = InternetDomainName.from(domain);
-        return useTopDomain ? fromDomain.topPrivateDomain().toString() : fromDomain.toString();
+        return domain.contains("dgstg.org") ? fromDomain.topPrivateDomain().toString() : fromDomain.toString();
     }
 
     @Override
