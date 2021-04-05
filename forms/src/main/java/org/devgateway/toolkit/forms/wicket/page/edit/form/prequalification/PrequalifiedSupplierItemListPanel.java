@@ -2,7 +2,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -17,7 +16,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.devgateway.toolkit.forms.wicket.components.ListViewSectionPanel;
 import org.devgateway.toolkit.forms.wicket.components.form.CheckBoxBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.events.SupplierChanged;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactDropdownButton;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.NewContactAlert;
@@ -109,15 +107,6 @@ public class PrequalifiedSupplierItemListPanel
             protected void onConfigure() {
                 super.onConfigure();
                 setVisibilityAllowed(!useDefaultContactModel.getObject());
-            }
-
-            @Override
-            public void onEvent(IEvent<?> event) {
-                super.onEvent(event);
-
-                if (event.getPayload() instanceof SupplierChanged && useDefaultContactModel.getObject()) {
-                    event.dontBroadcastDeeper();
-                }
             }
         };
         contactWrapper.setOutputMarkupPlaceholderTag(true);

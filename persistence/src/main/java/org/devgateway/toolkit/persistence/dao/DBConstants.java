@@ -11,17 +11,18 @@
  *******************************************************************************/
 package org.devgateway.toolkit.persistence.dao;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public final class DBConstants {
 
     public static final String DATE_FORMAT = "dd/MM/YYYY";
 
-
-    public static final String FROM_EMAIL = "noreply@dgstg.org";
 
     public static final String INSTANCE_NAME = "Elgeyo Marakwet";
 
@@ -65,6 +66,26 @@ public final class DBConstants {
         public static final String REJECTED = "Rejected";
         public static final String[] ALL = {ACCEPTED, REJECTED};
         public static final List<String> ALL_LIST = Collections.unmodifiableList(Arrays.asList(ALL));
+    }
+
+
+
+    public static final class Reports {
+        public static final long DIRECT_PROCUREMENT_THRESHOLD = 500000;
+    }
+
+    public static final class TargetGroup {
+        public static final String PWD = "PWD";
+        public static final String WOMEN = "Women";
+        public static final String YOUTH = "Youth";
+        public static final String CITIZEN_CONTRACTOR = "Citizen Contractor";
+        public static final String MARGIN_OF_PREFERENCE = "Margin of Preference for Local Contractor";
+        public static final String GENERAL = "General";
+
+        public static final Set<String> AGPO_CATEGORIES = ImmutableSet.of(PWD, WOMEN, YOUTH);
+
+        public static final Set<String> NON_AGPO_CATEGORIES =
+                ImmutableSet.of(CITIZEN_CONTRACTOR, MARGIN_OF_PREFERENCE, GENERAL);
     }
 
     public static final int MAX_DEFAULT_TEXT_LENGTH = 32000;

@@ -69,7 +69,6 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
-import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -83,7 +82,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.PersonService;
-import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityUtil;
@@ -151,7 +149,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private static final String OCID_PREFIX = "ocds-muq5cl-";
 
-    private ImmutableMap<String, Tender.ProcurementMethod> procurementMethodMap;
+
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
@@ -183,7 +181,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject("OCDS Validation Failures After Import");
             msg.setText(txt);
         };
@@ -456,7 +454,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Tender.ProcurementMethod createProcurementMethod(ProcurementMethod procurementMethod) {
-        Tender.ProcurementMethod pm = procurementMethodMap.get(procurementMethod.getLabel());
+        Tender.ProcurementMethod pm = MongoConstants.PROCUREMENT_METHOD_MAP.get(procurementMethod.getLabel());
         if (pm == null) {
             throw new RuntimeException("Procurement method mapping unknown " + procurementMethod);
         }
@@ -469,21 +467,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     @PostConstruct
     public void init() {
-        procurementMethodMap = ImmutableMap.<String, Tender.ProcurementMethod>builder()
-                .put("Direct Procurement", Tender.ProcurementMethod.direct)
-                .put("Open Tender - National", Tender.ProcurementMethod.open)
-                .put("Request for Proposal", Tender.ProcurementMethod.limited)
-                .put("Request for Quotation", Tender.ProcurementMethod.selective)
-                .put("Restricted Tender", Tender.ProcurementMethod.limited)
-                .put("Specially Permitted", Tender.ProcurementMethod.limited)
-                .put("Low Value Procurement", Tender.ProcurementMethod.direct)
-                .put("Framework Agreement", Tender.ProcurementMethod.direct)
-                .put("Two-stage Tendering", Tender.ProcurementMethod.selective)
-                .put("Design Competition", Tender.ProcurementMethod.selective)
-                .put("Force Account", Tender.ProcurementMethod.direct)
-                .put("Electronic Reverse Auction", Tender.ProcurementMethod.selective)
-                .put("Open Tender - International", Tender.ProcurementMethod.open).build();
-
         meMilestoneMap = ImmutableMap.<String, Milestone.Status>builder()
                 .put("completedNotInUse", Milestone.Status.MET)
                 .put("completeInUse", Milestone.Status.MET)
