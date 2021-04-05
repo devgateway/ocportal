@@ -354,24 +354,27 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
             );
             panels.add(paymentVoucherPanel);
 
-            BootstrapAjaxLink<Void> deleteLink = new BootstrapAjaxLink<Void>("delete", Buttons.Type.Danger) {
-                @Override
-                public void onClick(AjaxRequestTarget target) {
-                    tenderProcessService.delete(item.getModelObject());
-                    throw new RestartResponseException(DepartmentOverviewPage.class);
-                }
-            };
-            deleteLink.setLabel(new StringResourceModel("deleteTenderProcess", this));
-            deleteLink.setVisibilityAllowed(tenderProcess.isDeleteAllowed());
-            containerFragment.add(deleteLink);
+            containerFragment.add(createDeleteTenderProcessLink("delete", tenderProcess, item.getModel()));
 
             hideableContainer.addOrReplace(containerFragment);
         } else {
             final Fragment containerFragment = new Fragment(containerFragmentId, "emptyContainerFragment", this);
             hideableContainer.addOrReplace(containerFragment);
         }
+    }
 
-
+    private BootstrapAjaxLink<Void> createDeleteTenderProcessLink(String id, TenderProcess tenderProcess,
+                                                                  IModel<TenderProcess> model) {
+        BootstrapAjaxLink<Void> deleteLink = new BootstrapAjaxLink<Void>(id, Buttons.Type.Danger) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                tenderProcessService.delete(model.getObject());
+                throw new RestartResponseException(DepartmentOverviewPage.class);
+            }
+        };
+        deleteLink.setLabel(new StringResourceModel("deleteTenderProcess", this));
+        deleteLink.setVisibilityAllowed(tenderProcess.isDeleteAllowed());
+        return deleteLink;
     }
 
     @Override
