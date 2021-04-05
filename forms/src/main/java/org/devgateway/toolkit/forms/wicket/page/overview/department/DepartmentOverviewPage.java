@@ -18,12 +18,11 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
-import de.agilecoders.wicket.core.util.Attributes;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -35,7 +34,6 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.IRequestCycle;
@@ -122,8 +120,6 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
 
     @SpringBean
     private PermissionEntityRenderableService permissionEntityRenderableService;
-
-    private Label newProcurementPlanLabel;
 
     protected final IModel<FiscalYear> fiscalYearModel;
 
@@ -313,25 +309,30 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 .add(new DgFmBehavior("deptOverview.fiscalYearBudget")));
 
         addNewProcurementPlanButton();
-        addEditProcurementPlanButton();
+
+        WebMarkupContainer procurementPlanRow = new WebMarkupContainer("procurementPlanRow");
+        procurementPlanRow.setVisibilityAllowed(getProcurementPlan() != null);
+        add(procurementPlanRow);
+
+        addEditProcurementPlanButton(procurementPlanRow);
         addFiscalYearBudgetButton();
         addEditFiscalYearBudgetButton();
-        addLabelOrInvisibleContainer("procurementPlanLabel", getProcurementPlan());
+        addLabelOrInvisibleContainer(procurementPlanRow, "procurementPlanLabel", getProcurementPlan());
 
-        addAmountRemaining();
+        addAmountRemaining(procurementPlanRow);
 
         add(new ProjectOverviewPanel("projectOverview"));
 
         add(new TenderProcessOverviewPanel("tenderProcessOverview"));
     }
 
-    private void addAmountRemaining() {
+    private void addAmountRemaining(WebMarkupContainer parent) {
         BigDecimal amount = computeAmountRemaining(getProcurementPlan());
         Label label = new Label("amountRemaining",
                 new StringResourceModel("amountRemaining").setParameters(amount));
         label.setVisibilityAllowed(amount != null);
         label.add(new TooltipBehavior(new StringResourceModel("amountRemaining.tooltip")));
-        add(label);
+        parent.add(label);
     }
 
     private BigDecimal computeAmountRemaining(ProcurementPlan procurementPlan) {
@@ -420,12 +421,12 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         }
     }
 
-    private void addLabelOrInvisibleContainer(final String id, final Object o) {
+    private void addLabelOrInvisibleContainer(WebMarkupContainer parent, final String id, final Object o) {
         if (o != null) {
-            add(new Label(id, o.toString() + " "
+            parent.add(new Label(id, o.toString() + " "
                     + new StringResourceModel("procurementPlan", this).getObject()));
         } else {
-            add(new WebMarkupContainer(id).setVisibilityAllowed(false));
+            parent.add(new WebMarkupContainer(id).setVisibilityAllowed(false));
         }
     }
 
@@ -446,24 +447,27 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 setResponsePage(EditFiscalYearBudgetPage.class);
             }
         };
-        link.setEnabled(fiscalYearBudgetModel.getObject() == null);
+        link.setVisibilityAllowed(fiscalYearBudgetModel.getObject() == null
+                && canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
         link.add(new TooltipBehavior(new StringResourceModel("addFiscalYearBudget.tooltip", this)));
         link.add(new DgFmBehavior("deptOverview.fiscalYearBudget"));
+        link.setLabel(new StringResourceModel("add", this));
         add(link);
-        link.setVisibilityAllowed(canAccessAddNewButtons(EditFiscalYearBudgetPage.class));
     }
 
     private void addNewProcurementPlanButton() {
+        WebMarkupContainer newProcurementPlanWrapper = new WebMarkupContainer("newProcurementPlanWrapper");
+        newProcurementPlanWrapper.setVisibilityAllowed(canAccessAddNewButtons(EditProcurementPlanPage.class)
+                && getProcurementPlan() == null && getFiscalYear() != null);
+        add(newProcurementPlanWrapper);
+
         final BootstrapBookmarkablePageLink<Void> newProcurementPlanButton = new BootstrapBookmarkablePageLink<>(
                 "newProcurementPlan", ProcurementPlanInputSelectPage.class, Buttons.Type.Success);
-        add(newProcurementPlanButton);
-        newProcurementPlanButton.setEnabled(getProcurementPlan() == null && getFiscalYear() != null);
-        newProcurementPlanButton.setVisibilityAllowed(canAccessAddNewButtons(EditProcurementPlanPage.class));
+        newProcurementPlanWrapper.add(newProcurementPlanButton);
 
-        newProcurementPlanLabel = new Label("newProcurementPlanLabel",
+        Label newProcurementPlanLabel = new Label("newProcurementPlanLabel",
                 new StringResourceModel("newProcurementPlanLabel", this));
-        newProcurementPlanLabel.setVisibilityAllowed(newProcurementPlanButton.isVisibilityAllowed());
-        add(newProcurementPlanLabel);
+        newProcurementPlanWrapper.add(newProcurementPlanLabel);
     }
 
     private void addEditFiscalYearBudgetButton() {
@@ -472,52 +476,34 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         if (fiscalYearBudget != null) {
             pp.set(WebConstants.PARAM_ID, fiscalYearBudget.getId());
         }
-        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>(
-                "editFiscalYearBudget", EditFiscalYearBudgetPage.class, pp, Buttons.Type.Info) {
-            @Override
-            protected void onComponentTag(final ComponentTag tag) {
-                super.onComponentTag(tag);
-
-                if (!canAccessAddNewButtons(EditFiscalYearBudgetPage.class)) {
-                    Attributes.removeClass(tag, "btn-edit");
-                    Attributes.addClass(tag, "btn-view");
-                }
-            }
-        };
-        button.setEnabled(fiscalYearBudget != null);
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
+                "editFiscalYearBudget", EditFiscalYearBudgetPage.class, pp, Buttons.Type.Success);
+        button.setVisibilityAllowed(fiscalYearBudget != null);
         button.add(new TooltipBehavior(EditViewResourceModel.of(
                 canAccessAddNewButtons(EditFiscalYearBudgetPage.class), "fiscalYearBudget", this)));
-
+        button.setLabel(new StringResourceModel(
+                canAccessAddNewButtons(EditFiscalYearBudgetPage.class) ? "edit" : "view",
+                this));
         add(button);
-
     }
 
-    private void addEditProcurementPlanButton() {
+    private void addEditProcurementPlanButton(MarkupContainer parent) {
         final PageParameters pp = new PageParameters();
         if (getProcurementPlan() != null) {
             pp.set(WebConstants.PARAM_ID, getProcurementPlan().getId());
         }
-        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<Void>(
-                "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Info) {
-            @Override
-            protected void onComponentTag(final ComponentTag tag) {
-                super.onComponentTag(tag);
-
-                if (!canAccessAddNewButtons(EditProcurementPlanPage.class)) {
-                    Attributes.removeClass(tag, "btn-edit");
-                    Attributes.addClass(tag, "btn-view");
-                }
-            }
-        };
-        button.setEnabled(getProcurementPlan() != null);
+        final BootstrapBookmarkablePageLink<Void> button = new BootstrapBookmarkablePageLink<>(
+                "editProcurementPlan", EditProcurementPlanPage.class, pp, Buttons.Type.Success);
+        button.setLabel(new StringResourceModel(
+                canAccessAddNewButtons(EditProcurementPlanPage.class) ? "edit" : "view"));
         button.add(new TooltipBehavior(EditViewResourceModel.of(
                 canAccessAddNewButtons(EditProcurementPlanPage.class), "procurementPlan", this)));
 
-        add(button);
+        parent.add(button);
 
         DeptOverviewStatusLabel procurementPlanStatus = new DeptOverviewStatusLabel(
                 "procurementPlanStatus", getProcurementPlan() == null ? null : getProcurementPlan().getStatus());
-        add(procurementPlanStatus);
+        parent.add(procurementPlanStatus);
     }
 
     private BootstrapAjaxLink<Void> createEditCabinetPaperButton() {
@@ -532,6 +518,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("editCabinetPaper.tooltip", this)));
         editCabinetPaper.setVisibilityAllowed(canAccessAddNewButtons(EditCabinetPaperPage.class));
+        editCabinetPaper.setLabel(new StringResourceModel("add", this));
         return editCabinetPaper;
     }
 
@@ -543,19 +530,11 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 sessionMetadataService.setSessionPP(getProcurementPlan());
                 setResponsePage(ListCabinetPaperPage.class);
             }
-
-            @Override
-            protected void onComponentTag(final ComponentTag tag) {
-                super.onComponentTag(tag);
-
-                if (!canAccessAddNewButtons(EditCabinetPaperPage.class)) {
-                    Attributes.removeClass(tag, "btn-edit");
-                    Attributes.addClass(tag, "btn-view");
-                }
-            }
         };
         editCabinetPaper.setEnabled(getProcurementPlan() != null);
         editCabinetPaper.add(new TooltipBehavior(new StringResourceModel("listCabinetPaper.tooltip", this)));
+        editCabinetPaper.setLabel(
+                new StringResourceModel(canAccessAddNewButtons(EditCabinetPaperPage.class) ? "edit" : "view"));
         return editCabinetPaper;
     }
 
