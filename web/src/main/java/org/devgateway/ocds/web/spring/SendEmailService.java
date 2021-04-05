@@ -15,4 +15,6 @@ public interface SendEmailService {
     void sendNewAccountNotification(Person person, String plainPassword);
 
     void sendEmail(String subject, String text, String to);
+
+    String getFromEmail();
 }
