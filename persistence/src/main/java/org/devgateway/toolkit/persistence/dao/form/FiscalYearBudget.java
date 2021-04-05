@@ -6,6 +6,9 @@ import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.validator.Severity;
+import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.devgateway.toolkit.persistence.validator.validators.OneBudgetPerDepartmentAndFY;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -13,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -25,6 +30,8 @@ import java.util.Collections;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"department_id", "fiscal_year_id"}))
+@OneBudgetPerDepartmentAndFY(groups = HighLevel.class, payload = Severity.NonRecoverable.class)
 public class FiscalYearBudget extends AbstractMakueniEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")

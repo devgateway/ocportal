@@ -528,7 +528,8 @@
     width: 100%;
 }
 
-.collapse-content ul li {
+.collapse-content ul li a {
+    width: 100%;
     background: #ffffff;
     border-bottom: 1px solid #dfe3e9;
     display: flex;
@@ -555,6 +556,9 @@
     height: 20px;
     padding: 0;
     width: 20px;
+}
+.project-details > li {
+    display: block;
 }
 .project-panels-wrapper {
     padding: 0px 30px 30px 30px;
@@ -669,7 +673,7 @@
 
 .ministry .header-section .status {
     float: left;
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 .ministry .header-buttons {
@@ -702,6 +706,7 @@
     margin-right: 3px;
     padding: 15px 5px 0 5px;
     width: 20px;
+    margin-top: 1px;
 }
 
 .status-panel.project {
@@ -811,6 +816,7 @@
     border-right: 1px solid #eeeeee;
     margin-bottom: 15px;
     margin-top: 15px;
+    height: 100%;
 }
 
 .tender-header .tender-label {
@@ -850,12 +856,17 @@
     border-bottom: none;
     margin-right: 5px;
     padding-left: 0;
+    margin-bottom: 1px;
 }
 
 .collapse-content.tender .tender-info ul li ul li{
   float: left;
   line-height: 130%;
   margin-bottom: 4px;
+}
+
+.collapse-content.tender .tender-info ul li ul {
+    margin-top: 6px;
 }
 
 .collapse-content.tender .tender-info ul li ul li:last-child{
@@ -878,7 +889,7 @@
 .tender-info .tender-status{
   float: right;
   line-height: 18px;
-  width: 50px;
+  min-width: 75px;
 }
 
 .borderless tr td {
@@ -917,6 +928,11 @@
 .btn[disabled]{
   opacity: .45;
   filter: grayscale(1);
+}
+
+.btn-add-float-right {
+    float: right;
+    margin-right: 17px;
 }
 
 .mb-1 {

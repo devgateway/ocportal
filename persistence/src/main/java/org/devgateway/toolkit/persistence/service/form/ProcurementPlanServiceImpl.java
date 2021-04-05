@@ -26,9 +26,15 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
         implements ProcurementPlanService {
     @Autowired
     private ProcurementPlanRepository procurementPlanRepository;
-    
+
+    @Override
     public Long countByDepartmentAndFiscalYear(final Department department, final FiscalYear fiscalYear) {
         return procurementPlanRepository.countByDepartmentAndFiscalYear(department, fiscalYear);
+    }
+
+    @Override
+    public Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear, Long exceptId) {
+        return procurementPlanRepository.countByDepartmentAndFiscalYearExceptId(department, fiscalYear, exceptId);
     }
 
     @Override
