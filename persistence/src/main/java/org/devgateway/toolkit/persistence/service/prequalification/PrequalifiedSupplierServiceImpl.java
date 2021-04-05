@@ -15,6 +15,7 @@ import org.devgateway.toolkit.persistence.repository.prequalification.Prequalifi
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -60,14 +61,6 @@ public class PrequalifiedSupplierServiceImpl
     @Override
     public boolean isSupplierPrequalified(Supplier supplier, PrequalificationYearRange yearRange, Long exceptId) {
         return repository.countPrequalifiedSuppliers(supplier, yearRange, exceptId) > 0;
-    }
-
-    @Override
-    public Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
-        return repository.findOne((r, q, cb) ->
-                cb.and(
-                        cb.equal(r.get(PrequalifiedSupplier_.yearRange), yearRange),
-                        cb.equal(r.get(PrequalifiedSupplier_.supplier), supplier)));
     }
 
     @Override
@@ -126,21 +119,40 @@ public class PrequalifiedSupplierServiceImpl
             return Collections.emptyList();
         }
 
-        Date tenderInvitationDate = tender.getInvitationDate();
-        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+        return find(supplier, tender)
+                .map(this::formatItems)
+                .orElse(Collections.emptyList());
+    }
 
-        if (yearRange == null) {
-            return Collections.emptyList();
-        }
-
-        PrequalifiedSupplier prequalifiedSupplier = find(supplier, yearRange).orElse(null);
-
-        if (prequalifiedSupplier == null) {
-            return Collections.emptyList();
-        }
+    private List<String> formatItems(PrequalifiedSupplier prequalifiedSupplier) {
+        PrequalificationYearRange yearRange = prequalifiedSupplier.getYearRange();
 
         return prequalifiedSupplier.getItems().stream()
                 .map(i -> i.getItem().toString(yearRange))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, Tender tender) {
+        if (supplier == null) {
+            return Optional.empty();
+        }
+
+        Date tenderInvitationDate = tender.getInvitationDate();
+        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+
+        if (yearRange == null) {
+            return Optional.empty();
+        }
+
+        return find(supplier, yearRange);
+    }
+
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
+        return repository
+                .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
+                        cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),
+                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)));
     }
 }

@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author Octavian Ciubotaru
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/prequalifiedSupplier")
 public class EditPrequalifiedSupplierPage extends AbstractEditPage<PrequalifiedSupplier> {
 

@@ -83,7 +83,7 @@ import java.util.stream.Collectors;
 /**
  * @author Octavian Ciubotaru
  */
-@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_ADMIN)
+@AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/prequalifiedSuppliers")
 public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<PrequalifiedSupplierItem> {
 
@@ -216,6 +216,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 XSSFWorkbook workbook = exporter.export(items);
 
                 ResourceResponse response = new ResourceResponse();
+                response.disableCaching();
                 response.setContentType(Constants.ContentType.XLSX);
                 response.setFileName("Prequalified Suppliers.xlsx");
                 response.setWriteCallback(new WriteCallback() {
