@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.spring;
 
+import com.google.common.net.InternetDomainName;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -30,6 +31,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 
 import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_USER;
@@ -50,6 +55,10 @@ public class SendEmailServiceImpl implements SendEmailService {
     @Autowired
     private HttpServletRequest request;
 
+    private String fromEmail;
+
+    @Value("${serverURL}")
+    private String serverURL;
 
     @Value("${disableEmailSending:#{false}}")
     private Boolean disableEmailSending;
@@ -59,6 +68,36 @@ public class SendEmailServiceImpl implements SendEmailService {
         if (disableEmailSending) {
             logger.warn("**** SENDING OF EMAILS IS DISABLED !! ****");
         }
+        createFromEmail();
+    }
+
+    @Override
+    public String getFromEmail() {
+        return fromEmail;
+    }
+
+    public void createFromEmail() {
+        fromEmail = "noreply@" + getDomainName(serverURL, false);
+    }
+
+    public static String getDomainName(final String url, final Boolean useTopDomain) {
+        URI uri = null;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        String domain = uri.getHost();
+        if (domain.equals("localhost")) {
+            try {
+                return InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        InternetDomainName fromDomain = InternetDomainName.from(domain);
+        return useTopDomain ? fromDomain.topPrivateDomain().toString() : fromDomain.toString();
     }
 
     @Override
@@ -106,7 +145,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     public void sendEmailResetPassword(final Person person, final String newPassword) {
         final SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(person.getEmail());
-        msg.setFrom(DBConstants.FROM_EMAIL);
+        msg.setFrom(getFromEmail());
         msg.setSubject("Recover your password");
         msg.setText("Dear " + person.getFirstName() + " " + person.getLastName() + ",\n\n"
                 + "These are your new login credentials for Elgeyo Marakwet.\n\n"
@@ -155,7 +194,7 @@ public class SendEmailServiceImpl implements SendEmailService {
                     + "Kind regards,\n"
                     + INSTANCE_NAME + " Team";
             msg.setTo(person.getEmail());
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(getFromEmail());
             msg.setSubject("Your " + INSTANCE_NAME + " Account");
             msg.setText(content.replaceAll("\n", "<br />"), true);
         };
