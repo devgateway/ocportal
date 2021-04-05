@@ -99,6 +99,16 @@
   mandatory: no
   enabled: yes
   visible: yes
+- name: tenderQuotationEvaluationForm.tenderTitle
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderTitle
+- name: tenderQuotationEvaluationForm.tenderNumber
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderNumber
 
 #LIST
 - name: tenderQuotationEvaluationsList

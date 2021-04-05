@@ -9,7 +9,10 @@
     <div class="row list-wrapper" wicket:id="listWrapper">
         <div class="col-md-12">
             <div class="pane title">
-                <h4 wicket:id="panelTitle">[[title]]</h4>
+                <h4>
+                    <span wicket:id="panelTitle">[[title]]</span>
+                    <span wicket:id="tooltipLabel"></span>
+                </h4>
                 <span class="count"><span wicket:id="totalEntries">[[totalEntries]]</span></span>
                 <a wicket:id="showHideAllEntries">
                     <span class="show-all"><wicket:message key="showHideAllEntries" /></span>

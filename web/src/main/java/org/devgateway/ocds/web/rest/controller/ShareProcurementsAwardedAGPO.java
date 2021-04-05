@@ -11,11 +11,11 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import com.google.common.collect.ImmutableSet;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
+import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -45,13 +44,6 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
 
-    private static final String CITIZEN_CONTRACTOR = "Citizen Contractor";
-    private static final String MARGIN_OF_PREFERENCE = "Margin of Preference for Local Contractor";
-    private static final String GENERAL = "General";
-
-    private static final Set<String> NON_AGPO_GROUPS =
-            ImmutableSet.of(CITIZEN_CONTRACTOR, MARGIN_OF_PREFERENCE, GENERAL);
-
     public static final String NON_AGPO = "Non-AGPO";
 
     @ApiOperation(value = "Percent awarded for each target group by following the formula: (sum=(Contract value for "
@@ -67,7 +59,8 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
                 match(where(FieldNames.CONTRACTS_VALUE_AMOUNT).exists(true)),
                 project()
                         .and(FieldNames.CONTRACTS_VALUE_AMOUNT).as("value")
-                        .and(when(where(FieldNames.CONTRACTS_TARGET_GROUP).in(NON_AGPO_GROUPS))
+                        .and(when(where(FieldNames.CONTRACTS_TARGET_GROUP)
+                                .in(DBConstants.TargetGroup.NON_AGPO_CATEGORIES))
                                 .then(NON_AGPO)
                                 .otherwiseValueOf(ifNull(FieldNames.CONTRACTS_TARGET_GROUP).then(NON_AGPO)))
                         .as("targetGroup"),

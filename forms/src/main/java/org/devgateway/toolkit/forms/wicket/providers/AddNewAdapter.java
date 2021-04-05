@@ -48,10 +48,12 @@ public abstract class AddNewAdapter<T extends GenericPersistable> extends Choice
 
     @Override
     public void query(String term, int page, Response<T> response) {
-        if (!(term == null || term.isEmpty()) && page == 0) {
-            response.add(instantiate(term));
-        }
         target.query(term, page, response);
+        if (!(term == null || term.isEmpty()) && page == 0) {
+            if (response.getResults().stream().noneMatch(r -> term.equalsIgnoreCase(getDisplayValue(r)))) {
+                response.getResults().add(0, instantiate(term));
+            }
+        }
     }
 
     @Override
