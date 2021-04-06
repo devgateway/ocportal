@@ -118,7 +118,7 @@ class Docs extends CRDPage {
 
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/contract_contractor"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/contract_contractor"
             >
               {t('publicationPolicy:dataAndExceptions:contractContractor')}
             </a>
@@ -126,42 +126,42 @@ class Docs extends CRDPage {
 
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/first_time_winners"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/first_time_winners"
             >
               {t('publicationPolicy:dataAndExceptions:firstTimeWinners')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/fiscal_year"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/fiscal_year"
             >
               {t('publicationPolicy:dataAndExceptions:fiscalYear')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/milestone_delayed_authorization"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/milestone_delayed_authorization"
             >
               {t('publicationPolicy:dataAndExceptions:delayedMilestone')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/planning_items"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/planning_items"
             >
               {t('publicationPolicy:dataAndExceptions:plannedItems')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/target_groups"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/target_groups"
             >
               {t('publicationPolicy:dataAndExceptions:targetGroups')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/tender_location"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/tender_location"
             >
               {t('publicationPolicy:dataAndExceptions:tenderLocation')}
             </a>
