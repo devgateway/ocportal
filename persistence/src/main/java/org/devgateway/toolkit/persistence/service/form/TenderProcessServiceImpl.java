@@ -2,6 +2,7 @@ package org.devgateway.toolkit.persistence.service.form;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
@@ -27,9 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,6 +44,9 @@ import java.util.stream.Stream;
 @Transactional
 public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
         implements TenderProcessService {
+
+    private static final Set<String> RELATED_COLLECTION_CACHES = ImmutableSet.of(
+            ProcurementPlan.class.getName() + ".tenderProcesses");
 
     private static class TenderProcessForm {
 
@@ -197,9 +203,8 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
     }
 
     @Override
-    public void delete(TenderProcess entity) {
-        entity.getProcurementPlan().getTenderProcesses().remove(entity);
-        super.delete(entity);
+    public Collection<String> getRelatedCollectionCaches() {
+        return RELATED_COLLECTION_CACHES;
     }
 }
 
