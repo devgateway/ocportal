@@ -58,9 +58,9 @@
 - name: crd.overview.procurementProcesses.col.title
   visible: yes
 - name: crd.overview.procurementProcesses.col.procuringEntity
-  visible: yes
-- name: crd.overview.procurementProcesses.col.buyerName
   visible: no
+- name: crd.overview.procurementProcesses.col.buyerName
+  visible: yes
 - name: crd.overview.procurementProcesses.col.tenderAmount
   visible: yes
 - name: crd.overview.procurementProcesses.col.awardsAmount
