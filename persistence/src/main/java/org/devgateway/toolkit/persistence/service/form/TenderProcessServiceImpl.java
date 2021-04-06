@@ -45,9 +45,6 @@ import java.util.stream.Stream;
 public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
         implements TenderProcessService {
 
-    private static final Set<String> RELATED_COLLECTION_CACHES = ImmutableSet.of(
-            ProcurementPlan.class.getName() + ".tenderProcesses");
-
     private static class TenderProcessForm {
 
         private final Class<? extends AbstractMakueniEntity> formClass;
@@ -200,11 +197,6 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
             }
         }
         return null;
-    }
-
-    @Override
-    public Collection<String> getRelatedCollectionCaches() {
-        return RELATED_COLLECTION_CACHES;
     }
 }
 
