@@ -346,6 +346,7 @@
   "crd:procurementsTable:contractID": "Contract ID",
   "crd:procurementsTable:title": "Title",
   "crd:procurementsTable:procuringEntity": "Procuring Entity",
+  "crd:procurementsTable:buyerName": "Buyer Name",
   "crd:procurementsTable:tenderAmount": "Tender Amount",
   "crd:procurementsTable:awardsAmount": "Awards Amount",
   "crd:procurementsTable:tenderDate": "Tender Date",

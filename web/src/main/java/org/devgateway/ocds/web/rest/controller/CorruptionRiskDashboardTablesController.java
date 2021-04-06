@@ -66,6 +66,7 @@ public class CorruptionRiskDashboardTablesController extends GenericOCDSControll
                         "tender.title", "tag")
                         .and("tender.value").as("tender.value").and("awards.value").as("awards.value")
                         .and(MongoConstants.FieldNames.AWARDS_STATUS).as(MongoConstants.FieldNames.AWARDS_STATUS)
+                        .and(MongoConstants.FieldNames.BUYER_NAME).as(MongoConstants.FieldNames.BUYER_NAME)
                         .andExclude(Fields.UNDERSCORE_ID),
                 sort(Sort.Direction.DESC, "flags.flaggedStats.count"),
                 skip(filter.getSkip()),
