@@ -151,7 +151,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private static final String OCID_PREFIX = "ocds-udd159-";
 
-
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
     @Autowired

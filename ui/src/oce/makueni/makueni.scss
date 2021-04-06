@@ -614,6 +614,7 @@ a.more-details-link:hover::before {
     margin-left: 0;
     z-index: 10;
     @media screen and (max-width: 767px) {
+        left: 0;
         margin-left: 13%;
         position: relative;
         width: 100%;
