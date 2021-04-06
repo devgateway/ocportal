@@ -195,5 +195,11 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
         }
         return null;
     }
+
+    @Override
+    public void delete(TenderProcess entity) {
+        entity.getProcurementPlan().getTenderProcesses().remove(entity);
+        super.delete(entity);
+    }
 }
 
