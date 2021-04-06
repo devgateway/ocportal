@@ -148,7 +148,8 @@ public class PrequalifiedSupplierServiceImpl
         return find(supplier, yearRange);
     }
 
-    private Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
         return repository
                 .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
                         cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),
