@@ -58,24 +58,24 @@ public class OcdsController extends GenericOCDSController {
 
     public static final List<String> EXTENSIONS = Collections.unmodifiableList(
             Arrays.asList(
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-egleyo/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/first_time_winners/extension.json",
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-egleyo/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/planning_items/extension.json",
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-egleyo/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/target_groups/extension.json",
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-egleyo/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/fiscal_year/extension.json",
                     "https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.3/extension.json",
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-egleyo/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/milestone_delayed_authorization/extension.json",
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-egleyo/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/contract_contractor/extension.json",
                     "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/"
                             + "master/extension.json",
                     "https://raw.githubusercontent.com/open-contracting-extensions/ocds_location_extension/v1.1.3/"
                             + "extension.json",
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-egleyo/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/tender_location/extension.json"
             )
     );
@@ -145,8 +145,8 @@ public class OcdsController extends GenericOCDSController {
 
         Publisher publisher = new Publisher();
 
-        publisher.setName("Kenya County Government of Makueni");
-        publisher.setScheme("Kenya County Government of Makueni");
+        publisher.setName("Kenya County Government of Elgeyo Marakwet");
+        publisher.setScheme("Kenya County Government of Elgeyo Marakwet");
         publisher.setUri(serverURL);
         releasePackage.setPublisher(publisher);
         return releasePackage;
