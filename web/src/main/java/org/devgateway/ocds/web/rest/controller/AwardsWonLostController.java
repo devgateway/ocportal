@@ -517,10 +517,8 @@ public class AwardsWonLostController extends GenericOCDSController {
                                 getTenderDateField()
                         ))),
                 group(Fields.from(
-                        field("supplierId", MongoConstants
-                                .FieldNames.AWARDS_SUPPLIERS_ID),
-                        field("supplierName", MongoConstants
-                                .FieldNames.AWARDS_SUPPLIERS_NAME),
+                        field("supplierId", MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID),
+                        field("supplierName", MongoConstants.FieldNames.AWARDS_SUPPLIERS_NAME),
                         field("buyerName", BUYER_NAME),
                         field("buyerId", BUYER_ID)
                 ))
@@ -562,10 +560,8 @@ public class AwardsWonLostController extends GenericOCDSController {
                                 getTenderDateField()
                         ))),
                 group(Fields.from(
-                        field("supplierId", MongoConstants
-                                .FieldNames.AWARDS_SUPPLIERS_ID),
-                        field("supplierName", MongoConstants
-                                .FieldNames.AWARDS_SUPPLIERS_NAME),
+                        field("supplierId", MongoConstants.FieldNames.AWARDS_SUPPLIERS_ID),
+                        field("supplierName", MongoConstants.FieldNames.AWARDS_SUPPLIERS_NAME),
                         field("procuringEntityName", MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_NAME),
                         field("procuringEntityId", MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_ID)
                 ))

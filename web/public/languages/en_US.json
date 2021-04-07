@@ -427,6 +427,7 @@
   "crd:supplier:nrFlags:label:sg": "$#$ $#$ flag",
   "crd:supplier:nrFlags:label:pl": "$#$ $#$ flags",
   "crd:supplier:winsAndLosses:title": "Wins & flags by procuring entity",
+  "crd:supplier:winsAndLossesPerBuyer:title": "Wins & flags by buyer",
   "crd:supplier:win:sg": "Win",
   "crd:supplier:win:pl": "Wins",
   "crd:supplier:flaggedNr:title": "No. of flags per indicator in procurements won by supplier",
