@@ -1,0 +1,8 @@
+org.devgateway.toolkit.persistence.dao
+org.devgateway.toolkit.persistence.dao.alerts
+org.devgateway.toolkit.persistence.dao.categories
+org.devgateway.toolkit.persistence.dao.feedback
+org.devgateway.toolkit.persistence.dao.flags
+org.devgateway.toolkit.persistence.dao.form
+org.devgateway.toolkit.persistence.dao.prequalification
+org.devgateway.toolkit.persistence.dao.sms
