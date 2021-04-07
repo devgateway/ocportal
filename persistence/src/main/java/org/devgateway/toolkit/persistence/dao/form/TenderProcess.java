@@ -570,4 +570,9 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     public String getLabel() {
         return getId().toString();
     }
+
+    @JsonIgnore
+    public boolean isDeleteAllowed() {
+        return getPurchaseRequisition().isEmpty() && getTender().isEmpty();
+    }
 }
