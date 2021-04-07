@@ -34,6 +34,7 @@ import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Unit;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
+import org.devgateway.toolkit.persistence.service.InvalidObjectException;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
 import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
@@ -43,6 +44,7 @@ import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import javax.validation.ConstraintViolation;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -50,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author mpostelnicu
@@ -344,11 +347,18 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         BootstrapSubmitButton importButton = new BootstrapSubmitButton("import", importModel) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                ProcurementPlan procurementPlan = createProcurementPlan();
-                ProcurementPlan saved = procurementPlanService.save(procurementPlan);
-                PageParameters pp = new PageParameters();
-                pp.set(WebConstants.PARAM_ID, saved.getId());
-                setResponsePage(EditProcurementPlanPage.class, pp);
+                try {
+                    ProcurementPlan procurementPlan = createProcurementPlan();
+                    ProcurementPlan saved = procurementPlanService.save(procurementPlan);
+                    PageParameters pp = new PageParameters();
+                    pp.set(WebConstants.PARAM_ID, saved.getId());
+                    setResponsePage(EditProcurementPlanPage.class, pp);
+                } catch (InvalidObjectException e) {
+                    form.error(e.getViolations().stream()
+                            .map(ConstraintViolation::getMessage)
+                            .collect(Collectors.joining("\n")));
+                    target.add(feedbackPanel);
+                }
             }
 
             @Override

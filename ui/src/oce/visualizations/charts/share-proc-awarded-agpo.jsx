@@ -3,6 +3,8 @@ import Chart from './index';
 import { pluckImm } from '../../tools';
 import fmConnect from '../../fm/fm';
 
+const BAR_CHART_THRESHOLD = 1 / 1000000;
+
 class ShareProcAwardedAgpo extends backendYearFilterable(Chart) {
   getData() {
     const data = super.getData();
@@ -12,6 +14,19 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart) {
     const text = [];
     for (let i = 0; i < values.length; i += 1) {
       text.push(this.props.styling.charts.hoverFormatter(values[i]));
+    }
+    const smallestPie = Math.min(...values.filter((v) => v > 0)) / values.reduce((acc, val) => acc + val, 0);
+    if (smallestPie < BAR_CHART_THRESHOLD) {
+      const { traceColors } = this.props.styling.charts;
+      return [{
+        showlegend: false,
+        x: labels,
+        y: values,
+        type: 'bar',
+        marker: {
+          color: traceColors[0],
+        },
+      }];
     }
     return [{
       values,
@@ -38,6 +53,18 @@ class ShareProcAwardedAgpo extends backendYearFilterable(Chart) {
   getLayout() {
     return {
       showlegend: true,
+      xaxis: {
+        title: 'Category',
+        type: 'category',
+        automargin: true,
+        tickfont: { size: 9 },
+        tickangle: -45,
+      },
+      yaxis: {
+        title: 'Amount',
+        tickprefix: '   ',
+        automargin: true,
+      },
     };
   }
 }
