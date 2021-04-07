@@ -3,16 +3,12 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.AwardNotificationItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
@@ -54,23 +50,4 @@ public class EditAwardNotificationPage extends EditAbstractTenderReqMakueniEntit
 
         return awardNotification;
     }
-
-    @Override
-    protected void beforeSaveEntity(final AwardNotification awardNotification) {
-        super.beforeSaveEntity(awardNotification);
-
-        final TenderProcess tenderProcess = awardNotification.getTenderProcess();
-        tenderProcess.addAwardNotification(awardNotification);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final AwardNotification awardNotification) {
-        super.beforeDeleteEntity(awardNotification);
-
-        final TenderProcess tenderProcess = awardNotification.getTenderProcess();
-        tenderProcess.removeAwardNotification(awardNotification);
-        tenderProcessService.save(tenderProcess);
-    }
-
 }
