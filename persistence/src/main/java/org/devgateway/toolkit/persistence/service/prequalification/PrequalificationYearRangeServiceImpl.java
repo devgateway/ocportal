@@ -1,7 +1,5 @@
 package org.devgateway.toolkit.persistence.service.prequalification;
 
-import com.google.common.collect.ImmutableSet;
-import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange_;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -25,9 +23,6 @@ import java.util.Date;
 @Transactional
 public class PrequalificationYearRangeServiceImpl extends BaseJpaServiceImpl<PrequalificationYearRange>
         implements PrequalificationYearRangeService {
-
-    private static final Collection<String> RELATED_COLLECTION_CACHES = ImmutableSet.of(
-            PrequalificationSchema.class.getName() + ".prequalificationYearRanges");
 
     @Autowired
     private PrequalificationYearRangeRepository prequalificationYearRangeRepository;
@@ -68,11 +63,6 @@ public class PrequalificationYearRangeServiceImpl extends BaseJpaServiceImpl<Pre
         return prequalificationYearRangeRepository.countByOverlapping(
                 range.getId() == null ? -1 : range.getId(), range.getStartYear(),
                 range.getEndYear());
-    }
-
-    @Override
-    public Collection<String> getRelatedCollectionCaches() {
-        return RELATED_COLLECTION_CACHES;
     }
 
     @Override

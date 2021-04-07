@@ -3,24 +3,19 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
 import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionGroupService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 /**
@@ -124,23 +119,6 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
 
             jpaService.save(saveable);
         }
-    }
-
-    @Override
-    protected void beforeSaveEntity(final PurchaseRequisitionGroup entity) {
-        super.beforeSaveEntity(entity);
-        final TenderProcess tenderProcess = entity.getTenderProcess();
-        tenderProcess.addPurchaseRequisition(entity);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final PurchaseRequisitionGroup entity) {
-        super.beforeDeleteEntity(entity);
-
-        final TenderProcess tenderProcess = entity.getTenderProcess();
-        tenderProcess.removePurchaseRequisition(entity);
-        tenderProcessService.save(tenderProcess);
     }
 
     @Override

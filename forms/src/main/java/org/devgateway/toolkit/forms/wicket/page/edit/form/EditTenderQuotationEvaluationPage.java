@@ -74,22 +74,4 @@ public class EditTenderQuotationEvaluationPage extends EditAbstractTenderProcess
 
         return tenderQuotationEvaluation;
     }
-
-    @Override
-    protected void beforeSaveEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        super.beforeSaveEntity(tenderQuotationEvaluation);
-
-        final TenderProcess tenderProcess = tenderQuotationEvaluation.getTenderProcess();
-        tenderProcess.addTenderQuotationEvaluation(tenderQuotationEvaluation);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final TenderQuotationEvaluation tenderQuotationEvaluation) {
-        super.beforeDeleteEntity(tenderQuotationEvaluation);
-
-        final TenderProcess tenderProcess = tenderQuotationEvaluation.getTenderProcess();
-        tenderProcess.removeTenderQuotationEvaluation(tenderQuotationEvaluation);
-        tenderProcessService.save(tenderProcess);
-    }
 }
