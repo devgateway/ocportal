@@ -127,8 +127,10 @@
   visible: yes
 - name: crd.supplier.flagAnalysis
   visible: yes
-- name: crd.supplier.flagAnalysis.winsAndFlags
+- name: crd.supplier.flagAnalysis.winsAndFlagsPerProcuringEntity
   visible: yes
+- name: crd.supplier.flagAnalysis.winsAndFlagsPerBuyer
+  visible: no
 - name: crd.supplier.flagAnalysis.flaggedNr
   visible: yes
 - name: crd.supplier.flagAnalysis.crosstab
