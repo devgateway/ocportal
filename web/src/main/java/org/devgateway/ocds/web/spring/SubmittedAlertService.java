@@ -37,6 +37,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +57,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -252,9 +254,9 @@ public class SubmittedAlertService {
 
     @Scheduled(cron = "0 0 23 * * SUN")
     @Async
-    public void sendNotificationEmails() {
+    public Future<String> sendNotificationEmails() {
         if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
-            return;
+            return new AsyncResult<>("job completed");
         }
         collectDepartmentTypeIdTitle(procurementServices).forEach((aLong, classMapMap) ->
                 this.sendDepartmentEmailsForRole(aLong, ROLE_PROCUREMENT_VALIDATOR, classMapMap));
@@ -269,6 +271,7 @@ public class SubmittedAlertService {
         collectDepartmentTypeIdTitle(Arrays.asList(meReportService, paymentVoucherService)).
                 forEach((aLong, classMapMap) ->
                         this.sendDepartmentEmailsForRole(aLong, ROLE_ME_PAYMENT_VALIDATOR, classMapMap));
+        return new AsyncResult<>("job completed");
     }
 
     private String getLinkedEntityWithTitle(Class clazz, String title, String date, Long id) {
