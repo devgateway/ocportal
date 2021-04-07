@@ -7,61 +7,68 @@
 <body>
 <wicket:extend>
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="row">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                        <span wicket:id="excelTitle">[[Excel Export Settings]]</span>
-                    </div>
-
-
-                    <div class="panel-body">
-                        <div class="row">
-                            <div wicket:id="excelBatchSize" class="col-md-12"></div>
-                        </div>
-                    </div>
-                </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                <span wicket:id="excelTitle">[[Excel Export Settings]]</span>
             </div>
 
-            <div class="row">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                        <span wicket:id="systemTitle">[[System Settings]]</span>
+
+            <div class="panel-body">
+                <div class="row">
+                    <div wicket:id="excelBatchSize" class="col-md-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                <span wicket:id="systemTitle">[[System Settings]]</span>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="row">
+                    <div wicket:id="daysSubmittedReminder" class="col-md-6"></div>
+                    <div wicket:id="superAdminEmail" class="col-md-6"></div>
+                </div>
+
+                <div class="row">
+                    <div wicket:id="autosaveTime" class="col-md-6"></div>
+                    <div wicket:id="disableEmailAlerts" class="col-md-6"></div>
+                </div>
+
+                <div class="row">
+                    <div wicket:id="disableApiSecurity" class="col-md-6"></div>
+                    <div wicket:id="enableDailyAutomatedImport" class="col-md-6"></div>
+                </div>
+
+                <div class="row">
+                    <div wicket:id="adminEmail" class="col-md-6"></div>
+                    <div wicket:id="importFilesPath" class="col-md-6"></div>
+                </div>
+
+                <div class="row">
+                    <div wicket:id="unlockAfterHours" class="col-md-6"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <a wicket:id="clearCache">
+                            <wicket:message key="clearBackendCaches"/>
+                        </a>
                     </div>
-
-                    <div class="panel-body">
-
-                        <div class="row">
-                            <div wicket:id="daysSubmittedReminder" class="col-md-6"></div>
-                            <div wicket:id="superAdminEmail" class="col-md-6"></div>
-                        </div>
-
-                        <div class="row">
-                            <div wicket:id="autosaveTime" class="col-md-6"></div>
-                            <div wicket:id="disableEmailAlerts" class="col-md-6"></div>
-                        </div>
-
-                        <div class="row">
-                            <div wicket:id="disableApiSecurity" class="col-md-6"></div>
-                            <div wicket:id="enableDailyAutomatedImport" class="col-md-6"></div>
-                        </div>
-
-                        <div class="row">
-                            <div wicket:id="adminEmail" class="col-md-6"></div>
-                            <div wicket:id="importFilesPath" class="col-md-6"></div>
-                        </div>
-
-                        <div class="row">
-                            <div wicket:id="unlockAfterHours" class="col-md-6"></div>
-                        </div>
-
-                        <div class="row">
-                            <a wicket:id="clearCache" class="col-md-4"><wicket:message key="clearBackendCaches" /></a>
-                            <a wicket:id="importToMongo" class="col-md-4"><wicket:message key="runMongoImport" /></a>
-                            <a wicket:id="sendValidatorNotifications" class="col-md-4"><wicket:message key="sendValidatorNotifications" /></a>
-                        </div>
+                    <div class="col-md-4">
+                        <a wicket:id="importToMongo">
+                            <wicket:message key="runMongoImport"/>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a wicket:id="sendValidatorNotifications><wicket:message key=" sendValidatorNotifications"
+                        /></a>
                     </div>
                 </div>
             </div>
