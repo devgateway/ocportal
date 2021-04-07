@@ -12,6 +12,8 @@ public interface FiscalYearBudgetService extends BaseJpaService<FiscalYearBudget
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
+    Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear, Long exceptId);
+
     FiscalYearBudget findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
 }

@@ -36,14 +36,17 @@ public abstract class AbstractCategoryEditPage<T extends Category> extends Abstr
     public AbstractCategoryEditPage(final PageParameters parameters) {
         super(parameters);
     }
+    
+    protected void addCreateLabel() {
+        label = ComponentUtil.addTextField(editForm, "label");
+        label.required();
+        label.getField().add(VALIDATOR);
+    }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
-        label = ComponentUtil.addTextField(editForm, "label");
-        label.required();
-        label.getField().add(VALIDATOR);
+        addCreateLabel();
         addUniqueNameValidator();
     }
 
