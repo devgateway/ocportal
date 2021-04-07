@@ -829,7 +829,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         //releaseRepository.deleteAll();
-        //organizationRepository.deleteAll();
+        organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
         tenderProcessService.findAllStream().forEach(this::createAndPersistRelease);
         sendValidationFailureAlert(validationErrors.toString());
