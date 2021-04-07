@@ -537,6 +537,13 @@
     padding-left: 5px;
 }
 
+@media screen and (max-width: 767px){
+  .collapse-content ul li{
+    display: block;
+    padding-bottom: 10px;
+  }
+}
+
 .collapse-content ul li .project-title,
 .collapse-content ul li .tender,
 .collapse-content ul li .award {

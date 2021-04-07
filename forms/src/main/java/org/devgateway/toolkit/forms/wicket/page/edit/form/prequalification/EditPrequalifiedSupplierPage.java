@@ -3,20 +3,15 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2ChoiceBootstrapFormComponent;
-import org.devgateway.toolkit.forms.wicket.events.SupplierChanged;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.category.EditSupplierPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactDropdownButton;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ContactPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.NewContactAlert;
 import org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification.ListPrequalifiedSupplierPage;
-import org.devgateway.toolkit.forms.wicket.providers.AddNewAdapter;
 import org.devgateway.toolkit.forms.wicket.providers.GenericPersistableJpaTextChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
@@ -30,7 +25,6 @@ import org.devgateway.toolkit.persistence.service.prequalification.Prequalificat
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
-import org.wicketstuff.select2.ChoiceProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -79,6 +73,7 @@ public class EditPrequalifiedSupplierPage extends AbstractEditPage<PrequalifiedS
         Select2ChoiceBootstrapFormComponent<PrequalificationYearRange> yearRange;
         yearRange = new Select2ChoiceBootstrapFormComponent<>("yearRange",
                 new GenericPersistableJpaTextChoiceProvider<>(yearRangeService));
+        yearRange.required();
         yearRange.setEnabled(false);
         editForm.add(yearRange);
 
@@ -110,45 +105,11 @@ public class EditPrequalifiedSupplierPage extends AbstractEditPage<PrequalifiedS
             }
         });
 
-        ChoiceProvider<Supplier> supplierProvider = new AddNewAdapter<Supplier>(
-                new GenericPersistableJpaTextChoiceProvider<>(supplierService)) {
-
-            @Override
-            public String getAddNewDisplayValue(String displayValue) {
-                return new StringResourceModel("newSupplierItem", EditPrequalifiedSupplierPage.this)
-                        .setParameters(displayValue)
-                        .getString();
-            }
-
-            @Override
-            public Supplier instantiate(String value) {
-                Supplier newSupplier = new Supplier();
-                newSupplier.setLabel(value);
-                return newSupplier;
-            }
-        };
-
         Select2ChoiceBootstrapFormComponent<Supplier> supplier;
-        supplier = new Select2ChoiceBootstrapFormComponent<Supplier>("supplier", supplierProvider) {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                super.onUpdate(target);
-
-                Supplier selectedSupplier = getModelObject();
-                if (selectedSupplier.isNew()) {
-                    setModelObject(null);
-
-                    PageParameters params = new PageParameters();
-                    params.add("label", selectedSupplier.getLabel());
-                    CharSequence url = urlFor(EditSupplierPage.class, params);
-
-                    target.appendJavaScript(String.format("window.open('%s');", url));
-                }
-
-                send(editForm, Broadcast.BREADTH, new SupplierChanged(target));
-            }
-        };
+        supplier = new Select2ChoiceBootstrapFormComponent<>("supplier",
+                new GenericPersistableJpaTextChoiceProvider<>(supplierService));
         supplier.required();
+        supplier.setEnabled(false);
         editForm.add(supplier);
     }
 
@@ -158,6 +119,10 @@ public class EditPrequalifiedSupplierPage extends AbstractEditPage<PrequalifiedS
         Long yearRangeId = getPageParameters().get("yearRangeId").toOptionalLong();
         if (yearRangeId != null) {
             prequalifiedSupplier.setYearRange(yearRangeService.findById(yearRangeId).get());
+        }
+        Long supplierId = getPageParameters().get("supplierId").toOptionalLong();
+        if (supplierId != null) {
+            prequalifiedSupplier.setSupplier(supplierService.findById(supplierId).get());
         }
         return prequalifiedSupplier;
     }
