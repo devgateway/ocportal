@@ -384,6 +384,9 @@ class Contract extends CRDPage {
                   {...wireProps(this, 'nrOfBidders')}
                   Popup={DonutPopup}
                   Chart={NrOfBidders}
+                  layout={{
+                    autosize: true,
+                  }}
                   width={donutSize}
                   layout={{
                     autosize: true,
@@ -403,6 +406,9 @@ class Contract extends CRDPage {
                     {...wireProps(this, 'nrContracts')}
                     Popup={DonutPopup}
                     Chart={NrOfContractsWithThisPE}
+                    layout={{
+                      autosize: true,
+                    }}
                     width={donutSize}
                     layout={{
                       autosize: true,
@@ -423,6 +429,9 @@ class Contract extends CRDPage {
                     {...wireProps(this, 'percentPESpending')}
                     Popup={PercentPESpendingPopup}
                     Chart={PercentPESpending}
+                    layout={{
+                      autosize: true,
+                    }}
                     width={donutSize}
                     layout={{
                       autosize: true,
