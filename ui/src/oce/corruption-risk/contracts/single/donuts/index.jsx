@@ -15,9 +15,13 @@ class CenterTextDonut extends React.PureComponent {
       <div className={cn(this.getClassnames())}>
         <div>
           <Donut
+            layout={{
+              autosize: true,
+            }}
             margin={{
               b: 0, t: 0, r: 0, l: 0, pad: 0,
             }}
+            style={{ width: '100%' }}
             height={300}
             {...this.props}
           />

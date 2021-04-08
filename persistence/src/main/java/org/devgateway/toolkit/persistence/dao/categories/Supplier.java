@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
@@ -7,6 +8,7 @@ import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.AccessType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,6 +36,8 @@ public class Supplier extends Category {
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String agpoRegistrationId;
+
+    private Boolean nonPerforming = false;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -98,5 +102,27 @@ public class Supplier extends Category {
     public void addContact(SupplierContact contact) {
         contact.setParent(this);
         contacts.add(contact);
+    }
+
+    public void setNonPerforming(Boolean nonPerforming) {
+        this.nonPerforming = nonPerforming;
+    }
+
+    public Boolean getNonPerforming() {
+        return nonPerforming;
+    }
+
+    @Override
+    @AccessType(AccessType.Type.PROPERTY)
+    public String getLabel() {
+        return BooleanUtils.isTrue(nonPerforming) ? label + " (non-performing)" : label;
+    }
+
+    public String getRealLabel() {
+        return label;
+    }
+
+    public void setRealLabel(String label) {
+        this.label = label;
     }
 }
