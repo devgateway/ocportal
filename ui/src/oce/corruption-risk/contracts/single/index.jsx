@@ -348,7 +348,7 @@ class Contract extends CRDPage {
     const procuringEntityId = contract.getIn(['tender', 'procuringEntity', 'id'])
       || contract.getIn(['tender', 'procuringEntity', 'identifier', 'id']);
 
-    const donutSize = width / 3 - 100;
+    const donutSize = width;
 
     return (
       <div className="contract-page">
@@ -385,6 +385,9 @@ class Contract extends CRDPage {
                   Popup={DonutPopup}
                   Chart={NrOfBidders}
                   width={donutSize}
+                  layout={{
+                    autosize: true,
+                  }}
                   styling={styling}
                 />
               </div>
@@ -401,6 +404,9 @@ class Contract extends CRDPage {
                     Popup={DonutPopup}
                     Chart={NrOfContractsWithThisPE}
                     width={donutSize}
+                    layout={{
+                      autosize: true,
+                    }}
                     styling={styling}
                   />
                 )}
@@ -418,6 +424,9 @@ class Contract extends CRDPage {
                     Popup={PercentPESpendingPopup}
                     Chart={PercentPESpending}
                     width={donutSize}
+                    layout={{
+                      autosize: true,
+                    }}
                     styling={styling}
                   />
                 )}
