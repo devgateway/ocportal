@@ -26,6 +26,10 @@ $borderColor: #eeeeee;
         &.branding {
             height: $headerHeight;
             overflow: visible;
+
+            @media screen and (max-width: 414px) {
+                height: 90px;
+            }
         }
 
         a.logo-wrapper {
@@ -106,6 +110,9 @@ $borderColor: #eeeeee;
             @media (max-width: 768px) {
                 margin-top: 0;
             }
+            @media screen and (max-width: 414px) {
+                margin-top: 5px;
+            }
 
             .login-wrapper {
                 text-align: center;
@@ -132,12 +139,9 @@ $borderColor: #eeeeee;
         right: 0;
         position: fixed;
         z-index: 10;
-        @media (max-width: 768px) {
-            padding-left: 15px;
-            position: relative;
-        }
 
         @media screen and (max-width: 992px) {
+            padding-left: 15px;
             position: relative;
             top: 0;
         }
@@ -227,7 +231,7 @@ $borderColor: #eeeeee;
 
                     @media (max-width: 768px) {
                         left: 0;
-                        margin-left: 0;
+                        margin-left: 0 !important;
                         width: $extend;
                     }
 
@@ -340,10 +344,11 @@ $borderColor: #eeeeee;
         top: $filterHeight * 2;
 
         @media (max-width: 768px) {
+            margin-left: 0;
+            padding-bottom: 30px;
             position: relative !important;
             top: auto;
-            overflow-y: auto;
-            margin-right: -15px;
+            width: 100%;
         }
 
         >div {
@@ -574,9 +579,20 @@ $borderColor: #eeeeee;
         $arrowSize: 8px;
         margin-top: $filterHeight * 2;
 
+        @media (max-width: 1200px) {
+          padding: 30px $gutterRightMd 0 50px;
+        }
+
         @media screen and (max-width: 992px) {
             margin-top: 0;
         }
+
+        @media (max-width: 768px) {
+          padding: 40px;
+          margin-top: 0;
+          padding: 40px;
+        }
+
 
         h2, h3, h4 {
             font-family: 'Source Sans Pro', sans-serif;
@@ -777,7 +793,16 @@ $borderColor: #eeeeee;
 
             @media (max-width: 768px) {
                 font-size: 8px;
-                width: 100%;
+                margin-left: -30px;
+                overflow-x: auto;
+                width: 115%;
+            }
+
+            .react-bs-table-bordered{
+              @media (max-width: 768px){
+                overflow-x: scroll;
+                width: 200%;
+              }
             }
 
             .react-bootstrap-table {
