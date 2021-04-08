@@ -165,7 +165,6 @@ $lightest-grey: #f9f9f9;
     }
 
     a.download-file {
-        display: block;
         color: $active-text-color;
         cursor: pointer;
         text-decoration: none;
@@ -501,7 +500,6 @@ $lightest-grey: #f9f9f9;
     }
 
     a.download-file {
-        display: block;
         color: $active-text-color;
         cursor: pointer;
         text-decoration: none;
@@ -616,6 +614,7 @@ a.more-details-link:hover::before {
     margin-left: 0;
     z-index: 10;
     @media screen and (max-width: 767px) {
+        left: 0;
         margin-left: 13%;
         position: relative;
         width: 100%;

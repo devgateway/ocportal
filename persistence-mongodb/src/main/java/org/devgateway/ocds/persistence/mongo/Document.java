@@ -413,7 +413,8 @@ public class Document {
         FINANCIAL_PROGRESS_REPORT("financialProgressReport"),
         X_APPROVED_PURCHASE_REQUISITION("x_approvedPurchaseRequisition"),
         X_EVALUATION_PROFESSIONAL_OPINION("x_evaluationProfessionalOpinion"),
-        X_AWARD_ACCEPTANCE("x_awardAcceptance");
+        X_AWARD_ACCEPTANCE("x_awardAcceptance"),
+        X_AWARD_LETTER_REGRET("x_letterRegret");
 
         private final String value;
         private static final Map<String, Document.DocumentType> CONSTANTS = new HashMap<>();
