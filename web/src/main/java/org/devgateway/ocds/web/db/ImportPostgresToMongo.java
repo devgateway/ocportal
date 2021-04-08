@@ -105,7 +105,7 @@ public class ImportPostgresToMongo {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject("Form Status Integrity Checks Failure");
             msg.setText(sb.toString());
         };

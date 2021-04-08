@@ -16,7 +16,6 @@ import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.service.category.MEStatusService;
 import org.devgateway.toolkit.persistence.service.category.SubWardService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
@@ -97,10 +96,10 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
         ComponentUtil.addDateField(editForm, "byWhen");
         ComponentUtil.addYesNoToggle(editForm, "inspected", true);
         ComponentUtil.addYesNoToggle(editForm, "invoiced", true);
-        ComponentUtil.addTextField(editForm, "officerResponsible");
+        ComponentUtil.addTextField(editForm, "officerResponsible").setShowTooltip(true);
         ComponentUtil.addSelect2ChoiceField(editForm, "meStatus", meStatusService);
         ComponentUtil.addTextAreaField(editForm, "remarks");
-        ComponentUtil.addTextField(editForm, "contractorContact");
+        ComponentUtil.addTextField(editForm, "contractorContact").setShowTooltip(true);
 
 
         ComponentUtil.addDateField(editForm, "approvedDate");
@@ -126,24 +125,6 @@ public class EditMEReportPage extends EditAbstractImplTenderProcessEntityPage<ME
                 target.add(subwards);
             }
         });
-    }
-
-    @Override
-    protected void beforeSaveEntity(final MEReport report) {
-        super.beforeSaveEntity(report);
-
-        final TenderProcess tenderProcess = report.getTenderProcess();
-        tenderProcess.addMEReport(report);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final MEReport report) {
-        super.beforeDeleteEntity(report);
-
-        final TenderProcess tenderProcess = report.getTenderProcess();
-        tenderProcess.removeMEReport(report);
-        tenderProcessService.save(tenderProcess);
     }
 
     @Override

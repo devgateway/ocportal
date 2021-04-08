@@ -35,7 +35,6 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodRationaleService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
@@ -45,9 +44,7 @@ import org.devgateway.toolkit.persistence.service.category.TargetGroupService;
 import org.devgateway.toolkit.persistence.service.category.WardService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
-import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.math.BigDecimal;
@@ -164,7 +161,9 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         final FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs");
         editForm.add(formDocs);
 
-        editForm.add(new FileInputBootstrapFormComponent("billOfQuantities"));
+        FileInputBootstrapFormComponent billOfQuantities = new FileInputBootstrapFormComponent("billOfQuantities");
+        billOfQuantities.setShowTooltip(true);
+        editForm.add(billOfQuantities);
 
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);
@@ -241,23 +240,5 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         tender.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return tender;
-    }
-
-    @Override
-    protected void beforeSaveEntity(final Tender tender) {
-        super.beforeSaveEntity(tender);
-
-        final TenderProcess tenderProcess = tender.getTenderProcess();
-        tenderProcess.addTender(tender);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final Tender tender) {
-        super.beforeDeleteEntity(tender);
-
-        final TenderProcess tenderProcess = tender.getTenderProcess();
-        tenderProcess.removeTender(tender);
-        tenderProcessService.save(tenderProcess);
     }
 }

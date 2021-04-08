@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.service.prequalification;
 
-import com.google.common.collect.ImmutableSet;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
@@ -18,11 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -34,9 +33,6 @@ import java.util.stream.Collectors;
 public class PrequalifiedSupplierServiceImpl
         extends BaseJpaServiceImpl<PrequalifiedSupplier>
         implements PrequalifiedSupplierService {
-
-    private static final Collection<String> RELATED_COLLECTION_CACHES = ImmutableSet.of(
-            PrequalificationYearRange.class.getName() + ".prequalifiedSuppliers");
 
     @Autowired
     private PrequalifiedSupplierRepository repository;
@@ -80,11 +76,6 @@ public class PrequalifiedSupplierServiceImpl
         return super.saveAndFlush(entity);
     }
 
-    @Override
-    public Collection<String> getRelatedCollectionCaches() {
-        return RELATED_COLLECTION_CACHES;
-    }
-
     private <S extends PrequalifiedSupplier> void createSupplierContacts(S entity) {
         Comparator<String> cio = String.CASE_INSENSITIVE_ORDER;
         Set<AbstractContact<?>> contactSet = new TreeSet<>(
@@ -118,29 +109,40 @@ public class PrequalifiedSupplierServiceImpl
             return Collections.emptyList();
         }
 
-        Date tenderInvitationDate = tender.getInvitationDate();
-        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+        return find(supplier, tender)
+                .map(this::formatItems)
+                .orElse(Collections.emptyList());
+    }
 
-        if (yearRange == null) {
-            return Collections.emptyList();
-        }
-
-        PrequalifiedSupplier prequalifiedSupplier = find(supplier, yearRange);
-
-        if (prequalifiedSupplier == null) {
-            return Collections.emptyList();
-        }
+    private List<String> formatItems(PrequalifiedSupplier prequalifiedSupplier) {
+        PrequalificationYearRange yearRange = prequalifiedSupplier.getYearRange();
 
         return prequalifiedSupplier.getItems().stream()
                 .map(i -> i.getItem().toString(yearRange))
                 .collect(Collectors.toList());
     }
 
-    private PrequalifiedSupplier find(Supplier supplier, PrequalificationYearRange yearRange) {
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, Tender tender) {
+        if (supplier == null) {
+            return Optional.empty();
+        }
+
+        Date tenderInvitationDate = tender.getInvitationDate();
+        PrequalificationYearRange yearRange = prequalificationYearRangeService.findByDate(tenderInvitationDate);
+
+        if (yearRange == null) {
+            return Optional.empty();
+        }
+
+        return find(supplier, yearRange);
+    }
+
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
         return repository
                 .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
                         cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),
-                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)))
-                .orElse(null);
+                        cb.equal(root.get(PrequalifiedSupplier_.yearRange), yearRange)));
     }
 }
