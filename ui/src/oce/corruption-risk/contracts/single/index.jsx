@@ -384,10 +384,10 @@ class Contract extends CRDPage {
                   {...wireProps(this, 'nrOfBidders')}
                   Popup={DonutPopup}
                   Chart={NrOfBidders}
-                  width={donutSize}
                   layout={{
                     autosize: true,
                   }}
+                  width={donutSize}
                   styling={styling}
                 />
               </div>
@@ -403,10 +403,10 @@ class Contract extends CRDPage {
                     {...wireProps(this, 'nrContracts')}
                     Popup={DonutPopup}
                     Chart={NrOfContractsWithThisPE}
-                    width={donutSize}
                     layout={{
                       autosize: true,
                     }}
+                    width={donutSize}
                     styling={styling}
                   />
                 )}
@@ -423,10 +423,10 @@ class Contract extends CRDPage {
                     {...wireProps(this, 'percentPESpending')}
                     Popup={PercentPESpendingPopup}
                     Chart={PercentPESpending}
-                    width={donutSize}
                     layout={{
                       autosize: true,
                     }}
+                    width={donutSize}
                     styling={styling}
                   />
                 )}
