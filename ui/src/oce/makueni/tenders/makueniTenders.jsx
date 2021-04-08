@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { setImmer } from '../../tools';
 import { useTranslation } from 'react-i18next';
+import { Link, Route, Switch } from 'react-router-dom';
 
 const MakueniTenders = (props) => {
   useEffect(() => window.scrollTo(0, 0), []);
@@ -52,7 +53,7 @@ const MakueniTenders = (props) => {
     return introJsCount < 6;
   };
 
-  const tenderLink = (navigate) => (tenderTitle, row) => (
+  const tenderLink = (tenderTitle, row) => (
     <div
       className="tender-title"
       data-step={showDataStep() ? 9 : ''}
@@ -61,19 +62,15 @@ const MakueniTenders = (props) => {
       {
         row.tender !== undefined
           ? (
-            <a
-              href={`#!/tender/t/${row.tender.purchaseReqId}`}
-              onClick={() => navigate('t', row.tender.purchaseReqId)}
-              className="more-details-link"
-            >
+            <Link to={`/ui/tender/t/${row.tender.purchaseReqId}`} className="more-details-link">
               {tenderTitle && tenderTitle.toUpperCase()}
-            </a>
+            </Link>
           ) : t('tables:tenderLink:noTender')
       }
     </div>
   );
 
-  const projectLink = (navigate) => (project) => (
+  const projectLink = (project) => (
     <div
       data-step={showDataStep() ? 10 : ''}
       data-intro={showDataStep() ? t('tables:projectLink:dataIntro') : ''}
@@ -81,13 +78,9 @@ const MakueniTenders = (props) => {
       {
         project !== undefined
           ? (
-            <a
-              href={`#!/tender/p/${project._id}`}
-              onClick={() => navigate('p', project._id)}
-              className="more-details-link"
-            >
+            <Link to={`/ui/tender/p/${project._id}`} className="more-details-link">
               {project.projectTitle && project.projectTitle.toUpperCase()}
-            </a>
+            </Link>
           ) : t('tables:projectLink:noProject')
       }
     </div>
@@ -115,13 +108,12 @@ const MakueniTenders = (props) => {
     );
   };
 
-  const { navigate, route, isFeatureVisible } = props;
-  const [navigationPage, id] = route;
+  const { isFeatureVisible } = props;
 
   const columns = [{
     text: t('tables:tenders:col:title'),
     dataField: 'tender.tenderTitle',
-    formatter: tenderLink(navigate),
+    formatter: tenderLink,
     fm: 'publicView.tendersProcesses.col.tenderTitle',
   }, {
     text: t('tables:tenders:col:department'),
@@ -144,7 +136,7 @@ const MakueniTenders = (props) => {
   }, {
     text: t('tables:tenders:col:project'),
     dataField: 'project',
-    formatter: projectLink(navigate),
+    formatter: projectLink,
     fm: 'publicView.tendersProcesses.col.project',
   }, {
     text: t('tables:tenders:col:documents'),
@@ -173,41 +165,37 @@ const MakueniTenders = (props) => {
         </div>
 
         <div className="col-md-9 col-sm-12 col-main-content">
-          {navigationPage === undefined
-          && (
-            <div>
-              <h1>{t('tables:tenders:title')}</h1>
-
-              <BootstrapTableWrapper
-                data={dataWithCount.data}
-                page={page}
-                pageSize={pageSize}
-                onPageChange={setImmer(updatePage)}
-                onSizePerPageList={setImmer(updatePageSize)}
-                count={dataWithCount.count}
-                columns={columns}
+          <Switch>
+            <Route exact path="/ui/tender">
+              <div>
+                <h1>{t('tables:tenders:title')}</h1>
+                <BootstrapTableWrapper
+                  data={dataWithCount.data}
+                  page={page}
+                  pageSize={pageSize}
+                  onPageChange={setImmer(updatePage)}
+                  onSizePerPageList={setImmer(updatePageSize)}
+                  count={dataWithCount.count}
+                  columns={columns}
+                />
+              </div>
+            </Route>
+            <Route path="/ui/tender/t/:id/:selected?">
+              <PurchaseReqView
+                translations={props.translations}
+                styling={props.styling}
               />
-            </div>
-          )}
-          {navigationPage === 't'
-          && (
-            <PurchaseReqView
-              id={id}
-              navigate={navigate}
-              onSwitch={props.onSwitch}
-              styling={props.styling}
-            />
-          )}
-          {navigationPage === 'p'
-          && (
-            <Project
-              id={id}
-              navigate={navigate}
-              styling={props.styling}
-            />
-          )}
+            </Route>
+            <Route path="/ui/tender/p/:id">
+              <Project
+                translations={props.translations}
+                styling={props.styling}
+              />
+            </Route>
+          </Switch>
         </div>
       </div>
+
       {isFeatureVisible('publicView.subscribeToAlertsButton')
       && (
       <div className="alerts-container">
