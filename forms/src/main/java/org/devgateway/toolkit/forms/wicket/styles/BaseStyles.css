@@ -39,17 +39,17 @@ body {
      */
     min-height: 50px;
     margin-bottom: 20px;
-	  height: 60px;
-	  overflow: visible;
+    height: 60px;
+    overflow: visible;
     position: fixed;
-	  top: 0;
+    top: 0;
     z-index: 1001;
 }
 
 @media only screen and (max-width: 767px){
-  .mainHeader.with-navbar-fixed-top{
-		position: relative;
-	}
+    .mainHeader.with-navbar-fixed-top{
+        position: relative;
+    }
 }
 
 .mainHeader .navbar {
@@ -63,10 +63,10 @@ body {
     border-color: #223a49;
 }
 @media only screen and (max-width: 767px){
-  .mainHeader .navbar.navbar-inverse{
-		position: relative;
-		width: 100%;
-	}
+    .mainHeader .navbar.navbar-inverse{
+        position: relative;
+        width: 100%;
+    }
 }
 
 .mainHeader .navbar.navbar-inverse .navbar-nav > .active > a {
@@ -78,10 +78,16 @@ body {
 }
 
 @media (min-width: 768px){
-	.navbar-right {
-    float: right !important;
-    margin-right: -5px;
-  }
+    .navbar-right {
+        float: right !important;
+        margin-right: -5px;
+    }
+}
+
+@media (max-width: 1130px){
+    .navbar-right {
+        width: 65%;
+    }
 }
 
 .mainContainer {
@@ -92,30 +98,30 @@ body {
     padding-bottom: 15px;
 }
 @media (min-width: 1025px){
-  .mainContainer{
-    margin-top: 5%;
-  }
+    .mainContainer{
+        margin-top: 5%;
+    }
 }
 @media (max-width: 1024px){
-  .mainContainer{
-    margin-top: 0;
-  }
+    .mainContainer{
+        margin-top: 0;
+    }
 }
 @media (max-width: 768px){
-  .mainContainer{
-    margin-top: 0;
-  }
+    .mainContainer{
+        margin-top: 0;
+    }
 }
 @media (max-width:412px){
-  .mainContainer{
-    margin-top: 25%;
-  }
+    .mainContainer{
+        margin-top: 25%;
+    }
 }
 
 @media (max-width: 767px){
-  .navbar-inverse .navbar-collapse{
-    margin-top: 30px;
-  }
+    .navbar-inverse .navbar-collapse{
+        margin-top: 30px;
+    }
 }
 
 .mainFooter {
@@ -130,10 +136,10 @@ body {
 }
 
 .mainFooter a{
-  color: #ffffff;
+    color: #ffffff;
 }
 .mainFooter a:hover{
-  color: #eeeeee;
+    color: #eeeeee;
 }
 .mainFooter .text-muted {
     padding-top: 10px;
@@ -146,57 +152,70 @@ body {
     padding: 0;
 }
 
+@media (min-width: 768px){
+    .navbar-header{
+        width: 25%;
+    }
+}
+
 .navbar-header .navbar-brand img {
-    display: inline-block;
+    display: block;
+    float: left;
     width: 45px;
     margin-left: 20px;
     margin-top: 5px;
 }
 
 .navbar-header .navbar-brand span {
-    display: inline-block;
-    font-size: 1.05vw;
+    color: #fff;
+    display: block;
+    font-size: 14px;
     font-weight: 700;
+    left: 70px;
+    line-height: 135%;
     margin-top: 10px;
     padding-left: 0;
-    color: #fff;
+    position: absolute;
+    width: 250px;
 }
 
 @media (max-width: 768px){
-  .navbar-header .navbar-brand img{
-    margin-top: -10px;
-  }
-  .navbar-header .navbar-brand span{
-    margin-top: -5px;
-    margin-left: 10px;
-  }
+    .navbar-header .navbar-brand img{
+        margin-top: -10px;
+    }
+    .navbar-header .navbar-brand span{
+        margin-top: -5px;
+        margin-left: 10px;
+    }
 }
 
 @media (max-width: 412px){
-  .navbar-header .navbar-brand img{
-    margin-top: -75px;
-  }
+    .navbar-header .navbar-brand img{
+        margin-top: -75px;
+    }
 }
 
 h1.pageTitle {
-  border-bottom: 1px solid #eeeeee;
-  font-size: 23px;
-  font-weight: 400;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  text-align:center
+    border-bottom: 1px solid #eeeeee;
+    font-size: 23px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    text-align:center
 }
 
 .navbar-inverse .navbar-nav > li > a{
-  font-size: 1vw;
-  padding-left: 9px;
-	padding-right: 9px;
+    font-size: 14px;
+    padding-left: 9px;
+    padding-right: 9px;
 }
 
-.navbar-inverse .navbar-nav > li > a{
-  font-size: 1vw;
-  padding-left: 10px;
-	padding-right: 10px;
+@media (max-width: 1130px){
+    .navbar-inverse .navbar-nav > li > a{
+        font-size: 12px;
+        padding-top:5px;
+        padding-bottom: 0;
+    }
 }
 
 /* file upload
@@ -272,26 +291,26 @@ hr.edit-separator {
     color: #000000;
 }
 .panel-body .pane.title h4{
-  margin-left: 20px;
+    margin-left: 20px;
 }
 .panel-body .btn.btn-info{
-  margin-left: 20px;
-  margin-bottom: 5px;
-  margin-top: -5px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: -5px;
 }
 .panel-body input.form-control,
 .panel-body input[type=text]{
-  font-size: 14px;
+    font-size: 14px;
 }
 .panel-body .panel.panel-info{
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 .panel-body .pane .show-all{
-  margin-right: 20px;
+    margin-right: 20px;
 }
 .panel-body .panel-group{
-  margin-left: 2%;
-  width: 96%;
+    margin-left: 2%;
+    width: 96%;
 }
 
 .pane .count {
@@ -321,7 +340,7 @@ hr.edit-separator {
 }
 @media (max-width: 1024px) {
     .accordion-toggle .show-all{
-      margin-right: 30px;
+        margin-right: 30px;
     }
 }
 
@@ -502,7 +521,7 @@ hr.edit-separator {
 
 @media (max-width: 768px) {
     form.edit-form .btn{
-      margin-bottom: 10px !important;
+        margin-bottom: 10px !important;
     }
 }
 
@@ -607,22 +626,22 @@ hr.edit-separator {
     margin-top: 0;
 }
 @media (max-width: 1024px){
-  table.table.table-hover.list-table{
-    table-layout: fixed;
-  }
-  table.table.table-hover.list-table>tbody>tr>td{
-    font-size: 11px;
-  }
+    table.table.table-hover.list-table{
+        table-layout: fixed;
+    }
+    table.table.table-hover.list-table>tbody>tr>td{
+        font-size: 11px;
+    }
 }
 
 .toggle-group{
-  width: 215%;
+    width: 215%;
 }
 
 @media (max-width: 768px) {
-  .toggle-group label.btn {
-    margin-bottom: 0 !important;
-  }
+    .toggle-group label.btn {
+        margin-bottom: 0 !important;
+    }
 }
 
 /* Submitted Page styles
@@ -660,12 +679,12 @@ hr.edit-separator {
 }
 
 @media (max-width: 768px) {
-  .row.bottom-form-btns{
-    padding-bottom: 30px;
-  }
-  .row.list-form-wrapper{
-    padding-bottom: 50px;
-  }
+    .row.bottom-form-btns{
+        padding-bottom: 30px;
+    }
+    .row.list-form-wrapper{
+        padding-bottom: 50px;
+    }
 }
 
 /*
