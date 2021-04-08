@@ -28,7 +28,6 @@ public final class DBConstants {
 
     public static final String ANDROID_PACKAGE_NAME = "org.devgateway.elgeyo.pmcdc";
 
-
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     private DBConstants() {

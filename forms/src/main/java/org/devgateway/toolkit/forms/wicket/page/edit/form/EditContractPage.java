@@ -145,24 +145,6 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
         return contract;
     }
 
-    @Override
-    protected void beforeSaveEntity(final Contract contract) {
-        super.beforeSaveEntity(contract);
-
-        final TenderProcess tenderProcess = contract.getTenderProcess();
-        tenderProcess.addContract(contract);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final Contract contract) {
-        super.beforeDeleteEntity(contract);
-
-        final TenderProcess tenderProcess = contract.getTenderProcess();
-        tenderProcess.removeContract(contract);
-        tenderProcessService.save(tenderProcess);
-    }
-
     public static List<Supplier> getAcceptedSupplier(TenderProcess tenderProcess) {
         if (tenderProcess.getSingleAwardAcceptance() != null) {
             return tenderProcess.getSingleAwardAcceptance().getItems()

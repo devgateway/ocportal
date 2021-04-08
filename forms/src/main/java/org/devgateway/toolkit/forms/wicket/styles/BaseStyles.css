@@ -84,6 +84,12 @@ body {
   }
 }
 
+@media (max-width: 1130px){
+	.navbar-right {
+		width: 65%;
+	}
+}
+
 .mainContainer {
     /*
      * The main page content should have some height.
@@ -146,20 +152,31 @@ body {
     padding: 0;
 }
 
+@media (min-width: 768px){
+  .navbar-header{
+    width: 25%;
+  }
+}
+
 .navbar-header .navbar-brand img {
-    display: inline-block;
+    display: block;
+    float: left;
     width: 45px;
     margin-left: 20px;
     margin-top: 5px;
 }
 
 .navbar-header .navbar-brand span {
-    display: inline-block;
-    font-size: 1.05vw;
+    color: #fff;
+    display: block;
+    font-size: 14px;
     font-weight: 700;
+    left: 70px;
+    line-height: 135%;
     margin-top: 10px;
     padding-left: 0;
-    color: #fff;
+    position: absolute;
+    width: 250px;
 }
 
 @media (max-width: 768px){
@@ -188,15 +205,17 @@ h1.pageTitle {
 }
 
 .navbar-inverse .navbar-nav > li > a{
-  font-size: 1vw;
+  font-size: 14px;
   padding-left: 9px;
 	padding-right: 9px;
 }
 
-.navbar-inverse .navbar-nav > li > a{
-  font-size: 1vw;
-  padding-left: 10px;
-	padding-right: 10px;
+@media (max-width: 1130px){
+  .navbar-inverse .navbar-nav > li > a{
+    font-size: 12px;
+    padding-top:5px;
+    padding-bottom: 0;
+  }
 }
 
 /* file upload
@@ -619,6 +638,12 @@ hr.edit-separator {
   width: 215%;
 }
 
+@media (max-width: 768px) {
+  .toggle-group label.btn {
+    margin-bottom: 0 !important;
+  }
+}
+
 /* Submitted Page styles
 -------------------------------------------------- */
 
@@ -651,6 +676,15 @@ hr.edit-separator {
 .fa.fa-frown-o.unsubscribe {
     font-size: 7em;
     color: #333;
+}
+
+@media (max-width: 768px) {
+  .row.bottom-form-btns{
+    padding-bottom: 30px;
+  }
+  .row.list-form-wrapper{
+    padding-bottom: 50px;
+  }
 }
 
 /*
