@@ -90,12 +90,12 @@ export const download = ({
 }) => {
   let url = new URI(`/api/ocds/${ep}`)
     .addSearch(filters)
-    .addSearch('year', years.toArray())
+    .addSearch('year', years)
     // this sin shall be atoned for in the future
     .addSearch('language', localStorage.oceLocale || 'en_US');
 
-  if (years.count() === 1) {
-    url = url.addSearch('month', months && months.toJS()).addSearch('monthly', true);
+  if (years.length === 1) {
+    url = url.addSearch('month', months).addSearch('monthly', true);
   }
 
   return send(url).then((response) => {

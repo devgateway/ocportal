@@ -58,9 +58,8 @@ class MapVisual extends backendFilterable(Visualization) {
   }
 
   handleUpdate(locationTypeValue) {
-    const { filters, onUpdate } = this.props;
+    const { onUpdate } = this.props;
     onUpdate({
-      ...filters,
       locationType: locationTypeValue,
     });
   }

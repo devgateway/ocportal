@@ -145,7 +145,6 @@ Tab.propTypes = {
   compareBy: PropTypes.string.isRequired,
   comparisonCriteriaValues: PropTypes.arrayOf(PropTypes.string).isRequired,
   width: PropTypes.number.isRequired,
-  onUpdate: PropTypes.func,
   t: PropTypes.func.isRequired,
 };
 
