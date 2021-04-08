@@ -388,9 +388,6 @@ class Contract extends CRDPage {
                     autosize: true,
                   }}
                   width={donutSize}
-                  layout={{
-                    autosize: true,
-                  }}
                   styling={styling}
                 />
               </div>
@@ -410,9 +407,6 @@ class Contract extends CRDPage {
                       autosize: true,
                     }}
                     width={donutSize}
-                    layout={{
-                      autosize: true,
-                    }}
                     styling={styling}
                   />
                 )}
@@ -433,9 +427,6 @@ class Contract extends CRDPage {
                       autosize: true,
                     }}
                     width={donutSize}
-                    layout={{
-                      autosize: true,
-                    }}
                     styling={styling}
                   />
                 )}
