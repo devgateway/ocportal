@@ -1,13 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { enableMapSet } from 'immer';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
 import ViewSwitcher from '../oce/switcher';
 import './style.scss';
 import OCEMakueni from './oceMakueni';
 import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
 import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
-import { enableMapSet } from 'immer';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
@@ -18,9 +24,19 @@ import SMSHelp from '../oce/makueni/SMSHelp';
 import PortalVideos from '../oce/makueni/PortalVideos';
 
 import store from '../oce/app/store';
-import { useTranslation } from 'react-i18next';
 
 enableMapSet();
+
+class DebugRouter extends Router {
+  constructor(props) {
+    super(props);
+    console.log('initial history is: ', JSON.stringify(this.history, null, 2));
+    this.history.listen((location, action) => {
+      console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
+      console.log(`The last navigation action was ${action}`, JSON.stringify(this.history, null, 2));
+    });
+  }
+}
 
 const BILLION = 1000000000;
 const MILLION = 1000000;
@@ -102,7 +118,40 @@ OceSwitcher.views.crd = CorruptionRickDashboard;
 const OceSwitcherLoader = () => {
   const { t, i18n, ready } = useTranslation();
   return ready
-    ? <OceSwitcher t={t} i18n={i18n} styling={styling} />
+    ? (
+      <DebugRouter>
+        <Switch>
+          <Route path="/ui/publication-policy">
+            <PublicationPolicy
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/ui/tender">
+            <MakueniTenders
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/ui/procurement-plan">
+            <MakueniProcurementPlans
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/ui/procurement-plan">
+            <MakueniProcurementPlans
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+        </Switch>
+      </DebugRouter>
+    )
     : null;
 };
 

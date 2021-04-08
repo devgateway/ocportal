@@ -9,6 +9,7 @@ import './header.scss';
 import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
 import makueniLogo from '../resources/makueni-logo.png';
@@ -50,7 +51,7 @@ const handleIntroJS = () => {
 };
 
 const Header = ({
-  onSwitch, selected, styling, isFeatureVisible,
+  selected, styling, isFeatureVisible,
 }) => {
   const { t } = useTranslation();
 
@@ -97,7 +98,7 @@ const Header = ({
     dispatch(loadStats());
   }, [dispatch]);
 
-  const changeOption = (option) => onSwitch(option);
+  // const changeOption = (option) => onSwitch(option);
 
   const isActive = (option) => selected === option;
 
@@ -143,15 +144,15 @@ const Header = ({
             <div className="navigation">
               {
                 visibleTabs.map((tab) => (
-                  <a
+                  <Link
+                    to={`/ui/${tab.name}`}
                     key={tab.name}
                     className={cn('', { active: isActive(tab.name) })}
-                    onClick={() => changeOption(tab.name)}
                   >
                     <span data-intro={tab.intro} data-step={tab.step}>
                       {tab.title}
                     </span>
-                  </a>
+                  </Link>
                 ))
               }
               <a
@@ -206,7 +207,6 @@ const Header = ({
 
 Header.propTypes = {
   selected: PropTypes.string,
-  onSwitch: PropTypes.func.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
 };

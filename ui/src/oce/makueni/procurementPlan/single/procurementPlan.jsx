@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
 import { Item } from '../../tenders/single/Item';
 import FileDownloadLinks from '../../tenders/single/FileDownloadLinks';
 import fmConnect from '../../../fm/fm';
@@ -10,13 +11,12 @@ import { setImmer } from '../../../tools';
 import feedback from '../../../resources/icons/feedback.svg';
 
 const ProcurementPlan = (props) => {
-  const {
-    id, navigate, isFeatureVisible,
-  } = props;
+  const { isFeatureVisible } = props;
 
+  const { id } = useParams();
   const { t } = useTranslation();
-
   const [data, updateData] = useImmer(undefined);
+  const history = useHistory();
 
   const getFeedbackSubject = () => {
     let metadata;
@@ -48,7 +48,7 @@ const ProcurementPlan = (props) => {
   return (
     <div className="procurement-plan makueni-form">
       <div className="row">
-        <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-3">
+        <a href="#" onClick={() => history.goBack()} className="back-link col-md-3">
           <span className="back-icon">
             <span className="previous">&#8249;</span>
           </span>
@@ -226,8 +226,6 @@ const ProcurementPlan = (props) => {
 };
 
 ProcurementPlan.propTypes = {
-  id: PropTypes.string.isRequired,
-  navigate: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
 };
 
