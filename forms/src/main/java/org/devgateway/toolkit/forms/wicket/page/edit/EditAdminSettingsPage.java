@@ -1,11 +1,14 @@
 package org.devgateway.toolkit.forms.wicket.page.edit;
 
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -23,6 +26,8 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * @author idobre
@@ -147,38 +152,50 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
     }
 
     private void addCacheClearLink() {
-        IndicatingAjaxFallbackLink link = new IndicatingAjaxFallbackLink<Void>("clearCache") {
+        final LaddaAjaxButton link = new LaddaAjaxButton("clearCache", Buttons.Type.Primary) {
 
             @Override
-            public void onClick(Optional optional) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
             }
 
         };
+        link.setLabel(new ResourceModel("clearBackendCaches"));
         editForm.add(link);
     }
 
     private void addImportToMongoLink() {
-        final IndicatingAjaxFallbackLink link = new IndicatingAjaxFallbackLink<Void>("importToMongo") {
+        final LaddaAjaxButton link = new LaddaAjaxButton("importToMongo", Buttons.Type.Primary) {
 
             @Override
-            public void onClick(final Optional<AjaxRequestTarget> target) {
-                importPostgresToMongoJob.importOcdsMakueniToMongo();
+            protected void onSubmit(AjaxRequestTarget target) {
+                Future<String> stringFuture = importPostgresToMongoJob.importOcdsMakueniToMongo();
+                try {
+                    stringFuture.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
             }
-
         };
+        link.setLabel(new ResourceModel("runMongoImport"));
         editForm.add(link);
     }
 
     private void sendValidatorNotifications() {
-        final IndicatingAjaxFallbackLink link = new IndicatingAjaxFallbackLink<Void>("sendValidatorNotifications") {
+        final LaddaAjaxButton link = new LaddaAjaxButton("sendValidatorNotifications", Buttons.Type.Primary) {
 
             @Override
-            public void onClick(final Optional<AjaxRequestTarget> target) {
-                submittedAlertService.sendNotificationEmails();
+            protected void onSubmit(AjaxRequestTarget target) {
+                Future<String> stringFuture = submittedAlertService.sendNotificationEmails();
+                try {
+                    stringFuture.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
         };
+        link.setLabel(new ResourceModel("sendValidatorNotifications"));
         editForm.add(link);
     }
 }
