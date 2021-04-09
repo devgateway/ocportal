@@ -9,7 +9,7 @@ public interface MakueniToOCDSConversionService {
     Release createRelease(TenderProcess tenderProcess);
 
 
-    Release createAndPersistRelease(TenderProcess tenderProcess);
+    Release createAndPersistRelease(Long tenderProcessId);
 
     void convertToOcdsAndSaveAllApprovedPurchaseRequisitions();
 
