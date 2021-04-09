@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author mpostelnicu
  *         <p>
- *         i077 High number of contract awards to one supplier within a given time period by a single procurement entity
+ *         i077 High number of contract awards to one supplier within a given time period by a single buyer
  */
 @Component
 public class ReleaseFlagI077Processor extends AbstractFlaggedReleaseFlagProcessor {

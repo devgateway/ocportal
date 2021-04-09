@@ -55,14 +55,15 @@ const Info = ({
                 </small>
               </td>
             </tr>
-            {prs && prs.length
-          && (
-          <tr>
-            <Cell title={t('crd:contracts:baseInfo:procuringEntityName')} colSpan="3">
-              {prs.map((pr) => <p key={pr.procuringEntityId}>{pr.procuringEntityName}</p>)}
-            </Cell>
-          </tr>
-          )}
+            {(prs && prs.length)
+              ? (
+                <tr>
+                  <Cell title={t('crd:contracts:baseInfo:procuringEntityName')} colSpan="3">
+                    {prs.map((pr) => <p key={pr.procuringEntityId}>{pr.procuringEntityName}</p>)}
+                  </Cell>
+                </tr>
+              )
+              : null}
           </tbody>
         </table>
         {showBottomTable

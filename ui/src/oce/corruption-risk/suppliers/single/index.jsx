@@ -196,7 +196,7 @@ const Supplier = (props) => {
           (s) => setFlagRowState({
             ...s,
             maxCommonDataLength: Math.min(5,
-              Math.max(s.winsAndFlagsData.length, s.flaggedNrData.length)),
+              Math.max(s.winsAndFlagsData.length, s.winsAndFlagsPerBuyerData.length, s.flaggedNrData.length)),
           }),
           () => setFlagRowState(null),
         );
@@ -325,13 +325,26 @@ const Supplier = (props) => {
           <h2>
             {t('crd:contracts:flagAnalysis')}
           </h2>
-          {isFeatureVisible('crd.supplier.flagAnalysis.winsAndFlags')
+          {isFeatureVisible('crd.supplier.flagAnalysis.winsAndFlagsPerProcuringEntity')
           && (
             <div className="col-sm-6">
               <Zoomable zoomedWidth={width}>
                 <TitleBelow title={t('crd:supplier:winsAndLosses:title')}>
                   <WinsAndFlags
                     data={flagRowState.winsAndFlagsData}
+                    length={flagRowState.maxCommonDataLength}
+                  />
+                </TitleBelow>
+              </Zoomable>
+            </div>
+          )}
+          {isFeatureVisible('crd.supplier.flagAnalysis.winsAndFlagsPerBuyer')
+          && (
+            <div className="col-sm-6">
+              <Zoomable zoomedWidth={width}>
+                <TitleBelow title={t('crd:supplier:winsAndLosses:title')}>
+                  <WinsAndFlags
+                    data={flagRowState.winsAndFlagsPerBuyerData}
                     length={flagRowState.maxCommonDataLength}
                   />
                 </TitleBelow>
