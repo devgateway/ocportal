@@ -5,11 +5,11 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "org.devgateway.makueni.pmcdc"
+        applicationId "org.devgateway.elgeyo.pmcdc"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

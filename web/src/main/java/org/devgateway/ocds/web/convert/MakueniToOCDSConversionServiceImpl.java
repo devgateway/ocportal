@@ -71,7 +71,6 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
-import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -85,7 +84,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.PersonService;
-import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityUtil;
@@ -154,8 +152,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
     private StringBuffer validationErrors;
 
-    private static final String OCID_PREFIX = "ocds-muq5cl-";
-
+    private static final String OCID_PREFIX = "ocds-udd159-";
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
@@ -187,7 +184,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject("OCDS Validation Failures After Import");
             msg.setText(txt);
         };
