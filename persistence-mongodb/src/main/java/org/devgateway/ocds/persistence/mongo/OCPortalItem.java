@@ -7,7 +7,7 @@ import org.devgateway.ocds.persistence.mongo.excel.annotation.ExcelExport;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MakueniItem extends Item {
+public class OCPortalItem extends Item {
     /**
      * target Group
      * <p>

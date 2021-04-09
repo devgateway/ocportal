@@ -6,15 +6,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author mpostelnicu
  */
 @Document(collection = "location")
-public class MakueniLocation extends DefaultLocation {
+public class OCPortalLocation extends DefaultLocation {
 
-    private MakueniLocationType type;
+    private OCPortalLocationType type;
 
-    public MakueniLocationType getType() {
+    public OCPortalLocationType getType() {
         return type;
     }
 
-    public void setType(MakueniLocationType type) {
+    public void setType(OCPortalLocationType type) {
         this.type = type;
     }
 }

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import OverviewChart from '../../charts/overview';
-import CostEffectiveness from '../../charts/cost-effectiveness';
 import ProcurementMethodChart from '../../charts/procurement-method';
-import ProjectCount from '../../charts/project-count';
-import AmountBudgeted from '../../charts/amount-budgeted';
+import ContractCount from '../../charts/contract-count';
+import AmountContracted from '../../charts/amount-contracted';
 import ChartTab from '../location/chart-tab';
 import Tab from '../location/tab';
 import LocationWrapper from '../location/popup-marker';
@@ -14,18 +13,18 @@ export class OverviewTab extends Tab {
 
   render() {
     const { data, t } = this.props;
-    const { count, totalProjectsAmount } = data;
+    const { count, amount } = data;
     return (
       <div>
         <p>
-          <strong>{t('maps:tenderLocations:tabs:overview:nrOfProjects')}</strong>
+          <strong>{t('maps:contractLocations:tabs:overview:nrOfContracts')}</strong>
           {' '}
           {count}
         </p>
         <p>
-          <strong>{t('maps:tenderLocations:tabs:overview:totalFundingByLocation')}</strong>
+          <strong>{t('maps:contractLocations:tabs:overview:totalContractedFundingByLocation')}</strong>
           {' '}
-          {totalProjectsAmount.toLocaleString()}
+          {amount.toLocaleString()}
         </p>
       </div>
     );
@@ -44,27 +43,21 @@ class OverviewChartTab extends ChartTab {
 
 OverviewChartTab.Chart = OverviewChart;
 
-class CostEffectivenessTab extends ChartTab {
-  static getName(t) { return t('charts:costEffectiveness:title'); }
-}
-
-CostEffectivenessTab.Chart = CostEffectiveness;
-
-class ProjectCountChartTab extends ChartTab {
-  static getName(t) { return t('charts:projectCount:title'); }
+class ContractCountChartTab extends ChartTab {
+  static getName(t) { return t('charts:contractCount:title'); }
 
   static getChartClass() { return 'overview'; }
 }
 
-ProjectCountChartTab.Chart = ProjectCount;
+ContractCountChartTab.Chart = ContractCount;
 
-class AmountBudgetedChartTab extends ChartTab {
-  static getName(t) { return t('charts:amountBudgeted:title'); }
+class AmountContractedChartTab extends ChartTab {
+  static getName(t) { return t('charts:amountContracted:title'); }
 
   static getChartClass() { return 'overview'; }
 }
 
-AmountBudgetedChartTab.Chart = AmountBudgeted;
+AmountContractedChartTab.Chart = AmountContracted;
 
 class ProcurementMethodTab extends ChartTab {
   static getName(t) { return t('charts:procurementMethod:title'); }
@@ -72,9 +65,9 @@ class ProcurementMethodTab extends ChartTab {
 
 ProcurementMethodTab.Chart = ProcurementMethodChart;
 
-class TenderPopupMarker extends LocationWrapper {
+class ContractPopupMarker extends LocationWrapper {
 }
 
-TenderPopupMarker.TABS = [OverviewTab, ProjectCountChartTab, AmountBudgetedChartTab];
+ContractPopupMarker.TABS = [OverviewTab, ContractCountChartTab, AmountContractedChartTab];
 
-export default TenderPopupMarker;
+export default ContractPopupMarker;
