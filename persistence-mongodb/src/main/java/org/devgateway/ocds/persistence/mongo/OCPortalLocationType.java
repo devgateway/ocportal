@@ -6,21 +6,21 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum MakueniLocationType {
+public enum OCPortalLocationType {
 
     ward("ward"),
     subcounty("subcounty");
 
     private final String value;
-    private static final Map<String, MakueniLocationType> CONSTANTS = new HashMap<String, MakueniLocationType>();
+    private static final Map<String, OCPortalLocationType> CONSTANTS = new HashMap<String, OCPortalLocationType>();
 
     static {
-        for (MakueniLocationType c : values()) {
+        for (OCPortalLocationType c : values()) {
             CONSTANTS.put(c.value, c);
         }
     }
 
-    MakueniLocationType(String value) {
+    OCPortalLocationType(String value) {
         this.value = value;
     }
 
@@ -35,8 +35,8 @@ public enum MakueniLocationType {
     }
 
     @JsonCreator
-    public static MakueniLocationType fromValue(String value) {
-        MakueniLocationType constant = CONSTANTS.get(value);
+    public static OCPortalLocationType fromValue(String value) {
+        OCPortalLocationType constant = CONSTANTS.get(value);
         if (constant == null) {
             throw new IllegalArgumentException(value);
         } else {
