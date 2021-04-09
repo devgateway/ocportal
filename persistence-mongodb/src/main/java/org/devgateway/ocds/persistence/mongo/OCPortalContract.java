@@ -1,14 +1,17 @@
 package org.devgateway.ocds.persistence.mongo;
 
-import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author mpostelnicu
  */
-public class MakueniContract extends Contract {
+public class OCPortalContract extends Contract {
     private OrganizationReference contractor;
 
     private String targetGroup;
+
+    private Set<OCPortalLocation> locations = new LinkedHashSet<>();
 
     public OrganizationReference getContractor() {
         return contractor;
@@ -24,5 +27,13 @@ public class MakueniContract extends Contract {
 
     public void setTargetGroup(String targetGroup) {
         this.targetGroup = targetGroup;
+    }
+
+    public Set<OCPortalLocation> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Set<OCPortalLocation> locations) {
+        this.locations = locations;
     }
 }

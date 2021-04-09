@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MakueniOrganization extends Organization {
+public class OCPortalOrganization extends Organization {
 
     @JsonProperty("targetGroup")
     @JsonPropertyDescription("The name of the AGPO Category. Eg PWD, Women, Youth, etc.")
