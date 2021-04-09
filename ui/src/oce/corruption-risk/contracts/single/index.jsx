@@ -95,23 +95,23 @@ class Info extends Visualization {
             {title && <dd>{title}</dd>}
           </dl>
           )}
-        <table className="table table-bordered join-bottom info-table">
+        <table className="table table-bordered table-fixed join-bottom info-table">
           <tbody>
             <tr>
-              <td>
-                {PE && (
-                <dl>
-                  <dt><span className="contract-label">{t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
-                  <dd>
-                    <a
-                      href={`#!/crd/procuring-entity/${PE.get('id')}`}
-                    >
-                      {PE.get('name')}
-                    </a>
-                  </dd>
-                </dl>
-                )}
-              </td>
+              {PE && (
+                <td>
+                  <dl>
+                    <dt><span className="contract-label">{t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
+                    <dd>
+                      <a
+                        href={`#!/crd/procuring-entity/${PE.get('id')}`}
+                      >
+                        {PE.get('name')}
+                      </a>
+                    </dd>
+                  </dl>
+                </td>
+              )}
               <td>
                 <dl>
                   <dt><span className="contract-label">{t('crd:contracts:baseInfo:buyer')}</span></dt>
@@ -140,7 +140,7 @@ class Info extends Visualization {
             </tr>
           </tbody>
         </table>
-        <table className="table table-bordered">
+        <table className="table table-bordered table-fixed">
           <tbody>
             <tr>
               <td>
@@ -348,7 +348,7 @@ class Contract extends CRDPage {
     const procuringEntityId = contract.getIn(['tender', 'procuringEntity', 'id'])
       || contract.getIn(['tender', 'procuringEntity', 'identifier', 'id']);
 
-    const donutSize = width / 3 - 100;
+    const donutSize = width;
 
     return (
       <div className="contract-page">
@@ -384,6 +384,9 @@ class Contract extends CRDPage {
                   {...wireProps(this, 'nrOfBidders')}
                   Popup={DonutPopup}
                   Chart={NrOfBidders}
+                  layout={{
+                    autosize: true,
+                  }}
                   width={donutSize}
                   styling={styling}
                 />
@@ -400,6 +403,9 @@ class Contract extends CRDPage {
                     {...wireProps(this, 'nrContracts')}
                     Popup={DonutPopup}
                     Chart={NrOfContractsWithThisPE}
+                    layout={{
+                      autosize: true,
+                    }}
                     width={donutSize}
                     styling={styling}
                   />
@@ -417,6 +423,9 @@ class Contract extends CRDPage {
                     {...wireProps(this, 'percentPESpending')}
                     Popup={PercentPESpendingPopup}
                     Chart={PercentPESpending}
+                    layout={{
+                      autosize: true,
+                    }}
                     width={donutSize}
                     styling={styling}
                   />
