@@ -140,6 +140,20 @@ const OceSwitcherLoader = () => {
               i18n={i18n}
             />
           </Route>
+          <Route path="/ui/m-and-e/:selected?">
+            <OCEMakueni
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/ui/docs">
+            <Docs
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
           <Route path="/ui/procurement-plan">
             <MakueniProcurementPlans
               styling={styling}

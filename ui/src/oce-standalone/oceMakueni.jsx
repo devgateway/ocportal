@@ -2,6 +2,7 @@ import React from 'react';
 import { Map } from 'immutable';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import OCApp from '../oce';
 import OverviewTab from '../oce/tabs/overview';
 import LocationTab from '../oce/tabs/location';
@@ -164,4 +165,4 @@ OCEMakueni.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default fmConnect(OCEMakueni);
+export default withRouter(fmConnect(OCEMakueni));

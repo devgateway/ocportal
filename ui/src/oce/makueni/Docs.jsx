@@ -1,7 +1,8 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
 import './makueni.scss';
-import React from 'react';
 import Footer from '../layout/footer';
 
 class Docs extends CRDPage {
@@ -49,10 +50,10 @@ class Docs extends CRDPage {
                 <h3 className="list-group-item-heading">{t('docs:license:heading')}</h3>
                 <p className="list-group-item-text">{t('docs:license:text')}</p>
               </a>
-              <a href="#!/publication-policy" className="list-group-item">
+              <Link to="/ui/publication-policy" className="list-group-item">
                 <h3 className="list-group-item-heading">{t('docs:policy:heading')}</h3>
                 <p className="list-group-item-text">{t('docs:policy:text')}</p>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
