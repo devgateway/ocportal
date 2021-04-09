@@ -61,7 +61,7 @@ const Table = ({
         },
       }, {
         text: t('crd:procurements:table:ocid'),
-        dataField: 'id',
+        dataField: 'ocid',
         fm: `${fmPrefix}.ocid`,
         formatter: mkContractLink(navigate),
       }, {
