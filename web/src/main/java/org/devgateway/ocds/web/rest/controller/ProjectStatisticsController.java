@@ -21,6 +21,7 @@ import org.devgateway.toolkit.persistence.mongo.aggregate.CustomProjectionOperat
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +33,7 @@ import java.util.List;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
@@ -59,11 +61,12 @@ public class ProjectStatisticsController extends GenericOCDSController {
         project.put("projectID", ref(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID));
         addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
 
+        Criteria filterCriteria = getTenderMapFilterCriteria(filter);
+
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID).exists(true)
                         .and(getTenderDateField()).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()
-                        ))),
+                        .andOperator(filterCriteria)),
                 new CustomProjectionOperation(project),
                 group(getYearlyMonthlyGroupingFields(filter, "projectID")),
                 group(getYearlyMonthlyGroupingFields(filter)).count().as(Keys.COUNT),
@@ -86,11 +89,13 @@ public class ProjectStatisticsController extends GenericOCDSController {
         project.put(Keys.AMOUNT, ref(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT));
         addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
 
+        Criteria filterCriteria = getTenderMapFilterCriteria(filter);
+
         Aggregation agg = newAggregation(
                 match(where(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID).exists(true)
-                        .and(getTenderDateField()).exists(true).and(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT)
-                        .exists(true).andOperator(getYearDefaultFilterCriteria(filter, getTenderDateField()
-                        ))),
+                        .and(getTenderDateField()).exists(true)
+                        .and(MongoConstants.FieldNames.PLANNING_BUDGET_AMOUNT).exists(true)
+                        .andOperator(filterCriteria)),
                 new CustomProjectionOperation(project),
                 group(getYearlyMonthlyGroupingFields(filter, "projectID"))
                         .first(Keys.AMOUNT).as(Keys.AMOUNT),
@@ -102,4 +107,49 @@ public class ProjectStatisticsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
+    @ApiOperation(value = "Calculates number of contracts per year")
+    @RequestMapping(value = "/api/numberOfContractsByYear", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> numberOfContractsByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+
+        DBObject project = new BasicDBObject();
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
+
+        Criteria filterCriteria = getContractMapFilterCriteria(filter);
+
+        Aggregation agg = newAggregation(
+                match(where(getTenderDateField()).exists(true)
+                        .andOperator(filterCriteria)),
+                unwind(MongoConstants.FieldNames.CONTRACTS),
+                new CustomProjectionOperation(project),
+                group(getYearlyMonthlyGroupingFields(filter)).count().as(Keys.COUNT),
+                transformYearlyGrouping(filter).andInclude(Keys.COUNT),
+                getSortByYearMonth(filter)
+        );
+
+        return releaseAgg(agg);
+    }
+
+    @ApiOperation(value = "Calculates contract amount by year")
+    @RequestMapping(value = "/api/amountContractedByYear", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> amountContractedByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
+
+        DBObject project = new BasicDBObject();
+        project.put(Keys.AMOUNT, ref(MongoConstants.FieldNames.CONTRACTS_VALUE_AMOUNT));
+        addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
+
+        Criteria filterCriteria = getContractMapFilterCriteria(filter);
+
+        Aggregation agg = newAggregation(
+                match(where(getTenderDateField()).exists(true).andOperator(filterCriteria)),
+                unwind(MongoConstants.FieldNames.CONTRACTS),
+                new CustomProjectionOperation(project),
+                group(getYearlyMonthlyGroupingFields(filter)).sum(Keys.AMOUNT).as(Keys.AMOUNT),
+                transformYearlyGrouping(filter).andInclude(Keys.AMOUNT),
+                getSortByYearMonth(filter)
+        );
+
+        return releaseAgg(agg);
+    }
 }

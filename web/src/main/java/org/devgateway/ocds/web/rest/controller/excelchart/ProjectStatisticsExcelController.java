@@ -43,39 +43,13 @@ public class ProjectStatisticsExcelController extends ExcelChartOCDSController {
                                                  final HttpServletResponse response) throws IOException {
 
         final String chartTitle = translationService.getValue(filter.getLanguage(), "charts:projectCount:title");
+        String xAxisTitle = translationService.getValue(filter.getLanguage(), "charts:projectCount:xAxisTitle");
+        String valKey = ProjectStatisticsController.Keys.COUNT;
 
         final List<Document> endpointResult =
                 projectStatisticsController.numberOfProjectsByYear(filter);
 
-        final List<?> categories = excelChartHelper.getCategoriesFromDBObject(
-                getExportYearMonthXAxis(filter), endpointResult);
-
-        final List<List<? extends Number>> values = new ArrayList<>();
-        final List<Number> valuesFromDBObject = excelChartHelper.getValuesFromDBObject(endpointResult, categories,
-                getExportYearMonthXAxis(filter), ProjectStatisticsController.Keys.COUNT);
-
-        if (!valuesFromDBObject.isEmpty()) {
-            values.add(valuesFromDBObject);
-        }
-
-        // check if we have anything to display before setting the *seriesTitle*.
-        final List<String> seriesTitle;
-        if (!values.isEmpty()) {
-            seriesTitle = Arrays.asList(
-                    translationService.getValue(filter.getLanguage(), "charts:projectCount:xAxisTitle")
-            );
-        } else {
-            seriesTitle = new ArrayList<>();
-        }
-
-        response.setContentType(Constants.ContentType.XLSX);
-        response.setHeader("Content-Disposition", "attachment; filename=" + chartTitle + ".xlsx");
-        response.getOutputStream().write(
-                excelChartGenerator.getExcelChart(
-                        ChartType.barcol,
-                        chartTitle,
-                        seriesTitle,
-                        categories, values));
+        respondWithExcel(filter, response, chartTitle, xAxisTitle, valKey, endpointResult);
     }
 
     @ApiOperation(value = "Exports total Amount from project planning by year (it shows in map widget) excel chart ")
@@ -85,16 +59,57 @@ public class ProjectStatisticsExcelController extends ExcelChartOCDSController {
                                                final HttpServletResponse response) throws IOException {
 
         final String chartTitle = translationService.getValue(filter.getLanguage(), "charts:amountBudgeted:title");
+        String xAxisTitle = translationService.getValue(filter.getLanguage(), "charts:amountBudgeted:xAxisTitle");
+        String valKey = ProjectStatisticsController.Keys.AMOUNT;
 
         final List<Document> endpointResult =
                 projectStatisticsController.amountBudgetedByYear(filter);
 
+        respondWithExcel(filter, response, chartTitle, xAxisTitle, valKey, endpointResult);
+    }
+
+    @ApiOperation(value = "Exports Number of contracts by year (it shows in map widget) excel chart ")
+    @RequestMapping(value = "/api/ocds/numberOfContractsByYearExcelChart", method = {RequestMethod.GET,
+            RequestMethod.POST})
+    public void numberOfContractsByYearExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
+            final HttpServletResponse response) throws IOException {
+
+        final String chartTitle = translationService.getValue(filter.getLanguage(), "charts:contractCount:title");
+        String xAxisTitle = translationService.getValue(filter.getLanguage(), "charts:contractCount:xAxisTitle");
+        String valKey = ProjectStatisticsController.Keys.COUNT;
+
+        final List<Document> endpointResult =
+                projectStatisticsController.numberOfContractsByYear(filter);
+
+        respondWithExcel(filter, response, chartTitle, xAxisTitle, valKey, endpointResult);
+    }
+
+    @ApiOperation(value = "Exports total Amount from contracts by year (it shows in map widget) excel chart ")
+    @RequestMapping(value = "/api/ocds/amountContractedByYearExcelChart", method = {RequestMethod.GET,
+            RequestMethod.POST})
+    public void amountContractedByYearExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
+            final HttpServletResponse response) throws IOException {
+
+        final String chartTitle = translationService.getValue(filter.getLanguage(), "charts:amountContracted:title");
+        String xAxisTitle = translationService.getValue(filter.getLanguage(), "charts:amountContracted:xAxisTitle");
+        String valKey = ProjectStatisticsController.Keys.AMOUNT;
+
+        final List<Document> endpointResult =
+                projectStatisticsController.amountContractedByYear(filter);
+
+        respondWithExcel(filter, response, chartTitle, xAxisTitle, valKey, endpointResult);
+    }
+
+    private void respondWithExcel(
+            LangYearFilterPagingRequest filter,
+            HttpServletResponse response, String chartTitle, String xAxisTitle, String valKey,
+            List<Document> endpointResult) throws IOException {
         final List<?> categories = excelChartHelper.getCategoriesFromDBObject(
                 getExportYearMonthXAxis(filter), endpointResult);
 
         final List<List<? extends Number>> values = new ArrayList<>();
         final List<Number> valuesFromDBObject = excelChartHelper.getValuesFromDBObject(endpointResult, categories,
-                getExportYearMonthXAxis(filter), ProjectStatisticsController.Keys.AMOUNT);
+                getExportYearMonthXAxis(filter), valKey);
 
         if (!valuesFromDBObject.isEmpty()) {
             values.add(valuesFromDBObject);
@@ -103,9 +118,7 @@ public class ProjectStatisticsExcelController extends ExcelChartOCDSController {
         // check if we have anything to display before setting the *seriesTitle*.
         final List<String> seriesTitle;
         if (!values.isEmpty()) {
-            seriesTitle = Arrays.asList(
-                    translationService.getValue(filter.getLanguage(), "charts:amountBudgeted:xAxisTitle")
-            );
+            seriesTitle = Arrays.asList(xAxisTitle);
         } else {
             seriesTitle = new ArrayList<>();
         }
