@@ -100,6 +100,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
@@ -124,11 +125,13 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MON
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.OCDSSchemes.X_KE_INTERNAL_SCHEMA;
 
 @Service
-@Transactional(readOnly = true)
 public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConversionService {
 
     @Value("${serverURL}")
     private String serverURL;
+
+    @Resource
+    private OCPortalToOCDSConversionServiceImpl self;
 
     @Autowired
     private DgFmService fmService;
@@ -785,9 +788,12 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Release createAndPersistRelease(TenderProcess tenderProcess) {
+    public Release createAndPersistRelease(Long tenderProcessId) {
         try {
+            TenderProcess tenderProcess = tenderProcessService.findById(tenderProcessId).get();
+
             //never export releases from draft procurement plans or projects
             if (!tenderProcess.getProcurementPlan().getStatus().equals(DBConstants.Status.APPROVED)
                     || (tenderProcess.getProject() != null && !tenderProcess.getProject().getStatus()
@@ -820,7 +826,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
                 return null;
             }
         } catch (Exception e) {
-            logger.info("Exception processing tender process with id " + tenderProcess.getId());
+            logger.info("Exception processing tender process with id " + tenderProcessId);
             throw e;
         }
     }
@@ -832,7 +838,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         //releaseRepository.deleteAll();
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
-        tenderProcessService.findAllStream().forEach(this::createAndPersistRelease);
+        tenderProcessService.findAll().forEach(p -> self.createAndPersistRelease(p.getId()));
         sendValidationFailureAlert(validationErrors.toString());
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
