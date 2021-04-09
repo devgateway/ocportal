@@ -14,7 +14,7 @@ import java.util.Collections;
 /**
  * @author mpostelnicu
  *         <p>
- *         i180 Contractor receives multiple single-source/non-competitive contracts from a single procuring entity
+ *         i180 Contractor receives multiple single-source/non-competitive contracts from a single buyer
  *         during a defined time period
  */
 @Component

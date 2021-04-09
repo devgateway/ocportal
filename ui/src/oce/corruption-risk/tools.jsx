@@ -33,10 +33,10 @@ export const getAwardAmount = (contract) => {
   return 'N/A';
 };
 
-export const mkContractLink = (navigate) => (content, { id }) => (
+export const mkContractLink = (navigate) => (content, { ocid }) => (
   <a
-    href={`#!/crd/contract/${id}`}
-    onClick={() => navigate('contract', id)}
+    href={`#!/crd/contract/${ocid}`}
+    onClick={() => navigate('contract', ocid)}
     className="oce-3-line-text"
   >
     {content}

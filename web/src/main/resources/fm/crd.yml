@@ -6,7 +6,7 @@
 - name: crd.sidebar.suppliers
   visible: yes
 - name: crd.sidebar.procuringEntities
-  visible: yes
+  visible: no
 - name: crd.sidebar.buyers
   visible: yes
 - name: crd.sidebar.contracts
@@ -20,7 +20,7 @@
 - name: crd.filters.buyer
   visible: yes
 - name: crd.filters.procuringEntity
-  visible: yes
+  visible: no
 - name: crd.filters.supplier
   visible: yes
 - name: crd.filters.procurementMethodRationaleGroup
@@ -58,6 +58,8 @@
 - name: crd.overview.procurementProcesses.col.title
   visible: yes
 - name: crd.overview.procurementProcesses.col.procuringEntity
+  visible: no
+- name: crd.overview.procurementProcesses.col.buyerName
   visible: yes
 - name: crd.overview.procurementProcesses.col.tenderAmount
   visible: yes
@@ -87,8 +89,10 @@
   visible: yes
 - name: crd.flag.indicator.procurements.col.title
   visible: yes
-- name: crd.flag.indicator.procurements.col.procuringEntity
+- name: crd.flag.indicator.procurements.col.buyerName
   visible: yes
+- name: crd.flag.indicator.procurements.col.procuringEntity
+  visible: no
 - name: crd.flag.indicator.procurements.col.tenderAmount
   visible: yes
 - name: crd.flag.indicator.procurements.col.awardsAmount
@@ -125,7 +129,9 @@
   visible: yes
 - name: crd.supplier.flagAnalysis
   visible: yes
-- name: crd.supplier.flagAnalysis.winsAndFlags
+- name: crd.supplier.flagAnalysis.winsAndFlagsPerProcuringEntity
+  visible: no
+- name: crd.supplier.flagAnalysis.winsAndFlagsPerBuyer
   visible: yes
 - name: crd.supplier.flagAnalysis.flaggedNr
   visible: yes
@@ -134,6 +140,8 @@
 - name: crd.supplier.procurements
   visible: yes
 - name: crd.supplier.procurements.col.procuringEntityName
+  visible: no
+- name: crd.supplier.procurements.col.buyerName
   visible: yes
 - name: crd.supplier.procurements.col.awardAmount
   visible: yes
