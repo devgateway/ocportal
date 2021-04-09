@@ -89,8 +89,10 @@
   visible: yes
 - name: crd.flag.indicator.procurements.col.title
   visible: yes
-- name: crd.flag.indicator.procurements.col.procuringEntity
+- name: crd.flag.indicator.procurements.col.buyerName
   visible: yes
+- name: crd.flag.indicator.procurements.col.procuringEntity
+  visible: no
 - name: crd.flag.indicator.procurements.col.tenderAmount
   visible: yes
 - name: crd.flag.indicator.procurements.col.awardsAmount

@@ -128,6 +128,7 @@ class ProcurementsTable extends PaginatedTable {
         ocid,
         title: contract.get('title', 'N/A'),
         PEName: contract.getIn(['procuringEntity', 'name'], 'N/A'),
+        buyerName: contract.getIn(['buyer', 'name'], 'N/A'),
         tenderAmount,
         awardsAmount: getAwardAmount(contract),
         tenderDate: `${startDate}—${endDate}`,
@@ -169,6 +170,12 @@ class ProcurementsTable extends PaginatedTable {
             text: t('crd:procurementsTable:procuringEntity'),
             dataField: 'PEName',
             fm: 'crd.flag.indicator.procurements.col.procuringEntity',
+            formatter: _3LineText,
+          },
+          {
+            text: t('crd:procurementsTable:buyerName'),
+            dataField: 'buyerName',
+            fm: 'crd.flag.indicator.procurements.col.buyerName',
             formatter: _3LineText,
           },
           {
