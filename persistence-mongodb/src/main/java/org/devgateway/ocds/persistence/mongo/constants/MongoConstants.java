@@ -21,13 +21,11 @@ public final class MongoConstants {
 
 
     public static final class OCDSSchemes {
-        public static final String X_KE_INTERNAL_SCHEMA = "X-KE-OCMAKUENI";
+        public static final String X_KE_INTERNAL_SCHEMA = "X-KE-OCELGEYO-MARAKWET";
         public static final String X_KE_IFMIS = "x_KE-IFMIS";
         public static final String KE_IFMIS = "KE-IFMIS";
         public static final String UNCEFACT = "UNCEFACT";
     }
-
-    public static final String OCDS_PREFIX = "ocds-ep75k8-";
 
     public static final int IMPORT_ROW_BATCH = 1000;
 
