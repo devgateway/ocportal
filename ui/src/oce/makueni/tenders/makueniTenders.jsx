@@ -14,7 +14,9 @@ import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { setImmer } from '../../tools';
 import { useTranslation } from 'react-i18next';
-import { Link, Route, Switch } from 'react-router-dom';
+import {
+  Link, Route, Switch, useHistory,
+} from 'react-router-dom';
 
 const MakueniTenders = (props) => {
   useEffect(() => window.scrollTo(0, 0), []);
@@ -23,6 +25,7 @@ const MakueniTenders = (props) => {
   const [page, updatePage] = useImmer(1);
   const [pageSize, updatePageSize] = useImmer(20);
   const [dataWithCount, updateDataWithCount] = useImmer({ data: [], count: 0 });
+  const history = useHistory();
 
   useEffect(() => {
     getTenders({ ...filters, pageSize, pageNumber: page - 1 }).then((result) => {
@@ -204,7 +207,7 @@ const MakueniTenders = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => props.onSwitch('alerts')}
+              onClick={() => history.push('/ui/alerts')}
             >
               {t('general:subscribeToEmailAlerts')}
             </button>

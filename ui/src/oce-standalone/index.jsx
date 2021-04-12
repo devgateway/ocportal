@@ -6,7 +6,7 @@ import { enableMapSet } from 'immer';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
+  Route, Redirect,
 } from 'react-router-dom';
 import ViewSwitcher from '../oce/switcher';
 import './style.scss';
@@ -119,6 +119,16 @@ const OceSwitcherLoader = () => {
     ? (
       <DebugRouter>
         <Switch>
+          <Route exact path="/ui">
+            <Redirect to="/ui/tender" />
+          </Route>
+          <Route path="/ui/alerts/:preqId?">
+            <Alerts
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
           <Route path="/ui/publication-policy">
             <PublicationPolicy
               styling={styling}
