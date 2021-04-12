@@ -9,15 +9,13 @@ const getDate = (obj/* tender obj */, key/* date key */) => (obj.hasIn(['tenderP
 
 class Tenders extends Table {
   row(entry) {
-    const bidNo = entry.getIn(['planning', 'bidNo']);
+    const tenderId = entry.getIn(['tender', 'id']);
     const buyer = entry.get('buyer');
     const tender = entry.get('tender');
     const value = tender.get('value');
 
-    // TODO - change the key when we have a bidNo
     return (
-      <tr key={bidNo + tender}>
-        {/* <td>{bidNo}</td> */}
+      <tr key={tenderId}>
         <td>{getDate(tender, 'startDate')}</td>
         <td>{getDate(tender, 'endDate')}</td>
         <td className="procuring-entity-title">{buyer && buyer.getIn(['name'])}</td>
