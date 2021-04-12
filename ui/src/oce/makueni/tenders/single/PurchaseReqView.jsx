@@ -20,6 +20,7 @@ import PMCReport from './PMCReport';
 import MEReport from './MEReport';
 import PaymentVoucher from './PaymentVoucher';
 import { setImmer } from '../../../tools';
+import GoBack from '../../../goback';
 
 const PurchaseReqView = (props) => {
   const [visibleTabs, setVisibleTabs] = useState([]);
@@ -170,14 +171,7 @@ const PurchaseReqView = (props) => {
     </div>
 
     <div className="row">
-      <a href="#" onClick={() => history.goBack()} className="back-link col-md-3">
-        <span className="back-icon">
-          <span className="previous">&#8249;</span>
-        </span>
-        <span>
-          {t('general:goBack')}
-        </span>
-      </a>
+      <GoBack t={t} history={history} url="/ui/tender" />
 
       {isFeatureVisible('publicView.tender.receiveAlertsButton') && (
       <div className="col-md-offset-5 col-md-4">

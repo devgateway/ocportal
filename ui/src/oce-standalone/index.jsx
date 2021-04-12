@@ -27,16 +27,19 @@ import store from '../oce/app/store';
 
 enableMapSet();
 
-class DebugRouter extends Router {
-  constructor(props) {
-    super(props);
-    console.log('initial history is: ', JSON.stringify(this.history, null, 2));
-    this.history.listen((location, action) => {
-      console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
-      console.log(`The last navigation action was ${action}`, JSON.stringify(this.history, null, 2));
-    });
-  }
-}
+/**
+ * Can be used to debug routes more easily
+ */
+// class DebugRouter extends Router {
+//   constructor(props) {
+//     super(props);
+//     console.log('initial history is: ', JSON.stringify(this.history, null, 2));
+//     this.history.listen((location, action) => {
+//       console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
+//       console.log(`The last navigation action was ${action}`, JSON.stringify(this.history, null, 2));
+//     });
+//   }
+// }
 
 const BILLION = 1000000000;
 const MILLION = 1000000;
@@ -117,7 +120,7 @@ const OceSwitcherLoader = () => {
   const { t, i18n, ready } = useTranslation();
   return ready
     ? (
-      <DebugRouter>
+      <Router>
         <Switch>
           <Route exact path="/ui">
             <Redirect to="/ui/tender" />
@@ -164,6 +167,13 @@ const OceSwitcherLoader = () => {
               i18n={i18n}
             />
           </Route>
+          <Route path="/ui/crd/:page?/:type?/:individualIndicator?">
+            <CorruptionRickDashboard
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
           <Route path="/ui/procurement-plan">
             <MakueniProcurementPlans
               styling={styling}
@@ -172,7 +182,7 @@ const OceSwitcherLoader = () => {
             />
           </Route>
         </Switch>
-      </DebugRouter>
+      </Router>
     )
     : null;
 };

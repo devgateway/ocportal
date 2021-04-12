@@ -5,6 +5,7 @@ import { Map } from 'immutable';
 import PropTypes from 'prop-types';
 import { defaultMemoize } from 'reselect';
 import { isEqualWith } from 'lodash';
+import { withRouter } from 'react-router-dom';
 import {
   cacheFn, debounce, fetchJson, range,
 } from '../tools';
@@ -106,37 +107,32 @@ class CorruptionRiskDashboard extends React.Component {
   }
 
   getPage() {
-    const { route, navigate } = this.props;
     const styling = this.constructor.STYLING || this.props.styling;
-    const [page] = route;
+    const { page, type, individualIndicator } = this.props.match.params;
 
     const { indicatorTypesMapping, width } = this.state;
 
     if (page === 'type') {
-      const [, corruptionType] = route;
-
-      const indicators = getIndicators(indicatorTypesMapping, corruptionType);
+      const indicators = getIndicators(indicatorTypesMapping, type);
 
       return (
         <CorruptionTypePage
-          {...this.wireProps(['corruptionType', corruptionType])}
+          {...this.wireProps(['corruptionType', type])}
           indicators={indicators}
-          onGotoIndicator={(individualIndicator) => navigate('indicator', corruptionType, individualIndicator)}
-          corruptionType={corruptionType}
+          onGotoIndicator={(individualIndicator) => this.props.history.push(`/ui/crd/indicator/${type}/${individualIndicator}`)}
+          corruptionType={type}
           width={width}
           styling={styling}
         />
       );
     } if (page === 'indicator') {
-      const [, corruptionType, individualIndicator] = route;
       return (
         <IndividualIndicatorPage
           {...this.wireProps(['indicator', individualIndicator])}
           indicator={individualIndicator}
-          corruptionType={corruptionType}
+          corruptionType={type}
           width={width}
           styling={styling}
-          navigate={navigate}
         />
       );
     } if (page === 'contracts') {
@@ -183,7 +179,6 @@ class CorruptionRiskDashboard extends React.Component {
         indicatorTypesMapping={indicatorTypesMapping}
         styling={styling}
         width={width}
-        navigate={navigate}
       />
     );
   }
@@ -234,7 +229,7 @@ class CorruptionRiskDashboard extends React.Component {
     const { t } = this.props;
     if (this.state.user.loggedIn) {
       return (
-        <a href="/preLogout?referrer=/ui/index.html?corruption-risk-dashboard">
+        <a href="/preLogout?referrer=/ui/crd/">
           <button className="btn btn-success">
             {t('general:logout')}
           </button>
@@ -266,14 +261,13 @@ class CorruptionRiskDashboard extends React.Component {
   }
 
   renderArchive(Component, slug) {
-    const { navigate, route } = this.props;
-    const [, searchQuery] = route;
+    const { type } = this.props.match.params;
+
     return (
       <Component
         {...this.wireProps(slug)}
-        searchQuery={searchQuery}
-        doSearch={(query) => navigate(slug, query)}
-        navigate={navigate}
+        searchQuery={type}
+        doSearch={(query) => this.props.history.push(`/ui/crd/${slug}/${query}`)}
         styling={this.props.styling}
       />
     );
@@ -282,16 +276,15 @@ class CorruptionRiskDashboard extends React.Component {
   renderSingle({
     Component, sgSlug, plSlug, additionalProps, selectDatelessFiltersFn,
   }) {
-    const { route, navigate, styling } = this.props;
+    const { styling } = this.props;
     const { indicatorTypesMapping } = this.state;
-    const [, id] = route;
+    const { type } = this.props.match.params;
     return (
       <Component
         {...this.wireProps(sgSlug, selectDatelessFiltersFn)}
-        id={id}
+        id={type}
         styling={styling}
-        doSearch={(query) => navigate(plSlug, query)}
-        navigate={navigate}
+        doSearch={(query) => this.props.history.push(`/ui/crd/${plSlug}/${query}/`)}
         indicatorTypesMapping={indicatorTypesMapping}
         {...additionalProps}
       />
@@ -305,8 +298,8 @@ class CorruptionRiskDashboard extends React.Component {
       disabledApiSecurity,
     } = this.state;
 
-    const { route, navigate, t } = this.props;
-    const [page] = route;
+    const { t } = this.props;
+    const { page } = this.props.match.params;
 
     return (
       <div className="container-fluid dashboard-corruption-risk">
@@ -321,7 +314,7 @@ class CorruptionRiskDashboard extends React.Component {
         )}
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
-            <a className="portal-logo-wrapper" href="#!/crd/">
+            <a className="portal-logo-wrapper" href="/ui/">
               <img src={makueniLogo} alt="Makueni" />
               <span>{t('crd:title')}</span>
             </a>
@@ -347,8 +340,6 @@ class CorruptionRiskDashboard extends React.Component {
           {...this.wireProps('sidebar')}
           page={page}
           indicatorTypesMapping={indicatorTypesMapping}
-          route={route}
-          navigate={navigate}
           styling={this.props.styling}
         />
         <div className="row">
@@ -363,11 +354,8 @@ class CorruptionRiskDashboard extends React.Component {
 
 CorruptionRiskDashboard.propTypes = {
   styling: PropTypes.object.isRequired,
-  onSwitch: PropTypes.func.isRequired,
-  route: PropTypes.array.isRequired,
-  navigate: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   i18n: PropTypes.object.isRequired,
 };
 
-export default CorruptionRiskDashboard;
+export default withRouter(CorruptionRiskDashboard);
