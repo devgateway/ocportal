@@ -289,7 +289,7 @@ class OCApp extends React.Component {
     const { t } = this.props;
     if (this.state.user.loggedIn) {
       return (
-        <a href="/preLogout?referrer=/ui/index.html">
+        <a href="/preLogout?referrer=/ui/">
           <i className="glyphicon glyphicon-user" />
           {' '}
           {t('general:logout')}
@@ -297,7 +297,7 @@ class OCApp extends React.Component {
       );
     }
     return (
-      <a href="/login?referrer=/ui/index.html">
+      <a href="/login?referrer=/ui/">
         <i className="glyphicon glyphicon-user" />
         {' '}
         {t('general:login')}
