@@ -7,7 +7,7 @@ class Archive extends CRDPage {
   render() {
     const {
       className, searchQuery, doSearch, topSearchPlaceholder, t, data, List, dataEP,
-      countEP, navigate,
+      countEP,
     } = this.props;
 
     const count = data.get('count');
@@ -40,7 +40,6 @@ class Archive extends CRDPage {
           dataEP={dataEP}
           countEP={countEP}
           searchQuery={searchQuery}
-          navigate={navigate}
         />
       </div>
     );

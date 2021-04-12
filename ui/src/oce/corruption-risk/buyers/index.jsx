@@ -145,7 +145,7 @@ class Buyers extends CRDPage {
 
   render() {
     const {
-      navigate, searchQuery, doSearch, t,
+      searchQuery, doSearch, t,
     } = this.props;
     return (
       <Archive
@@ -153,7 +153,6 @@ class Buyers extends CRDPage {
         requestNewData={this.requestNewData.bind(this)}
         searchQuery={searchQuery}
         doSearch={doSearch}
-        navigate={navigate}
         className="procuring-entities-page"
         topSearchPlaceholder={t('crd:buyers:top-search')}
         List={BuyerList}
