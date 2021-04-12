@@ -24,9 +24,9 @@
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.elgeyo</groupId>
+        <artifactId>elgeyo</artifactId>
+        <version>2.0.8-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -152,7 +152,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -177,7 +177,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 

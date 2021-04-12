@@ -6,7 +6,7 @@
     "en": "Allowing Fiscal Year under Planning"
   },
   "documentationUrl": {
-    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/fiscal_year"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/fiscal_year"
   },
   "compatibility": [
     "1.1"
