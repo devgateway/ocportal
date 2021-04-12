@@ -131,7 +131,7 @@ const Header = ({
     <div>
       <header className="branding row">
         <div className="col-md-6 col-sm-6 col-xs-12">
-          <a className="portal-logo-wrapper" href="#!/">
+          <a className="portal-logo-wrapper" href="/ui/">
             <img src={makueniLogo} alt="Makueni" />
             <span data-step="1" data-intro={t('header:title:intro')}>
               {t('header:title')}

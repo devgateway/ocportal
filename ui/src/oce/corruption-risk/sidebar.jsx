@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import cn from 'classnames';
 import { Map } from 'immutable';
 import PropTypes from 'prop-types';
+import { Link, withRouter } from 'react-router-dom';
 import TotalFlags from './total-flags';
 import { CORRUPTION_TYPES } from './constants';
 import overviewBlue from '../resources/icons/blue/overview.svg';
@@ -57,9 +58,11 @@ class Sidebar extends React.PureComponent {
 
   render() {
     const {
-      page, indicatorTypesMapping, filters, years, monthly, months, navigate, t,
-      data, requestNewData, route, isFeatureVisible,
+      indicatorTypesMapping, filters, years, monthly, months, t,
+      data, requestNewData, isFeatureVisible,
     } = this.props;
+
+    const { page, corruptionType } = this.props.match.params;
 
     return (
       <aside className="col-sm-3" id="crd-sidebar">
@@ -68,14 +71,14 @@ class Sidebar extends React.PureComponent {
             {isFeatureVisible('crd.sidebar.overview')
             && (
               <>
-                <a
-                  onClick={() => navigate()}
+                <Link
+                  to="/ui/crd"
                   className={cn('crd-description-link', { active: !page })}
                 >
                   <img className="blue" src={overviewBlue} alt="Overview icon" />
                   <img className="white" src={overviewWhite} alt="Overview icon" />
                   {t('tabs:overview:title')}
-                </a>
+                </Link>
 
                 <p className="crd-description">
                   {t('crd:description')}
@@ -89,77 +92,69 @@ class Sidebar extends React.PureComponent {
                 .filter((key) => indicatorTypesMapping[key].types.indexOf(slug) > -1)
                 .length;
               return count > 0;
-            }).map((slug) => {
-              let corruptionType;
-              if (page === 'type' || page === 'indicator') {
-                [, corruptionType] = route;
-              }
-
-              return (
-                <a
-                  onClick={() => navigate('type', slug)}
-                  className={cn({ active: slug === corruptionType })}
-                  key={slug}
-                >
-                  <img className="blue" src={corruptionTypeIcons.blue[slug]} alt="Tab icon" />
-                  <img className="white" src={corruptionTypeIcons.white[slug]} alt="Tab icon" />
-                  {t(`crd:corruptionType:${slug}:name`)}
-                  {/* <span className="count">({count})</span> */}
-                </a>
-              );
-            })}
+            }).map((slug) => (
+              <Link
+                to={`/ui/crd/type/${slug}`}
+                className={cn({ active: slug === corruptionType })}
+                key={slug}
+              >
+                <img className="blue" src={corruptionTypeIcons.blue[slug]} alt="Tab icon" />
+                <img className="white" src={corruptionTypeIcons.white[slug]} alt="Tab icon" />
+                {t(`crd:corruptionType:${slug}:name`)}
+                {/* <span className="count">({count})</span> */}
+              </Link>
+            ))}
 
             {isFeatureVisible('crd.sidebar.suppliers')
             && (
-              <a
-                onClick={() => navigate('suppliers')}
+              <Link
+                to="/ui/crd/suppliers/"
                 className={cn('archive-link', { active: page === 'suppliers' || page === 'supplier' })}
                 key="suppliers"
               >
                 <img className="blue" src={suppliersBlue} alt="Suppliers icon" />
                 <img className="white" src={suppliersWhite} alt="Suppliers icon" />
                 {t('crd:contracts:baseInfo:suppliers')}
-              </a>
+              </Link>
             )}
 
             {isFeatureVisible('crd.sidebar.procuringEntities')
             && (
-              <a
-                onClick={() => navigate('procuring-entities')}
+              <Link
+                to="/ui/crd/procuring-entities/"
                 className={cn('archive-link', { active: page === 'procuring-entities' || page === 'procuring-entity' })}
                 key="procuring-entities"
               >
                 <img className="blue" src={peBlue} alt="Procuring entities icon" />
                 <img className="white" src={peWhite} alt="Procuring entities icon" />
                 {t('crd:contracts:menu:procuringEntities')}
-              </a>
+              </Link>
             )}
 
             {isFeatureVisible('crd.sidebar.buyers')
             && (
-              <a
-                onClick={() => navigate('buyers')}
+              <Link
+                to="/ui/crd/buyers/"
                 className={cn('archive-link', { active: page === 'buyers' || page === 'buyer' })}
                 key="buyers"
               >
                 <img className="blue" src={buyersBlue} alt="Procuring entities icon" />
                 <img className="white" src={buyersWhite} alt="Procuring entities icon" />
                 {t('crd:contracts:menu:buyers')}
-              </a>
+              </Link>
             )}
 
             {isFeatureVisible('crd.sidebar.contracts')
             && (
-              <a
-                href="#!/crd/contracts"
-                onClick={() => navigate('contracts')}
+              <Link
+                to="/ui/crd/contracts/"
                 className={cn('archive-link', 'contracts-link', { active: page === 'contracts' || page === 'contract' })}
                 key="contracts"
               >
                 <img className="blue" src={contractsBlue} alt="Contracts icon" />
                 <img className="white" src={contractsWhite} alt="Contracts icon" />
                 {t('crd:general:contracts')}
-              </a>
+              </Link>
             )}
           </section>
           <TotalFlags
@@ -182,4 +177,4 @@ Sidebar.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default fmConnect(Sidebar);
+export default withRouter(fmConnect(Sidebar));

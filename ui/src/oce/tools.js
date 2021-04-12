@@ -1,5 +1,7 @@
 import URI from 'urijs';
 import _ from 'lodash';
+import React from 'react';
+import { ItemLabel, ItemValue } from './makueni/tenders/single/Item';
 
 /**
  * Returns a function that will invoke `funcName` property on its argument

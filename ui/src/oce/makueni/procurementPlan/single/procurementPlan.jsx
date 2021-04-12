@@ -9,6 +9,7 @@ import fmConnect from '../../../fm/fm';
 import { getProcurementPlan } from '../../../api/Api';
 import { setImmer } from '../../../tools';
 import feedback from '../../../resources/icons/feedback.svg';
+import GoBack from '../../../goback';
 
 const ProcurementPlan = (props) => {
   const { isFeatureVisible } = props;
@@ -47,17 +48,7 @@ const ProcurementPlan = (props) => {
 
   return (
     <div className="procurement-plan makueni-form">
-      <div className="row">
-        <a href="#" onClick={() => history.goBack()} className="back-link col-md-3">
-          <span className="back-icon">
-            <span className="previous">&#8249;</span>
-          </span>
-          <span className="back-text">
-            {t('general:goBack')}
-          </span>
-        </a>
-      </div>
-
+      <GoBack history={history} t={t} />
       <div className="row padding-top-10">
         <div className="col-md-12">
           <h1 className="page-title">{t('procurementPlan:title')}</h1>
