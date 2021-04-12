@@ -17,6 +17,10 @@
   mandatory: false
   enabled: true
   visible: false
+- name: supplierForm.nonPerforming
+  mandatory: false
+  enabled: true
+  visible: false
 - name: supplierForm.contacts.directors
   mandatory: true
   enabled: true

@@ -12,7 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MakueniPlanning extends Planning {
+public class OCPortalPlanning extends Planning {
 
     @JsonProperty("items")
     @ExcelExport

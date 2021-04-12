@@ -3,7 +3,7 @@ package org.devgateway.ocds.persistence.mongo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MakueniBudgetBreakdown {
+public class OCPortalBudgetBreakdown {
     private String id;
     private Period period;
 

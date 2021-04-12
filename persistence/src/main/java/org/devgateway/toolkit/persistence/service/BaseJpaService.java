@@ -52,8 +52,4 @@ public interface BaseJpaService<T extends GenericPersistable & Serializable> {
     void delete(T entity);
 
     T newInstance();
-
-    Collection<String> getRelatedCollectionCaches();
-
-    void flushRelatedCollectionCaches();
 }

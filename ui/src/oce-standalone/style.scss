@@ -44,8 +44,7 @@ header.branding {
     z-index: 1002;
     @media screen and (max-width: 992px) {
         position: relative;
-    }
-    @media screen and (max-width: 767px) {
+        display: block;
         height: 125px;
     }
     @media screen and (max-width: 414px) {
@@ -435,8 +434,12 @@ footer.main-footer {
         outline: none;
         padding: 26px 8px 24px 8px;
         transition: 0.3s;
-        font-size: 10px;
+        font-size: 12px;
         text-align: center;
+
+        @media screen and (max-width:992px) {
+            font-size: 10px;
+        }
 
         &:hover, &.active {
             background-color: $active-tab-color;
@@ -538,7 +541,7 @@ footer.main-footer {
     width: 15%;
 }
 .download-title{
-    font-size: 9px;
+    font-size: 12px;
     font-family: 'Montserrat', sans-serif;
     text-transform: uppercase;
     color: #ffffff;
@@ -643,8 +646,12 @@ a.portal-logo-wrapper {
     img {
         width: 55px;
         margin-left: 20px;
-        @media screen and (max-width: 767px) {
+        margin-top: 3px;
+        @media screen and (max-width: 992px) {
             margin-left: 10px;
+        }
+        @media screen and (max-width: 414px) {
+            margin-top: 5px;
         }
 
     }
@@ -654,8 +661,31 @@ a.portal-logo-wrapper {
         color: #fff;
         line-height: 20px;
         font-weight: lighter !important;
+
+        @media screen and (max-width: 992px) {
+           display: inline-block;
+           font-size: 21px;
+           margin-top: 10px;
+        }
+
+        @media screen and (max-width: 414px) {
+           display: inline;
+           font-size: 9px;
+        }
+
     }
 }
+
+.dashboard-corruption-risk{
+  a.portal-logo-wrapper {
+    span {
+      @media screen and (max-width: 414px) {
+         font-size: 15px;
+      }
+    }
+  }
+}
+
 
 .language-switcher {
     display: flex;

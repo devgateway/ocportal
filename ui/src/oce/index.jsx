@@ -115,7 +115,7 @@ class OCApp extends React.Component {
   }
 
   content() {
-    const { navigate, t } = this.props;
+    const { navigate, t, isFeatureVisible } = this.props;
     const {
       filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width,
     } = this.state;
@@ -123,7 +123,7 @@ class OCApp extends React.Component {
     return (
       <Tab
         filters={filters}
-        onUpdate={(filters) => this.setState({ filters })}
+        isFeatureVisible={isFeatureVisible}
         compareBy={compareBy}
         comparisonCriteriaValues={comparisonCriteriaValues}
         requestNewData={(path, data) => this.updateData([currentTab, ...path], data)}

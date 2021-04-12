@@ -11,6 +11,7 @@ import { fetchJson } from '../oce/tools';
 import Header from '../oce/layout/header';
 import Footer from '../oce/layout/footer';
 import Implementation from '../oce/tabs/implementation';
+import fmConnect from '../oce/fm/fm';
 
 class OCEDemoLocation extends LocationTab {
   getHeight() {
@@ -163,4 +164,4 @@ OCEMakueni.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default OCEMakueni;
+export default fmConnect(OCEMakueni);
