@@ -8,7 +8,6 @@ import {
   Switch,
   Route, Redirect,
 } from 'react-router-dom';
-import ViewSwitcher from '../oce/switcher';
 import './style.scss';
 import OCEMakueni from './oceMakueni';
 import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
@@ -101,20 +100,6 @@ const styling = {
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
 CorruptionRickDashboard.STYLING.charts.traceColors = ['#3371b1', '#2b9ff6', '#5db7fb', '#86cafd', '#bbe2ff'];
 
-class OceSwitcher extends ViewSwitcher {
-}
-
-OceSwitcher.views.tender = MakueniTenders;
-OceSwitcher.views.docs = Docs;
-OceSwitcher.views.smshelp = SMSHelp;
-OceSwitcher.views['publication-policy'] = PublicationPolicy;
-OceSwitcher.views['portal-videos'] = PortalVideos;
-OceSwitcher.views['contracts-list'] = ContractsList;
-OceSwitcher.views['procurement-plan'] = MakueniProcurementPlans;
-OceSwitcher.views.alerts = Alerts;
-OceSwitcher.views['m-and-e'] = OCEMakueni;
-OceSwitcher.views.crd = CorruptionRickDashboard;
-
 // this could be replaced with Suspense
 const OceSwitcherLoader = () => {
   const { t, i18n, ready } = useTranslation();
@@ -124,6 +109,27 @@ const OceSwitcherLoader = () => {
         <Switch>
           <Route exact path="/ui">
             <Redirect to="/ui/tender" />
+          </Route>
+          <Route path="/ui/smshelp">
+            <SMSHelp
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/ui/contracts-list">
+            <ContractsList
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/ui/portal-videos">
+            <PortalVideos
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
           </Route>
           <Route path="/ui/alerts/:preqId?">
             <Alerts

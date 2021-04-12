@@ -2,17 +2,20 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { Item } from './Item';
 import fmConnect from '../../../fm/fm';
 import FileDownloadLinks from './FileDownloadLinks';
 import { getProject } from '../../../api/Api';
 import { setImmer } from '../../../tools';
+import GoBack from '../../../goback';
 
 const Project = (props) => {
   const [data, updateData] = useImmer(undefined);
-  const { navigate, isFeatureVisible } = props;
+  const { isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
   const { t } = useTranslation();
+  const history = useHistory();
 
   useEffect(() => {
     getProject({ id: props.id }).then(setImmer(updateData));
@@ -32,14 +35,7 @@ const Project = (props) => {
   return (
     <div className="project makueni-form">
       <div className="row">
-        <a href="#!/tender" onClick={() => navigate()} className="back-link col-md-3">
-          <span className="back-icon">
-            <span className="previous">&#8249;</span>
-          </span>
-          <span className="back-text">
-            {t('general:goBack')}
-          </span>
-        </a>
+        <GoBack t={t} history={history} />
       </div>
 
       <div className="row padding-top-10">
@@ -100,7 +96,6 @@ const Project = (props) => {
 
 Project.propTypes = {
   id: PropTypes.number.isRequired,
-  navigate: PropTypes.func.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
 };

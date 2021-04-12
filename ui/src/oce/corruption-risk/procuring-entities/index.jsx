@@ -1,6 +1,7 @@
 import React from 'react';
 import { List } from 'immutable';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
@@ -8,13 +9,12 @@ import { wireProps } from '../tools';
 import { getTenderAndAwardCounts } from './api';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
-export const mkLink = (navigate) => (content, { id }) => (
-  <a
-    href={`#!/crd/procuring-entity/${id}`}
-    onClick={() => navigate('procuring-entity', id)}
+export const mkLink = (content, { id }) => (
+  <Link
+    to={`/ui/crd/procuring-entity/${id}`}
   >
     {content}
-  </a>
+  </Link>
 );
 
 class PEList extends PaginatedTable {
@@ -74,7 +74,7 @@ class PEList extends PaginatedTable {
   }
 
   render() {
-    const { data, navigate, t } = this.props;
+    const { data, t } = this.props;
 
     const count = data.get('count', 0);
 
@@ -106,13 +106,13 @@ class PEList extends PaginatedTable {
             text: t('crd:suppliers:ID'),
             dataField: 'id',
             fm: 'crd.procuringEntities.col.id',
-            formatter: mkLink(navigate),
+            formatter: mkLink,
           },
           {
             text: t('crd:suppliers:name'),
             dataField: 'name',
             fm: 'crd.procuringEntities.col.name',
-            formatter: mkLink(navigate),
+            formatter: mkLink,
           },
           {
             text: t('crd:procuringEntities:noOfTenders'),
@@ -148,16 +148,13 @@ class ProcuringEntities extends CRDPage {
   }
 
   render() {
-    const {
-      navigate, searchQuery, doSearch, t,
-    } = this.props;
+    const { searchQuery, doSearch, t } = this.props;
     return (
       <Archive
         {...wireProps(this)}
         requestNewData={this.requestNewData.bind(this)}
         searchQuery={searchQuery}
         doSearch={doSearch}
-        navigate={navigate}
         className="procuring-entities-page"
         topSearchPlaceholder={t('crd:procuringEntities:top-search')}
         List={PEList}

@@ -134,7 +134,7 @@ public class OcdsController extends GenericOCDSController {
             });
 
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
-            releasePackage.setPublicationPolicy(new URI(serverURL + "/ui/index.html#!/publication-policy"));
+            releasePackage.setPublicationPolicy(new URI(serverURL + "/ui/publication-policy"));
             releasePackage.setUri(new URI(serverURL + "/api/ocds/package/ocid/" + release.getOcid()));
             releasePackage.setVersion("1.1");
         } catch (URISyntaxException e) {

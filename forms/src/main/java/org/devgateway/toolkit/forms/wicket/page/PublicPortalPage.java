@@ -13,7 +13,7 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class PublicPortalPage extends WebPage {
-    public static final String URL = "/ui/index.html#!/m-and-e";
+    public static final String URL = "/ui/m-and-e";
 
     public PublicPortalPage() {
         throw new RedirectToUrlException(URL);

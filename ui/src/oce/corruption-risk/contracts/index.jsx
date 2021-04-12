@@ -141,7 +141,7 @@ CList.propTypes = {
 export default class Contracts extends CRDPage {
   render() {
     const {
-      searchQuery, doSearch, navigate, t,
+      searchQuery, doSearch, t,
     } = this.props;
     return (
       <BackendDateFilterable
@@ -150,7 +150,6 @@ export default class Contracts extends CRDPage {
         <Archive
           searchQuery={searchQuery}
           doSearch={doSearch}
-          navigate={navigate}
           className="contracts-page"
           topSearchPlaceholder={t('crd:contracts:top-search')}
           List={CList}
