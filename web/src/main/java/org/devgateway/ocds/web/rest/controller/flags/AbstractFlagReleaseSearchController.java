@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.AWARDS_STATUS;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.AWARDS_VALUE;
+import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.BUYER_NAME;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.FLAGS_COUNT;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.TENDER_PERIOD;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.TENDER_PROCURING_ENTITY_NAME;
@@ -41,8 +43,10 @@ public abstract class AbstractFlagReleaseSearchController extends AbstractFlagCo
                                 MongoConstants.FieldNames.TENDER_PERIOD_START_DATE))),
                 project("ocid", TENDER_PROCURING_ENTITY_NAME, TENDER_PERIOD, "flags",
                         TENDER_TITLE, "tag", TENDER_STATUS)
-                        .and(TENDER_VALUE).as(TENDER_VALUE).and(AWARDS_VALUE).as(AWARDS_VALUE)
-                        .and(MongoConstants.FieldNames.AWARDS_STATUS).as(MongoConstants.FieldNames.AWARDS_STATUS)
+                        .and(TENDER_VALUE).as(TENDER_VALUE)
+                        .and(AWARDS_VALUE).as(AWARDS_VALUE)
+                        .and(AWARDS_STATUS).as(AWARDS_STATUS)
+                        .and(BUYER_NAME).as(BUYER_NAME)
                         .andExclude(Fields.UNDERSCORE_ID),
                 sort(Sort.Direction.DESC, FLAGS_COUNT),
                 skip(filter.getSkip()),

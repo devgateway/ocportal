@@ -83,8 +83,8 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
     @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
     private ArrayList<String> rightBidderIds;
 
-    @ApiModelProperty(value = "This will filter after tender.locations._id")
-    private TreeSet<String> tenderLoc = new TreeSet<>();
+    @ApiModelProperty(value = "This will filter after tender.locations._id or contracts.locations._id")
+    private TreeSet<String> locationId = new TreeSet<>();
 
     @ApiModelProperty(value = "This will filter after tender.procurementMethod")
     private TreeSet<String> procurementMethod = new TreeSet<>();
@@ -179,12 +179,12 @@ public class DefaultFilterPagingRequest extends GenericPagingRequest {
         this.procuringEntityId = procuringEntityId;
     }
 
-    public TreeSet<String> getTenderLoc() {
-        return tenderLoc;
+    public TreeSet<String> getLocationId() {
+        return locationId;
     }
 
-    public void setTenderLoc(final TreeSet<String> tenderDeliveryLocationGazetteerIdentifier) {
-        this.tenderLoc = tenderDeliveryLocationGazetteerIdentifier;
+    public void setLocationId(TreeSet<String> locationId) {
+        this.locationId = locationId;
     }
 
     public BigDecimal getMinTenderValue() {

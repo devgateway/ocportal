@@ -73,6 +73,15 @@ const Table = ({ filters }) => {
           width: '20%',
         },
       }, {
+        text: t('crd:contracts:baseInfo:buyerName'),
+        dataField: 'buyerName',
+        fm: 'crd.supplier.procurements.col.buyerName',
+        className: 'buyer-name',
+        columnClassName: 'buyer-name',
+        headerStyle: {
+          width: '20%',
+        },
+      }, {
         text: t('crd:contracts:list:awardAmount'),
         dataField: 'awardAmount',
         fm: 'crd.supplier.procurements.col.awardAmount',

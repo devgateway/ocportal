@@ -22,4 +22,14 @@ public interface FiscalYearBudgetRepository extends BaseJpaRepository<FiscalYear
     FiscalYearBudget findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
+
+    @Query("select count(b) "
+            + "from FiscalYearBudget b "
+            + "where b.department = :department "
+            + "and b.fiscalYear = :fiscalYear "
+            + "and b.id <> :id")
+    Long countByDepartmentAndFiscalYear(
+            @Param("department") Department department,
+            @Param("fiscalYear") FiscalYear fiscalYear,
+            @Param("id") Long exceptId);
 }

@@ -15,16 +15,20 @@ const getAwardDate = (awards) => {
   return award.date;
 };
 
-const mapFlaggedReleases = (data) => data.map((datum) => ({
-  id: datum.id,
-  PEName: datum.tender.procuringEntity.name,
-  PEId: datum.tender.procuringEntity.id,
-  awardAmount: getAwardAmount(datum.awards),
-  awardDate: getAwardDate(datum.awards),
-  nrBidders: datum.tender.numberOfTenderers,
-  types: datum.flags.flaggedStats,
-  flags: Object.keys(datum.flags).filter((key) => datum.flags[key].value),
-}));
+const mapFlaggedReleases = (data) => data.map((datum) => {
+  const PE = (datum.tender.procuringEntity || {});
+  return ({
+    id: datum.id,
+    PEName: PE.name,
+    PEId: PE.id,
+    buyerName: datum.buyer.name,
+    awardAmount: getAwardAmount(datum.awards),
+    awardDate: getAwardDate(datum.awards),
+    nrBidders: datum.tender.numberOfTenderers,
+    types: datum.flags.flaggedStats,
+    flags: Object.keys(datum.flags).filter((key) => datum.flags[key].value),
+  });
+});
 
 // eslint-disable-next-line import/prefer-default-export
 export const getFlaggedReleases = (params) => Promise.all([

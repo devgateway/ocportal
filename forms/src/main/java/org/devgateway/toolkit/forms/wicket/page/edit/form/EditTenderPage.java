@@ -16,6 +16,7 @@ import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.apache.wicket.validation.validator.UrlValidator;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.validators.BigDecimalValidator;
 import org.devgateway.toolkit.forms.validators.EarlierThanDateFieldValidator;
 import org.devgateway.toolkit.forms.validators.UniquePropertyEntryValidator;
@@ -35,7 +36,6 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
-import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodRationaleService;
 import org.devgateway.toolkit.persistence.service.category.ProcurementMethodService;
@@ -84,9 +84,9 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
     @SpringBean
     private TargetGroupService targetGroupService;
 
-    private GenericSleepFormComponent procuringEntityEmail;
+    private GenericSleepFormComponent<String> procuringEntityEmail;
 
-    private GenericSleepFormComponent procuringEntityAddress;
+    private GenericSleepFormComponent<String> procuringEntityAddress;
 
     private Select2MultiChoiceBootstrapFormComponent<Ward> wards;
     private Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
@@ -185,6 +185,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
             }
             return null;
         });
+        procuringEntityEmail.add(new DgFmBehavior(issuedBy));
         procuringEntityEmail.setOutputMarkupId(true);
         editForm.add(procuringEntityEmail);
 
@@ -194,6 +195,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
             }
             return null;
         });
+        procuringEntityAddress.add(new DgFmBehavior(issuedBy));
         procuringEntityAddress.setOutputMarkupId(true);
         editForm.add(procuringEntityAddress);
     }
@@ -241,23 +243,5 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
         tender.setTenderProcess(sessionMetadataService.getSessionTenderProcess());
 
         return tender;
-    }
-
-    @Override
-    protected void beforeSaveEntity(final Tender tender) {
-        super.beforeSaveEntity(tender);
-
-        final TenderProcess tenderProcess = tender.getTenderProcess();
-        tenderProcess.addTender(tender);
-        tenderProcessService.save(tenderProcess);
-    }
-
-    @Override
-    protected void beforeDeleteEntity(final Tender tender) {
-        super.beforeDeleteEntity(tender);
-
-        final TenderProcess tenderProcess = tender.getTenderProcess();
-        tenderProcess.removeTender(tender);
-        tenderProcessService.save(tenderProcess);
     }
 }

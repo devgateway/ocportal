@@ -48,7 +48,7 @@ public class DgFmBehavior extends Behavior implements DgFmComponentSubject {
             attachFm(fmName);
         }
         component.setEnabled(isFmEnabled(component::isEnabled));
-        component.setVisibilityAllowed(isFmVisible(component::isVisible));
+        component.setVisibilityAllowed(isFmVisible(component::isVisibilityAllowed));
     }
 
     @Override
