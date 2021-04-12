@@ -171,7 +171,7 @@ const PurchaseReqView = (props) => {
     </div>
 
     <div className="row">
-      <GoBack t={t} history={history} url="/ui/tender" />
+      <GoBack t={t} history={history} />
 
       {isFeatureVisible('publicView.tender.receiveAlertsButton') && (
       <div className="col-md-offset-5 col-md-4">
