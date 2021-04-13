@@ -131,7 +131,7 @@ const Header = ({
     <div>
       <header className="branding row">
         <div className="col-md-6 col-sm-6 col-xs-12">
-          <a className="portal-logo-wrapper" href="/ui/">
+          <a className="portal-logo-wrapper" href="/portal/">
             <img src={makueniLogo} alt="Makueni" />
             <span data-step="1" data-intro={t('header:title:intro')}>
               {t('header:title')}
@@ -145,7 +145,7 @@ const Header = ({
               {
                 visibleTabs.map((tab) => (
                   <Link
-                    to={`/ui/${tab.name}`}
+                    to={`/portal/${tab.name}`}
                     key={tab.name}
                     className={cn('', { active: isActive(tab.name) })}
                   >

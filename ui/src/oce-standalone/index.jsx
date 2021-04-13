@@ -107,80 +107,80 @@ const OceSwitcherLoader = () => {
     ? (
       <Router>
         <Switch>
-          <Route exact path="/ui">
-            <Redirect to="/ui/tender" />
+          <Route exact path="/portal">
+            <Redirect to="/portal/tender" />
           </Route>
-          <Route path="/ui/smshelp">
+          <Route path="/portal/smshelp">
             <SMSHelp
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/contracts-list">
+          <Route path="/portal/contracts-list">
             <ContractsList
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/portal-videos">
+          <Route path="/portal/portal-videos">
             <PortalVideos
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/alerts/:preqId?">
+          <Route path="/portal/alerts/:preqId?">
             <Alerts
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/publication-policy">
+          <Route path="/portal/publication-policy">
             <PublicationPolicy
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/tender">
+          <Route path="/portal/tender">
             <MakueniTenders
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/procurement-plan">
+          <Route path="/portal/procurement-plan">
             <MakueniProcurementPlans
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/m-and-e/:selected?">
+          <Route path="/portal/m-and-e/:selected?">
             <OCEMakueni
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/docs">
+          <Route path="/portal/docs">
             <Docs
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/crd/:page?/:type?/:individualIndicator?">
+          <Route path="/portal/crd/:page?/:type?/:individualIndicator?">
             <CorruptionRickDashboard
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
-          <Route path="/ui/procurement-plan">
+          <Route path="/portal/procurement-plan">
             <MakueniProcurementPlans
               styling={styling}
               t={t}

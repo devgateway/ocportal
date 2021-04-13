@@ -72,7 +72,7 @@ class Sidebar extends React.PureComponent {
             && (
               <>
                 <Link
-                  to="/ui/crd"
+                  to="/portal/crd"
                   className={cn('crd-description-link', { active: !page })}
                 >
                   <img className="blue" src={overviewBlue} alt="Overview icon" />
@@ -94,7 +94,7 @@ class Sidebar extends React.PureComponent {
               return count > 0;
             }).map((slug) => (
               <Link
-                to={`/ui/crd/type/${slug}`}
+                to={`/portal/crd/type/${slug}`}
                 className={cn({ active: slug === corruptionType })}
                 key={slug}
               >
@@ -108,7 +108,7 @@ class Sidebar extends React.PureComponent {
             {isFeatureVisible('crd.sidebar.suppliers')
             && (
               <Link
-                to="/ui/crd/suppliers/"
+                to="/portal/crd/suppliers/"
                 className={cn('archive-link', { active: page === 'suppliers' || page === 'supplier' })}
                 key="suppliers"
               >
@@ -121,7 +121,7 @@ class Sidebar extends React.PureComponent {
             {isFeatureVisible('crd.sidebar.procuringEntities')
             && (
               <Link
-                to="/ui/crd/procuring-entities/"
+                to="/portal/crd/procuring-entities/"
                 className={cn('archive-link', { active: page === 'procuring-entities' || page === 'procuring-entity' })}
                 key="procuring-entities"
               >
@@ -134,7 +134,7 @@ class Sidebar extends React.PureComponent {
             {isFeatureVisible('crd.sidebar.buyers')
             && (
               <Link
-                to="/ui/crd/buyers/"
+                to="/portal/crd/buyers/"
                 className={cn('archive-link', { active: page === 'buyers' || page === 'buyer' })}
                 key="buyers"
               >
@@ -147,7 +147,7 @@ class Sidebar extends React.PureComponent {
             {isFeatureVisible('crd.sidebar.contracts')
             && (
               <Link
-                to="/ui/crd/contracts/"
+                to="/portal/crd/contracts/"
                 className={cn('archive-link', 'contracts-link', { active: page === 'contracts' || page === 'contract' })}
                 key="contracts"
               >

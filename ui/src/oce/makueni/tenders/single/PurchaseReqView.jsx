@@ -159,7 +159,7 @@ const PurchaseReqView = (props) => {
         {
           visibleTabs.map((tab) => (
             <Link
-              to={`/ui/tender/t/${id}/${tab.tab}`}
+              to={`/portal/tender/t/${id}/${tab.tab}`}
               key={tab.tab}
               className={cn('', { active: isActive(tab.tab) })}
             >
@@ -180,7 +180,7 @@ const PurchaseReqView = (props) => {
           type="submit"
           data-step="11"
           data-intro={t('purchaseReq:receiveAlerts:dataIntro')}
-          onClick={() => history.push(`/ui/alerts/${data.tenderProcesses._id}`)}
+          onClick={() => history.push(`/portal/alerts/${data.tenderProcesses._id}`)}
         >
           {t('purchaseReq:receiveAlerts:caption')}
         </button>

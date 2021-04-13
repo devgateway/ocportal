@@ -36,7 +36,7 @@ export const getAwardAmount = (contract) => {
 
 export const mkContractLink = (content, { ocid }) => (
   <Link
-    to={`/ui/crd/contract/${ocid}`}
+    to={`/portal/crd/contract/${ocid}`}
     className="oce-3-line-text"
   >
     {content}

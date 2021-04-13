@@ -119,7 +119,7 @@ class CorruptionRiskDashboard extends React.Component {
         <CorruptionTypePage
           {...this.wireProps(['corruptionType', type])}
           indicators={indicators}
-          onGotoIndicator={(individualIndicator) => this.props.history.push(`/ui/crd/indicator/${type}/${individualIndicator}`)}
+          onGotoIndicator={(individualIndicator) => this.props.history.push(`/portal/crd/indicator/${type}/${individualIndicator}`)}
           corruptionType={type}
           width={width}
           styling={styling}
@@ -229,7 +229,7 @@ class CorruptionRiskDashboard extends React.Component {
     const { t } = this.props;
     if (this.state.user.loggedIn) {
       return (
-        <a href="/preLogout?referrer=/ui/crd/">
+        <a href="/preLogout?referrer=/portal/crd/">
           <button className="btn btn-success">
             {t('general:logout')}
           </button>
@@ -267,7 +267,7 @@ class CorruptionRiskDashboard extends React.Component {
       <Component
         {...this.wireProps(slug)}
         searchQuery={type}
-        doSearch={(query) => this.props.history.push(`/ui/crd/${slug}/${query}`)}
+        doSearch={(query) => this.props.history.push(`/portal/crd/${slug}/${query}`)}
         styling={this.props.styling}
       />
     );
@@ -284,7 +284,7 @@ class CorruptionRiskDashboard extends React.Component {
         {...this.wireProps(sgSlug, selectDatelessFiltersFn)}
         id={type}
         styling={styling}
-        doSearch={(query) => this.props.history.push(`/ui/crd/${plSlug}/${query}/`)}
+        doSearch={(query) => this.props.history.push(`/portal/crd/${plSlug}/${query}/`)}
         indicatorTypesMapping={indicatorTypesMapping}
         {...additionalProps}
       />
@@ -314,7 +314,7 @@ class CorruptionRiskDashboard extends React.Component {
         )}
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
-            <a className="portal-logo-wrapper" href="/ui/">
+            <a className="portal-logo-wrapper" href="/portal/">
               <img src={makueniLogo} alt="Makueni" />
               <span>{t('crd:title')}</span>
             </a>
