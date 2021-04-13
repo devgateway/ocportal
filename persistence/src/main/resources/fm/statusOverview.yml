@@ -1,9 +1,9 @@
 # Status Overview
 - name: statusOverview.project
-  visible: no
+  visible: yes
   visibleDeps:
     - projectForm.projectTitle
 - name: statusOverview.tenderProcess
-  visible: yes
+  visible: no
   visibleDeps:
     - tenderForm.tenderTitle
