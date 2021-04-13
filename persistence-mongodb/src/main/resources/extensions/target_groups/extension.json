@@ -6,7 +6,7 @@
     "en": "Procurement Plan, Tender and Organization Target Groups"
   },
   "documentationUrl": {
-    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/target_groups"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master-makueni/persistence-mongodb/src/main/resources/extensions/target_groups"
   },
   "compatibility": [
     "1.1"

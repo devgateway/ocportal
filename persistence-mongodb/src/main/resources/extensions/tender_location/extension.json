@@ -6,7 +6,7 @@
     "en": "Location entity at tender level"
   },
   "documentationUrl": {
-    "en": "https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/tender_location"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master-makueni/persistence-mongodb/src/main/resources/extensions/tender_location"
   },
   "compatibility": [
     "1.1"
