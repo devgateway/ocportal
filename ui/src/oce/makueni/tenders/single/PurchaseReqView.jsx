@@ -29,8 +29,8 @@ const PurchaseReqView = (props) => {
   const { t } = useTranslation();
 
   const maybeTrimOcidPrefix = (id) => {
-    if (id.includes('ocds-muq5cl-')) {
-      return id.replace('ocds-muq5cl-', '');
+    if (id.includes('ocds-udd159-')) {
+      return id.replace('ocds-udd159-', '');
     }
     return id;
   };

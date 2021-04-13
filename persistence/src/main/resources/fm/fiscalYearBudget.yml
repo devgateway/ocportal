@@ -3,7 +3,7 @@
 - name: fiscalYearBudgetForm
   mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: fiscalYearBudgetForm.amountBudgeted
   mandatory: no
   enabled: yes
