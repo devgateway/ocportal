@@ -1,4 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
+import { defaultMemoize } from 'reselect';
 
 export const metadataSlice = createSlice({
     name: 'metadata',
@@ -10,9 +11,6 @@ export const metadataSlice = createSlice({
         loadSuccess: (state, action) => {
             state.ref = action.payload
             state.refById = getRefById(action.payload)
-            if (!state.refById["Tender"]) {
-                state.refById["Tender"] = {};
-            }
         }
     }
 });
@@ -43,3 +41,5 @@ const getRefById = ref => {
     }
     return refById
 }
+
+export const selectTendersById = defaultMemoize((metadata) => metadata.refById["Tender"] || {});
