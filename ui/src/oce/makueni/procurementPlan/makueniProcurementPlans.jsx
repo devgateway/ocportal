@@ -63,7 +63,7 @@ const MakueniProcurementPlans = (props) => {
 
   const ppLink = (ppId) => (
     <Link
-      to={`/ui/procurement-plan/pp/${ppId}`}
+      to={`/portal/procurement-plan/pp/${ppId}`}
       className="more-details-link"
     >
       {t('tables:procurementPlans:moreDetails')}
@@ -126,7 +126,7 @@ const MakueniProcurementPlans = (props) => {
 
         <div className="col-md-9 col-sm-9 col-main-content">
           <Switch>
-            <Route exact path="/ui/procurement-plan">
+            <Route exact path="/portal/procurement-plan">
               <div>
                 <h1>{t('tables:procurementPlans:title')}</h1>
                 <BootstrapTableWrapper
@@ -140,7 +140,7 @@ const MakueniProcurementPlans = (props) => {
                 />
               </div>
             </Route>
-            <Route path="/ui/procurement-plan/pp/:id">
+            <Route path="/portal/procurement-plan/pp/:id">
               <ProcurementPlan
                 styling={props.styling}
               />

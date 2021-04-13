@@ -10,7 +10,7 @@ import { getBuyersTenderAndAwardCounts } from './api';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 const mkLink = (content, { id }) => (
-  <Link to={`/ui/crd/buyer/${id}`}>{content}</Link>
+  <Link to={`/portal/crd/buyer/${id}`}>{content}</Link>
 );
 
 class BuyerList extends PaginatedTable {

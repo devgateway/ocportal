@@ -161,7 +161,7 @@ class OCApp extends React.Component {
     return (
       <Link
         key={index}
-        to={`/ui/m-and-e/${index}`}
+        to={`/portal/m-and-e/${index}`}
         className={cn('', { active: index === selected })}
       >
         {getName(t)}
@@ -289,7 +289,7 @@ class OCApp extends React.Component {
     const { t } = this.props;
     if (this.state.user.loggedIn) {
       return (
-        <a href="/preLogout?referrer=/ui/">
+        <a href="/preLogout?referrer=/portal/">
           <i className="glyphicon glyphicon-user" />
           {' '}
           {t('general:logout')}
@@ -297,7 +297,7 @@ class OCApp extends React.Component {
       );
     }
     return (
-      <a href="/login?referrer=/ui/">
+      <a href="/login?referrer=/portal/">
         <i className="glyphicon glyphicon-user" />
         {' '}
         {t('general:login')}

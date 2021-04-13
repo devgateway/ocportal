@@ -28,7 +28,7 @@ class ContractsList extends React.PureComponent {
     return (
       <tr key={id}>
         <td>
-          <Link to={`/ui/tender/t/${id}`} className="more-details-link">{entry.title}</Link>
+          <Link to={`/portal/tender/t/${id}`} className="more-details-link">{entry.title}</Link>
         </td>
       </tr>
     );

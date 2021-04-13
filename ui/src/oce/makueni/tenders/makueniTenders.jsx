@@ -65,7 +65,7 @@ const MakueniTenders = (props) => {
       {
         row.tender !== undefined
           ? (
-            <Link to={`/ui/tender/t/${row.tender.purchaseReqId}`} className="more-details-link">
+            <Link to={`/portal/tender/t/${row.tender.purchaseReqId}`} className="more-details-link">
               {tenderTitle && tenderTitle.toUpperCase()}
             </Link>
           ) : t('tables:tenderLink:noTender')
@@ -81,7 +81,7 @@ const MakueniTenders = (props) => {
       {
         project !== undefined
           ? (
-            <Link to={`/ui/tender/p/${project._id}`} className="more-details-link">
+            <Link to={`/portal/tender/p/${project._id}`} className="more-details-link">
               {project.projectTitle && project.projectTitle.toUpperCase()}
             </Link>
           ) : t('tables:projectLink:noProject')
@@ -169,7 +169,7 @@ const MakueniTenders = (props) => {
 
         <div className="col-md-9 col-sm-12 col-main-content">
           <Switch>
-            <Route exact path="/ui/tender">
+            <Route exact path="/portal/tender">
               <div>
                 <h1>{t('tables:tenders:title')}</h1>
                 <BootstrapTableWrapper
@@ -183,13 +183,13 @@ const MakueniTenders = (props) => {
                 />
               </div>
             </Route>
-            <Route path="/ui/tender/t/:id/:selected?">
+            <Route path="/portal/tender/t/:id/:selected?">
               <PurchaseReqView
                 translations={props.translations}
                 styling={props.styling}
               />
             </Route>
-            <Route path="/ui/tender/p/:id">
+            <Route path="/portal/tender/p/:id">
               <Project
                 translations={props.translations}
                 styling={props.styling}
@@ -207,7 +207,7 @@ const MakueniTenders = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => history.push('/ui/alerts')}
+              onClick={() => history.push('/portal/alerts')}
             >
               {t('general:subscribeToEmailAlerts')}
             </button>

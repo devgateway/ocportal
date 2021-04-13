@@ -121,7 +121,7 @@ public class VerifyEmailAddressPage extends BasePage {
                     // redirect to home page
                     if (timer == 1) {
                         setResponsePage(Homepage.class);
-                        throw new RedirectToUrlException("/ui/");
+                        throw new RedirectToUrlException("/portal/");
                     } else {
                         // decrease timer and update the label on the screen
                         timer--;

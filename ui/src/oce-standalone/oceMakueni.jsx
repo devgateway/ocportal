@@ -47,10 +47,10 @@ class OCEMakueni extends OCApp {
     let linkUrl;
     let text;
     if (this.state.user.loggedIn) {
-      linkUrl = '/preLogout?referrer=/ui/';
+      linkUrl = '/preLogout?referrer=/portal/';
       text = t('general:logout');
     } else {
-      linkUrl = '/login?referrer=/ui/';
+      linkUrl = '/login?referrer=/portal/';
       text = t('general:login');
     }
     return (

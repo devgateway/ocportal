@@ -13,7 +13,7 @@ import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
 export const mkLink = (content, { id }) => (
   <Link
-    to={`/ui/crd/supplier/${id}`}
+    to={`/portal/crd/supplier/${id}`}
   >
     {content}
   </Link>
