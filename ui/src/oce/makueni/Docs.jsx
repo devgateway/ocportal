@@ -23,9 +23,9 @@ class Docs extends CRDPage {
 
           <div className="col-md-6 col-md-offset-3">
             <div className="list-group">
-              <a href="#!/portal-videos" className="list-group-item">
+              <Link to="/portal/portal-videos" className="list-group-item">
                 <h3 className="list-group-item-heading">{t('docs:portalVideos:heading')}</h3>
-              </a>
+              </Link>
               <a href="/swagger-ui/" className="list-group-item">
                 <h3 className="list-group-item-heading">{t('docs:allEndpoints:heading')}</h3>
                 <p className="list-group-item-text">{t('docs:allEndpoints:text')}</p>
