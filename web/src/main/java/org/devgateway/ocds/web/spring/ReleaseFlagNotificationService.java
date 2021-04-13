@@ -6,7 +6,6 @@ import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.flags.ReleaseFlags;
 import org.devgateway.ocds.persistence.mongo.repository.main.FlaggedReleaseRepository;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.flags.ReleaseFlagHistory;
@@ -85,7 +84,7 @@ public class ReleaseFlagNotificationService {
     }
 
     @Transactional
-    private Set<String> getUsersValidatorsEmailsFromRelease(Long departmentId) {
+    public Set<String> getUsersValidatorsEmailsFromRelease(Long departmentId) {
         Optional<Department> department = departmentService.findById(departmentId);
         return department.map(value -> personService.findByDepartmentWithRoles(value,
                 SecurityConstants.Roles.ROLE_PROCUREMENT_USER, SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR
@@ -123,7 +122,7 @@ public class ReleaseFlagNotificationService {
     }
 
     @Transactional
-    private String getDepartmentNameFromId(Long departmentId) {
+    public String getDepartmentNameFromId(Long departmentId) {
         return departmentService.findById(departmentId).get().getLabel();
     }
 
@@ -177,7 +176,7 @@ public class ReleaseFlagNotificationService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject(count + " new Corruption Risk Flags for "
                     + getDepartmentNameFromId(department));
             msg.setText(createDepartmentContent(department), true);
@@ -199,7 +198,7 @@ public class ReleaseFlagNotificationService {
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(strings);
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject(count + " new Corruption Risk Flags");
             msg.setText(createAdminContent(), true);
 
