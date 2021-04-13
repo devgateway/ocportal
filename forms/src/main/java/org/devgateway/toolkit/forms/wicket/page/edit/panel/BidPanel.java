@@ -87,6 +87,11 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         supplier.getField().add(new SupplierUpdatingBehavior("change",
                 supplierID, targetGroup, prequalifiedItems));
 
+        ComponentUtil.addIntegerTextField(item, "supplierScore")
+                .getField().add(RangeValidator.minimum(0));
+        ComponentUtil.addIntegerTextField(item, "supplierRanking")
+                .getField().add(RangeValidator.minimum(0));
+
         ComponentUtil.addBigDecimalField(item, "quotedAmount")
                 .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new NonZeroBigDecimalValidator());
 
