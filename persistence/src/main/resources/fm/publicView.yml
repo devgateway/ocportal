@@ -12,13 +12,17 @@
   visible: yes
 - name: publicView.filter.subcounties
   visible: yes
+  visibleDeps:
+    - projectForm.subcounties
 - name: publicView.filter.wards
   visible: yes
+  visibleDeps:
+    - projectForm.wards
 - name: publicView.filter.amount
   visible: yes
 - name: publicView.filter.date
   visible: yes
 - name: publicView.smsHelpButton
-  visible: yes
+  visible: no
 - name: publicView.subscribeToAlertsButton
   visible: yes

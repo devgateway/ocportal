@@ -18,15 +18,15 @@
 - name: professionalOpinionForm.items.approvedDate
   mandatory: yes
   enabled: yes
-  visible: yes
+  visible: no
 - name: professionalOpinionForm.items.awardee
   mandatory: yes
   enabled: yes
   visible: yes
 - name: professionalOpinionForm.items.formDocs
-  mandatory: yes
+  mandatory: no
   enabled: yes
-  visible: yes
+  visible: no
 - name: professionalOpinionForm.items.newButton
   enabled: yes
   visible: yes

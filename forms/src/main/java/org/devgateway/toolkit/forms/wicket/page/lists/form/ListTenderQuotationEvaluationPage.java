@@ -49,4 +49,8 @@ public class ListTenderQuotationEvaluationPage extends ListAbstractTenderProcess
     public JpaFilterState<TenderQuotationEvaluation> newFilterState() {
         return new TenderQuotationEvaluationFilterState();
     }
+
+    protected void autoPageTitle() {
+
+    }
 }
