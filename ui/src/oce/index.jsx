@@ -158,11 +158,12 @@ class OCApp extends React.Component {
   navigationLink({ getName }, index) {
     const { t } = this.props;
     const { selected = '0' } = this.props.match.params;
+    const currentTab = parseInt(selected, 10);
     return (
       <Link
         key={index}
         to={`/portal/m-and-e/${index}`}
-        className={cn('', { active: index === selected })}
+        className={cn('', { active: index === currentTab })}
       >
         {getName(t)}
       </Link>
