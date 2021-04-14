@@ -115,7 +115,9 @@ class OCApp extends React.Component {
   }
 
   content() {
-    const { navigate, t } = this.props;
+    const {
+      navigate, t, isFeatureVisible, styling,
+    } = this.props;
     const {
       filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width,
     } = this.state;
@@ -123,7 +125,7 @@ class OCApp extends React.Component {
     return (
       <Tab
         filters={filters}
-        onUpdate={(filters) => this.setState({ filters })}
+        isFeatureVisible={isFeatureVisible}
         compareBy={compareBy}
         comparisonCriteriaValues={comparisonCriteriaValues}
         requestNewData={(path, data) => this.updateData([currentTab, ...path], data)}
@@ -137,7 +139,7 @@ class OCApp extends React.Component {
         width={width}
         navigate={navigate}
         t={t}
-        styling={this.constructor.STYLING}
+        styling={styling}
       />
     );
   }
@@ -390,13 +392,6 @@ OCApp.TRANSLATIONS = {
 };
 
 OCApp.Filters = Filters;
-
-OCApp.STYLING = {
-  charts: {
-    axisLabelColor: undefined,
-    traceColors: [],
-  },
-};
 
 OCApp.COMPARISON_TYPES = [{
   value: '',

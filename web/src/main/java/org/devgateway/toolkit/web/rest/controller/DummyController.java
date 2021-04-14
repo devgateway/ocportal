@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.devgateway.toolkit.web.rest.controller;
 
+import org.devgateway.toolkit.persistence.dao.FileContent;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.Item;
@@ -48,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,6 +64,10 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @RestController
 public class DummyController {
+
+    @Resource
+    private DummyController self;
+
     @Autowired
     private ProcurementPlanService procurementPlanService;
 
@@ -158,6 +165,52 @@ public class DummyController {
         }
 
         return "Success!";
+    }
+
+    @RequestMapping("/attachFiles")
+    public String attachFiles(@RequestParam(value = "generate", defaultValue = "no") final String generate) {
+        if (!generate.equals("ok")) {
+            return "Doing nothing";
+        }
+
+        tenderQuotationEvaluationService.findAll().forEach(tqe -> self.attachFile(tqe.getId()));
+
+        return "Attached files";
+    }
+
+    @Transactional
+    public void attachFile(Long id) {
+        TenderQuotationEvaluation tqe = tenderQuotationEvaluationService.findById(id).get();
+
+        int size = 100 * 1024 * 1024;
+
+        FileMetadata fm = new FileMetadata();
+        fm.setSize(size);
+        fm.setName("dummy.pdf");
+        fm.setContentType("application/pdf");
+        FileContent fc = new FileContent();
+        fc.setBytes(new byte[size]);
+        fm.setContent(fc);
+
+        tqe.getFormDocs().add(fm);
+    }
+
+    @RequestMapping("/removeAttachedFiles")
+    public String removeAttachedFiles(@RequestParam(value = "generate", defaultValue = "no") final String generate) {
+        if (!generate.equals("ok")) {
+            return "Doing nothing";
+        }
+
+        tenderQuotationEvaluationService.findAll().forEach(tqe -> self.removeAttachedFiles(tqe.getId()));
+
+        return "Removed attached files";
+    }
+
+    @Transactional
+    public void removeAttachedFiles(Long id) {
+        TenderQuotationEvaluation tqe = tenderQuotationEvaluationService.findById(id).get();
+
+        tqe.getFormDocs().removeIf(fm -> fm.getName().equals("dummy.pdf"));
     }
 
     @RequestMapping("/generateTest")

@@ -700,3 +700,7 @@ a.more-details-link:hover::before {
   max-width: 100%;
   height: auto;
 }
+
+.table-fixed {
+    table-layout: fixed;
+}

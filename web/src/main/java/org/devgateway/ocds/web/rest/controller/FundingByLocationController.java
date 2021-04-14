@@ -22,6 +22,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.Fields;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -111,15 +112,15 @@ public class FundingByLocationController extends GenericOCDSController {
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
         addYearlyMonthlyProjection(filter, project, ref(getTenderDateField()));
 
+        Criteria filterCriteria = getContractMapFilterCriteria(filter);
+
         Aggregation agg = newAggregation(
                 match(where("tender").exists(true)
                         .and(MongoConstants.FieldNames.PLANNING_BUDGET_PROJECT_ID).exists(true)
                         .and(getTenderDateField()).exists(true)
-                        .andOperator(getYearDefaultFilterCriteria(
-                                filter,
-                                getTenderDateField()
-                        ))), unwind(ref(MongoConstants.FieldNames.TENDER_LOCATIONS)),
-                match(getYearDefaultFilterCriteria(filter, getTenderDateField())),
+                        .andOperator(filterCriteria)),
+                unwind(ref(MongoConstants.FieldNames.TENDER_LOCATIONS)),
+                match(filterCriteria),
                 new CustomProjectionOperation(project),
                 facet(
                         project().and(
@@ -198,5 +199,29 @@ public class FundingByLocationController extends GenericOCDSController {
     }
 
 
+    @ApiOperation(value = "Contracted amount & number of contracts per location as specified in contract.")
+    @RequestMapping(value = "/api/fundingByContractLocation", method = {RequestMethod.POST,
+            RequestMethod.GET}, produces = "application/json")
+    public List<Document> fundingByContractLocation(
+            @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
+        Criteria filterCriteria = getContractMapFilterCriteria(filter);
+
+        Aggregation agg = newAggregation(
+                match(where(getTenderDateField()).exists(true)
+                        .andOperator(filterCriteria)),
+                unwind(ref(MongoConstants.FieldNames.CONTRACTS)),
+                unwind(ref(MongoConstants.FieldNames.CONTRACTS_LOCATIONS)),
+                match(filterCriteria),
+                project()
+                        .and(MongoConstants.FieldNames.CONTRACTS_VALUE_AMOUNT).as("amount")
+                        .and(MongoConstants.FieldNames.CONTRACTS_LOCATIONS).as("location"),
+                match(where("location.geometry.coordinates.0").exists(true)),
+                group("location")
+                        .sum("amount").as("contractsAmount")
+                        .count().as("contractsCount")
+        );
+
+        return releaseAgg(agg);
+    }
 }

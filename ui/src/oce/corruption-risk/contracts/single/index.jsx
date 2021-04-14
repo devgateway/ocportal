@@ -95,23 +95,23 @@ class Info extends Visualization {
             {title && <dd>{title}</dd>}
           </dl>
           )}
-        <table className="table table-bordered join-bottom info-table">
+        <table className="table table-bordered table-fixed join-bottom info-table">
           <tbody>
             <tr>
-              <td>
-                {PE && (
-                <dl>
-                  <dt><span className="contract-label">{t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
-                  <dd>
-                    <a
-                      href={`#!/crd/procuring-entity/${PE.get('id')}`}
-                    >
-                      {PE.get('name')}
-                    </a>
-                  </dd>
-                </dl>
-                )}
-              </td>
+              {PE && (
+                <td>
+                  <dl>
+                    <dt><span className="contract-label">{t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
+                    <dd>
+                      <a
+                        href={`#!/crd/procuring-entity/${PE.get('id')}`}
+                      >
+                        {PE.get('name')}
+                      </a>
+                    </dd>
+                  </dl>
+                </td>
+              )}
               <td>
                 <dl>
                   <dt><span className="contract-label">{t('crd:contracts:baseInfo:buyer')}</span></dt>
@@ -140,7 +140,7 @@ class Info extends Visualization {
             </tr>
           </tbody>
         </table>
-        <table className="table table-bordered">
+        <table className="table table-bordered table-fixed">
           <tbody>
             <tr>
               <td>
