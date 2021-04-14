@@ -8,6 +8,7 @@ import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.SupplierResponse;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.validator.validators.RequireAwardValueForAccepted;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -27,6 +28,7 @@ import java.util.stream.Stream;
 @Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@RequireAwardValueForAccepted
 public class AwardAcceptanceItem extends AbstractDocsChildExpAuditEntity<AwardAcceptance>
         implements ListViewItem {
 
