@@ -8,7 +8,7 @@
 - name: supplierForm.agpoRegistrationId
   mandatory: false
   enabled: true
-  visible: true
+  visible: false
 - name: supplierForm.code
   mandatory: true
   enabled: true
@@ -16,7 +16,7 @@
 - name: supplierForm.contacts
   mandatory: false
   enabled: true
-  visible: true
+  visible: false
 - name: supplierForm.nonPerforming
   mandatory: false
   enabled: true
@@ -53,7 +53,7 @@
 - name: supplierForm.subcounties
   mandatory: false
   enabled: true
-  visible: true
+  visible: false
 - name: supplierForm.targetGroups
   mandatory: false
   enabled: true
@@ -61,7 +61,7 @@
 - name: supplierForm.wards
   mandatory: false
   enabled: true
-  visible: true
+  visible: false
 - name: supplierForm.save
   enabled: true
   visible: true
