@@ -3,6 +3,7 @@ import { Trans } from 'react-i18next';
 
 import 'intro.js/introjs.css';
 import './header.scss';
+import { Link } from 'react-router-dom';
 
 export default class Footer extends React.Component {
   render() {
@@ -14,9 +15,9 @@ export default class Footer extends React.Component {
           <Trans i18nKey="footer:license" />
         </a>
       &nbsp;-&nbsp;
-        <a href="#!/publication-policy">
+        <Link to="/portal/publication-policy">
           <Trans i18nKey="footer:publicationPolicy" />
-        </a>
+        </Link>
       </footer>
     );
   }
