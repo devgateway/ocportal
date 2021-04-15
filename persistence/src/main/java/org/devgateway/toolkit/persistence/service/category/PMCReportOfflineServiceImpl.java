@@ -271,7 +271,7 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
     @Override
     public List<PMCReportOffline> getPMCReports(Long userId) {
         Person user = loadPersonById(userId, personService);
-        return pmcReportService.getPMCReportsCreatedBy(user.getUsername()).stream()
+        return pmcReportService.getPMCReportsCreatedBy(user.getUsername(), user.getDepartments()).stream()
                 .map(this::convertToOffline)
                 .collect(Collectors.toList());
     }
