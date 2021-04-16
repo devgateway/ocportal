@@ -6,7 +6,6 @@ package org.devgateway.toolkit.forms.wicket.page.edit.category;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -74,7 +73,8 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
         final TextAreaFieldBootstrapFormComponent<String> address = ComponentUtil.addTextAreaField(editForm, "address");
         address.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT);
 
-        ComponentUtil.addSelect2MultiChoiceField(editForm, "targetGroups", targetGroupService);
+        ComponentUtil.addSelect2MultiChoiceField(editForm, "targetGroups", targetGroupService)
+                .required();
 
         Select2MultiChoiceBootstrapFormComponent<Ward> wards;
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
