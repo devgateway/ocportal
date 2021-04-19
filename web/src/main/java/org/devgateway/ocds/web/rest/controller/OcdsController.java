@@ -58,7 +58,7 @@ public class OcdsController extends GenericOCDSController {
 
     public static final List<String> EXTENSIONS = Collections.unmodifiableList(
             Arrays.asList(
-                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-makueni/persistence-mongodb"
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/prequalified_supplier/extension.json",
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/first_time_winners/extension.json",
