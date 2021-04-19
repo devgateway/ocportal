@@ -79,8 +79,6 @@ const styling = {
   },
 };
 
-OCEMakueni.STYLING = styling;
-
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
 CorruptionRickDashboard.STYLING.charts.traceColors = ['#3371b1', '#2b9ff6', '#5db7fb', '#86cafd', '#bbe2ff'];
 

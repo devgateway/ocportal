@@ -9,7 +9,7 @@ import {
     performSubmitPMCReport,
     selectPMCReports
 } from "./pmcReportsSlice";
-import {selectMetadata} from "./metadataSlice";
+import { selectMetadata, selectTendersById } from "./metadataSlice";
 import {DP_DATE_FORMAT, PMCReportStatus} from "../../app/constants";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -31,7 +31,7 @@ export function EditReport(props) {
     const fiscalYears = metadata.ref["FiscalYear"];
     const departments = metadata.ref["Department"];
     const tenders = metadata.ref["Tender"];
-    const tendersById = metadata.refById["Tender"];
+    const tendersById = selectTendersById(metadata);
     const wards = metadata.ref["Ward"];
     const pmcStaff = metadata.ref["PMCStaff"];
     const pmcStatus = metadata.ref["PMCStatus"];

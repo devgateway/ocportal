@@ -25,4 +25,6 @@ public interface PrequalifiedSupplierService extends BaseJpaService<Prequalified
     }
 
     List<String> findItemsForBid(Bid bid, Tender tender);
+
+    Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange);
 }

@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.service.prequalification;
 
-import com.google.common.collect.ImmutableSet;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -35,9 +33,6 @@ import java.util.stream.Collectors;
 public class PrequalifiedSupplierServiceImpl
         extends BaseJpaServiceImpl<PrequalifiedSupplier>
         implements PrequalifiedSupplierService {
-
-    private static final Collection<String> RELATED_COLLECTION_CACHES = ImmutableSet.of(
-            PrequalificationYearRange.class.getName() + ".prequalifiedSuppliers");
 
     @Autowired
     private PrequalifiedSupplierRepository repository;
@@ -79,11 +74,6 @@ public class PrequalifiedSupplierServiceImpl
     public <S extends PrequalifiedSupplier> S saveAndFlush(S entity) {
         createSupplierContacts(entity);
         return super.saveAndFlush(entity);
-    }
-
-    @Override
-    public Collection<String> getRelatedCollectionCaches() {
-        return RELATED_COLLECTION_CACHES;
     }
 
     private <S extends PrequalifiedSupplier> void createSupplierContacts(S entity) {
@@ -148,7 +138,8 @@ public class PrequalifiedSupplierServiceImpl
         return find(supplier, yearRange);
     }
 
-    private Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
+    @Override
+    public Optional<PrequalifiedSupplier> find(Supplier supplier, PrequalificationYearRange yearRange) {
         return repository
                 .findOne((Specification<PrequalifiedSupplier>) (root, cq, cb) -> cb.and(
                         cb.equal(root.get(PrequalifiedSupplier_.supplier), supplier),

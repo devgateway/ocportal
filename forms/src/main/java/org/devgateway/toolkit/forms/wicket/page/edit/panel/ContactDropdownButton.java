@@ -14,9 +14,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
-import org.devgateway.toolkit.forms.wicket.behaviors.RefreshOnEventBehavior;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
-import org.devgateway.toolkit.forms.wicket.events.SupplierChanged;
 import org.devgateway.toolkit.persistence.dao.prequalification.AbstractContact;
 
 import java.io.Serializable;
@@ -66,8 +64,6 @@ public abstract class ContactDropdownButton<T extends AbstractContact<?>> extend
         add(button);
 
         setOutputMarkupPlaceholderTag(true);
-
-        add(new RefreshOnEventBehavior<>(SupplierChanged.class));
     }
 
     @Override

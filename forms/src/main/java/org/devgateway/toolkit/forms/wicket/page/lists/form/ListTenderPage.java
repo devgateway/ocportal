@@ -21,7 +21,7 @@ import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.ReleasePackage;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
-import org.devgateway.ocds.web.convert.MakueniToOCDSConversionServiceImpl;
+import org.devgateway.ocds.web.convert.OCPortalToOCDSConversionServiceImpl;
 import org.devgateway.ocds.web.rest.controller.OcdsController;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.page.edit.form.EditTenderPage;
@@ -82,7 +82,7 @@ public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tende
                         public void write(final OutputStream output) throws IOException {
                             Optional<TenderProcess> byId = tenderProcessService.findById(model.getObject());
                             Release release = releaseRepository.findByOcid(
-                                    MakueniToOCDSConversionServiceImpl.getOcid(byId.get()));
+                                    OCPortalToOCDSConversionServiceImpl.getOcid(byId.get()));
                             if (release == null) {
                                 return;
                             }

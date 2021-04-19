@@ -4,13 +4,16 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.category;
 
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.WebConstants;
 import org.devgateway.toolkit.forms.wicket.behaviors.CountyAjaxFormComponentUpdatingBehavior;
 import org.devgateway.toolkit.forms.wicket.components.form.Select2MultiChoiceBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.form.TextAreaFieldBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.TextFieldBootstrapFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.lists.category.ListSupplierPage;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
@@ -49,6 +52,15 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
     }
 
     @Override
+    protected void addCreateLabel() {
+        label = new TextFieldBootstrapFormComponent<>("label", LambdaModel.of(editForm.getModel(),
+                Supplier::getRealLabel, Supplier::setRealLabel));
+        label.required();
+        label.getField().add(VALIDATOR);
+        editForm.add(label);
+    }
+
+    @Override
     protected void onInitialize() {
         editForm.attachFm("supplierForm");
 
@@ -66,6 +78,8 @@ public class EditSupplierPage extends AbstractCategoryEditPage<Supplier> {
 
         Select2MultiChoiceBootstrapFormComponent<Ward> wards;
         wards = ComponentUtil.addSelect2MultiChoiceField(editForm, "wards", wardService);
+
+        ComponentUtil.addYesNoToggle(editForm, "nonPerforming");
 
         Select2MultiChoiceBootstrapFormComponent<Subcounty> subcounties;
         subcounties = ComponentUtil.addSelect2MultiChoiceField(editForm, "subcounties", subcountyService);

@@ -12,10 +12,12 @@ import org.devgateway.jocds.OcdsValidatorConstants;
 import org.devgateway.jocds.OcdsValidatorNodeRequest;
 import org.devgateway.jocds.OcdsValidatorService;
 import org.devgateway.ocds.persistence.mongo.Address;
+import org.devgateway.ocds.persistence.mongo.Amendment;
 import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Bids;
 import org.devgateway.ocds.persistence.mongo.Budget;
+import org.devgateway.ocds.persistence.mongo.Change;
 import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.ContactPoint;
 import org.devgateway.ocds.persistence.mongo.Contract;
@@ -24,16 +26,16 @@ import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Implementation;
 import org.devgateway.ocds.persistence.mongo.Item;
-import org.devgateway.ocds.persistence.mongo.MakueniBudget;
-import org.devgateway.ocds.persistence.mongo.MakueniBudgetBreakdown;
-import org.devgateway.ocds.persistence.mongo.MakueniContract;
-import org.devgateway.ocds.persistence.mongo.MakueniItem;
-import org.devgateway.ocds.persistence.mongo.MakueniLocation;
-import org.devgateway.ocds.persistence.mongo.MakueniLocationType;
-import org.devgateway.ocds.persistence.mongo.MakueniMilestone;
-import org.devgateway.ocds.persistence.mongo.MakueniOrganization;
-import org.devgateway.ocds.persistence.mongo.MakueniPlanning;
-import org.devgateway.ocds.persistence.mongo.MakueniTender;
+import org.devgateway.ocds.persistence.mongo.OCPortalBudget;
+import org.devgateway.ocds.persistence.mongo.OCPortalBudgetBreakdown;
+import org.devgateway.ocds.persistence.mongo.OCPortalContract;
+import org.devgateway.ocds.persistence.mongo.OCPortalItem;
+import org.devgateway.ocds.persistence.mongo.OCPortalLocation;
+import org.devgateway.ocds.persistence.mongo.OCPortalLocationType;
+import org.devgateway.ocds.persistence.mongo.OCPortalMilestone;
+import org.devgateway.ocds.persistence.mongo.OCPortalOrganization;
+import org.devgateway.ocds.persistence.mongo.OCPortalPlanning;
+import org.devgateway.ocds.persistence.mongo.OCPortalTender;
 import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.OrganizationReference;
@@ -44,7 +46,7 @@ import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.Transaction;
 import org.devgateway.ocds.persistence.mongo.Unit;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
-import org.devgateway.ocds.persistence.mongo.repository.main.MakueniLocationRepository;
+import org.devgateway.ocds.persistence.mongo.repository.main.OCPortalLocationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.OrganizationRepository;
 import org.devgateway.ocds.persistence.mongo.repository.main.ReleaseRepository;
 import org.devgateway.ocds.web.rest.controller.OcdsController;
@@ -98,6 +100,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
@@ -122,16 +125,18 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MON
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.OCDSSchemes.X_KE_INTERNAL_SCHEMA;
 
 @Service
-@Transactional(readOnly = true)
-public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversionService {
+public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConversionService {
 
     @Value("${serverURL}")
     private String serverURL;
 
+    @Resource
+    private OCPortalToOCDSConversionServiceImpl self;
+
     @Autowired
     private DgFmService fmService;
 
-    private static final Logger logger = LoggerFactory.getLogger(MakueniToOCDSConversionServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(OCPortalToOCDSConversionServiceImpl.class);
 
     @Autowired
     private ReleaseRepository releaseRepository;
@@ -150,7 +155,6 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private static final String OCID_PREFIX = "ocds-muq5cl-";
 
 
-
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
     @Autowired
@@ -160,7 +164,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     private TenderProcessService tenderProcessService;
 
     @Autowired
-    private MakueniLocationRepository makueniLocationRepository;
+    private OCPortalLocationRepository ocPortalLocationRepository;
 
     @Autowired
     private AdminSettingsRepository adminSettingsRepository;
@@ -175,7 +179,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         if (txt.isEmpty()) {
             return;
         }
-        
+
         logger.info("OCDS Validation Failures After Import: " + txt);
 
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
@@ -194,28 +198,28 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public MakueniLocation lpcToMakueniLocation(LocationPointCategory lpc) {
-        MakueniLocation makueniLocation = makueniLocationRepository.findByDescription(lpc.getLabel());
-        if (makueniLocation != null) {
-            return makueniLocation;
+    public OCPortalLocation lpcToOCPortalLocation(LocationPointCategory lpc) {
+        OCPortalLocation location = ocPortalLocationRepository.findByDescription(lpc.getLabel());
+        if (location != null) {
+            return location;
         }
-        MakueniLocation ml = new MakueniLocation();
+        OCPortalLocation ml = new OCPortalLocation();
         ml.setDescription(lpc.getLabel());
         if (lpc instanceof Ward) {
-            ml.setType(MakueniLocationType.ward);
+            ml.setType(OCPortalLocationType.ward);
         } else if (lpc instanceof Subcounty) {
-            ml.setType(MakueniLocationType.subcounty);
+            ml.setType(OCPortalLocationType.subcounty);
         } else {
-            throw new RuntimeException("Unkown Makueni location type");
+            throw new RuntimeException("Unkown OC Portal Location Type");
         }
         ml.setGeometry(new GeoJsonPoint(lpc.getLocationPoint().getX(), lpc.getLocationPoint().getY()));
-        makueniLocation = makueniLocationRepository.save(ml);
-        return makueniLocation;
+        location = ocPortalLocationRepository.save(ml);
+        return location;
     }
 
 
-    public MakueniTender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
-        MakueniTender ocdsTender = new MakueniTender();
+    public OCPortalTender createTender(org.devgateway.toolkit.persistence.dao.form.Tender tender) {
+        OCPortalTender ocdsTender = new OCPortalTender();
         safeSet(ocdsTender::setId, tender::getId, this::longIdToString);
         safeSet(ocdsTender::setTitle, tender::getTitle);
         safeSet(ocdsTender::setTenderPeriod, () -> tender, this::createTenderPeriod);
@@ -233,16 +237,16 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::convertNumberOfTenderers
         );
 
-        safeSetEach(ocdsTender.getLocations()::add, tenderProjectWards(tender), this::lpcToMakueniLocation);
-        safeSetEach(ocdsTender.getLocations()::add, tenderProjectSubcounties(tender), this::lpcToMakueniLocation);
+        safeSetEach(ocdsTender.getLocations()::add, tenderProjectWards(tender), this::lpcToOCPortalLocation);
+        safeSetEach(ocdsTender.getLocations()::add, tenderProjectSubcounties(tender), this::lpcToOCPortalLocation);
 
         //documents
         safeSet(ocdsTender.getDocuments()::add, tender::getFormDoc, this::storeAsDocumentTenderNotice);
         safeSet(ocdsTender.getDocuments()::add, tender::getTenderLink, this::createDocumentFromUrlTenderNotice);
         safeSetEach(ocdsTender.getDocuments()::add,
                 () -> tender.getTenderProcess().getPurchaseRequisition().stream().filter(Statusable::isExportable)
-                        .flatMap(pr->pr.getPurchRequisitions().stream())
-                        .flatMap(prr->prr.getFormDocs().stream()).collect(Collectors.toList()),
+                        .flatMap(pr -> pr.getPurchRequisitions().stream())
+                        .flatMap(prr -> prr.getFormDocs().stream()).collect(Collectors.toList()),
                 this::storeAsDocumentApprovedPurchaseRequisition
         );
 
@@ -261,7 +265,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Supplier<Collection<Subcounty>> tenderProjectSubcounties(org.devgateway.toolkit.persistence.dao.form.Tender
-                                                                          tender) {
+                                                                            tender) {
         return tender == null || tender.getProject() == null ? null : tender.getProject()::getSubcounties;
     }
 
@@ -314,13 +318,13 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                         t.setPayee(addOrUpdateOrganizationSetByRole(orgs, t.getPayee()));
                         t.setPayer(addOrUpdateOrganizationSetByRole(orgs, t.getPayer()));
                     }));
-            release.getContracts().forEach(c -> ((MakueniContract) c).setContractor(
-                    addOrUpdateOrganizationSetByRole(orgs, ((MakueniContract) c).getContractor())
+            release.getContracts().forEach(c -> ((OCPortalContract) c).setContractor(
+                    addOrUpdateOrganizationSetByRole(orgs, ((OCPortalContract) c).getContractor())
             ));
         }
 
         if (!ObjectUtils.isEmpty(release.getPlanning().getBudget())) {
-            Set<MakueniBudgetBreakdown> budgetBreakdown = ((MakueniBudget) release.getPlanning().getBudget())
+            Set<OCPortalBudgetBreakdown> budgetBreakdown = ((OCPortalBudget) release.getPlanning().getBudget())
                     .getBudgetBreakdown();
             if (budgetBreakdown != null) {
                 budgetBreakdown.forEach(bb -> bb.setSourceParty(addOrUpdateOrganizationSetByRole(orgs,
@@ -344,8 +348,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         org.devgateway.toolkit.persistence.dao.form.Contract contract =
                 Optional.ofNullable(tender.getTenderProcess().getSingleContract())
-                .filter(Statusable::isExportable)
-               .orElse(null);
+                        .filter(Statusable::isExportable)
+                        .orElse(null);
         if (!ObjectUtils.isEmpty(contract)) {
             return Tender.Status.complete;
         }
@@ -435,7 +439,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 Category::getLabel
         );
 
-        safeSet(unit::setId, tenderItem::getNonNullPlanItem,  PlanItem::getUnitOfIssue,
+        safeSet(unit::setId, tenderItem::getNonNullPlanItem, PlanItem::getUnitOfIssue,
                 Category::getCode
         );
         safeSet(unit::setValue, tenderItem::getUnitPrice, this::convertAmount);
@@ -485,7 +489,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessMakueniEntity report) {
-        MakueniMilestone milestone = new MakueniMilestone();
+        OCPortalMilestone milestone = new OCPortalMilestone();
         safeSet(milestone::setId, report::getId, this::longIdToString);
         safeSet(milestone::setTitle, () -> "Payment Authorization " + report.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.FINANCING::toString);
@@ -513,7 +517,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Milestone createMEMilestone(MEReport report) {
-        MakueniMilestone milestone = new MakueniMilestone();
+        OCPortalMilestone milestone = new OCPortalMilestone();
         safeSet(milestone::setId, report::getId, this::longIdToString);
         safeSet(milestone::setTitle, () -> "ME Report " + report.getId());
         safeSet(milestone::setType, Milestone.MilestoneType.DELIVERY::toString);
@@ -538,10 +542,10 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return transaction;
     }
 
-    public MakueniBudgetBreakdown createPlanningBudgetBreakdown(TenderProcess tenderProcess) {
+    public OCPortalBudgetBreakdown createPlanningBudgetBreakdown(TenderProcess tenderProcess) {
         ProcurementPlan procurementPlan = tenderProcess.getProcurementPlan();
 
-        MakueniBudgetBreakdown budgetBreakdown = new MakueniBudgetBreakdown();
+        OCPortalBudgetBreakdown budgetBreakdown = new OCPortalBudgetBreakdown();
 
         safeSet(budgetBreakdown::setAmount,
                 () -> procurementPlan.getPlanItems().stream()
@@ -563,14 +567,14 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     public Budget createPlanningBudget(TenderProcess tenderProcess) {
-        MakueniBudget budget = new MakueniBudget();
+        OCPortalBudget budget = new OCPortalBudget();
 
         safeSet(budget::setProject, tenderProcessProjectTitle(tenderProcess));
         safeSet(budget::setProjectID, tenderProcess::getProject, this::entityIdToString);
         safeSet(budget::setAmount, () -> tenderProcess.getPurchaseRequisition().
-                stream().filter(Statusable::isExportable).flatMap(p->p.getPurchRequisitions().stream())
+                stream().filter(Statusable::isExportable).flatMap(p -> p.getPurchRequisitions().stream())
                 .flatMap(pr -> pr.getPurchaseItems().stream()).map(PurchaseItem::getAmount).reduce(
-                BigDecimal.ZERO.setScale(MONGO_DECIMAL_SCALE), BigDecimal::add), this::convertAmount);
+                        BigDecimal.ZERO.setScale(MONGO_DECIMAL_SCALE), BigDecimal::add), this::convertAmount);
 
         safeSet(budget.getBudgetBreakdown()::add, () -> tenderProcess, this::createPlanningBudgetBreakdown);
 
@@ -625,10 +629,11 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
     private Document storeAsDocumentAwardAcceptance(FileMetadata fm) {
-        return mongoFileStorageService.storeFileAndReferenceAsDocument(
-                fm,
-                Document.DocumentType.X_AWARD_ACCEPTANCE
-        );
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.X_AWARD_ACCEPTANCE);
+    }
+
+    private Document storeAsDocumentLettersRegret(FileMetadata fm) {
+        return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.X_AWARD_LETTER_REGRET);
     }
 
 
@@ -661,8 +666,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return document;
     }
 
-    public MakueniPlanning createPlanning(TenderProcess tenderProcess) {
-        MakueniPlanning planning = new MakueniPlanning();
+    public OCPortalPlanning createPlanning(TenderProcess tenderProcess) {
+        OCPortalPlanning planning = new OCPortalPlanning();
 
         safeSet(planning::setBudget, () -> tenderProcess, this::createPlanningBudget);
         safeSet(planning::setFiscalYear, tenderProcess::getProcurementPlan, ProcurementPlan::getFiscalYear,
@@ -671,7 +676,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
         safeSetEach(planning.getItems()::add, () -> tenderProcess
                 .getPurchaseRequisition().stream().filter(Statusable::isExportable)
-                .flatMap(pr->pr.getPurchaseItems().stream()).collect(Collectors.toList()), this::createPlanningItem);
+                .flatMap(pr -> pr.getPurchaseItems().stream()).collect(Collectors.toList()), this::createPlanningItem);
 
         safeSet(planning.getDocuments()::add, tenderProcess.getProcurementPlan()::getFormDoc,
                 this::storeAsDocumentProcurementPlan
@@ -681,9 +686,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::storeAsDocumentProjectPlan
         );
 
-        safeSetEach(planning.getMilestones()::add, ()->
+        safeSetEach(planning.getMilestones()::add, () ->
                         tenderProcess.getPurchaseRequisition().stream().filter(Statusable::isExportable)
-                                .flatMap(pr->pr.getPurchRequisitions().stream()).collect(Collectors.toList()),
+                                .flatMap(pr -> pr.getPurchRequisitions().stream()).collect(Collectors.toList()),
                 this::createPlanningMilestone);
 
         return planning;
@@ -694,9 +699,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 ::getCabinetPapers;
     }
 
-    public MakueniOrganization convertOrganization(
+    public OCPortalOrganization convertOrganization(
             org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
-        MakueniOrganization ocdsOrg = new MakueniOrganization();
+        OCPortalOrganization ocdsOrg = new OCPortalOrganization();
         safeSet(ocdsOrg::setName, supplier::getLabel, WordUtils::capitalizeFully);
         safeSet(ocdsOrg::setIdentifier, () -> supplier, this::convertCategoryCodeToIdentifier,
                 this::convertToOrgIdentifier);
@@ -784,9 +789,12 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Release createAndPersistRelease(TenderProcess tenderProcess) {
+    public Release createAndPersistRelease(Long tenderProcessId) {
         try {
+            TenderProcess tenderProcess = tenderProcessService.findById(tenderProcessId).get();
+
             //never export releases from draft procurement plans or projects
             if (!tenderProcess.getProcurementPlan().getStatus().equals(DBConstants.Status.APPROVED)
                     || (tenderProcess.getProject() != null && !tenderProcess.getProject().getStatus()
@@ -819,7 +827,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 return null;
             }
         } catch (Exception e) {
-            logger.info("Exception processing tender process with id " + tenderProcess.getId());
+            logger.info("Exception processing tender process with id " + tenderProcessId);
             throw e;
         }
     }
@@ -829,9 +837,9 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         //releaseRepository.deleteAll();
-        //organizationRepository.deleteAll();
+        organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
-        tenderProcessService.findAllStream().forEach(this::createAndPersistRelease);
+        tenderProcessService.findAll().forEach(p -> self.createAndPersistRelease(p.getId()));
         sendValidationFailureAlert(validationErrors.toString());
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
@@ -995,8 +1003,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         return amount;
     }
 
-    public MakueniItem createPlanningItem(PurchaseItem purchaseItem) {
-        MakueniItem ocdsItem = new MakueniItem();
+    public OCPortalItem createPlanningItem(PurchaseItem purchaseItem) {
+        OCPortalItem ocdsItem = new OCPortalItem();
         safeSet(ocdsItem::setId, purchaseItem::getId, this::longIdToString);
         safeSet(ocdsItem::setDescription, purchaseItem::getLabel);
         safeSet(ocdsItem::setUnit, () -> purchaseItem, this::createPlanningItemUnit);
@@ -1095,6 +1103,8 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
                 this::storeAsDocumentProfessionalOpinion
         );
 
+        safeSetEach(ocdsAward.getDocuments()::add, item::getLettersOfRegret, this::storeAsDocumentLettersRegret);
+
         AwardAcceptanceItem acceptanceItem = item.getExportableAcceptanceItem();
 
 
@@ -1117,13 +1127,14 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
 
 
     public Contract createContract(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
-        MakueniContract ocdsContract = new MakueniContract();
+        OCPortalContract ocdsContract = new OCPortalContract();
         safeSet(ocdsContract::setId, contract::getReferenceNumber);
         safeSet(ocdsContract::setTitle, contract::getTenderProcess, TenderProcess::getSingleTender,
                 org.devgateway.toolkit.persistence.dao.form.Tender::getTenderTitle
         );
         safeSet(ocdsContract::setDateSigned, contract::getContractDate);
-        safeSet(ocdsContract::setPeriod, contract::getExpiryDate, this::convertContractEndDateToPeriod);
+        safeSet(ocdsContract::setPeriod, () -> contract, this::convertContractEndDateToPeriod);
+        safeSet(ocdsContract.getAmendments()::add, () -> contract, this::createContactExtensionAmendment);
         safeSet(ocdsContract::setValue, contract::getContractValue, this::convertAmount);
         safeSetEach(ocdsContract.getDocuments()::add, contract::getContractDocs, this::storeAsDocumentContractNotice);
         safeSet(ocdsContract::setAwardID,
@@ -1133,7 +1144,20 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
         safeSet(ocdsContract::setImplementation, contract::getTenderProcess, this::createImplementation);
         safeSet(ocdsContract::setTargetGroup, contract::getTargetGroup, Category::getLabel);
 
+        safeSetEach(ocdsContract.getLocations()::add, contract::getWards, this::lpcToOCPortalLocation);
+        safeSetEach(ocdsContract.getLocations()::add, contract::getSubcounties, this::lpcToOCPortalLocation);
+
         return ocdsContract;
+    }
+
+    public Amendment createContactExtensionAmendment(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
+        if (contract.getContractExtensionDate() != null) {
+            Amendment amendment = new Amendment();
+            amendment.setRationale("Contract extension of completion date");
+            amendment.setDescription("New contract completion date: " + contract.getExpiryDate());
+            return amendment;
+        }
+        return null;
     }
 
     public Contract.Status createContractStatus(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
@@ -1188,9 +1212,18 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     }
 
 
-    public Period convertContractEndDateToPeriod(Date endDate) {
+    public Period convertContractEndDateToPeriod(org.devgateway.toolkit.persistence.dao.form.Contract contract) {
         Period period = new Period();
-        period.setEndDate(endDate);
+        if (contract.getContractDate() != null) {
+            period.setStartDate(contract.getContractDate());
+        }
+        if (contract.getContractExtensionDate() != null) {
+            period.setEndDate(contract.getContractExtensionDate());
+        } else {
+            if (contract.getExpiryDate() != null) {
+                period.setEndDate(contract.getExpiryDate());
+            }
+        }
         return period;
     }
 
@@ -1235,7 +1268,7 @@ public class MakueniToOCDSConversionServiceImpl implements MakueniToOCDSConversi
     public Release createRelease(TenderProcess tenderProcess) {
         Release release = new Release();
         safeSet(release::setId, this::getReleaseId);
-        safeSet(release::setOcid, () -> tenderProcess, MakueniToOCDSConversionServiceImpl::getOcid);
+        safeSet(release::setOcid, () -> tenderProcess, OCPortalToOCDSConversionServiceImpl::getOcid);
         safeSet(release::setPlanning, () -> tenderProcess, this::createPlanning);
         safeSet(release::setBids, tenderProcess::getSingleTenderQuotationEvaluation, this::createBids);
         safeSet(release::setTender, tenderProcess::getSingleTender, this::createTender);
