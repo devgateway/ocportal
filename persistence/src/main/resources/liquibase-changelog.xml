@@ -1539,9 +1539,9 @@
 
     <changeSet id="OCMAKU-1050" author="Octavian Ciubotaru">
         <preConditions onFail="CONTINUE">
-            <columnExists tableName="category" columnName="target_group_id"/>
             <columnExists tableName="contract" columnName="target_group_id"/>
             <tableExists tableName="category_target_groups"/>
+            <changeSetExecuted id="OCMAKU-953" author="Octavian Ciubotaru" />
         </preConditions>
         <sql><![CDATA[
             INSERT INTO category_target_groups
