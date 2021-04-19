@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { range } from '../../tools';
 import CustomPopupChart from '../custom-popup-chart';
 import CRDPage from '../page';
@@ -6,7 +7,6 @@ import { colorLuminance, wireProps } from '../tools';
 import ProcurementsTable from './table';
 import { POPUP_HEIGHT } from '../constants';
 import fmConnect from '../../fm/fm';
-import PropTypes from 'prop-types';
 import { tMonth } from '../../translatable';
 
 const TRACES = ['COLLUSION', 'RIGGING'];
@@ -184,7 +184,7 @@ class OverviewPage extends CRDPage {
 
   render() {
     const {
-      indicatorTypesMapping, styling, width, navigate, isFeatureVisible, t,
+      indicatorTypesMapping, styling, width, isFeatureVisible, t,
     } = this.props;
     return (
       <div className="page-overview">
@@ -211,7 +211,6 @@ class OverviewPage extends CRDPage {
               {...wireProps(this, 'topFlaggedContracts')}
               dataEP="corruptionRiskOverviewTable"
               countEP="corruptionRiskOverviewTable/count"
-              navigate={navigate}
               styling={styling}
             />
           </section>

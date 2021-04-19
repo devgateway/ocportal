@@ -2,6 +2,7 @@ import React from 'react';
 import URI from 'urijs';
 import { List, Map } from 'immutable';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
@@ -10,13 +11,12 @@ import { fetchEP, pluckImm, cacheFn } from '../../tools';
 import BackendDateFilterable from '../backend-date-filterable';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
 
-export const mkLink = (navigate) => (content, { id }) => (
-  <a
-    href={`#!/crd/supplier/${id}`}
-    onClick={() => navigate('supplier', id)}
+export const mkLink = (content, { id }) => (
+  <Link
+    to={`/portal/crd/supplier/${id}`}
   >
     {content}
-  </a>
+  </Link>
 );
 
 class SList extends PaginatedTable {
@@ -38,7 +38,7 @@ class SList extends PaginatedTable {
   }
 
   render() {
-    const { data, navigate, t } = this.props;
+    const { data, t } = this.props;
 
     const count = data.get('count', 0);
 
@@ -66,13 +66,13 @@ class SList extends PaginatedTable {
             text: t('crd:suppliers:name'),
             dataField: 'name',
             fm: 'crd.suppliers.col.name',
-            formatter: mkLink(navigate),
+            formatter: mkLink,
           },
           {
             text: t('crd:suppliers:ID'),
             dataField: 'id',
             fm: 'crd.suppliers.col.id',
-            formatter: mkLink(navigate),
+            formatter: mkLink,
           },
           {
             text: t('crd:suppliers:wins'),
@@ -145,7 +145,7 @@ class Suppliers extends CRDPage {
 
   render() {
     const {
-      navigate, searchQuery, doSearch, data, t,
+      searchQuery, doSearch, data, t,
     } = this.props;
     const { winLossFlagInfo } = this.state;
     return (
@@ -157,7 +157,6 @@ class Suppliers extends CRDPage {
         <Archive
           searchQuery={searchQuery}
           doSearch={doSearch}
-          navigate={navigate}
           className="suppliers-page"
           topSearchPlaceholder={t('crd:suppliers:top-search')}
           List={SList}

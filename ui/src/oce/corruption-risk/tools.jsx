@@ -1,5 +1,6 @@
 import React from 'react';
 import { List } from 'immutable';
+import { Link } from 'react-router-dom';
 
 // copypasted from https://www.sitepoint.com/javascript-generate-lighter-darker-color/
 export function colorLuminance(hexParam, lumParam) {
@@ -33,14 +34,13 @@ export const getAwardAmount = (contract) => {
   return 'N/A';
 };
 
-export const mkContractLink = (navigate) => (content, { ocid }) => (
-  <a
-    href={`#!/crd/contract/${ocid}`}
-    onClick={() => navigate('contract', ocid)}
+export const mkContractLink = (content, { ocid }) => (
+  <Link
+    to={`/portal/crd/contract/${ocid}`}
     className="oce-3-line-text"
   >
     {content}
-  </a>
+  </Link>
 );
 
 const ROUTINE_PROPS = ['filters', 'years', 'months', 'monthly', 'width', 't'];
