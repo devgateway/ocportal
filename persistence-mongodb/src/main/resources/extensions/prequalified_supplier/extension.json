@@ -6,7 +6,7 @@
     "en": "Show the items the supplier is prequalified for"
   },
   "documentationUrl": {
-    "en": "https://github.com/devgateway/forms-makueni/tree/develop-makueni/persistence-mongodb/src/main/resources/extensions/prequalified_supplier"
+    "en": "https://github.com/devgateway/forms-makueni/tree/master-makueni/persistence-mongodb/src/main/resources/extensions/prequalified_supplier"
   },
   "compatibility": [
     "1.1"
