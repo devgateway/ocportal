@@ -1507,7 +1507,60 @@
         ]]></sql>
     </changeSet>
 
-    <!--Change Set Placeholder 1-->
+    <changeSet id="OCMAKU-965" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="category" columnName="non_performing"/>
+        </preConditions>
+        <update tableName="category">
+            <column name="non_performing" valueBoolean="false"/>
+            <where>dtype='Supplier'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="OCMAKU-945-multiple-planitem-target-groups" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="plan_item_target_group"/>
+        </preConditions>
+        <sql>
+            insert into plan_item_target_group (plan_item_id, target_group_id)
+            (select id,target_group_id from plan_item where target_group_id is not null)
+        </sql>
+    </changeSet>
+
+    <changeSet id="OCMAKU-1008" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="ROLE"/>
+        </preConditions>
+        <insert tableName="ROLE">
+            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
+            <column name="AUTHORITY" value="ROLE_VALIDATOR_ALL"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="OCMAKU-1050" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="contract" columnName="target_group_id"/>
+            <tableExists tableName="category_target_groups"/>
+            <not>
+                <columnExists tableName="category" columnName="target_group_id"/>
+            </not>
+        </preConditions>
+        <sql><![CDATA[
+            INSERT INTO category_target_groups
+            SELECT s.id, cc.id
+            FROM category s
+            join category cc on cc.dtype='TargetGroup' and cc.label='Citizen Contractor'
+            WHERE s.dtype = 'Supplier'
+            and not exists(select ctg.supplier_id from category_target_groups ctg where s.id = ctg.supplier_id);
+
+            UPDATE contract
+            SET target_group_id=s.id
+            FROM category s
+            WHERE s.dtype='TargetGroup'
+              AND s.label='Citizen Contractor'
+              AND contract.target_group_id IS NULL;
+        ]]></sql>
+    </changeSet>
 
     <!--Change Set Placeholder 2-->
 
@@ -1546,34 +1599,4 @@
     <!--Change Set Placeholder 19-->
 
     <!--Change Set Placeholder 20-->
-
-    <changeSet id="OCMAKU-965" author="mpostelnicu">
-        <preConditions onFail="CONTINUE">
-        <columnExists tableName="category" columnName="non_performing"/>
-        </preConditions>
-        <update tableName="category">
-            <column name="non_performing" valueBoolean="false"/>
-            <where>dtype='Supplier'</where>
-        </update>
-    </changeSet>
-
-    <changeSet id="OCMAKU-945-multiple-planitem-target-groups" author="mpostelnicu">
-        <preConditions onFail="CONTINUE">
-            <tableExists tableName="plan_item_target_group"/>
-        </preConditions>
-    <sql>
-        insert into plan_item_target_group (plan_item_id, target_group_id)
-        (select id,target_group_id from plan_item where target_group_id is not null)
-    </sql>
-    </changeSet>
-
-    <changeSet id="OCMAKU-1008" author="mpostelnicu">
-        <preConditions onFail="CONTINUE">
-            <tableExists tableName="ROLE"/>
-        </preConditions>
-        <insert tableName="ROLE">
-            <column name="ID" valueComputed="nextval('hibernate_sequence')"/>
-            <column name="AUTHORITY" value="ROLE_VALIDATOR_ALL"/>
-        </insert>
-    </changeSet>
 </databaseChangeLog>
