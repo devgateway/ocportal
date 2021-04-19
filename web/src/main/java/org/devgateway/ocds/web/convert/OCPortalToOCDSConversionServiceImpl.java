@@ -709,7 +709,14 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
                 this::convertToLocalIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
         safeSetEach(ocdsOrg.getTargetGroups()::add, supplier::getTargetGroups, this::categoryLabel);
+        safeSet(ocdsOrg::setPrequalifiedItems, ()->supplier, this::convertPrequalifiedItems);
         return ocdsOrg;
+    }
+
+    public List<String> convertPrequalifiedItems(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        return supplier.getPrequalifiedSuppliers().stream().flatMap(ps ->
+            ps.getItems().stream().map(si-> si.getItem().toString(ps.getYearRange())))
+                .collect(Collectors.toList());
     }
 
     public Address createSupplierAddress(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
