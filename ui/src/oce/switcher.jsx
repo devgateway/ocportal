@@ -2,6 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { getRoute, navigate, onNavigation } from './router';
 
+/**
+ * @Deprecated
+ */
 class OCESwitcher extends React.Component {
   constructor(...args) {
     super(...args);

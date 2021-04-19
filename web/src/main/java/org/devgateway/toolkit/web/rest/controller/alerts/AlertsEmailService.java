@@ -59,7 +59,7 @@ public class AlertsEmailService {
             msg.setFrom(DBConstants.FROM_EMAIL);
             msg.setSubject("You've received a reply to your feedback message!");
             msg.setText("Click on the link below to view your message on the Government of " + INSTANCE_NAME
-                    + " County Open Contracting Portal.\n" + getFeedbackExpandedURL(parent.getUrl()));
+                    + " County Open Contracting Portal.\n" + parent.getUrl());
         };
         try {
             emailSendingService.send(messagePreparator);
@@ -67,10 +67,6 @@ public class AlertsEmailService {
             logger.error("Failed to send alert email for feedback message from " + message.getEmail());
             throw e;
         }
-    }
-
-    private String getFeedbackExpandedURL(String url) {
-        return URI.create(serverURL + "/ui/index.html#!/" + url).toASCIIString();
     }
 
     @Transactional
