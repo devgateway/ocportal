@@ -1541,7 +1541,9 @@
         <preConditions onFail="CONTINUE">
             <columnExists tableName="contract" columnName="target_group_id"/>
             <tableExists tableName="category_target_groups"/>
-            <changeSetExecuted id="OCMAKU-953" author="Octavian Ciubotaru" />
+            <not>
+                <columnExists tableName="category" columnName="target_group_id"/>
+            </not>
         </preConditions>
         <sql><![CDATA[
             INSERT INTO category_target_groups
