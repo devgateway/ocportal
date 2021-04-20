@@ -26,7 +26,7 @@ const procuringEntityFiltersSelector = createSelector(
 );
 
 const ProcuringEntity = ({
-  doSearch, width, navigate, isFeatureVisible, ...otherProps
+  doSearch, width, isFeatureVisible, ...otherProps
 }) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -153,7 +153,6 @@ const ProcuringEntity = ({
           )}
           <ProcurementsTable
             filters={peFilters}
-            navigate={navigate}
             fmPrefix="crd.procuringEntity.procurements.col"
           />
         </section>

@@ -53,8 +53,7 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
             ReplyableFeedbackMessage entity = (ReplyableFeedbackMessage) this.getDefaultModelObject();
 
             BootstrapExternalLink viewLink = new BootstrapExternalLink("view",
-                    Model.of("ui/index.html#!/" + entity.getUrl()), Buttons.Type.Warning
-            ) {
+                    Model.of(entity.getUrl()), Buttons.Type.Warning) {
             };
             viewLink.setLabel(new StringResourceModel("view", ListFeedbackMessagePage.this, null));
             viewLink.setIconType(FontAwesomeIconType.eye).setSize(Buttons.Size.Small);

@@ -170,7 +170,7 @@ class IndividualIndicatorPage extends CRDPage {
     const { chart, table } = this.state;
     const {
       corruptionType, indicator, t, filters, years, monthly, months, width,
-      styling, navigate, isFeatureVisible,
+      styling, isFeatureVisible,
     } = this.props;
 
     return (
@@ -239,7 +239,6 @@ class IndividualIndicatorPage extends CRDPage {
               years={years}
               monthly={monthly}
               months={months}
-              navigate={navigate}
             />
           </section>
         )}
