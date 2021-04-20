@@ -7,7 +7,7 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 public class CorruptionRiskDashboardPage extends WebPage {
-    public static final String URL = "/ui/index.html#!/crd";
+    public static final String URL = "/portal/crd";
 
     public CorruptionRiskDashboardPage() {
         throw new RedirectToUrlException(URL);
