@@ -7,9 +7,10 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import './alerts.scss';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
-import { fetch, subscribeToAlerts } from '../api/Api';
-import { setImmer } from '../tools';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import { setImmer } from '../tools';
+import { fetch, subscribeToAlerts } from '../api/Api';
 
 const emailPattern = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
 
@@ -25,7 +26,7 @@ const Alerts = (props) => {
   });
   const { departments, items, email } = formData;
 
-  const [purchaseReqId, tenderTitle] = props.route;
+  const { purchaseReqId } = useParams();
 
   useEffect(() => {
     if (!purchaseReqId) {
@@ -82,7 +83,6 @@ const Alerts = (props) => {
     <div className="container-fluid dashboard-default">
 
       <Header
-        onSwitch={props.onSwitch}
         styling={props.styling}
         selected=""
       />
@@ -119,7 +119,7 @@ const Alerts = (props) => {
           </div>
 
           {
-            purchaseReqId !== undefined && tenderTitle !== undefined
+            purchaseReqId !== undefined
               ? (
                 <div>
                   <div className="row">
@@ -132,7 +132,7 @@ const Alerts = (props) => {
                     <div className="col-md-12">
                       {t('alerts:alertsForTender')}
                       {' '}
-                      <b>{unescape(tenderTitle)}</b>
+                      <b>{purchaseReqId}</b>
                     </div>
                   </div>
                 </div>
@@ -265,9 +265,7 @@ const Alerts = (props) => {
 };
 
 Alerts.propTypes = {
-  route: PropTypes.arrayOf(PropTypes.string),
   styling: PropTypes.object.isRequired,
-  onSwitch: PropTypes.func.isRequired,
 };
 
 export default Alerts;

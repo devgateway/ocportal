@@ -1,6 +1,7 @@
 import React from 'react';
 import { Map, List } from 'immutable';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CRDPage from '../../page';
 import Visualization from '../../../visualization';
 import TopSearch from '../../top-search';
@@ -54,7 +55,7 @@ class Info extends Visualization {
 
   render() {
     const {
-      data, supplier, gotoSupplier, t,
+      data, supplier, t,
     } = this.props;
 
     const title = data.getIn(['tender', 'title']);
@@ -103,11 +104,11 @@ class Info extends Visualization {
                   <dl>
                     <dt><span className="contract-label">{t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
                     <dd>
-                      <a
-                        href={`#!/crd/procuring-entity/${PE.get('id')}`}
+                      <Link
+                        to={`/portal/crd/procuring-entity/${PE.get('id')}`}
                       >
                         {PE.get('name')}
-                      </a>
+                      </Link>
                     </dd>
                   </dl>
                 </td>
@@ -125,12 +126,11 @@ class Info extends Visualization {
                     <span className="contract-value">
                       {supplier
                         ? (
-                          <a
-                            href={`#!/crd/supplier/${supplier.get('id')}`}
-                            onClick={gotoSupplier}
+                          <Link
+                            to={`/portal/crd/supplier/${supplier.get('id')}`}
                           >
                             {supplier.get('name')}
-                          </a>
+                          </Link>
                         )
                         : t('general:undefined')}
                     </span>
