@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static org.devgateway.ocds.persistence.mongo.flags.FlagsConstants.FLAGS_LIST;
+import static org.devgateway.ocds.web.convert.OCPortalToOCDSConversionServiceImpl.OCID_PREFIX;
 
 @Service
 public class ReleaseFlagNotificationService {
@@ -75,12 +76,12 @@ public class ReleaseFlagNotificationService {
         departmentFlagRelease = new ConcurrentHashMap<>();
     }
 
-    private void addDepartmentFlagReleaseId(Long department, String flag, String releaseId) {
+    private void addDepartmentFlagReleaseId(Long department, String flag, String ocId) {
         departmentFlagRelease.putIfAbsent(department, new ConcurrentHashMap<>());
         Map<String, Set<String>> stringSetMap = departmentFlagRelease.get(department);
         stringSetMap.putIfAbsent(flag, new HashSet<>());
         Set<String> set = stringSetMap.get(flag);
-        set.add(releaseId);
+        set.add(ocId);
     }
 
     @Transactional
@@ -104,7 +105,7 @@ public class ReleaseFlagNotificationService {
                         addDepartmentFlagReleaseId(
                                 Long.valueOf(flaggedRelease.getBuyer().getId().replaceAll(
                                         MongoConstants.OCDSSchemes.X_KE_INTERNAL_SCHEMA + "-", "")),
-                                f, flaggedRelease.getId()
+                                f, flaggedRelease.getOcid()
                         );
 
                     }
@@ -126,18 +127,19 @@ public class ReleaseFlagNotificationService {
         return departmentService.findById(departmentId).get().getLabel();
     }
 
-    private String getReleaseURL(String releaseId) {
-        return URI.create(serverURL + "/tenderProcess?id=" + releaseId).toASCIIString();
+    private String getReleaseURL(String ocId) {
+        String id = ocId.substring(OCID_PREFIX.length());
+        return URI.create(serverURL + "/departmentOverview?id=" + id).toASCIIString();
     }
 
     private String createAdminContent() {
         StringBuffer sb = new StringBuffer();
         sb.append("<ul>");
-        departmentFlagRelease.forEach((department, flagReleaseId) -> {
+        departmentFlagRelease.forEach((department, flagOCIds) -> {
             sb.append("<li>").append(getDepartmentNameFromId(department));
             sb.append("<ul>");
-            flagReleaseId.forEach((flag, releaseId) -> {
-                createFlagContent(sb, flag, releaseId);
+            flagOCIds.forEach((flag, ocIds) -> {
+                createFlagContent(sb, flag, ocIds);
             });
             sb.append("</ul>");
             sb.append("</li>");
@@ -146,17 +148,17 @@ public class ReleaseFlagNotificationService {
         return sb.toString();
     }
 
-    private void createFlagContent(StringBuffer sb, String flag, Set<String> releaseId) {
+    private void createFlagContent(StringBuffer sb, String flag, Set<String> ocIds) {
         sb.append("<li><b>").append(getFlagNameFromId(flag)).append("</b><br/>");
-        releaseId.forEach(r -> sb.append(getLinkedReleaseTitle(r)).append("<br/>"));
+        ocIds.forEach(ocId -> sb.append(getLinkedReleaseTitle(ocId)).append("<br/>"));
         sb.append("</li>");
     }
 
     private String createDepartmentContent(Long department) {
         StringBuffer sb = new StringBuffer();
         sb.append("<ul>");
-        departmentFlagRelease.get(department).forEach((flag, releaseId) -> {
-            createFlagContent(sb, flag, releaseId);
+        departmentFlagRelease.get(department).forEach((flag, ocIds) -> {
+            createFlagContent(sb, flag, ocIds);
         });
         sb.append("</ul>");
         return sb.toString();
@@ -211,20 +213,21 @@ public class ReleaseFlagNotificationService {
         }
     }
 
-    private String getLinkedReleaseTitle(String releaseId) {
+    private String getLinkedReleaseTitle(String ocId) {
         StringBuffer sb = new StringBuffer();
-        sb.append("<a href=\"").append(getReleaseURL(releaseId)).append("\">").append(getReleaseTitle(releaseId))
+        sb.append("<a href=\"").append(getReleaseURL(ocId)).append("\">").append(getReleaseTitle(ocId))
                 .append("</a>");
         return sb.toString();
     }
 
-    public String getReleaseTitle(String releaseId) {
-        Optional<FlaggedRelease> optRelease = flaggedReleaseRepository.findById(releaseId);
-        if (!optRelease.isPresent() || ObjectUtils.isEmpty(optRelease.get().getTender())
-                || ObjectUtils.isEmpty(optRelease.get().getTender().getTitle())) {
-            return "Unkown [id=" + releaseId + "]";
+    public String getReleaseTitle(String ocId) {
+        FlaggedRelease release = flaggedReleaseRepository.findByOcid(ocId);
+        if (release == null
+                || ObjectUtils.isEmpty(release.getTender())
+                || ObjectUtils.isEmpty(release.getTender().getTitle())) {
+            return "Unknown [ocid=" + ocId + "]";
         }
-        return optRelease.get().getTender().getTitle();
+        return release.getTender().getTitle();
     }
 
 
