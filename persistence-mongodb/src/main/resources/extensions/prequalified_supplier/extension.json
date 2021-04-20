@@ -1,0 +1,17 @@
+{
+  "name": {
+    "en": "Prequalified Supplier"
+  },
+  "description": {
+    "en": "Show the items the supplier is prequalified for"
+  },
+  "documentationUrl": {
+    "en": "https://github.com/devgateway/forms-makueni/tree/master-makueni/persistence-mongodb/src/main/resources/extensions/prequalified_supplier"
+  },
+  "compatibility": [
+    "1.1"
+  ],
+  "schemas": [
+    "release-schema.json"
+  ]
+}

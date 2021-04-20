@@ -1,15 +1,16 @@
 import React from 'react';
 import { List } from 'immutable';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CRDPage from '../page';
 import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import { wireProps } from '../tools';
 import { getBuyersTenderAndAwardCounts } from './api';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
-import PropTypes from 'prop-types';
 
-const mkLink = (navigate) => (content, { id }) => (
-  <a href={`#!/crd/buyer/${id}`} onClick={() => navigate('buyer', id)}>{content}</a>
+const mkLink = (content, { id }) => (
+  <Link to={`/portal/crd/buyer/${id}`}>{content}</Link>
 );
 
 class BuyerList extends PaginatedTable {
@@ -69,7 +70,7 @@ class BuyerList extends PaginatedTable {
   }
 
   render() {
-    const { data, navigate, t } = this.props;
+    const { data, t } = this.props;
 
     const count = data.get('count', 0);
 
@@ -101,13 +102,13 @@ class BuyerList extends PaginatedTable {
             text: t('crd:suppliers:ID'),
             dataField: 'id',
             fm: 'crd.buyers.col.id',
-            formatter: mkLink(navigate),
+            formatter: mkLink,
           },
           {
             text: t('crd:suppliers:name'),
             dataField: 'name',
             fm: 'crd.buyers.col.name',
-            formatter: mkLink(navigate),
+            formatter: mkLink,
           },
           {
             text: t('crd:procuringEntities:noOfTenders'),
@@ -144,7 +145,7 @@ class Buyers extends CRDPage {
 
   render() {
     const {
-      navigate, searchQuery, doSearch, t,
+      searchQuery, doSearch, t,
     } = this.props;
     return (
       <Archive
@@ -152,7 +153,6 @@ class Buyers extends CRDPage {
         requestNewData={this.requestNewData.bind(this)}
         searchQuery={searchQuery}
         doSearch={doSearch}
-        navigate={navigate}
         className="procuring-entities-page"
         topSearchPlaceholder={t('crd:buyers:top-search')}
         List={BuyerList}

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * @author mpostelnicu
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MakueniMilestone extends Milestone {
+public class OCPortalMilestone extends Milestone {
 
     private Boolean delayed;
 

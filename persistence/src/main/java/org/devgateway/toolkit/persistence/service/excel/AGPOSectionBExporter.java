@@ -22,6 +22,7 @@ import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.devgateway.toolkit.persistence.dto.NamedDateRange;
+import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalifiedSupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class AGPOSectionBExporter {
     @Autowired
     private PrequalifiedSupplierService prequalifiedSupplierService;
 
+    @Autowired
+    private DgFmService fmService;
+
     public boolean hasData(NamedDateRange range) {
         return tenderProcessService.count(getSpecification(range)) > 0;
     }
@@ -72,6 +76,10 @@ public class AGPOSectionBExporter {
 
         XSSFSheet sheet = workbook.createSheet();
         sheet.setDefaultColumnWidth(20);
+
+        if (!fmService.isFeatureVisible("prequalificationSchemaForm")) {
+            sheet.setColumnHidden(DIRECTORS, true);
+        }
 
         addHeaderRow(sheet);
 

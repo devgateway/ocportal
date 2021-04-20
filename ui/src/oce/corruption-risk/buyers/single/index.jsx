@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createSelector } from '@reduxjs/toolkit';
 import { useImmer } from 'use-immer';
+import { useTranslation } from 'react-i18next';
 import TopSearch from '../../top-search';
 import Info from './info';
 import Zoomable from '../../zoomable';
@@ -14,7 +15,6 @@ import ProcurementsTable from '../../table/procurements';
 import './style.scss';
 import { fetchAllInfo } from './api';
 import fmConnect from '../../../fm/fm';
-import { useTranslation } from 'react-i18next';
 
 const buyerFiltersSelector = createSelector(
   [(props) => props.id, (props) => props.filters, (props) => props.years, (props) => props.months],
@@ -27,7 +27,7 @@ const buyerFiltersSelector = createSelector(
 );
 
 const Buyer = ({
-  doSearch, width, navigate, isFeatureVisible, ...otherProps
+  doSearch, width, isFeatureVisible, ...otherProps
 }) => {
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -155,7 +155,6 @@ const Buyer = ({
           )}
           <ProcurementsTable
             filters={buyerFilters}
-            navigate={navigate}
             fmPrefix="crd.buyer.procurements.col"
           />
         </section>

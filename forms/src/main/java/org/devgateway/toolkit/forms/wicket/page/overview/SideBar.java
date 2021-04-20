@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.overview;
 
 import de.agilecoders.wicket.core.util.Attributes;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -8,6 +9,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.fm.DgFmBehavior;
 import org.devgateway.toolkit.forms.service.SessionMetadataService;
@@ -77,16 +79,18 @@ public class SideBar extends Panel {
         add(statusLink);
 
         projectCountWrapper = new TransparentWebMarkupContainer("projectCountWrapper");
-        projectCount = new Label("projectCount", calculateProjectCount());
+        projectCount = new Label("projectCount",
+                LoadableDetachableModel.of(this::calculateProjectCount));
         projectCountWrapper.add(new DgFmBehavior("overviewSidebar.projectCount"));
-        projectCount.setOutputMarkupId(true);
+        projectCountWrapper.setOutputMarkupPlaceholderTag(true);
         projectCountWrapper.add(projectCount);
         add(projectCountWrapper);
 
         tenderProcessCountWrapper = new TransparentWebMarkupContainer("tenderProcessCountWrapper");
-        tenderProcessCount = new Label("tenderProcessCount", calculateTenderProcessCount());
+        tenderProcessCount = new Label("tenderProcessCount",
+                LoadableDetachableModel.of(this::calculateTenderProcessCount));
         tenderProcessCountWrapper.add(new DgFmBehavior("overviewSidebar.tenderProcessCount"));
-        tenderProcessCount.setOutputMarkupId(true);
+        tenderProcessCountWrapper.setOutputMarkupPlaceholderTag(true);
         tenderProcessCountWrapper.add(tenderProcessCount);
         add(tenderProcessCountWrapper);
 
@@ -138,5 +142,9 @@ public class SideBar extends Panel {
 
     public Label getTenderProcessCount() {
         return tenderProcessCount;
+    }
+
+    public void refreshCounts(AjaxRequestTarget target) {
+        target.add(projectCountWrapper, tenderProcessCountWrapper);
     }
 }

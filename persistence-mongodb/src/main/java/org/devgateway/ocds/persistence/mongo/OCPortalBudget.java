@@ -8,17 +8,17 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MakueniBudget extends Budget {
+public class OCPortalBudget extends Budget {
 
     @JsonDeserialize(as = LinkedHashSet.class)
     @JsonProperty("budgetBreakdown")
-    private Set<MakueniBudgetBreakdown> budgetBreakdown = new LinkedHashSet<>();
+    private Set<OCPortalBudgetBreakdown> budgetBreakdown = new LinkedHashSet<>();
 
-    public Set<MakueniBudgetBreakdown> getBudgetBreakdown() {
+    public Set<OCPortalBudgetBreakdown> getBudgetBreakdown() {
         return budgetBreakdown;
     }
 
-    public void setBudgetBreakdown(Set<MakueniBudgetBreakdown> budgetBreakdown) {
+    public void setBudgetBreakdown(Set<OCPortalBudgetBreakdown> budgetBreakdown) {
         this.budgetBreakdown = budgetBreakdown;
     }
 }

@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MakueniTender extends Tender {
+public class OCPortalTender extends Tender {
     /**
      * target Group
      * <p>
@@ -20,7 +20,7 @@ public class MakueniTender extends Tender {
     @ExcelExport
     private String targetGroup;
 
-    private Set<MakueniLocation> locations = new LinkedHashSet<>();
+    private Set<OCPortalLocation> locations = new LinkedHashSet<>();
 
     public String getTargetGroup() {
         return targetGroup;
@@ -30,11 +30,11 @@ public class MakueniTender extends Tender {
         this.targetGroup = targetGroup;
     }
 
-    public Set<MakueniLocation> getLocations() {
+    public Set<OCPortalLocation> getLocations() {
         return locations;
     }
 
-    public void setLocations(Set<MakueniLocation> locations) {
+    public void setLocations(Set<OCPortalLocation> locations) {
         this.locations = locations;
     }
 }

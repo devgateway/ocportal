@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.db;
 
-import org.devgateway.ocds.web.convert.MakueniToOCDSConversionService;
+import org.devgateway.ocds.web.convert.OCPortalToOCDSConversionService;
 import org.devgateway.ocds.web.spring.ReleaseFlaggingService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.web.rest.controller.alerts.processsing.AlertsManager;
@@ -25,7 +25,7 @@ public class ImportPostgresToMongoJob {
     private ImportPostgresToMongo importPostgresToMongo;
 
     @Autowired
-    private MakueniToOCDSConversionService makueniToOCDSConversionService;
+    private OCPortalToOCDSConversionService ocPortalToOCDSConversionService;
 
     @Autowired
     private CacheManager cacheManager;
@@ -51,7 +51,7 @@ public class ImportPostgresToMongoJob {
     public Future<String> importOcdsMakueniToMongo() {
         formStatusIntegrityCheck();
         importPostgresToMongo.importToMongo();
-        makueniToOCDSConversionService.convertToOcdsAndSaveAllApprovedPurchaseRequisitions();
+        ocPortalToOCDSConversionService.convertToOcdsAndSaveAllApprovedPurchaseRequisitions();
         releaseFlaggingService.processAndSaveFlagsForAllReleases(releaseFlaggingService::logMessage);
         cacheManager.getCacheNames().forEach(c -> cacheManager.getCache(c).clear());
 

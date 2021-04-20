@@ -77,7 +77,7 @@ class Tab extends Visualization {
 
   render() {
     const {
-      filters, compareBy, requestNewData, data, years, months, monthly, width, t, styling, navigate,
+      filters, compareBy, requestNewData, data, years, months, monthly, width, t, styling,
     } = this.props;
     return (
       <div className="col-sm-12">
@@ -94,7 +94,6 @@ class Tab extends Visualization {
                   years={years}
                   months={months}
                   width={width}
-                  navigate={navigate}
                   t={t}
                   styling={styling}
                   wrapRendered={this.maybeWrap(Component, ref)}
@@ -145,7 +144,6 @@ Tab.propTypes = {
   compareBy: PropTypes.string.isRequired,
   comparisonCriteriaValues: PropTypes.arrayOf(PropTypes.string).isRequired,
   width: PropTypes.number.isRequired,
-  onUpdate: PropTypes.func,
   t: PropTypes.func.isRequired,
 };
 
