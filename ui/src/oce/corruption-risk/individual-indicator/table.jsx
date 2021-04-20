@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { List } from 'immutable';
+import PropTypes from 'prop-types';
 import { POPUP_HEIGHT } from '../constants';
 import { getAwardAmount, mkContractLink, _3LineText } from '../tools';
 import PaginatedTable from '../paginated-table';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
-import PropTypes from 'prop-types';
 
 // eslint-disable-next-line no-undef
 class Popup extends React.Component {
@@ -89,7 +89,7 @@ class ProcurementsTable extends PaginatedTable {
 
   render() {
     const {
-      data, navigate, corruptionType, t,
+      data, corruptionType, t,
     } = this.props;
 
     if (!data) return null;
@@ -158,13 +158,13 @@ class ProcurementsTable extends PaginatedTable {
             text: t('crd:procurementsTable:contractID'),
             dataField: 'ocid',
             fm: 'crd.flag.indicator.procurements.col.contractId',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
           },
           {
             text: t('crd:procurementsTable:title'),
             dataField: 'title',
             fm: 'crd.flag.indicator.procurements.col.title',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
           },
           {
             text: t('crd:procurementsTable:procuringEntity'),

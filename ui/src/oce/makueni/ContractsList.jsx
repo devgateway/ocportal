@@ -1,5 +1,6 @@
 import './makueni.scss';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { API_ROOT } from '../api/Api';
 
 class ContractsList extends React.PureComponent {
@@ -27,7 +28,7 @@ class ContractsList extends React.PureComponent {
     return (
       <tr key={id}>
         <td>
-          <a href={`#!/tender/t/${id}`} className="more-details-link">{entry.title}</a>
+          <Link to={`/portal/tender/t/${id}`} className="more-details-link">{entry.title}</Link>
         </td>
       </tr>
     );
