@@ -1549,7 +1549,7 @@
             INSERT INTO category_target_groups
             SELECT s.id, cc.id
             FROM category s
-            join category cc on cc.dtype='TargetGroup' and cc.label='Citizen Contractor'
+            join category cc on cc.dtype='TargetGroup' and cc.label='General'
             WHERE s.dtype = 'Supplier'
             and not exists(select ctg.supplier_id from category_target_groups ctg where s.id = ctg.supplier_id);
 
@@ -1557,7 +1557,7 @@
             SET target_group_id=s.id
             FROM category s
             WHERE s.dtype='TargetGroup'
-              AND s.label='Citizen Contractor'
+              AND s.label='General'
               AND contract.target_group_id IS NULL;
         ]]></sql>
     </changeSet>
