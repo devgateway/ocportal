@@ -59,6 +59,8 @@ public class OcdsController extends GenericOCDSController {
     public static final List<String> EXTENSIONS = Collections.unmodifiableList(
             Arrays.asList(
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
+                            + "/src/main/resources/extensions/prequalified_supplier/extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/first_time_winners/extension.json",
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/planning_items/extension.json",
@@ -72,7 +74,7 @@ public class OcdsController extends GenericOCDSController {
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/contract_contractor/extension.json",
                     "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/"
-                            + "master/extension.json",
+                            + "master-makueni/extension.json",
                     "https://raw.githubusercontent.com/open-contracting-extensions/ocds_location_extension/v1.1.3/"
                             + "extension.json",
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"

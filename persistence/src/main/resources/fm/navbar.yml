@@ -74,3 +74,5 @@
 - name:  navbar.prequalifiedSupplierPage
   visibleDeps:
     - prequalifiedSupplierForm
+- name:  navbar.redFlagHistory
+  visible: no

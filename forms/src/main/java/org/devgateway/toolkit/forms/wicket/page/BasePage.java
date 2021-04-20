@@ -731,12 +731,8 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 MetaDataRoleAuthorizationStrategy.authorize(navbarAlerts, Component.RENDER, ROLE_ADMIN);
                 list.add(navbarAlerts);
 
-                BootstrapBookmarkablePageLink<ListFlagHistoryPage> redFlagHistory =
-                        new MenuBookmarkablePageLink<ListFlagHistoryPage>(ListFlagHistoryPage.class,
-                                new StringResourceModel("navbar.redFlagHistory", BasePage.this, null)
-                        ).setIconType(FontAwesomeIconType.flag);
-                MetaDataRoleAuthorizationStrategy.authorize(redFlagHistory, Component.RENDER, ROLE_ADMIN);
-                list.add(redFlagHistory);
+                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListFlagHistoryPage.class,
+                        "navbar.redFlagHistory", FontAwesomeIconType.flag);
 
                 BootstrapBookmarkablePageLink<ListAlertsStatisticsPage> alertsStatistics =
                         new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
