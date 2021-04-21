@@ -281,8 +281,13 @@ public abstract class GenericOCDSController {
         return createFilterCriteria(MongoConstants.FieldNames.PLANNING_FISCAL_YEAR, filter.getFiscalYear(), filter);
     }
 
-    protected Criteria getLocationTypeCriteria(final DefaultFilterPagingRequest filter) {
+    protected Criteria getTenderLocationTypeCriteria(final DefaultFilterPagingRequest filter) {
         return createFilterCriteria(MongoConstants.FieldNames.TENDER_LOCATIONS_TYPE, filter.getLocationType(), filter);
+    }
+
+    protected Criteria getContractLocationTypeCriteria(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteria(MongoConstants.FieldNames.CONTRACTS_LOCATIONS_TYPE,
+                filter.getLocationType(), filter);
     }
 
     protected Criteria getTenderStatusFilterCriteria(final DefaultFilterPagingRequest filter) {
@@ -441,12 +446,16 @@ public abstract class GenericOCDSController {
      */
     protected Criteria getByTenderDeliveryLocationIdentifier(final DefaultFilterPagingRequest filter) {
         return createFilterCriteria("tender.items.deliveryLocation._id",
-                filter.getTenderLoc(), filter
+                filter.getLocationId(), filter
         );
     }
 
     protected Criteria getByTenderLocationIdentifier(final DefaultFilterPagingRequest filter) {
-        return createFilterCriteriaObjectId("tender.locations._id", filter.getTenderLoc(), filter);
+        return createFilterCriteriaObjectId("tender.locations._id", filter.getLocationId(), filter);
+    }
+
+    protected Criteria getByContractLocationIdentifier(final DefaultFilterPagingRequest filter) {
+        return createFilterCriteriaObjectId("contracts.locations._id", filter.getLocationId(), filter);
     }
 
     /**
@@ -726,7 +735,6 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.CONTRACTOR_ID, getContractorIdCriteria(filter));
         map.put(MongoConstants.Filters.BUYER_ID, getBuyerIdCriteria(filter));
         map.put(MongoConstants.Filters.PROCUREMENT_METHOD, getProcurementMethodCriteria(filter));
-        map.put(MongoConstants.Filters.TENDER_LOC, getByTenderLocationIdentifier(filter));
         map.put(MongoConstants.Filters.TENDER_VALUE, getByTenderAmountIntervalCriteria(filter));
         map.put(MongoConstants.Filters.AWARD_VALUE, getByAwardAmountIntervalCriteria(filter));
         map.put(MongoConstants.Filters.FLAGGED, getFlaggedCriteria(filter));
@@ -735,7 +743,6 @@ public abstract class GenericOCDSController {
         map.put(MongoConstants.Filters.AWARD_STATUS, getAwardStatusFilterCriteria(filter));
         map.put(MongoConstants.Filters.PROCUREMENT_METHOD_RATIONALE, getProcurementMethodRationaleCriteria(filter));
         map.put(MongoConstants.Filters.FISCAL_YEAR, getFiscalYearFilterCriteria(filter));
-        map.put(MongoConstants.Filters.LOCATION_TYPE, getLocationTypeCriteria(filter));
         map.put(MongoConstants.Filters.TENDER_STATUS, getTenderStatusFilterCriteria(filter));
         map.put(MongoConstants.Filters.BIDDER_ID, getBidderIdCriteria(filter));
         map.put(MongoConstants.Filters.TOTAL_FLAGGED, getTotalFlaggedCriteria(filter));
@@ -843,4 +850,17 @@ public abstract class GenericOCDSController {
         return null;
     }
 
+    protected Criteria getContractMapFilterCriteria(YearFilterPagingRequest filter) {
+        Map<String, CriteriaDefinition> map = createDefaultFilterCriteriaMap(filter);
+        map.put(MongoConstants.Filters.LOCATION_TYPE, getContractLocationTypeCriteria(filter));
+        map.put(MongoConstants.Filters.LOCATION_ID, getByContractLocationIdentifier(filter));
+        return getYearDefaultFilterCriteria(filter, map, getTenderDateField());
+    }
+
+    protected Criteria getTenderMapFilterCriteria(YearFilterPagingRequest filter) {
+        Map<String, CriteriaDefinition> map = createDefaultFilterCriteriaMap(filter);
+        map.put(MongoConstants.Filters.LOCATION_TYPE, getTenderLocationTypeCriteria(filter));
+        map.put(MongoConstants.Filters.LOCATION_ID, getByTenderLocationIdentifier(filter));
+        return getYearDefaultFilterCriteria(filter, map, getTenderDateField());
+    }
 }

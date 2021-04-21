@@ -5,8 +5,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import org.devgateway.ocds.persistence.mongo.excel.annotation.ExcelExport;
 
 import java.util.Set;
+import java.util.TreeSet;
 
-public class MakueniItem extends Item {
+public class OCPortalItem extends Item {
     /**
      * AGPO Category
      * <p>
@@ -15,7 +16,7 @@ public class MakueniItem extends Item {
     @JsonProperty("targetGroup")
     @JsonPropertyDescription("The name of the AGPO Category. Eg PWD, Women, Youth, etc.")
     @ExcelExport
-    private Set<String> targetGroup;
+    private Set<String> targetGroup = new TreeSet<>();
 
     /**
      * The monetary value of a single unit, allocated to the AGPO Category

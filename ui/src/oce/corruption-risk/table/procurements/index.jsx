@@ -8,7 +8,7 @@ import { getFlaggedReleases } from './api';
 import { setImmer } from '../../../tools';
 
 const Table = ({
-  filters, navigate, fmPrefix,
+  filters, fmPrefix,
 }) => {
   const { t } = useTranslation();
 
@@ -55,15 +55,15 @@ const Table = ({
         text: t('crd:procurements:table:tenderName'),
         dataField: 'name',
         fm: `${fmPrefix}.tenderName`,
-        formatter: mkContractLink(navigate),
+        formatter: mkContractLink,
         headerStyle: {
           width: '20%',
         },
       }, {
         text: t('crd:procurements:table:ocid'),
-        dataField: 'id',
+        dataField: 'ocid',
         fm: `${fmPrefix}.ocid`,
-        formatter: mkContractLink(navigate),
+        formatter: mkContractLink,
       }, {
         text: t('crd:procurements:table:awardStatus'),
         dataField: 'awardStatus',
@@ -98,7 +98,6 @@ const Table = ({
 };
 
 Table.propTypes = {
-  navigate: PropTypes.func.isRequired,
   fmPrefix: PropTypes.string.isRequired,
 };
 

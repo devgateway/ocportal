@@ -82,7 +82,7 @@ class ProcurementsTable extends PaginatedTable {
 
   render() {
     const {
-      data, navigate, corruptionType, t,
+      data, corruptionType, t,
     } = this.props;
 
     if (!data) return null;
@@ -101,6 +101,8 @@ class ProcurementsTable extends PaginatedTable {
       const startDate = new Date(tenderPeriod.get('startDate')).toLocaleDateString();
       const endDate = new Date(tenderPeriod.get('endDate')).toLocaleDateString();
 
+      const ocid = contract.get('ocid');
+
       const flags = contract.get('flags');
       const flaggedStats = flags.get('flaggedStats');
       const flagType = flaggedStats.get('type', corruptionType);
@@ -115,9 +117,11 @@ class ProcurementsTable extends PaginatedTable {
           ['tender', 'status'],
           contract.get('status', 'N/A'),
         ),
-        id: contract.get('ocid'),
+        id: `${ocid}-${flagType}`,
+        ocid,
         title: contract.get('title', 'N/A'),
         PEName: contract.getIn(['procuringEntity', 'name'], 'N/A'),
+        buyerName: contract.getIn(['buyer', 'name'], 'N/A'),
         tenderAmount,
         awardsAmount: getAwardAmount(contract),
         tenderDate: `${startDate}—${endDate}`,
@@ -145,20 +149,26 @@ class ProcurementsTable extends PaginatedTable {
           },
           {
             text: t('crd:procurementsTable:contractID'),
-            dataField: 'id',
+            dataField: 'ocid',
             fm: 'crd.overview.procurementProcesses.col.contractId',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
           },
           {
             text: t('crd:procurementsTable:title'),
             dataField: 'title',
             fm: 'crd.overview.procurementProcesses.col.title',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
           },
           {
             text: t('crd:procurementsTable:procuringEntity'),
             dataField: 'PEName',
             fm: 'crd.overview.procurementProcesses.col.procuringEntity',
+            formatter: _3LineText,
+          },
+          {
+            text: t('crd:procurementsTable:buyerName'),
+            dataField: 'buyerName',
+            fm: 'crd.overview.procurementProcesses.col.buyerName',
             formatter: _3LineText,
           },
           {

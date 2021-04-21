@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MakueniOrganization extends Organization {
+public class OCPortalOrganization extends Organization {
 
     @JsonProperty("targetGroup")
     @JsonPropertyDescription("The name of the AGPO Category. Eg PWD, Women, Youth, etc.")
     @ExcelExport
     private List<String> targetGroups = new ArrayList<>();
+
+    private List<String> prequalifiedItems = new ArrayList<>();
 
     public List<String> getTargetGroups() {
         return targetGroups;
@@ -22,6 +24,14 @@ public class MakueniOrganization extends Organization {
 
     public void setTargetGroups(List<String> targetGroups) {
         this.targetGroups = targetGroups;
+    }
+
+    public List<String> getPrequalifiedItems() {
+        return prequalifiedItems;
+    }
+
+    public void setPrequalifiedItems(List<String> prequalifiedItems) {
+        this.prequalifiedItems = prequalifiedItems;
     }
 }
 

@@ -64,12 +64,12 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
         GenericSleepFormComponent<String> supplierID =
                 new GenericSleepFormComponent<>("supplierID",
                         item.getModel().map(Bid::getSupplier).map(Supplier::getCode));
-        supplierID.setOutputMarkupId(true);
+        supplierID.setOutputMarkupPlaceholderTag(true);
         item.add(supplierID);
 
         GenericSleepFormComponent<String> targetGroup = new GenericSleepFormComponent<>("targetGroup",
                 item.getModel().map(Bid::getSupplier).map(Supplier::getTargetGroups).map(Category::categoryLabels));
-        targetGroup.setOutputMarkupId(true);
+        targetGroup.setOutputMarkupPlaceholderTag(true);
         item.add(targetGroup);
 
         GenericSleepFormComponent<List<String>> prequalifiedItems =
@@ -81,7 +81,7 @@ public class BidPanel extends ListViewSectionPanel<Bid, TenderQuotationEvaluatio
                         return new MultiLineLabel(id, getModel());
                     }
                 };
-        prequalifiedItems.setOutputMarkupId(true);
+        prequalifiedItems.setOutputMarkupPlaceholderTag(true);
         item.add(prequalifiedItems);
 
         supplier.getField().add(new SupplierUpdatingBehavior("change",

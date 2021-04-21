@@ -1,13 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import ViewSwitcher from '../oce/switcher';
+import { useTranslation } from 'react-i18next';
+import { enableMapSet } from 'immer';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route, Redirect,
+} from 'react-router-dom';
 import './style.scss';
 import OCEMakueni from './oceMakueni';
 import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
 import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
-import { enableMapSet } from 'immer';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
@@ -18,9 +23,22 @@ import SMSHelp from '../oce/makueni/SMSHelp';
 import PortalVideos from '../oce/makueni/PortalVideos';
 
 import store from '../oce/app/store';
-import { useTranslation } from 'react-i18next';
 
 enableMapSet();
+
+/**
+ * Can be used to debug routes more easily
+ */
+// class DebugRouter extends Router {
+//   constructor(props) {
+//     super(props);
+//     console.log('initial history is: ', JSON.stringify(this.history, null, 2));
+//     this.history.listen((location, action) => {
+//       console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
+//       console.log(`The last navigation action was ${action}`, JSON.stringify(this.history, null, 2));
+//     });
+//   }
+// }
 
 const BILLION = 1000000000;
 const MILLION = 1000000;
@@ -79,30 +97,99 @@ const styling = {
   },
 };
 
-OCEMakueni.STYLING = styling;
-
 CorruptionRickDashboard.STYLING = JSON.parse(JSON.stringify(styling));
 CorruptionRickDashboard.STYLING.charts.traceColors = ['#3371b1', '#2b9ff6', '#5db7fb', '#86cafd', '#bbe2ff'];
-
-class OceSwitcher extends ViewSwitcher {
-}
-
-OceSwitcher.views.tender = MakueniTenders;
-OceSwitcher.views.docs = Docs;
-OceSwitcher.views.smshelp = SMSHelp;
-OceSwitcher.views['publication-policy'] = PublicationPolicy;
-OceSwitcher.views['portal-videos'] = PortalVideos;
-OceSwitcher.views['contracts-list'] = ContractsList;
-OceSwitcher.views['procurement-plan'] = MakueniProcurementPlans;
-OceSwitcher.views.alerts = Alerts;
-OceSwitcher.views['m-and-e'] = OCEMakueni;
-OceSwitcher.views.crd = CorruptionRickDashboard;
 
 // this could be replaced with Suspense
 const OceSwitcherLoader = () => {
   const { t, i18n, ready } = useTranslation();
   return ready
-    ? <OceSwitcher t={t} i18n={i18n} styling={styling} />
+    ? (
+      <Router>
+        <Switch>
+          <Route exact path="/portal">
+            <Redirect to="/portal/tender" />
+          </Route>
+          <Route path="/portal/smshelp">
+            <SMSHelp
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/contracts-list">
+            <ContractsList
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/portal-videos">
+            <PortalVideos
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/alerts/:preqId?">
+            <Alerts
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/publication-policy">
+            <PublicationPolicy
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/tender">
+            <MakueniTenders
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/procurement-plan">
+            <MakueniProcurementPlans
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/m-and-e/:selected?">
+            <OCEMakueni
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/docs">
+            <Docs
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/crd/:page?/:type?/:individualIndicator?">
+            <CorruptionRickDashboard
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/procurement-plan">
+            <MakueniProcurementPlans
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+        </Switch>
+      </Router>
+    )
     : null;
 };
 

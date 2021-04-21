@@ -60,6 +60,7 @@
 - name: navbar.designations
 - name: navbar.projectClosureHandover
 - name: navbar.procuringentitylist
+  visible: no
 - name: navbar.subcountylist
 - name: navbar.wardlist
 - name: navbar.subwardlist
@@ -73,3 +74,5 @@
 - name:  navbar.prequalifiedSupplierPage
   visibleDeps:
     - prequalifiedSupplierForm
+- name:  navbar.redFlagHistory
+  visible: yes

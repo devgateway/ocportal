@@ -1,6 +1,7 @@
 import React from 'react';
 import { Map, List } from 'immutable';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import CRDPage from '../../page';
 import Visualization from '../../../visualization';
 import TopSearch from '../../top-search';
@@ -54,7 +55,7 @@ class Info extends Visualization {
 
   render() {
     const {
-      data, supplier, gotoSupplier, t,
+      data, supplier, t,
     } = this.props;
 
     const title = data.getIn(['tender', 'title']);
@@ -95,23 +96,23 @@ class Info extends Visualization {
             {title && <dd>{title}</dd>}
           </dl>
           )}
-        <table className="table table-bordered join-bottom info-table">
+        <table className="table table-bordered table-fixed join-bottom info-table">
           <tbody>
             <tr>
-              <td>
-                {PE && (
-                <dl>
-                  <dt><span className="contract-label">{t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
-                  <dd>
-                    <a
-                      href={`#!/crd/procuring-entity/${PE.get('id')}`}
-                    >
-                      {PE.get('name')}
-                    </a>
-                  </dd>
-                </dl>
-                )}
-              </td>
+              {PE && (
+                <td>
+                  <dl>
+                    <dt><span className="contract-label">{t('crd:contracts:baseInfo:procuringEntityName')}</span></dt>
+                    <dd>
+                      <Link
+                        to={`/portal/crd/procuring-entity/${PE.get('id')}`}
+                      >
+                        {PE.get('name')}
+                      </Link>
+                    </dd>
+                  </dl>
+                </td>
+              )}
               <td>
                 <dl>
                   <dt><span className="contract-label">{t('crd:contracts:baseInfo:buyer')}</span></dt>
@@ -125,12 +126,11 @@ class Info extends Visualization {
                     <span className="contract-value">
                       {supplier
                         ? (
-                          <a
-                            href={`#!/crd/supplier/${supplier.get('id')}`}
-                            onClick={gotoSupplier}
+                          <Link
+                            to={`/portal/crd/supplier/${supplier.get('id')}`}
                           >
                             {supplier.get('name')}
-                          </a>
+                          </Link>
                         )
                         : t('general:undefined')}
                     </span>
@@ -140,7 +140,7 @@ class Info extends Visualization {
             </tr>
           </tbody>
         </table>
-        <table className="table table-bordered">
+        <table className="table table-bordered table-fixed">
           <tbody>
             <tr>
               <td>

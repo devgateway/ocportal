@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import BootstrapTableWrapper from '../../../archive/bootstrap-table-wrapper';
 import { getFlaggedReleases } from './api';
 import './style.scss';
+import { Link } from 'react-router-dom';
 
 const Table = ({ filters }) => {
   const [page, setPage] = useState(1);
@@ -48,9 +49,9 @@ const Table = ({ filters }) => {
   const formatDate = (date) => new Date(date).toLocaleDateString();
 
   const formatPE = (PEName, { PEId }) => (
-    <a href={`#!/crd/procuring-entity/${PEId}`}>
+    <Link to={`/portal/crd/procuring-entity/${PEId}`}>
       {PEName}
-    </a>
+    </Link>
   );
 
   return (
@@ -69,6 +70,15 @@ const Table = ({ filters }) => {
         className: 'pe-name',
         columnClassName: 'pe-name',
         formatter: formatPE,
+        headerStyle: {
+          width: '20%',
+        },
+      }, {
+        text: t('crd:contracts:baseInfo:buyerName'),
+        dataField: 'buyerName',
+        fm: 'crd.supplier.procurements.col.buyerName',
+        className: 'buyer-name',
+        columnClassName: 'buyer-name',
         headerStyle: {
           width: '20%',
         },
