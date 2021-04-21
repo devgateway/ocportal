@@ -1,5 +1,6 @@
 import React from 'react';
 import { List } from 'immutable';
+import PropTypes from 'prop-types';
 import CRDPage from '../page';
 import {
   getAwardAmount, mkContractLink, wireProps, _3LineText,
@@ -8,7 +9,6 @@ import PaginatedTable from '../paginated-table';
 import Archive from '../archive';
 import BackendDateFilterable from '../backend-date-filterable';
 import BootstrapTableWrapper from '../archive/bootstrap-table-wrapper';
-import PropTypes from 'prop-types';
 
 class CList extends PaginatedTable {
   getCustomEP() {
@@ -29,7 +29,7 @@ class CList extends PaginatedTable {
   }
 
   render() {
-    const { data, navigate, t } = this.props;
+    const { data, t } = this.props;
 
     if (!data) return null;
 
@@ -85,7 +85,7 @@ class CList extends PaginatedTable {
             text: t('crd:procurementsTable:contractID'),
             dataField: 'ocid',
             fm: 'crd.contracts.col.contractId',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
             classes: 'ocid',
             headerClasses: 'ocid',
           },
@@ -93,7 +93,7 @@ class CList extends PaginatedTable {
             text: t('crd:general:contract:title'),
             dataField: 'title',
             fm: 'crd.contracts.col.contractTitle',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
           },
           {
             text: t('crd:contracts:list:procuringEntity'),
@@ -141,7 +141,7 @@ CList.propTypes = {
 export default class Contracts extends CRDPage {
   render() {
     const {
-      searchQuery, doSearch, navigate, t,
+      searchQuery, doSearch, t,
     } = this.props;
     return (
       <BackendDateFilterable
@@ -150,7 +150,6 @@ export default class Contracts extends CRDPage {
         <Archive
           searchQuery={searchQuery}
           doSearch={doSearch}
-          navigate={navigate}
           className="contracts-page"
           topSearchPlaceholder={t('crd:contracts:top-search')}
           List={CList}
