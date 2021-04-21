@@ -152,8 +152,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
     private StringBuffer validationErrors;
 
-    private static final String OCID_PREFIX = "ocds-muq5cl-";
-
+    public static final String OCID_PREFIX = "ocds-muq5cl-";
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
