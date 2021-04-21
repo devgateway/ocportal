@@ -124,7 +124,7 @@ public class ReleaseFlaggingService {
                 map(ReleaseFlags::getShortFlagName).
                 filter(f -> flaggedRelease.getFlags().getFlagSet(f)).
                 collect(Collectors.toCollection(rfh::getFlagged));
-        rfh.setReleaseId(flaggedRelease.getId());
+        rfh.setReleaseId(flaggedRelease.getOcid());
         rfh.setFlaggedDate(ZonedDateTime.now());
         releaseFlagHistoryService.save(rfh);
     }
