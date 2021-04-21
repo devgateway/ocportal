@@ -19,7 +19,7 @@
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
     <properties>
-        <revision>1.13.2-SNAPSHOT</revision>
+        <revision>2.0.9-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <liquibase.version>3.8.5</liquibase.version>
