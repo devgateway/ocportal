@@ -1562,7 +1562,16 @@
         ]]></sql>
     </changeSet>
 
-    <!--Change Set Placeholder 2-->
+    <changeSet id="OCMAKU-1061" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="release_flag_history_flagged"/>
+            <tableExists tableName="release_flag_history"/>
+        </preConditions>
+        <sql><![CDATA[
+            delete from release_flag_history_flagged;
+            delete from release_flag_history;
+        ]]></sql>
+    </changeSet>
 
     <!--Change Set Placeholder 3-->
 
