@@ -31,6 +31,8 @@ const PurchaseReqView = (props) => {
   const history = useHistory();
   const { t } = useTranslation();
 
+  useEffect(() => window.scrollTo(0, 0), []);
+
   const maybeTrimOcidPrefix = (id) => {
     if (id.includes('ocds-muq5cl-')) {
       return id.replace('ocds-muq5cl-', '');
@@ -171,7 +173,7 @@ const PurchaseReqView = (props) => {
     </div>
 
     <div className="row">
-      <GoBack t={t} history={history} />
+      <GoBack t={t} history={history} className="col-md-3" />
 
       {isFeatureVisible('publicView.tender.receiveAlertsButton') && (
       <div className="col-md-offset-5 col-md-4">

@@ -19,8 +19,6 @@ import {
 } from 'react-router-dom';
 
 const MakueniTenders = (props) => {
-  useEffect(() => window.scrollTo(0, 0), []);
-
   const [filters, updateFilters] = useImmer({});
   const [page, updatePage] = useImmer(1);
   const [pageSize, updatePageSize] = useImmer(20);

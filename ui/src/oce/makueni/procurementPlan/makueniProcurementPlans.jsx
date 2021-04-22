@@ -14,8 +14,6 @@ import { getProcurementPlans } from '../../api/Api';
 import fmConnect from '../../fm/fm';
 
 const MakueniProcurementPlans = (props) => {
-  useEffect(() => window.scrollTo(0, 0), []);
-
   const [state, updateState] = useImmer({
     filters: {},
     page: 1,
