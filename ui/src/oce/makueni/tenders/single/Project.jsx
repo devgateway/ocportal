@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Item } from './Item';
 import fmConnect from '../../../fm/fm';
 import FileDownloadLinks from './FileDownloadLinks';
@@ -15,7 +15,6 @@ const Project = (props) => {
   const { isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
   const { t } = useTranslation();
-  const history = useHistory();
 
   const { id } = useParams();
 
@@ -39,7 +38,9 @@ const Project = (props) => {
   return (
     <div className="project makueni-form">
       <div className="row">
-        <GoBack t={t} history={history} className="col-md-3" />
+        <div className="col-md-3">
+          <GoBack t={t} />
+        </div>
       </div>
 
       <div className="row padding-top-10">

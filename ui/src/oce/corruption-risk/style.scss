@@ -63,41 +63,6 @@ $borderColor: #eeeeee;
             }
         }
 
-        .dash-switcher-wrapper {
-            display: inline-block;
-            color: #9fa9ba;
-
-            h1 {
-                cursor: pointer;
-                padding: $base-space-sm / 2;
-
-                &.corruption-dash-title {
-                    color: #ffffff;
-                    font-size: 17px;
-                    font-weight: 600;
-                    margin-top: 3px;
-                }
-
-                .glyphicon {
-                    font-size: .53em;
-                    margin-left: $base-space-sm;
-                    top: 0;
-                }
-            }
-
-            .dashboard-switcher {
-                background: rgb(20, 67, 97);
-                font-weight: 500;
-                padding: $base-space-sm / 2;
-                border-top: 1px solid #204e6e;
-                margin-top: -10px;
-
-                a {
-                    color: white;
-                }
-            }
-        }
-
         .react-bootstrap-table-pagination {
             margin-bottom: $base-space-sm;
         }
