@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
-import { Link, Route, Switch } from 'react-router-dom';
+import {
+  Link, Route, Switch, useHistory,
+} from 'react-router-dom';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import '../makueni.scss';
@@ -14,6 +16,8 @@ import { getProcurementPlans } from '../../api/Api';
 import fmConnect from '../../fm/fm';
 
 const MakueniProcurementPlans = (props) => {
+  const history = useHistory();
+
   const [state, updateState] = useImmer({
     filters: {},
     page: 1,
@@ -107,7 +111,6 @@ const MakueniProcurementPlans = (props) => {
     <div className="container-fluid dashboard-default">
 
       <Header
-        onSwitch={props.onSwitch}
         styling={props.styling}
         selected="procurement-plan"
       />
@@ -154,7 +157,7 @@ const MakueniProcurementPlans = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => props.onSwitch('alerts')}
+              onClick={() => history.push('/portal/alerts')}
             >
               {t('general:subscribeToEmailAlerts')}
             </button>
@@ -170,7 +173,7 @@ const MakueniProcurementPlans = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => props.onSwitch('smshelp')}
+              onClick={() => history.push('/portal/smshelp')}
             >
               {t('general:smsFeedbackHelp')}
             </button>

@@ -150,7 +150,6 @@ const MakueniTenders = (props) => {
     <div className="container-fluid dashboard-default">
 
       <Header
-        onSwitch={props.onSwitch}
         styling={props.styling}
         selected="tender"
       />
@@ -221,7 +220,7 @@ const MakueniTenders = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => props.onSwitch('smshelp')}
+              onClick={() => history.push('/portal/smshelp')}
             >
               {t('general:smsFeedbackHelp')}
             </button>
