@@ -1,13 +1,16 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.MEStatus;
 import org.devgateway.toolkit.persistence.dao.categories.SubWard;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.validator.validators.MaxAttachedFiles;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -305,5 +308,12 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity {
 
     public void setSubwards(List<SubWard> subwards) {
         this.subwards = subwards;
+    }
+
+    @MaxAttachedFiles
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Collection<FileMetadata> getAllAttachedFiles() {
+        return getFormDocs();
     }
 }
