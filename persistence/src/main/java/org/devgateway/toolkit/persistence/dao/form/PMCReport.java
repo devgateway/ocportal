@@ -1,13 +1,16 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.PMCStatus;
 import org.devgateway.toolkit.persistence.dao.categories.ProjectClosureHandover;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.validator.validators.MaxAttachedFiles;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -23,6 +26,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -181,5 +185,12 @@ public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
     public void setPmcChallenges(String pmcChallenges) {
         this.pmcChallenges = pmcChallenges;
+    }
+
+    @MaxAttachedFiles
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Collection<FileMetadata> getAllAttachedFiles() {
+        return getFormDocs();
     }
 }
