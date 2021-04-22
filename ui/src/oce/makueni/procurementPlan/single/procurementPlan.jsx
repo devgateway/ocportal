@@ -48,7 +48,9 @@ const ProcurementPlan = (props) => {
 
   return (
     <div className="procurement-plan makueni-form">
-      <GoBack history={history} t={t} />
+      <div className="row">
+        <GoBack history={history} t={t} className="col-md-3" />
+      </div>
       <div className="row padding-top-10">
         <div className="col-md-12">
           <h1 className="page-title">{t('procurementPlan:title')}</h1>
