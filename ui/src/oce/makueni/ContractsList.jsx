@@ -49,7 +49,7 @@ class ContractsList extends React.PureComponent {
             {data && data.map((entry) => this.row(entry))}
           </tbody>
         </table>
-        <span className="back-text">
+        <span>
           <a onClick={() => resetContractorID()} className="more-details-link">
             Go Back
           </a>
