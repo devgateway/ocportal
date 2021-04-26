@@ -21,7 +21,6 @@ class OCApp extends React.Component {
     super(props);
     this.tabs = [];
     this.state = {
-      dashboardSwitcherOpen: false,
       exporting: false,
       width: 0,
       compareBy: '',
@@ -353,38 +352,9 @@ class OCApp extends React.Component {
       </div>
     );
   }
-
-  toggleDashboardSwitcher(e) {
-    e.stopPropagation();
-    const { dashboardSwitcherOpen } = this.state;
-    this.setState({ dashboardSwitcherOpen: !dashboardSwitcherOpen });
-  }
-
-  dashboardSwitcher() {
-    const { dashboardSwitcherOpen } = this.state;
-    const { onSwitch, t } = this.props;
-    return (
-      <div className={cn('dash-switcher-wrapper', { open: dashboardSwitcherOpen })}>
-        <h1 onClick={(e) => this.toggleDashboardSwitcher(e)}>
-          {t('general:title')}
-          <i className="glyphicon glyphicon-menu-down" />
-          <small>{t('general:subtitle')}</small>
-        </h1>
-        {dashboardSwitcherOpen
-        && (
-        <div className="dashboard-switcher">
-          <a onClick={() => onSwitch('crd')}>
-            Corruption Risk Dashboard
-          </a>
-        </div>
-        )}
-      </div>
-    );
-  }
 }
 
 OCApp.propTypes = {
-  onSwitch: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
 };
 
