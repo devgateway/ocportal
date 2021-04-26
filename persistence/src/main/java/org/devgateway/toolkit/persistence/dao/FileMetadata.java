@@ -18,11 +18,13 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author idobre
@@ -49,6 +51,10 @@ public class FileMetadata extends AbstractAuditableEntity {
     private String url;
 
     private long size;
+
+    @NotNull
+    @Column(columnDefinition = "varchar(255) default ''")
+    private String md5;
 
     @Override
     public String toString() {
@@ -93,6 +99,14 @@ public class FileMetadata extends AbstractAuditableEntity {
 
     public void setSize(final long size) {
         this.size = size;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
     @Override
