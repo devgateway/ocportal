@@ -1,6 +1,5 @@
 import React from 'react';
 import { Map } from 'immutable';
-import cn from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import OCApp from '../oce';
@@ -62,29 +61,6 @@ class OCEMakueni extends OCApp {
     );
   }
 
-  dashboardSwitcher() {
-    const { dashboardSwitcherOpen } = this.state;
-    const { onSwitch } = this.props;
-    return (
-      <div className={cn('dash-switcher-wrapper', { open: dashboardSwitcherOpen })}>
-        <h1 onClick={this.toggleDashboardSwitcher.bind(this)}>
-          <strong>Monitoring & Evaluation</strong>
-          {' '}
-          Toolkit
-          <i className="glyphicon glyphicon-menu-down" />
-        </h1>
-        {dashboardSwitcherOpen
-        && (
-        <div className="dashboard-switcher">
-          <a onClick={() => onSwitch('crd')}>
-            Corruption Risk Dashboard
-          </a>
-        </div>
-        )}
-      </div>
-    );
-  }
-
   exportBtn() {
     const { t } = this.props;
     if (this.state.exporting) {
@@ -119,7 +95,6 @@ class OCEMakueni extends OCApp {
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="m-and-e"
         />
