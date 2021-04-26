@@ -8,27 +8,20 @@ import ussdMainMenu from '../resources/help/ussd-main-menu.jpg';
 import ussdSelectSubcounty from '../resources/help/ussd-select-subcounty.jpg';
 import ussdSelectWard from '../resources/help/ussd-select-ward.jpg';
 import ussdSubscribed from '../resources/help/ussd-subscribed.jpg';
+import GoBack from '../goback';
 
 class SMSHelp extends CRDPage {
   render() {
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="smshelp"
         />
         <div className="makueni-procurement-plan content">
           <div className="row">
             <div className="col-md-8 col-md-offset-2 makueni-form">
-              <a href="#" onClick={() => window.history.back()} className="back-link">
-                <span className="back-icon">
-                  <span className="previous">&#8249;</span>
-                </span>
-                <span className="back-text">
-                  Go Back
-                </span>
-              </a>
+              <GoBack t={this.props.t} />
             </div>
           </div>
 
