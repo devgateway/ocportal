@@ -11,7 +11,7 @@
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devgateway.makueni</groupId>
+    <groupId>org.devgateway.ocportal.makueni</groupId>
     <artifactId>makueni</artifactId>
     <version>2.0.10-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -108,27 +108,27 @@
                 <version>${pg.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                 <groupId>org.devgateway.ocportal.makueni</groupId>
                 <artifactId>persistence</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                 <groupId>org.devgateway.ocportal.makueni</groupId>
                 <artifactId>persistence-mongodb</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                 <groupId>org.devgateway.ocportal.makueni</groupId>
                 <artifactId>ui</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                 <groupId>org.devgateway.ocportal.makueni</groupId>
                 <artifactId>web</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                 <groupId>org.devgateway.ocportal.makueni</groupId>
                 <artifactId>forms</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -247,7 +247,7 @@
                     </executions>
                     <dependencies>
                         <dependency>
-                            <groupId>org.devgateway.makueni</groupId>
+                             <groupId>org.devgateway.ocportal.makueni</groupId>
                             <artifactId>pmd-rules</artifactId>
                             <version>${revision}</version>
                         </dependency>

@@ -21,7 +21,7 @@
     <description>Makueni Forms</description>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
+         <groupId>org.devgateway.ocportal.makueni</groupId>
         <artifactId>makueni</artifactId>
         <version>2.0.10-SNAPSHOT</version>
     </parent>
@@ -42,7 +42,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -53,17 +53,17 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>ui</artifactId>
         </dependency>
 
