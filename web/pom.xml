@@ -21,6 +21,8 @@
         <jminix.version>1.2.0</jminix.version>
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
         <commons-email.version>1.5</commons-email.version>
+        <json-tools.version>1.2.14</json-tools.version>
+        <joda-time.version>2.10.10</joda-time.version>
     </properties>
 
     <parent>
@@ -44,6 +46,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.java-json-tools</groupId>
+            <artifactId>json-schema-core</artifactId>
+            <version>${json-tools.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
         </dependency>
 
         <dependency>
@@ -93,6 +107,7 @@
             <artifactId>commons-text</artifactId>
             <version>${commons.text.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.bedatadriven</groupId>
