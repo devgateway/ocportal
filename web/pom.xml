@@ -94,6 +94,7 @@
             <version>${commons.text.version}</version>
         </dependency>
 
+
         <dependency>
             <groupId>com.bedatadriven</groupId>
             <artifactId>jackson-datatype-jts</artifactId>
