@@ -1,0 +1,72 @@
+<!--
+    Copyright (c) 2015 Development Gateway, Inc and others.
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the MIT License (MIT)
+    which accompanies this distribution, and is available at
+    https://opensource.org/licenses/MIT
+
+    Contributors:
+    Development Gateway - initial API and implementation
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="OCMAKU-1069" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="purchase_requisition_group_status_comments"/>
+            <tableExists tableName="tender_process_status_comments"/>
+        </preConditions>
+        <sql><![CDATA[
+            insert into purchase_requisition_group_status_comments
+                (purchase_requisition_group_id, status_comments_id, index)
+            select prg.id, tpsc.status_comments_id, tpsc.index
+            from tender_process_status_comments tpsc
+            join tender_process tp on tpsc.tender_process_id = tp.id
+            join purchase_requisition_group prg ON tp.id = prg.tender_process_id
+            where prg.id not in (select purchase_requisition_group_id from purchase_requisition_group_status_comments);
+
+            delete from tender_process_status_comments;
+        ]]></sql>
+    </changeSet>
+
+    <!--Change Set Placeholder 2-->
+
+    <!--Change Set Placeholder 3-->
+
+    <!--Change Set Placeholder 4-->
+
+    <!--Change Set Placeholder 5-->
+
+    <!--Change Set Placeholder 6-->
+
+    <!--Change Set Placeholder 7-->
+
+    <!--Change Set Placeholder 8-->
+
+    <!--Change Set Placeholder 9-->
+
+    <!--Change Set Placeholder 10-->
+
+    <!--Change Set Placeholder 11-->
+
+    <!--Change Set Placeholder 12-->
+
+    <!--Change Set Placeholder 13-->
+
+    <!--Change Set Placeholder 14-->
+
+    <!--Change Set Placeholder 15-->
+
+    <!--Change Set Placeholder 16-->
+
+    <!--Change Set Placeholder 17-->
+
+    <!--Change Set Placeholder 18-->
+
+    <!--Change Set Placeholder 19-->
+
+    <!--Change Set Placeholder 20-->
+</databaseChangeLog>
