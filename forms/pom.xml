@@ -249,7 +249,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.yahoo.platform.yui</groupId>
+            <groupId>webnf.compat</groupId>
             <artifactId>yuicompressor</artifactId>
             <version>${yuicompressor.version}</version>
         </dependency>
