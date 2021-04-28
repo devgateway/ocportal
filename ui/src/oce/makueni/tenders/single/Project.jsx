@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Item } from './Item';
 import fmConnect from '../../../fm/fm';
 import FileDownloadLinks from './FileDownloadLinks';
@@ -15,11 +15,14 @@ const Project = (props) => {
   const { isFeatureVisible } = props;
   const { currencyFormatter, formatDate } = props.styling.tables;
   const { t } = useTranslation();
-  const history = useHistory();
+
+  const { id } = useParams();
+
+  useEffect(() => window.scrollTo(0, 0), []);
 
   useEffect(() => {
-    getProject({ id: props.id }).then(setImmer(updateData));
-  });
+    getProject({ id }).then(setImmer(updateData));
+  }, [id]);
 
   // eslint-disable-next-line no-unused-vars
   const getFeedbackSubject = () => {
@@ -35,7 +38,9 @@ const Project = (props) => {
   return (
     <div className="project makueni-form">
       <div className="row">
-        <GoBack t={t} history={history} />
+        <div className="col-md-3">
+          <GoBack t={t} />
+        </div>
       </div>
 
       <div className="row padding-top-10">
@@ -95,7 +100,6 @@ const Project = (props) => {
 };
 
 Project.propTypes = {
-  id: PropTypes.number.isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
 };

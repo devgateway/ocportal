@@ -19,8 +19,6 @@ import {
 } from 'react-router-dom';
 
 const MakueniTenders = (props) => {
-  useEffect(() => window.scrollTo(0, 0), []);
-
   const [filters, updateFilters] = useImmer({});
   const [page, updatePage] = useImmer(1);
   const [pageSize, updatePageSize] = useImmer(20);
@@ -152,7 +150,6 @@ const MakueniTenders = (props) => {
     <div className="container-fluid dashboard-default">
 
       <Header
-        onSwitch={props.onSwitch}
         styling={props.styling}
         selected="tender"
       />
@@ -223,7 +220,7 @@ const MakueniTenders = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => props.onSwitch('smshelp')}
+              onClick={() => history.push('/portal/smshelp')}
             >
               {t('general:smsFeedbackHelp')}
             </button>
