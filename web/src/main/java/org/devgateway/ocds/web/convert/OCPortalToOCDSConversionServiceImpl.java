@@ -1201,10 +1201,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
             return Award.Status.pending;
         }
 
-        Optional<AwardNotificationItem> first = item.getParent().getItems().stream().sorted(
-                Comparator.comparing(AwardNotificationItem::getAwardDate).reversed())
-                .findFirst();
-        if (first.get().equals(item)) {
+        if (item.getAwardee().equals(contract.getAwardee())) {
             return Award.Status.active;
         } else {
             return Award.Status.unsuccessful;
