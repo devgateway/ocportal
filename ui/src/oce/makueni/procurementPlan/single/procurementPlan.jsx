@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Item } from '../../tenders/single/Item';
 import FileDownloadLinks from '../../tenders/single/FileDownloadLinks';
 import fmConnect from '../../../fm/fm';
@@ -17,7 +17,6 @@ const ProcurementPlan = (props) => {
   const { id } = useParams();
   const { t } = useTranslation();
   const [data, updateData] = useImmer(undefined);
-  const history = useHistory();
 
   const getFeedbackSubject = () => {
     let metadata;
@@ -48,7 +47,11 @@ const ProcurementPlan = (props) => {
 
   return (
     <div className="procurement-plan makueni-form">
-      <GoBack history={history} t={t} />
+      <div className="row">
+        <div className="col-md-3">
+          <GoBack t={t} />
+        </div>
+      </div>
       <div className="row padding-top-10">
         <div className="col-md-12">
           <h1 className="page-title">{t('procurementPlan:title')}</h1>

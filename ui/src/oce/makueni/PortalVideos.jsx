@@ -9,7 +9,6 @@ class PortalVideos extends CRDPage {
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="docs"
         />

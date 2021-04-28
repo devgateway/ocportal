@@ -1573,7 +1573,16 @@
         ]]></sql>
     </changeSet>
 
-    <!--Change Set Placeholder 3-->
+    <changeSet id="OCMAKU-1070" author="Octavian Ciubotaru">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="file_metadata" columnName="md5"/>
+        </preConditions>
+        <sql><![CDATA[
+            update file_metadata set md5=md5(fc.bytes)
+            from file_content fc
+            where fc.id=content_id;
+        ]]></sql>
+    </changeSet>
 
     <!--Change Set Placeholder 4-->
 
