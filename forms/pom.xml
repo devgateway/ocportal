@@ -175,7 +175,7 @@
 
         <dependency>
             <groupId>com.google.javascript</groupId>
-            <artifactId>closure-compiler</artifactId>
+            <artifactId>closure-compiler-unshaded</artifactId>
             <version>${closure.compiler.version}</version>
         </dependency>
 
