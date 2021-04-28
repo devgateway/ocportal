@@ -98,8 +98,6 @@ const Header = ({
     dispatch(loadStats());
   }, [dispatch]);
 
-  // const changeOption = (option) => onSwitch(option);
-
   const isActive = (option) => selected === option;
 
   const exportBtn = () => {
