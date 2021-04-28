@@ -38,7 +38,6 @@
         <poi.version>3.17</poi.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <jminix.version>1.2.0</jminix.version>
-        <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <swagger.version>3.0.0</swagger.version>
         <jdk-serializable-functional.version>1.8.6</jdk-serializable-functional.version>
         <commons-io.version>2.6</commons-io.version>
