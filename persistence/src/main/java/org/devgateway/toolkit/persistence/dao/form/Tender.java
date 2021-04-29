@@ -15,6 +15,7 @@ import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.persistence.validator.Severity;
 import org.devgateway.toolkit.persistence.validator.groups.HighLevel;
+import org.devgateway.toolkit.persistence.validator.validators.MaxAttachedFiles;
 import org.devgateway.toolkit.persistence.validator.validators.UniqueTenderProcessEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -299,5 +300,15 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     public void setWards(List<Ward> wards) {
         this.wards = wards;
+    }
+
+    @MaxAttachedFiles
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Collection<FileMetadata> getAllAttachedFiles() {
+        HashSet<FileMetadata> attached = new HashSet<>();
+        attached.addAll(getFormDocs());
+        attached.addAll(getBillOfQuantities());
+        return attached;
     }
 }

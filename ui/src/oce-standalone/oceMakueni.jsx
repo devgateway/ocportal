@@ -1,7 +1,7 @@
 import React from 'react';
 import { Map } from 'immutable';
-import cn from 'classnames';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import OCApp from '../oce';
 import OverviewTab from '../oce/tabs/overview';
 import LocationTab from '../oce/tabs/location';
@@ -46,10 +46,10 @@ class OCEMakueni extends OCApp {
     let linkUrl;
     let text;
     if (this.state.user.loggedIn) {
-      linkUrl = '/preLogout?referrer=/ui/index.html';
+      linkUrl = '/preLogout?referrer=/portal/';
       text = t('general:logout');
     } else {
-      linkUrl = '/login?referrer=/ui/index.html';
+      linkUrl = '/login?referrer=/portal/';
       text = t('general:login');
     }
     return (
@@ -58,29 +58,6 @@ class OCEMakueni extends OCApp {
           {text}
         </button>
       </a>
-    );
-  }
-
-  dashboardSwitcher() {
-    const { dashboardSwitcherOpen } = this.state;
-    const { onSwitch } = this.props;
-    return (
-      <div className={cn('dash-switcher-wrapper', { open: dashboardSwitcherOpen })}>
-        <h1 onClick={this.toggleDashboardSwitcher.bind(this)}>
-          <strong>Monitoring & Evaluation</strong>
-          {' '}
-          Toolkit
-          <i className="glyphicon glyphicon-menu-down" />
-        </h1>
-        {dashboardSwitcherOpen
-        && (
-        <div className="dashboard-switcher">
-          <a onClick={() => onSwitch('crd')}>
-            Corruption Risk Dashboard
-          </a>
-        </div>
-        )}
-      </div>
     );
   }
 
@@ -118,7 +95,6 @@ class OCEMakueni extends OCApp {
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="m-and-e"
         />
@@ -164,4 +140,4 @@ OCEMakueni.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default fmConnect(OCEMakueni);
+export default withRouter(fmConnect(OCEMakueni));

@@ -1,9 +1,11 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
+import org.devgateway.toolkit.persistence.validator.validators.MaxAttachedFiles;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -19,6 +21,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author mpostelnicu
@@ -115,5 +119,15 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
 
     public void setCompletionCertificate(Set<FileMetadata> completionCertificate) {
         this.completionCertificate = completionCertificate;
+    }
+
+    @MaxAttachedFiles
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Collection<FileMetadata> getAllAttachedFiles() {
+        return Stream.concat(
+                getFormDocs().stream(),
+                getCompletionCertificate().stream()
+        ).collect(Collectors.toCollection(HashSet::new));
     }
 }

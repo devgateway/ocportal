@@ -2,7 +2,7 @@ import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useHistory} from "react-router-dom";
 import {errorDialogClosed, selectPMCReports, selectPMCReportsArray, tokenDialogClosed} from "./pmcReportsSlice";
-import {selectMetadata} from "./metadataSlice";
+import { selectMetadata, selectTendersById } from "./metadataSlice";
 import {isRejectedReport, PMCReportStatus} from "../../app/constants";
 import {formatDateForDisplay, parseDate} from "../../app/date";
 import {Border} from "./Border";
@@ -15,7 +15,9 @@ export function PMCReports() {
     const history = useHistory();
 
     const metadata = useSelector(selectMetadata);
-    const tendersById = metadata.refById["Tender"];
+    const tenders = metadata.ref["Tender"];
+    const hasTenders = Array.isArray(tenders) && tenders.length > 0;
+    const tendersById = selectTendersById(metadata);
 
     const handleEditReport = report => e => {
         e.preventDefault();
@@ -61,7 +63,9 @@ export function PMCReports() {
 
     return (
         <Border title="PMC Reports" extraNavBar={
-            <Link to="/report" className="btn btn-success"><i className="fa fa-plus"/></Link>
+            <Link to="/report" className={`btn btn-success ${hasTenders ? '' : 'disabled'}`}>
+                <i className="fa fa-plus"/>
+            </Link>
         }>
             <div className="container-fluid pb-3">
 

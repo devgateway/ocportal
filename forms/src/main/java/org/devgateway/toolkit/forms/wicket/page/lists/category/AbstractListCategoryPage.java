@@ -17,6 +17,7 @@ public abstract class AbstractListCategoryPage<T extends Category> extends Abstr
 
     public AbstractListCategoryPage(final PageParameters parameters) {
         super(parameters);
+        filterGoReset = true;
     }
 
     @Override
