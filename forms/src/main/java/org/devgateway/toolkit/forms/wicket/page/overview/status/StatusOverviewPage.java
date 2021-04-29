@@ -122,8 +122,8 @@ public class StatusOverviewPage extends DataEntryBasePage {
             listViewStatusOverview.setModelObject(fetchData());
             listViewStatusOverview.removeListItems();
 
+            sideBar.refreshCounts(target);
             target.add(listViewStatusOverview);
-            target.add(sideBar.getTenderProcessCount());
             target.add(noData);
         }
 

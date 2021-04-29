@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import { fromJS, Map, Set } from 'immutable';
 import URI from 'urijs';
@@ -20,10 +21,8 @@ class OCApp extends React.Component {
     super(props);
     this.tabs = [];
     this.state = {
-      dashboardSwitcherOpen: false,
       exporting: false,
       width: 0,
-      currentTab: 0,
       compareBy: '',
       compareOpen: false,
       comparisonCriteriaValues: [],
@@ -115,11 +114,11 @@ class OCApp extends React.Component {
   }
 
   content() {
+    const { t, isFeatureVisible, styling } = this.props;
+    const { selected = '0' } = this.props.match.params;
+    const currentTab = parseInt(selected, 10);
     const {
-      navigate, t, isFeatureVisible, styling,
-    } = this.props;
-    const {
-      filters, compareBy, comparisonCriteriaValues, currentTab, bidTypes, width,
+      filters, compareBy, comparisonCriteriaValues, bidTypes, width,
     } = this.state;
     const Tab = this.tabs[currentTab];
     return (
@@ -137,7 +136,6 @@ class OCApp extends React.Component {
         months={filters.month || EMPTY_ARRAY}
         bidTypes={bidTypes}
         width={width}
-        navigate={navigate}
         t={t}
         styling={styling}
       />
@@ -158,14 +156,16 @@ class OCApp extends React.Component {
 
   navigationLink({ getName }, index) {
     const { t } = this.props;
+    const { selected = '0' } = this.props.match.params;
+    const currentTab = parseInt(selected, 10);
     return (
-      <a
+      <Link
         key={index}
-        className={cn('', { active: index === this.state.currentTab })}
-        onClick={() => this.setState({ currentTab: index })}
+        to={`/portal/m-and-e/${index}`}
+        className={cn('', { active: index === currentTab })}
       >
         {getName(t)}
-      </a>
+      </Link>
     );
   }
 
@@ -289,7 +289,7 @@ class OCApp extends React.Component {
     const { t } = this.props;
     if (this.state.user.loggedIn) {
       return (
-        <a href="/preLogout?referrer=/ui/index.html">
+        <a href="/preLogout?referrer=/portal/">
           <i className="glyphicon glyphicon-user" />
           {' '}
           {t('general:logout')}
@@ -297,7 +297,7 @@ class OCApp extends React.Component {
       );
     }
     return (
-      <a href="/login?referrer=/ui/index.html">
+      <a href="/login?referrer=/portal/">
         <i className="glyphicon glyphicon-user" />
         {' '}
         {t('general:login')}
@@ -352,38 +352,9 @@ class OCApp extends React.Component {
       </div>
     );
   }
-
-  toggleDashboardSwitcher(e) {
-    e.stopPropagation();
-    const { dashboardSwitcherOpen } = this.state;
-    this.setState({ dashboardSwitcherOpen: !dashboardSwitcherOpen });
-  }
-
-  dashboardSwitcher() {
-    const { dashboardSwitcherOpen } = this.state;
-    const { onSwitch, t } = this.props;
-    return (
-      <div className={cn('dash-switcher-wrapper', { open: dashboardSwitcherOpen })}>
-        <h1 onClick={(e) => this.toggleDashboardSwitcher(e)}>
-          {t('general:title')}
-          <i className="glyphicon glyphicon-menu-down" />
-          <small>{t('general:subtitle')}</small>
-        </h1>
-        {dashboardSwitcherOpen
-        && (
-        <div className="dashboard-switcher">
-          <a onClick={() => onSwitch('crd')}>
-            Corruption Risk Dashboard
-          </a>
-        </div>
-        )}
-      </div>
-    );
-  }
 }
 
 OCApp.propTypes = {
-  onSwitch: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
 };
 

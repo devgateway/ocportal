@@ -3,7 +3,7 @@ package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import org.bson.Document;
-import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.alerts.AlertsStatistics;
@@ -62,6 +62,9 @@ public class AlertsManagerImpl implements AlertsManager {
 
     @Autowired
     private AlertsEmailService alertsEmailService;
+
+    @Autowired
+    private SendEmailService emailSendingService;
 
     @Autowired
     private AlertsStatisticsService alertsStatisticsService;
@@ -172,7 +175,7 @@ public class AlertsManagerImpl implements AlertsManager {
             final Document tenderProcess = (Document) document.get("tenderProcesses");
             final Long tenderProcessId = (Long) tenderProcess.get("_id");
 
-            final String tenderUrl = String.format("%s/ui/index.html#!/tender/t/%d", serverURL, tenderProcessId);
+            final String tenderUrl = String.format("%s/portal/tender/t/%d", serverURL, tenderProcessId);
             tenderLinks.append("* <a style=\"color: #3060ED; text-decoration: none;\" href=\""
                     + tenderUrl + "\">" + tenderUrl + "</a>\n");
         }
@@ -183,7 +186,7 @@ public class AlertsManagerImpl implements AlertsManager {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage);
 
             msg.setTo(alert.getEmail());
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
 
             final String content;
             if (alert.getPurchaseReq() != null) {

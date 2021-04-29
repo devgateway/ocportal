@@ -20,7 +20,6 @@
   enabled: yes
   visible: yes
 - name: awardAcceptanceForm.items.acceptedAwardValue
-  mandatory: yes
   enabled: yes
   visible: yes
 - name: awardAcceptanceForm.items.awardee
