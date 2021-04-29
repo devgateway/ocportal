@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
@@ -42,6 +43,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.proj
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
+import javax.annotation.Resource;
+
 /**
  * @author idobre
  * @since 26/08/2019
@@ -53,6 +56,9 @@ public class AlertsManagerImpl implements AlertsManager {
     private static final Integer MAX_FAIL_COUNT = 3;
 
     private static final int THREAD_COUNT = 2;
+
+    @Resource
+    private AlertsManager self;
 
     @Value("${serverURL}")
     private String serverURL;
@@ -75,16 +81,18 @@ public class AlertsManagerImpl implements AlertsManager {
     @Override
     @Transactional
     public synchronized void sendAlerts() {
-        final List<Alert> alerts = getAlertableUsers();
+        final List<Long> alertIds = getAlertableUsers().stream()
+                .map(AbstractPersistable::getId)
+                .collect(Collectors.toList());
 
-        logger.info(alerts.size() + " alerts(s) will be processed.");
-        final List<Alert>[] lists = splitList(alerts);
+        logger.info(alertIds.size() + " alerts(s) will be processed.");
+        final List<Long>[] lists = splitList(alertIds);
         logger.info(lists.length + " threads will be created.");
 
         // create and start alerts threads
         final List<AlertsThread> threads = new ArrayList<>();
         for (int i = 0; i < lists.length; i++) {
-            final AlertsThread thread = new AlertsThread(lists[i], this);
+            final AlertsThread thread = new AlertsThread(lists[i], self);
             thread.setName("Alerts Thread #" + i);
             thread.start();
             threads.add(thread);
@@ -116,7 +124,10 @@ public class AlertsManagerImpl implements AlertsManager {
 
     @Override
     @Transactional
-    public AlertsStatistics processAlert(final Alert alert) throws AlertsProcessingException {
+    public AlertsStatistics processAlert(final Long alertId) throws AlertsProcessingException {
+        Alert alert = alertService.findById(alertId)
+                .orElseThrow(() -> new AlertsProcessingException(alertId));
+
         try {
             final AlertsStatistics stats = new AlertsStatistics(1);
             final LocalDateTime now = LocalDateTime.now();
@@ -153,7 +164,7 @@ public class AlertsManagerImpl implements AlertsManager {
             alert.setLastErrorMessage(e.getMessage());
             alertService.saveAndFlush(alert);
 
-            throw new AlertsProcessingException(alert, e);
+            throw new AlertsProcessingException(alertId, e);
         }
     }
 
@@ -256,7 +267,7 @@ public class AlertsManagerImpl implements AlertsManager {
         }
         if (!alert.getItems().isEmpty()) {
             criteriaList.add(createFilterCriteria(
-                    "tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                    "tenderProcesses.tender.tenderItems.nonNullPlanItem.item._id",
                     alert.getItems()));
         }
 

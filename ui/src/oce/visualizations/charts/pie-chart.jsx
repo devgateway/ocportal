@@ -28,7 +28,7 @@ class PieChart extends backendYearFilterable(Chart) {
       text,
       hovertext,
       textposition: 'inside',
-      textinfo: 'text',
+      textinfo: 'percent',
       hoverinfo: 'text+percent',
       marker: {
         colors,
