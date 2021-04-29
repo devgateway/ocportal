@@ -6,12 +6,6 @@ import org.apache.poi.ss.usermodel.charts.ChartDataSource;
 import org.apache.poi.xssf.usermodel.XSSFChart;
 import org.apache.xmlbeans.XmlObject;
 import org.devgateway.toolkit.web.excelcharts.CustomChartSeries;
-import org.devgateway.toolkit.web.excelcharts.util.XSSFChartUtil;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTAxDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBubbleChart;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBubbleSer;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTNumDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTPlotArea;
 
 /**
  * @author idobre
@@ -30,21 +24,21 @@ public class XSSFBubbleChartData extends AbstractXSSFChartData {
         return new AbstractSeries(id, order, categories, values) {
             @Override
             public void addToChart(final XmlObject ctChart) {
-                final CTBubbleChart ctBubbleChart = (CTBubbleChart) ctChart;
-                final CTBubbleSer bubbleSer = ctBubbleChart.addNewSer();
-
-                bubbleSer.addNewIdx().setVal(this.id);
-                bubbleSer.addNewOrder().setVal(this.order);
-
-                final CTAxDataSource catDS = bubbleSer.addNewXVal();
-                XSSFChartUtil.buildAxDataSource(catDS, this.categories);
-
-                final CTNumDataSource valueDS = bubbleSer.addNewBubbleSize();
-                XSSFChartUtil.buildNumDataSource(valueDS, this.values);
-
-                if (isTitleSet()) {
-                    bubbleSer.setTx(getCTSerTx());
-                }
+//                final CTBubbleChart ctBubbleChart = (CTBubbleChart) ctChart;
+//                final CTBubbleSer bubbleSer = ctBubbleChart.addNewSer();
+//
+//                bubbleSer.addNewIdx().setVal(this.id);
+//                bubbleSer.addNewOrder().setVal(this.order);
+//
+//                final CTAxDataSource catDS = bubbleSer.addNewXVal();
+//                XSSFChartUtil.buildAxDataSource(catDS, this.categories);
+//
+//                final CTNumDataSource valueDS = bubbleSer.addNewBubbleSize();
+//                XSSFChartUtil.buildNumDataSource(valueDS, this.values);
+//
+//                if (isTitleSet()) {
+//                    bubbleSer.setTx(getCTSerTx());
+//                }
             }
         };
     }
@@ -55,18 +49,18 @@ public class XSSFBubbleChartData extends AbstractXSSFChartData {
             throw new IllegalArgumentException("Chart must be instance of XSSFChart");
         }
 
-        final XSSFChart xssfChart = (XSSFChart) chart;
-        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
-        final CTBubbleChart bubbleChart = plotArea.addNewBubbleChart();
+//        final XSSFChart xssfChart = (XSSFChart) chart;
+//        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
+//        final CTBubbleChart bubbleChart = plotArea.addNewBubbleChart();
+//
+//        for (CustomChartSeries s : series) {
+//            s.addToChart(bubbleChart);
+//        }
+//
+//        for (ChartAxis ax : axis) {
+//            bubbleChart.addNewAxId().setVal(ax.getId());
+//        }
 
-        for (CustomChartSeries s : series) {
-            s.addToChart(bubbleChart);
-        }
-
-        for (ChartAxis ax : axis) {
-            bubbleChart.addNewAxId().setVal(ax.getId());
-        }
-
-        xssfChart.setTitleText(this.title);
+//        xssfChart.setTitleText(this.title);
     }
 }
