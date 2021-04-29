@@ -87,6 +87,7 @@ public class TopTenController extends GenericOCDSController {
 
         BasicDBObject project = new BasicDBObject();
         project.put(Fields.UNDERSCORE_ID, 0);
+        project.put(MongoConstants.FieldNames.AWARDS + ".id", ref(MongoConstants.FieldNames.AWARDS + "._id"));
         project.put(awardDateField(), 1);
         project.put(MongoConstants.FieldNames.AWARDS_SUPPLIERS_NAME, 1);
         project.put(MongoConstants.FieldNames.AWARDS_VALUE_AMOUNT, 1);
@@ -125,6 +126,7 @@ public class TopTenController extends GenericOCDSController {
 
         BasicDBObject project = new BasicDBObject();
         project.put(Fields.UNDERSCORE_ID, 0);
+        project.put(MongoConstants.FieldNames.TENDER + ".id", ref(MongoConstants.FieldNames.TENDER + "._id"));
         project.put(MongoConstants.FieldNames.TENDER_VALUE_AMOUNT, 1);
         project.put(getTenderDateField(), 1);
         project.put(MongoConstants.FieldNames.TENDER_PERIOD_START_DATE, 1);
