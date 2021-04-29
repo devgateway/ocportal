@@ -21,7 +21,7 @@
     <description>Makueni Forms</description>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
+         <groupId>org.devgateway.ocportal.makueni</groupId>
         <artifactId>makueni</artifactId>
         <version>2.0.10-SNAPSHOT</version>
     </parent>
@@ -35,14 +35,14 @@
         <zt.zip.version>1.13</zt.zip.version>
         <wicket.webjars.version>2.0.18</wicket.webjars.version>
         <closure.compiler.version>v20200406</closure.compiler.version>
-        <cglib.version>3.1</cglib.version>
+        <cglib.version>3.2.12</cglib.version>
         <yuicompressor.version>2.4.8</yuicompressor.version>
         <javamelody.version>1.86.0</javamelody.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -53,17 +53,17 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+             <groupId>org.devgateway.ocportal.makueni</groupId>
             <artifactId>ui</artifactId>
         </dependency>
 
@@ -159,6 +159,12 @@
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
             <version>${wicket.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib-nodep</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -169,7 +175,7 @@
 
         <dependency>
             <groupId>com.google.javascript</groupId>
-            <artifactId>closure-compiler</artifactId>
+            <artifactId>closure-compiler-unshaded</artifactId>
             <version>${closure.compiler.version}</version>
         </dependency>
 
@@ -243,7 +249,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.yahoo.platform.yui</groupId>
+            <groupId>webnf.compat</groupId>
             <artifactId>yuicompressor</artifactId>
             <version>${yuicompressor.version}</version>
         </dependency>
