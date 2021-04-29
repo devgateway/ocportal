@@ -17,7 +17,6 @@
         <start-class>org.devgateway.toolkit.web.spring.WebApplication</start-class>
         <java.version>1.8</java.version>
         <swagger.version>3.0.0</swagger.version>
-        <jminix.version>1.2.0</jminix.version>
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
         <commons-email.version>1.5</commons-email.version>
         <json-tools.version>1.2.14</json-tools.version>
@@ -40,6 +39,16 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-email</artifactId>
             <version>${commons-email.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.mail</groupId>
+                    <artifactId>javax.mail</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -78,8 +87,20 @@
 
         <dependency>
             <groupId>com.github.java-json-tools</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>2.2.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.java-json-tools</groupId>
             <artifactId>json-schema-core</artifactId>
             <version>${json-tools.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava-parent-jdk5</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -192,12 +213,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jminix</groupId>
-            <artifactId>jminix</artifactId>
-            <version>${jminix.version}</version>
         </dependency>
 
         <dependency>
