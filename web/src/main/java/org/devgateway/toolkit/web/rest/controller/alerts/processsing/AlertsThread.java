@@ -21,7 +21,7 @@ public class AlertsThread extends Thread {
     // how often the status information is logged (every 500 processed alerts)
     private static final int STATUS_FREQUENCY = 500;
 
-    private final List<Alert> alerts;
+    private final List<Long> alertIds;
 
     private final AlertsManager alertsManager;
 
@@ -39,15 +39,15 @@ public class AlertsThread extends Thread {
 
     private int errors = 0;         // number of errors
 
-    public AlertsThread(final List<Alert> alerts, final AlertsManager alertsManager) {
-        this.alerts = alerts;
+    public AlertsThread(final List<Long> alertIds, final AlertsManager alertsManager) {
+        this.alertIds = alertIds;
         this.alertsManager = alertsManager;
-        this.totalAlertsToProcess = alerts.size();
+        this.totalAlertsToProcess = alertIds.size();
         this.threadStats = new AlertsStatistics();
     }
 
     public void run() {
-        logger.info(getName() + " started processing " + alerts.size() + " alert(s).");
+        logger.info(getName() + " started processing " + alertIds.size() + " alert(s).");
 
         this.startTime = System.currentTimeMillis();
 
@@ -70,18 +70,17 @@ public class AlertsThread extends Thread {
      * Process Alerts one by one.
      */
     private void processAlerts() {
-        for (final Alert alert : alerts) {
+        for (final Long alertId : alertIds) {
             this.processedAlerts++;
 
             try {
-                final AlertsStatistics stats = alertsManager.processAlert(alert);
+                final AlertsStatistics stats = alertsManager.processAlert(alertId);
 
                 // add to global thread statistics data
                 this.threadStats.addStats(stats);
             } catch (Exception e) {
                 threadStats.setNumberErrors(++this.errors);
-                logger.error(getName()
-                        + " : Couldn't process alert: " + alert.getId() + " - email: " + alert.getEmail(), e);
+                logger.error(getName() + " : Couldn't process alert #" + alertId, e);
             }
 
             // update and log the status
