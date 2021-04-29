@@ -1,7 +1,10 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Form;
+import org.devgateway.toolkit.persistence.validator.validators.MaxAttachedFiles;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -9,6 +12,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import java.util.Collection;
 
 /**
  * @author mpostelnicu
@@ -21,4 +25,10 @@ import javax.persistence.Table;
 @Form(featureName = "administratorReportForm")
 public class AdministratorReport extends AbstractAuthImplTenderProcessMakueniEntity {
 
+    @MaxAttachedFiles
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Collection<FileMetadata> getAllAttachedFiles() {
+        return getFormDocs();
+    }
 }
