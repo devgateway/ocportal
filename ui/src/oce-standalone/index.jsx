@@ -131,7 +131,7 @@ const OceSwitcherLoader = () => {
               i18n={i18n}
             />
           </Route>
-          <Route path="/portal/alerts/:preqId?">
+          <Route path="/portal/alerts/:purchaseReqId?">
             <Alerts
               styling={styling}
               t={t}
