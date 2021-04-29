@@ -56,7 +56,11 @@ class ExpenditureTodateVsBudget extends Chart {
         hoverformat: hoverFormat,
       },
       yaxis: {
-        title: t('charts:expenditureToDateVsBudget:yAxisName'),
+        automargin: true,
+        title: {
+          text: t('charts:expenditureToDateVsBudget:yAxisName'),
+          standoff: 10,
+        },
         type: 'category',
       },
     };
