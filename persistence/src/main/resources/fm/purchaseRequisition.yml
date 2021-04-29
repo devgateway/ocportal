@@ -15,10 +15,10 @@
   mandatory: no
   enabled: yes
   visible: yes
-- name: purchaseRequisitionForm.project.procurementPlan.department
+- name: purchaseRequisitionForm.tenderProcess.procurementPlan.department
   enabled: yes
   visible: yes
-- name: purchaseRequisitionForm.project.procurementPlan.fiscalYear
+- name: purchaseRequisitionForm.tenderProcess.procurementPlan.fiscalYear
   enabled: yes
   visible: yes
 - name: purchaseRequisitionForm.purchRequisitions
@@ -122,7 +122,7 @@
 - name: purchaseRequisitionList.department
   visible: yes
   visibleDeps:
-    - purchaseRequisitionForm.project.procurementPlan.department
+    - purchaseRequisitionForm.tenderProcess.procurementPlan.department
 - name: purchaseRequisitionList.downloadOcds
   visible: yes
 - name: purchaseRequisitionList.filterToolbar
@@ -130,7 +130,7 @@
 - name: purchaseRequisitionList.fiscalYear
   visible: yes
   visibleDeps:
-    - purchaseRequisitionForm.project.procurementPlan.fiscalYear
+    - purchaseRequisitionForm.tenderProcess.procurementPlan.fiscalYear
 - name: purchaseRequisitionList.lastModifiedDate
   visible: yes
 - name: purchaseRequisitionList.status
@@ -206,11 +206,11 @@
 - name: publicView.tendersProcesses.col.department
   visible: yes
   visibleDeps:
-    - purchaseRequisitionForm.project.procurementPlan.department
+    - purchaseRequisitionForm.tenderProcess.procurementPlan.department
 - name: publicView.tendersProcesses.col.fiscalYear
   visible: yes
   visibleDeps:
-    - purchaseRequisitionForm.project.procurementPlan.fiscalYear
+    - purchaseRequisitionForm.tenderProcess.procurementPlan.fiscalYear
 - name: publicView.tendersProcesses.col.closingDate
   visible: yes
   visibleDeps:
