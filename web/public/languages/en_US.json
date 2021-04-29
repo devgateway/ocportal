@@ -807,7 +807,7 @@
   "alerts:subscribe": "Apply Subscription Preferences",
   "alerts:formErrorGeneral": "Please enter a valid email address and select at least 1 Department or 1 Item",
   "alerts:formErrorForTender": "Please enter a valid email address",
-  "alerts:subscribedSuccessfully:line1": "A confirmation email was send to $#$ address.",
+  "alerts:subscribedSuccessfully:line1": "A confirmation email was sent to $#$ address.",
   "alerts:subscribedSuccessfully:line2": "Please check your email and click on provided URL in order to validate your email address.",
   "alerts:subscribeFailed": "Error subscribing!",
   "alerts:unknownError": "Unknown error",
