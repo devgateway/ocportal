@@ -172,7 +172,7 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.wards._id", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                new Index().on("tenderProcesses.tender.tenderItems.nonNullPlanItem.item._id",
                         Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("tenderProcesses.tender.tenderValue", Sort.Direction.ASC));
