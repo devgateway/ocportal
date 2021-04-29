@@ -19,6 +19,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.fileinput.Boo
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.fileinput.FileInputConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
 import de.agilecoders.wicket.jquery.Key;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
@@ -409,6 +410,7 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
 
                             FileContent fileContent = new FileContent();
                             fileContent.setBytes(upload.getBytes());
+                            fileMetadata.setMd5(DigestUtils.md5Hex(upload.getBytes()));
                             fileMetadata.setContent(fileContent);
 
                             filesModel.add(fileMetadata);
