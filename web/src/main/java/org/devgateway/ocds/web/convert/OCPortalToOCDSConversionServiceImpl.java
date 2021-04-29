@@ -17,7 +17,6 @@ import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Bids;
 import org.devgateway.ocds.persistence.mongo.Budget;
-import org.devgateway.ocds.persistence.mongo.Change;
 import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.ContactPoint;
 import org.devgateway.ocds.persistence.mongo.Contract;
@@ -26,6 +25,7 @@ import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Implementation;
 import org.devgateway.ocds.persistence.mongo.Item;
+import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.OCPortalBudget;
 import org.devgateway.ocds.persistence.mongo.OCPortalBudgetBreakdown;
 import org.devgateway.ocds.persistence.mongo.OCPortalContract;
@@ -36,7 +36,6 @@ import org.devgateway.ocds.persistence.mongo.OCPortalMilestone;
 import org.devgateway.ocds.persistence.mongo.OCPortalOrganization;
 import org.devgateway.ocds.persistence.mongo.OCPortalPlanning;
 import org.devgateway.ocds.persistence.mongo.OCPortalTender;
-import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.OrganizationReference;
 import org.devgateway.ocds.persistence.mongo.Period;
@@ -198,12 +197,13 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
 
     public OCPortalLocation lpcToOCPortalLocation(LocationPointCategory lpc) {
-        OCPortalLocation location = ocPortalLocationRepository.findByDescription(lpc.getLabel());
-        if (location != null) {
-            return location;
+        Optional<OCPortalLocation> location = ocPortalLocationRepository.findById(lpc.getId().toString());
+        if (location.isPresent()) {
+            return location.get();
         }
         OCPortalLocation ml = new OCPortalLocation();
         ml.setDescription(lpc.getLabel());
+        ml.setId(lpc.getId().toString());
         if (lpc instanceof Ward) {
             ml.setType(OCPortalLocationType.ward);
         } else if (lpc instanceof Subcounty) {
@@ -212,8 +212,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
             throw new RuntimeException("Unkown OC Portal Location Type");
         }
         ml.setGeometry(new GeoJsonPoint(lpc.getLocationPoint().getX(), lpc.getLocationPoint().getY()));
-        location = ocPortalLocationRepository.save(ml);
-        return location;
+        return ocPortalLocationRepository.save(ml);
     }
 
 
@@ -842,7 +841,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        //releaseRepository.deleteAll();
+        ocPortalLocationRepository.deleteAll(); //locations are always re-created during import
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
         Set<String> ocids = tenderProcessService.findAll()
