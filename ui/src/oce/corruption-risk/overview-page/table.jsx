@@ -82,7 +82,7 @@ class ProcurementsTable extends PaginatedTable {
 
   render() {
     const {
-      data, navigate, corruptionType, t,
+      data, corruptionType, t,
     } = this.props;
 
     if (!data) return null;
@@ -151,13 +151,13 @@ class ProcurementsTable extends PaginatedTable {
             text: t('crd:procurementsTable:contractID'),
             dataField: 'ocid',
             fm: 'crd.overview.procurementProcesses.col.contractId',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
           },
           {
             text: t('crd:procurementsTable:title'),
             dataField: 'title',
             fm: 'crd.overview.procurementProcesses.col.title',
-            formatter: mkContractLink(navigate),
+            formatter: mkContractLink,
           },
           {
             text: t('crd:procurementsTable:procuringEntity'),

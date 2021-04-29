@@ -71,7 +71,6 @@ import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.CabinetPaper;
 import org.devgateway.toolkit.persistence.dao.form.ContractDocument;
-import org.devgateway.toolkit.persistence.dao.form.FiscalYearBudget;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 import org.devgateway.toolkit.persistence.dao.form.PlanItem;
@@ -85,7 +84,6 @@ import org.devgateway.toolkit.persistence.dao.form.TenderQuotationEvaluation;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.PersonService;
-import org.devgateway.toolkit.persistence.service.form.FiscalYearBudgetService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.devgateway.toolkit.web.security.SecurityUtil;
@@ -154,8 +152,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
     private StringBuffer validationErrors;
 
-    private static final String OCID_PREFIX = "ocds-muq5cl-";
-
+    public static final String OCID_PREFIX = "ocds-muq5cl-";
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
@@ -187,7 +184,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
-            msg.setFrom(DBConstants.FROM_EMAIL);
+            msg.setFrom(emailSendingService.getFromEmail());
             msg.setSubject("OCDS Validation Failures After Import");
             msg.setText(txt);
         };
@@ -712,7 +709,14 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
                 this::convertToLocalIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
         safeSetEach(ocdsOrg.getTargetGroups()::add, supplier::getTargetGroups, this::categoryLabel);
+        safeSet(ocdsOrg::setPrequalifiedItems, ()->supplier, this::convertPrequalifiedItems);
         return ocdsOrg;
+    }
+
+    public List<String> convertPrequalifiedItems(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        return supplier.getPrequalifiedSuppliers().stream().flatMap(ps ->
+            ps.getItems().stream().map(si-> si.getItem().toString(ps.getYearRange())))
+                .collect(Collectors.toList());
     }
 
     public Address createSupplierAddress(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
@@ -841,7 +845,13 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         //releaseRepository.deleteAll();
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
-        tenderProcessService.findAll().forEach(p -> self.createAndPersistRelease(p.getId()));
+        Set<String> ocids = tenderProcessService.findAll()
+                .stream()
+                .map(p -> self.createAndPersistRelease(p.getId()))
+                .filter(Objects::nonNull)
+                .map(Release::getOcid)
+                .collect(Collectors.toSet());
+        releaseRepository.deleteByOcidNotIn(ocids);
         sendValidationFailureAlert(validationErrors.toString());
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");

@@ -28,7 +28,6 @@ import de.agilecoders.wicket.core.markup.html.themes.bootstrap.BootstrapCssRefer
 import de.agilecoders.wicket.core.util.CssClassNames;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -120,8 +119,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_METADATA_ROLES;
 import static org.devgateway.toolkit.forms.WebConstants.PARAM_PRINT;
+import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.PMC_METADATA_ROLES;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_ADMIN;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_USER;
@@ -213,20 +212,12 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
     }
 
-    public static class JminixRedirectPage extends RedirectPage {
-        private static final long serialVersionUID = -750983217518258464L;
-
-        public JminixRedirectPage() {
-            super(WebApplication.get().getServletContext().getContextPath() + "/jminix/");
-        }
-
-    }
 
     public static class UIRedirectPage extends RedirectPage {
         private static final long serialVersionUID = -750983217518258464L;
 
         public UIRedirectPage() {
-            super(WebApplication.get().getServletContext().getContextPath() + "/ui/index.html");
+            super(WebApplication.get().getServletContext().getContextPath() + "/portal/");
         }
     }
 
@@ -731,12 +722,8 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 MetaDataRoleAuthorizationStrategy.authorize(navbarAlerts, Component.RENDER, ROLE_ADMIN);
                 list.add(navbarAlerts);
 
-                BootstrapBookmarkablePageLink<ListFlagHistoryPage> redFlagHistory =
-                        new MenuBookmarkablePageLink<ListFlagHistoryPage>(ListFlagHistoryPage.class,
-                                new StringResourceModel("navbar.redFlagHistory", BasePage.this, null)
-                        ).setIconType(FontAwesomeIconType.flag);
-                MetaDataRoleAuthorizationStrategy.authorize(redFlagHistory, Component.RENDER, ROLE_ADMIN);
-                list.add(redFlagHistory);
+                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListFlagHistoryPage.class,
+                        "navbar.redFlagHistory", FontAwesomeIconType.flag);
 
                 BootstrapBookmarkablePageLink<ListAlertsStatisticsPage> alertsStatistics =
                         new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,

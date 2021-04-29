@@ -63,6 +63,11 @@
   visible: yes
   visibleDeps:
     - tenderForm.tenderTitle
+- name: administratorReportForm.tenderProcess.tender.iterator.next.tenderNumber
+  enabled: yes
+  visible: yes
+  visibleDeps:
+    - tenderForm.tenderNumber
 - name: administratorReportForm.terminate
   enabled: yes
   visible: yes
