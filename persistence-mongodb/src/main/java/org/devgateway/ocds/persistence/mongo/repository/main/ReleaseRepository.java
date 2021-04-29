@@ -6,6 +6,7 @@ package org.devgateway.ocds.persistence.mongo.repository.main;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
@@ -18,4 +19,6 @@ public interface ReleaseRepository extends GenericReleaseRepository<Release> {
             + "{$exists:true}}]}",
             sort = "{ 'tender.tenderPeriod.endDate' : 1 }")
     Stream<Release> findAllNonEmptyEndDatesAwardSuppliersOrderByEndDateDesc();
+
+    void deleteByOcidNotIn(Collection<String> ocids);
 }
