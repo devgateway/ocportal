@@ -3,18 +3,14 @@ package org.devgateway.toolkit.web.excelcharts.data;
 import org.apache.poi.ss.usermodel.Chart;
 import org.apache.poi.ss.usermodel.charts.ChartAxis;
 import org.apache.poi.ss.usermodel.charts.ChartDataSource;
-import org.apache.poi.xssf.usermodel.XSSFChart;
 import org.apache.xmlbeans.XmlObject;
 import org.devgateway.toolkit.web.excelcharts.CustomChartSeries;
 import org.devgateway.toolkit.web.excelcharts.util.XSSFChartUtil;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTAxDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTCatAx;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTNumDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTPlotArea;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTScatterChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTScatterSer;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTScatterStyle;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTValAx;
 import org.openxmlformats.schemas.drawingml.x2006.chart.STScatterStyle;
 
 /**
@@ -55,35 +51,35 @@ public class XSSFScatterChartData extends AbstractXSSFChartData {
 
     @Override
     public void fillChart(final Chart chart, final ChartAxis... axis) {
-        if (!(chart instanceof XSSFChart)) {
-            throw new IllegalArgumentException("Chart must be instance of XSSFChart");
-        }
-
-        final XSSFChart xssfChart = (XSSFChart) chart;
-        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
-        final CTScatterChart scatterChart = plotArea.addNewScatterChart();
-        addStyle(scatterChart);
-
-        for (CustomChartSeries s : series) {
-            s.addToChart(scatterChart);
-        }
-
-        for (ChartAxis ax : axis) {
-            scatterChart.addNewAxId().setVal(ax.getId());
-        }
-
-        xssfChart.setTitleText(this.title);
-
-        // add grid lines
-        CTCatAx[] ctCatAx = plotArea.getCatAxArray();
-        if (ctCatAx.length != 0) {
-            ctCatAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
-        }
-
-        CTValAx[] ctValAx = plotArea.getValAxArray();
-        if (ctValAx.length != 0) {
-            ctValAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
-        }
+//        if (!(chart instanceof XSSFChart)) {
+//            throw new IllegalArgumentException("Chart must be instance of XSSFChart");
+//        }
+//
+//        final XSSFChart xssfChart = (XSSFChart) chart;
+//        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
+//        final CTScatterChart scatterChart = plotArea.addNewScatterChart();
+//        addStyle(scatterChart);
+//
+//        for (CustomChartSeries s : series) {
+//            s.addToChart(scatterChart);
+//        }
+//
+//        for (ChartAxis ax : axis) {
+//            scatterChart.addNewAxId().setVal(ax.getId());
+//        }
+//
+//        xssfChart.setTitleText(this.title);
+//
+//        // add grid lines
+//        CTCatAx[] ctCatAx = plotArea.getCatAxArray();
+//        if (ctCatAx.length != 0) {
+//            ctCatAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
+//        }
+//
+//        CTValAx[] ctValAx = plotArea.getValAxArray();
+//        if (ctValAx.length != 0) {
+//            ctValAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
+//        }
     }
 
     private static void addStyle(final CTScatterChart ctScatterChart) {
