@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.spring;
 
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.ocds.persistence.mongo.spring.ExcelImportService;
 import org.devgateway.ocds.persistence.mongo.spring.ImportResult;
 import org.devgateway.ocds.web.util.SettingsUtils;

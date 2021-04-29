@@ -892,8 +892,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             }
             object.getField().processInput();
 
-            // we try validate the field
-            object.getField().validate();
+            // clear errors added during validate
+            object.getField().getFeedbackMessages().clear();
 
             // still, if the field is invalid, its input is null, and field is
             // of a certain type, we turn
