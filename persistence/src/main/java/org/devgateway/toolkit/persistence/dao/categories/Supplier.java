@@ -1,8 +1,11 @@
 package org.devgateway.toolkit.persistence.dao.categories;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Form;
+import org.devgateway.toolkit.persistence.dao.form.Tender;
+import org.devgateway.toolkit.persistence.dao.prequalification.PrequalifiedSupplier;
 import org.devgateway.toolkit.persistence.dao.prequalification.SupplierContact;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.annotations.Cache;
@@ -13,10 +16,13 @@ import org.springframework.data.annotation.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author gmutuhu
@@ -28,6 +34,12 @@ public class Supplier extends Category {
     @ExcelExport(name = "Address")
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_LENGTH_ONE_LINE)
     private String address;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "supplier")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    private Set<PrequalifiedSupplier> prequalifiedSuppliers = new HashSet<>();
 
     @ExcelExport(justExport = true, name = "AGPO Category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -124,5 +136,13 @@ public class Supplier extends Category {
 
     public void setRealLabel(String label) {
         this.label = label;
+    }
+
+    public Set<PrequalifiedSupplier> getPrequalifiedSuppliers() {
+        return prequalifiedSuppliers;
+    }
+
+    public void setPrequalifiedSuppliers(Set<PrequalifiedSupplier> prequalifiedSuppliers) {
+        this.prequalifiedSuppliers = prequalifiedSuppliers;
     }
 }

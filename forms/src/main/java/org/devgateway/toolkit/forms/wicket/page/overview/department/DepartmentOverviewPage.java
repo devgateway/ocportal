@@ -235,6 +235,11 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
     public DepartmentOverviewPage(final PageParameters parameters) {
         super(parameters);
 
+        Long id = parameters.get("id").toOptionalLong();
+        if (id != null) {
+            tenderProcessService.findById(id).ifPresent(this::scrollToProcessOrProject);
+        }
+
         fiscalYearsModel = new LoadableDetachableModel<List<FiscalYear>>() {
             @Override
             protected List<FiscalYear> load() {
@@ -280,6 +285,13 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                 return procurementPlanService.findByDepartmentAndFiscalYear(getDepartment(), getFiscalYear());
             }
         };
+    }
+
+    private void scrollToProcessOrProject(TenderProcess tenderProcess) {
+        sessionMetadataService.setSessionTenderProcess(tenderProcess);
+        sessionMetadataService.setSessionDepartment(tenderProcess.getDepartment());
+        sessionMetadataService.setSessionFiscalYear(tenderProcess.getProcurementPlan().getFiscalYear());
+        sessionMetadataService.setSessionProject(tenderProcess.getProject());
     }
 
     @Override

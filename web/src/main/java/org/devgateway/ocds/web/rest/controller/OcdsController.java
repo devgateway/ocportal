@@ -59,6 +59,8 @@ public class OcdsController extends GenericOCDSController {
     public static final List<String> EXTENSIONS = Collections.unmodifiableList(
             Arrays.asList(
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
+                            + "/src/main/resources/extensions/prequalified_supplier/extension.json",
+                    "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/first_time_winners/extension.json",
                     "https://raw.githubusercontent.com/devgateway/forms-makueni/master-elgeyo/persistence-mongodb"
                             + "/src/main/resources/extensions/planning_items/extension.json",
@@ -134,7 +136,7 @@ public class OcdsController extends GenericOCDSController {
             });
 
             releasePackage.setLicense(new URI("https://creativecommons.org/licenses/by-sa/4.0/"));
-            releasePackage.setPublicationPolicy(new URI(serverURL + "/ui/index.html#!/publication-policy"));
+            releasePackage.setPublicationPolicy(new URI(serverURL + "/portal/publication-policy"));
             releasePackage.setUri(new URI(serverURL + "/api/ocds/package/ocid/" + release.getOcid()));
             releasePackage.setVersion("1.1");
         } catch (URISyntaxException e) {

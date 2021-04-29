@@ -49,7 +49,7 @@ const Contract = (props) => {
         && <Item label={t('contract:awardee:address')} value={contract.awardee.address} col={4} />}
 
         {isFeatureVisible('publicView.contract.targetGroup')
-        && <Item label={t('contract:targetGroup')} value={contract.targetGroup.label} col={4} />}
+        && <Item label={t('contract:targetGroup')} value={(contract.targetGroup || {}).label} col={4} />}
 
         {isFeatureVisible('publicView.contract.contractValue')
         && <Item label={t('contract:contractValue')} value={currencyFormatter(contract.contractValue)} col={4} />}

@@ -2,9 +2,12 @@ package org.devgateway.toolkit.persistence.service.form;
 
 
 import org.devgateway.toolkit.persistence.dao.alerts.ApprovedReport;
-import org.devgateway.toolkit.persistence.dao.categories.Department_;
+import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.form.PMCReport;
+import org.devgateway.toolkit.persistence.dao.form.PMCReport_;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
+import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.repository.alerts.ApprovedReportRepository;
 import org.devgateway.toolkit.persistence.repository.form.PMCReportRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,8 +51,11 @@ public class PMCReportServiceImpl extends AbstractImplTenderProcessMakueniEntity
     }
 
     @Override
-    public List<PMCReport> getPMCReportsCreatedBy(String username) {
-        return repository.findAll((r, cq, cb) -> cb.and(r.get(Department_.createdBy).in(username)));
+    public List<PMCReport> getPMCReportsCreatedBy(String username, Collection<Department> departments) {
+        return repository.findAll((r, cq, cb) -> cb.and(
+                r.get(PMCReport_.createdBy).in(username),
+                r.join(PMCReport_.tenderProcess).join(TenderProcess_.procurementPlan).get(ProcurementPlan_.department)
+                        .in(departments)));
     }
 
     @Override

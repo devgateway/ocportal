@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
+import {
+  Link, Route, Switch, useHistory,
+} from 'react-router-dom';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 import '../makueni.scss';
@@ -13,7 +16,7 @@ import { getProcurementPlans } from '../../api/Api';
 import fmConnect from '../../fm/fm';
 
 const MakueniProcurementPlans = (props) => {
-  useEffect(() => window.scrollTo(0, 0), []);
+  const history = useHistory();
 
   const [state, updateState] = useImmer({
     filters: {},
@@ -60,16 +63,13 @@ const MakueniProcurementPlans = (props) => {
 
   const { t } = useTranslation();
 
-  const ppLink = (navigate) => (ppId, data, formatExtraData, r) => (
-    <a
-      data-intro={r === 0 ? t('tables:procurementPlans:clickForDetails') : ''}
-      data-step={r === 0 ? 9 : ''}
-      href={`#!/procurement-plan/pp/${ppId}`}
-      onClick={() => navigate('pp', ppId)}
+  const ppLink = (ppId) => (
+    <Link
+      to={`/portal/procurement-plan/pp/${ppId}`}
       className="more-details-link"
     >
       {t('tables:procurementPlans:moreDetails')}
-    </a>
+    </Link>
   );
 
   const downloadFiles = () => (formDocs, data, formatExtraData, r) => (
@@ -82,8 +82,7 @@ const MakueniProcurementPlans = (props) => {
     </div>
   );
 
-  const { navigate, route, isFeatureVisible } = props;
-  const [navigationPage, id] = route;
+  const { isFeatureVisible } = props;
 
   const columns = [{
     text: t('tables:procurementPlans:col:id'),
@@ -91,7 +90,7 @@ const MakueniProcurementPlans = (props) => {
     headerStyle: {
       width: '20%',
     },
-    formatter: ppLink(navigate),
+    formatter: ppLink,
     fm: 'publicView.procurementPlans.col.id',
   }, {
     text: t('tables:procurementPlans:col:dpt'),
@@ -112,7 +111,6 @@ const MakueniProcurementPlans = (props) => {
     <div className="container-fluid dashboard-default">
 
       <Header
-        onSwitch={props.onSwitch}
         styling={props.styling}
         selected="procurement-plan"
       />
@@ -128,12 +126,10 @@ const MakueniProcurementPlans = (props) => {
         </div>
 
         <div className="col-md-9 col-sm-9 col-main-content">
-          {
-          navigationPage === undefined
-            ? (
+          <Switch>
+            <Route exact path="/portal/procurement-plan">
               <div>
                 <h1>{t('tables:procurementPlans:title')}</h1>
-
                 <BootstrapTableWrapper
                   data={state.data}
                   page={state.page}
@@ -144,15 +140,13 @@ const MakueniProcurementPlans = (props) => {
                   columns={columns}
                 />
               </div>
-            )
-            : (
+            </Route>
+            <Route path="/portal/procurement-plan/pp/:id">
               <ProcurementPlan
-                id={id}
-                navigate={navigate}
                 styling={props.styling}
               />
-            )
-}
+            </Route>
+          </Switch>
         </div>
       </div>
       {isFeatureVisible('publicView.subscribeToAlertsButton')
@@ -163,7 +157,7 @@ const MakueniProcurementPlans = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => props.onSwitch('alerts')}
+              onClick={() => history.push('/portal/alerts')}
             >
               {t('general:subscribeToEmailAlerts')}
             </button>
@@ -179,7 +173,7 @@ const MakueniProcurementPlans = (props) => {
             <button
               className="btn btn-info btn-lg"
               type="submit"
-              onClick={() => props.onSwitch('smshelp')}
+              onClick={() => history.push('/portal/smshelp')}
             >
               {t('general:smsFeedbackHelp')}
             </button>

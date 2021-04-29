@@ -2,20 +2,20 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { Item } from '../../tenders/single/Item';
 import FileDownloadLinks from '../../tenders/single/FileDownloadLinks';
 import fmConnect from '../../../fm/fm';
 import { getProcurementPlan } from '../../../api/Api';
 import { setImmer } from '../../../tools';
 import feedback from '../../../resources/icons/feedback.svg';
+import GoBack from '../../../goback';
 
 const ProcurementPlan = (props) => {
-  const {
-    id, navigate, isFeatureVisible,
-  } = props;
+  const { isFeatureVisible } = props;
 
+  const { id } = useParams();
   const { t } = useTranslation();
-
   const [data, updateData] = useImmer(undefined);
 
   const getFeedbackSubject = () => {
@@ -48,16 +48,10 @@ const ProcurementPlan = (props) => {
   return (
     <div className="procurement-plan makueni-form">
       <div className="row">
-        <a href="#!/procurement-plan" onClick={() => navigate()} className="back-link col-md-3">
-          <span className="back-icon">
-            <span className="previous">&#8249;</span>
-          </span>
-          <span className="back-text">
-            {t('general:goBack')}
-          </span>
-        </a>
+        <div className="col-md-3">
+          <GoBack t={t} />
+        </div>
       </div>
-
       <div className="row padding-top-10">
         <div className="col-md-12">
           <h1 className="page-title">{t('procurementPlan:title')}</h1>
@@ -226,8 +220,6 @@ const ProcurementPlan = (props) => {
 };
 
 ProcurementPlan.propTypes = {
-  id: PropTypes.string.isRequired,
-  navigate: PropTypes.func.isRequired,
   styling: PropTypes.object.isRequired,
 };
 

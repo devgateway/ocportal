@@ -152,7 +152,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
     private StringBuffer validationErrors;
 
-    private static final String OCID_PREFIX = "ocds-udd159-";
+    public static final String OCID_PREFIX = "ocds-udd159-";
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
@@ -709,7 +709,14 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
                 this::convertToLocalIdentifier);
         safeSet(ocdsOrg::setAddress, () -> supplier, this::createSupplierAddress);
         safeSetEach(ocdsOrg.getTargetGroups()::add, supplier::getTargetGroups, this::categoryLabel);
+        safeSet(ocdsOrg::setPrequalifiedItems, ()->supplier, this::convertPrequalifiedItems);
         return ocdsOrg;
+    }
+
+    public List<String> convertPrequalifiedItems(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
+        return supplier.getPrequalifiedSuppliers().stream().flatMap(ps ->
+            ps.getItems().stream().map(si-> si.getItem().toString(ps.getYearRange())))
+                .collect(Collectors.toList());
     }
 
     public Address createSupplierAddress(org.devgateway.toolkit.persistence.dao.categories.Supplier supplier) {
@@ -838,7 +845,13 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         //releaseRepository.deleteAll();
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
-        tenderProcessService.findAll().forEach(p -> self.createAndPersistRelease(p.getId()));
+        Set<String> ocids = tenderProcessService.findAll()
+                .stream()
+                .map(p -> self.createAndPersistRelease(p.getId()))
+                .filter(Objects::nonNull)
+                .map(Release::getOcid)
+                .collect(Collectors.toSet());
+        releaseRepository.deleteByOcidNotIn(ocids);
         sendValidationFailureAlert(validationErrors.toString());
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
