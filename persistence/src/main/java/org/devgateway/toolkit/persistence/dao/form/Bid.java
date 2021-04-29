@@ -34,6 +34,12 @@ public class Bid extends AbstractChildExpandableAuditEntity<TenderQuotationEvalu
     @ExcelExport(useTranslation = true, name = "Supplier Responsiveness")
     private String supplierResponsiveness;
 
+    @ExcelExport(useTranslation = true, name = "Supplier Score")
+    private Integer supplierScore;
+
+    @ExcelExport(useTranslation = true, name = "Supplier Ranking")
+    private Integer supplierRanking;
+
     @ExcelExport(useTranslation = true, name = "Quoted Price")
     private BigDecimal quotedAmount;
 
@@ -70,5 +76,21 @@ public class Bid extends AbstractChildExpandableAuditEntity<TenderQuotationEvalu
 
     public void setPrequalifiedItems(List<String> prequalifiedItems) {
         this.prequalifiedItems = prequalifiedItems;
+    }
+
+    public Integer getSupplierScore() {
+        return supplierScore;
+    }
+
+    public void setSupplierScore(Integer supplierScore) {
+        this.supplierScore = supplierScore;
+    }
+
+    public Integer getSupplierRanking() {
+        return supplierRanking;
+    }
+
+    public void setSupplierRanking(Integer supplierRanking) {
+        this.supplierRanking = supplierRanking;
     }
 }
