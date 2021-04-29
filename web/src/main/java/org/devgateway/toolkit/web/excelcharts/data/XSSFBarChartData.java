@@ -6,15 +6,6 @@ import org.apache.poi.ss.usermodel.charts.ChartDataSource;
 import org.apache.poi.xssf.usermodel.XSSFChart;
 import org.apache.xmlbeans.XmlObject;
 import org.devgateway.toolkit.web.excelcharts.CustomChartSeries;
-import org.devgateway.toolkit.web.excelcharts.util.XSSFChartUtil;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTAxDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarChart;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTNumDataSource;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTPlotArea;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTValAx;
-import org.openxmlformats.schemas.drawingml.x2006.chart.STBarDir;
-import org.openxmlformats.schemas.drawingml.x2006.chart.STCrossBetween;
 
 /**
  * @author idobre
@@ -23,7 +14,7 @@ import org.openxmlformats.schemas.drawingml.x2006.chart.STCrossBetween;
  *        Holds data for a XSSF Bar Chart.
  */
 public class XSSFBarChartData extends AbstractXSSFChartData {
-    protected STBarDir.Enum barDir = STBarDir.COL;
+    //protected STBarDir.Enum barDir = STBarDir.COL;
 
     public XSSFBarChartData(final String title) {
         super(title);
@@ -35,21 +26,21 @@ public class XSSFBarChartData extends AbstractXSSFChartData {
         return new AbstractSeries(id, order, categories, values) {
             @Override
             public void addToChart(final XmlObject ctChart) {
-                final CTBarChart ctBarChart = (CTBarChart) ctChart;
-                final CTBarSer ctBarSer = ctBarChart.addNewSer();
-
-                ctBarSer.addNewIdx().setVal(this.id);
-                ctBarSer.addNewOrder().setVal(this.order);
-
-                final CTAxDataSource catDS = ctBarSer.addNewCat();
-                XSSFChartUtil.buildAxDataSource(catDS, this.categories);
-
-                final CTNumDataSource valueDS = ctBarSer.addNewVal();
-                XSSFChartUtil.buildNumDataSource(valueDS, this.values);
-
-                if (isTitleSet()) {
-                    ctBarSer.setTx(getCTSerTx());
-                }
+//                final CTBarChart ctBarChart = (CTBarChart) ctChart;
+//                final CTBarSer ctBarSer = ctBarChart.addNewSer();
+//
+//                ctBarSer.addNewIdx().setVal(this.id);
+//                ctBarSer.addNewOrder().setVal(this.order);
+//
+//                final CTAxDataSource catDS = ctBarSer.addNewCat();
+//                XSSFChartUtil.buildAxDataSource(catDS, this.categories);
+//
+//                final CTNumDataSource valueDS = ctBarSer.addNewVal();
+//                XSSFChartUtil.buildNumDataSource(valueDS, this.values);
+//
+//                if (isTitleSet()) {
+//                    ctBarSer.setTx(getCTSerTx());
+//                }
             }
         };
     }
@@ -59,34 +50,34 @@ public class XSSFBarChartData extends AbstractXSSFChartData {
         if (!(chart instanceof XSSFChart)) {
             throw new IllegalArgumentException("Chart must be instance of XSSFChart");
         }
-
-        final XSSFChart xssfChart = (XSSFChart) chart;
-        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
-        final CTBarChart barChart = plotArea.addNewBarChart();
-
-        barChart.addNewVaryColors().setVal(false);
-
-        // set bars orientation
-        barChart.addNewBarDir().setVal(barDir);
-
-        xssfChart.setTitleText(this.title);
-
-        CTValAx[] ctValAx = plotArea.getValAxArray();
-        if (ctValAx.length != 0) {
-            ctValAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
-            ctValAx[0].getCrossBetween().setVal(STCrossBetween.BETWEEN);
-        }
-
-        for (CustomChartSeries s : series) {
-            s.addToChart(barChart);
-        }
-
-        for (ChartAxis ax : axis) {
-            barChart.addNewAxId().setVal(ax.getId());
-        }
+//
+//        final XSSFChart xssfChart = (XSSFChart) chart;
+//        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
+//        final CTBarChart barChart = plotArea.addNewBarChart();
+//
+//        barChart.addNewVaryColors().setVal(false);
+//
+//        // set bars orientation
+//        barChart.addNewBarDir().setVal(barDir);
+//
+//        xssfChart.setTitleText(this.title);
+//
+//        CTValAx[] ctValAx = plotArea.getValAxArray();
+//        if (ctValAx.length != 0) {
+//            ctValAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
+//            ctValAx[0].getCrossBetween().setVal(STCrossBetween.BETWEEN);
+//        }
+//
+//        for (CustomChartSeries s : series) {
+//            s.addToChart(barChart);
+//        }
+//
+//        for (ChartAxis ax : axis) {
+//            barChart.addNewAxId().setVal(ax.getId());
+//        }
     }
 
-    public void setBarDir(final STBarDir.Enum barDir) {
-        this.barDir = barDir;
-    }
+//    public void setBarDir(final STBarDir.Enum barDir) {
+//        this.barDir = barDir;
+//    }
 }
