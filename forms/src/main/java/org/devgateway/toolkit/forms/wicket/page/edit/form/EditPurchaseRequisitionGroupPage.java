@@ -1,18 +1,14 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PurchRequisitionPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.devgateway.toolkit.persistence.service.category.ChargeAccountService;
 import org.devgateway.toolkit.persistence.service.category.StaffService;
-import org.devgateway.toolkit.persistence.service.form.ProjectService;
 import org.devgateway.toolkit.persistence.service.form.PurchaseRequisitionGroupService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
@@ -24,7 +20,8 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/purchaseRequisition")
-public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityPage<PurchaseRequisitionGroup>
+public class EditPurchaseRequisitionGroupPage
+        extends EditAbstractTenderProcessMakueniEntityPage<PurchaseRequisitionGroup>
         implements ProcurementRoleAssignable {
     @SpringBean
     private PurchaseRequisitionGroupService purchaseRequisitionGroupService;
@@ -33,21 +30,10 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
     protected TenderProcessService tenderProcessService;
 
     @SpringBean
-    private ProjectService projectService;
-
-    @SpringBean
     protected StaffService staffService;
 
     @SpringBean
     protected ChargeAccountService chargeAccountService;
-
-    @Override
-    protected void checkAndSendEventForDisableEditing() {
-        super.checkAndSendEventForDisableEditing();
-        if (isTerminated()) {
-            send(getPage(), Broadcast.BREADTH, new EditingDisabledEvent());
-        }
-    }
 
     public EditPurchaseRequisitionGroupPage() {
         this(new PageParameters());
@@ -62,13 +48,6 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
     protected void onInitialize() {
         editForm.attachFm("purchaseRequisitionForm");
         super.onInitialize();
-
-        editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.department"));
-        editForm.add(new GenericSleepFormComponent<>("project.procurementPlan.fiscalYear"));
-
-        if (isTerminated()) {
-            alertTerminated.setVisibilityAllowed(true);
-        }
 
         final GenericSleepFormComponent purchaseRequestNumber =
                 new GenericSleepFormComponent<>("purchaseRequestNumber");
@@ -103,12 +82,6 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
     }
 
     @Override
-    public boolean isTerminated() {
-        PurchaseRequisitionGroup pr = editForm.getModelObject();
-        return pr.isTerminated();
-    }
-
-    @Override
     protected void afterSaveEntity(final PurchaseRequisitionGroup saveable) {
         super.afterSaveEntity(saveable);
 
@@ -119,10 +92,5 @@ public class EditPurchaseRequisitionGroupPage extends EditAbstractMakueniEntityP
 
             jpaService.save(saveable);
         }
-    }
-
-    @Override
-    protected Class<? extends Page> pageAfterSubmitAndNext() {
-        return EditTenderPage.class;
     }
 }
