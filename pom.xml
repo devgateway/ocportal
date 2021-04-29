@@ -38,7 +38,6 @@
         <poi.version>3.17</poi.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <jminix.version>1.2.0</jminix.version>
-        <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <swagger.version>3.0.0</swagger.version>
         <jdk-serializable-functional.version>1.8.6</jdk-serializable-functional.version>
         <commons-io.version>2.6</commons-io.version>
@@ -61,57 +60,42 @@
     </organization>
     <issueManagement>
         <system>JIRA</system>
-        <url>https://jira.dgfoundation.org/browse/OCE/</url>
+        <url>https://jira.developmentgateway.org/browse/OCMAKU</url>
     </issueManagement>
-    <ciManagement>
-        <system>Jenkins</system>
-        <url>https://ocmakueni.dgstg.org/ci</url>
-    </ciManagement>
 
     <scm>
-        <url>git@github.com:devgateway/forms-makueni.git</url>
-        <developerConnection>scm:git:git@github.com:devgateway/forms-makueni.git</developerConnection>
-        <connection>git@github.com:devgateway/oc-makueni.git</connection>
+        <url>git@github.com:devgateway/ocportal.git</url>
+        <developerConnection>scm:git:git@github.com:devgateway/ocportal.git</developerConnection>
+        <connection>git@github.com:devgateway/ocportal.git</connection>
         <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
         <repository>
-            <id>bintray-devgateway-oc-makueni</id>
-            <name>devgateway-oc-makueni</name>
-            <url>https://api.bintray.com/maven/devgateway/oc-makueni/oc-makueni/;publish=1</url>
+            <id>ocportal-open-source</id>
+            <name>ocportal-open-source</name>
+            <url>https://artifactory.dgdev.org/artifactory/ocportal-open-source/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>jcenter</id>
-            <url>https://jcenter.bintray.com/</url>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-devgateway-jocds</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/devgateway/jocds</url>
-        </repository>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-devgateway-dozer-hibernate-model</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/devgateway/dozer-hibernate-model</url>
+            <id>devgateway-open-source</id>
+            <name>devgateway-open-source</name>
+            <url>https://artifactory.dgdev.org/artifactory/devgateway-open-source/</url>
         </repository>
     </repositories>
 
-
     <pluginRepositories>
         <pluginRepository>
-            <id>jcenter</id>
-            <name>jcenter</name>
-            <url>https://jcenter.bintray.com</url>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
         </pluginRepository>
     </pluginRepositories>
 

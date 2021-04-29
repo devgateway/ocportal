@@ -845,7 +845,13 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         //releaseRepository.deleteAll();
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
-        tenderProcessService.findAll().forEach(p -> self.createAndPersistRelease(p.getId()));
+        Set<String> ocids = tenderProcessService.findAll()
+                .stream()
+                .map(p -> self.createAndPersistRelease(p.getId()))
+                .filter(Objects::nonNull)
+                .map(Release::getOcid)
+                .collect(Collectors.toSet());
+        releaseRepository.deleteByOcidNotIn(ocids);
         sendValidationFailureAlert(validationErrors.toString());
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
