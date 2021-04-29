@@ -46,6 +46,7 @@ public final class MongoConstants {
         public static final String PLANNING_BUDGETB_ID = "planning.budget.budgetBreakdown._id";
         public static final String AWARDS_FIRST_TIME_WINNER = "awards.firstTimeWinner";
         public static final String AWARDS_STATUS = "awards.status";
+        public static final String AWARDS = "awards";
         public static final String AWARDS_SUPPLIERS_ID = "awards.suppliers._id";
         public static final String AWARDS_SUPPLIERS_NAME = "awards.suppliers.name";
         public static final String AWARDS_VALUE_AMOUNT = "awards.value.amount";
@@ -83,6 +84,7 @@ public final class MongoConstants {
         public static final String CONTRACTS_LOCATIONS_TYPE = "contracts.locations.type";
         public static final String TENDER_PERIOD_END_DATE = "tender.tenderPeriod.endDate";
         public static final String TENDER_VALUE = "tender.value";
+        public static final String TENDER = "tender";
         public static final String TENDER_VALUE_AMOUNT = "tender.value.amount";
         public static final String TENDER_LOCATIONS = "tender.locations";
         public static final String TENDER_LOCATIONS_ID = "tender.locations._id";
