@@ -451,11 +451,11 @@ public abstract class GenericOCDSController {
     }
 
     protected Criteria getByTenderLocationIdentifier(final DefaultFilterPagingRequest filter) {
-        return createFilterCriteriaObjectId("tender.locations._id", filter.getLocationId(), filter);
+        return createFilterCriteria("tender.locations._id", filter.getLocationId(), filter);
     }
 
     protected Criteria getByContractLocationIdentifier(final DefaultFilterPagingRequest filter) {
-        return createFilterCriteriaObjectId("contracts.locations._id", filter.getLocationId(), filter);
+        return createFilterCriteria("contracts.locations._id", filter.getLocationId(), filter);
     }
 
     /**
@@ -511,14 +511,6 @@ public abstract class GenericOCDSController {
             return new Criteria();
         }
         return where(filterName).in(filterValues.toArray());
-    }
-
-    private Criteria createFilterCriteriaObjectId(final String filterName, final Set<String> filterValues,
-                                                  final DefaultFilterPagingRequest filter) {
-        return createFilterCriteria(filterName, filterValues.stream().filter(Objects::nonNull)
-                        .map(ObjectId::new).collect(Collectors.toSet()),
-                filter
-        );
     }
 
     private <S> Criteria createNotFilterCriteria(final String filterName, final Set<S> filterValues,
