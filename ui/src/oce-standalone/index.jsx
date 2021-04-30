@@ -18,6 +18,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
 import Docs from '../oce/makueni/Docs';
 import PublicationPolicy from '../oce/makueni/PublicationPolicy';
+import PrivacyPolicy from '../oce/makueni/PrivacyPolicy';
 import ContractsList from '../oce/makueni/ContractsList';
 import SMSHelp from '../oce/makueni/SMSHelp';
 import PortalVideos from '../oce/makueni/PortalVideos';
@@ -140,6 +141,13 @@ const OceSwitcherLoader = () => {
           </Route>
           <Route path="/portal/publication-policy">
             <PublicationPolicy
+              styling={styling}
+              t={t}
+              i18n={i18n}
+            />
+          </Route>
+          <Route path="/portal/privacy-policy">
+            <PrivacyPolicy
               styling={styling}
               t={t}
               i18n={i18n}

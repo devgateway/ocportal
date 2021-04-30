@@ -53,6 +53,10 @@ class Docs extends CRDPage {
                 <h3 className="list-group-item-heading">{t('docs:policy:heading')}</h3>
                 <p className="list-group-item-text">{t('docs:policy:text')}</p>
               </Link>
+              <Link to="/portal/privacy-policy" className="list-group-item">
+                <h3 className="list-group-item-heading">{t('docs:privacyPolicy:heading')}</h3>
+                <p className="list-group-item-text">{t('docs:privacyPolicy:text')}</p>
+              </Link>
             </div>
           </div>
         </div>
