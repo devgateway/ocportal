@@ -172,7 +172,7 @@ public class ImportPostgresToMongo {
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("projects.wards._id", Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
-                new Index().on("tenderProcesses.tender.tenderItems.purchaseItem.planItem.item._id",
+                new Index().on("tenderProcesses.tender.tenderItems.nonNullPlanItem.item._id",
                         Sort.Direction.ASC));
         mongoTemplate.indexOps(ProcurementPlan.class).ensureIndex(
                 new Index().on("tenderProcesses.tender.tenderValue", Sort.Direction.ASC));
@@ -212,6 +212,8 @@ public class ImportPostgresToMongo {
 
         pp.setProjects(new HashSet<>(filterNotExportable(pp.getProjects())));
         pp.getTenderProcesses().stream().forEach(pr -> {
+            pr.setProject(filterNotExportableSingle(pr.getProject()));
+
             pr.setPurchaseRequisition(new HashSet<>(filterNotExportable(pr.getPurchaseRequisition())));
             pr.getPurchaseRequisition().stream().flatMap(i -> i.getPurchRequisitions().stream())
                     .forEach(item -> self.storeMakueniFormFiles(item.getFormDocs()));
@@ -306,5 +308,11 @@ public class ImportPostgresToMongo {
         return collection.stream()
                 .filter(item -> item.isExportable())
                 .collect(Collectors.toList());
+    }
+
+    private <S extends Statusable> S filterNotExportableSingle(S item) {
+        return item == null || !item.isExportable()
+                ? null
+                : item;
     }
 }

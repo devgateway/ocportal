@@ -11,7 +11,6 @@ class Docs extends CRDPage {
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="docs"
         />
@@ -53,6 +52,10 @@ class Docs extends CRDPage {
               <Link to="/portal/publication-policy" className="list-group-item">
                 <h3 className="list-group-item-heading">{t('docs:policy:heading')}</h3>
                 <p className="list-group-item-text">{t('docs:policy:text')}</p>
+              </Link>
+              <Link to="/portal/privacy-policy" className="list-group-item">
+                <h3 className="list-group-item-heading">{t('docs:privacyPolicy:heading')}</h3>
+                <p className="list-group-item-text">{t('docs:privacyPolicy:text')}</p>
               </Link>
             </div>
           </div>

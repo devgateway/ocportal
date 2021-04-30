@@ -27,7 +27,6 @@ import org.devgateway.toolkit.persistence.service.filterstate.JpaFilterState;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ContractFilterState;
 import org.devgateway.toolkit.persistence.service.form.ContractService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
-import org.hibernate.Hibernate;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -92,7 +91,6 @@ public class ListContractPage extends ListAbstractTenderProcessMakueniEntity<Con
                             ZipOutputStream zipOut = new ZipOutputStream(output);
                             for (ContractDocument doc : model.getObject().getContractDocs()) {
                                 final FileMetadata file = doc.getFormDoc();
-                                Hibernate.initialize(file.getContent());
                                 ZipEntry zipEntry = new ZipEntry(file.getName());
                                 zipOut.putNextEntry(zipEntry);
                                 zipOut.write(file.getContent().getBytes());

@@ -3,10 +3,12 @@ package org.devgateway.toolkit.persistence.dao.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.Form;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
+import org.devgateway.toolkit.persistence.validator.validators.MaxAttachedFiles;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
@@ -113,5 +115,12 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @JsonIgnore
     public boolean isExportable() {
         return true;
+    }
+
+    @MaxAttachedFiles
+    @JsonIgnore
+    @org.springframework.data.annotation.Transient
+    public Collection<FileMetadata> getAllAttachedFiles() {
+        return getFormDocs();
     }
 }

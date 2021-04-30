@@ -10,7 +10,6 @@ class Docs extends CRDPage {
     return (
       <div className="container-fluid dashboard-default">
         <Header
-          onSwitch={this.props.onSwitch}
           styling={this.props.styling}
           selected="docs"
         />
@@ -191,7 +190,7 @@ class Docs extends CRDPage {
             {reactStringReplace(t('publicationPolicy:ocdsMapping:text'), '$#$',
               (m, i) => {
                 if (i === 1) {
-                  return <a key={i} className="download-file" href={`${process.env.PUBLIC_URL}/Elgeyo-OCDS-Conversion-Matrix.xlsx`}>{t('publicationPolicy:ocdsMapping:text:link1')}</a>;
+                  return <a key={i} className="download-file" href={`${process.env.PUBLIC_URL}/OCDS-Conversion-Matrix.xlsx`}>{t('publicationPolicy:ocdsMapping:text:link1')}</a>;
                 }
                 return <a key={i} target="_blank" className="download-file" href={`${process.env.PUBLIC_URL}/javadoc/index.html`}>{t('publicationPolicy:ocdsMapping:text:link2')}</a>;
               })}
