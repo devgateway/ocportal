@@ -1,6 +1,5 @@
 package org.devgateway.ocds.web.convert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
@@ -17,7 +16,6 @@ import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Bids;
 import org.devgateway.ocds.persistence.mongo.Budget;
-import org.devgateway.ocds.persistence.mongo.Change;
 import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.ContactPoint;
 import org.devgateway.ocds.persistence.mongo.Contract;
@@ -26,6 +24,7 @@ import org.devgateway.ocds.persistence.mongo.Document;
 import org.devgateway.ocds.persistence.mongo.Identifier;
 import org.devgateway.ocds.persistence.mongo.Implementation;
 import org.devgateway.ocds.persistence.mongo.Item;
+import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.OCPortalBudget;
 import org.devgateway.ocds.persistence.mongo.OCPortalBudgetBreakdown;
 import org.devgateway.ocds.persistence.mongo.OCPortalContract;
@@ -36,7 +35,6 @@ import org.devgateway.ocds.persistence.mongo.OCPortalMilestone;
 import org.devgateway.ocds.persistence.mongo.OCPortalOrganization;
 import org.devgateway.ocds.persistence.mongo.OCPortalPlanning;
 import org.devgateway.ocds.persistence.mongo.OCPortalTender;
-import org.devgateway.ocds.persistence.mongo.Milestone;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.OrganizationReference;
 import org.devgateway.ocds.persistence.mongo.Period;
@@ -91,7 +89,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.convert.CustomConversions;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -174,6 +175,12 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private CustomConversions customConversions;
+
+    @Autowired
+    private MappingMongoConverter mappingMongoConverter;
+
     private void sendValidationFailureAlert(String txt) {
         if (txt.isEmpty()) {
             return;
@@ -198,12 +205,13 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
 
     public OCPortalLocation lpcToOCPortalLocation(LocationPointCategory lpc) {
-        OCPortalLocation location = ocPortalLocationRepository.findByDescription(lpc.getLabel());
-        if (location != null) {
-            return location;
+        Optional<OCPortalLocation> location = ocPortalLocationRepository.findById(lpc.getId().toString());
+        if (location.isPresent()) {
+            return location.get();
         }
         OCPortalLocation ml = new OCPortalLocation();
         ml.setDescription(lpc.getLabel());
+        ml.setId(lpc.getId().toString());
         if (lpc instanceof Ward) {
             ml.setType(OCPortalLocationType.ward);
         } else if (lpc instanceof Subcounty) {
@@ -212,8 +220,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
             throw new RuntimeException("Unkown OC Portal Location Type");
         }
         ml.setGeometry(new GeoJsonPoint(lpc.getLocationPoint().getX(), lpc.getLocationPoint().getY()));
-        location = ocPortalLocationRepository.save(ml);
-        return location;
+        return ocPortalLocationRepository.save(ml);
     }
 
 
@@ -778,20 +785,21 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         String newId = newRelease.getId();
         Date oldDate = oldRelease.getDate();
         String oldId = oldRelease.getId();
-        newRelease.setDate(null);
-        oldRelease.setDate(null);
-        newRelease.setId(null);
-        oldRelease.setId(null);
         try {
-            String newReleaseJson = objectMapper.writeValueAsString(newRelease);
-            String oldReleaseJson = objectMapper.writeValueAsString(oldRelease);
+            newRelease.setDate(null);
+            oldRelease.setDate(null);
+            newRelease.setId(null);
+            oldRelease.setId(null);
+            org.bson.Document newReleaseBson = new org.bson.Document();
+            org.bson.Document oldReleaseBson = new org.bson.Document();
+            mappingMongoConverter.write(newRelease, newReleaseBson);
+            mappingMongoConverter.write(oldRelease, oldReleaseBson);
+            return BsonUtils.toJson(newReleaseBson).equals(BsonUtils.toJson(oldReleaseBson));
+        } finally {
             newRelease.setDate(newDate);
             newRelease.setId(newId);
             oldRelease.setDate(oldDate);
             oldRelease.setId(oldId);
-            return newReleaseJson.equals(oldReleaseJson);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -830,7 +838,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
                 return save;
             } else {
                 logger.info("Will not resave unchanged release " + release.getOcid());
-                return null;
+                return release;
             }
         } catch (Exception e) {
             logger.info("Exception processing tender process with id " + tenderProcessId);
@@ -842,10 +850,21 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+
+        mappingMongoConverter.setCustomConversions(customConversions);
+        mappingMongoConverter.afterPropertiesSet();
+
         //releaseRepository.deleteAll();
+        ocPortalLocationRepository.deleteAll(); //locations are always re-created during import
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
-        tenderProcessService.findAll().forEach(p -> self.createAndPersistRelease(p.getId()));
+        Set<String> ocids = tenderProcessService.findAll()
+                .stream()
+                .map(p -> self.createAndPersistRelease(p.getId()))
+                .filter(Objects::nonNull)
+                .map(Release::getOcid)
+                .collect(Collectors.toSet());
+        releaseRepository.deleteByOcidNotIn(ocids);
         sendValidationFailureAlert(validationErrors.toString());
         stopWatch.stop();
         logger.info("OCDS export finished in: " + stopWatch.getTime() + "ms");
@@ -1201,10 +1220,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
             return Award.Status.pending;
         }
 
-        Optional<AwardNotificationItem> first = item.getParent().getItems().stream().sorted(
-                Comparator.comparing(AwardNotificationItem::getAwardDate).reversed())
-                .findFirst();
-        if (first.get().equals(item)) {
+        if (item.getAwardee().equals(contract.getAwardee())) {
             return Award.Status.active;
         } else {
             return Award.Status.unsuccessful;

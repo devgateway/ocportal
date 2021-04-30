@@ -51,13 +51,14 @@ public class EditAlertPage extends AbstractEditPage<Alert> {
         email.required()
                 .getField().add(RfcCompliantEmailAddressValidator.getInstance());
 
-        if (editForm.getModelObject().getPurchaseReq() != null) {
+        if (editForm.getModelObject().getPurchaseReq() != null
+                && editForm.getModelObject().getPurchaseReq().getTender().stream().findFirst().isPresent()) {
             final TenderProcess purchaseReq = editForm.getModelObject().getPurchaseReq();
             final Tender tender = purchaseReq.getTender().stream().findFirst().get();
 
-            editForm.add(new GenericSleepFormComponent("purchaseReq", new Model(tender.getTenderTitle())));
+            editForm.add(new GenericSleepFormComponent<>("purchaseReq", new Model<>(tender.getTenderTitle())));
         } else {
-            editForm.add(new GenericSleepFormComponent("purchaseReq",
+            editForm.add(new GenericSleepFormComponent<>("purchaseReq",
                     new StringResourceModel("noTenderSelected", this)));
         }
 

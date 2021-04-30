@@ -111,7 +111,7 @@ public class MakueniDataController extends GenericOCDSController {
                 createFilterCriteria("tender.procurementMethodRationale._id", filter.getProcurementMethodRationale()),
                 createFilterCriteria("project.wards._id", filter.getWard()),
                 createFilterCriteria(
-                        "tender.tenderItems.purchaseItem.planItem.item._id",
+                        "tender.tenderItems.nonNullPlanItem.item._id",
                         filter.getItem()
                 ),
                 createRangeFilterCriteria("tender.tenderValue",
