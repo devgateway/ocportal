@@ -1,6 +1,5 @@
 package org.devgateway.ocds.web.convert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.google.common.collect.ImmutableMap;
@@ -17,7 +16,6 @@ import org.devgateway.ocds.persistence.mongo.Amount;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Bids;
 import org.devgateway.ocds.persistence.mongo.Budget;
-import org.devgateway.ocds.persistence.mongo.Change;
 import org.devgateway.ocds.persistence.mongo.Classification;
 import org.devgateway.ocds.persistence.mongo.ContactPoint;
 import org.devgateway.ocds.persistence.mongo.Contract;
@@ -91,7 +89,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.convert.CustomConversions;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -173,6 +174,12 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
     @Autowired
     private PersonService personService;
+
+    @Autowired
+    private CustomConversions customConversions;
+
+    @Autowired
+    private MappingMongoConverter mappingMongoConverter;
 
     private void sendValidationFailureAlert(String txt) {
         if (txt.isEmpty()) {
@@ -778,20 +785,21 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         String newId = newRelease.getId();
         Date oldDate = oldRelease.getDate();
         String oldId = oldRelease.getId();
-        newRelease.setDate(null);
-        oldRelease.setDate(null);
-        newRelease.setId(null);
-        oldRelease.setId(null);
         try {
-            String newReleaseJson = objectMapper.writeValueAsString(newRelease);
-            String oldReleaseJson = objectMapper.writeValueAsString(oldRelease);
+            newRelease.setDate(null);
+            oldRelease.setDate(null);
+            newRelease.setId(null);
+            oldRelease.setId(null);
+            org.bson.Document newReleaseBson = new org.bson.Document();
+            org.bson.Document oldReleaseBson = new org.bson.Document();
+            mappingMongoConverter.write(newRelease, newReleaseBson);
+            mappingMongoConverter.write(oldRelease, oldReleaseBson);
+            return BsonUtils.toJson(newReleaseBson).equals(BsonUtils.toJson(oldReleaseBson));
+        } finally {
             newRelease.setDate(newDate);
             newRelease.setId(newId);
             oldRelease.setDate(oldDate);
             oldRelease.setId(oldId);
-            return newReleaseJson.equals(oldReleaseJson);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -842,6 +850,10 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
+
+        mappingMongoConverter.setCustomConversions(customConversions);
+        mappingMongoConverter.afterPropertiesSet();
+
         //releaseRepository.deleteAll();
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
