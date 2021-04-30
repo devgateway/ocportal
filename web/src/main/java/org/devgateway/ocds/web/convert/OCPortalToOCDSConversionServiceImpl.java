@@ -830,7 +830,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
                 return save;
             } else {
                 logger.info("Will not resave unchanged release " + release.getOcid());
-                return null;
+                return release;
             }
         } catch (Exception e) {
             logger.info("Exception processing tender process with id " + tenderProcessId);
