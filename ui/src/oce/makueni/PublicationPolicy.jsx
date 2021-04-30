@@ -36,7 +36,7 @@ class Docs extends CRDPage {
                     <a
                       key={i}
                       className="download-file"
-                      href="https://opencontracting.makueni.go.ke/api/ocds/package/all"
+                      href="/api/ocds/package/all"
                     >
                       {t('publicationPolicy:ad:line1:link1')}
                     </a>
@@ -46,7 +46,7 @@ class Docs extends CRDPage {
                   <a
                     key={i}
                     className="download-file"
-                    href="https://opencontracting.makueni.go.ke/swagger-ui/#/ocds-controller"
+                    href="/swagger-ui/#/ocds-controller"
                   >
                     {t('publicationPolicy:ad:line1:link2')}
                   </a>
@@ -58,7 +58,7 @@ class Docs extends CRDPage {
                 <a
                   key={i}
                   className="download-file"
-                  href="https://opencontracting.makueni.go.ke"
+                  href="/"
                 >
                   opencontracting.makueni.go.ke
                 </a>
@@ -192,7 +192,7 @@ class Docs extends CRDPage {
                 if (i === 1) {
                   return <a key={i} className="download-file" href={`${process.env.PUBLIC_URL}/OCDS-Conversion-Matrix.xlsx`}>{t('publicationPolicy:ocdsMapping:text:link1')}</a>;
                 }
-                return <a key={i} target="_blank" className="download-file" href={`${process.env.PUBLIC_URL}/javadoc/dao/index.html`}>{t('publicationPolicy:ocdsMapping:text:link2')}</a>;
+                return <a key={i} target="_blank" className="download-file" href={`${process.env.PUBLIC_URL}/javadoc/index.html`}>{t('publicationPolicy:ocdsMapping:text:link2')}</a>;
               })}
           </div>
 
