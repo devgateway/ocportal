@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.web.rest.controller;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.devgateway.toolkit.persistence.dao.FileContent;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
@@ -191,6 +192,7 @@ public class DummyController {
         FileContent fc = new FileContent();
         fc.setBytes(new byte[size]);
         fm.setContent(fc);
+        fm.setMd5(DigestUtils.md5Hex(fc.getBytes()));
 
         tqe.getFormDocs().add(fm);
     }
