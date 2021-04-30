@@ -838,7 +838,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
                 return save;
             } else {
                 logger.info("Will not resave unchanged release " + release.getOcid());
-                return null;
+                return release;
             }
         } catch (Exception e) {
             logger.info("Exception processing tender process with id " + tenderProcessId);
@@ -1219,10 +1219,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
             return Award.Status.pending;
         }
 
-        Optional<AwardNotificationItem> first = item.getParent().getItems().stream().sorted(
-                Comparator.comparing(AwardNotificationItem::getAwardDate).reversed())
-                .findFirst();
-        if (first.get().equals(item)) {
+        if (item.getAwardee().equals(contract.getAwardee())) {
             return Award.Status.active;
         } else {
             return Award.Status.unsuccessful;
