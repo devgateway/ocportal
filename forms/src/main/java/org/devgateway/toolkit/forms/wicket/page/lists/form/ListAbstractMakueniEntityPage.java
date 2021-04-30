@@ -23,9 +23,9 @@ import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.SingleFileMetadatable;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
-import org.hibernate.Hibernate;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -106,8 +106,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
                                      final IModel<T> model) {
                 final FileMetadata file = model.getObject().getFormDoc();
                 if (file != null) {
-                    Hibernate.initialize(file.getContent());
-                    cellItem.add(new DownloadPanel(componentId, new Model<>(file)));
+                    cellItem.add(new DownloadPanel(componentId, model.map(SingleFileMetadatable::getFormDoc)));
                 } else {
                     cellItem.add(new Label(componentId));
                 }
