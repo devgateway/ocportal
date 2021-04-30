@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.components.form;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteStorage;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.devgateway.toolkit.persistence.dao.FileContent;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -35,6 +36,7 @@ public class SummernoteJpaStorageService implements SummernoteStorage {
         FileContent fileContent = new FileContent();
         fileContent.setBytes(bytes);
         fileMetadata.setContent(fileContent);
+        fileMetadata.setMd5(DigestUtils.md5Hex(fileContent.getBytes()));
         fileMetadataService.save(fileMetadata);
 
     }

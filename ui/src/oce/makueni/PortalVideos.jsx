@@ -23,7 +23,7 @@ class PortalVideos extends CRDPage {
             <iframe
               width="640"
               height="480"
-              src="https://www.youtube.com/embed/ER9wfYw1dnw"
+              src="https://www.youtube.com/embed/U5K1_zgKEU4"
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -35,7 +35,7 @@ class PortalVideos extends CRDPage {
             <iframe
               width="640"
               height="480"
-              src="https://www.youtube.com/embed/bI4Yt_CKR_A"
+              src="https://www.youtube.com/embed/nq52dm4KMso"
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -47,7 +47,7 @@ class PortalVideos extends CRDPage {
             <iframe
               width="640"
               height="480"
-              src="https://www.youtube.com/embed/wBiy17jijYo"
+              src="https://www.youtube.com/embed/bUXg6QNxY1s"
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -59,7 +59,7 @@ class PortalVideos extends CRDPage {
             <iframe
               width="640"
               height="480"
-              src="https://www.youtube.com/embed/7D1V9kqzQ-M"
+              src="https://www.youtube.com/embed/mkh5lGdfC30"
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -71,7 +71,7 @@ class PortalVideos extends CRDPage {
             <iframe
               width="640"
               height="480"
-              src="https://www.youtube.com/embed/Szv4PxBgMLU"
+              src="https://www.youtube.com/embed/LGSILUGkOmE"
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

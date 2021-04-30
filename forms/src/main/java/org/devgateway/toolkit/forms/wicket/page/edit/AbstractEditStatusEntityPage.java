@@ -802,7 +802,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     protected void addSaveNextButtonPermissions(Component button) {
-        addDefaultAllButtonsPermissions(button);
+        addSaveButtonsPermissions(button);
     }
 
     protected void addTerminateButtonPermissions(Component button) {
