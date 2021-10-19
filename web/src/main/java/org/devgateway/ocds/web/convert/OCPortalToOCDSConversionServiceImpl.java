@@ -854,7 +854,6 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         mappingMongoConverter.setCustomConversions(customConversions);
         mappingMongoConverter.afterPropertiesSet();
 
-        //releaseRepository.deleteAll();
         ocPortalLocationRepository.deleteAll(); //locations are always re-created during import
         organizationRepository.deleteAll(); //organizations are always re-created during import, to allow renames/etc
         validationErrors = new StringBuffer();
