@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
-import makueniLogo from '../resources/makueni-logo.png';
+import logo from '../resources/nmsbanner-oc.png';
 import { getGaId } from '../api/Api';
 import fmConnect from '../fm/fm';
 
@@ -113,7 +113,7 @@ const Header = ({
           <a href={excelURL} download="export.zip">
             <button className="xls" />
           </a>
-          <a href={jsonURL} target="_blank">
+          <a href={jsonURL} target="_blank" rel="noreferrer">
             <button className="json" />
           </a>
         </div>
@@ -130,7 +130,7 @@ const Header = ({
       <header className="branding row">
         <div className="col-md-6 col-sm-6 col-xs-12">
           <a className="portal-logo-wrapper" href="/portal/">
-            <img src={makueniLogo} alt="Makueni" />
+            <img src={logo} alt="OC Portal" />
             <span data-step="1" data-intro={t('header:title:intro')}>
               {t('header:title')}
             </span>

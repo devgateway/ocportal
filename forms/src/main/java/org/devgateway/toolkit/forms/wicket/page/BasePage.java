@@ -783,7 +783,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         navbar.setInverted(true);
 
         // add brand image
-        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
+        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/nmsbanner-oc.png"),
                 new StringResourceModel("brandImageAltText", this, null));
         navbar.setBrandName(new StringResourceModel("brandName", this, null));
 

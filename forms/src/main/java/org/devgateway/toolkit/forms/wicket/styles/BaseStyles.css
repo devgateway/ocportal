@@ -140,7 +140,7 @@ body {
 .navbar-header .navbar-brand img {
     display: block;
     float: left;
-    width: 45px;
+    width: 135px;
     margin-left: 20px;
     margin-top: 5px;
 }
@@ -150,7 +150,7 @@ body {
     display: block;
     font-size: 14px;
     font-weight: 700;
-    left: 70px;
+    left: 170px;
     line-height: 135%;
     margin-top: 10px;
     padding-left: 0;
@@ -164,7 +164,6 @@ body {
     }
     .navbar-header .navbar-brand span{
         margin-top: -5px;
-        margin-left: 10px;
     }
 }
 
