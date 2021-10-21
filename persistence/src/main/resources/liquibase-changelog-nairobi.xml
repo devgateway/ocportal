@@ -4,4 +4,254 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
+    <changeSet id="OCMAKU-1090-nairobi-wards-subcounties" author="mpostelnicu">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="tender_wards"/>
+            <tableExists tableName="tender_subcounties"/>
+            <tableExists tableName="contract_wards"/>
+            <tableExists tableName="contract_subcounties"/>
+        </preConditions>
+        <sql>delete
+             from tender_wards</sql>
+        <sql>delete
+             from tender_subcounties</sql>
+        <sql>delete
+             from contract_wards</sql>
+        <sql>delete
+             from contract_subcounties</sql>
+        <sql>delete
+             from mereport_subwards</sql>
+        <sql>delete
+             from mereport_wards</sql>
+        <sql>delete
+             from mereport_subcounties</sql>
+        <sql>delete
+             from pmcreport_wards</sql>
+        <sql>delete
+             from pmcreport_subcounties</sql>
+        <sql>delete
+             from project_wards</sql>
+        <sql>delete
+             from project_subcounties</sql>
+        <sql>delete
+             from alerts_subscription_wards</sql>
+        <sql>delete
+             from alerts_subscription_subcounties</sql>
+        <sql>delete
+             from category
+             where dtype = 'SubWard'</sql>
+        <sql>delete
+             from category
+             where dtype = 'Ward'</sql>
+        <sql>delete
+             from category
+             where dtype = 'Subcounty'</sql>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Dagoretti North"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Dagoretti South"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Embakasi Central"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Embakasi East"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Embasaki South"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Embakasi North"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Embakasi West"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Kamukunji"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Kasarani"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Kibra"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Langata"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Makadara"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Mathare"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Roysambu"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Ruaraka"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Starehe"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <insert tableName="CATEGORY">
+            <column name="ID" valueSequenceNext="hibernate_sequence"/>
+            <column name="LABEL" value="Westlands"/>
+            <column name="DTYPE" value="Subcounty"/>
+        </insert>
+        <sql>
+            SELECT insertWard('Kitisuru', 'Westlands');
+            SELECT insertWard('Parklands/Highridge', 'Westlands');
+            SELECT insertWard('Kangemi', 'Westlands');
+            SELECT insertWard('Karura', 'Westlands');
+            SELECT insertWard('Mountain View', 'Westlands');
+        </sql>
+        <sql>
+            SELECT insertWard('Kilimani', 'Dagoretti North');
+            SELECT insertWard('Kawangware', 'Dagoretti North');
+            SELECT insertWard('Gatina', 'Dagoretti North');
+            SELECT insertWard('Kileleshwa', 'Dagoretti North');
+            SELECT insertWard('Kabiro', 'Dagoretti North');
+        </sql>
+        <sql>
+            SELECT insertWard('Mutu-ini', 'Dagoretti South');
+            SELECT insertWard('Ngand’o', 'Dagoretti South');
+            SELECT insertWard('Riruta satellite', 'Dagoretti South');
+            SELECT insertWard('Uthiru/Ruthimitu', 'Dagoretti South');
+            SELECT insertWard('Waithaka', 'Dagoretti South');
+        </sql>
+        <sql>
+            SELECT insertWard('Karen', 'Langata');
+            SELECT insertWard('Nairobi West', 'Langata');
+            SELECT insertWard('Nyayo Highrise', 'Langata');
+            SELECT insertWard('South C', 'Langata');
+            SELECT insertWard('Mugumu-ini', 'Langata');
+        </sql>
+        <sql>
+            SELECT insertWard('Laini Saba', 'Kibra');
+            SELECT insertWard('Lindi', 'Kibra');
+            SELECT insertWard('Makina', 'Kibra');
+            SELECT insertWard('Woodley-Kenyatta Golf Course', 'Kibra');
+            SELECT insertWard('Sarang’ombe', 'Kibra');
+        </sql>
+        <sql>
+            SELECT insertWard('Githurai', 'Roysambu');
+            SELECT insertWard('Kahawa West', 'Roysambu');
+            SELECT insertWard('Zimmermann', 'Roysambu');
+            SELECT insertWard('Roysambu', 'Roysambu');
+            SELECT insertWard('Kahawa', 'Roysambu');
+        </sql>
+        <sql>
+            SELECT insertWard('Clay City', 'Kasarani');
+            SELECT insertWard('Mwiki', 'Kasarani');
+            SELECT insertWard('Kasarani', 'Kasarani');
+            SELECT insertWard('Njiru Shopping Centre', 'Kasarani');
+            SELECT insertWard('Ruai', 'Kasarani');
+        </sql>
+        <sql>
+            SELECT insertWard('Babadogo', 'Ruaraka');
+            SELECT insertWard('Utalii', 'Ruaraka');
+            SELECT insertWard('Mathare North', 'Ruaraka');
+            SELECT insertWard('Lucky Summer', 'Ruaraka');
+            SELECT insertWard('Korogocho', 'Ruaraka');
+        </sql>
+        <sql>
+            SELECT insertWard('Imara Daima', 'Embakasi South');
+            SELECT insertWard('Kwa Njenga', 'Embakasi South');
+            SELECT insertWard('Kwa Reuben', 'Embakasi South');
+            SELECT insertWard('Pipeline', 'Embakasi South');
+            SELECT insertWard('Kware', 'Embakasi South');
+        </sql>
+        <sql>
+            SELECT insertWard('Kariobangi North', 'Embakasi North');
+            SELECT insertWard('Dandora Area I', 'Embakasi North');
+            SELECT insertWard('Dandora Area II', 'Embakasi North');
+            SELECT insertWard('Dandora Area III', 'Embakasi North');
+            SELECT insertWard('Dandora Area IV', 'Embakasi North');
+        </sql>
+        <sql>
+            SELECT insertWard('Kayole North', 'Embakasi Central');
+            SELECT insertWard('Kayole Central', 'Embakasi Central');
+            SELECT insertWard('Kayole South', 'Embakasi Central');
+            SELECT insertWard('Komarock', 'Embakasi Central');
+            SELECT insertWard('Chokaa', 'Embakasi Central');
+            SELECT insertWard('Matopeni/Spring Valley', 'Embakasi Central');
+        </sql>
+        <sql>
+            SELECT insertWard('Upper Savanna', 'Embakasi East');
+            SELECT insertWard('Lower Savanna', 'Embakasi East');
+            SELECT insertWard('Embakasi Constituency', 'Embakasi East');
+            SELECT insertWard('Utawala', 'Embakasi East');
+            SELECT insertWard('Mihang’o', 'Embakasi East');
+        </sql>
+        <sql>
+            SELECT insertWard('Umoja I', 'Embakasi West');
+            SELECT insertWard('Umoja II', 'Embakasi West');
+            SELECT insertWard('Mowlem', 'Embakasi West');
+            SELECT insertWard('Kariobangi South', 'Embakasi West');
+            SELECT insertWard('Maringo/Hamza', 'Embakasi West');
+        </sql>
+        <sql>
+            SELECT insertWard('Viwandani', 'Makadara');
+            SELECT insertWard('Harambee', 'Makadara');
+            SELECT insertWard('Makongeni', 'Makadara');
+            SELECT insertWard('Pumwani', 'Makadara');
+            SELECT insertWard('Eastleigh North', 'Makadara');
+        </sql>
+        <sql>
+            SELECT insertWard('Eastleight South', 'Kamukunji');
+            SELECT insertWard('Airbase', 'Kamukunji');
+            SELECT insertWard('California', 'Kamukunji');
+            SELECT insertWard('Ngara', 'Kamukunji');
+            SELECT insertWard('Nairobi Central', 'Kamukunji');
+        </sql>
+        <sql>
+            SELECT insertWard('Pangani', 'Starehe');
+            SELECT insertWard('Ziwani/Koriokor', 'Starehe');
+            SELECT insertWard('Landimawe', 'Starehe');
+            SELECT insertWard('Nairobi South', 'Starehe');
+            SELECT insertWard('Hospital', 'Starehe');
+        </sql>
+        <sql>
+            SELECT insertWard('Mabatini', 'Mathare');
+            SELECT insertWard('Huruma', 'Mathare');
+            SELECT insertWard('Ngei', 'Mathare');
+            SELECT insertWard('Mlango Kubwa', 'Mathare');
+            SELECT insertWard('Klamaiko', 'Mathare');
+        </sql>
+    </changeSet>
+
+
 </databaseChangeLog>
