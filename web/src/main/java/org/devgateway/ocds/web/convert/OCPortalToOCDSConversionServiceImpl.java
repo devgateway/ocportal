@@ -219,7 +219,9 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         } else {
             throw new RuntimeException("Unkown OC Portal Location Type");
         }
-        ml.setGeometry(new GeoJsonPoint(lpc.getLocationPoint().getX(), lpc.getLocationPoint().getY()));
+        if (lpc.getLocationPoint() != null) {
+            ml.setGeometry(new GeoJsonPoint(lpc.getLocationPoint().getX(), lpc.getLocationPoint().getY()));
+        }
         return ocPortalLocationRepository.save(ml);
     }
 
