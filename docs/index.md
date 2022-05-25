@@ -2,9 +2,9 @@
 layout: home
 ---
 
-jOCDS - The Java Open Contracting Data Standard Validator
+Open Contracting Portal
 
-[ ![Download](https://api.bintray.com/packages/devgateway/jocds/jocds/images/download.svg) ](https://bintray.com/devgateway/jocds/jocds/_latestVersion)
+
 
 OCE is a project that allows importing the public procurement data, available in the common MS Excel format,
 into a native Open Contracting Data Standard (OCDS) NoSQL storage, and then run visual data analytics
