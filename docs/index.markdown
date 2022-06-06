@@ -2,11 +2,8 @@
 layout: home
 ---
 
-jOCDS - The Java Open Contracting Data Standard Validator
-
-[ ![Download](https://api.bintray.com/packages/devgateway/jocds/jocds/images/download.svg) ](https://bintray.com/devgateway/jocds/jocds/_latestVersion)
-
-OCE is a project that allows importing the public procurement data, available in the common MS Excel format,
-into a native Open Contracting Data Standard (OCDS) NoSQL storage, and then run visual data analytics
-(display a live dashboard with charts, maps and data tables as well as custom comparison charts).
-Since the data is natively stored in the OCDS format, it can be readily exported in this format without any transformation required, and with great throughput.
+The Open Contracting Portal (OC Portal) is an open-source platform built to organize and archive procurement documents, 
+improve data transparency and feedback by the public, and to help publish procurement information in the [Open Contracting Data Standard (OCDS)](https://standard.open-contracting.org/latest/en/). 
+DG developed the platform using the Open Contracting Explorer (OCE) framework upon which several of our OC tools are built, and the [DG Toolkit](https://github.com/devgateway/dg-toolkit), 
+which is a flexible, customizable, and ready-to-launch set of code modules that DG developed and often uses as a ‘base’ from which we build new systems. 
+The modules in the DG Toolkit are continually tested and improved.
