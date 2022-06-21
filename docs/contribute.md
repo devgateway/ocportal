@@ -1,0 +1,38 @@
+---
+layout: page
+title: Contribute
+permalink: /contrib/
+---
+
+# How to contribute to the OC Portal
+
+For general bugs and requests, you can use [our issues page](https://github.com/devgateway/ocportal/issues) on the Github project page.
+
+
+If you want to contribute code directly, you can use the general Github recommendation for contributing to open source projects, found [here](https://docs.github.com/en/get-started/quickstart/contributing-to-projects).
+
+We summarize below the main steps:
+
+## Fork the repo
+
+A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without affecting the original project.
+
+See a complete description of what a fork is and how to make one on Github, [here](https://docs.github.com/en/get-started/quickstart/fork-a-repo).
+
+You may fork the OC Portal by following [this link](https://github.com/devgateway/ocportal/fork).
+
+## Clone the fork
+
+After creating the fork, you must copy it locally in order to work. This is called cloning. 
+
+Follow [these steps](https://docs.github.com/en/get-started/quickstart/contributing-to-projects#cloning-a-fork) to produce a clone on your computer.
+
+## Making and pushing changes
+
+On the local cloned repository, you can change the code and make the required changes in similar way as described [here](https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-and-pushing-changes).
+
+## Making a pull request
+
+A pull request is the final step in adding back your contribution to our code. Again, the Github contributing guide
+[describes how you can achieve that](https://docs.github.com/en/get-started/quickstart/contributing-to-projects#making-a-pull-request).
+
