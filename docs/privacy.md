@@ -1,6 +1,6 @@
 ---
 layout: page
-title: DG Privacy Policy
+title: Privacy
 permalink: /privacy/
 ---
 
