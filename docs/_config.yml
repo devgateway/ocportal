@@ -24,7 +24,7 @@ description: Open Contracting Portal
 
 baseurl: "/ocportal" # the subpath of your site, e.g. /blog
 url: "https://devgateway.github.io/ocportal/" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: devgateway
+twitter_username: DGateway
 github_username:  devgateway
 
 # Build settings
