@@ -147,8 +147,8 @@ public class OcdsController extends GenericOCDSController {
 
         Publisher publisher = new Publisher();
 
-        publisher.setName("Kenya County Government of Elgeyo Marakwet");
-        publisher.setScheme("Kenya County Government of Elgeyo Marakwet");
+        publisher.setName("Kenya County Government of Nandi");
+        publisher.setScheme("Kenya County Government of Nandi");
         publisher.setUri(serverURL);
         releasePackage.setPublisher(publisher);
         return releasePackage;

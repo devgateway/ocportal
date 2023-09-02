@@ -154,7 +154,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         msg.setFrom(getFromEmail());
         msg.setSubject("Recover your password");
         msg.setText("Dear " + person.getFirstName() + " " + person.getLastName() + ",\n\n"
-                + "These are your new login credentials for Elgeyo Marakwet.\n\n"
+                + "These are your new login credentials for Nandi.\n\n"
                 + "Username: " + person.getUsername() + "\n"
                 + "Password: " + newPassword + "\n\n"
                 + "At login, you will be prompted to change your password to one of your choice.\n\n" + "Thank you,\n"

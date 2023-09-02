@@ -24,7 +24,7 @@ public final class DBConstants {
     public static final String DATE_FORMAT = "dd/MM/YYYY";
 
 
-    public static final String INSTANCE_NAME = "Elgeyo Marakwet";
+    public static final String INSTANCE_NAME = "Nandi";
 
     public static final String ANDROID_PACKAGE_NAME = "org.devgateway.elgeyo.pmcdc";
 

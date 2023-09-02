@@ -25,7 +25,6 @@ import LandingPopup from './landing-popup';
 import { LOGIN_URL } from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
-import makueniLogo from '../resources/makueni-logo.png';
 import { LOCALES } from '../translatable';
 
 const getIndicators = cacheFn((indicatorTypesMapping, corruptionType) => Object.keys(indicatorTypesMapping)
@@ -315,7 +314,7 @@ class CorruptionRiskDashboard extends React.Component {
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
             <a className="portal-logo-wrapper" href="/portal/">
-              <img src={makueniLogo} alt="Makueni" />
+              {/* <img src={makueniLogo} alt="Makueni" /> */}
               <span>{t('crd:title')}</span>
             </a>
           </div>
