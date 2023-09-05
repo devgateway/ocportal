@@ -756,7 +756,7 @@
   "publicationPolicy:ad:line1:link2": "the specific API endpoints here",
   "publicationPolicy:ad:line2": "The Government of Nandi County provides an open contracting portal to support exploration and use of contracting data at the following url: $#$. The portal provides access to all contracting data through a series of filters including a free text search, analyzes and visualizes the data in a series of charts, including a GIS feature.",
   "publicationPolicy:ad:line3": "Data tables on the main page include data that is not available in the OCDS exports as OCDS does not cover all data relevant for Nandi County. An Excel export on the portal includes the full data set. Both datasets will be maintained going forward.",
-  "publicationPolicy:ad:line4": "The table in the Annex provides the full list of data fields collected and published by the Makeuni Open Contracting Portal and the OCDS path for those converted to OCDS.",
+  "publicationPolicy:ad:line4": "The table in the Annex provides the full list of data fields collected and published by the Nandi Open Contracting Portal and the OCDS path for those converted to OCDS.",
   "publicationPolicy:dataScope:title": "Data Scope",
   "publicationPolicy:dataScope:line1:label": "Dates:",
   "publicationPolicy:dataScope:line1:text": "2019-01-01 onwards",
