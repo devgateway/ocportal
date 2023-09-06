@@ -15,7 +15,7 @@
     <artifactId>elgeyo</artifactId>
     <version>2.0.10-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Elgeyo Marakwet</name>
+    <name>Nandi</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
     <properties>
