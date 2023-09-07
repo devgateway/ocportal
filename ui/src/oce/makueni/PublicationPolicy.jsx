@@ -106,7 +106,7 @@ class Docs extends CRDPage {
 
             <h3>{t('publicationPolicy:pubContact:title')}</h3>
             {reactStringReplace(t('publicationPolicy:pubContact:text'), '$#$',
-              (m, i) => <a key={i} className="download-file" href="mailto:info@elgeyomarakwet.go.ke">info@elgeyomarakwet.go.ke</a>)}
+              (m, i) => <a key={i} className="download-file" href="mailto:info@nandi.go.ke">info@nandi.go.ke</a>)}
 
             <h3>{t('publicationPolicy:disclaimer:title')}</h3>
             {t('publicationPolicy:disclaimer:text')}
