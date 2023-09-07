@@ -3,6 +3,24 @@ version: '3.1'
 
 services:
 
+
+  app:
+    image: ocportal-nandi/admin/prod:${TAG-local}
+    restart: 'no'
+    extra_hosts:
+      - "host.docker.internal:host-gateway" #required so docker connects to host interface (this is for sending emails)
+    build:
+      target: prod
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8090"
+    volumes:
+      - ./data/logs:/var/log/vifaa
+
+
   db:
     image: postgis/postgis:11-3.3
     restart: 'no'
