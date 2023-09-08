@@ -4,7 +4,6 @@ COPY forms/pom.xml forms/pom.xml
 COPY persistence/pom.xml persistence/pom.xml
 COPY persistence-mongodb/pom.xml persistence-mongodb/pom.xml
 COPY web/pom.xml web/pom.xml
-COPY coverage-report/pom.xml coverage-report/pom.xml
 COPY pom.xml .
 #we run dependency:go-offline on all pom.xml files copied, to get the dependencies first
 RUN --mount=type=cache,target=/root/.m2,id=ocnandi-m2 \
@@ -20,12 +19,12 @@ RUN --mount=type=cache,target=/root/.m2,id=ocnandi-m2 \
     && jar -xf ../*.jar \
     && rm -f ../*.*
 
-FROM openjdk:8-jdk-slim as prod
-WORKDIR /opt/app
-#we copy artifacts from exploded jar, one by one, each COPY command will create a separate docker layer
-#this means that for example if lib folder gets unchanged in between builds (no jars were updated) the same layer is reused
-COPY --from=compiler /tmp/build/forms/target/deps/BOOT-INF/lib lib
-COPY --from=compiler /tmp/build/forms/target/deps/META-INF META-INF
-COPY --from=compiler /tmp/build/forms/target/deps/BOOT-INF/classes .
-COPY --chmod=0755 entrypoint.sh .
-EXPOSE 8090
+#FROM openjdk:8-jdk-slim as prod
+#WORKDIR /opt/app
+##we copy artifacts from exploded jar, one by one, each COPY command will create a separate docker layer
+##this means that for example if lib folder gets unchanged in between builds (no jars were updated) the same layer is reused
+#COPY --from=compiler /tmp/build/forms/target/deps/BOOT-INF/lib lib
+#COPY --from=compiler /tmp/build/forms/target/deps/META-INF META-INF
+#COPY --from=compiler /tmp/build/forms/target/deps/BOOT-INF/classes .
+#COPY --chmod=0755 entrypoint.sh .
+#EXPOSE 8090

@@ -1,8 +1,6 @@
-# Use postgres/example user/password credentials
-version: '3.1'
+version: '3.8'
 
 services:
-
 
   app:
     image: ocportal-nandi/admin/prod:${TAG-local}
@@ -10,16 +8,12 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway" #required so docker connects to host interface (this is for sending emails)
     build:
-      target: prod
+        target: compiler
     depends_on:
       - db
-    env_file:
-      - .env
+      - mongo
     ports:
       - "8090"
-    volumes:
-      - ./data/logs:/var/log/vifaa
-
 
   db:
     image: postgis/postgis:11-3.3
