@@ -8,34 +8,35 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway" #required so docker connects to host interface (this is for sending emails)
     build:
-        target: compiler
+        target: prod
     depends_on:
       - db
       - mongo
     ports:
-      - "8090"
+      - "127.0.0.1:8090:8090"
+    env_file:
+      - .env
 
   db:
     image: postgis/postgis:11-3.3
     restart: 'no'
-    environment:
-      POSTGRES_PASSWORD: 1234
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "127.0.0.1:5432:5432"
+    env_file:
+      - .env
 
   mongo:
     image: mongo:4.2
     restart: 'no'
     command: [--auth]
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 1234
     volumes:
         - mongodata:/data/db
     ports:
       - "127.0.0.1:27017:27017"
+    env_file:
+      - .env
 
 volumes:
     pgdata:

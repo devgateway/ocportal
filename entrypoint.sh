@@ -2,23 +2,23 @@
 
 COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -server
-  -DjwtSecret=1321323232
-  -Dserver.address=127.0.0.1
+  -DjwtSecret=$JWT_SECRET
+  -Dserver.address=0.0.0.0
   -Dwicket.configuration=deployment
   -Dfile.encoding=UTF-8
   -Xms512m
   -Xmx4096m
   -XX:MaxMetaspaceSize=512m
   -XX:ReservedCodeCacheSize=256m
-  -Dspring.datasource.username=postgres
-  -Dspring.datasource.password=1234
+  -Dspring.datasource.username=$POSTGRES_USER
+  -Dspring.datasource.password=$POSTGRES_PASSWORD
   -DJava.awt.headless=true
   -XX:+UseG1GC
-  -Dspring.data.mongodb.uri=mongodb://root:1234@localhost:27017/ocportal?authSource=admin
-  -Dspring.datasource.url=jdbc:postgresql://localhost/ocportal
-  -Dgoogle.recaptcha.secret=0
-  -Dinfobip.key=a
-  -Dsmsgateway.key=b
+  -Dspring.data.mongodb.uri=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@mongo:27017/ocportal?authSource=admin
+  -Dspring.datasource.url=jdbc:postgresql://db/ocportal
+  -Dgoogle.recaptcha.secret=$RECAPTCHA_SECRET
+  -Dinfobip.key=$INFOBIP_KEY
+  -Dsmsgateway.key=$SMSGATEWAY_KEY
 EOF
 )"
 
