@@ -10,6 +10,7 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -Xmx4096m
   -XX:MaxMetaspaceSize=512m
   -XX:ReservedCodeCacheSize=256m
+  -Dspring.jmx.enabled=true
   -Dspring.datasource.username=$POSTGRES_USER
   -Dspring.datasource.password=$POSTGRES_PASSWORD
   -DJava.awt.headless=true
