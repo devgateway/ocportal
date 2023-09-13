@@ -5,7 +5,7 @@
     Contributors: Development Gateway - initial API and implementation -->
 
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+         xsi:noNamespaceSchemaLocation="https://www.ehcache.org/ehcache.xsd">
 
     <diskStore path="ehcache-diskstore"/>
 
