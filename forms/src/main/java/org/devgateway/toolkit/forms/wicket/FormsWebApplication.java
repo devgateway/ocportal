@@ -67,6 +67,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
@@ -84,7 +85,9 @@ import java.math.BigDecimal;
  */
 @EnableScheduling
 @SpringBootApplication(exclude = {org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration.class})
-@ComponentScan("org.devgateway")
+@ComponentScan(value = "org.devgateway", excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = org.devgateway.jocds.ValidatorConfiguration.class))
 @PropertySource("classpath:/org/devgateway/toolkit/forms/application.properties")
 @EnableCaching
 public class FormsWebApplication extends AuthenticatedWebApplication {
