@@ -22,6 +22,7 @@ RUN mkdir -p forms/target/deps \
 
 FROM openjdk:8-jdk-slim as prod
 WORKDIR /opt/app
+RUN apt-get update && apt-get install -y fontconfig libfreetype6 && rm -rf /var/lib/apt/lists/*
 #we copy artifacts from exploded jar, one by one, each COPY command will create a separate docker layer
 #this means that for example if lib folder gets unchanged in between builds (no jars were updated) the same layer is reused
 COPY --from=compiler /tmp/build/forms/target/deps/BOOT-INF/lib lib
