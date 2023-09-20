@@ -8,6 +8,8 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -Dfile.encoding=UTF-8
   -Xms512m
   -Xmx4096m
+  -Dspring.mail.port=$SMTP_PORT
+  -Dspring.mail.host=$SMTP_HOST
   -XX:MaxMetaspaceSize=512m
   -XX:ReservedCodeCacheSize=256m
   -Dspring.jmx.enabled=true
@@ -23,7 +25,7 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
 EOF
 )"
 
-case "$1" in
+case "$RUN_MODE" in
 admin)
   JAVA_ARGS="${COMMON_JAVA_ARGS} $(tr '\n' ' ' <<-EOF
 			-cp .:lib/*
@@ -32,19 +34,13 @@ admin)
   )"
   exec java $JAVA_ARGS $@
   ;;
-admin-dev-local)
+admin-debug)
   JAVA_ARGS="${COMMON_JAVA_ARGS} $(tr '\n' ' ' <<-EOF
-			-Dspring.devtools.restart.additional-exclude=logs/**,META-INF/**,ehcache-disk-store/**
-			-Dspring.devtools.restart.poll-interval=3s
-			-Dspring.devtools.restart.quiet-period=2s
-			-XX:+TieredCompilation
-			-XX:TieredStopAtLevel=1
-			-noverify
-			-cp forms/classes:web/classes:persistence/classes:lib/*
+			-cp .:lib/*
 			org.devgateway.toolkit.forms.wicket.FormsWebApplication
 		EOF
   )"
-  exec java $JAVA_ARGS $@
+  exec java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 $JAVA_ARGS $@
   ;;
 *)
   exec "$@"

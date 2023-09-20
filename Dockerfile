@@ -32,4 +32,4 @@ COPY --chmod=0755 entrypoint.sh .
 EXPOSE 8090
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.12.0/wait /wait
 RUN chmod +x /wait
-CMD /wait && /opt/app/entrypoint.sh admin
+CMD /wait && /opt/app/entrypoint.sh
