@@ -6,6 +6,7 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -Dserver.address=0.0.0.0
   -Dwicket.configuration=deployment
   -Dfile.encoding=UTF-8
+  -DserverURL=$SERVER_URL
   -Xms512m
   -Xmx4096m
   -Dspring.mail.port=$SMTP_PORT
