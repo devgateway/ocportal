@@ -21,7 +21,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -54,12 +54,12 @@ public class MongoPersistenceApplication {
     }
 
     @Bean
-    public CustomConversions customConversions() {
-        return new CustomConversions(Arrays
-                .asList(new Object[]{BigDecimalToDoubleConverter.INSTANCE, DoubleToBigDecimalConverter.INSTANCE,
+    public MongoCustomConversions customConversions() {
+        return new MongoCustomConversions(Arrays
+                .asList(BigDecimalToDoubleConverter.INSTANCE, DoubleToBigDecimalConverter.INSTANCE,
                         DbObjectToGeoJsonPointConverter.INSTANCE,
                         ZonedDateTimeReadConverter.INSTANCE, ZonedDateTimeWriteConverter.INSTANCE,
-                        URIToStringConverter.INSTANCE}));
+                        URIToStringConverter.INSTANCE));
     }
 
     public enum URIToStringConverter implements Converter<URI, String> {

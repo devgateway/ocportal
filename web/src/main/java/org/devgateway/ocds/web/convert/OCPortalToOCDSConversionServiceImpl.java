@@ -89,8 +89,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.mail.MailException;
@@ -176,7 +176,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     private PersonService personService;
 
     @Autowired
-    private CustomConversions customConversions;
+    private MongoCustomConversions customConversions;
 
     @Autowired
     private MappingMongoConverter mappingMongoConverter;

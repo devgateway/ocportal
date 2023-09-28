@@ -1,7 +1,7 @@
 package org.devgateway.ocds.persistence.mongo.spring;
 
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientSettings;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
@@ -20,9 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
+import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -74,13 +74,13 @@ public class MongoTemplateTestConfig {
     private MongoProperties properties;
 
     @Autowired
-    private CustomConversions customConversions;
+    private MongoCustomConversions customConversions;
 
     @Autowired
     private Environment environment;
 
     @Autowired(required = false)
-    private MongoClientOptions options;
+    private MongoClientSettings options;
 
     private String originalUri;
 
@@ -117,10 +117,10 @@ public class MongoTemplateTestConfig {
         properties.setDatabase(originalUri);
         properties.setUri(null);
 
-        MongoClientFactory mcf=new MongoClientFactory(properties, environment);
+        MongoClientFactory mcf=new MongoClientFactory(properties, environment, null);
 
         MongoTemplate template = new MongoTemplate(
-                new SimpleMongoDbFactory(mcf.createMongoClient(this.options),
+                new SimpleMongoClientDatabaseFactory(mcf.createMongoClient(this.options),
                         properties.getDatabase()));
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
         return template;
@@ -147,10 +147,10 @@ public class MongoTemplateTestConfig {
         properties.setDatabase(originalUri + MongoTemplateConfig.SHADOW_POSTFIX);
         properties.setUri(null);
 
-        MongoClientFactory mcf=new MongoClientFactory(properties, environment);
+        MongoClientFactory mcf=new MongoClientFactory(properties, environment, null);
 
         MongoTemplate template = new MongoTemplate(
-                new SimpleMongoDbFactory(mcf.createMongoClient(this.options),
+                new SimpleMongoClientDatabaseFactory(mcf.createMongoClient(this.options),
                         properties.getDatabase()));
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
         return template;
