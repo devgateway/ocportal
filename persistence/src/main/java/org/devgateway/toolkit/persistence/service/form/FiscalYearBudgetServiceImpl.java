@@ -38,7 +38,7 @@ public class FiscalYearBudgetServiceImpl extends BaseJpaServiceImpl<FiscalYearBu
 
     @Override
     public Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear, Long exceptId) {
-        return repository.countByDepartmentAndFiscalYear(department, fiscalYear, exceptId);
+        return repository.countByDepartmentAndFiscalYearExcept(department, fiscalYear, exceptId);
     }
 
     @Override

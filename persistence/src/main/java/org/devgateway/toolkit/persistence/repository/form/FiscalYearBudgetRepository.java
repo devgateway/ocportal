@@ -28,7 +28,7 @@ public interface FiscalYearBudgetRepository extends BaseJpaRepository<FiscalYear
             + "where b.department = :department "
             + "and b.fiscalYear = :fiscalYear "
             + "and b.id <> :id")
-    Long countByDepartmentAndFiscalYear(
+    Long countByDepartmentAndFiscalYearExcept(
             @Param("department") Department department,
             @Param("fiscalYear") FiscalYear fiscalYear,
             @Param("id") Long exceptId);

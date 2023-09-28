@@ -4,6 +4,7 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.repository.category.ProcurementMethodRepository;
 import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +29,4 @@ public class ProcurementMethodServiceImpl extends CategoryServiceImpl<Procuremen
         return new ProcurementMethod();
     }
 
-    @Override
-    public ProcurementMethod findByLabel(String label) {
-        return repository.findByLabel(label);
-    }
 }
