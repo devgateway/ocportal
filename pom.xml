@@ -25,7 +25,7 @@
         <liquibase.version>3.8.5</liquibase.version>
         <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
         <derby.version>10.14.2.0</derby.version>
-        <pg.version>42.2.18</pg.version>
+        <pg.version>42.5.4</pg.version>
         <poi.version>4.0.1</poi.version>
         <embedded.postgres.version>2.10</embedded.postgres.version>
         <docker.image.prefix>devgateway/toolkit</docker.image.prefix>
