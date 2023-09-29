@@ -177,6 +177,11 @@ public class ExcelFileImportDefaultTest {
         }
 
         @Override
+        public <A extends Annotation> A findAnnotationOnBean(String s, Class<A> aClass, boolean b) throws NoSuchBeanDefinitionException {
+            return null;
+        }
+
+        @Override
         public Object getBean(String s) throws BeansException {
             return null;
         }

@@ -155,14 +155,14 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @Override
     @Transactional
     public boolean isExportable() {
-        return super.isExportable() || getTenderProcesses().size() > 0;
+        return super.isExportable() || !tenderProcesses.isEmpty();
     }
 
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 
