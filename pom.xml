@@ -41,6 +41,7 @@
         <jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
         <commons-io.version>2.6</commons-io.version>
         <maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
+        <reflections.version>0.9.12</reflections.version>
     </properties>
 
     <modules>

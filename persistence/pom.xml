@@ -21,7 +21,6 @@
         <ehcache.version>2.10.6</ehcache.version>
         <dozer.hibernate.model.version>0.3.9</dozer.hibernate.model.version>
         <guava.version>31.1-jre</guava.version>
-        <reflections.version>0.10.2</reflections.version>
     </properties>
 
     <parent>
