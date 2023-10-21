@@ -22,7 +22,7 @@ public interface AbstractMakueniEntityRepository<T extends AbstractMakueniEntity
     @Query("select c "
             + "from #{#entityName} c "
             + "where c.owner = :person")
-    List<T> getAllLocked(@Param("person") Person person);
+    List<T> getAllLockedByPerson(@Param("person") Person person);
 
     @Query("select c "
             + "from #{#entityName} c "

@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -96,9 +95,6 @@ public class MakueniDataController extends GenericOCDSController {
 
     @Autowired
     private GridFsOperations gridFsOperations;
-
-    @Resource
-    private MakueniDataController self; // Self-autowired reference to proxified bean of this class.
 
     private List<AggregationOperation> makueniTenderOperations(MakueniFilterPagingRequest filter) {
         final Criteria criteria = new Criteria().andOperator(

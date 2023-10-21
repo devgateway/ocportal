@@ -9,6 +9,16 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -DserverURL=$SERVER_URL
   -Xms512m
   -Xmx4096m
+  --add-opens=java.naming/javax.naming=ALL-UNNAMED
+  --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+  --add-opens=java.base/java.lang.ref=ALL-UNNAMED
+  --add-opens=java.base/java.lang=ALL-UNNAMED
+  --add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED
+  --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+  --add-opens=java.base/java.io=ALL-UNNAMED
+  --add-opens=java.base/java.security=ALL-UNNAMED
+  --add-opens=java.base/java.util=ALL-UNNAMED
+  --add-opens=java.management/javax.management=ALL-UNNAMED
   -Dspring.mail.port=$SMTP_PORT
   -Dspring.mail.host=$SMTP_HOST
   -XX:MaxMetaspaceSize=512m

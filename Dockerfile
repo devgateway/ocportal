@@ -1,5 +1,6 @@
-FROM maven:3.6-openjdk-8 as compiler
+FROM maven:3.8-openjdk-17 as compiler
 WORKDIR /tmp/build
+RUN microdnf install zip
 COPY forms/pom.xml forms/pom.xml
 COPY persistence/pom.xml persistence/pom.xml
 COPY persistence-mongodb/pom.xml persistence-mongodb/pom.xml
@@ -20,7 +21,7 @@ RUN mkdir -p forms/target/deps \
     ( e=$? && if [ $e -ne 1 ]; then exit $e; fi ) \
     && rm -f ../*.*
 
-FROM openjdk:8-jdk-slim as prod
+FROM openjdk:17-jdk-slim as prod
 WORKDIR /opt/app
 RUN apt-get update && apt-get install -y fontconfig libfreetype6 && rm -rf /var/lib/apt/lists/*
 #we copy artifacts from exploded jar, one by one, each COPY command will create a separate docker layer

@@ -39,7 +39,7 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
 
     @Override
     public List<T> getAllLocked(Person person) {
-        return makueniRepository().getAllLocked(person);
+        return makueniRepository().getAllLockedByPerson(person);
     }
 
     @Override
