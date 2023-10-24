@@ -33,4 +33,18 @@ COPY --chmod=0755 entrypoint.sh .
 EXPOSE 8090
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.12.0/wait /wait
 RUN chmod +x /wait
-CMD /wait && /opt/app/entrypoint.sh
+CMD /wait && /opt/app/entrypoint.sh admin
+
+FROM openjdk:17-jdk-slim as dev
+WORKDIR /opt/app
+COPY --from=compiler /tmp/build/forms/target/deps/BOOT-INF/lib lib
+RUN rm -f lib/persistence*-SNAPSHOT.jar
+RUN rm -f lib/web*-SNAPSHOT.jar
+COPY --chmod=0755 entrypoint.sh .
+EXPOSE 8090
+EXPOSE 8000
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,address=*:8000,server=y,suspend=n
+#we use the docker-compose-wait script to wait for port 5432. postgres may be busy importing the db if db is not present
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.12.0/wait /wait
+RUN chmod +x /wait
+CMD /wait && /opt/app/entrypoint.sh admin-dev
