@@ -17,6 +17,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 
 /**
@@ -25,7 +26,9 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(exclude = {EmbeddedMongoAutoConfiguration.class})
 @PropertySource("classpath:/org/devgateway/toolkit/web/application.properties")
-@ComponentScan("org.devgateway.toolkit")
+@ComponentScan(value = "org.devgateway.toolkit", excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        value = org.devgateway.jocds.ValidatorConfiguration.class))
 public class WebApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(WebApplication.class);

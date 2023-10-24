@@ -13,30 +13,35 @@ services:
       - db
       - mongo
     ports:
-      - "127.0.0.1:8090:8090"
+      - "8090:8090"
+      - "8000:8000"
     env_file:
       - .env
 
   db:
     image: postgis/postgis:11-3.3
-    restart: always
+    restart: 'no'
     volumes:
       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     env_file:
       - .env
 
   mongo:
     image: mongo:4.2
-    restart: always
+    restart: 'no'
     command: [--auth]
     volumes:
         - mongodata:/data/db
+    ports:
+      - "27017:27017"
     env_file:
       - .env
 
   pgbackups:
     image: prodrigestivill/postgres-backup-local
-    restart: always
+    restart: 'no'
     volumes:
       - /opt/pgbackups:/backups
     env_file:

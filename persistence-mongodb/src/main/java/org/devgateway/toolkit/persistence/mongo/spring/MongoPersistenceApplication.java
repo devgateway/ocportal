@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
@@ -44,7 +45,8 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MON
  * @author mpostelnicu
  */
 @SpringBootApplication
-@ComponentScan("org.devgateway")
+@ComponentScan(value = "org.devgateway", excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration" ))
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/mongo/application.properties")
 @EnableCaching
 public class MongoPersistenceApplication {
