@@ -6,6 +6,7 @@ COPY persistence/pom.xml persistence/pom.xml
 COPY persistence-mongodb/pom.xml persistence-mongodb/pom.xml
 COPY web/pom.xml web/pom.xml
 COPY pom.xml .
+ENV MAVEN_OPTS="-XX:-TieredCompilation -XX:TieredStopAtLevel=1"
 #we run dependency:go-offline on all pom.xml files copied, to get the dependencies first
 RUN --mount=type=cache,target=/root/.m2,id=ocnandi-m2 \
   find . -name pom.xml \
@@ -14,7 +15,7 @@ RUN --mount=type=cache,target=/root/.m2,id=ocnandi-m2 \
 COPY . .
 #we compile the code then we explode the fat jar. This is useful to create a reusable layer and save image space/compile time
 RUN --mount=type=cache,target=/root/.m2,id=ocnandi-m2 \
-  mvn -T 4 clean package -DskipTests -Dcheckstyle.skip -Dmaven.gitcommitid.skip=true
+  mvn -T 1C clean package -DskipTests -Dmaven.javadoc.skip=true -Dmaven.test.skip=true -Dmaven.gitcommitid.skip=true
 RUN mkdir -p forms/target/deps \
     && cd forms/target/deps \
     && unzip -qo '../*.jar' || \
@@ -37,6 +38,7 @@ CMD /wait && /opt/app/entrypoint.sh admin
 
 FROM openjdk:17-jdk-slim as dev
 WORKDIR /opt/app
+RUN apt-get update && apt-get install -y fontconfig libfreetype6 && rm -rf /var/lib/apt/lists/*
 COPY --from=compiler /tmp/build/forms/target/deps/BOOT-INF/lib lib
 RUN rm -f lib/persistence*-SNAPSHOT.jar
 RUN rm -f lib/web*-SNAPSHOT.jar

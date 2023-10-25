@@ -48,7 +48,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan(basePackageClasses = {GenericPersistable.class})
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/application.properties")
 @ComponentScan(value = "org.devgateway.toolkit", excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration" ))
+        type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration"))
 @EnableConfigurationProperties({OnfonMediaProperties.class, DgFmProperties.class})
 public class PersistenceApplication {
     private static final Logger logger = LoggerFactory.getLogger(PersistenceApplication.class);

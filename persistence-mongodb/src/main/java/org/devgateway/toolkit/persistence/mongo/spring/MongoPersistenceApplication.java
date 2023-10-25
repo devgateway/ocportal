@@ -46,7 +46,7 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MON
  */
 @SpringBootApplication
 @ComponentScan(value = "org.devgateway", excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration" ))
+        type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration"))
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/mongo/application.properties")
 @EnableCaching
 public class MongoPersistenceApplication {
