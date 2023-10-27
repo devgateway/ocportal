@@ -17,6 +17,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
+import org.devgateway.toolkit.persistence.mongo.spring.MongoUtil;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
@@ -283,7 +284,7 @@ public class MakueniDataController extends GenericOCDSController {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
         final Aggregation aggregation = newAggregation(group("department"),
-                Aggregation.replaceRoot().withValueOf("_id"),
+                MongoUtil.replaceRootWithId(),
                 sort(Sort.by("label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
@@ -398,7 +399,7 @@ public class MakueniDataController extends GenericOCDSController {
                 project("tender.procurementMethodRationale"),
                 match(where("procurementMethodRationale").exists(true)),
                 group("procurementMethodRationale"),
-                Aggregation.replaceRoot().withValueOf("_id")
+                MongoUtil.replaceRootWithId()
                 );
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
@@ -411,8 +412,7 @@ public class MakueniDataController extends GenericOCDSController {
     @Cacheable
     public List<Document> getFiscalYears() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
-        AggregationOperation replaceRoot = Aggregation.replaceRoot().withValueOf("_id");
-        final Aggregation aggregation = newAggregation(group("fiscalYear"), replaceRoot,
+        final Aggregation aggregation = newAggregation(group("fiscalYear"), MongoUtil.replaceRootWithId(),
                 sort(Sort.by("label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
