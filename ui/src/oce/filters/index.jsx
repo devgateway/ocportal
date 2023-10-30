@@ -25,12 +25,15 @@ const Filters = (props) => {
       filters: [
         {
           render: singlePropertyRendererCreator(ProcuringEntitySelect, 'procuringEntityId'),
+          fm: 'publicView.filter.procuringEntity',
         },
         {
           render: singlePropertyRendererCreator(BuyerSelect, 'buyerId'),
+          fm: 'publicView.filter.buyer',
         },
         {
           render: singlePropertyRendererCreator(SupplierSelect, 'supplierId'),
+          fm: 'publicView.filter.supplier',
         },
       ],
     },

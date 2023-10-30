@@ -7,8 +7,10 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -Dwicket.configuration=deployment
   -Dfile.encoding=UTF-8
   -DserverURL=$SERVER_URL
+  -DdisableEmailSending=$DISABLE_EMAIL_SENDING
+  -Dspring.devtools.restart.enabled=$SPRING_DEVTOOLS_RESTART_ENABLED
   -Xms512m
-  -Xmx4096m
+  -Xmx6144m
   --add-opens=java.naming/javax.naming=ALL-UNNAMED
   --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
   --add-opens=java.base/java.lang.ref=ALL-UNNAMED
@@ -36,7 +38,7 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
 EOF
 )"
 
-case "$RUN_MODE" in
+case "$1" in
 admin)
   JAVA_ARGS="${COMMON_JAVA_ARGS} $(tr '\n' ' ' <<-EOF
 			-cp .:lib/*
@@ -45,13 +47,19 @@ admin)
   )"
   exec java $JAVA_ARGS $@
   ;;
-admin-debug)
+admin-dev)
   JAVA_ARGS="${COMMON_JAVA_ARGS} $(tr '\n' ' ' <<-EOF
-			-cp .:lib/*
+			-Dspring.devtools.restart.additional-exclude=logs/**,META-INF/**,ehcache-disk-store/**
+			-Dspring.devtools.restart.poll-interval=3s
+			-Dspring.devtools.restart.quiet-period=2s
+			-XX:+TieredCompilation
+			-XX:TieredStopAtLevel=1
+			-noverify
+			-cp forms/classes:persistence-mongodb/classes:web/classes:persistence/classes:lib/*
 			org.devgateway.toolkit.forms.wicket.FormsWebApplication
 		EOF
   )"
-  exec java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 $JAVA_ARGS $@
+  exec java $JAVA_ARGS $@
   ;;
 *)
   exec "$@"

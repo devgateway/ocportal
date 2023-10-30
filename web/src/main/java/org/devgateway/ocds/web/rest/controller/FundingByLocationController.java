@@ -22,6 +22,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.Fields;
+import org.springframework.data.mongodb.core.aggregation.ObjectOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -219,8 +220,12 @@ public class FundingByLocationController extends GenericOCDSController {
                 match(where("location.geometry.coordinates.0").exists(true)),
                 group("location")
                         .sum("amount").as("contractsAmount")
-                        .count().as("contractsCount")
-        );
+                        .count().as("contractsCount"),
+                Aggregation.replaceRoot()
+                        .withValueOf(ObjectOperators.MergeObjects.merge(
+                                new Document("contractsAmount", "$contractsAmount"),
+                                new Document("contractsCount", "$contractsCount")
+                        ).mergeWithValuesOf(Fields.UNDERSCORE_ID)));
 
         return releaseAgg(agg);
     }

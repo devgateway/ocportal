@@ -37,6 +37,7 @@
         <closure.compiler.version>v20200406</closure.compiler.version>
         <yuicompressor.version>2.4.8</yuicompressor.version>
         <javamelody.version>1.95.0</javamelody.version>
+        <exclude.devtools>false</exclude.devtools>
     </properties>
 
     <dependencies>
@@ -353,6 +354,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
+                    <excludeDevtools>${exclude.devtools}</excludeDevtools>
                 </configuration>
                 <version>${spring.boot.version}</version>
                 <executions>

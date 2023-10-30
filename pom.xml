@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <liquibase.version>4.23.0</liquibase.version>
-        <spring.boot.version>2.7.16</spring.boot.version>
+        <spring.boot.version>2.7.17</spring.boot.version>
         <derby.version>10.14.2.0</derby.version>
         <pg.version>42.5.4</pg.version>
         <poi.version>4.0.1</poi.version>

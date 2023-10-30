@@ -2,6 +2,8 @@ package org.devgateway.toolkit.persistence.mongo.spring;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.ReplaceRootOperation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.io.Serializable;
@@ -18,6 +20,10 @@ public final class MongoUtil {
 
     private MongoUtil() {
 
+    }
+
+    public static ReplaceRootOperation replaceRootWithId() {
+        return Aggregation.replaceRoot().withValueOf("_id");
     }
 
     public static final int BATCH_SIZE = 10000;
