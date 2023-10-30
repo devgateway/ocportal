@@ -146,17 +146,6 @@ public class ProcurementPlan extends AbstractMakueniEntity {
         return getLabel();
     }
 
-    /**
-     * Since we no longer have projects all the time, a procurement plan becomes exportable as soon as it has
-     * some tender processes added, regardless if these are approved or not
-     *
-     * @return
-     */
-    @Override
-    @Transactional
-    public boolean isExportable() {
-        return super.isExportable() || !tenderProcesses.isEmpty();
-    }
 
     @Override
     @Transactional
