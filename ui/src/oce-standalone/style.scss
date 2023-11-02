@@ -343,7 +343,7 @@ $yearsBarHeight: 30px;
             }
 
             .glyphicon {
-                display: none
+                display: inline-block;
             }
 
             &.active {
@@ -361,7 +361,7 @@ $yearsBarHeight: 30px;
         }
 
         a:hover .ctrl-click-hint {
-            display: block;
+            display: inline-block;
         }
     }
 
