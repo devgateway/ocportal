@@ -11,6 +11,19 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
+import io.swagger.annotations.ApiOperation;
+import org.bson.Document;
+import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
+
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS_VALUE_AMOUNT;
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.PLANNING_BUDGETB;
@@ -26,19 +39,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.repl
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 
-import io.swagger.annotations.ApiOperation;
-import org.bson.Document;
-import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.List;
-
 /**
  * @author mpostelnicu
  */
@@ -51,13 +51,8 @@ public class BudgetStatsController extends GenericOCDSController {
     public List<Document> expenditureToDateVsBudget(
             @ModelAttribute @Valid final YearFilterPagingRequest filter) {
 
-        YearFilterPagingRequest effectiveFilters = new YearFilterPagingRequest();
-        effectiveFilters.setBuyerId(filter.getBuyerId());
-        effectiveFilters.setProcuringEntityId(filter.getProcuringEntityId());
-        effectiveFilters.setFiscalYear(filter.getFiscalYear());
-
         Aggregation agg = newAggregation(
-                match(getDefaultFilterCriteria(effectiveFilters)),
+                match(getYearDefaultFilterCriteria(filter, getTenderDateField())),
                 facet(
                         unwind(CONTRACTS, true),
                         group(PLANNING_FISCAL_YEAR)
