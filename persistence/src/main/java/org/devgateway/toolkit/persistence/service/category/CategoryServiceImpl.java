@@ -20,6 +20,11 @@ public abstract class CategoryServiceImpl<T extends Category> extends BaseJpaSer
         return categoryRepository().findByLabel(label, page);
     }
 
+    @Override
+    public T findByLabel(String label) {
+        return categoryRepository().findFirstByLabel(label);
+    }
+
     public CategoryRepository<T> categoryRepository() {
         return (CategoryRepository<T>) repository();
     }

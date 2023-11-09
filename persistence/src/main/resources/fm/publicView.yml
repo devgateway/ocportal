@@ -6,6 +6,18 @@
   visible: yes
   visibleDeps:
     - tenderForm.procurementMethodRationale
+- name: publicView.filter.procuringEntity
+  visible: yes
+  visibleDeps:
+    - tenderForm.issuedBy
+- name: publicView.filter.buyer
+  visible: yes
+  visibleDeps:
+    - procurementPlanForm.department
+- name: publicView.filter.supplier
+  visible: yes
+  visibleDeps:
+    - awardAcceptanceForm.items.awardee
 - name: publicView.filter.titleSearch
   visible: yes
 - name: publicView.filter.items

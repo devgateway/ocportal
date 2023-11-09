@@ -146,23 +146,12 @@ public class ProcurementPlan extends AbstractMakueniEntity {
         return getLabel();
     }
 
-    /**
-     * Since we no longer have projects all the time, a procurement plan becomes exportable as soon as it has
-     * some tender processes added, regardless if these are approved or not
-     *
-     * @return
-     */
-    @Override
-    @Transactional
-    public boolean isExportable() {
-        return super.isExportable() || getTenderProcesses().size() > 0;
-    }
 
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

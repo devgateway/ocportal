@@ -2,7 +2,6 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
@@ -17,8 +16,8 @@ import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
+import org.devgateway.toolkit.persistence.mongo.spring.MongoUtil;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
@@ -32,7 +31,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
-import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.util.ObjectUtils;
@@ -43,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -96,9 +93,6 @@ public class MakueniDataController extends GenericOCDSController {
 
     @Autowired
     private GridFsOperations gridFsOperations;
-
-    @Resource
-    private MakueniDataController self; // Self-autowired reference to proxified bean of this class.
 
     private List<AggregationOperation> makueniTenderOperations(MakueniFilterPagingRequest filter) {
         final Criteria criteria = new Criteria().andOperator(
@@ -289,13 +283,9 @@ public class MakueniDataController extends GenericOCDSController {
     public List<Document> getDepartments() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
-        final DBObject project = new BasicDBObject("_id._id", 1);
-        project.put("_id.label", 1);
-        project.put("_id.code", 1);
-
-        final Aggregation aggregation = newAggregation(project("department", Fields.UNDERSCORE_ID),
-                group("department"), new CustomOperation(new Document("$project", project)),
-                sort(Sort.by("_id.label")));
+        final Aggregation aggregation = newAggregation(group("department"),
+                MongoUtil.replaceRootWithId(),
+                sort(Sort.by("label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
@@ -408,7 +398,8 @@ public class MakueniDataController extends GenericOCDSController {
                 unwind("tender"),
                 project("tender.procurementMethodRationale"),
                 match(where("procurementMethodRationale").exists(true)),
-                group("procurementMethodRationale")
+                group("procurementMethodRationale"),
+                MongoUtil.replaceRootWithId()
                 );
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
@@ -421,14 +412,8 @@ public class MakueniDataController extends GenericOCDSController {
     @Cacheable
     public List<Document> getFiscalYears() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
-
-        final DBObject project = new BasicDBObject("_id._id", 1);
-        project.put("_id.label", "$_id.name");
-        project.put("_id.startDate", 1);
-        project.put("_id.endDate", 1);
-
-        final Aggregation aggregation = newAggregation(project("fiscalYear", Fields.UNDERSCORE_ID),
-                group("fiscalYear"), new CustomOperation(new Document("$project", project)));
+        final Aggregation aggregation = newAggregation(group("fiscalYear"), MongoUtil.replaceRootWithId(),
+                sort(Sort.by("label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();

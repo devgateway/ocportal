@@ -89,8 +89,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.mail.MailException;
@@ -101,7 +101,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
@@ -130,9 +129,6 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
     @Value("${serverURL}")
     private String serverURL;
-
-    @Resource
-    private OCPortalToOCDSConversionServiceImpl self;
 
     @Autowired
     private DgFmService fmService;
@@ -176,7 +172,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     private PersonService personService;
 
     @Autowired
-    private CustomConversions customConversions;
+    private MongoCustomConversions customConversions;
 
     @Autowired
     private MappingMongoConverter mappingMongoConverter;
@@ -847,6 +843,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -859,7 +856,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         validationErrors = new StringBuffer();
         Set<String> ocids = tenderProcessService.findAll()
                 .stream()
-                .map(p -> self.createAndPersistRelease(p.getId()))
+                .map(p -> createAndPersistRelease(p.getId()))
                 .filter(Objects::nonNull)
                 .map(Release::getOcid)
                 .collect(Collectors.toSet());

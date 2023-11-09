@@ -83,7 +83,7 @@ const FiltersWrapper = (props) => {
           {expanded.has(index)
             && (
             <div className={cn('col-md-12 filter-content', { expanded: expanded.has(index) })}>
-              {group.filters.map((filter, fIdx) => (
+              {group.filters.filter((filter) => !filter.fm || isFeatureVisible(filter.fm)).map((filter, fIdx) => (
                 <React.Fragment key={fIdx}>
                   {filter.render({
                     filters: localFilters,

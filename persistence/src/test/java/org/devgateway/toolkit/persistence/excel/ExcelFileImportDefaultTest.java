@@ -119,7 +119,17 @@ public class ExcelFileImportDefaultTest {
         public String[] getBeanDefinitionNames() {
             return new String[0];
         }
-        
+
+        @Override
+        public <T> ObjectProvider<T> getBeanProvider(Class<T> aClass, boolean b) {
+            return null;
+        }
+
+        @Override
+        public <T> ObjectProvider<T> getBeanProvider(ResolvableType resolvableType, boolean b) {
+            return null;
+        }
+
 
         @Override
         public String[] getBeanNamesForType(ResolvableType resolvableType) {
@@ -163,6 +173,11 @@ public class ExcelFileImportDefaultTest {
 
         @Override
         public <A extends Annotation> A findAnnotationOnBean(String s, Class<A> aClass) throws NoSuchBeanDefinitionException {
+            return null;
+        }
+
+        @Override
+        public <A extends Annotation> A findAnnotationOnBean(String s, Class<A> aClass, boolean b) throws NoSuchBeanDefinitionException {
             return null;
         }
 

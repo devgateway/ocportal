@@ -28,11 +28,6 @@ public class UnitServiceImpl extends CategoryServiceImpl<Unit> implements UnitSe
     }
 
     @Override
-    public Unit findByLabel(String label) {
-        return repository.findByLabel(label);
-    }
-
-    @Override
     public Unit findByLabelIgnoreCase(String label) {
         return repository.findByLabelIgnoreCase(label);
     }

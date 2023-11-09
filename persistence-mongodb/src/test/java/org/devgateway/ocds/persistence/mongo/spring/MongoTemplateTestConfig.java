@@ -1,32 +1,31 @@
 package org.devgateway.ocds.persistence.mongo.spring;
 
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientSettings;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongoCmdOptionsBuilder;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
+import de.flapdoodle.embed.mongo.config.MongoCmdOptions;
+import de.flapdoodle.embed.mongo.config.MongodConfig;
 import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Feature;
-import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion;
+import de.flapdoodle.embed.mongo.distribution.Version;
 import org.devgateway.toolkit.persistence.mongo.spring.MongoTemplateConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mongo.MongoClientFactory;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
+import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.EnumSet;
+import java.util.Collections;
 
 /**
  * Created by mpostelnicu on 6/12/17.
@@ -35,52 +34,17 @@ import java.util.EnumSet;
 @Profile("integration")
 public class MongoTemplateTestConfig {
 
-    public enum OCEMongoVersion implements IFeatureAwareVersion {
-
-        V3_4_11("3.4.11", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE);
-
-        private final String specificVersion;
-        private EnumSet<Feature> features;
-
-        OCEMongoVersion(String vName, Feature... features) {
-            this.specificVersion = vName;
-            this.features = Feature.asSet(features);
-        }
-
-        @Override
-        public String asInDownloadPath() {
-            return specificVersion;
-        }
-
-        @Override
-        public boolean enabled(Feature feature) {
-            return features.contains(feature);
-        }
-
-        @Override
-        public EnumSet<Feature> getFeatures() {
-            return features;
-        }
-
-        @Override
-        public String toString() {
-            return "Version{" + specificVersion + '}';
-        }
-
-    }
-
-
     @Autowired
     private MongoProperties properties;
 
     @Autowired
-    private CustomConversions customConversions;
+    private MongoCustomConversions customConversions;
 
     @Autowired
     private Environment environment;
 
     @Autowired(required = false)
-    private MongoClientOptions options;
+    private MongoClientSettings options;
 
     private String originalUri;
 
@@ -90,15 +54,15 @@ public class MongoTemplateTestConfig {
     }
 
     @Bean(destroyMethod = "stop")
-    public MongodExecutable embeddedMongoServer(MongodStarter mongodStarter, IMongodConfig iMongodConfig)
+    public MongodExecutable embeddedMongoServer(MongodStarter mongodStarter, MongodConfig iMongodConfig)
             throws IOException {
         return mongodStarter.prepare(iMongodConfig);
     }
 
     @Bean
-    public IMongodConfig mongodConfig() throws IOException {
-        return new MongodConfigBuilder().version(OCEMongoVersion.V3_4_11)
-                .cmdOptions(new MongoCmdOptionsBuilder().useNoJournal(true)
+    public MongodConfig mongodConfig() {
+        return  MongodConfig.builder().version(Version.V4_2_22)
+                .cmdOptions(MongoCmdOptions.builder().useNoJournal(true)
                         .build())
                 .build();
     }
@@ -117,10 +81,11 @@ public class MongoTemplateTestConfig {
         properties.setDatabase(originalUri);
         properties.setUri(null);
 
-        MongoClientFactory mcf=new MongoClientFactory(properties, environment);
+        MongoClientFactory mcf = new MongoClientFactory(Collections.singletonList(
+                new MongoPropertiesClientSettingsBuilderCustomizer(properties, environment)));
 
         MongoTemplate template = new MongoTemplate(
-                new SimpleMongoDbFactory(mcf.createMongoClient(this.options),
+                new SimpleMongoClientDatabaseFactory(mcf.createMongoClient(this.options),
                         properties.getDatabase()));
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
         return template;
@@ -147,10 +112,11 @@ public class MongoTemplateTestConfig {
         properties.setDatabase(originalUri + MongoTemplateConfig.SHADOW_POSTFIX);
         properties.setUri(null);
 
-        MongoClientFactory mcf=new MongoClientFactory(properties, environment);
+        MongoClientFactory mcf = new MongoClientFactory(Collections.singletonList(
+                new MongoPropertiesClientSettingsBuilderCustomizer(properties, environment)));
 
         MongoTemplate template = new MongoTemplate(
-                new SimpleMongoDbFactory(mcf.createMongoClient(this.options),
+                new SimpleMongoClientDatabaseFactory(mcf.createMongoClient(this.options),
                         properties.getDatabase()));
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
         return template;
