@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -148,7 +149,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 createProcurementPlan();
             } catch (Exception e) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("message", e.getMessage());
+                map.put("message", StringEscapeUtils.escapeJava(e.getMessage()));
                 form.error(getString("ExcelImportErrorValidator"), map);
             }
         }
@@ -249,7 +250,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 String unitName = r.getCell(5).getStringCellValue();
                 Unit unit = unitService.findByLabelIgnoreCase(unitName);
                 if (unit == null) {
-                    String message = new StringResourceModel("import.unknownUnit")
+                    String message = new StringResourceModel("import.unknownUnit", this)
                             .setParameters(unitName)
                             .getString();
                     throw new RuntimeException(message);
