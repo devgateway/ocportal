@@ -43,6 +43,7 @@ import org.devgateway.toolkit.persistence.service.category.UnitService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.validation.ConstraintViolation;
@@ -270,7 +271,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
 
         } catch (Exception e) {
             String message = new StringResourceModel("import.exceptionAtRow", this)
-                    .setParameters((rn + 2), e.toString())
+                    .setParameters((rn + 2), ObjectUtils.isEmpty(e.getMessage()) ? e.toString() : e.getMessage())
                     .getString();
             throw new RuntimeException(message);
         }
