@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -42,6 +43,7 @@ import org.devgateway.toolkit.persistence.service.category.UnitService;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import javax.validation.ConstraintViolation;
@@ -148,7 +150,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 createProcurementPlan();
             } catch (Exception e) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("message", e.getMessage());
+                map.put("message", StringEscapeUtils.escapeJava(e.getMessage()));
                 form.error(getString("ExcelImportErrorValidator"), map);
             }
         }
@@ -249,7 +251,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
                 String unitName = r.getCell(5).getStringCellValue();
                 Unit unit = unitService.findByLabelIgnoreCase(unitName);
                 if (unit == null) {
-                    String message = new StringResourceModel("import.unknownUnit")
+                    String message = new StringResourceModel("import.unknownUnit", this)
                             .setParameters(unitName)
                             .getString();
                     throw new RuntimeException(message);
@@ -269,7 +271,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
 
         } catch (Exception e) {
             String message = new StringResourceModel("import.exceptionAtRow", this)
-                    .setParameters((rn + 2), e.toString())
+                    .setParameters((rn + 2), ObjectUtils.isEmpty(e.getMessage()) ? e.toString() : e.getMessage())
                     .getString();
             throw new RuntimeException(message);
         }
