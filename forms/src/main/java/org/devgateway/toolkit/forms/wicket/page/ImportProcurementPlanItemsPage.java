@@ -234,7 +234,8 @@ public class ImportProcurementPlanItemsPage extends BasePage {
             Workbook wb = WorkbookFactory.create(new ByteArrayInputStream(file.getContent().getBytes()));
             Sheet sh = wb.getSheetAt(0);
             for (Row r : sh) {
-                if (rn++ < 7 || isEmptyRow(r)) {
+                rn = r.getRowNum();
+                if (rn < 9 || isEmptyRow(r)) {
                     continue;
                 }
                 PlanItem pi = new PlanItem();
@@ -271,7 +272,7 @@ public class ImportProcurementPlanItemsPage extends BasePage {
 
         } catch (Exception e) {
             String message = new StringResourceModel("import.exceptionAtRow", this)
-                    .setParameters((rn + 2), ObjectUtils.isEmpty(e.getMessage()) ? e.toString() : e.getMessage())
+                    .setParameters((rn + 1), ObjectUtils.isEmpty(e.getMessage()) ? e.toString() : e.getMessage())
                     .getString();
             throw new RuntimeException(message);
         }
