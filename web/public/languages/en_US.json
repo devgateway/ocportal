@@ -713,7 +713,7 @@
   "header:export": "Download the Data",
   "header:export:intro": "Download the data in either XLS, which uses the standard government terminology, or in JSON which uses the Open Contracting Data Standard.",
   "header:title": "County Government of Nandi Open Contracting Portal",
-  "header:title:intro": "Welcome to the County Government of Nandi Open Contracting Portal. The procurement data has been provided and validated by the Government of Nandi county.",
+  "header:title:intro": "Welcome to the County Government of Nandi <br/> Open Contracting Portal. The procurement data has been provided and validated by the Government of Nandi county.",
   "header:help": "HELP",
   "header:help:intro": "HELP",
   "header:totalContracts": "Total Contracts",

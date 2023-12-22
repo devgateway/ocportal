@@ -129,6 +129,9 @@ body {
 .navbar-header .navbar-brand {
     /*height: auto;*/
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 @media (min-width: 768px){
@@ -154,8 +157,8 @@ body {
     line-height: 135%;
     margin-top: 10px;
     padding-left: 0;
-    position: absolute;
-    width: 250px;
+    width: 450px;
+    margin-left: 10px;
 }
 
 @media (max-width: 768px){
