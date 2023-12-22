@@ -12,7 +12,7 @@
 package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -68,7 +68,7 @@ public class PercentageAmountAwardedController extends GenericOCDSController {
         );
     }
 
-    @ApiOperation("Calculate percentage of awards awarded to a list of suppliers vs total awards. Filters by all"
+    @Operation(summary = "Calculate percentage of awards awarded to a list of suppliers vs total awards. Filters by all"
             + " filters. Careful using supplierId filter here!"
             + " It has a different signification than for other endpoints.")
     @RequestMapping(value = "/api/percentageAmountAwarded",

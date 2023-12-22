@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.AverageNumberOfTenderersController;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
@@ -36,7 +36,7 @@ public class AverageNumberOfTenderersExcelController extends ExcelChartOCDSContr
     @Autowired
     private AverageNumberOfTenderersController averageNumberOfTenderersController;
 
-    @ApiOperation(value = "Exports *Average number of bids* dashboard in Excel format.")
+    @Operation(summary = "Exports *Average number of bids* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/averageNumberBidsExcelChart", method = {RequestMethod.GET, RequestMethod.POST})
     public void averageNumberBidsExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
                                             final HttpServletResponse response) throws IOException {

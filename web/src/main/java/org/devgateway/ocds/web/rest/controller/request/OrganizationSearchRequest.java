@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.request;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.Size;
 
@@ -10,11 +10,11 @@ import javax.validation.constraints.Size;
 public class OrganizationSearchRequest extends GenericPagingRequest {
 
     @Size(min = 3, max = 30)
-    @ApiModelProperty(value = "Searches organization fields (name and id) by the given keyword text. "
+    @Schema(title = "Searches organization fields (name and id) by the given keyword text. "
             + "This uses full text search.")
     private String text;
 
-    @ApiModelProperty(value = "The organization scheme. "
+    @Schema(title = "The organization scheme. "
             + "See https://standard.open-contracting.org/latest/en/schema/identifiers/")
     private String scheme;
 

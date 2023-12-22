@@ -12,7 +12,7 @@
 package org.devgateway.ocds.web.rest.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.devgateway.ocds.persistence.mongo.FlaggedRelease;
 import org.devgateway.ocds.persistence.mongo.Publisher;
 import org.devgateway.ocds.persistence.mongo.Release;
@@ -88,7 +88,7 @@ public class OcdsController extends GenericOCDSController {
     @Autowired
     private FlaggedReleaseRepository flaggedReleaseRepository;
 
-    @ApiOperation(value = "Returns a release entity for the given project id. "
+    @Operation(summary = "Returns a release entity for the given project id. "
             + "The project id is read from planning.budget.projectID")
     @RequestMapping(value = "/api/ocds/release/budgetProjectId/{projectId:^[a-zA-Z0-9]*$}",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -100,7 +100,7 @@ public class OcdsController extends GenericOCDSController {
         return release;
     }
 
-    @ApiOperation(value = "Returns a release entity for the given open contracting id (OCID).")
+    @Operation(summary = "Returns a release entity for the given open contracting id (OCID).")
     @RequestMapping(value = "/api/ocds/release/ocid/{ocid}",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -111,7 +111,7 @@ public class OcdsController extends GenericOCDSController {
         return release;
     }
 
-    @ApiOperation(value = "Returns a release package for the given open contracting id (OCID)."
+    @Operation(summary = "Returns a release package for the given open contracting id (OCID)."
             + "This will contain the OCDS package information (metadata about publisher) plus the release itself.")
     @RequestMapping(value = "/api/ocds/package/ocid/{ocid}", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -154,7 +154,7 @@ public class OcdsController extends GenericOCDSController {
         return releasePackage;
     }
 
-    @ApiOperation(value = "Returns a release package for the given project id. "
+    @Operation(summary = "Returns a release package for the given project id. "
             + "The project id is read from planning.budget.projectID."
             + "This will contain the OCDS package information (metadata about publisher) plus the release itself.")
     @RequestMapping(value = "/api/ocds/package/budgetProjectId/{projectId:^[a-zA-Z0-9]*$}",
@@ -172,7 +172,7 @@ public class OcdsController extends GenericOCDSController {
      *
      * @return the release data
      */
-    @ApiOperation(value = "Resturns all available releases, filtered by the given criteria.")
+    @Operation(summary = "Resturns all available releases, filtered by the given criteria.")
     @RequestMapping(value = "/api/ocds/release/all", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @JsonView(Views.Public.class)
@@ -197,7 +197,7 @@ public class OcdsController extends GenericOCDSController {
      *
      * @return the release data
      */
-    @ApiOperation(value = "Counts releases, filter by given criteria")
+    @Operation(summary = "Counts releases, filter by given criteria")
     @RequestMapping(value = "/api/ocds/release/count", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @JsonView(Views.Public.class)
@@ -223,7 +223,7 @@ public class OcdsController extends GenericOCDSController {
      *
      * @return the release data
      */
-    @ApiOperation(value = "Resturns all available releases with flags, filtered by the given criteria.")
+    @Operation(summary = "Resturns all available releases with flags, filtered by the given criteria.")
     @RequestMapping(value = "/api/flaggedRelease/all", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @JsonView(Views.Internal.class)
@@ -248,7 +248,7 @@ public class OcdsController extends GenericOCDSController {
      *
      * @return the release data
      */
-    @ApiOperation(value = "Counts all available releases with flags, filtered by the given criteria.")
+    @Operation(summary = "Counts all available releases with flags, filtered by the given criteria.")
     @RequestMapping(value = "/api/flaggedRelease/count", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @Cacheable
@@ -262,7 +262,7 @@ public class OcdsController extends GenericOCDSController {
         return mongoTemplate.count(query, FlaggedRelease.class);
     }
 
-    @ApiOperation(value = "Returns a release entity for the given open contracting id (OCID).")
+    @Operation(summary = "Returns a release entity for the given open contracting id (OCID).")
     @RequestMapping(value = "/api/flaggedRelease/ocid/{ocid}",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -271,7 +271,7 @@ public class OcdsController extends GenericOCDSController {
         return flaggedReleaseRepository.findByOcid(ocid);
     }
 
-    @ApiOperation(value = "Returns all available packages, filtered by the given criteria."
+    @Operation(summary = "Returns all available packages, filtered by the given criteria."
             + "This will contain the OCDS package information (metadata about publisher) plus the release itself.")
     @RequestMapping(value = "/api/ocds/package/all", method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")

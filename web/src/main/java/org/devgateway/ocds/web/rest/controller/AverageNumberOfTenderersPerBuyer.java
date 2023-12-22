@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -44,7 +44,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class AverageNumberOfTenderersPerBuyer extends GenericOCDSController {
 
 
-    @ApiOperation(value = "Calculate average number of tenderers, by buyer The endpoint can be filtered"
+    @Operation(summary = "Calculate average number of tenderers, by buyer The endpoint can be filtered"
             + "by year.")
     @RequestMapping(value = "/api/averageNumberOfTenderersPerBuyer",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")

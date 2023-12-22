@@ -12,7 +12,7 @@
 package org.devgateway.ocds.web.rest.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -117,7 +117,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Suppliers ordered by countFlags>0, descending")
+    @Operation(summary = "Suppliers ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/suppliersByFlags",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -129,7 +129,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(newAggregation(part));
     }
 
-    @ApiOperation(value = "Procuring Entities ordered by countFlags>0, descending")
+    @Operation(summary = "Procuring Entities ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/procuringEntitiesByFlags",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -141,7 +141,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(newAggregation(part));
     }
 
-    @ApiOperation(value = "Buyers ordered by countFlags>0, descending")
+    @Operation(summary = "Buyers ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/buyersByFlags",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -154,7 +154,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Counts Suppliers ordered by countFlags>0, descending")
+    @Operation(summary = "Counts Suppliers ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/suppliersByFlags/count",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -165,7 +165,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(newAggregation(part));
     }
 
-    @ApiOperation(value = "Counts procuring entities ordered by countFlags>0, descending")
+    @Operation(summary = "Counts procuring entities ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/procuringEntitiesByFlags/count",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -176,7 +176,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(newAggregation(part));
     }
 
-    @ApiOperation(value = "Counts buyers ordered by countFlags>0, descending")
+    @Operation(summary = "Counts buyers ordered by countFlags>0, descending")
     @RequestMapping(value = "/api/buyersByFlags/count",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -187,7 +187,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(newAggregation(part));
     }
 
-    @ApiOperation(value = "Number of tenders grouped by procuring entities. All filters apply. "
+    @Operation(summary = "Number of tenders grouped by procuring entities. All filters apply. "
             + "procuringEntityId filter is mandatory.")
     @RequestMapping(value = "/api/procuringEntitiesTendersCount",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -203,7 +203,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Number of tenders grouped by buyers. All filters apply. "
+    @Operation(summary = "Number of tenders grouped by buyers. All filters apply. "
             + "buyerId filter is mandatory.")
     @RequestMapping(value = "/api/buyersTendersCount",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -218,7 +218,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Number of awards grouped by procuring entities. All filters apply. "
+    @Operation(summary = "Number of awards grouped by procuring entities. All filters apply. "
             + "procuringEntityId filter is mandatory.")
     @RequestMapping(value = "/api/procuringEntitiesAwardsCount",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -235,7 +235,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Number of awards grouped by buyers. All filters apply. "
+    @Operation(summary = "Number of awards grouped by buyers. All filters apply. "
             + "buyerId filter is mandatory.")
     @RequestMapping(value = "/api/buyersAwardsCount",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -253,7 +253,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Counts the won, lost procurements, flags and amounts. Receives any filters, "
+    @Operation(summary = "Counts the won, lost procurements, flags and amounts. Receives any filters, "
             + "but most important here is the supplierId and bidderId. Requires bid extension. Use bidderId instead "
             + "of supplierId.")
     @RequestMapping(value = "/api/procurementsWonLost",
@@ -342,7 +342,7 @@ public class AwardsWonLostController extends GenericOCDSController {
 
     }
 
-    @ApiOperation(value = "Number of procurements by tender status for a list of procuring entities by buyer")
+    @Operation(summary = "Number of procurements by tender status for a list of procuring entities by buyer")
     @RequestMapping(value = "/api/procurementsByTenderStatusBuyer",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -364,7 +364,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Number of procurements by tender status for a list of procuring entities")
+    @Operation(summary = "Number of procurements by tender status for a list of procuring entities")
     @RequestMapping(value = "/api/procurementsByTenderStatus",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -388,7 +388,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Number of procurements by procurement method for a list of procuring entities by "
+    @Operation(summary = "Number of procurements by procurement method for a list of procuring entities by "
             + "procuring entity")
     @RequestMapping(value = "/api/procurementsByProcurementMethod",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -414,7 +414,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Number of procurements by procurement method for a list of procuring entities by buyer")
+    @Operation(summary = "Number of procurements by procurement method for a list of procuring entities by buyer")
     @RequestMapping(value = "/api/procurementsByProcurementMethodBuyer",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -436,7 +436,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "List of buyers with releases for the given procuring entities."
+    @Operation(summary = "List of buyers with releases for the given procuring entities."
             + "procuringEntityId is mandatory")
     @RequestMapping(value = "/api/buyersForProcuringEntities",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -462,7 +462,7 @@ public class AwardsWonLostController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "List of procuring entities with releases for the given buyers."
+    @Operation(summary = "List of procuring entities with releases for the given buyers."
             + "buyerId is mandatory")
     @RequestMapping(value = "/api/procuringEntitiesForBuyers",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -488,7 +488,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Counts the number of wins per supplierId per buyerId, plus shows the flags"
+    @Operation(summary = "Counts the number of wins per supplierId per buyerId, plus shows the flags"
             + " and the awarded total. You must provide supplierId parameter. Any other filter can be used as well.")
     @RequestMapping(value = "/api/supplierWinsPerBuyer",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -531,7 +531,7 @@ public class AwardsWonLostController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Counts the number of wins per supplierId per procuringEntityId, plus shows the flags"
+    @Operation(summary = "Counts the number of wins per supplierId per procuringEntityId, plus shows the flags"
             + " and the awarded total. You must provide supplierId parameter. Any other filter can be used as well.")
     @RequestMapping(value = "/api/supplierWinsPerProcuringEntity",
             method = {RequestMethod.POST, RequestMethod.GET},

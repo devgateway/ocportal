@@ -1,7 +1,7 @@
 package org.devgateway.ocds.web.rest.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.persistence.mongo.spring.json.Views;
@@ -31,7 +31,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @RestController
 public class LocationInfowindowController extends GenericOCDSController {
 
-    @ApiOperation(value = "Displays the tenders filtered by location. See the location filter "
+    @Operation(summary = "Displays the tenders filtered by location. See the location filter "
             + "for the options to filter by")
     @RequestMapping(value = "/api/tendersByLocation", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
@@ -54,7 +54,7 @@ public class LocationInfowindowController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Displays the planning items, filtered by location. See the location filter "
+    @Operation(summary = "Displays the planning items, filtered by location. See the location filter "
             + "for the options to filter by")
     @RequestMapping(value = "/api/planningByLocation", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
@@ -74,7 +74,7 @@ public class LocationInfowindowController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Displays the awards, filtered by location. See the location filter "
+    @Operation(summary = "Displays the awards, filtered by location. See the location filter "
             + "for the options to filter by")
     @RequestMapping(value = "/api/awardsByLocation", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")

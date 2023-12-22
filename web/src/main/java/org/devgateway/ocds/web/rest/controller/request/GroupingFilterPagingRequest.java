@@ -3,7 +3,7 @@
  */
 package org.devgateway.ocds.web.rest.controller.request;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author mpostelnicu
@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class GroupingFilterPagingRequest extends YearFilterPagingRequest {
 
-    @ApiModelProperty(value = "This parameter specified which category can be used for grouping the results."
+    @Schema(title = "This parameter specified which category can be used for grouping the results."
             + " Possible values here are: bidTypeId, procuringEntityId.")
     private String groupByCategory;
 

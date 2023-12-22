@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Tender;
@@ -62,7 +62,7 @@ public class TenderPercentagesController extends GenericOCDSController {
         public static final String TOTAL_TENDERS_WITH_LINKED_PROCUREMENT_PLAN = "totalTendersWithLinkedProcurementPlan";
     }
 
-    @ApiOperation("Returns the percent of tenders that were cancelled, grouped by year."
+    @Operation(summary = "Returns the percent of tenders that were cancelled, grouped by year."
             + " The year is taken from tender.tenderPeriod.endDate. The response also contains the"
             + " total number of tenders and total number of cancelled tenders for each year.")
     @RequestMapping(value = "/api/percentTendersCancelled",
@@ -109,7 +109,7 @@ public class TenderPercentagesController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation("Percentage of tenders with >1 tenderer/bidder): "
+    @Operation(summary = "Percentage of tenders with >1 tenderer/bidder): "
             + "Count of tenders with numberOfTenderers >1 divided by total count of tenders."
             + "This endpoint uses tender.tenderPeriod.startDate to calculate the tender year.")
     @RequestMapping(value = "/api/percentTendersWithTwoOrMoreTenderers",
@@ -158,7 +158,7 @@ public class TenderPercentagesController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation("Percent of awarded tenders with >1 tenderer/bidder"
+    @Operation(summary = "Percent of awarded tenders with >1 tenderer/bidder"
             + "Count of tenders with numberOfTenderers >1 divided by total count of tenders with numberOfTenderers >0"
             + "This endpoint uses tender.tenderPeriod.startDate to calculate the tender year.")
     @RequestMapping(value = "/api/percentTendersAwardedWithTwoOrMoreTenderers",
@@ -223,7 +223,7 @@ public class TenderPercentagesController extends GenericOCDSController {
     }
 
 
-    @ApiOperation("Returns the percent of tenders with active awards, "
+    @Operation(summary = "Returns the percent of tenders with active awards, "
             + "with tender.submissionMethod='electronicSubmission'."
             + "The endpoint also returns the total tenderds with active awards and the count of tenders with "
             + "tender.submissionMethod='electronicSubmission")
@@ -284,7 +284,7 @@ public class TenderPercentagesController extends GenericOCDSController {
     }
 
 
-    @ApiOperation("Percentage of tenders that are associated in releases that "
+    @Operation(summary = "Percentage of tenders that are associated in releases that "
             + "have the planning.budget.amount non empty,"
             + "meaning there really is a planning entity correlated with the tender entity."
             + "This endpoint uses tender.tenderPeriod.startDate to calculate the tender year.")

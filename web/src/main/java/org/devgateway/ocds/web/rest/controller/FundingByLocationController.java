@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -64,7 +64,7 @@ public class FundingByLocationController extends GenericOCDSController {
         public static final String YEAR = "year";
     }
 
-    @ApiOperation(value = "Total estimated funding (tender.value) grouped by "
+    @Operation(summary = "Total estimated funding (tender.value) grouped by "
             + "tender.items.deliveryLocation and also grouped by year."
             + " The endpoint also returns the count of tenders for each location. "
             + "It responds to all filters. The year is calculated based on tender.tenderPeriod.startDate")
@@ -98,7 +98,7 @@ public class FundingByLocationController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Tenders by tender location at the tender level. The location can be at the ward or at "
+    @Operation(summary = "Tenders by tender location at the tender level. The location can be at the ward or at "
             + "the subcounty levels. This location is attached directly to tender, unlike the OCDS extension, which "
             + "ties it to the items.")
     @RequestMapping(value = "/api/fundingByTenderLocation", method = {RequestMethod.POST,
@@ -158,7 +158,7 @@ public class FundingByLocationController extends GenericOCDSController {
     }
 
 
-    @ApiOperation("Calculates percentage of releases with tender with at least one specified delivery location,"
+    @Operation(summary = "Calculates percentage of releases with tender with at least one specified delivery location,"
             + " that is the array tender.items.deliveryLocation has to have items."
             + "Filters out stub tenders, therefore tender.tenderPeriod.startDate has to exist.")
     @RequestMapping(value = "/api/qualityFundingByTenderDeliveryLocation", method = {RequestMethod.POST,
@@ -200,7 +200,7 @@ public class FundingByLocationController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Contracted amount & number of contracts per location as specified in contract.")
+    @Operation(summary = "Contracted amount & number of contracts per location as specified in contract.")
     @RequestMapping(value = "/api/fundingByContractLocation", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> fundingByContractLocation(

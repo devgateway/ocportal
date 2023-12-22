@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.AverageTenderAndAwardPeriodsController;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
@@ -36,7 +36,7 @@ public class AverageTenderAndAwardsExcelController extends ExcelChartOCDSControl
     @Autowired
     private AverageTenderAndAwardPeriodsController averageTenderAndAwardPeriodsController;
 
-    @ApiOperation(value = "Exports *Bid Timeline* dashboard in Excel format.")
+    @Operation(summary = "Exports *Bid Timeline* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/bidTimelineExcelChart", method = {RequestMethod.GET, RequestMethod.POST})
     public void bidTimelineExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
                                       final HttpServletResponse response) throws IOException {
