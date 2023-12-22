@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.CostEffectivenessVisualsController;
 import org.devgateway.ocds.web.rest.controller.request.LangGroupingFilterPagingRequest;
@@ -36,7 +36,7 @@ public class CostEffectivenessExcelController extends ExcelChartOCDSController {
     @Autowired
     private CostEffectivenessVisualsController costEffectivenessVisualsController;
 
-    @ApiOperation(value = "Exports *Cost effectiveness* dashboard in Excel format.")
+    @Operation(summary = "Exports *Cost effectiveness* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/costEffectivenessExcelChart", method = {RequestMethod.GET, RequestMethod.POST})
     public void costEffectivenessExcelChart(@ModelAttribute @Valid final LangGroupingFilterPagingRequest filter,
                                             final HttpServletResponse response) throws IOException {

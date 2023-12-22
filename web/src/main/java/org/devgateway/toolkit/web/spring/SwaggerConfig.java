@@ -17,17 +17,17 @@ public class SwaggerConfig {
 
         return GroupedOpenApi.builder()
                 .group("1ocDashboardsApi")
-                .pathsToMatch("/api/.*")
+                .pathsToMatch("/api/**")
                 .build();
     }
 
-    @Bean
-    public GroupedOpenApi manageApi() {
-        return GroupedOpenApi.builder()
-                .group("2manageApi")
-                .pathsToMatch("/manage/.*")
-                .build();
-    }
+//    @Bean
+//    public GroupedOpenApi manageApi() {
+//        return GroupedOpenApi.builder()
+//                .group("2manageApi")
+//                .pathsToMatch("/manage/**")
+//                .build();
+//    }
 
     @Bean
     public OpenAPI springShopOpenAPI() {

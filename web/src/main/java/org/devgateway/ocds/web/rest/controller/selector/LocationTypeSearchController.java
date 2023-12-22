@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller.selector;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.GenericOCDSController;
@@ -39,7 +39,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwi
 @CacheConfig(cacheNames = "locationTypesJson")
 public class LocationTypeSearchController extends GenericOCDSController {
 
-    @ApiOperation(value = "Location types from location extension")
+    @Operation(summary = "Location types from location extension")
     @RequestMapping(value = "/api/ocds/locationTypes/all", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> locationTypes() {

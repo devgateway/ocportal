@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller.selector;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.GenericOCDSController;
@@ -40,7 +40,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @CacheConfig(cacheNames = "procurementMethodRationalesJson")
 public class ProcurementMethodRationaleSearchController extends GenericOCDSController {
 
-    @ApiOperation(value = "Display the available procurement methods. "
+    @Operation(summary = "Display the available procurement methods. "
             + "These are taken from tender.procurementMethod")
     @RequestMapping(value = "/api/ocds/procurementMethodRationale/all", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")

@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.flags;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.flags.FlagsConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -23,7 +23,7 @@ import java.util.List;
 public class FlagI002StatsController extends AbstractSingleFlagStatsController {
 
     @Override
-    @ApiOperation(value = "Stats for flag i002")
+    @Operation(summary = "Stats for flag i002")
     @RequestMapping(value = "/api/flags/i002/stats",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public List<Document> flagStats(@ModelAttribute @Valid YearFilterPagingRequest filter) {

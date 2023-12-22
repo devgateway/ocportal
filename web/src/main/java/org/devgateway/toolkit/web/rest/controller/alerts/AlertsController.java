@@ -1,6 +1,6 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import org.apache.commons.collections.CollectionUtils;
@@ -54,7 +54,7 @@ public class AlertsController {
     @Autowired
     private AlertsEmailService alertsEmailService;
 
-    @ApiOperation(value = "Subscribe to a particular Email Alert")
+    @Operation(summary = "Subscribe to a particular Email Alert")
     @RequestMapping(value = "/api/makueni/alerts/subscribeAlert",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -147,7 +147,7 @@ public class AlertsController {
         }
     }
 
-    @ApiOperation(value = "Unsubscribe to a particular Email Alert")
+    @Operation(summary = "Unsubscribe to a particular Email Alert")
     @RequestMapping(value = "/api/makueni/alerts/unsubscribeAlert",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")

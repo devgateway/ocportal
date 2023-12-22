@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -46,7 +46,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 public class CorruptionRiskDashboardTablesController extends GenericOCDSController {
 
-    @ApiOperation(value = "Returns data to show in the table on corruption risk overview page."
+    @Operation(summary = "Returns data to show in the table on corruption risk overview page."
             + "This is presented as releases only with the information in the table present and unwinded by "
             + "flags.flaggedStats")
     @RequestMapping(value = "/api/corruptionRiskOverviewTable",
@@ -76,7 +76,7 @@ public class CorruptionRiskDashboardTablesController extends GenericOCDSControll
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Counts data to show in the table on corruption risk overview page.")
+    @Operation(summary = "Counts data to show in the table on corruption risk overview page.")
     @RequestMapping(value = "/api/corruptionRiskOverviewTable/count",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")

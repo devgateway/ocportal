@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.springframework.data.domain.Sort;
@@ -45,7 +45,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwi
 @RestController
 public class BudgetStatsController extends GenericOCDSController {
 
-    @ApiOperation(value = "Expenditure to-date vs. budget")
+    @Operation(summary = "Expenditure to-date vs. budget")
     @RequestMapping(value = "/api/expenditureToDateVsBudget", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> expenditureToDateVsBudget(

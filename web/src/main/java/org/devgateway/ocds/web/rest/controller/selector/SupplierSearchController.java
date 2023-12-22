@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.selector;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.devgateway.ocds.persistence.mongo.Organization;
 import org.devgateway.ocds.persistence.mongo.Organization.OrganizationType;
 import org.devgateway.ocds.web.rest.controller.request.OrganizationSearchRequest;
@@ -20,7 +20,7 @@ public class SupplierSearchController extends AbstractOrganizationSearchControll
 
     @RequestMapping(value = "/api/ocds/organization/supplier/id/{id:^[a-zA-Z0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Finds supplier by the given id")
+    @Operation(summary = "Finds supplier by the given id")
     public Organization byId(@PathVariable final String id) {
         return organizationRepository.findByAllIdsAndType(id, Organization.OrganizationType.supplier);
     }
@@ -34,7 +34,7 @@ public class SupplierSearchController extends AbstractOrganizationSearchControll
      */
     @RequestMapping(value = "/api/ocds/organization/supplier/all",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Lists all suppliers in the database. "
+    @Operation(summary = "Lists all suppliers in the database. "
             + "Suppliers are organizations that have the label 'supplier' assigned to organization.types array"
             + "Allows full text search using the text parameter.")
     public List<Organization> searchText(@Valid final OrganizationSearchRequest request) {
@@ -43,7 +43,7 @@ public class SupplierSearchController extends AbstractOrganizationSearchControll
 
     @RequestMapping(value = "/api/ocds/organization/supplier/count",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Counts all suppliers in the database. "
+    @Operation(summary = "Counts all suppliers in the database. "
             + "Suppliers are organizations that have the label 'supplier' assigned to organization.types array"
             + "Allows full text search using the text parameter.")
     @Override

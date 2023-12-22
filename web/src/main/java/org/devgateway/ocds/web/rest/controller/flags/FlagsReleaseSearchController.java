@@ -1,9 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.flags;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
-
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.flags.FlagsConstants;
 import org.devgateway.ocds.web.rest.controller.request.FlagsWithFilterRequest;
@@ -18,6 +15,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+
 /**
  * @author Octavian Ciubotaru
  */
@@ -26,7 +26,7 @@ import java.util.Map;
 @Cacheable
 public class FlagsReleaseSearchController extends AbstractFlagReleaseSearchController {
 
-    @ApiOperation(value = "Search releases by flags")
+    @Operation(summary = "Search releases by flags")
     @RequestMapping(value = "/api/flags/releases",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public Map<String, List<Document>> releaseFlagSearch(@ModelAttribute @Valid FlagsWithFilterRequest filter) {
@@ -35,7 +35,7 @@ public class FlagsReleaseSearchController extends AbstractFlagReleaseSearchContr
                 flag -> releaseFlagSearch(FlagsConstants.FLAG_VALUES_BY_NAME.get(flag), filter)));
     }
 
-    @ApiOperation(value = "Counts releases by flags")
+    @Operation(summary = "Counts releases by flags")
     @RequestMapping(value = "/api/flags/count",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public Map<String, List<Document>> releaseFlagCount(@ModelAttribute @Valid FlagsWithFilterRequest filter) {
