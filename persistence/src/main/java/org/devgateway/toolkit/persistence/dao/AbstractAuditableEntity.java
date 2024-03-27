@@ -33,12 +33,14 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
     private static final long serialVersionUID = 4031407178647451427L;
 
     @Audited
+    @org.springframework.data.annotation.Transient
     protected String createdBy;
 
     @Audited
     protected ZonedDateTime createdDate;
 
     @Audited
+    @org.springframework.data.annotation.Transient
     protected String lastModifiedBy;
 
     @Audited
