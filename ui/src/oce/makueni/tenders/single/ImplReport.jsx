@@ -22,7 +22,7 @@ const ImplReport = (props) => {
     if (department !== undefined) {
       metadata = ` - ${tenderTitle
       } - ${department.label
-      } - ${fiscalYear.name}`;
+      } - ${fiscalYear.label}`;
     }
     return escape(reportName + metadata);
   };
@@ -43,7 +43,7 @@ const ImplReport = (props) => {
                   && <Item label={t('report:awardee:label')} value={i.contract.awardee.label} col={3} />}
 
                   {isFeatureVisible(`${fmPrefix}.fiscalYear`)
-                  && <Item label={t('report:fiscalYear')} value={fiscalYear.name} col={3} />}
+                  && <Item label={t('report:fiscalYear')} value={fiscalYear.label} col={3} />}
 
                   {isFeatureVisible(`${fmPrefix}.approvedDate`)
                   && <Item label={t('report:approvedDate')} value={formatDate(i.approvedDate)} col={3} />}

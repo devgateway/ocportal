@@ -18,7 +18,7 @@ const Award = (props) => {
     if (department !== undefined) {
       metadata = ` - ${tenderTitle
       } - ${department.label
-      } - ${fiscalYear.name}`;
+      } - ${fiscalYear.label}`;
     }
     return escape(t('award:subject') + metadata);
   };
