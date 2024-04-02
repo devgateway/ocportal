@@ -21,7 +21,7 @@ const ProcurementPlan = (props) => {
   const getFeedbackSubject = () => {
     let metadata;
     if (data !== undefined) {
-      metadata = ` - ${data.department.label} - ${data.fiscalYear.name}`;
+      metadata = ` - ${data.department.label} - ${data.fiscalYear.label}`;
     }
     return escape(t('procurementPlan:feedbackSubject') + metadata);
   };
@@ -66,7 +66,7 @@ const ProcurementPlan = (props) => {
               {isFeatureVisible('publicView.procurementPlan.department')
             && <Item label={t('procurementPlan:department')} value={data.department.label} col={8} />}
               {isFeatureVisible('publicView.procurementPlan.fiscalYear')
-            && <Item label={t('procurementPlan:fiscalYear')} value={data.fiscalYear.name} col={4} />}
+            && <Item label={t('procurementPlan:fiscalYear')} value={data.fiscalYear.label} col={4} />}
             </div>
 
             {

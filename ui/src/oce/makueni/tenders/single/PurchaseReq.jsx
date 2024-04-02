@@ -20,7 +20,7 @@ const PurchaseReq = (props) => {
     if (data !== undefined) {
       metadata = ` - ${data.title
       } - ${department.label
-      } - ${fiscalYear.name}`;
+      } - ${fiscalYear.label}`;
     }
     return escape(t('purchaseReq:label') + metadata);
   };

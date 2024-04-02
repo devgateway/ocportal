@@ -30,7 +30,7 @@ const Project = (props) => {
     if (data !== undefined) {
       metadata = ` - ${data.projects.projectTitle
       } - ${data.department.label
-      } - ${data.fiscalYear.name}`;
+      } - ${data.fiscalYear.label}`;
     }
     return escape(t('project:feedbackSubject') + metadata);
   };

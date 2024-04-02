@@ -18,7 +18,7 @@ const Notification = (props) => {
     if (department !== undefined) {
       metadata = ` - ${tenderTitle
       } - ${department.label
-      } - ${fiscalYear.name}`;
+      } - ${fiscalYear.label}`;
     }
     return escape(t('notification:subject') + metadata);
   };
